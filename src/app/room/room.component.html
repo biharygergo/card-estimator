@@ -1,0 +1,81 @@
+<div class="room-container">
+  <div class="meta-container">
+    <mat-card>
+      <mat-card-content>
+        <h2>{{ (room?.rounds)[currentRound].topic }}</h2>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="members-card">
+      <mat-card-header>
+        <mat-card-title>Estimates</mat-card-title>
+        <mat-card-subtitle
+          >See the estimates of people who have joined your
+          room</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let member of room?.members">
+            <span matListAvatar class="avatar">{{
+              member.name.charAt(0)
+            }}</span>
+            <h3 matLine class="member">
+              {{ member.name }}
+              <span class="estimate">
+                <span
+                  *ngIf="
+                    (room?.rounds)[currentRound].estimates[member.id] !=
+                      undefined && (room?.rounds)[currentRound].show_results
+                  "
+                  >{{ (room?.rounds)[currentRound].estimates[member.id] }}</span
+                >
+                <mat-spinner
+                  [diameter]="20"
+                  *ngIf="
+                    (room?.rounds)[currentRound].estimates[member.id] ==
+                    undefined
+                  "
+                ></mat-spinner>
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example home icon"
+                  *ngIf="
+                    (room?.rounds)[currentRound].estimates[member.id] !=
+                      undefined && !(room?.rounds)[currentRound].show_results
+                  "
+                  >done</mat-icon
+                >
+              </span>
+            </h3>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+      <mat-card-footer class="card-footer">
+        <h3>
+          Your room id is: <strong>{{ room?.roomId }}</strong>
+        </h3>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+  <div class="estimate-container">
+    <div class="action-buttons-container">
+      <button mat-raised-button (click)="newRound()">New Round</button>
+      <button mat-raised-button (click)="showResults()">Show results</button>
+    </div>
+
+    <div class="estimator-buttons">
+      <div
+        class="estimator-button-container"
+        *ngFor="let estimate of estimationValues"
+      >
+        <button
+          mat-raised-button
+          class="estimator-button"
+          (click)="setEstimate(estimate)"
+        >
+          {{ estimate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

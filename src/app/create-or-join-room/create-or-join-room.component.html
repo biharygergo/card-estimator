@@ -1,0 +1,48 @@
+<div class="join-container">
+  <mat-card class="join-card">
+    <mat-card-title>Join a Room</mat-card-title>
+    <mat-card-subtitle>
+      Insert the room id below to join an estimation room.
+    </mat-card-subtitle>
+    <mat-card-content>
+      <form class="join-room-content">
+        <mat-form-field class="name">
+          <mat-label>Your Name</mat-label>
+          <input matInput placeholder="Foo Bar" required [formControl]="name" />
+        </mat-form-field>
+
+        <div class="divider-container">
+          <mat-divider></mat-divider>
+        </div>
+        <mat-form-field class="room-id">
+          <mat-label>Room ID</mat-label>
+          <input
+            matInput
+            placeholder="123456789"
+            required
+            [formControl]="roomId"
+          />
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!(roomId.value.length && name.value.length)"
+          (click)="joinRoom()"
+        >
+          Join Room
+        </button>
+      </form>
+      <div class="divider-container">
+        <mat-divider></mat-divider>
+      </div>
+      <div class="create-container">
+        <button mat-raised-button color="warn" (click)="createRoom()">
+          Create a New Room
+        </button>
+      </div>
+    </mat-card-content>
+    <mat-card-actions> </mat-card-actions>
+    <mat-card-footer> </mat-card-footer>
+  </mat-card>
+</div>

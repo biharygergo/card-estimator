@@ -1,0 +1,76 @@
+.room-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.meta-container {
+  margin: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.estimate-container {
+  margin: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.members-card {
+  margin-top: 2rem;
+}
+
+.avatar {
+  background: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.member {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.action-buttons-container {
+  display: flex;
+  flex-direction: row;
+  height: 64px;
+  button {
+    flex: 1;
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+}
+
+.estimator-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+
+  .estimator-button-container {
+    width: 33.333%;
+    display: flex;
+    button {
+      margin: 0.3rem;
+      flex: 1;
+      height: 80px;
+    }
+  }
+}
+
+.card-footer {
+  padding: 1rem;
+  border-top: 0.5px solid lightgrey;
+  h3 {
+    margin: 0;
+  }
+}

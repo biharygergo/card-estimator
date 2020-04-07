@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "card-estimator": {
+      "hosting": {
+        "estimator": [
+          "card-estimator"
+        ]
+      }
+    }
+  }
+}

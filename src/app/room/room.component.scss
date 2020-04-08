@@ -60,7 +60,7 @@
     width: 33.333%;
     display: flex;
     button {
-      margin: 0.3rem;
+      margin: 0 0.3rem 0.5rem 0.3rem;
       flex: 1;
       height: 80px;
     }
@@ -72,5 +72,63 @@
   border-top: 0.5px solid lightgrey;
   h3 {
     margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    small {
+      cursor: pointer;
+      color: lightskyblue;
+
+      &:hover {
+        color: darkblue;
+      }
+    }
+  }
+}
+
+.topic-input {
+  width: 90%;
+  border: none;
+  border-bottom: 1px solid lightgray;
+  font-size: 20px;
+  font-family: inherit;
+  height: 32px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.topic-container {
+  cursor: pointer;
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:hover {
+      color: gray;
+    }
+  }
+  mat-card-subtitle {
+    margin-bottom: 0;
+  }
+  .mat-card-header-text {
+    margin: 0;
+  }
+}
+
+.round-history-container {
+  margin-top: 2rem;
+}
+
+.statistic {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+
+  span {
+    color: #ff5722;
   }
 }

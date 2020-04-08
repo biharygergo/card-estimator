@@ -19,6 +19,10 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatExpansionModule} from '@angular/material/expansion';
+
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -42,6 +46,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatListModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatExpansionModule,
+    ClipboardModule,
     FormsModule,
     ReactiveFormsModule
   ],

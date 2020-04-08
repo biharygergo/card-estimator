@@ -74,6 +74,7 @@ export class EstimatorService {
     this.refreshCurrentRoom(roomId, member.id);
     this.activeMember = member;
 
+
     return member;
   }
 

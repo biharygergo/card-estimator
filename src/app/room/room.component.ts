@@ -1,6 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { EstimatorService, Room, Round } from '../estimator.service';
-import { ActivatedRoute } from '@angular/router';
+import {
+  EstimatorService,
+  Room,
+  Round,
+  RoomNotFoundError,
+  MemberNotFoundError,
+} from '../estimator.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,16 +37,21 @@ export class RoomComponent implements OnInit {
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
+  isObserver = false;
   roundStatistics: RoundStatistics[];
   constructor(
     private estimatorService: EstimatorService,
     private route: ActivatedRoute,
+    private router: Router,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
+    if (!roomId) {
+      this.errorGoBackToJoinPage();
+    }
     const memberId = this.route.snapshot.queryParamMap.get('member');
 
     this.estimatorService.refreshCurrentRoom(roomId, memberId);
@@ -50,15 +61,41 @@ export class RoomComponent implements OnInit {
         this.room = room;
         this.currentRound = room.rounds.length - 1;
         this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
-        this.currentEstimate = this.room.rounds[this.currentRound].estimates[
-          this.estimatorService.activeMember.id
-        ];
+        if (!memberId || !this.estimatorService.activeMember) {
+          if (!this.isObserver) {
+            this.snackBar.open(
+              'You are currently observing this estimation. Join with a name to estimate as well.',
+              'OK'
+            );
+          }
+          this.isObserver = true;
+        } else {
+          this.currentEstimate = this.room.rounds[this.currentRound].estimates[
+            this.estimatorService.activeMember.id
+          ];
+        }
+
         this.reCalculateStatistics(room);
       },
       (error) => {
-        console.error(error);
+        if (error instanceof RoomNotFoundError) {
+          this.errorGoBackToJoinPage();
+        } else if (error instanceof MemberNotFoundError) {
+          this.isObserver = true;
+        } else {
+          this.errorGoBackToJoinPage();
+        }
       }
     );
+  }
+
+  private errorGoBackToJoinPage() {
+    this.snackBar.open(
+      'Unable to join this room. Please check the room ID and join again.',
+      null,
+      { duration: 5000 }
+    );
+    this.router.navigate(['']);
   }
 
   setEstimate(amount: number) {

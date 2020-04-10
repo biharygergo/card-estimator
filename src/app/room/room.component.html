@@ -75,6 +75,7 @@
                 >
                 <mat-spinner
                   [diameter]="20"
+                  color="accent"
                   *ngIf="
                     (room?.rounds)[currentRound].estimates[member.id] ==
                     undefined
@@ -97,7 +98,8 @@
       <mat-card-footer class="card-footer">
         <h3>
           <span
-            >Your room id is: <strong>{{ room?.roomId }}</strong></span
+            >The ID of this estimation is:
+            <strong>{{ room?.roomId }}</strong></span
           >
           <small (click)="copyRoomId()">Copy</small>
         </h3>
@@ -106,8 +108,12 @@
   </div>
   <div class="estimate-container">
     <div class="action-buttons-container">
-      <button mat-raised-button (click)="newRound()">New Round</button>
-      <button mat-raised-button (click)="showResults()">Show Results</button>
+      <button mat-raised-button (click)="newRound()" [disabled]="isObserver">
+        New Round
+      </button>
+      <button mat-raised-button (click)="showResults()" [disabled]="isObserver">
+        Show Results
+      </button>
     </div>
 
     <div class="estimator-buttons">
@@ -120,6 +126,7 @@
           class="estimator-button"
           (click)="setEstimate(estimate)"
           [color]="estimate === currentEstimate && 'accent'"
+          [disabled]="isObserver"
         >
           {{ estimate }}
         </button>
@@ -154,7 +161,10 @@
                     <h3 matLine class="statistic">
                       Highest
                       <span>
-                        {{ roundStatistics[roundNumber]?.highestVote.value }} ({{
+                        {{
+                          roundStatistics[roundNumber]?.highestVote.value
+                        }}
+                        ({{
                           roundStatistics[roundNumber]?.highestVote.voter
                         }})</span
                       >

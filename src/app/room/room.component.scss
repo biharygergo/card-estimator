@@ -2,21 +2,34 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+
+  @media screen and (min-width: 800px) {
+    padding: 2rem;
+  }
 }
 
 .meta-container {
   margin: 1rem;
-  flex: 1;
   display: flex;
   flex-direction: column;
+  flex-basis: 100%;
+
+  @media screen and (min-width: 800px) {
+    flex: 1;
+  }
 }
 
 .estimate-container {
   margin: 1rem;
-  flex: 1;
+  flex-basis: 100%;
   display: flex;
   flex-direction: column;
+
+  @media screen and (min-width: 800px) {
+    flex: 1;
+  }
 }
 
 .members-card {
@@ -24,7 +37,7 @@
 }
 
 .avatar {
-  background: green;
+  background: #f5a115;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,6 +60,9 @@
     &:not(:last-child) {
       margin-right: 1rem;
     }
+    &:disabled {
+      background-color: white;
+    }
   }
 }
 
@@ -63,6 +79,10 @@
       margin: 0 0.3rem 0.5rem 0.3rem;
       flex: 1;
       height: 80px;
+
+      &:disabled {
+        background-color: white;
+      }
     }
   }
 }
@@ -78,10 +98,10 @@
 
     small {
       cursor: pointer;
-      color: lightskyblue;
+      color: #f5a115;
 
       &:hover {
-        color: darkblue;
+        font-weight: bold;
       }
     }
   }
@@ -101,11 +121,11 @@
 }
 
 .topic-container {
-  cursor: pointer;
   h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
 
     &:hover {
       color: gray;
@@ -129,6 +149,6 @@
   justify-content: space-between;
 
   span {
-    color: #ff5722;
+    color: #f5a115;
   }
 }

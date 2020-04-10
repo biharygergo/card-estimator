@@ -2,21 +2,36 @@
   <mat-card class="join-card">
     <mat-card-title>Join an Estimation</mat-card-title>
     <mat-card-subtitle>
-      To join an estimation, type your name and insert the room ID you have
-      received from your teammate. If you are the first one here, create a new estimation!
+      To join an estimation, type your name and insert the ID you have received
+      from your teammate. If you are the first one here, create a new
+      estimation!
     </mat-card-subtitle>
     <mat-card-content>
       <form class="join-room-content">
         <mat-form-field class="name">
           <mat-label>Your Name</mat-label>
-          <input matInput placeholder="Best Engineer" required [formControl]="name" />
+          <input
+            matInput
+            placeholder="Best Engineer"
+            required
+            [formControl]="name"
+          />
         </mat-form-field>
-
+        <div class="create-container">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="createRoom()"
+            [disabled]="!name.value.length"
+          >
+            Create a New Estimation
+          </button>
+        </div>
         <div class="divider-container">
           <mat-divider></mat-divider>
         </div>
         <mat-form-field class="room-id">
-          <mat-label>Room ID</mat-label>
+          <mat-label>Estimation ID</mat-label>
           <input
             matInput
             placeholder="random-room-name"
@@ -31,19 +46,20 @@
           [disabled]="!(roomId.value.length && name.value.length)"
           (click)="joinRoom()"
         >
-          Join Room
+          Join Estimation
         </button>
       </form>
       <div class="divider-container">
         <mat-divider></mat-divider>
       </div>
-      <div class="create-container">
-        <button mat-raised-button color="warn" (click)="createRoom()" [disabled]="!name.value.length">
-          Create a New Room
-        </button>
-      </div>
     </mat-card-content>
-    <mat-card-actions> </mat-card-actions>
-    <mat-card-footer> </mat-card-footer>
+    <mat-card-footer>
+      <small
+        >Improve this app on
+        <a href="https://github.com/biharygergo/card-estimator"
+          >GitHub!</a
+        ></small
+      >
+    </mat-card-footer>
   </mat-card>
 </div>

@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
 import * as firebase from 'firebase/app';
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 
 export interface Room {
   id: string;
@@ -25,6 +25,9 @@ export interface Member {
   id: string;
   name: string;
 }
+
+export class MemberNotFoundError extends Error {}
+export class RoomNotFoundError extends Error {}
 
 @Injectable({
   providedIn: 'root',
@@ -74,7 +77,6 @@ export class EstimatorService {
     this.refreshCurrentRoom(roomId, member.id);
     this.activeMember = member;
 
-
     return member;
   }
 
@@ -85,6 +87,9 @@ export class EstimatorService {
       .valueChanges()
       .pipe(
         tap((room) => {
+          if (!room) {
+            throw new RoomNotFoundError();
+          }
           this.activeMember = room.members.find((m) => m.id === memberId);
         })
       );
@@ -95,7 +100,7 @@ export class EstimatorService {
   }
 
   newRound(room: Room) {
-    room.rounds.push(this.createRound(room.members, room.rounds.length));
+    room.rounds.push(this.createRound(room.members, room.rounds.length + 1));
     this.updateRoom(room);
   }
 

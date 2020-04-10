@@ -17,16 +17,7 @@
             [formControl]="name"
           />
         </mat-form-field>
-        <div class="create-container">
-          <button
-            mat-raised-button
-            color="warn"
-            (click)="createRoom()"
-            [disabled]="!name.value.length"
-          >
-            Create a New Estimation
-          </button>
-        </div>
+        
         <div class="divider-container">
           <mat-divider></mat-divider>
         </div>
@@ -49,6 +40,19 @@
           Join Estimation
         </button>
       </form>
+      <div class="divider-container">
+        <mat-divider></mat-divider>
+      </div>
+      <div class="create-container">
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="createRoom()"
+          [disabled]="!name.value.length"
+        >
+          Create a New Estimation
+        </button>
+      </div>
       <div class="divider-container">
         <mat-divider></mat-divider>
       </div>

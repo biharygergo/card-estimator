@@ -13,7 +13,10 @@
 }
 
 .join-card {
-  width: 33%;
+  width: 90%;
+  @media screen and (min-width: 800px){
+    width: 33%;
+  }
 }
 
 .join-room-content {

@@ -17,7 +17,7 @@
             [formControl]="name"
           />
         </mat-form-field>
-        
+
         <div class="divider-container">
           <mat-divider></mat-divider>
         </div>
@@ -39,6 +39,14 @@
         >
           Join Estimation
         </button>
+        <button
+          mat-button
+          [routerLink]="roomId.value"
+          class="observer-link"
+          [disabled]="!roomId.value.length"
+        >
+          Join as an Observer
+        </button>
       </form>
       <div class="divider-container">
         <mat-divider></mat-divider>
@@ -48,7 +56,7 @@
           mat-raised-button
           color="warn"
           (click)="createRoom()"
-          [disabled]="!name.value.length"
+          [disabled]="!name.value.length || !!roomId.value"
         >
           Create a New Estimation
         </button>

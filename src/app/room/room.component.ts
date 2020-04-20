@@ -33,12 +33,13 @@ export class RoomComponent implements OnInit {
   room: Room;
   currentRound = 0;
   currentEstimate: number;
-  estimationValues = [0, 0.5, 1, 1.5, 2, 3];
+  estimationValues = [0, 0.5, 1, 2, 3, 5];
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
   isObserver = false;
   roundStatistics: RoundStatistics[];
+
   constructor(
     private estimatorService: EstimatorService,
     private route: ActivatedRoute,
@@ -60,7 +61,6 @@ export class RoomComponent implements OnInit {
       (room) => {
         this.room = room;
         this.currentRound = room.rounds.length - 1;
-        this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
         if (!memberId || !this.estimatorService.activeMember) {
           if (!this.isObserver) {
             this.snackBar.open(
@@ -123,11 +123,14 @@ export class RoomComponent implements OnInit {
 
   onTopicClicked() {
     this.isEditingTopic = true;
+    this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
     setTimeout(() => this.topicInput.nativeElement.focus(), 100);
   }
 
   copyRoomId() {
-    this.clipboard.copy(this.room.roomId);
+    this.clipboard.copy(
+      `https://card-estimator.web.app?roomId=${this.room.roomId}`
+    );
     this.snackBar.open('Room ID copied to clipboard.', null, {
       duration: 2000,
     });

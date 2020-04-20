@@ -57,11 +57,13 @@
   height: 64px;
   button {
     flex: 1;
+    background: #f5a115;
+    color: white;
     &:not(:last-child) {
       margin-right: 1rem;
     }
     &:disabled {
-      background-color: white;
+      background-color: lightgray;
     }
   }
 }

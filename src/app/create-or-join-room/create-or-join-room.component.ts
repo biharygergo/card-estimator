@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EstimatorService, Member } from '../estimator.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -16,10 +16,19 @@ export class CreateOrJoinRoomComponent implements OnInit {
   constructor(
     private estimatorService: EstimatorService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private activatedRoute: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const roomIdFromParams = this.activatedRoute.snapshot.queryParamMap.get(
+      'roomId'
+    );
+    if (roomIdFromParams) {
+      this.roomId.setValue(roomIdFromParams);
+      this.roomId.disable();
+    }
+  }
 
   async joinRoom() {
     const member: Member = {

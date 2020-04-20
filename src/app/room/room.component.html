@@ -3,7 +3,7 @@
     <mat-card class="topic-container">
       <mat-card-content (click)="onTopicClicked()">
         <h2 *ngIf="!isEditingTopic">
-          {{ roundTopic.value }}
+          {{ this.room && this.room.rounds[this.currentRound].topic }}
           <mat-icon>edit</mat-icon>
         </h2>
         <input
@@ -33,7 +33,9 @@
             <mat-list-item>
               <h3 matLine class="statistic">
                 Average
-                <span>{{ roundStatistics[currentRound]?.average }}</span>
+                <span>{{
+                  roundStatistics[currentRound]?.average | number
+                }}</span>
               </h3>
             </mat-list-item>
             <mat-list-item>
@@ -154,16 +156,16 @@
                   <mat-list-item>
                     <h3 matLine class="statistic">
                       Average
-                      <span>{{ roundStatistics[roundNumber]?.average }}</span>
+                      <span>{{
+                        roundStatistics[roundNumber]?.average | number
+                      }}</span>
                     </h3>
                   </mat-list-item>
                   <mat-list-item>
                     <h3 matLine class="statistic">
                       Highest
                       <span>
-                        {{
-                          roundStatistics[roundNumber]?.highestVote.value
-                        }}
+                        {{ roundStatistics[roundNumber]?.highestVote.value }}
                         ({{
                           roundStatistics[roundNumber]?.highestVote.voter
                         }})</span

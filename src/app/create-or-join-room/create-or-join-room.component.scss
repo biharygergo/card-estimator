@@ -14,7 +14,7 @@
 
 .join-card {
   width: 90%;
-  @media screen and (min-width: 800px){
+  @media screen and (min-width: 800px) {
     width: 33%;
   }
 }
@@ -31,7 +31,11 @@
   flex-direction: column;
 }
 
-mat-card-footer{
+mat-card-footer {
   text-align: center;
   padding-bottom: 0.5rem;
+}
+.observer-link {
+  color: #f5a115;
+  margin-top: 6px;
 }

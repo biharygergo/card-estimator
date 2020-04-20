@@ -16,8 +16,8 @@ export interface Room {
 export interface Round {
   id: string;
   topic: string;
-  started_at: Date;
-  finished_at: Date;
+  started_at: firebase.firestore.Timestamp;
+  finished_at: firebase.firestore.Timestamp;
   estimates: { [memberId: string]: number };
   show_results: boolean;
 }
@@ -100,6 +100,9 @@ export class EstimatorService {
   }
 
   newRound(room: Room) {
+    room.rounds[
+      room.rounds.length - 1
+    ].finished_at = firebase.firestore.Timestamp.now();
     room.rounds.push(this.createRound(room.members, room.rounds.length + 1));
     this.updateRoom(room);
   }
@@ -108,7 +111,7 @@ export class EstimatorService {
     return {
       id: this.firestore.createId(),
       topic: `Topic of Round ${roundNumber}`,
-      started_at: new Date(),
+      started_at: firebase.firestore.Timestamp.now(),
       finished_at: null,
       estimates: {},
       show_results: false,

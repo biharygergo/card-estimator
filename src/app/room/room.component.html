@@ -113,7 +113,11 @@
       <button mat-raised-button (click)="newRound()" [disabled]="isObserver">
         New Round
       </button>
-      <button mat-raised-button (click)="showResults()" [disabled]="isObserver">
+      <button
+        mat-raised-button
+        (click)="showResults()"
+        [disabled]="isObserver || (room?.rounds)[currentRound]?.show_results"
+      >
         Show Results
       </button>
     </div>
@@ -152,8 +156,10 @@
               </mat-expansion-panel-header>
               <ng-template matExpansionPanelContent>
                 <mat-list>
-                  <h3 matSubheader>Statistics</h3>
-                  <mat-list-item>
+                  <h3 matSubheader *ngIf="roundStatistics[roundNumber]">
+                    Statistics
+                  </h3>
+                  <mat-list-item *ngIf="roundStatistics[roundNumber]?.average">
                     <h3 matLine class="statistic">
                       Average
                       <span>{{
@@ -161,7 +167,9 @@
                       }}</span>
                     </h3>
                   </mat-list-item>
-                  <mat-list-item>
+                  <mat-list-item
+                    *ngIf="roundStatistics[roundNumber]?.highestVote"
+                  >
                     <h3 matLine class="statistic">
                       Highest
                       <span>
@@ -172,7 +180,9 @@
                       >
                     </h3>
                   </mat-list-item>
-                  <mat-list-item>
+                  <mat-list-item
+                    *ngIf="roundStatistics[roundNumber]?.lowestVote"
+                  >
                     <h3 matLine class="statistic">
                       Lowest
                       <span>
@@ -180,6 +190,12 @@
                           roundStatistics[roundNumber]?.lowestVote.voter
                         }})</span
                       >
+                    </h3>
+                  </mat-list-item>
+                  <mat-list-item *ngIf="roundStatistics[roundNumber]?.elapsed">
+                    <h3 matLine class="statistic">
+                      Elapsed time
+                      <span> {{ roundStatistics[roundNumber]?.elapsed }}</span>
                     </h3>
                   </mat-list-item>
                   <h3 matSubheader>Votes</h3>

@@ -21,6 +21,7 @@ interface RoundStatistics {
     value: number;
     voter: string;
   };
+  elapsed?: string;
 }
 @Component({
   selector: 'app-room',
@@ -143,12 +144,19 @@ export class RoomComponent implements OnInit {
   }
 
   calculateRoundStatistics(round: Round) {
+    let elapsed = '0m 0s';
     const estimates = Object.keys(round.estimates)
       .map((member) => ({
         value: round.estimates[member],
         voter: this.room.members.find((m) => m.id === member)?.name,
       }))
       .sort((a, b) => a.value - b.value);
+    if (!!round.started_at && !!round.finished_at) {
+      const diff = round.finished_at.seconds - round.started_at.seconds;
+      const minutes = Math.floor(diff / 60);
+      const seconds = diff - minutes * 60;
+      elapsed = `${minutes}m ${seconds}s`;
+    }
     if (estimates.length) {
       const average =
         estimates
@@ -156,7 +164,8 @@ export class RoomComponent implements OnInit {
           .reduce((acc, curr) => acc + curr) / estimates.length;
       const lowest = estimates[0];
       const highest = estimates[estimates.length - 1];
-      return { average, lowestVote: lowest, highestVote: highest };
+
+      return { average, elapsed, lowestVote: lowest, highestVote: highest };
     }
   }
 }

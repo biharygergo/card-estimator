@@ -9,7 +9,7 @@ export interface Room {
   id: string;
   roomId: string;
   members: Member[];
-  rounds: Round[];
+  rounds: { [roundNumber: number]: Round };
   isOpen: boolean;
 }
 
@@ -47,7 +47,7 @@ export class EstimatorService {
       id: this.firestore.createId(),
       roomId: generate().dashed,
       members: [member],
-      rounds: [this.createRound([member], 1)],
+      rounds: { 0: this.createRound([member], 1) },
       isOpen: true,
     };
 
@@ -96,15 +96,44 @@ export class EstimatorService {
   }
 
   updateRoom(room: Room) {
-    this.firestore.collection(this.ROOMS_COLLECTION).doc(room.roomId).set(room);
+    this.firestore.collection(this.ROOMS_COLLECTION).doc(room.roomId).update(room);
+  }
+
+  setTopic(room: Room, round: number, topic: string) {
+    return this.firestore
+      .collection(this.ROOMS_COLLECTION)
+      .doc(room.roomId)
+      .update({ [`rounds.${round}.topic`]: topic });
+  }
+
+  setShowResults(room: Room, round: number, showResults: boolean) {
+    return this.firestore
+      .collection(this.ROOMS_COLLECTION)
+      .doc(room.roomId)
+      .update({ [`rounds.${round}.show_results`]: showResults });
   }
 
   newRound(room: Room) {
+    const currentRoundId = Object.keys(room.rounds).length - 1;
+    const nextRoundId = currentRoundId + 1;
+    const nextRoundNumber = nextRoundId + 1;
     room.rounds[
-      room.rounds.length - 1
+      currentRoundId
     ].finished_at = firebase.firestore.Timestamp.now();
-    room.rounds.push(this.createRound(room.members, room.rounds.length + 1));
-    this.updateRoom(room);
+    room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
+    return this.updateRoom(room);
+  }
+
+  setEstimate(
+    room: Room,
+    roundNumber: number,
+    estimate: number,
+    userId: string
+  ) {
+    return this.firestore
+      .collection('rooms')
+      .doc(room.roomId)
+      .update({ [`rounds.${roundNumber}.estimates.${userId}`]: estimate });
   }
 
   createRound(members: Member[], roundNumber: number): Round {

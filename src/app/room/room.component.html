@@ -148,9 +148,9 @@
         </mat-card-header>
         <mat-accordion>
           <ng-container
-            *ngFor="let round of room?.rounds; let roundNumber = index"
+            *ngFor="let round of rounds; let roundNumber = index"
           >
-            <mat-expansion-panel *ngIf="roundNumber !== room.rounds.length - 1">
+            <mat-expansion-panel *ngIf="roundNumber !== currentRound">
               <mat-expansion-panel-header>
                 <mat-panel-title>{{ round.topic }}</mat-panel-title>
               </mat-expansion-panel-header>

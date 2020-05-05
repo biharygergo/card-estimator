@@ -32,6 +32,7 @@ export class RoomComponent implements OnInit {
   @ViewChild('topicInput') topicInput: ElementRef;
 
   room: Room;
+  rounds: Round[] = [];
   currentRound = 0;
   currentEstimate: number;
   estimationValues = [0, 0.5, 1, 2, 3, 5];
@@ -61,7 +62,8 @@ export class RoomComponent implements OnInit {
     this.estimatorService.currentRoom.subscribe(
       (room) => {
         this.room = room;
-        this.currentRound = room.rounds.length - 1;
+        this.rounds = Object.values(room.rounds);
+        this.currentRound = Object.keys(room.rounds).length - 1;
         if (!memberId || !this.estimatorService.activeMember) {
           if (!this.isObserver) {
             this.snackBar.open(
@@ -100,26 +102,29 @@ export class RoomComponent implements OnInit {
   }
 
   setEstimate(amount: number) {
-    this.room.rounds[this.currentRound].estimates[
+    this.estimatorService.setEstimate(
+      this.room,
+      this.currentRound,
+      amount,
       this.estimatorService.activeMember.id
-    ] = amount;
-
-    this.estimatorService.updateRoom(this.room);
+    );
   }
 
   showResults() {
-    this.room.rounds[this.currentRound].show_results = true;
-    this.estimatorService.updateRoom(this.room);
+    this.estimatorService.setShowResults(this.room, this.currentRound, true);
   }
 
   newRound() {
     this.estimatorService.newRound(this.room);
   }
 
-  topicBlur() {
+  async topicBlur() {
     this.isEditingTopic = false;
-    this.room.rounds[this.currentRound].topic = this.roundTopic.value;
-    this.estimatorService.updateRoom(this.room);
+    await this.estimatorService.setTopic(
+      this.room,
+      this.currentRound,
+      this.roundTopic.value
+    );
   }
 
   onTopicClicked() {
@@ -138,7 +143,9 @@ export class RoomComponent implements OnInit {
 
   reCalculateStatistics(room: Room) {
     const statistics: RoundStatistics[] = [
-      ...room.rounds.map((round) => this.calculateRoundStatistics(round)),
+      ...Object.values(room.rounds).map((round) =>
+        this.calculateRoundStatistics(round)
+      ),
     ];
     this.roundStatistics = statistics;
   }

@@ -63,6 +63,12 @@ export class RoomComponent implements OnInit {
       (room) => {
         this.room = room;
         this.rounds = Object.values(room.rounds);
+        const newRoundNumber = Object.keys(room.rounds).length - 1;
+
+        if (newRoundNumber !== this.currentRound) {
+          this.playNotificationSound();
+        }
+
         this.currentRound = Object.keys(room.rounds).length - 1;
         if (!memberId || !this.estimatorService.activeMember) {
           if (!this.isObserver) {
@@ -116,6 +122,13 @@ export class RoomComponent implements OnInit {
 
   newRound() {
     this.estimatorService.newRound(this.room);
+  }
+
+  playNotificationSound() {
+    const audio = new Audio();
+    audio.src = '../../assets/notification.mp3';
+    audio.load();
+    audio.play();
   }
 
   async topicBlur() {

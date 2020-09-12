@@ -1,0 +1,202 @@
+.hero-header {
+  padding: 15rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  .start-planning-btn {
+    background: white;
+    padding: 1.5rem 4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.5rem;
+  }
+  .header-cards {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.how-to {
+  background: white;
+  padding: 5rem 1rem;
+
+  .how-to-section {
+    display: flex;
+    padding: 1rem;
+    margin: 2rem 0;
+
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+    }
+
+    .how-to-image {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @media screen and (max-width: 600px) {
+        margin: 1rem 0 1.5rem 0;
+      }
+    }
+
+    .how-to-text {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      font-size: 1.3rem;
+      line-height: 1.5rem;
+
+      .how-to-step {
+        display: inline-block;
+        background: orange;
+        border-radius: 50%;
+        line-height: 2rem;
+        font-size: 1.5rem;
+        color: white;
+        width: 2rem;
+        height: 2rem;
+        text-align: center;
+        margin-right: 2rem;
+        flex: none;
+      }
+    }
+  }
+
+  .input-image {
+    background: white;
+    border-radius: 4px;
+    font-size: 2rem;
+    line-height: 2rem;
+    padding: 0.5rem 2rem;
+    border: 1px solid;
+    display: inline-block;
+
+    .cursor {
+      color: lightblue;
+      animation: blink 1s infinite;
+      margin-left: -5px;
+    }
+  }
+
+  .share-image {
+    .share-text {
+      font-size: 2rem;
+      line-height: 2rem;
+      text-decoration: underline;
+      color: orange;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+
+    .pointer img {
+      height: 20px;
+      display: inline-block;
+    }
+  }
+
+  .score-text {
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+}
+
+.poker-card {
+  background: white;
+  border-radius: 20px;
+  text-align: center;
+  border: 2px solid;
+  position: absolute;
+  font-weight: bold;
+  box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+    rgba(5, 18, 37, 0.24) 0px 0px 8px;
+
+  &.large {
+    height: 300px;
+    width: 200px;
+    line-height: 300px;
+    font-size: 150px;
+    left: -10px;
+    bottom: -45px;
+    transform: rotate(20deg);
+    z-index: 3;
+
+    @media screen and (max-width: 600px) {
+      transform: rotate(20deg) scale(0.8);
+      left: -40px;
+      bottom: -55px;
+    }
+  }
+
+  &.small {
+    height: 200px;
+    width: 132px;
+    line-height: 200px;
+    font-size: 100px;
+    left: 170px;
+    bottom: -30px;
+    transform: rotate(10deg);
+    z-index: 2;
+
+    @media screen and (max-width: 600px) {
+      transform: rotate(10deg) scale(0.8);
+      left: 100px;
+      bottom: -40px;
+    }
+  }
+}
+
+.about {
+  color: white;
+  padding: 5rem 3rem;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+    max-width: 60%;
+
+    @media screen and (max-width: 600px) {
+      max-width: 100%;
+    }
+  }
+
+  .made-by {
+    margin: 2rem 0;
+    font-weight: bold;
+  }
+
+  .made-by-box {
+    background: white;
+    border-radius: 4px;
+    color: black;
+    height: 30px;
+    padding: 1rem 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    .made-by-img {
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1rem;
+    }
+  }
+}

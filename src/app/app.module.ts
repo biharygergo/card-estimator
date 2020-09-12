@@ -25,12 +25,14 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { LandingComponent } from './landing/landing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateOrJoinRoomComponent,
-    RoomComponent
+    RoomComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,

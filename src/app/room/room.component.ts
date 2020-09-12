@@ -104,7 +104,7 @@ export class RoomComponent implements OnInit {
       null,
       { duration: 5000 }
     );
-    this.router.navigate(['']);
+    this.router.navigate(['join']);
   }
 
   setEstimate(amount: number) {

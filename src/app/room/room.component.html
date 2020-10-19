@@ -110,13 +110,11 @@
   </div>
   <div class="estimate-container">
     <div class="action-buttons-container">
-      <button mat-raised-button (click)="newRound()" [disabled]="isObserver">
-        New Round
-      </button>
+      <button mat-raised-button (click)="newRound()">New Round</button>
       <button
         mat-raised-button
         (click)="showResults()"
-        [disabled]="isObserver || (room?.rounds)[currentRound]?.show_results"
+        [disabled]="(room?.rounds)[currentRound]?.show_results"
       >
         Show Results
       </button>
@@ -147,9 +145,7 @@
           >
         </mat-card-header>
         <mat-accordion>
-          <ng-container
-            *ngFor="let round of rounds; let roundNumber = index"
-          >
+          <ng-container *ngFor="let round of rounds; let roundNumber = index">
             <mat-expansion-panel *ngIf="roundNumber !== currentRound">
               <mat-expansion-panel-header>
                 <mat-panel-title>{{ round.topic }}</mat-panel-title>

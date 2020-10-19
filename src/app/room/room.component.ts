@@ -148,7 +148,7 @@ export class RoomComponent implements OnInit {
 
   copyRoomId() {
     const host = window.origin || 'https://card-estimator.web.app';
-    this.clipboard.copy(`${host}?roomId=${this.room.roomId}`);
+    this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
     this.snackBar.open('Join link copied to clipboard.', null, {
       duration: 2000,
     });

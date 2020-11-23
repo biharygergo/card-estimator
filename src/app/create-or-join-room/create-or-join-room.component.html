@@ -41,7 +41,7 @@
         </button>
         <button
           mat-button
-          [routerLink]="roomId.value"
+          [routerLink]="'/' + roomId.value"
           class="observer-link"
           [disabled]="!roomId.value.length"
         >

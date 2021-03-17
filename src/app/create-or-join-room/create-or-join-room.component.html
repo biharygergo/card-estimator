@@ -26,7 +26,6 @@
           <input
             matInput
             placeholder="random-room-name"
-            required
             [formControl]="roomId"
           />
         </mat-form-field>
@@ -37,11 +36,12 @@
           [disabled]="!(roomId.value.length && name.value.length)"
           (click)="joinRoom()"
         >
-          Join Estimation
+          Join as an Estimator
         </button>
         <button
           mat-button
           [routerLink]="'/' + roomId.value"
+          [queryParams]="{ observing: 1 }"
           class="observer-link"
           [disabled]="!roomId.value.length"
         >

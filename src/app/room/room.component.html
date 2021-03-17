@@ -75,12 +75,19 @@
                   "
                   >{{ (room?.rounds)[currentRound].estimates[member.id] }}</span
                 >
+                <span
+                  *ngIf="
+                    (room?.rounds)[currentRound].estimates[member.id] ==
+                      undefined && (room?.rounds)[currentRound].show_results
+                  "
+                  >-</span
+                >
                 <mat-spinner
                   [diameter]="20"
                   color="accent"
                   *ngIf="
                     (room?.rounds)[currentRound].estimates[member.id] ==
-                    undefined
+                    undefined && !(room?.rounds)[currentRound].show_results
                   "
                 ></mat-spinner>
                 <mat-icon
@@ -105,6 +112,10 @@
           >
           <small (click)="copyRoomId()">Share</small>
         </h3>
+      </mat-card-footer>
+      <mat-card-footer class="card-footer-actions">
+        <button mat-stroked-button color="warn" (click)="leaveRoom()">Leave</button>
+        <button mat-stroked-button (click)="toggleMute()">{{isMuted ? 'Sound': 'Mute'}}</button>
       </mat-card-footer>
     </mat-card>
   </div>

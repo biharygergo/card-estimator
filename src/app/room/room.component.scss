@@ -109,6 +109,16 @@
   }
 }
 
+.card-footer-actions {
+  margin-top: 1rem;
+  border-top: 0.5px solid lightgrey;
+  padding: 1rem;
+
+  button {
+    margin-right: 0.5rem;
+  }
+}
+
 .topic-input {
   width: 90%;
   border: none;

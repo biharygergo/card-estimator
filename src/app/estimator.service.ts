@@ -26,8 +26,31 @@ export interface Member {
   name: string;
 }
 
+export interface RoomData {
+  roomId: string;
+  memberId: string;
+}
+
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
+
+const LAST_ROOM_DATA = 'CARD_ESTIMATOR_LAST_ROOM_DATA';
+
+export const saveJoinedRoomData = (roomData: RoomData | undefined) => {
+  if (window.localStorage) {
+    if (roomData) {
+      window.localStorage.setItem(LAST_ROOM_DATA, JSON.stringify(roomData));
+    } else {
+      window.localStorage.removeItem(LAST_ROOM_DATA);
+    }
+  }
+};
+
+export const retrieveRoomData = (): RoomData | undefined => {
+  if (window.localStorage) {
+    return JSON.parse(window.localStorage.getItem(LAST_ROOM_DATA));
+  }
+};
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +82,8 @@ export class EstimatorService {
     this.refreshCurrentRoom(room.id, member.id);
     this.activeMember = member;
 
+    saveJoinedRoomData({ roomId: room.roomId, memberId: member.id });
+
     return { room, member };
   }
 
@@ -77,7 +102,18 @@ export class EstimatorService {
     this.refreshCurrentRoom(roomId, member.id);
     this.activeMember = member;
 
+    saveJoinedRoomData({ roomId, memberId: member.id });
+
     return member;
+  }
+
+  async removeMember(roomId: string, member: Member) {
+    await this.firestore
+      .collection(this.ROOMS_COLLECTION)
+      .doc(roomId)
+      .update({
+        members: firebase.firestore.FieldValue.arrayRemove(member),
+      });
   }
 
   refreshCurrentRoom(roomId: string, memberId: string) {
@@ -90,13 +126,18 @@ export class EstimatorService {
           if (!room) {
             throw new RoomNotFoundError();
           }
+          console.log(memberId);
           this.activeMember = room.members.find((m) => m.id === memberId);
+          console.log(this.activeMember, room.members);
         })
       );
   }
 
   updateRoom(room: Room) {
-    this.firestore.collection(this.ROOMS_COLLECTION).doc(room.roomId).update(room);
+    this.firestore
+      .collection(this.ROOMS_COLLECTION)
+      .doc(room.roomId)
+      .update(room);
   }
 
   setTopic(room: Room, round: number, topic: string) {

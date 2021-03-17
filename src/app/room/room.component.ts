@@ -5,11 +5,14 @@ import {
   Round,
   RoomNotFoundError,
   MemberNotFoundError,
+  retrieveRoomData,
+  saveJoinedRoomData,
 } from '../estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 interface RoundStatistics {
   average: number;
@@ -33,14 +36,17 @@ export class RoomComponent implements OnInit {
 
   room: Room;
   rounds: Round[] = [];
-  currentRound = 0;
+  currentRound = undefined;
   currentEstimate: number;
   estimationValues = [0, 0.5, 1, 2, 3, 5];
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
   isObserver = false;
+  isMuted = false;
   roundStatistics: RoundStatistics[];
+
+  roomSubscription: Subscription;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -52,30 +58,47 @@ export class RoomComponent implements OnInit {
 
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
+    const observing = this.route.snapshot.queryParamMap.get('observing');
+    const roomData = retrieveRoomData();
+
     if (!roomId) {
       this.errorGoBackToJoinPage();
+      return;
     }
-    const memberId = this.route.snapshot.queryParamMap.get('member');
 
-    this.estimatorService.refreshCurrentRoom(roomId, memberId);
+    if (!roomData?.memberId && !observing) {
+      this.router.navigate(['join'], { queryParams: { roomId } });
+      return;
+    }
 
-    this.estimatorService.currentRoom.subscribe(
+    this.estimatorService.refreshCurrentRoom(roomId, roomData?.memberId);
+
+    this.roomSubscription = this.estimatorService.currentRoom.subscribe(
       (room) => {
         this.room = room;
         this.rounds = Object.values(room.rounds);
         const newRoundNumber = Object.keys(room.rounds).length - 1;
 
-        if (newRoundNumber !== this.currentRound) {
+        if (
+          newRoundNumber !== this.currentRound &&
+          this.currentRound !== undefined
+        ) {
           this.playNotificationSound();
         }
 
         this.currentRound = Object.keys(room.rounds).length - 1;
-        if (!memberId || !this.estimatorService.activeMember) {
+        if (!roomData?.memberId || !this.estimatorService.activeMember) {
           if (!this.isObserver) {
-            this.snackBar.open(
-              'You are currently observing this estimation. Join with a name to estimate as well.',
-              'OK'
-            );
+            this.snackBar
+              .open(
+                'You are currently observing this estimation. Join with a name to estimate as well.',
+                'Join with a Name',
+                { duration: 10000 }
+              )
+              .onAction()
+              .subscribe(() => {
+                this.router.navigate(['join'], { queryParams: { roomId } });
+              });
           }
           this.isObserver = true;
         } else {
@@ -125,10 +148,12 @@ export class RoomComponent implements OnInit {
   }
 
   playNotificationSound() {
-    const audio = new Audio();
-    audio.src = '../../assets/notification.mp3';
-    audio.load();
-    audio.play();
+    if (!this.isMuted) {
+      const audio = new Audio();
+      audio.src = '../../assets/notification.mp3';
+      audio.load();
+      audio.play();
+    }
   }
 
   async topicBlur() {
@@ -166,6 +191,7 @@ export class RoomComponent implements OnInit {
   calculateRoundStatistics(round: Round) {
     let elapsed = '0m 0s';
     const estimates = Object.keys(round.estimates)
+      .filter((member) => this.room.members.map((m) => m.id).includes(member))
       .map((member) => ({
         value: round.estimates[member],
         voter: this.room.members.find((m) => m.id === member)?.name,
@@ -187,5 +213,24 @@ export class RoomComponent implements OnInit {
 
       return { average, elapsed, lowestVote: lowest, highestVote: highest };
     }
+  }
+
+  async leaveRoom() {
+    if (confirm('Do you really want to leave this estimation?')) {
+      if (this.estimatorService.activeMember) {
+        this.roomSubscription?.unsubscribe();
+        await this.estimatorService.removeMember(
+          this.room.roomId,
+          this.estimatorService.activeMember
+        );
+        saveJoinedRoomData(undefined);
+      }
+
+      this.router.navigate(['']);
+    }
+  }
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
   }
 }

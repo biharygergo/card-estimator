@@ -126,9 +126,7 @@ export class EstimatorService {
           if (!room) {
             throw new RoomNotFoundError();
           }
-          console.log(memberId);
           this.activeMember = room.members.find((m) => m.id === memberId);
-          console.log(this.activeMember, room.members);
         })
       );
   }

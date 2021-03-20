@@ -12,6 +12,7 @@ export const environment = {
     storageBucket: 'card-estimator.appspot.com',
     messagingSenderId: '417578634660',
     appId: '1:417578634660:web:3617c13e4d28109aa18531',
+    measurementId: "G-ZVXZ9HTLGS"
   },
 };
 

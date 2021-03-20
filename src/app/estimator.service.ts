@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import { tap, catchError } from 'rxjs/operators';
 
 export interface Room {

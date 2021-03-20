@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule} from '@angular/fire/auth';
+import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
 import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
 import { RoomComponent } from './room/room.component';
@@ -41,6 +42,7 @@ import { LandingComponent } from './landing/landing.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    AngularFireAnalyticsModule,
     MatCardModule,
     MatInputModule,
     MatButtonModule,

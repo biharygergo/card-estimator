@@ -4,8 +4,13 @@
   </button>
   <div class="poker-card large">3</div>
   <div class="poker-card small">1</div>
+  <div
+    class="mouse"
+    (click)="scrollDown()"
+    [ngClass]="isScrollDownHidden && 'hidden'"
+  ></div>
 </section>
-<section class="how-to">
+<section class="how-to" id="how-to">
   <div class="how-to-section">
     <div class="how-to-image">
       <div class="input-image">

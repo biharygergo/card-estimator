@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 declare const gtag: any;
@@ -8,9 +8,23 @@ declare const gtag: any;
   styleUrls: ['./landing.component.scss'],
 })
 export class LandingComponent implements OnInit {
+  isScrollDownHidden = false;
   constructor(private router: Router) {}
 
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {}
+
+  @HostListener('window:scroll', ['$event'])
+  onScrollHandler() {
+    window.requestAnimationFrame(() => {
+      if (window.scrollY === 0) {
+        this.isScrollDownHidden = false;
+      } else if (window.scrollY > 200) {
+        this.isScrollDownHidden = true;
+      }
+    });
+  }
 
   start() {
     if (gtag) {
@@ -19,5 +33,12 @@ export class LandingComponent implements OnInit {
       });
     }
     this.router.navigate(['join']);
+  }
+
+  scrollDown() {
+    if (!this.isScrollDownHidden) {
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+      this.isScrollDownHidden = true;
+    }
   }
 }

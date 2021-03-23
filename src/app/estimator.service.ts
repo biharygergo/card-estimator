@@ -11,6 +11,7 @@ export interface Room {
   members: Member[];
   rounds: { [roundNumber: number]: Round };
   isOpen: boolean;
+  createdAt: firebase.firestore.Timestamp;
 }
 
 export interface Round {
@@ -72,6 +73,7 @@ export class EstimatorService {
       members: [member],
       rounds: { 0: this.createRound([member], 1) },
       isOpen: true,
+      createdAt: firebase.firestore.Timestamp.now(),
     };
 
     await this.firestore

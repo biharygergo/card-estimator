@@ -17,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CreateOrJoinRoomComponent implements OnInit {
   name = new FormControl('');
   roomId = new FormControl('');
+  isBusy = false;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -47,6 +48,7 @@ export class CreateOrJoinRoomComponent implements OnInit {
   }
 
   async joinLastRoom(savedRoomData: RoomData) {
+    this.isBusy = true;
     this.estimatorService.refreshCurrentRoom(
       savedRoomData.roomId,
       savedRoomData.memberId
@@ -58,8 +60,10 @@ export class CreateOrJoinRoomComponent implements OnInit {
             .navigate([savedRoomData.roomId])
             .then(() => roomSubscrption.unsubscribe());
         }
+        this.isBusy = false;
       },
       (error) => {
+        this.isBusy = false;
         console.error(error);
         this.showUnableToJoinRoom();
       }
@@ -73,10 +77,13 @@ export class CreateOrJoinRoomComponent implements OnInit {
     };
 
     try {
+      this.isBusy = true;
       await this.estimatorService.joinRoom(this.roomId.value, member);
       this.router.navigate([this.roomId.value]);
     } catch (e) {
       this.showUnableToJoinRoom();
+    } finally {
+      this.isBusy = false;
     }
   }
 
@@ -94,7 +101,9 @@ export class CreateOrJoinRoomComponent implements OnInit {
       name: this.name.value,
     };
 
+    this.isBusy = true;
     const { room } = await this.estimatorService.createRoom(newMember);
     this.router.navigate([room.roomId]);
+    this.isBusy = false;
   }
 }

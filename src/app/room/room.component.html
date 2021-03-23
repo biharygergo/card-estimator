@@ -87,7 +87,7 @@
                   color="accent"
                   *ngIf="
                     (room?.rounds)[currentRound].estimates[member.id] ==
-                    undefined && !(room?.rounds)[currentRound].show_results
+                      undefined && !(room?.rounds)[currentRound].show_results
                   "
                 ></mat-spinner>
                 <mat-icon
@@ -114,8 +114,31 @@
         </h3>
       </mat-card-footer>
       <mat-card-footer class="card-footer-actions">
-        <button mat-stroked-button color="warn" (click)="leaveRoom()">Leave</button>
-        <button mat-stroked-button (click)="toggleMute()">{{isMuted ? 'Sound': 'Mute'}}</button>
+        <button mat-stroked-button color="warn" (click)="leaveRoom()">
+          Leave
+        </button>
+        <button mat-stroked-button (click)="toggleMute()">
+          {{ isMuted ? "Sound" : "Mute" }}
+        </button>
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          aria-label="Estimator settings"
+          class="estimator-settings-button"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            mat-menu-item
+            *ngFor="let cardSet of estimationCardSets | keyvalue"
+            (click)="setEstimationCardSet(cardSet.key)"
+            [ngClass]="selectedEstimationCardSet === cardSet.key && 'selected'"
+          >
+            <mat-icon>{{ cardSet.value.icon }}</mat-icon>
+            <span>{{ cardSet.value.title }}</span>
+          </button>
+        </mat-menu>
       </mat-card-footer>
     </mat-card>
   </div>

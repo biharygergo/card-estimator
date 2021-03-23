@@ -22,6 +22,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatMenuModule} from '@angular/material/menu';
 
 import {ClipboardModule} from '@angular/cdk/clipboard';
 
@@ -52,6 +53,7 @@ import { LandingComponent } from './landing/landing.component';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatExpansionModule,
+    MatMenuModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule

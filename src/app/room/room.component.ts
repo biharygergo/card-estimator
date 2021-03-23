@@ -34,11 +34,35 @@ interface RoundStatistics {
 export class RoomComponent implements OnInit {
   @ViewChild('topicInput') topicInput: ElementRef;
 
+  estimationCardSets = {
+    default: {
+      value: [0, 0.5, 1, 2, 3, 5],
+      title: 'Default Cards',
+      icon: 'looks_one',
+    },
+    fibonacci: {
+      value: [1, 2, 3, 5, 8, 13],
+      title: 'Fibonacci Cards',
+      icon: 'looks_two',
+    },
+    half_pointer: {
+      value: [0.5, 1, 1.5, 2, 2.5, 3],
+      title: 'Half Cards',
+      icon: 'looks_3',
+    },
+    large: {
+      value: [0, 20, 40, 60, 80, 100],
+      title: 'Large Cards',
+      icon: 'looks_4',
+    },
+  };
+
   room: Room;
   rounds: Round[] = [];
   currentRound = undefined;
   currentEstimate: number;
-  estimationValues = [0, 0.5, 1, 2, 3, 5];
+  selectedEstimationCardSet = 'default';
+  estimationValues = this.estimationCardSets.default.value;
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
@@ -232,5 +256,10 @@ export class RoomComponent implements OnInit {
 
   toggleMute() {
     this.isMuted = !this.isMuted;
+  }
+
+  setEstimationCardSet(key: string) {
+    this.selectedEstimationCardSet = key;
+    this.estimationValues = this.estimationCardSets[key]?.value;
   }
 }

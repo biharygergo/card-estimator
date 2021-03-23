@@ -80,8 +80,9 @@
     button {
       margin: 0 0.3rem 0.5rem 0.3rem;
       flex: 1;
-      height: 80px;
-
+      height: 100px;
+      font-size: 1.3rem;
+      font-weight: 400;
       &:disabled {
         background-color: white;
       }
@@ -116,6 +117,11 @@
 
   button {
     margin-right: 0.5rem;
+  }
+
+  .estimator-settings-button {
+    margin: 0;
+    float: right;
   }
 }
 
@@ -161,6 +167,12 @@
   justify-content: space-between;
 
   span {
+    color: #f5a115;
+  }
+}
+
+.mat-menu-item.selected {
+  .mat-icon {
     color: #f5a115;
   }
 }

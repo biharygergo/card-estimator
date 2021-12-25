@@ -28,13 +28,15 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LandingComponent } from './landing/landing.component';
+import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateOrJoinRoomComponent,
     RoomComponent,
-    LandingComponent
+    LandingComponent,
+    EstimateConverterPipe
   ],
   imports: [
     BrowserModule,

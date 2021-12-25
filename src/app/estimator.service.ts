@@ -3,34 +3,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
 import firebase from 'firebase/app';
-import { tap, catchError } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { RoomData, Room, Member, CardSet, Round } from './types';
 
-export interface Room {
-  id: string;
-  roomId: string;
-  members: Member[];
-  rounds: { [roundNumber: number]: Round };
-  isOpen: boolean;
-  createdAt: firebase.firestore.Timestamp;
-}
 
-export interface Round {
-  id: string;
-  topic: string;
-  started_at: firebase.firestore.Timestamp;
-  finished_at: firebase.firestore.Timestamp;
-  estimates: { [memberId: string]: number };
-  show_results: boolean;
-}
-export interface Member {
-  id: string;
-  name: string;
-}
-
-export interface RoomData {
-  roomId: string;
-  memberId: string;
-}
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -74,6 +50,7 @@ export class EstimatorService {
       rounds: { 0: this.createRound([member], 1) },
       isOpen: true,
       createdAt: firebase.firestore.Timestamp.now(),
+      cardSet: CardSet.DEFAULT,
     };
 
     await this.firestore
@@ -158,9 +135,8 @@ export class EstimatorService {
     const currentRoundId = Object.keys(room.rounds).length - 1;
     const nextRoundId = currentRoundId + 1;
     const nextRoundNumber = nextRoundId + 1;
-    room.rounds[
-      currentRoundId
-    ].finished_at = firebase.firestore.Timestamp.now();
+    room.rounds[currentRoundId].finished_at =
+      firebase.firestore.Timestamp.now();
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
     return this.updateRoom(room);
   }
@@ -175,6 +151,12 @@ export class EstimatorService {
       .collection('rooms')
       .doc(room.roomId)
       .update({ [`rounds.${roundNumber}.estimates.${userId}`]: estimate });
+  }
+
+  setRoomCardSet(roomId: string, selectedSet: CardSet) {
+    return this.firestore.collection(this.ROOMS_COLLECTION).doc(roomId).update({
+      cardSet: selectedSet,
+    });
   }
 
   createRound(members: Member[], roundNumber: number): Round {

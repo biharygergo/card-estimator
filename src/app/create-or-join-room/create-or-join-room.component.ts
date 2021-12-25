@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   EstimatorService,
-  Member,
   retrieveRoomData,
-  RoomData,
 } from '../estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RoomData, Member } from '../types';
 
 @Component({
   selector: 'app-create-or-join-room',

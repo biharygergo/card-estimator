@@ -4,7 +4,7 @@
       <mat-card-content (click)="onTopicClicked()">
         <h2 *ngIf="!isEditingTopic">
           {{ this.room && this.room.rounds[this.currentRound].topic }}
-          <mat-icon>edit</mat-icon>
+          <button mat-stroked-button>Edit</button>
         </h2>
         <input
           placeholder="Placeholder"
@@ -34,7 +34,9 @@
               <h3 matLine class="statistic">
                 Average
                 <span>{{
-                  roundStatistics[currentRound]?.average | number
+                  roundStatistics[currentRound]?.average
+                    | number
+                    | estimateConverter: selectedEstimationCardSet:"rounded"
                 }}</span>
               </h3>
             </mat-list-item>
@@ -42,9 +44,11 @@
               <h3 matLine class="statistic">
                 Highest
                 <span>
-                  {{ roundStatistics[currentRound]?.highestVote.value }} ({{
-                    roundStatistics[currentRound]?.highestVote.voter
-                  }})</span
+                  {{
+                    roundStatistics[currentRound]?.highestVote.value
+                      | estimateConverter: selectedEstimationCardSet:"exact"
+                  }}
+                  ({{ roundStatistics[currentRound]?.highestVote.voter }})</span
                 >
               </h3>
             </mat-list-item>
@@ -52,9 +56,11 @@
               <h3 matLine class="statistic">
                 Lowest
                 <span>
-                  {{ roundStatistics[currentRound]?.lowestVote.value }} ({{
-                    roundStatistics[currentRound]?.lowestVote.voter
-                  }})</span
+                  {{
+                    roundStatistics[currentRound]?.lowestVote.value
+                      | estimateConverter: selectedEstimationCardSet:"exact"
+                  }}
+                  ({{ roundStatistics[currentRound]?.lowestVote.voter }})</span
                 >
               </h3>
             </mat-list-item>
@@ -73,7 +79,10 @@
                     (room?.rounds)[currentRound].estimates[member.id] !=
                       undefined && (room?.rounds)[currentRound].show_results
                   "
-                  >{{ (room?.rounds)[currentRound].estimates[member.id] }}</span
+                  >{{
+                    (room?.rounds)[currentRound].estimates[member.id]
+                      | estimateConverter: selectedEstimationCardSet:"exact"
+                  }}</span
                 >
                 <span
                   *ngIf="
@@ -107,10 +116,10 @@
       <mat-card-footer class="card-footer">
         <h3>
           <span
-            >The ID of this estimation is:
+            >Room ID:
             <strong>{{ room?.roomId }}</strong></span
           >
-          <small (click)="copyRoomId()">Share</small>
+          <button mat-stroked-button (click)="copyRoomId()">Invite others</button>
         </h3>
       </mat-card-footer>
       <mat-card-footer class="card-footer-actions">
@@ -121,12 +130,12 @@
           {{ isMuted ? "Sound" : "Mute" }}
         </button>
         <button
-          mat-icon-button
+          mat-stroked-button
           [matMenuTriggerFor]="menu"
           aria-label="Estimator settings"
           class="estimator-settings-button"
         >
-          <mat-icon>more_vert</mat-icon>
+          Units
         </button>
         <mat-menu #menu="matMenu">
           <button
@@ -157,16 +166,16 @@
     <div class="estimator-buttons">
       <div
         class="estimator-button-container"
-        *ngFor="let estimate of estimationValues"
+        *ngFor="let estimate of estimationValues | keyvalue"
       >
         <button
           mat-raised-button
           class="estimator-button"
-          (click)="setEstimate(estimate)"
-          [color]="estimate === currentEstimate && 'accent'"
+          (click)="setEstimate(estimate.key)"
+          [color]="estimate.key === currentEstimate && 'accent'"
           [disabled]="isObserver"
         >
-          {{ estimate }}
+          {{ estimate.value }}
         </button>
       </div>
     </div>
@@ -193,7 +202,11 @@
                     <h3 matLine class="statistic">
                       Average
                       <span>{{
-                        roundStatistics[roundNumber]?.average | number
+                        roundStatistics[roundNumber]?.average
+                          | number
+                          | estimateConverter
+                            : selectedEstimationCardSet
+                            : "rounded"
                       }}</span>
                     </h3>
                   </mat-list-item>
@@ -203,7 +216,12 @@
                     <h3 matLine class="statistic">
                       Highest
                       <span>
-                        {{ roundStatistics[roundNumber]?.highestVote.value }}
+                        {{
+                          roundStatistics[roundNumber]?.highestVote.value
+                            | estimateConverter
+                              : selectedEstimationCardSet
+                              : "exact"
+                        }}
                         ({{
                           roundStatistics[roundNumber]?.highestVote.voter
                         }})</span
@@ -216,7 +234,13 @@
                     <h3 matLine class="statistic">
                       Lowest
                       <span>
-                        {{ roundStatistics[roundNumber]?.lowestVote.value }} ({{
+                        {{
+                          roundStatistics[roundNumber]?.lowestVote.value
+                            | estimateConverter
+                              : selectedEstimationCardSet
+                              : "exact"
+                        }}
+                        ({{
                           roundStatistics[roundNumber]?.lowestVote.voter
                         }})</span
                       >
@@ -239,7 +263,10 @@
                         <span>{{
                           round.estimates[member.id] == undefined
                             ? "Not voted"
-                            : round.estimates[member.id]
+                            : (round.estimates[member.id]
+                              | estimateConverter
+                                : selectedEstimationCardSet
+                                : "exact")
                         }}</span>
                       </span>
                     </h3>

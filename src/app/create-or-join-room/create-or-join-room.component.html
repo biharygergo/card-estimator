@@ -1,77 +1,66 @@
 <div class="join-container">
-  <mat-card class="join-card">
-    <mat-card-title>Create or Join an Estimation</mat-card-title>
-    <mat-card-subtitle>
-      To join an estimation, type your name and insert the ID you have received
-      from your teammate. If you are the first one here, create a new
-      estimation!
-    </mat-card-subtitle>
-    <mat-card-content>
-      <form class="join-room-content">
-        <mat-form-field class="name">
-          <mat-label>Your Name</mat-label>
-          <input
-            matInput
-            placeholder="Best Engineer"
-            required
-            [formControl]="name"
-          />
-        </mat-form-field>
+  <div class="name-container">
+    <h3 class="step-indicator">1. Set your name</h3>
+    <mat-card class="name-card">
+      <mat-card-content>
+        <form class="join-room-content">
+          <mat-form-field class="name">
+            <mat-label>Your name</mat-label>
+            <input
+              matInput
+              placeholder="Best Engineer"
+              required
+              [formControl]="name"
+            />
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="join-options-container">
+    <h3 class="step-indicator">2. Join or create a room</h3>
+    <div class="join-options" [ngClass]="{'disabled': !name.value.length}">
+      <mat-card class="join-card">
+        <mat-card-content>
+          <form class="join-room-content">
+            <mat-form-field class="room-id">
+              <mat-label>Room ID</mat-label>
+              <input
+                matInput
+                placeholder="random-room-name"
+                [formControl]="roomId"
+              />
+            </mat-form-field>
 
-        <div class="divider-container">
-          <mat-divider></mat-divider>
-        </div>
-        <mat-form-field class="room-id">
-          <mat-label>Estimation ID</mat-label>
-          <input
-            matInput
-            placeholder="random-room-name"
-            [formControl]="roomId"
-          />
-        </mat-form-field>
-
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="!(roomId.value.length && name.value.length) || isBusy"
-          (click)="joinRoom()"
-        >
-          Join as an Estimator
-        </button>
-        <button
-          mat-button
-          [routerLink]="'/' + roomId.value"
-          [queryParams]="{ observing: 1 }"
-          class="observer-link"
-          [disabled]="!roomId.value.length || isBusy"
-        >
-          Join as an Observer
-        </button>
-      </form>
-      <div class="divider-container">
-        <mat-divider></mat-divider>
-      </div>
-      <div class="create-container">
-        <button
-          mat-raised-button
-          color="warn"
-          (click)="createRoom()"
-          [disabled]="!name.value.length || !!roomId.value || isBusy"
-        >
-          Create a New Estimation
-        </button>
-      </div>
-      <div class="divider-container">
-        <mat-divider></mat-divider>
-      </div>
-    </mat-card-content>
-    <mat-card-footer>
-      <small
-        >Improve this app on
-        <a href="https://github.com/biharygergo/card-estimator"
-          >GitHub!</a
-        ></small
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="!(roomId.value.length && name.value.length) || isBusy"
+              (click)="joinRoom()"
+            >
+              Join as an Estimator
+            </button>
+            <button
+              mat-button
+              [routerLink]="'/' + roomId.value"
+              [queryParams]="{ observing: 1 }"
+              class="observer-link"
+              [disabled]="!roomId.value.length || isBusy"
+            >
+              Join as an Observer
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+      <span class="or-container">or</span>
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="createRoom()"
+        [disabled]="!name.value.length || !!roomId.value || isBusy"
       >
-    </mat-card-footer>
-  </mat-card>
+        Create a Room
+      </button>
+    </div>
+  </div>
 </div>

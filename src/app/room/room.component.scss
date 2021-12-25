@@ -114,19 +114,16 @@
   margin-top: 1rem;
   border-top: 0.5px solid lightgrey;
   padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
 
-  button {
+  button:not(:last-of-type) {
     margin-right: 0.5rem;
-  }
-
-  .estimator-settings-button {
-    margin: 0;
-    float: right;
   }
 }
 
 .topic-input {
-  width: 90%;
+  width: 100%;
   border: none;
   border-bottom: 1px solid lightgray;
   font-size: 20px;
@@ -143,11 +140,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
-
-    &:hover {
-      color: gray;
-    }
   }
   mat-card-subtitle {
     margin-bottom: 0;

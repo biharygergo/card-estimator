@@ -17,9 +17,12 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="join-options-container">
+  <div
+    class="join-options-container"
+    [ngClass]="{ disabled: !name.value.length }"
+  >
     <h3 class="step-indicator">2. Join or create a room</h3>
-    <div class="join-options" [ngClass]="{'disabled': !name.value.length}">
+    <div class="join-options">
       <mat-card class="join-card">
         <mat-card-content>
           <form class="join-room-content">

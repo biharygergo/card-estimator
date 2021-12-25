@@ -1,3 +1,5 @@
+$opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+
 .join-container {
   position: absolute;
   width: 100%;
@@ -24,6 +26,12 @@
   @media screen and (max-width: 800px) {
     width: 90%;
   }
+
+  transition: $opacityTransition;
+
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 
 .join-options {
@@ -43,19 +51,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .disabled & {
-    opacity: 0.5;
-  }
 }
 
 .join-card {
-  transition: opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
-
-  .disabled & {
-    opacity: 0.5;
-  }
 }
+
 .name-container {
   width: 60%;
   max-width: 1400px;

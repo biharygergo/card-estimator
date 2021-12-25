@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
   EstimatorService,
-  Room,
-  Round,
   RoomNotFoundError,
   MemberNotFoundError,
   retrieveRoomData,
@@ -13,19 +11,8 @@ import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { CardSet, CARD_SETS, Room, Round, RoundStatistics } from '../types';
 
-interface RoundStatistics {
-  average: number;
-  highestVote: {
-    value: number;
-    voter: string;
-  };
-  lowestVote: {
-    value: number;
-    voter: string;
-  };
-  elapsed?: string;
-}
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -34,35 +21,14 @@ interface RoundStatistics {
 export class RoomComponent implements OnInit {
   @ViewChild('topicInput') topicInput: ElementRef;
 
-  estimationCardSets = {
-    default: {
-      value: [0, 0.5, 1, 2, 3, 5],
-      title: 'Default Cards',
-      icon: 'looks_one',
-    },
-    fibonacci: {
-      value: [1, 2, 3, 5, 8, 13],
-      title: 'Fibonacci Cards',
-      icon: 'looks_two',
-    },
-    half_pointer: {
-      value: [0.5, 1, 1.5, 2, 2.5, 3],
-      title: 'Half Cards',
-      icon: 'looks_3',
-    },
-    large: {
-      value: [0, 20, 40, 60, 80, 100],
-      title: 'Large Cards',
-      icon: 'looks_4',
-    },
-  };
+  readonly estimationCardSets = CARD_SETS;
 
   room: Room;
   rounds: Round[] = [];
   currentRound = undefined;
   currentEstimate: number;
-  selectedEstimationCardSet = 'default';
-  estimationValues = this.estimationCardSets.default.value;
+  selectedEstimationCardSet = CardSet.DEFAULT;
+  estimationValues = this.estimationCardSets[this.selectedEstimationCardSet].values;
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
@@ -103,6 +69,10 @@ export class RoomComponent implements OnInit {
         this.rounds = Object.values(room.rounds);
         const newRoundNumber = Object.keys(room.rounds).length - 1;
 
+        this.selectedEstimationCardSet = room.cardSet || CardSet.DEFAULT;
+        this.estimationValues = this.estimationCardSets[this.selectedEstimationCardSet].values;
+
+        console.log(room)
         if (
           newRoundNumber !== this.currentRound &&
           this.currentRound !== undefined
@@ -126,9 +96,10 @@ export class RoomComponent implements OnInit {
           }
           this.isObserver = true;
         } else {
-          this.currentEstimate = this.room.rounds[this.currentRound].estimates[
-            this.estimatorService.activeMember.id
-          ];
+          this.currentEstimate =
+            this.room.rounds[this.currentRound].estimates[
+              this.estimatorService.activeMember.id
+            ];
         }
 
         this.reCalculateStatistics(room);
@@ -158,7 +129,7 @@ export class RoomComponent implements OnInit {
     this.estimatorService.setEstimate(
       this.room,
       this.currentRound,
-      amount,
+      +amount,
       this.estimatorService.activeMember.id
     );
   }
@@ -231,10 +202,11 @@ export class RoomComponent implements OnInit {
       const average =
         estimates
           .map((estimate) => estimate.value)
-          .reduce((acc, curr) => acc + curr) / estimates.length;
+          .reduce((acc, curr) => acc + curr, 0) / estimates.length;
       const lowest = estimates[0];
       const highest = estimates[estimates.length - 1];
 
+      console.log(average, estimates)
       return { average, elapsed, lowestVote: lowest, highestVote: highest };
     }
   }
@@ -258,8 +230,7 @@ export class RoomComponent implements OnInit {
     this.isMuted = !this.isMuted;
   }
 
-  setEstimationCardSet(key: string) {
-    this.selectedEstimationCardSet = key;
-    this.estimationValues = this.estimationCardSets[key]?.value;
+  setEstimationCardSet(key: CardSet) {
+    this.estimatorService.setRoomCardSet(this.room.roomId, key);
   }
 }

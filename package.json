@@ -16,17 +16,18 @@
     "@angular/common": "~12.2.15",
     "@angular/compiler": "~12.2.15",
     "@angular/core": "~12.2.15",
-    "@angular/fire": "^6.1.4",
+    "@angular/fire": "^7.2.0",
     "@angular/forms": "~12.2.15",
     "@angular/material": "^11.2.5",
     "@angular/platform-browser": "~12.2.15",
     "@angular/platform-browser-dynamic": "~12.2.15",
     "@angular/router": "~12.2.15",
-    "firebase": "^8.3.1",
+    "firebase": "^9.4.0",
     "project-name-generator": "^2.1.9",
-    "rxjs": "~6.5.4",
+    "rxjs": "~7.4.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "rxfire": "^6.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.14",
@@ -49,7 +50,7 @@
     "tslint": "~6.1.3",
     "typescript": "~4.3.5",
     "@angular-devkit/architect": "~0.1202.14",
-    "firebase-tools": "^7.12.1",
+    "firebase-tools": "^9.23.3",
     "fuzzy": "^0.1.3",
     "inquirer": "^6.2.2",
     "inquirer-autocomplete-prompt": "^1.3.0"

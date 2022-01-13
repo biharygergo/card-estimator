@@ -206,7 +206,6 @@ export class RoomComponent implements OnInit {
       const lowest = estimates[0];
       const highest = estimates[estimates.length - 1];
 
-      console.log(average, estimates)
       return { average, elapsed, lowestVote: lowest, highestVote: highest };
     }
   }

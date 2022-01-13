@@ -10,7 +10,7 @@ exports.clearOldRooms = functions.pubsub
       const db = firestore();
 
       const twoWeeksAgo = new Date();
-      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 5);
+      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
       const roomsRef = db.collection("rooms");
       const queryRef = roomsRef.where("createdAt", "<", twoWeeksAgo);

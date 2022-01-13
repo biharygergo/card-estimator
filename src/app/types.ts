@@ -33,6 +33,7 @@ export enum CardSet {
   export interface RoomData {
     roomId: string;
     memberId: string;
+    createdAt: string;
   }
 
 export interface RoundStatistics {

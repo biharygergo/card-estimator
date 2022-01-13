@@ -6,8 +6,6 @@ import firebase from 'firebase/compat/app';
 import { tap } from 'rxjs/operators';
 import { RoomData, Room, Member, CardSet, Round } from './types';
 
-
-
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
 
@@ -23,9 +21,28 @@ export const saveJoinedRoomData = (roomData: RoomData | undefined) => {
   }
 };
 
+const isNewerThanTwoWeeks = (roomDate: Date) => {
+  const twoWeeksAgo = new Date();
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+  return twoWeeksAgo.getTime() < roomDate.getTime();
+};
+
 export const retrieveRoomData = (): RoomData | undefined => {
   if (window.localStorage) {
-    return JSON.parse(window.localStorage.getItem(LAST_ROOM_DATA));
+    const data = JSON.parse(window.localStorage.getItem(LAST_ROOM_DATA)) as
+      | RoomData
+      | undefined;
+    if (
+      data &&
+      data.createdAt &&
+      isNewerThanTwoWeeks(new Date(data.createdAt))
+    ) {
+      return data;
+    } else {
+      saveJoinedRoomData(undefined);
+      return undefined;
+    }
   }
 };
 
@@ -61,7 +78,11 @@ export class EstimatorService {
     this.refreshCurrentRoom(room.id, member.id);
     this.activeMember = member;
 
-    saveJoinedRoomData({ roomId: room.roomId, memberId: member.id });
+    saveJoinedRoomData({
+      roomId: room.roomId,
+      memberId: member.id,
+      createdAt: new Date().toISOString(),
+    });
 
     return { room, member };
   }
@@ -81,7 +102,11 @@ export class EstimatorService {
     this.refreshCurrentRoom(roomId, member.id);
     this.activeMember = member;
 
-    saveJoinedRoomData({ roomId, memberId: member.id });
+    saveJoinedRoomData({
+      roomId,
+      memberId: member.id,
+      createdAt: new Date().toISOString(),
+    });
 
     return member;
   }

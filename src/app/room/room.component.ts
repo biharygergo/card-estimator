@@ -33,7 +33,7 @@ export class RoomComponent implements OnInit {
 
   isEditingTopic = false;
   isObserver = false;
-  isMuted = false;
+  isMuted = true;
   roundStatistics: RoundStatistics[];
 
   roomSubscription: Subscription;

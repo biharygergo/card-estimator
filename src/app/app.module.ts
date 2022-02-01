@@ -29,6 +29,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LandingComponent } from './landing/landing.component';
 import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
+import { AloneInRoomModalComponent } from './room/alone-in-room-modal/alone-in-room-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
     CreateOrJoinRoomComponent,
     RoomComponent,
     LandingComponent,
-    EstimateConverterPipe
+    EstimateConverterPipe,
+    AloneInRoomModalComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
     MatSnackBarModule,
     MatExpansionModule,
     MatMenuModule,
+    MatDialogModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule

@@ -12,7 +12,10 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { CardSet, CARD_SETS, Room, Round, RoundStatistics } from '../types';
+import { MatDialog } from '@angular/material/dialog';
+import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 
+const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -28,12 +31,15 @@ export class RoomComponent implements OnInit {
   currentRound = undefined;
   currentEstimate: number;
   selectedEstimationCardSet = CardSet.DEFAULT;
-  estimationValues = this.estimationCardSets[this.selectedEstimationCardSet].values;
+  estimationValues =
+    this.estimationCardSets[this.selectedEstimationCardSet].values;
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
   isObserver = false;
   isMuted = true;
+  shouldShowAloneInRoom = false;
+  isAloneInRoomHidden = false;
   roundStatistics: RoundStatistics[];
 
   roomSubscription: Subscription;
@@ -43,7 +49,8 @@ export class RoomComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private clipboard: Clipboard,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -70,9 +77,9 @@ export class RoomComponent implements OnInit {
         const newRoundNumber = Object.keys(room.rounds).length - 1;
 
         this.selectedEstimationCardSet = room.cardSet || CardSet.DEFAULT;
-        this.estimationValues = this.estimationCardSets[this.selectedEstimationCardSet].values;
+        this.estimationValues =
+          this.estimationCardSets[this.selectedEstimationCardSet].values;
 
-        console.log(room)
         if (
           newRoundNumber !== this.currentRound &&
           this.currentRound !== undefined
@@ -101,7 +108,7 @@ export class RoomComponent implements OnInit {
               this.estimatorService.activeMember.id
             ];
         }
-
+        this.showOrHideAloneInRoomModal();
         this.reCalculateStatistics(room);
       },
       (error) => {
@@ -114,6 +121,43 @@ export class RoomComponent implements OnInit {
         }
       }
     );
+  }
+
+  private showOrHideAloneInRoomModal() {
+    this.shouldShowAloneInRoom =
+      this.room.members.length === 1 &&
+      (this.currentRound > 0 || this.currentEstimate !== undefined) &&
+      !this.isAloneInRoomHidden;
+    if (this.shouldShowAloneInRoom) {
+      this.openAloneInRoomModal();
+    } else {
+      this.closeAllDialogs();
+    }
+  }
+
+  private closeAllDialogs() {
+    this.dialog.closeAll();
+  }
+
+  private openAloneInRoomModal() {
+    if (this.dialog.getDialogById(ALONE_IN_ROOM_MODAL) === undefined) {
+      const dialogRef = this.dialog.open(AloneInRoomModalComponent, {
+        id: ALONE_IN_ROOM_MODAL,
+        height: '80%',
+        maxHeight: '400px',
+        width: '90%',
+        maxWidth: '600px',
+        disableClose: true,
+        data: {
+          name: this.estimatorService.activeMember.name,
+          onCopyLink: () => this.copyRoomId(),
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.isAloneInRoomHidden = true;
+      });
+    }
   }
 
   private errorGoBackToJoinPage() {

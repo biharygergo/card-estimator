@@ -1,0 +1,28 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  padding: 24px;
+  margin: -24px;
+}
+
+.travolta {
+  position: absolute;
+  left: 10px;
+  bottom: 0;
+  height: 150px;
+}
+
+.mat-dialog-actions {
+  margin-top: auto;
+  justify-content: end;
+  padding-left: 100px;
+
+  @media screen and (max-width: 550px) {
+    > * {
+      margin-bottom: 8px;
+    }
+  }
+}

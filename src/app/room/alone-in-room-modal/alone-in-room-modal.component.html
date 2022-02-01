@@ -1,0 +1,28 @@
+<div class="dialog-content">
+  <h1 mat-dialog-title>{{ data.name }}, you are all alone in here!</h1>
+  <div mat-dialog-content>
+    <p>
+      Planning poker is
+      <strong>designed for teams who estimate their projects together</strong>.
+      Using it alone will not give you too much value.
+    </p>
+    <p>
+      Copy the join link and send it to your teammates so you can start planning
+      your project together, in real-time.
+    </p>
+    <img src="/assets/travolta-transparent.gif" class="travolta" />
+  </div>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="secondary" (click)="onExploreClick()">
+      Continue alone
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="data.onCopyLink()"
+      cdkFocusInitial
+    >
+      Copy join link
+    </button>
+  </div>
+</div>

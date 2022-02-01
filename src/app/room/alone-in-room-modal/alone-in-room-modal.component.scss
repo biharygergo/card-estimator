@@ -17,7 +17,7 @@
 
 .mat-dialog-actions {
   margin-top: auto;
-  justify-content: end;
+  justify-content: flex-end;
   padding-left: 100px;
 
   @media screen and (max-width: 550px) {

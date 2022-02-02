@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  EstimatorService,
-  retrieveRoomData,
-} from '../estimator.service';
+import { EstimatorService, retrieveRoomData } from '../estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoomData, Member } from '../types';
+import { AnalyticsService } from '../analytics.service';
 
 @Component({
   selector: 'app-create-or-join-room',
@@ -22,16 +20,17 @@ export class CreateOrJoinRoomComponent implements OnInit {
     private estimatorService: EstimatorService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private analytics: AnalyticsService
   ) {}
 
   ngOnInit(): void {
-    const roomIdFromParams = this.activatedRoute.snapshot.queryParamMap.get(
-      'roomId'
-    );
+    const roomIdFromParams =
+      this.activatedRoute.snapshot.queryParamMap.get('roomId');
     if (roomIdFromParams) {
       this.roomId.setValue(roomIdFromParams);
       this.roomId.disable();
+      this.analytics.logAutoFilledRoomId();
     }
 
     const savedRoomData = retrieveRoomData();
@@ -55,6 +54,7 @@ export class CreateOrJoinRoomComponent implements OnInit {
     const roomSubscrption = this.estimatorService.currentRoom.subscribe(
       (room) => {
         if (room) {
+          this.analytics.logClickedJoinLastRoom();
           this.router
             .navigate([savedRoomData.roomId])
             .then(() => roomSubscrption.unsubscribe());
@@ -78,12 +78,21 @@ export class CreateOrJoinRoomComponent implements OnInit {
     try {
       this.isBusy = true;
       await this.estimatorService.joinRoom(this.roomId.value, member);
+
+      this.analytics.logClickedJoinedRoom();
       this.router.navigate([this.roomId.value]);
     } catch (e) {
       this.showUnableToJoinRoom();
     } finally {
       this.isBusy = false;
     }
+  }
+
+  joinRoomAsObserver() {
+    this.analytics.logClickedJoinAsObserver();
+    return this.router.navigate([this.roomId.value], {
+      queryParams: { observing: 1 },
+    });
   }
 
   showUnableToJoinRoom() {
@@ -102,7 +111,16 @@ export class CreateOrJoinRoomComponent implements OnInit {
 
     this.isBusy = true;
     const { room } = await this.estimatorService.createRoom(newMember);
+    this.analytics.logClickedCreateNewRoom();
     this.router.navigate([room.roomId]);
     this.isBusy = false;
+  }
+
+  onNameBlur() {
+    this.analytics.logFilledNameInput();
+  }
+
+  onRoomIdBlur() {
+    this.analytics.logFilledRoomId();
   }
 }

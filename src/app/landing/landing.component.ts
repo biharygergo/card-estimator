@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AnalyticsService } from '../analytics.service';
 
 declare const gtag: any;
 @Component({
@@ -9,7 +10,7 @@ declare const gtag: any;
 })
 export class LandingComponent implements OnInit {
   isScrollDownHidden = false;
-  constructor(private router: Router) {}
+  constructor(private router: Router, private analytics: AnalyticsService) {}
 
   ngOnInit(): void {}
 
@@ -27,11 +28,7 @@ export class LandingComponent implements OnInit {
   }
 
   start() {
-    if (gtag) {
-      gtag('event', 'conversion', {
-        send_to: 'AW-970033218/cXtiCLWunPwBEMKQxs4D',
-      });
-    }
+    this.analytics.logClickedStartPlanning();
     this.router.navigate(['join']);
   }
 

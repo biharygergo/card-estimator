@@ -12,6 +12,7 @@
               required
               [formControl]="name"
               autocomplete="name"
+              (blur)="onNameBlur()"
             />
           </mat-form-field>
         </form>
@@ -33,6 +34,7 @@
                 matInput
                 placeholder="random-room-name"
                 [formControl]="roomId"
+                (blur)="onRoomIdBlur()"
               />
             </mat-form-field>
 
@@ -46,10 +48,9 @@
             </button>
             <button
               mat-button
-              [routerLink]="'/' + roomId.value"
-              [queryParams]="{ observing: 1 }"
               class="observer-link"
               [disabled]="!roomId.value.length || isBusy"
+              (click)="joinRoomAsObserver()"
             >
               Join as an Observer
             </button>

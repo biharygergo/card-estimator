@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { CardSet, CARD_SETS, Room, Round, RoundStatistics } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
+import { AnalyticsService } from '../analytics.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 @Component({
@@ -50,7 +51,8 @@ export class RoomComponent implements OnInit {
     private router: Router,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private analytics: AnalyticsService
   ) {}
 
   ngOnInit(): void {
@@ -141,6 +143,7 @@ export class RoomComponent implements OnInit {
 
   private openAloneInRoomModal() {
     if (this.dialog.getDialogById(ALONE_IN_ROOM_MODAL) === undefined) {
+      this.analytics.logShowedAloneInRoomModal();
       const dialogRef = this.dialog.open(AloneInRoomModalComponent, {
         id: ALONE_IN_ROOM_MODAL,
         height: '80%',
@@ -170,6 +173,7 @@ export class RoomComponent implements OnInit {
   }
 
   setEstimate(amount: number) {
+    this.analytics.logClickedVoteOption();
     this.estimatorService.setEstimate(
       this.room,
       this.currentRound,
@@ -179,10 +183,12 @@ export class RoomComponent implements OnInit {
   }
 
   showResults() {
+    this.analytics.logClickedShowResults();
     this.estimatorService.setShowResults(this.room, this.currentRound, true);
   }
 
   newRound() {
+    this.analytics.logClickedNewRound();
     this.estimatorService.newRound(this.room);
   }
 
@@ -205,12 +211,14 @@ export class RoomComponent implements OnInit {
   }
 
   onTopicClicked() {
+    this.analytics.logClickedTopicName();
     this.isEditingTopic = true;
     this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
     setTimeout(() => this.topicInput.nativeElement.focus(), 100);
   }
 
   copyRoomId() {
+    this.analytics.logClickedShareRoom('main');
     const host = window.origin || 'https://card-estimator.web.app';
     this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
     this.snackBar.open('Join link copied to clipboard.', null, {
@@ -255,6 +263,7 @@ export class RoomComponent implements OnInit {
   }
 
   async leaveRoom() {
+    this.analytics.logClickedLeaveRoom();
     if (confirm('Do you really want to leave this estimation?')) {
       if (this.estimatorService.activeMember) {
         this.roomSubscription?.unsubscribe();
@@ -270,7 +279,14 @@ export class RoomComponent implements OnInit {
   }
 
   toggleMute() {
+    this.isMuted
+      ? this.analytics.logClickedEnableSound()
+      : this.analytics.logClickedDisableSound();
     this.isMuted = !this.isMuted;
+  }
+
+  clickedUnitsButton() {
+    this.analytics.logClickedUnits();
   }
 
   setEstimationCardSet(key: CardSet) {

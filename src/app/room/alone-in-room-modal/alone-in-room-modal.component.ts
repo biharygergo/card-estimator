@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AnalyticsService } from 'src/app/analytics.service';
 
 export type AloneInRoomData = {
   name: string;
@@ -14,11 +15,17 @@ export type AloneInRoomData = {
 export class AloneInRoomModalComponent {
   constructor(
     public dialogRef: MatDialogRef<AloneInRoomModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AloneInRoomData
+    @Inject(MAT_DIALOG_DATA) public data: AloneInRoomData,
+    private analytics: AnalyticsService
   ) {}
 
   onExploreClick(): void {
+    this.analytics.logClickedContinueAlone();
     this.dialogRef.close();
   }
 
+  onCopyLink() {
+    this.analytics.logClickedShareRoom('alone_modal');
+    this.data.onCopyLink();
+  }
 }

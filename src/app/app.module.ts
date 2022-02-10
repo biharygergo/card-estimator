@@ -42,7 +42,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     AloneInRoomModalComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),

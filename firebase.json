@@ -2,16 +2,21 @@
   "hosting": [
     {
       "target": "estimator",
-      "public": "dist/estimator",
+      "public": "dist/estimator/browser",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
+      "trailingSlash": false,
       "rewrites": [
         {
-          "source": "**",
+          "source": "/",
           "destination": "/index.html"
+        },
+        {
+          "source": "**",
+          "destination": "/index.original.html"
         }
       ]
     }

@@ -116,10 +116,11 @@
       <mat-card-footer class="card-footer">
         <h3>
           <span
-            >Room ID:
-            <strong>{{ room?.roomId }}</strong></span
+            >Room ID: <strong>{{ room?.roomId }}</strong></span
           >
-          <button mat-stroked-button (click)="copyRoomId()">Invite others</button>
+          <button mat-stroked-button (click)="copyRoomId()">
+            Invite others
+          </button>
         </h3>
       </mat-card-footer>
       <mat-card-footer class="card-footer-actions">
@@ -280,4 +281,5 @@
       </mat-card>
     </div>
   </div>
+  <app-github-badge></app-github-badge>
 </div>

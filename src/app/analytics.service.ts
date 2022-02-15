@@ -82,4 +82,8 @@ export class AnalyticsService {
   logClickedLeaveRoom() {
     this.analytics.logEvent('clicked_leave_room');
   }
+
+  logClickedGithubLink() {
+    this.analytics.logEvent('clicked_github_link');
+  }
 }

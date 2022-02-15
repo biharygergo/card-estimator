@@ -31,6 +31,7 @@ import { LandingComponent } from './landing/landing.component';
 import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
 import { AloneInRoomModalComponent } from './room/alone-in-room-modal/alone-in-room-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { GithubBadgeComponent } from './room/github-badge/github-badge.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     LandingComponent,
     EstimateConverterPipe,
     AloneInRoomModalComponent,
+    GithubBadgeComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

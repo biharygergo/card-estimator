@@ -54,7 +54,7 @@
 .action-buttons-container {
   display: flex;
   flex-direction: row;
-  height: 64px;
+  height: 68px;
   button {
     flex: 1;
     background: #f5a115;
@@ -168,4 +168,9 @@
   .mat-icon {
     color: #f5a115;
   }
+}
+
+.flat-accordion {
+  box-shadow: none;
+  border-radius: 4px !important;
 }

@@ -15,6 +15,8 @@ import { CardSet, CARD_SETS, Room, Round, RoundStatistics } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../analytics.service';
+import { SerializerService } from '../serializer.service';
+import { getHumanReadableElapsedTime } from '../utils';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 @Component({
@@ -52,8 +54,9 @@ export class RoomComponent implements OnInit {
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private analytics: AnalyticsService
-  ) {}
+    private analytics: AnalyticsService,
+    private serializer: SerializerService
+  ) { }
 
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
@@ -107,7 +110,7 @@ export class RoomComponent implements OnInit {
         } else {
           this.currentEstimate =
             this.room.rounds[this.currentRound].estimates[
-              this.estimatorService.activeMember.id
+            this.estimatorService.activeMember.id
             ];
         }
         this.showOrHideAloneInRoomModal();
@@ -236,7 +239,7 @@ export class RoomComponent implements OnInit {
   }
 
   calculateRoundStatistics(round: Round) {
-    let elapsed = '0m 0s';
+    const elapsed = getHumanReadableElapsedTime(round);
     const estimates = Object.keys(round.estimates)
       .filter((member) => this.room.members.map((m) => m.id).includes(member))
       .map((member) => ({
@@ -244,12 +247,7 @@ export class RoomComponent implements OnInit {
         voter: this.room.members.find((m) => m.id === member)?.name,
       }))
       .sort((a, b) => a.value - b.value);
-    if (!!round.started_at && !!round.finished_at) {
-      const diff = round.finished_at.seconds - round.started_at.seconds;
-      const minutes = Math.floor(diff / 60);
-      const seconds = diff - minutes * 60;
-      elapsed = `${minutes}m ${seconds}s`;
-    }
+
     if (estimates.length) {
       const average =
         estimates
@@ -291,5 +289,10 @@ export class RoomComponent implements OnInit {
 
   setEstimationCardSet(key: CardSet) {
     this.estimatorService.setRoomCardSet(this.room.roomId, key);
+  }
+
+  downloadAsCsv() {
+    this.analytics.logClickedDownloadResults();
+    this.serializer.exportRoomAsCsv(this.room);
   }
 }

@@ -86,4 +86,8 @@ export class AnalyticsService {
   logClickedGithubLink() {
     this.analytics.logEvent('clicked_github_link');
   }
+
+  logClickedDownloadResults() {
+    this.analytics.logEvent('clicked_download_results');
+  }
 }

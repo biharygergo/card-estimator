@@ -5,7 +5,7 @@ import {
   MemberNotFoundError,
   retrieveRoomData,
   saveJoinedRoomData,
-} from '../estimator.service';
+} from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -14,8 +14,8 @@ import { Subscription } from 'rxjs';
 import { CardSet, CARD_SETS, Room, Round, RoundStatistics } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
-import { AnalyticsService } from '../analytics.service';
-import { SerializerService } from '../serializer.service';
+import { AnalyticsService } from '../services/analytics.service';
+import { SerializerService } from '../services/serializer.service';
 import { getHumanReadableElapsedTime } from '../utils';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';

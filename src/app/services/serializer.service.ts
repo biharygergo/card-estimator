@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
-import { Member, Room } from './types';
-import { getHumanReadableElapsedTime } from './utils';
+import { EstimateConverterPipe } from './../pipes/estimate-converter.pipe';
+import { Member, Room } from './../types';
+import { getHumanReadableElapsedTime } from './../utils';
 
 const CSV_HEADERS_BEFORE_NAMES = ['Round'];
 const CSV_HEADERS_AFTER_NAMES = ['Average', 'Duration'];

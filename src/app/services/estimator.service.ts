@@ -4,7 +4,7 @@ import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
 import firebase from 'firebase/compat/app';
 import { tap } from 'rxjs/operators';
-import { RoomData, Room, Member, CardSet, Round } from './types';
+import { RoomData, Room, Member, CardSet, Round } from './../types';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}

@@ -191,7 +191,7 @@
         </mat-card-header>
         <mat-accordion>
           <ng-container *ngFor="let round of rounds; let roundNumber = index">
-            <mat-expansion-panel *ngIf="roundNumber !== currentRound">
+            <mat-expansion-panel *ngIf="roundNumber !== currentRound" class="flat-accordion">
               <mat-expansion-panel-header>
                 <mat-panel-title>{{ round.topic }}</mat-panel-title>
               </mat-expansion-panel-header>
@@ -278,6 +278,11 @@
             </mat-expansion-panel>
           </ng-container>
         </mat-accordion>
+        <mat-card-footer class="card-footer-actions" *ngIf="rounds.length > 1">
+          <button mat-stroked-button aria-label="Download results as .csv" (click)="downloadAsCsv()">
+            Download results
+          </button>
+        </mat-card-footer>
       </mat-card>
     </div>
   </div>

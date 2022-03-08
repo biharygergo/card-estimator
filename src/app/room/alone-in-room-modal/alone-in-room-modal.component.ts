@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnalyticsService } from 'src/app/analytics.service';
+import { AnalyticsService } from './../../services/analytics.service';
 
 export type AloneInRoomData = {
   name: string;

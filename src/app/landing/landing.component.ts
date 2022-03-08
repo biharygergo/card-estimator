@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AnalyticsService } from '../analytics.service';
+import { AnalyticsService } from '../services/analytics.service';
 
 declare const gtag: any;
 @Component({

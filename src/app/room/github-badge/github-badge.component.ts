@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AnalyticsService } from 'src/app/analytics.service';
+import { AnalyticsService } from './../../services/analytics.service';
 
 @Component({
   selector: 'app-github-badge',

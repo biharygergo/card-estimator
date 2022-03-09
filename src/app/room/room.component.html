@@ -174,7 +174,7 @@
           mat-raised-button
           class="estimator-button"
           (click)="setEstimate(estimate.key)"
-          [color]="estimate.key === currentEstimate && 'accent'"
+          [color]="+estimate.key === currentEstimate && 'accent'"
           [disabled]="isObserver"
         >
           {{ estimate.value }}

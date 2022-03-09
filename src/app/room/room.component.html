@@ -186,12 +186,16 @@
         <mat-card-header>
           <mat-card-title>History</mat-card-title>
           <mat-card-subtitle
-            >See the results and averages of previous rounds</mat-card-subtitle
+            >Look back at previous rounds, re-vote controversial topics and
+            download results for later use.</mat-card-subtitle
           >
         </mat-card-header>
         <mat-accordion>
           <ng-container *ngFor="let round of rounds; let roundNumber = index">
-            <mat-expansion-panel *ngIf="roundNumber !== currentRound" class="flat-accordion">
+            <mat-expansion-panel
+              *ngIf="roundNumber !== currentRound"
+              class="flat-accordion"
+            >
               <mat-expansion-panel-header>
                 <mat-panel-title>{{ round.topic }}</mat-panel-title>
               </mat-expansion-panel-header>
@@ -274,12 +278,26 @@
                     </h3>
                   </mat-list-item>
                 </mat-list>
+                <mat-action-row class="expansion-panel-action-row">
+                  <button
+                    mat-stroked-button
+                    aria-label="Re-vote selected round"
+                    size="small"
+                    (click)="setActiveRound(roundNumber)"
+                  >
+                    Re-vote
+                  </button>
+                </mat-action-row>
               </ng-template>
             </mat-expansion-panel>
           </ng-container>
         </mat-accordion>
         <mat-card-footer class="card-footer-actions" *ngIf="rounds.length > 1">
-          <button mat-stroked-button aria-label="Download results as .csv" (click)="downloadAsCsv()">
+          <button
+            mat-stroked-button
+            aria-label="Download results as .csv"
+            (click)="downloadAsCsv()"
+          >
             Download results
           </button>
         </mat-card-footer>

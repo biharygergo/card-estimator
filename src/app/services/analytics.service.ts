@@ -90,4 +90,8 @@ export class AnalyticsService {
   logClickedDownloadResults() {
     this.analytics.logEvent('clicked_download_results');
   }
+
+  logClickedReVote() {
+    this.analytics.logEvent('clicked_revote');
+  }
 }

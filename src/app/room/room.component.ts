@@ -56,7 +56,7 @@ export class RoomComponent implements OnInit {
     public dialog: MatDialog,
     private analytics: AnalyticsService,
     private serializer: SerializerService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
@@ -79,7 +79,9 @@ export class RoomComponent implements OnInit {
       (room) => {
         this.room = room;
         this.rounds = Object.values(room.rounds);
-        const newRoundNumber = Object.keys(room.rounds).length - 1;
+        const roundNumberOrFallback =
+          room.currentRound ?? Object.keys(room.rounds).length - 1;
+        const newRoundNumber = roundNumberOrFallback;
 
         this.selectedEstimationCardSet = room.cardSet || CardSet.DEFAULT;
         this.estimationValues =
@@ -92,7 +94,7 @@ export class RoomComponent implements OnInit {
           this.playNotificationSound();
         }
 
-        this.currentRound = Object.keys(room.rounds).length - 1;
+        this.currentRound = roundNumberOrFallback;
         if (!roomData?.memberId || !this.estimatorService.activeMember) {
           if (!this.isObserver) {
             this.snackBar
@@ -110,7 +112,7 @@ export class RoomComponent implements OnInit {
         } else {
           this.currentEstimate =
             this.room.rounds[this.currentRound].estimates[
-            this.estimatorService.activeMember.id
+              this.estimatorService.activeMember.id
             ];
         }
         this.showOrHideAloneInRoomModal();
@@ -294,5 +296,10 @@ export class RoomComponent implements OnInit {
   downloadAsCsv() {
     this.analytics.logClickedDownloadResults();
     this.serializer.exportRoomAsCsv(this.room);
+  }
+
+  setActiveRound(roundNumber: number) {
+    this.analytics.logClickedReVote();
+    this.estimatorService.setActiveRound(this.room, roundNumber);
   }
 }

@@ -173,4 +173,16 @@
 .flat-accordion {
   box-shadow: none;
   border-radius: 4px !important;
+
+  &.mat-expanded {
+    background: #efefef;
+  }
+}
+
+.expansion-panel-action-row {
+  border: none;
+
+  button {
+    background: white;
+  }
 }

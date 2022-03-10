@@ -158,8 +158,9 @@ export class EstimatorService {
   }
 
   newRound(room: Room) {
-    const currentRoundId = Object.keys(room.rounds).length - 1;
-    const nextRoundId = currentRoundId + 1;
+    const currentRoundId = room.currentRound ?? Object.keys(room.rounds).length - 1;
+    const numberOfRounds = Object.keys(room.rounds).length;
+    const nextRoundId = numberOfRounds;
     const nextRoundNumber = nextRoundId + 1;
     room.rounds[currentRoundId].finished_at =
       firebase.firestore.Timestamp.now();

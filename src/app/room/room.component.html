@@ -193,11 +193,19 @@
         <mat-accordion>
           <ng-container *ngFor="let round of rounds; let roundNumber = index">
             <mat-expansion-panel
-              *ngIf="roundNumber !== currentRound"
               class="flat-accordion"
+              [disabled]="roundNumber === currentRound"
             >
               <mat-expansion-panel-header>
-                <mat-panel-title>{{ round.topic }}</mat-panel-title>
+                <mat-panel-title
+                  [ngClass]="{ active: roundNumber === currentRound }"
+                  >{{ round.topic
+                  }}<span
+                    class="active-badge"
+                    *ngIf="roundNumber === currentRound"
+                    >Active</span
+                  ></mat-panel-title
+                >
               </mat-expansion-panel-header>
               <ng-template matExpansionPanelContent>
                 <mat-list>

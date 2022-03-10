@@ -65,6 +65,7 @@ export class EstimatorService {
       roomId: generate().dashed,
       members: [member],
       rounds: { 0: this.createRound([member], 1) },
+      currentRound: 0,
       isOpen: true,
       createdAt: firebase.firestore.Timestamp.now(),
       cardSet: CardSet.DEFAULT,
@@ -157,12 +158,21 @@ export class EstimatorService {
   }
 
   newRound(room: Room) {
-    const currentRoundId = Object.keys(room.rounds).length - 1;
-    const nextRoundId = currentRoundId + 1;
+    const currentRoundId = room.currentRound ?? Object.keys(room.rounds).length - 1;
+    const numberOfRounds = Object.keys(room.rounds).length;
+    const nextRoundId = numberOfRounds;
     const nextRoundNumber = nextRoundId + 1;
     room.rounds[currentRoundId].finished_at =
       firebase.firestore.Timestamp.now();
+    room.currentRound = nextRoundId;
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
+    return this.updateRoom(room);
+  }
+
+  setActiveRound(room: Room, roundId: number) {
+    room.currentRound = roundId;
+    const round = room.rounds[roundId];
+    room.rounds[roundId] = this.revoteRound(round);
     return this.updateRoom(room);
   }
 
@@ -188,6 +198,16 @@ export class EstimatorService {
     return {
       id: this.firestore.createId(),
       topic: `Topic of Round ${roundNumber}`,
+      started_at: firebase.firestore.Timestamp.now(),
+      finished_at: null,
+      estimates: {},
+      show_results: false,
+    };
+  }
+
+  revoteRound(round: Round): Round {
+    return {
+      ...round,
       started_at: firebase.firestore.Timestamp.now(),
       finished_at: null,
       estimates: {},

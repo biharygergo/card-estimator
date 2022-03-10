@@ -174,7 +174,7 @@
           mat-raised-button
           class="estimator-button"
           (click)="setEstimate(estimate.key)"
-          [color]="estimate.key === currentEstimate && 'accent'"
+          [color]="+estimate.key === currentEstimate && 'accent'"
           [disabled]="isObserver"
         >
           {{ estimate.value }}
@@ -186,14 +186,26 @@
         <mat-card-header>
           <mat-card-title>History</mat-card-title>
           <mat-card-subtitle
-            >See the results and averages of previous rounds</mat-card-subtitle
+            >Look back at previous rounds, revote controversial topics and
+            download results for later use.</mat-card-subtitle
           >
         </mat-card-header>
         <mat-accordion>
           <ng-container *ngFor="let round of rounds; let roundNumber = index">
-            <mat-expansion-panel *ngIf="roundNumber !== currentRound" class="flat-accordion">
+            <mat-expansion-panel
+              class="flat-accordion"
+              [disabled]="roundNumber === currentRound"
+            >
               <mat-expansion-panel-header>
-                <mat-panel-title>{{ round.topic }}</mat-panel-title>
+                <mat-panel-title
+                  [ngClass]="{ active: roundNumber === currentRound }"
+                  >{{ round.topic
+                  }}<span
+                    class="active-badge"
+                    *ngIf="roundNumber === currentRound"
+                    >Active</span
+                  ></mat-panel-title
+                >
               </mat-expansion-panel-header>
               <ng-template matExpansionPanelContent>
                 <mat-list>
@@ -274,12 +286,26 @@
                     </h3>
                   </mat-list-item>
                 </mat-list>
+                <mat-action-row class="expansion-panel-action-row">
+                  <button
+                    mat-stroked-button
+                    aria-label="Revote selected round"
+                    size="small"
+                    (click)="setActiveRound(roundNumber)"
+                  >
+                    Revote
+                  </button>
+                </mat-action-row>
               </ng-template>
             </mat-expansion-panel>
           </ng-container>
         </mat-accordion>
         <mat-card-footer class="card-footer-actions" *ngIf="rounds.length > 1">
-          <button mat-stroked-button aria-label="Download results as .csv" (click)="downloadAsCsv()">
+          <button
+            mat-stroked-button
+            aria-label="Download results as .csv"
+            (click)="downloadAsCsv()"
+          >
             Download results
           </button>
         </mat-card-footer>

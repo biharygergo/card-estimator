@@ -12,6 +12,7 @@ export enum CardSet {
     roomId: string;
     members: Member[];
     rounds: { [roundNumber: number]: Round };
+    currentRound?: number;
     isOpen: boolean;
     createdAt: firebase.firestore.Timestamp;
     cardSet?: CardSet;

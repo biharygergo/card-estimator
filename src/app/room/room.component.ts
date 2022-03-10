@@ -11,7 +11,14 @@ import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { CardSet, CARD_SETS, Room, Round, RoundStatistics } from '../types';
+import {
+  CardSet,
+  CARD_SETS,
+  Room,
+  RoomData,
+  Round,
+  RoundStatistics,
+} from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../services/analytics.service';
@@ -76,58 +83,66 @@ export class RoomComponent implements OnInit {
     this.estimatorService.refreshCurrentRoom(roomId, roomData?.memberId);
 
     this.roomSubscription = this.estimatorService.currentRoom.subscribe(
-      (room) => {
-        this.room = room;
-        this.rounds = Object.values(room.rounds);
-        const roundNumberOrFallback =
-          room.currentRound ?? Object.keys(room.rounds).length - 1;
-        const newRoundNumber = roundNumberOrFallback;
-
-        this.selectedEstimationCardSet = room.cardSet || CardSet.DEFAULT;
-        this.estimationValues =
-          this.estimationCardSets[this.selectedEstimationCardSet].values;
-
-        if (
-          newRoundNumber !== this.currentRound &&
-          this.currentRound !== undefined
-        ) {
-          this.playNotificationSound();
-        }
-
-        this.currentRound = roundNumberOrFallback;
-        if (!roomData?.memberId || !this.estimatorService.activeMember) {
-          if (!this.isObserver) {
-            this.snackBar
-              .open(
-                'You are currently observing this estimation. Join with a name to estimate as well.',
-                'Join with a Name',
-                { duration: 10000 }
-              )
-              .onAction()
-              .subscribe(() => {
-                this.router.navigate(['join'], { queryParams: { roomId } });
-              });
-          }
-          this.isObserver = true;
-        } else {
-          this.currentEstimate =
-            this.room.rounds[this.currentRound].estimates[
-              this.estimatorService.activeMember.id
-            ];
-        }
-        this.showOrHideAloneInRoomModal();
-        this.reCalculateStatistics(room);
-      },
-      (error) => {
-        if (error instanceof RoomNotFoundError) {
-          this.errorGoBackToJoinPage();
-        } else if (error instanceof MemberNotFoundError) {
-          this.isObserver = true;
-        } else {
-          this.errorGoBackToJoinPage();
-        }
-      }
+      (room) => this.onRoomUpdated(room, roomData, roomId),
+      (error) => this.onRoomUpdateError(error)
     );
+  }
+
+  private onRoomUpdated(room: Room, roomData: RoomData, roomId: string) {
+    this.room = room;
+    this.rounds = Object.values(room.rounds);
+    const roundNumberOrFallback =
+      room.currentRound ?? Object.keys(room.rounds).length - 1;
+    const newRoundNumber = roundNumberOrFallback;
+
+    this.selectedEstimationCardSet = room.cardSet || CardSet.DEFAULT;
+    this.estimationValues =
+      this.estimationCardSets[this.selectedEstimationCardSet].values;
+
+    if (
+      newRoundNumber !== this.currentRound &&
+      this.currentRound !== undefined
+    ) {
+      this.playNotificationSound();
+    }
+
+    this.currentRound = roundNumberOrFallback;
+    if (!roomData?.memberId || !this.estimatorService.activeMember) {
+      this.joinAsObserver(roomId);
+    } else {
+      this.currentEstimate =
+        this.room.rounds[this.currentRound].estimates[
+          this.estimatorService.activeMember.id
+        ];
+    }
+    this.showOrHideAloneInRoomModal();
+    this.reCalculateStatistics(room);
+  }
+
+  private onRoomUpdateError(error: Error) {
+    if (error instanceof RoomNotFoundError) {
+      this.errorGoBackToJoinPage();
+    } else if (error instanceof MemberNotFoundError) {
+      this.isObserver = true;
+    } else {
+      this.errorGoBackToJoinPage();
+    }
+  }
+
+  private joinAsObserver(roomId: string) {
+    if (!this.isObserver) {
+      this.snackBar
+        .open(
+          'You are currently observing this estimation. Join with a name to estimate as well.',
+          'Join with a Name',
+          { duration: 10000 }
+        )
+        .onAction()
+        .subscribe(() => {
+          this.router.navigate(['join'], { queryParams: { roomId } });
+        });
+    }
+    this.isObserver = true;
   }
 
   private showOrHideAloneInRoomModal() {

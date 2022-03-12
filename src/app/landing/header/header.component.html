@@ -1,0 +1,29 @@
+<header [ngClass]="{ open: isOpen }">
+  <button
+    mat-icon-button
+    aria-label="Toggle navigation menu"
+    class="mobile-nav-toggle"
+    (click)="toggleMenu()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  <div class="nav-container">
+    <ul>
+      <li>
+        <a routerLink="/" routerLinkActive="active">Home</a>
+      </li>
+      <li>
+        <a routerLink="/features" routerLinkActive="active">Features</a>
+      </li>
+      <li>
+        <a routerLink="/faq" routerLinkActive="active">FAQ</a>
+      </li>
+      <li>
+        <a routerLink="/about" routerLinkActive="active">About</a>
+      </li>
+      <li>
+        <a routerLink="/join" class="start-planning-link">Start planning</a>
+      </li>
+    </ul>
+  </div>
+</header>

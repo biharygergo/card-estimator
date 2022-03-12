@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+  --main-color: #1c4182;
+  --main-dark-color: #001b55;
+  --main-light-color: #536bb2;
+  --accent-color: #f5a115;
+}
 html,
 body {
   height: 100%;
@@ -7,5 +13,5 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: #1c4182;
+  background: var(--main-color);
 }

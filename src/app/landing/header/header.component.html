@@ -1,4 +1,4 @@
-<header [ngClass]="{ open: isOpen }">
+<nav [ngClass]="{ open: isOpen }">
   <button
     mat-icon-button
     aria-label="Toggle navigation menu"
@@ -7,21 +7,26 @@
   >
     <mat-icon>menu</mat-icon>
   </button>
-    <ul>
-      <li>
-        <a routerLink="/" routerLinkActive="active">Home</a>
-      </li>
-      <li>
-        <a routerLink="/features" routerLinkActive="active">Features</a>
-      </li>
-      <li>
-        <a routerLink="/faq" routerLinkActive="active">FAQ</a>
-      </li>
-      <li>
-        <a routerLink="/about" routerLinkActive="active">About</a>
-      </li>
-      <li>
-        <a routerLink="/join" class="start-planning-link">Start planning</a>
-      </li>
-    </ul>
-</header>
+  <ul>
+    <li>
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Home</a
+      >
+    </li>
+    <li>
+      <a routerLink="/features" routerLinkActive="active">Features</a>
+    </li>
+    <li>
+      <a routerLink="/faq" routerLinkActive="active">FAQ</a>
+    </li>
+    <li>
+      <a routerLink="/about" routerLinkActive="active">About</a>
+    </li>
+    <li>
+      <a routerLink="/join" class="start-planning-link">Start planning</a>
+    </li>
+  </ul>
+</nav>

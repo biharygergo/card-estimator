@@ -1,11 +1,10 @@
-header {
+nav {
   background-color: var(--main-color);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-
 
   ul {
     display: flex;
@@ -46,6 +45,10 @@ header {
         &:hover::after,
         &.active::after {
           transform: scaleX(1);
+        }
+
+        &.active::after {
+          transition-duration: 0ms;
         }
 
         &.start-planning-link {

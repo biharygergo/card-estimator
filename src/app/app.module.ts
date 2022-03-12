@@ -33,6 +33,9 @@ import { AloneInRoomModalComponent } from './room/alone-in-room-modal/alone-in-r
 import { MatDialogModule } from '@angular/material/dialog';
 import { GithubBadgeComponent } from './room/github-badge/github-badge.component';
 import { HeaderComponent } from './landing/header/header.component';
+import { FeaturesComponent } from './landing/features/features.component';
+import { FaqComponent } from './landing/faq/faq.component';
+import { AboutComponent } from './landing/about/about.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +47,9 @@ import { HeaderComponent } from './landing/header/header.component';
     AloneInRoomModalComponent,
     GithubBadgeComponent,
     HeaderComponent,
+    FeaturesComponent,
+    FaqComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

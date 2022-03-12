@@ -47,12 +47,15 @@
       }
     }
 
-    @media screen and (max-width: 800px){
+    @media screen and (max-width: 800px) {
       gap: 24px;
-      h1 {
-        font-size: 2rem;
-        line-height: 2.5rem;
 
+      h1 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+      }
+      .start-planning-btn {
+        padding: 1rem 2rem;
       }
     }
   }

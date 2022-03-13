@@ -1,8 +1,12 @@
 
+main {
+    background: white;
+}
 .features {
   padding: 50px 10%;
+  max-width: 1500px;
+  margin: 0 auto;
   color: var(--main-color);
-  background: white;
 
   .feature-block {
     display: flex;

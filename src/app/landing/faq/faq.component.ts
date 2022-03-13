@@ -9,7 +9,7 @@ const faqs: FaqRow[] = [
   {
     question: 'How can I start a new planning poker session?',
     answer:
-      'Click on "Start planning" in the header or just click <a href="/join">here</a> to start.',
+      'Click on "Start planning" in the header or just <a href="/join">click here to start a new session</a>.',
   },
   {
     question: 'How can I add colleagues to a session?',

@@ -35,7 +35,8 @@ import { GithubBadgeComponent } from './room/github-badge/github-badge.component
 import { HeaderComponent } from './landing/header/header.component';
 import { FeaturesComponent } from './landing/features/features.component';
 import { FaqComponent } from './landing/faq/faq.component';
-import { AboutComponent } from './landing/about/about.component';
+import { PageHeaderComponent } from './landing/components/page-header/page-header.component';
+import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { AboutComponent } from './landing/about/about.component';
     HeaderComponent,
     FeaturesComponent,
     FaqComponent,
-    AboutComponent,
+    PageHeaderComponent,
+    FaqRowComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

@@ -11,6 +11,10 @@
       "trailingSlash": false,
       "rewrites": [
         {
+          "source": "/features",
+          "destination": "/features/index.html"
+        },
+        {
           "source": "/",
           "destination": "/index.html"
         },

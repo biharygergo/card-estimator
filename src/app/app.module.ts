@@ -32,6 +32,11 @@ import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
 import { AloneInRoomModalComponent } from './room/alone-in-room-modal/alone-in-room-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GithubBadgeComponent } from './room/github-badge/github-badge.component';
+import { HeaderComponent } from './landing/header/header.component';
+import { FeaturesComponent } from './landing/features/features.component';
+import { FaqComponent } from './landing/faq/faq.component';
+import { PageHeaderComponent } from './landing/components/page-header/page-header.component';
+import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +47,11 @@ import { GithubBadgeComponent } from './room/github-badge/github-badge.component
     EstimateConverterPipe,
     AloneInRoomModalComponent,
     GithubBadgeComponent,
+    HeaderComponent,
+    FeaturesComponent,
+    FaqComponent,
+    PageHeaderComponent,
+    FaqRowComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

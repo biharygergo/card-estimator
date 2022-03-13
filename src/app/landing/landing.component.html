@@ -1,7 +1,22 @@
+<app-header> </app-header>
 <section class="hero-header">
-  <button mat-button [routerLink]="'join'" class="start-planning-btn">
-    Start Planning
-  </button>
+  <div class="header-intro">
+    <h1>
+      Real-time online planning poker<br />
+      for remote scrum teams
+    </h1>
+    <button mat-button [routerLink]="'join'" class="start-planning-btn">
+      Start Planning
+    </button>
+    <div class="used-by">
+      Used by awesome engineers at
+      <ul class="logo-list">
+        <li><img src="/assets/logos/prezi.svg" alt="Prezi logo"/></li>
+        <li><img src="/assets/logos/netflix.svg" alt="Netflix logo"/></li>
+      </ul>
+    </div>
+  </div>
+
   <div class="poker-card large">3</div>
   <div class="poker-card small">1</div>
   <div
@@ -55,7 +70,7 @@
 <section class="about">
   <h1>What is planning poker?</h1>
   <p>
-    Planning poker, also called Scrum poker, is a consensus-based, gamified
+    Planning poker, also called SCRUM poker or pointing poker, is a consensus-based, gamified
     technique for estimating, mostly used to estimate effort or relative size of
     development goals in software development. In planning poker, members of the
     group make estimates by playing numbered cards face-down to the table,

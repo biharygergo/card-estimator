@@ -5,13 +5,61 @@
   position: relative;
   overflow: hidden;
   height: 100vh;
-  .start-planning-btn {
-    background: white;
-    padding: 1.5rem 4rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 1.5rem;
+
+  .header-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    color: white;
+    padding: 0 8px;
+
+    h1 {
+      font-size: 3rem;
+      line-height: 3.5rem;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .start-planning-btn {
+      background: white;
+      padding: 1.5rem 4rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 1.5rem;
+      color: var(--main-color);
+      margin: 0 24px;
+    }
+
+    .used-by {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo-list {
+      display: flex;
+      list-style: none;
+      gap: 16px;
+      margin-top: 0;
+      padding: 0;
+      img {
+        height: 50px;
+      }
+    }
+
+    @media screen and (max-width: 800px) {
+      gap: 24px;
+
+      h1 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+      }
+      .start-planning-btn {
+        padding: 1rem 2rem;
+      }
+    }
   }
+
   .header-cards {
     position: absolute;
     left: 0;

@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  arrayRemove,
+  arrayUnion,
+  docData,
+  Firestore,
+} from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
-import firebase from 'firebase/compat/app';
 import { tap } from 'rxjs/operators';
 import { RoomData, Room, Member, CardSet, Round } from './../types';
+import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentReference } from 'rxfire/firestore/interfaces';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -55,26 +61,26 @@ export class EstimatorService {
   currentRoom: Observable<Room> = new Observable<Room>();
   activeMember: Member;
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: Firestore) {}
 
+  createId() {
+    return doc(this.firestore, '_', '__').id;
+  }
   async createRoom(member: Member) {
-    member.id = this.firestore.createId();
+    member.id = this.createId();
 
     const room: Room = {
-      id: this.firestore.createId(),
+      id: this.createId(),
       roomId: generate().dashed,
       members: [member],
       rounds: { 0: this.createRound([member], 1) },
       currentRound: 0,
       isOpen: true,
-      createdAt: firebase.firestore.Timestamp.now(),
+      createdAt: serverTimestamp(),
       cardSet: CardSet.DEFAULT,
     };
 
-    await this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc(room.roomId)
-      .set(room);
+    await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
 
     this.refreshCurrentRoom(room.id, member.id);
     this.activeMember = member;
@@ -90,15 +96,12 @@ export class EstimatorService {
 
   async joinRoom(roomId: string, member: Member) {
     if (!member.id) {
-      member.id = this.firestore.createId();
+      member.id = this.createId();
     }
 
-    await this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc(roomId)
-      .update({
-        members: firebase.firestore.FieldValue.arrayUnion(member),
-      });
+    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      members: arrayUnion(member),
+    });
 
     this.refreshCurrentRoom(roomId, member.id);
     this.activeMember = member;
@@ -113,57 +116,53 @@ export class EstimatorService {
   }
 
   async removeMember(roomId: string, member: Member) {
-    await this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc(roomId)
-      .update({
-        members: firebase.firestore.FieldValue.arrayRemove(member),
-      });
+    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      members: arrayRemove(member),
+    });
   }
 
   refreshCurrentRoom(roomId: string, memberId: string) {
-    this.currentRoom = this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc<Room>(roomId)
-      .valueChanges()
-      .pipe(
-        tap((room) => {
-          if (!room) {
-            throw new RoomNotFoundError();
-          }
-          this.activeMember = room.members.find((m) => m.id === memberId);
-        })
-      );
+    this.currentRoom = docData<Room>(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId
+      ) as DocumentReference<Room>
+    ).pipe(
+      tap((room) => {
+        if (!room) {
+          throw new RoomNotFoundError();
+        }
+        this.activeMember = room.members.find((m) => m.id === memberId);
+      })
+    );
   }
 
   updateRoom(room: Room) {
-    this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc(room.roomId)
-      .update(room);
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      ...room,
+    });
   }
 
   setTopic(room: Room, round: number, topic: string) {
-    return this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc(room.roomId)
-      .update({ [`rounds.${round}.topic`]: topic });
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      [`rounds.${round}.topic`]: topic,
+    });
   }
 
   setShowResults(room: Room, round: number, showResults: boolean) {
-    return this.firestore
-      .collection(this.ROOMS_COLLECTION)
-      .doc(room.roomId)
-      .update({ [`rounds.${round}.show_results`]: showResults });
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      [`rounds.${round}.show_results`]: showResults,
+    });
   }
 
   newRound(room: Room) {
-    const currentRoundId = room.currentRound ?? Object.keys(room.rounds).length - 1;
+    const currentRoundId =
+      room.currentRound ?? Object.keys(room.rounds).length - 1;
     const numberOfRounds = Object.keys(room.rounds).length;
     const nextRoundId = numberOfRounds;
     const nextRoundNumber = nextRoundId + 1;
-    room.rounds[currentRoundId].finished_at =
-      firebase.firestore.Timestamp.now();
+    room.rounds[currentRoundId].finished_at = serverTimestamp();
     room.currentRound = nextRoundId;
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
     return this.updateRoom(room);
@@ -182,23 +181,22 @@ export class EstimatorService {
     estimate: number,
     userId: string
   ) {
-    return this.firestore
-      .collection('rooms')
-      .doc(room.roomId)
-      .update({ [`rounds.${roundNumber}.estimates.${userId}`]: estimate });
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      [`rounds.${roundNumber}.estimates.${userId}`]: estimate,
+    });
   }
 
   setRoomCardSet(roomId: string, selectedSet: CardSet) {
-    return this.firestore.collection(this.ROOMS_COLLECTION).doc(roomId).update({
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       cardSet: selectedSet,
     });
   }
 
   createRound(members: Member[], roundNumber: number): Round {
     return {
-      id: this.firestore.createId(),
+      id: this.createId(),
       topic: `Topic of Round ${roundNumber}`,
-      started_at: firebase.firestore.Timestamp.now(),
+      started_at: serverTimestamp(),
       finished_at: null,
       estimates: {},
       show_results: false,
@@ -208,7 +206,7 @@ export class EstimatorService {
   revoteRound(round: Round): Round {
     return {
       ...round,
-      started_at: firebase.firestore.Timestamp.now(),
+      started_at: serverTimestamp(),
       finished_at: null,
       estimates: {},
       show_results: false,

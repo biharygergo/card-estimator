@@ -9,7 +9,13 @@ import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { RoomData, Room, Member, CardSet, Round } from './../types';
-import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { DocumentReference } from 'rxfire/firestore/interfaces';
 
 export class MemberNotFoundError extends Error {}
@@ -64,8 +70,9 @@ export class EstimatorService {
   constructor(private firestore: Firestore) {}
 
   createId() {
-    return doc(this.firestore, '_', '__').id;
+    return doc(collection(this.firestore, '_')).id;
   }
+
   async createRoom(member: Member) {
     member.id = this.createId();
 

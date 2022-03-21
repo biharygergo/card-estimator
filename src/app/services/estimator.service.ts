@@ -209,7 +209,7 @@ export class EstimatorService {
       show_results: false,
       notes: {
         note: '',
-        editedBy: undefined,
+        editedBy: null,
       },
     };
   }

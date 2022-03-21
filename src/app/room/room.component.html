@@ -288,6 +288,10 @@
                       </span>
                     </h3>
                   </mat-list-item>
+                  <h3 matSubheader>Notes</h3>
+                  <div class="note-wrapper">
+                    <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
+                  </div>
                 </mat-list>
                 <mat-action-row class="expansion-panel-action-row">
                   <button

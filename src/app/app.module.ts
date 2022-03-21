@@ -47,6 +47,7 @@ import { FeaturesComponent } from './landing/features/features.component';
 import { FaqComponent } from './landing/faq/faq.component';
 import { PageHeaderComponent } from './landing/components/page-header/page-header.component';
 import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
+import { NotesFieldComponent } from './room/notes-field/notes-field.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
     FaqComponent,
     PageHeaderComponent,
     FaqRowComponent,
+    NotesFieldComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -71,7 +73,7 @@ import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
-    provideAppCheck(() => {
+   provideAppCheck(() => {
       const provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
       if (!environment.production) {
         (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;

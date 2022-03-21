@@ -16,27 +16,10 @@ export class NotesFieldComponent implements OnInit {
   }
   @Input() set room(room: Room) {
     this._room = room;
-    if (room !== undefined && this.estimatorService.activeMember) {
-      const currentRound = room.rounds[room.currentRound];
-
-      this.editedBy = currentRound.notes?.editedBy;
-      this.isNoteDisabled =
-        this.editedBy !== null &&
-        this.editedBy.id !== this.estimatorService.activeMember.id;
-
-      this.isNoteDisabled
-        ? this.noteValue.disable({ emitEvent: false })
-        : this.noteValue.enable({ emitEvent: false });
-
-      console.log(this.noteValue.value);
-      if (this.isNoteDisabled || this.noteValue.value === null) {
-        this.noteValue.setValue(currentRound.notes?.note || '', {
-          emitEvent: false,
-        });
-      }
-    }
+    this.onRoomUpdated(room);
   }
 
+  cachedRound: number;
   noteValue = new FormControl(null);
   isNoteDisabled: boolean;
   editedBy: Member | null;
@@ -64,5 +47,34 @@ export class NotesFieldComponent implements OnInit {
 
   onNoteBlur() {
     this.estimatorService.setNoteEditor(this.room, null);
+  }
+
+  onRoomUpdated(room: Room) {
+    if (room !== undefined && this.estimatorService.activeMember) {
+      const currentRound = room.rounds[room.currentRound];
+
+      this.editedBy = currentRound.notes?.editedBy;
+      this.isNoteDisabled =
+        this.editedBy &&
+        this.editedBy.id !== this.estimatorService.activeMember.id;
+
+      this.isNoteDisabled
+        ? this.noteValue.disable({ emitEvent: false })
+        : this.noteValue.enable({ emitEvent: false });
+
+      if (
+        this.isNoteDisabled ||
+        this.noteValue.value === null ||
+        this.cachedRound !== room.currentRound
+      ) {
+        this.noteValue.setValue(currentRound.notes?.note || '', {
+          emitEvent: false,
+        });
+
+        if (this.cachedRound !== room.currentRound) {
+          this.cachedRound = room.currentRound;
+        }
+      }
+    }
   }
 }

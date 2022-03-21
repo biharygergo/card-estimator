@@ -120,6 +120,10 @@
   button:not(:last-of-type) {
     margin-right: 0.5rem;
   }
+
+  &.extra-padding {
+    padding-bottom: 2rem;
+  }
 }
 
 .topic-input {
@@ -202,4 +206,8 @@
 .mat-panel-title.active {
   display: flex;
   align-items: center;
+}
+
+.note-wrapper {
+  padding: 0px 16px;
 }

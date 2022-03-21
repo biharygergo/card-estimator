@@ -25,7 +25,14 @@ export interface Round {
   finished_at: FieldValue;
   estimates: { [memberId: string]: number };
   show_results: boolean;
+  notes?: Notes;
 }
+
+export interface Notes {
+  note: string;
+  editedBy: Member | null;
+}
+
 export interface Member {
   id: string;
   name: string;

@@ -8,7 +8,7 @@ import {
 import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { RoomData, Room, Member, CardSet, Round } from './../types';
+import { RoomData, Room, Member, CardSet, Round, Notes } from './../types';
 import {
   collection,
   doc,
@@ -207,6 +207,10 @@ export class EstimatorService {
       finished_at: null,
       estimates: {},
       show_results: false,
+      notes: {
+        note: '',
+        editedBy: null,
+      },
     };
   }
 
@@ -218,5 +222,21 @@ export class EstimatorService {
       estimates: {},
       show_results: false,
     };
+  }
+
+  setNote(note: string, room: Room, member: Member) {
+    const newNote: Notes = {
+      note,
+      editedBy: member,
+    };
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      [`rounds.${room.currentRound}.notes`]: newNote,
+    });
+  }
+
+  setNoteEditor(room: Room, member: Member | null) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      [`rounds.${room.currentRound}.notes.editedBy`]: member,
+    });
   }
 }

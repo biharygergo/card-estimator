@@ -113,6 +113,9 @@
           </mat-list-item>
         </mat-list>
       </mat-card-content>
+      <mat-card-footer class="card-footer-actions extra-padding">
+        <app-notes-field [room]="room"></app-notes-field>
+      </mat-card-footer>
       <mat-card-footer class="card-footer">
         <h3>
           <span
@@ -285,6 +288,10 @@
                       </span>
                     </h3>
                   </mat-list-item>
+                  <h3 matSubheader>Notes</h3>
+                  <div class="note-wrapper">
+                    <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
+                  </div>
                 </mat-list>
                 <mat-action-row class="expansion-panel-action-row">
                   <button

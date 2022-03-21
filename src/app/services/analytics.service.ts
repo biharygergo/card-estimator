@@ -94,4 +94,8 @@ export class AnalyticsService {
   logClickedReVote() {
     logEvent(this.analytics, 'clicked_revote');
   }
+
+  logFocusedNotesField() {
+    logEvent(this.analytics, 'focused_notes_field')
+  }
 }

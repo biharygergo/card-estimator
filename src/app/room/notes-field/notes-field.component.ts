@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, map } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { Member, Room } from 'src/app/types';
 
@@ -24,7 +25,10 @@ export class NotesFieldComponent implements OnInit {
   isNoteDisabled: boolean;
   editedBy: Member | null;
 
-  constructor(private estimatorService: EstimatorService) {}
+  constructor(
+    private estimatorService: EstimatorService,
+    private analytics: AnalyticsService
+  ) {}
 
   ngOnInit(): void {
     this.noteValue.valueChanges
@@ -43,6 +47,7 @@ export class NotesFieldComponent implements OnInit {
       this.room,
       this.estimatorService.activeMember
     );
+    this.analytics.logFocusedNotesField();
   }
 
   onNoteBlur() {

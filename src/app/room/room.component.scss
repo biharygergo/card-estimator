@@ -120,6 +120,10 @@
   button:not(:last-of-type) {
     margin-right: 0.5rem;
   }
+
+  &.extra-padding {
+    padding-bottom: 2rem;
+  }
 }
 
 .topic-input {

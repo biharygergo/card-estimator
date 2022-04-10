@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CardSet, CARD_SETS } from '../types';
+import { CardSet, CARD_SETS, getRoundedDisplayValue } from '../types';
 
 @Pipe({
   name: 'estimateConverter',
@@ -13,7 +13,7 @@ export class EstimateConverterPipe implements PipeTransform {
     if (transformType === 'exact') {
       return CARD_SETS[activeCardSet].values[+value];
     } else {
-      return CARD_SETS[activeCardSet].getRoundedDisplayValue(+value);
+      return getRoundedDisplayValue(+value, CARD_SETS[activeCardSet]);
     }
   }
 }

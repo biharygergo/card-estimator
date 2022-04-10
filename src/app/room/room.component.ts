@@ -24,6 +24,7 @@ import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-m
 import { AnalyticsService } from '../services/analytics.service';
 import { SerializerService } from '../services/serializer.service';
 import { getHumanReadableElapsedTime } from '../utils';
+import { KeyValue } from '@angular/common';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 @Component({
@@ -317,4 +318,11 @@ export class RoomComponent implements OnInit {
     this.analytics.logClickedReVote();
     this.estimatorService.setActiveRound(this.room, roundNumber);
   }
+
+  originalOrder = (
+    a: KeyValue<string, string>,
+    b: KeyValue<string, string>
+  ): number => {
+    return 0;
+  };
 }

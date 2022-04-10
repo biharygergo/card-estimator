@@ -73,7 +73,7 @@ import { NotesFieldComponent } from './room/notes-field/notes-field.component';
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
-   provideAppCheck(() => {
+    provideAppCheck(() => {
       const provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
       if (!environment.production) {
         (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;

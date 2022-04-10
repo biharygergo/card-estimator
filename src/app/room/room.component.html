@@ -140,7 +140,7 @@
           class="estimator-settings-button"
           (click)="clickedUnitsButton()"
         >
-          Units
+          Choose cards
         </button>
         <mat-menu #menu="matMenu">
           <button
@@ -171,7 +171,7 @@
     <div class="estimator-buttons">
       <div
         class="estimator-button-container"
-        *ngFor="let estimate of estimationValues | keyvalue"
+        *ngFor="let estimate of estimationValues | keyvalue: originalOrder"
       >
         <button
           mat-raised-button

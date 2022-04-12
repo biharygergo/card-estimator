@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { debounceTime } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { CardSetValue, isNumeric } from 'src/app/types';
 import { cardDeckValidator, convertInputToCards } from './validator';
@@ -29,7 +30,8 @@ export class AddCardDeckModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddCardDeckModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddCardDeckModalData,
-    private estimatorService: EstimatorService
+    private estimatorService: EstimatorService,
+    private analytics: AnalyticsService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +67,7 @@ export class AddCardDeckModalComponent implements OnInit {
       key: 'CUSTOM',
     };
 
+    this.analytics.logClickedSaveCustomCards();
     this.estimatorService
       .setRoomCustomCardSetValue(this.data.roomId, customDeck)
       .then(() => {

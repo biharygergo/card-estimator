@@ -323,6 +323,7 @@ export class RoomComponent implements OnInit {
   }
 
   setEstimationCardSet(key: CardSet) {
+    this.analytics.logSelectedCardSet(key);
     this.estimatorService.setRoomCardSet(this.room.roomId, key);
   }
 
@@ -357,6 +358,7 @@ export class RoomComponent implements OnInit {
 
   openAddCardDeckModal() {
     if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
+      this.analytics.logClickedSetCustomCards();
       const dialogRef = this.dialog.open(AddCardDeckModalComponent, {
         id: ADD_CARD_DECK_MODAL,
         height: '80%',

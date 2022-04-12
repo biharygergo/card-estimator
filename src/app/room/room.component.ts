@@ -96,25 +96,25 @@ export class RoomComponent implements OnInit {
   }
 
   private onRoomUpdated(room: Room, roomData: RoomData, roomId: string) {
+    const oldRoom: Room | undefined =
+      this.room === undefined
+        ? undefined
+        : JSON.parse(JSON.stringify(this.room));
+
     this.room = room;
     this.rounds = Object.values(room.rounds);
     const roundNumberOrFallback =
       room.currentRound ?? Object.keys(room.rounds).length - 1;
     const newRoundNumber = roundNumberOrFallback;
 
-    this.selectedEstimationCardSetValue = getRoomCardSetValue(this.room);
-    this.estimationValues = this.getSortedCardSetValues(
-      this.selectedEstimationCardSetValue
-    );
-
     if (
-      this.selectedEstimationCardSetValue.key === 'CUSTOM' ||
-      !!this.room.customCardSetValue
+      oldRoom === undefined ||
+      oldRoom.cardSet !== room.cardSet ||
+      (room.customCardSetValue &&
+        JSON.stringify(oldRoom.customCardSetValue) !==
+          JSON.stringify(room.customCardSetValue))
     ) {
-      this.estimationCardSets = [
-        ...Object.values(CARD_SETS),
-        this.room.customCardSetValue,
-      ];
+      this.updateSelectedCardSets();
     }
 
     if (
@@ -135,6 +135,23 @@ export class RoomComponent implements OnInit {
     }
     this.showOrHideAloneInRoomModal();
     this.reCalculateStatistics(room);
+  }
+
+  private updateSelectedCardSets() {
+    this.selectedEstimationCardSetValue = getRoomCardSetValue(this.room);
+    this.estimationValues = this.getSortedCardSetValues(
+      this.selectedEstimationCardSetValue
+    );
+
+    if (
+      this.selectedEstimationCardSetValue.key === 'CUSTOM' ||
+      !!this.room.customCardSetValue
+    ) {
+      this.estimationCardSets = [
+        ...Object.values(CARD_SETS),
+        this.room.customCardSetValue,
+      ];
+    }
   }
 
   private onRoomUpdateError(error: Error) {
@@ -361,8 +378,6 @@ export class RoomComponent implements OnInit {
       this.analytics.logClickedSetCustomCards();
       const dialogRef = this.dialog.open(AddCardDeckModalComponent, {
         id: ADD_CARD_DECK_MODAL,
-        height: '80%',
-        maxHeight: '450px',
         width: '90%',
         maxWidth: '600px',
         disableClose: false,

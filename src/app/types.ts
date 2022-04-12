@@ -104,7 +104,6 @@ export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   const values = Object.values(cardSet.values);
   const isNumericCard = values.every((value) => isNumeric(value));
-  console.log(value, isNumericCard)
   if (isNumericCard) {
     return value;
   }

@@ -8,7 +8,16 @@ import {
 import * as generate from 'project-name-generator';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { RoomData, Room, Member, CardSet, Round, Notes } from './../types';
+import {
+  RoomData,
+  Room,
+  Member,
+  CardSet,
+  Round,
+  Notes,
+  CardSetValue,
+  CustomCardSet,
+} from './../types';
 import {
   collection,
   doc,
@@ -89,7 +98,7 @@ export class EstimatorService {
 
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
 
-    this.refreshCurrentRoom(room.id, member.id);
+    this.refreshCurrentRoom(room.roomId, member.id);
     this.activeMember = member;
 
     saveJoinedRoomData({
@@ -237,6 +246,13 @@ export class EstimatorService {
   setNoteEditor(room: Room, member: Member | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${room.currentRound}.notes.editedBy`]: member,
+    });
+  }
+
+  setRoomCustomCardSetValue(roomId: string, selectedSet: CardSetValue) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      cardSet: CustomCardSet,
+      customCardSetValue: selectedSet,
     });
   }
 }

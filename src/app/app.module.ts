@@ -48,6 +48,7 @@ import { FaqComponent } from './landing/faq/faq.component';
 import { PageHeaderComponent } from './landing/components/page-header/page-header.component';
 import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
 import { NotesFieldComponent } from './room/notes-field/notes-field.component';
+import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-deck-modal.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { NotesFieldComponent } from './room/notes-field/notes-field.component';
     PageHeaderComponent,
     FaqRowComponent,
     NotesFieldComponent,
+    AddCardDeckModalComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

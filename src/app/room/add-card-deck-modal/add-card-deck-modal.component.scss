@@ -1,0 +1,51 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.card-deck-form {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2rem;
+  gap: 8px;
+}
+
+.mat-dialog-actions {
+  margin-top: auto;
+  justify-content: flex-end;
+}
+
+.preview-cards {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.preview-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 12px;
+  border-radius: 6px;
+  border: 1px solid #fefefe;
+  margin-right: 8px;
+  opacity: 0.3;
+
+  &.filled {
+    animation: scaleIn 300ms ease-in-out 100ms forwards;
+  }
+}

@@ -15,3 +15,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background: var(--main-color);
 }
+
+.mat-menu-panel {
+  max-width: 300px !important;
+}

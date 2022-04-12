@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Analytics, logEvent } from '@angular/fire/analytics';
+import { CardSetOrCustom } from '../types';
 
 @Injectable({
   providedIn: 'root',
@@ -96,6 +97,20 @@ export class AnalyticsService {
   }
 
   logFocusedNotesField() {
-    logEvent(this.analytics, 'focused_notes_field')
+    logEvent(this.analytics, 'focused_notes_field');
+  }
+
+  logClickedSetCustomCards() {
+    logEvent(this.analytics, 'clicked_set_custom_cards');
+  }
+
+  logClickedSaveCustomCards() {
+    logEvent(this.analytics, 'clicked_save_custom_cards');
+  }
+
+  logSelectedCardSet(cardSet: CardSetOrCustom) {
+    logEvent(this.analytics, 'selected_custom_cards', {
+      card_set: cardSet,
+    });
   }
 }

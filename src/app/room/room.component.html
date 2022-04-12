@@ -36,7 +36,9 @@
                 <span>{{
                   roundStatistics[currentRound]?.average
                     | number
-                    | estimateConverter: selectedEstimationCardSet:"rounded"
+                    | estimateConverter
+                      : selectedEstimationCardSetValue
+                      : "rounded"
                 }}</span>
               </h3>
             </mat-list-item>
@@ -46,7 +48,9 @@
                 <span>
                   {{
                     roundStatistics[currentRound]?.highestVote.value
-                      | estimateConverter: selectedEstimationCardSet:"exact"
+                      | estimateConverter
+                        : selectedEstimationCardSetValue
+                        : "exact"
                   }}
                   ({{ roundStatistics[currentRound]?.highestVote.voter }})</span
                 >
@@ -58,7 +62,9 @@
                 <span>
                   {{
                     roundStatistics[currentRound]?.lowestVote.value
-                      | estimateConverter: selectedEstimationCardSet:"exact"
+                      | estimateConverter
+                        : selectedEstimationCardSetValue
+                        : "exact"
                   }}
                   ({{ roundStatistics[currentRound]?.lowestVote.voter }})</span
                 >
@@ -81,7 +87,9 @@
                   "
                   >{{
                     (room?.rounds)[currentRound].estimates[member.id]
-                      | estimateConverter: selectedEstimationCardSet:"exact"
+                      | estimateConverter
+                        : selectedEstimationCardSetValue
+                        : "exact"
                   }}</span
                 >
                 <span
@@ -145,12 +153,24 @@
         <mat-menu #menu="matMenu">
           <button
             mat-menu-item
-            *ngFor="let cardSet of estimationCardSets | keyvalue"
+            *ngFor="let cardSet of estimationCardSets"
             (click)="setEstimationCardSet(cardSet.key)"
-            [ngClass]="selectedEstimationCardSet === cardSet.key && 'selected'"
+            [ngClass]="
+              selectedEstimationCardSetValue.key === cardSet.key && 'selected'
+            "
           >
-            <mat-icon>{{ cardSet.value.icon }}</mat-icon>
-            <span>{{ cardSet.value.title }}</span>
+            <mat-icon>{{ cardSet.icon }}</mat-icon>
+            <span
+              >{{ cardSet.title }} ({{
+                getCardSetDisplayValues(cardSet)
+              }})</span
+            >
+          </button>
+          <mat-divider></mat-divider>
+
+          <button mat-menu-item (click)="openAddCardDeckModal()">
+            <mat-icon>add</mat-icon>
+            <span>Set a custom card deck</span>
           </button>
         </mat-menu>
       </mat-card-footer>
@@ -171,16 +191,16 @@
     <div class="estimator-buttons">
       <div
         class="estimator-button-container"
-        *ngFor="let estimate of estimationValues | keyvalue: originalOrder"
+        *ngFor="let item of estimationValues"
       >
         <button
           mat-raised-button
           class="estimator-button"
-          (click)="setEstimate(estimate.key)"
-          [color]="+estimate.key === currentEstimate && 'accent'"
+          (click)="setEstimate(item.key)"
+          [color]="+item.key === currentEstimate && 'accent'"
           [disabled]="isObserver"
         >
-          {{ estimate.value }}
+          {{ item.value }}
         </button>
       </div>
     </div>
@@ -222,7 +242,7 @@
                         roundStatistics[roundNumber]?.average
                           | number
                           | estimateConverter
-                            : selectedEstimationCardSet
+                            : selectedEstimationCardSetValue
                             : "rounded"
                       }}</span>
                     </h3>
@@ -236,7 +256,7 @@
                         {{
                           roundStatistics[roundNumber]?.highestVote.value
                             | estimateConverter
-                              : selectedEstimationCardSet
+                              : selectedEstimationCardSetValue
                               : "exact"
                         }}
                         ({{
@@ -254,7 +274,7 @@
                         {{
                           roundStatistics[roundNumber]?.lowestVote.value
                             | estimateConverter
-                              : selectedEstimationCardSet
+                              : selectedEstimationCardSetValue
                               : "exact"
                         }}
                         ({{
@@ -282,7 +302,7 @@
                             ? "Not voted"
                             : (round.estimates[member.id]
                               | estimateConverter
-                                : selectedEstimationCardSet
+                                : selectedEstimationCardSetValue
                                 : "exact")
                         }}</span>
                       </span>

@@ -1,5 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CardSet, CARD_SETS, getRoundedDisplayValue } from '../types';
+import {
+  CardSet,
+  CardSetValue,
+  CARD_SETS,
+  CustomCardSet,
+  getRoundedDisplayValue,
+  Room,
+} from '../types';
 
 @Pipe({
   name: 'estimateConverter',
@@ -7,13 +14,22 @@ import { CardSet, CARD_SETS, getRoundedDisplayValue } from '../types';
 export class EstimateConverterPipe implements PipeTransform {
   transform(
     value: number | string,
-    activeCardSet: CardSet,
+    activeCardSetValue: CardSetValue,
     transformType: 'exact' | 'rounded'
   ): string | number {
     if (transformType === 'exact') {
-      return CARD_SETS[activeCardSet].values[+value];
+      return activeCardSetValue.values[+value];
     } else {
-      return getRoundedDisplayValue(+value, CARD_SETS[activeCardSet]);
+      return getRoundedDisplayValue(+value, activeCardSetValue);
     }
   }
+}
+
+export function getRoomCardSetValue(room: Room) {
+  const cardSet = room.cardSet || CardSet.DEFAULT;
+  if (cardSet === CustomCardSet) {
+    return room.customCardSetValue ?? CARD_SETS[CardSet.DEFAULT];
+  }
+
+  return CARD_SETS[cardSet];
 }

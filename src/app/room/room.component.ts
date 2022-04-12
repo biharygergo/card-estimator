@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import {
   CardSet,
+  CardSetValue,
   CARD_SETS,
   Room,
   RoomData,
@@ -25,8 +26,11 @@ import { AnalyticsService } from '../services/analytics.service';
 import { SerializerService } from '../services/serializer.service';
 import { getHumanReadableElapsedTime } from '../utils';
 import { KeyValue } from '@angular/common';
+import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
+import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
+const ADD_CARD_DECK_MODAL = 'add-card-deck';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -35,15 +39,17 @@ const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 export class RoomComponent implements OnInit {
   @ViewChild('topicInput') topicInput: ElementRef;
 
-  readonly estimationCardSets = CARD_SETS;
-
   room: Room;
   rounds: Round[] = [];
   currentRound = undefined;
   currentEstimate: number;
-  selectedEstimationCardSet = CardSet.DEFAULT;
-  estimationValues =
-    this.estimationCardSets[this.selectedEstimationCardSet].values;
+
+  estimationCardSets = Object.values(CARD_SETS);
+  selectedEstimationCardSetValue = CARD_SETS[CardSet.DEFAULT];
+  estimationValues = this.getSortedCardSetValues(
+    this.selectedEstimationCardSetValue
+  );
+
   roundTopic = new FormControl('');
 
   isEditingTopic = false;
@@ -96,9 +102,20 @@ export class RoomComponent implements OnInit {
       room.currentRound ?? Object.keys(room.rounds).length - 1;
     const newRoundNumber = roundNumberOrFallback;
 
-    this.selectedEstimationCardSet = room.cardSet || CardSet.DEFAULT;
-    this.estimationValues =
-      this.estimationCardSets[this.selectedEstimationCardSet].values;
+    this.selectedEstimationCardSetValue = getRoomCardSetValue(this.room);
+    this.estimationValues = this.getSortedCardSetValues(
+      this.selectedEstimationCardSetValue
+    );
+
+    if (
+      this.selectedEstimationCardSetValue.key === 'CUSTOM' ||
+      !!this.room.customCardSetValue
+    ) {
+      this.estimationCardSets = [
+        ...Object.values(CARD_SETS),
+        this.room.customCardSetValue,
+      ];
+    }
 
     if (
       newRoundNumber !== this.currentRound &&
@@ -319,10 +336,40 @@ export class RoomComponent implements OnInit {
     this.estimatorService.setActiveRound(this.room, roundNumber);
   }
 
-  originalOrder = (
-    a: KeyValue<string, string>,
-    b: KeyValue<string, string>
-  ): number => {
-    return 0;
-  };
+  getCardSetDisplayValues(cardSet: CardSetValue | undefined) {
+    if (!cardSet) {
+      return '';
+    }
+    return this.getSortedCardSetValues(cardSet)
+      .map((item) => item.value)
+      .join(', ');
+  }
+
+  getSortedCardSetValues(
+    cardSet: CardSetValue
+  ): { key: string; value: string }[] {
+    return Object.keys(cardSet.values)
+      .sort((a, b) => +a - +b)
+      .map((key) => {
+        return { key, value: cardSet.values[key] };
+      });
+  }
+
+  openAddCardDeckModal() {
+    if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
+      const dialogRef = this.dialog.open(AddCardDeckModalComponent, {
+        id: ADD_CARD_DECK_MODAL,
+        height: '80%',
+        maxHeight: '450px',
+        width: '90%',
+        maxWidth: '600px',
+        disableClose: false,
+        data: {
+          roomId: this.room.roomId,
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {});
+    }
+  }
 }

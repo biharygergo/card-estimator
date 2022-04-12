@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { EstimateConverterPipe } from './../pipes/estimate-converter.pipe';
+import {
+  EstimateConverterPipe,
+  getRoomCardSetValue,
+} from './../pipes/estimate-converter.pipe';
 import { Member, Room } from './../types';
 import { getHumanReadableElapsedTime } from './../utils';
 
@@ -30,7 +33,7 @@ class ExportData {
       const estimates = Object.entries(round.estimates).reduce(
         (acc, [id, estimate]) => {
           acc[id] = this.converter
-            .transform(estimate, room.cardSet, 'exact')
+            .transform(estimate, getRoomCardSetValue(room), 'exact')
             .toString();
           if (this.members[id] === undefined) {
             this.members[id] = { name: 'Unknown Voter', id };
@@ -48,7 +51,7 @@ class ExportData {
       const result = {
         estimates,
         average: this.converter
-          .transform(average, room.cardSet, 'rounded')
+          .transform(average, getRoomCardSetValue(room), 'rounded')
           .toString(),
         duration: getHumanReadableElapsedTime(round),
         topic: round.topic,

@@ -18,7 +18,7 @@ export class EstimateConverterPipe implements PipeTransform {
     transformType: 'exact' | 'rounded'
   ): string | number {
     if (transformType === 'exact') {
-      return activeCardSetValue.values[+value];
+      return activeCardSetValue.values[+value] ?? +value;
     } else {
       return getRoundedDisplayValue(+value, activeCardSetValue);
     }

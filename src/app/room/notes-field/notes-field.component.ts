@@ -25,6 +25,8 @@ export class NotesFieldComponent implements OnInit {
   isNoteDisabled: boolean;
   editedBy: Member | null;
 
+  blurTimeout: number | undefined;
+
   constructor(
     private estimatorService: EstimatorService,
     private analytics: AnalyticsService
@@ -32,7 +34,7 @@ export class NotesFieldComponent implements OnInit {
 
   ngOnInit(): void {
     this.noteValue.valueChanges
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(500))
       .subscribe((value: string) => {
         this.estimatorService.setNote(
           value,
@@ -51,7 +53,11 @@ export class NotesFieldComponent implements OnInit {
   }
 
   onNoteBlur() {
-    this.estimatorService.setNoteEditor(this.room, null);
+    clearTimeout(this.blurTimeout);
+
+    this.blurTimeout = window.setTimeout(() => {
+      this.estimatorService.setNoteEditor(this.room, null);
+    }, 500);
   }
 
   onRoomUpdated(room: Room) {

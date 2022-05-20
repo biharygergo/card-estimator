@@ -25,9 +25,9 @@ import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-m
 import { AnalyticsService } from '../services/analytics.service';
 import { SerializerService } from '../services/serializer.service';
 import { getHumanReadableElapsedTime } from '../utils';
-import { KeyValue } from '@angular/common';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
+import { ConfigService } from '../services/config.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -61,6 +61,11 @@ export class RoomComponent implements OnInit {
 
   roomSubscription: Subscription;
 
+  adHideClicks = 0;
+  adsEnabled = false;
+
+  showAds = false;
+
   constructor(
     private estimatorService: EstimatorService,
     private route: ActivatedRoute,
@@ -69,6 +74,7 @@ export class RoomComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
+    private configService: ConfigService,
     private serializer: SerializerService
   ) {}
 
@@ -93,6 +99,11 @@ export class RoomComponent implements OnInit {
       (room) => this.onRoomUpdated(room, roomData, roomId),
       (error) => this.onRoomUpdateError(error)
     );
+
+    this.configService.isEnabled('adsEnabled').then((value) => {
+      this.adsEnabled = value;
+      this.updateShowAds();
+    });
   }
 
   private onRoomUpdated(room: Room, roomData: RoomData, roomId: string) {
@@ -388,5 +399,13 @@ export class RoomComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(() => {});
     }
+  }
+
+  updateShowAds() {
+    this.showAds = this.adHideClicks < 5 && this.adsEnabled;
+  }
+
+  increaseHideAdsCounter() {
+    this.adHideClicks += 1;
   }
 }

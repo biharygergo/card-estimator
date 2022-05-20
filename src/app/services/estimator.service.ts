@@ -88,8 +88,8 @@ export class EstimatorService {
     let userId = user?.uid;
   
     if (!userId) {
-      const credentials = await this.authService.loginAnonymously();
-      userId = credentials.user.uid;
+      const newUser = await this.authService.loginAnonymously(member.name);
+      userId = newUser.uid;
     }
   
     member.id = userId;

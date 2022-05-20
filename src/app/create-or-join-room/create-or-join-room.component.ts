@@ -39,6 +39,9 @@ export class CreateOrJoinRoomComponent implements OnInit {
     const savedRoomData = retrieveRoomData();
 
     this.authService.getUser().then(user => {
+      if (user?.displayName) {
+        this.name.setValue(user.displayName);
+      }
       if (savedRoomData && user?.uid === savedRoomData.memberId) {
         const snackbarRef = this.snackBar.open(
           `Do you want to re-join your last estimation, ${savedRoomData.roomId}?`,

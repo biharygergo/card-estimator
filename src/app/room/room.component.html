@@ -204,6 +204,35 @@
         </button>
       </div>
     </div>
+    <div class="ad-explainer" *ngIf="showAds">
+      <span
+        matTooltip="Ads support the development of this free-to-use app. If you want to hide ads in this session, click on this text 5 times."
+        matTooltipPosition="above"
+        (click)="increaseHideAdsCounter()"
+        >Why is there an ad here?</span
+      >
+    </div>
+    <div class="ad-container" *ngIf="showAds">
+      <mat-card>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2421485157517914"
+          crossorigin="anonymous"
+        ></script>
+        <!-- In-game Ad -->
+        <ins
+          class="adsbygoogle"
+          style="display: block"
+          data-ad-client="ca-pub-2421485157517914"
+          data-ad-slot="2199925768"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </mat-card>
+    </div>
     <div class="round-history-container">
       <mat-card>
         <mat-card-header>

@@ -18,6 +18,7 @@ import {
   ReCaptchaV3Provider,
 } from '@angular/fire/app-check';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideRemoteConfig, getRemoteConfig } from '@angular/fire/remote-config';
 
 import { environment } from '../environments/environment';
 import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
@@ -33,6 +34,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -49,6 +51,7 @@ import { PageHeaderComponent } from './landing/components/page-header/page-heade
 import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
 import { NotesFieldComponent } from './room/notes-field/notes-field.component';
 import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-deck-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -75,6 +78,7 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
+    provideRemoteConfig(() => getRemoteConfig()),
     provideAppCheck(() => {
       const provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
       if (!environment.production) {
@@ -96,6 +100,7 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
     MatExpansionModule,
     MatMenuModule,
     MatDialogModule,
+    MatTooltipModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

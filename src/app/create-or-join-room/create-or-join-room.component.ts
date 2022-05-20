@@ -5,6 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoomData, Member } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
+import { AuthService } from '../services/auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-create-or-join-room',
@@ -21,8 +23,9 @@ export class CreateOrJoinRoomComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
-    private analytics: AnalyticsService
-  ) {}
+    private analytics: AnalyticsService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     const roomIdFromParams =
@@ -35,14 +38,20 @@ export class CreateOrJoinRoomComponent implements OnInit {
 
     const savedRoomData = retrieveRoomData();
 
-    if (savedRoomData) {
-      const snackbarRef = this.snackBar.open(
-        `Do you want to re-join your last estimation, ${savedRoomData.roomId}?`,
-        'Join',
-        { duration: 10000 }
-      );
-      snackbarRef.onAction().subscribe(() => this.joinLastRoom(savedRoomData));
-    }
+    this.authService.getUser().then(user => {
+      if (user?.displayName) {
+        this.name.setValue(user.displayName);
+      }
+      if (savedRoomData && user?.uid === savedRoomData.memberId) {
+        const snackbarRef = this.snackBar.open(
+          `Do you want to re-join your last estimation, ${savedRoomData.roomId}?`,
+          'Join',
+          { duration: 10000 }
+        );
+        snackbarRef.onAction().subscribe(() => this.joinLastRoom(savedRoomData));
+      }
+    })
+    
   }
 
   async joinLastRoom(savedRoomData: RoomData) {

@@ -6,7 +6,7 @@ import {
   Firestore,
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
   RoomData,
@@ -26,6 +26,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { DocumentReference } from 'rxfire/firestore/interfaces';
+import { AuthService } from './auth.service';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -76,14 +77,26 @@ export class EstimatorService {
   currentRoom: Observable<Room> = new Observable<Room>();
   activeMember: Member;
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private authService: AuthService) {}
 
   createId() {
     return doc(collection(this.firestore, '_')).id;
   }
 
+  private async signInAsMember(member: Member) {
+    let user = await this.authService.getUser();
+    let userId = user?.uid;
+  
+    if (!userId) {
+      const newUser = await this.authService.loginAnonymously(member.name);
+      userId = newUser.uid;
+    }
+  
+    member.id = userId;
+  }
+
   async createRoom(member: Member) {
-    member.id = this.createId();
+    await this.signInAsMember(member)
 
     const room: Room = {
       id: this.createId(),
@@ -111,9 +124,7 @@ export class EstimatorService {
   }
 
   async joinRoom(roomId: string, member: Member) {
-    if (!member.id) {
-      member.id = this.createId();
-    }
+    await this.signInAsMember(member)
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       members: arrayUnion(member),

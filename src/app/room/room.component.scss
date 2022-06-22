@@ -1,3 +1,20 @@
+.sidenav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidenav-content {
+  background: var(--main-color);
+}
+
+.topics-sidenav {
+  width: 400px;
+  background: #efefef;
+}
+
 .room-container {
   display: flex;
   flex-direction: row;
@@ -215,7 +232,7 @@
 }
 
 .active-badge {
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: #f5a115;
   color: white;
   padding: 1px 6px;
@@ -226,11 +243,103 @@
   align-items: center;
 }
 
-.mat-panel-title.active {
+.result-container {
+  margin-right: 4px;
+  border-radius: 4px;
+  background-color: #f5a115;
+  color: white;
+  padding: 1px 6px;
+  margin-left: 8px;
+  font-weight: bold;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .note-wrapper {
   padding: 0px 16px;
+}
+
+.round-history-container {
+  mat-card {
+    margin: 1rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .mat-menu-trigger {
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+
+    .mat-icon {
+      font-size: 20px;
+      line-height: 20px;
+    }
+  }
+
+  .round-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.sidenav-actions {
+  padding: 1rem 1rem 0 1rem;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.flat-card {
+  box-shadow: none;
+}
+
+.card-round-number {
+  color: var(--main-dark-color);
+  opacity: 0.8;
+  font-size: 0.7rem;
+}
+
+.blob {
+  background: black;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+  margin-left: 10px;
+  margin-right: 8px;
+  height: 10px;
+  width: 10px;
+  transform: scale(1);
+  animation: pulse-black 2s infinite;
+  flex-shrink: 0;
+}
+
+.blob.green {
+  background: rgba(51, 217, 178, 1);
+  box-shadow: 0 0 0 0 rgba(51, 217, 178, 1);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(51, 217, 178, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
+  }
 }

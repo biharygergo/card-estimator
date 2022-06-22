@@ -35,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -101,6 +102,7 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
     MatMenuModule,
     MatDialogModule,
     MatTooltipModule,
+    MatSidenavModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

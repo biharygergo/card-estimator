@@ -86,17 +86,17 @@ export class EstimatorService {
   private async signInAsMember(member: Member) {
     let user = await this.authService.getUser();
     let userId = user?.uid;
-  
+
     if (!userId) {
       const newUser = await this.authService.loginAnonymously(member.name);
       userId = newUser.uid;
     }
-  
+
     member.id = userId;
   }
 
   async createRoom(member: Member) {
-    await this.signInAsMember(member)
+    await this.signInAsMember(member);
 
     const room: Room = {
       id: this.createId(),
@@ -124,7 +124,7 @@ export class EstimatorService {
   }
 
   async joinRoom(roomId: string, member: Member) {
-    await this.signInAsMember(member)
+    await this.signInAsMember(member);
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       members: arrayUnion(member),
@@ -183,22 +183,37 @@ export class EstimatorService {
     });
   }
 
-  newRound(room: Room) {
+  private getRoundIds(room: Room) {
     const currentRoundId =
       room.currentRound ?? Object.keys(room.rounds).length - 1;
     const numberOfRounds = Object.keys(room.rounds).length;
     const nextRoundId = numberOfRounds;
     const nextRoundNumber = nextRoundId + 1;
+
+    return { currentRoundId, numberOfRounds, nextRoundId, nextRoundNumber };
+  }
+
+  newRound(room: Room) {
+    const { currentRoundId, nextRoundId, nextRoundNumber } = this.getRoundIds(room);
     room.rounds[currentRoundId].finished_at = serverTimestamp();
     room.currentRound = nextRoundId;
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
     return this.updateRoom(room);
   }
 
-  setActiveRound(room: Room, roundId: number) {
+  addRound(room: Room, topic: string) {
+    const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
+
+    room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber, topic);
+    return this.updateRoom(room);
+  }
+
+  setActiveRound(room: Room, roundId: number, shouldRevote: boolean) {
     room.currentRound = roundId;
-    const round = room.rounds[roundId];
-    room.rounds[roundId] = this.revoteRound(round);
+    if (shouldRevote) {
+      const round = room.rounds[roundId];
+      room.rounds[roundId] = this.revoteRound(round);
+    }
     return this.updateRoom(room);
   }
 
@@ -219,10 +234,10 @@ export class EstimatorService {
     });
   }
 
-  createRound(members: Member[], roundNumber: number): Round {
+  createRound(members: Member[], roundNumber: number, topic?: string): Round {
     return {
       id: this.createId(),
-      topic: `Topic of Round ${roundNumber}`,
+      topic: topic ?? `Topic of Round ${roundNumber}`,
       started_at: serverTimestamp(),
       finished_at: null,
       estimates: {},

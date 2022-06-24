@@ -12,7 +12,7 @@
 
 .topics-sidenav {
   width: 400px;
-  background: #efefef;
+  background: var(--light-background-color);
 }
 
 .room-container {
@@ -243,18 +243,19 @@
   align-items: center;
 }
 
-.result-container {
-  margin-right: 4px;
-  border-radius: 4px;
-  background-color: #f5a115;
-  color: white;
-  padding: 1px 6px;
-  margin-left: 8px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.card-round-result {
+  .result-container {
+    border-radius: 4px;
+    background-color: var(--main-color);
+    color: white;
+    padding: 3px 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
+
 
 .note-wrapper {
   padding: 0px 16px;
@@ -286,12 +287,21 @@
   .round-title {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
   }
 }
 
+.sidenav-header {
+  padding: 1rem;
+  background: var(--main-color);
+  color: white;
+}
+
 .sidenav-actions {
-  padding: 1rem 1rem 0 1rem;
+  margin-top: -10px;
+  background: var(--light-background-color);
+  border-radius: 6px 6px 0 0;
+  padding: 1rem;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -300,6 +310,7 @@
 
 .flat-card {
   box-shadow: none;
+  border: 1px solid lightgrey;
 }
 
 .card-round-number {
@@ -308,12 +319,24 @@
   font-size: 0.7rem;
 }
 
+.add-round-container {
+  padding: 16px;
+  mat-card {
+    margin: 0;
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+.add-round-button {
+  width: 100%;
+}
+
 .blob {
   background: black;
   border-radius: 50%;
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-  margin-left: 10px;
-  margin-right: 8px;
   height: 10px;
   width: 10px;
   transform: scale(1);

@@ -9,7 +9,7 @@
               <button mat-stroked-button>Edit</button>
             </h2>
             <input
-              placeholder="Placeholder"
+              placeholder="Add a JIRA ticket or a short description of the current round"
               [formControl]="roundTopic"
               (blur)="topicBlur()"
               class="topic-input"
@@ -194,7 +194,8 @@
       </div>
       <div class="estimate-container">
         <div class="action-buttons-container">
-          <button mat-raised-button (click)="newRound()">New Round</button>
+          <button mat-raised-button (click)="newRound()" *ngIf="currentRound === rounds.length - 1">New Round</button>
+          <button mat-raised-button (click)="nextRound()" *ngIf="currentRound < rounds.length - 1">Next Round</button>
           <button
             mat-raised-button
             (click)="showResults()"
@@ -254,9 +255,13 @@
     </div>
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
+    <div class="sidenav-header">
+      <h4>Rounds</h4>
+      <p>Manage the rounds in this estimation and download results for later use.</p>
+    </div>
     <div class="sidenav-actions">
       <button
-        mat-stroked-button
+        mat-button
         aria-label="Download results as .csv"
         (click)="downloadAsCsv()"
         [disabled]="rounds.length <= 1"
@@ -274,37 +279,44 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item>Edit</button>
               <button
                 mat-menu-item
                 aria-label="View the results of the given round"
                 (click)="detailsPanel.toggle()"
                 [disabled]="roundNumber === currentRound"
               >
-                View details
+                Details
+              </button>
+              <button
+                mat-menu-item
+                aria-label="Set selected round as active"
+                (click)="setActiveRound(roundNumber)"
+              >
+                Vote now
               </button>
               <button
                 mat-menu-item
                 aria-label="Revote selected round"
-                (click)="setActiveRound(roundNumber)"
+                (click)="revoteRound(roundNumber)"
               >
-                Revote
+                Clear votes
               </button>
-              <button mat-menu-item>Delete</button>
             </mat-menu>
           </div>
 
           <h3 class="round-title" [class.active]="roundNumber === currentRound">
-            {{ round.topic }}
             <div class="blob green" *ngIf="roundNumber === currentRound"></div>
-            <span class="result-container" *ngIf="roundNumber !== currentRound">
+            {{ round.topic }}
+          </h3>
+          <div class="card-round-result">
+            <span class="result-container" *ngIf="roundNumber !== currentRound && roundStatistics[roundNumber] !== undefined">
               {{
                 roundStatistics[roundNumber]?.average
                   | number
                   | estimateConverter: selectedEstimationCardSetValue:"rounded"
               }}
             </span>
-          </h3>
+          </div>
 
           <mat-expansion-panel
             class="flat-accordion"
@@ -396,6 +408,47 @@
           </mat-expansion-panel>
         </mat-card>
       </ng-container>
+      <div class="add-round-container">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="addRound()"
+          *ngIf="!isAddingRound"
+          class="add-round-button"
+        >
+          Add round
+        </button>
+        <mat-card *ngIf="isAddingRound" class="flat-card">
+          <div class="card-header">
+            <span class="card-round-number">#{{ rounds.length + 1 }}</span>
+          </div>
+          <mat-form-field appearance="outline" color="accent">
+            <mat-label>Topic</mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              placeholder="Describe the topic of this round"
+              [formControl]="sidebarRoundTopicForm"
+              autofocus
+            ></textarea>
+            <mat-hint>Insert a JIRA ticket or a short description of what you want to vote on.</mat-hint>
+          </mat-form-field>
+
+          <mat-card-footer class="card-footer-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="addRoundConfirmed()"
+              [disabled]="!sidebarRoundTopicForm.value"
+            >
+              Add
+            </button>
+            <button mat-flat-button (click)="cancelAddingRound()">
+              Cancel
+            </button>
+          </mat-card-footer>
+        </mat-card>
+      </div>
     </div>
   </mat-sidenav>
 </mat-sidenav-container>

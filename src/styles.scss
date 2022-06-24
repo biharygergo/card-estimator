@@ -1,10 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
 
 :root {
   --main-color: #1c4182;
   --main-dark-color: #001b55;
   --main-light-color: #536bb2;
   --accent-color: #f5a115;
+  --light-background-color: #F4F5F6;
 }
 html,
 body {
@@ -19,3 +21,16 @@ body {
 .mat-menu-panel {
   max-width: 300px !important;
 }
+
+
+$my-primary: mat.define-palette(mat.$indigo-palette, 500);
+$my-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: $my-primary,
+   accent: $my-accent,
+ )
+));
+@include mat.all-component-themes($my-theme);
+

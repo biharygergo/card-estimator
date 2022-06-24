@@ -28,6 +28,7 @@ import { getHumanReadableElapsedTime } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 import { ConfigService } from '../services/config.service';
+import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -38,6 +39,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
 })
 export class RoomComponent implements OnInit {
   @ViewChild('topicInput') topicInput: ElementRef;
+  @ViewChild(MatSidenavContainer, { read: ElementRef }) sidenav: MatSidenavContainer;
 
   room: Room;
   rounds: Round[] = [];
@@ -51,8 +53,11 @@ export class RoomComponent implements OnInit {
   );
 
   roundTopic = new FormControl('');
+  sidebarRoundTopicForm = new FormControl('');
+  
 
   isEditingTopic = false;
+  isAddingRound = false;
   isObserver = false;
   isMuted = true;
   shouldShowAloneInRoom = false;
@@ -144,7 +149,7 @@ export class RoomComponent implements OnInit {
           this.estimatorService.activeMember.id
         ];
     }
-    this.showOrHideAloneInRoomModal();
+    // this.showOrHideAloneInRoomModal();
     this.reCalculateStatistics(room);
   }
 
@@ -258,6 +263,16 @@ export class RoomComponent implements OnInit {
     this.estimatorService.newRound(this.room);
   }
 
+  nextRound() {
+    // this.analytics.logClickedNextRound();
+    this.estimatorService.setActiveRound(this.room, this.currentRound + 1, false);
+  }
+
+  setActiveRound(roundNumber: number) {
+    // this.analytics.logClickedSetActiveRound();
+    this.estimatorService.setActiveRound(this.room, roundNumber, false);
+  }
+
   playNotificationSound() {
     if (!this.isMuted) {
       const audio = new Audio();
@@ -360,9 +375,9 @@ export class RoomComponent implements OnInit {
     this.serializer.exportRoomAsCsv(this.room);
   }
 
-  setActiveRound(roundNumber: number) {
+  revoteRound(roundNumber: number) {
     this.analytics.logClickedReVote();
-    this.estimatorService.setActiveRound(this.room, roundNumber);
+    this.estimatorService.setActiveRound(this.room, roundNumber, true);
   }
 
   getCardSetDisplayValues(cardSet: CardSetValue | undefined) {
@@ -407,5 +422,23 @@ export class RoomComponent implements OnInit {
 
   increaseHideAdsCounter() {
     this.adHideClicks += 1;
+  }
+
+  addRound() {
+    this.isAddingRound = true;
+    window.setTimeout(() => {
+      const drawer = document.querySelector('.mat-drawer-inner-container');
+      drawer?.scrollTo({top: drawer?.scrollHeight, behavior: 'smooth'})
+    }, 100)
+  }
+
+  cancelAddingRound() {
+    this.isAddingRound = false;
+  } 
+
+  async addRoundConfirmed() {
+    await this.estimatorService.addRound(this.room, this.sidebarRoundTopicForm.value);
+    this.sidebarRoundTopicForm.setValue('');
+    this.isAddingRound = false;
   }
 }

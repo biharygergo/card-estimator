@@ -21,7 +21,7 @@
   justify-content: center;
   padding: 1rem;
   background: var(--main-dark-color);
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px;
 
   @media screen and (min-width: 800px) {
     flex-wrap: nowrap;
@@ -50,6 +50,7 @@
       margin: 0.3rem;
       flex: 1;
       aspect-ratio: 2/3;
+      height: 100%;
       font-size: 1.3rem;
       font-weight: 400;
       will-change: transform;

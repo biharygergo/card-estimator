@@ -44,6 +44,10 @@ export class AnalyticsService {
     logEvent(this.analytics, 'clicked_new_round');
   }
 
+  logClickedAddRoundConfirmed() {
+    logEvent(this.analytics, 'clicked_add_round_confirmed');
+  }
+
   logClickedNextRound() {
     logEvent(this.analytics, 'clicked_next_round');
   }

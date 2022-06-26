@@ -56,6 +56,7 @@ export class TopicsSidebarComponent implements OnInit {
       this.room,
       this.sidebarRoundTopicForm.value
     );
+    this.analytics.logClickedAddRoundConfirmed();
     this.sidebarRoundTopicForm.setValue('');
     this.isAddingRound = false;
   }

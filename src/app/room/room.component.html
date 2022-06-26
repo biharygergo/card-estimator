@@ -3,13 +3,17 @@
     <div class="navbar">
       <div class="navbar-right">
         <button
-          mat-stroked-button
+          mat-flat-button
+          color="primary"
           aria-label="Toggle topics sidebar"
           (click)="sidenav.toggle()"
           class="topics-toggle"
         >
-          Manage rounds ({{ rounds.length }})
-          <mat-icon>menu</mat-icon>
+          <div class="center-icon-button">
+            Manage rounds ({{ rounds.length }})
+            <mat-icon>menu</mat-icon>
+          </div>
+         
         </button>
       </div>
     </div>

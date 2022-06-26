@@ -1,0 +1,18 @@
+<div class="card-deck">
+  <div class="estimator-buttons">
+    <div
+      class="estimator-button-container"
+      *ngFor="let item of estimationValues"
+    >
+      <button
+        mat-raised-button
+        class="estimator-button"
+        (click)="setEstimate(item.key)"
+        [color]="+item.key === currentEstimate && 'accent'"
+        [disabled]="isObserver"
+      >
+        {{ item.value }}
+      </button>
+    </div>
+  </div>
+</div>

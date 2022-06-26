@@ -28,6 +28,7 @@ import { getHumanReadableElapsedTime } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 import { ConfigService } from '../services/config.service';
+import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -38,6 +39,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
 })
 export class RoomComponent implements OnInit {
   @ViewChild('topicInput') topicInput: ElementRef;
+  @ViewChild(MatSidenavContainer, { read: ElementRef }) sidenav: MatSidenavContainer;
 
   room: Room;
   rounds: Round[] = [];
@@ -51,6 +53,7 @@ export class RoomComponent implements OnInit {
   );
 
   roundTopic = new FormControl('');
+  
 
   isEditingTopic = false;
   isObserver = false;
@@ -74,8 +77,7 @@ export class RoomComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
-    private configService: ConfigService,
-    private serializer: SerializerService
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -238,16 +240,6 @@ export class RoomComponent implements OnInit {
     this.router.navigate(['join']);
   }
 
-  setEstimate(amount: number) {
-    this.analytics.logClickedVoteOption();
-    this.estimatorService.setEstimate(
-      this.room,
-      this.currentRound,
-      +amount,
-      this.estimatorService.activeMember.id
-    );
-  }
-
   showResults() {
     this.analytics.logClickedShowResults();
     this.estimatorService.setShowResults(this.room, this.currentRound, true);
@@ -256,6 +248,11 @@ export class RoomComponent implements OnInit {
   newRound() {
     this.analytics.logClickedNewRound();
     this.estimatorService.newRound(this.room);
+  }
+
+  nextRound() {
+    this.analytics.logClickedNextRound();
+    this.estimatorService.setActiveRound(this.room, this.currentRound + 1, false);
   }
 
   playNotificationSound() {
@@ -289,6 +286,7 @@ export class RoomComponent implements OnInit {
     this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
     this.snackBar.open('Join link copied to clipboard.', null, {
       duration: 2000,
+      horizontalPosition: 'right'
     });
   }
 
@@ -353,16 +351,6 @@ export class RoomComponent implements OnInit {
   setEstimationCardSet(key: CardSet) {
     this.analytics.logSelectedCardSet(key);
     this.estimatorService.setRoomCardSet(this.room.roomId, key);
-  }
-
-  downloadAsCsv() {
-    this.analytics.logClickedDownloadResults();
-    this.serializer.exportRoomAsCsv(this.room);
-  }
-
-  setActiveRound(roundNumber: number) {
-    this.analytics.logClickedReVote();
-    this.estimatorService.setActiveRound(this.room, roundNumber);
   }
 
   getCardSetDisplayValues(cardSet: CardSetValue | undefined) {

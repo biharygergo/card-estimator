@@ -1,10 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
 
 :root {
   --main-color: #1c4182;
   --main-dark-color: #001b55;
-  --main-light-color: #536bb2;
+  --main-light-color: #2a479b;
   --accent-color: #f5a115;
+  --light-background-color: #F4F5F6;
 }
 html,
 body {
@@ -18,4 +20,83 @@ body {
 
 .mat-menu-panel {
   max-width: 300px !important;
+}
+
+
+$my-primary: mat.define-palette(mat.$indigo-palette, 500);
+$my-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: $my-primary,
+   accent: $my-accent,
+ )
+));
+@include mat.all-component-themes($my-theme);
+
+
+.card-footer {
+  padding: 1rem !important;
+  border-top: 0.5px solid lightgrey;
+  h3 {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    small {
+      cursor: pointer;
+      color: #f5a115;
+
+      &:hover {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.card-footer-actions {
+  margin-top: 1rem !important;
+  border-top: 0.5px solid lightgrey;
+  padding: 1rem !important;
+  display: flex !important;
+  justify-content: flex-end;
+
+  button:not(:last-of-type) {
+    margin-right: 0.5rem;
+  }
+
+  &.extra-padding {
+    padding-bottom: 2rem;
+  }
+}
+
+
+.avatar {
+  background: #f5a115;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.member {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.statistic {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+
+  span {
+    color: #f5a115;
+  }
+}
+
+.note-wrapper {
+  padding: 0px 16px;
 }

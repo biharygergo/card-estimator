@@ -39,13 +39,15 @@
       src="https://www.googletagmanager.com/gtag/js?id=AW-970033218"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+      if (window && !window.location.origin.includes("localhost")) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
 
-      gtag("config", "AW-970033218");
+        gtag("config", "AW-970033218");
+      }
     </script>
 
     <!-- AdSense script -->
@@ -54,7 +56,6 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2421485157517914"
       crossorigin="anonymous"
     ></script>
-  
   </head>
   <body class="mat-typography">
     <app-root></app-root>

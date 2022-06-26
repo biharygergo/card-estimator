@@ -1,0 +1,136 @@
+.round-history-container {
+  mat-card {
+    margin: 1rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .mat-menu-trigger {
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+
+    .mat-icon {
+      font-size: 20px;
+      line-height: 20px;
+    }
+  }
+
+  .round-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.sidenav-header {
+  padding: 1rem;
+  background: var(--main-color);
+  color: white;
+}
+
+.sidenav-actions {
+  margin-top: -10px;
+  background: var(--light-background-color);
+  border-radius: 6px 6px 0 0;
+  padding: 1rem;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.flat-card {
+  box-shadow: none;
+  border: 1px solid lightgrey;
+}
+
+.card-round-number {
+  color: var(--main-dark-color);
+  opacity: 0.8;
+  font-size: 0.7rem;
+}
+
+.add-round-container {
+  padding: 16px;
+  mat-card {
+    margin: 0;
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+.add-round-button {
+  width: 100%;
+  background-color: var(--main-color);
+}
+
+.blob {
+  background: black;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+  height: 10px;
+  width: 10px;
+  transform: scale(1);
+  animation: pulse-black 2s infinite;
+  flex-shrink: 0;
+}
+
+.blob.green {
+  background: rgba(51, 217, 178, 1);
+  box-shadow: 0 0 0 0 rgba(51, 217, 178, 1);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(51, 217, 178, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
+  }
+}
+
+.card-round-result {
+  .result-container {
+    border-radius: 4px;
+    background-color: var(--main-color);
+    color: white;
+    padding: 3px 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.flat-accordion {
+  box-shadow: none;
+  border-radius: 4px !important;
+
+  &.mat-expanded {
+    background: #efefef;
+  }
+}
+
+.expansion-panel-action-row {
+  border: none;
+
+  button {
+    background: white;
+  }
+}

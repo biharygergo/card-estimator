@@ -35,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -51,6 +52,8 @@ import { PageHeaderComponent } from './landing/components/page-header/page-heade
 import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
 import { NotesFieldComponent } from './room/notes-field/notes-field.component';
 import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-deck-modal.component';
+import { TopicsSidebarComponent } from './room/topics-sidebar/topics-sidebar.component';
+import { CardDeckComponent } from './room/card-deck/card-deck.component';
 
 
 @NgModule({
@@ -69,6 +72,8 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
     FaqRowComponent,
     NotesFieldComponent,
     AddCardDeckModalComponent,
+    TopicsSidebarComponent,
+    CardDeckComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -101,6 +106,7 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
     MatMenuModule,
     MatDialogModule,
     MatTooltipModule,
+    MatSidenavModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

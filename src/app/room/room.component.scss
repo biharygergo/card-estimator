@@ -1,12 +1,33 @@
+.sidenav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidenav-content {
+  background: var(--main-color);
+}
+
+.topics-sidenav {
+  width: min(90%, 400px);
+  background: var(--light-background-color);
+}
+
 .room-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding: 0.5rem;
   flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 0 auto;
 
   @media screen and (min-width: 800px) {
     padding: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 150px;
   }
 }
 
@@ -17,7 +38,7 @@
   flex-basis: 100%;
 
   @media screen and (min-width: 800px) {
-    flex: 1;
+    flex: 2;
   }
 }
 
@@ -32,97 +53,53 @@
   }
 }
 
-.members-card {
-  margin-top: 2rem;
+.navbar {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  justify-content: flex-end;
+  align-items: center;
+
+  .topics-toggle {
+    .mat-icon {
+      margin-left: 8px;
+    }
+  }
 }
 
-.avatar {
-  background: #f5a115;
+.center-icon-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
+  gap: 6px;
 }
 
-.member {
-  display: flex !important;
-  flex-direction: row;
-  justify-content: space-between;
+.navbar-right {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+
+  @media screen and (min-width: 800px) {
+    padding: 1rem 2.5rem;
+
+  }
 }
 
 .action-buttons-container {
   display: flex;
-  flex-direction: row;
-  height: 68px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1rem;
+
   button {
-    flex: 1;
-    background: #f5a115;
-    color: white;
+    height: 50px;
+    flex: 1 0 100%;
     &:not(:last-child) {
       margin-right: 1rem;
     }
     &:disabled {
       background-color: lightgray;
     }
-  }
-}
-
-.estimator-buttons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-
-  .estimator-button-container {
-    width: 33.333%;
-    display: flex;
-    button {
-      margin: 0 0.3rem 0.5rem 0.3rem;
-      flex: 1;
-      height: 100px;
-      font-size: 1.3rem;
-      font-weight: 400;
-      &:disabled {
-        background-color: white;
-      }
-    }
-  }
-}
-
-.card-footer {
-  padding: 1rem;
-  border-top: 0.5px solid lightgrey;
-  h3 {
-    margin: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    small {
-      cursor: pointer;
-      color: #f5a115;
-
-      &:hover {
-        font-weight: bold;
-      }
-    }
-  }
-}
-
-.card-footer-actions {
-  margin-top: 1rem;
-  border-top: 0.5px solid lightgrey;
-  padding: 1rem;
-  display: flex;
-  justify-content: flex-end;
-
-  button:not(:last-of-type) {
-    margin-right: 0.5rem;
-  }
-
-  &.extra-padding {
-    padding-bottom: 2rem;
   }
 }
 
@@ -154,8 +131,8 @@
   margin: 0;
 }
 
-.round-history-container {
-  margin-top: 2rem;
+.members-card {
+  margin-top: 1rem;
 }
 
 .ad-explainer {
@@ -171,6 +148,7 @@
     user-select: none;
   }
 }
+
 .ad-container {
   margin-top: 0.2rem;
   min-height: 90px;
@@ -181,56 +159,8 @@
   }
 }
 
-.statistic {
-  display: flex !important;
-  flex-direction: row;
-  justify-content: space-between;
-
-  span {
-    color: #f5a115;
-  }
-}
-
 .mat-menu-item.selected {
   .mat-icon {
     color: #f5a115;
   }
-}
-
-.flat-accordion {
-  box-shadow: none;
-  border-radius: 4px !important;
-
-  &.mat-expanded {
-    background: #efefef;
-  }
-}
-
-.expansion-panel-action-row {
-  border: none;
-
-  button {
-    background: white;
-  }
-}
-
-.active-badge {
-  border-radius: 8px;
-  background-color: #f5a115;
-  color: white;
-  padding: 1px 6px;
-  margin-left: 8px;
-  font-size: 12px;
-  line-height: 12px;
-  display: flex;
-  align-items: center;
-}
-
-.mat-panel-title.active {
-  display: flex;
-  align-items: center;
-}
-
-.note-wrapper {
-  padding: 0px 16px;
 }

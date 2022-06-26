@@ -52,6 +52,7 @@ import { PageHeaderComponent } from './landing/components/page-header/page-heade
 import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
 import { NotesFieldComponent } from './room/notes-field/notes-field.component';
 import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-deck-modal.component';
+import { TopicsSidebarComponent } from './room/topics-sidebar/topics-sidebar.component';
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
     FaqRowComponent,
     NotesFieldComponent,
     AddCardDeckModalComponent,
+    TopicsSidebarComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

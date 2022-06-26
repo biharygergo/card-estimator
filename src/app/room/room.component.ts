@@ -53,11 +53,9 @@ export class RoomComponent implements OnInit {
   );
 
   roundTopic = new FormControl('');
-  sidebarRoundTopicForm = new FormControl('');
   
 
   isEditingTopic = false;
-  isAddingRound = false;
   isObserver = false;
   isMuted = true;
   shouldShowAloneInRoom = false;
@@ -79,8 +77,7 @@ export class RoomComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
-    private configService: ConfigService,
-    private serializer: SerializerService
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -268,11 +265,6 @@ export class RoomComponent implements OnInit {
     this.estimatorService.setActiveRound(this.room, this.currentRound + 1, false);
   }
 
-  setActiveRound(roundNumber: number) {
-    // this.analytics.logClickedSetActiveRound();
-    this.estimatorService.setActiveRound(this.room, roundNumber, false);
-  }
-
   playNotificationSound() {
     if (!this.isMuted) {
       const audio = new Audio();
@@ -370,16 +362,6 @@ export class RoomComponent implements OnInit {
     this.estimatorService.setRoomCardSet(this.room.roomId, key);
   }
 
-  downloadAsCsv() {
-    this.analytics.logClickedDownloadResults();
-    this.serializer.exportRoomAsCsv(this.room);
-  }
-
-  revoteRound(roundNumber: number) {
-    this.analytics.logClickedReVote();
-    this.estimatorService.setActiveRound(this.room, roundNumber, true);
-  }
-
   getCardSetDisplayValues(cardSet: CardSetValue | undefined) {
     if (!cardSet) {
       return '';
@@ -422,23 +404,5 @@ export class RoomComponent implements OnInit {
 
   increaseHideAdsCounter() {
     this.adHideClicks += 1;
-  }
-
-  addRound() {
-    this.isAddingRound = true;
-    window.setTimeout(() => {
-      const drawer = document.querySelector('.mat-drawer-inner-container');
-      drawer?.scrollTo({top: drawer?.scrollHeight, behavior: 'smooth'})
-    }, 100)
-  }
-
-  cancelAddingRound() {
-    this.isAddingRound = false;
-  } 
-
-  async addRoundConfirmed() {
-    await this.estimatorService.addRound(this.room, this.sidebarRoundTopicForm.value);
-    this.sidebarRoundTopicForm.setValue('');
-    this.isAddingRound = false;
   }
 }

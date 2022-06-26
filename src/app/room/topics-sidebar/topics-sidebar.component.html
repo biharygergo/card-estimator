@@ -1,195 +1,199 @@
 <div class="sidenav-header">
-    <h3>Rounds</h3>
-    <p>Manage the rounds in this estimation and download results for later use.</p>
-  </div>
-  <div class="sidenav-actions">
-    <button
-      mat-button
-      aria-label="Download results as .csv"
-      (click)="downloadAsCsv()"
-      [disabled]="rounds.length <= 1"
-    >
-      Download results
-    </button>
-  </div>
-  <div class="round-history-container">
-    <ng-container *ngFor="let round of rounds; let roundNumber = index">
-      <mat-card class="flat-card">
-        <div class="card-header">
-          <span class="card-round-number">#{{ roundNumber + 1 }}</span>
+  <h3>Rounds</h3>
+  <p>
+    Manage the rounds in this estimation and download results for later use.
+  </p>
+</div>
+<div class="sidenav-actions">
+  <button
+    mat-button
+    aria-label="Download results as .csv"
+    (click)="downloadAsCsv()"
+    [disabled]="rounds.length <= 1"
+  >
+    Download results
+  </button>
+</div>
+<div class="round-history-container">
+  <ng-container *ngFor="let round of rounds; let roundNumber = index">
+    <mat-card class="flat-card">
+      <div class="card-header">
+        <span class="card-round-number">#{{ roundNumber + 1 }}</span>
 
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            mat-menu-item
+            aria-label="View the results of the given round"
+            (click)="detailsPanel.toggle()"
+            [disabled]="roundNumber === currentRound"
+          >
+            Details
           </button>
-          <mat-menu #menu="matMenu">
-            <button
-              mat-menu-item
-              aria-label="View the results of the given round"
-              (click)="detailsPanel.toggle()"
-              [disabled]="roundNumber === currentRound"
-            >
-              Details
-            </button>
-            <button
-              mat-menu-item
-              aria-label="Set selected round as active"
-              (click)="setActiveRound(roundNumber)"
-            >
-              Vote now
-            </button>
-            <button
-              mat-menu-item
-              aria-label="Revote selected round"
-              (click)="revoteRound(roundNumber)"
-            >
-              Clear votes
-            </button>
-          </mat-menu>
-        </div>
+          <button
+            mat-menu-item
+            aria-label="Set selected round as active"
+            (click)="setActiveRound(roundNumber)"
+            [disabled]="roundNumber === currentRound"
+          >
+            Vote now
+          </button>
+          <button
+            mat-menu-item
+            aria-label="Revote selected round"
+            (click)="revoteRound(roundNumber)"
+          >
+            Clear votes
+          </button>
+        </mat-menu>
+      </div>
 
-        <h3 class="round-title" [class.active]="roundNumber === currentRound">
-          <div class="blob green" *ngIf="roundNumber === currentRound"></div>
-          {{ round.topic }}
-        </h3>
-        <div class="card-round-result">
-          <span class="result-container" *ngIf="roundNumber !== currentRound && roundStatistics[roundNumber] !== undefined">
-            {{
-              roundStatistics[roundNumber]?.average
-                | number
-                | estimateConverter: selectedEstimationCardSetValue:"rounded"
-            }}
-          </span>
-        </div>
-
-        <mat-expansion-panel
-          class="flat-accordion"
-          [disabled]="roundNumber === currentRound"
-          #detailsPanel
+      <h3 class="round-title" [class.active]="roundNumber === currentRound">
+        <div class="blob green" *ngIf="roundNumber === currentRound"></div>
+        {{ round.topic }}
+      </h3>
+      <div class="card-round-result">
+        <span
+          class="result-container"
+          *ngIf="
+            roundNumber !== currentRound &&
+            roundStatistics[roundNumber] !== undefined
+          "
         >
-          <ng-template matExpansionPanelContent>
-            <mat-list>
-              <h3 matSubheader *ngIf="roundStatistics[roundNumber]">
-                Statistics
+          {{
+            roundStatistics[roundNumber]?.average
+              | number
+              | estimateConverter: selectedEstimationCardSetValue:"rounded"
+          }}
+        </span>
+      </div>
+
+      <mat-expansion-panel
+        class="flat-accordion"
+        [disabled]="roundNumber === currentRound"
+        #detailsPanel
+      >
+        <ng-template matExpansionPanelContent>
+          <mat-list>
+            <h3 matSubheader *ngIf="roundStatistics[roundNumber]">
+              Statistics
+            </h3>
+            <mat-list-item *ngIf="roundStatistics[roundNumber]?.average">
+              <h3 matLine class="statistic">
+                Average
+                <span>{{
+                  roundStatistics[roundNumber]?.average
+                    | number
+                    | estimateConverter
+                      : selectedEstimationCardSetValue
+                      : "rounded"
+                }}</span>
               </h3>
-              <mat-list-item *ngIf="roundStatistics[roundNumber]?.average">
-                <h3 matLine class="statistic">
-                  Average
-                  <span>{{
-                    roundStatistics[roundNumber]?.average
-                      | number
+            </mat-list-item>
+            <mat-list-item *ngIf="roundStatistics[roundNumber]?.highestVote">
+              <h3 matLine class="statistic">
+                Highest
+                <span>
+                  {{
+                    roundStatistics[roundNumber]?.highestVote.value
                       | estimateConverter
                         : selectedEstimationCardSetValue
-                        : "rounded"
+                        : "exact"
+                  }}
+                  ({{ roundStatistics[roundNumber]?.highestVote.voter }})</span
+                >
+              </h3>
+            </mat-list-item>
+            <mat-list-item *ngIf="roundStatistics[roundNumber]?.lowestVote">
+              <h3 matLine class="statistic">
+                Lowest
+                <span>
+                  {{
+                    roundStatistics[roundNumber]?.lowestVote.value
+                      | estimateConverter
+                        : selectedEstimationCardSetValue
+                        : "exact"
+                  }}
+                  ({{ roundStatistics[roundNumber]?.lowestVote.voter }})</span
+                >
+              </h3>
+            </mat-list-item>
+            <mat-list-item *ngIf="roundStatistics[roundNumber]?.elapsed">
+              <h3 matLine class="statistic">
+                Elapsed time
+                <span> {{ roundStatistics[roundNumber]?.elapsed }}</span>
+              </h3>
+            </mat-list-item>
+            <h3 matSubheader>Votes</h3>
+            <mat-list-item *ngFor="let member of room?.members">
+              <span matListAvatar class="avatar">{{
+                member.name.charAt(0)
+              }}</span>
+              <h3 matLine class="member">
+                {{ member.name }}
+                <span class="estimate">
+                  <span>{{
+                    round.estimates[member.id] == undefined
+                      ? "Not voted"
+                      : (round.estimates[member.id]
+                        | estimateConverter
+                          : selectedEstimationCardSetValue
+                          : "exact")
                   }}</span>
-                </h3>
-              </mat-list-item>
-              <mat-list-item
-                *ngIf="roundStatistics[roundNumber]?.highestVote"
-              >
-                <h3 matLine class="statistic">
-                  Highest
-                  <span>
-                    {{
-                      roundStatistics[roundNumber]?.highestVote.value
-                        | estimateConverter
-                          : selectedEstimationCardSetValue
-                          : "exact"
-                    }}
-                    ({{
-                      roundStatistics[roundNumber]?.highestVote.voter
-                    }})</span
-                  >
-                </h3>
-              </mat-list-item>
-              <mat-list-item *ngIf="roundStatistics[roundNumber]?.lowestVote">
-                <h3 matLine class="statistic">
-                  Lowest
-                  <span>
-                    {{
-                      roundStatistics[roundNumber]?.lowestVote.value
-                        | estimateConverter
-                          : selectedEstimationCardSetValue
-                          : "exact"
-                    }}
-                    ({{
-                      roundStatistics[roundNumber]?.lowestVote.voter
-                    }})</span
-                  >
-                </h3>
-              </mat-list-item>
-              <mat-list-item *ngIf="roundStatistics[roundNumber]?.elapsed">
-                <h3 matLine class="statistic">
-                  Elapsed time
-                  <span> {{ roundStatistics[roundNumber]?.elapsed }}</span>
-                </h3>
-              </mat-list-item>
-              <h3 matSubheader>Votes</h3>
-              <mat-list-item *ngFor="let member of room?.members">
-                <span matListAvatar class="avatar">{{
-                  member.name.charAt(0)
-                }}</span>
-                <h3 matLine class="member">
-                  {{ member.name }}
-                  <span class="estimate">
-                    <span>{{
-                      round.estimates[member.id] == undefined
-                        ? "Not voted"
-                        : (round.estimates[member.id]
-                          | estimateConverter
-                            : selectedEstimationCardSetValue
-                            : "exact")
-                    }}</span>
-                  </span>
-                </h3>
-              </mat-list-item>
-              <h3 matSubheader>Notes</h3>
-              <div class="note-wrapper">
-                <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
-              </div>
-            </mat-list>
-          </ng-template>
-        </mat-expansion-panel>
-      </mat-card>
-    </ng-container>
-    <div class="add-round-container">
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="addRound()"
-        *ngIf="!isAddingRound"
-        class="add-round-button"
-      >
-        Add round
-      </button>
-      <mat-card *ngIf="isAddingRound" class="flat-card">
-        <div class="card-header">
-          <span class="card-round-number">#{{ rounds.length + 1 }}</span>
-        </div>
-        <mat-form-field appearance="outline" color="accent">
-          <mat-label>Topic</mat-label>
-          <textarea
-            matInput
-            cdkTextareaAutosize
-            placeholder="Describe the topic of this round"
-            [formControl]="sidebarRoundTopicForm"
-            autofocus
-          ></textarea>
-          <mat-hint>Insert a JIRA ticket or a short description of what you want to vote on.</mat-hint>
-        </mat-form-field>
+                </span>
+              </h3>
+            </mat-list-item>
+            <h3 matSubheader>Notes</h3>
+            <div class="note-wrapper">
+              <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
+            </div>
+          </mat-list>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-card>
+  </ng-container>
+  <div class="add-round-container">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="addRound()"
+      *ngIf="!isAddingRound"
+      class="add-round-button"
+    >
+      Add round
+    </button>
+    <mat-card *ngIf="isAddingRound" class="flat-card">
+      <div class="card-header">
+        <span class="card-round-number">#{{ rounds.length + 1 }}</span>
+      </div>
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>Topic</mat-label>
+        <textarea
+          matInput
+          cdkTextareaAutosize
+          placeholder="Describe the topic of this round"
+          [formControl]="sidebarRoundTopicForm"
+          autofocus
+        ></textarea>
+        <mat-hint
+          >Insert a JIRA ticket or a short description of what you want to vote
+          on.</mat-hint
+        >
+      </mat-form-field>
 
-        <mat-card-footer class="card-footer-actions">
-          <button
-            mat-flat-button
-            color="primary"
-            (click)="addRoundConfirmed()"
-            [disabled]="!sidebarRoundTopicForm.value"
-          >
-            Add
-          </button>
-          <button mat-flat-button (click)="cancelAddingRound()">
-            Cancel
-          </button>
-        </mat-card-footer>
-      </mat-card>
-    </div>
+      <mat-card-footer class="card-footer-actions">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="addRoundConfirmed()"
+          [disabled]="!sidebarRoundTopicForm.value"
+        >
+          Add
+        </button>
+        <button mat-flat-button (click)="cancelAddingRound()">Cancel</button>
+      </mat-card-footer>
+    </mat-card>
   </div>
+</div>

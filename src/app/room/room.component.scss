@@ -25,6 +25,7 @@
   @media screen and (min-width: 800px) {
     padding: 2rem;
     padding-top: 1rem;
+    padding-bottom: 150px;
   }
 }
 
@@ -35,7 +36,7 @@
   flex-basis: 100%;
 
   @media screen and (min-width: 800px) {
-    flex: 1;
+    flex: 2;
   }
 }
 
@@ -61,57 +62,44 @@
     color: white;
     border-color: white;
     background: var(--main-dark-color);
-    .mat-button-wrapper {
-      display: flex;
-      align-items: center;
-    }
     .mat-icon {
       margin-left: 8px;
     }
   }
 }
 
+.center-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
 .navbar-right {
   display: flex;
   justify-content: flex-end;
-  padding: 1rem 2.5rem;
+  padding: 1rem;
+
+  @media screen and (min-width: 800px) {
+    padding: 1rem 2.5rem;
+
+  }
 }
 
 .action-buttons-container {
   display: flex;
-  flex-direction: row;
-  height: 68px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1rem;
+
   button {
-    flex: 1;
-    background: #f5a115;
-    color: white;
+    height: 50px;
+    flex: 1 0 100%;
     &:not(:last-child) {
       margin-right: 1rem;
     }
     &:disabled {
       background-color: lightgray;
-    }
-  }
-}
-
-.estimator-buttons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-
-  .estimator-button-container {
-    width: 33.333%;
-    display: flex;
-    button {
-      margin: 0 0.3rem 0.5rem 0.3rem;
-      flex: 1;
-      height: 100px;
-      font-size: 1.3rem;
-      font-weight: 400;
-      &:disabled {
-        background-color: white;
-      }
     }
   }
 }
@@ -142,6 +130,10 @@
 
 .mat-card-header-text {
   margin: 0;
+}
+
+.members-card {
+  margin-top: 1rem;
 }
 
 .ad-explainer {

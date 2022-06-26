@@ -240,16 +240,6 @@ export class RoomComponent implements OnInit {
     this.router.navigate(['join']);
   }
 
-  setEstimate(amount: number) {
-    this.analytics.logClickedVoteOption();
-    this.estimatorService.setEstimate(
-      this.room,
-      this.currentRound,
-      +amount,
-      this.estimatorService.activeMember.id
-    );
-  }
-
   showResults() {
     this.analytics.logClickedShowResults();
     this.estimatorService.setShowResults(this.room, this.currentRound, true);
@@ -296,6 +286,7 @@ export class RoomComponent implements OnInit {
     this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
     this.snackBar.open('Join link copied to clipboard.', null, {
       duration: 2000,
+      horizontalPosition: 'right'
     });
   }
 

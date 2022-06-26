@@ -3,16 +3,15 @@
     <div class="navbar">
       <div class="navbar-right">
         <button
-        mat-stroked-button
-        aria-label="Toggle topics sidebar"
-        (click)="sidenav.toggle()"
-        class="topics-toggle"
-      >
-        Rounds
-        <mat-icon>menu</mat-icon>
-      </button>
+          mat-stroked-button
+          aria-label="Toggle topics sidebar"
+          (click)="sidenav.toggle()"
+          class="topics-toggle"
+        >
+          Manage rounds ({{ rounds.length }})
+          <mat-icon>menu</mat-icon>
+        </button>
       </div>
-     
     </div>
     <div class="room-container">
       <div class="meta-container">
@@ -35,13 +34,13 @@
           </mat-card-content>
         </mat-card>
         <mat-card class="members-card">
-          <mat-card-header>
+          <!-- <mat-card-header>
             <mat-card-title>Estimates</mat-card-title>
             <mat-card-subtitle
               >See the estimates of people who have joined your
               room</mat-card-subtitle
             >
-          </mat-card-header>
+          </mat-card-header> -->
           <mat-card-content>
             <mat-list>
               <ng-container *ngIf="(room?.rounds)[currentRound].show_results">
@@ -146,12 +145,52 @@
           <mat-card-footer class="card-footer-actions extra-padding">
             <app-notes-field [room]="room"></app-notes-field>
           </mat-card-footer>
+          
+        </mat-card>
+      </div>
+      <div class="estimate-container">
+        <mat-card class="flat-card">
+          <div class="action-buttons-container">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="newRound()"
+              *ngIf="currentRound === rounds.length - 1"
+            >
+              <div class="center-icon-button">
+                <mat-icon>add</mat-icon>
+                New Round
+              </div>
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="nextRound()"
+              *ngIf="currentRound < rounds.length - 1"
+            >
+              <div class="center-icon-button">
+                <mat-icon>navigate_next</mat-icon>
+                Next Round
+              </div>
+            </button>
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="showResults()"
+              [disabled]="(room?.rounds)[currentRound]?.show_results"
+            >
+              <div class="center-icon-button">
+                <mat-icon>visibility</mat-icon>
+                Reveal Votes
+              </div>
+            </button>
+          </div>
           <mat-card-footer class="card-footer">
             <h3>
               <span
                 >Room ID: <strong>{{ room?.roomId }}</strong></span
               >
-              <button mat-stroked-button (click)="copyRoomId()">
+              <button mat-stroked-button color="primary" (click)="copyRoomId()">
                 Invite others
               </button>
             </h3>
@@ -199,48 +238,7 @@
             </mat-menu>
           </mat-card-footer>
         </mat-card>
-      </div>
-      <div class="estimate-container">
-        <div class="action-buttons-container">
-          <button
-            mat-raised-button
-            (click)="newRound()"
-            *ngIf="currentRound === rounds.length - 1"
-          >
-            New Round
-          </button>
-          <button
-            mat-raised-button
-            (click)="nextRound()"
-            *ngIf="currentRound < rounds.length - 1"
-          >
-            Next Round
-          </button>
-          <button
-            mat-raised-button
-            (click)="showResults()"
-            [disabled]="(room?.rounds)[currentRound]?.show_results"
-          >
-            Reveal Votes
-          </button>
-        </div>
 
-        <div class="estimator-buttons">
-          <div
-            class="estimator-button-container"
-            *ngFor="let item of estimationValues"
-          >
-            <button
-              mat-raised-button
-              class="estimator-button"
-              (click)="setEstimate(item.key)"
-              [color]="+item.key === currentEstimate && 'accent'"
-              [disabled]="isObserver"
-            >
-              {{ item.value }}
-            </button>
-          </div>
-        </div>
         <div class="ad-explainer" *ngIf="showAds">
           <span
             matTooltip="Ads support the development of this free-to-use app. If you want to hide ads in this session, click on this text 5 times."
@@ -271,10 +269,17 @@
           </mat-card>
         </div>
       </div>
+      <app-card-deck
+        [room]="room"
+        [currentRound]="currentRound"
+        [isObserver]="isObserver"
+        [estimationValues]="estimationValues"
+        [currentEstimate]="currentEstimate"
+      ></app-card-deck>
       <app-github-badge></app-github-badge>
     </div>
   </mat-sidenav-content>
-  <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav" [autoFocus]="false">
+  <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
     <app-topics-sidebar
       [room]="room"
       [rounds]="rounds"

@@ -146,7 +146,7 @@ export class RoomComponent implements OnInit {
           this.estimatorService.activeMember.id
         ];
     }
-    // this.showOrHideAloneInRoomModal();
+    this.showOrHideAloneInRoomModal();
     this.reCalculateStatistics(room);
   }
 
@@ -251,7 +251,7 @@ export class RoomComponent implements OnInit {
   }
 
   nextRound() {
-    // this.analytics.logClickedNextRound();
+    this.analytics.logClickedNextRound();
     this.estimatorService.setActiveRound(this.room, this.currentRound + 1, false);
   }
 

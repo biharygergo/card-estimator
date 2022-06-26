@@ -61,7 +61,7 @@ export class TopicsSidebarComponent implements OnInit {
   }
 
   setActiveRound(roundNumber: number) {
-    // this.analytics.logClickedSetActiveRound();
+    this.analytics.logClickedSetActiveRound();
     this.estimatorService.setActiveRound(this.room, roundNumber, false);
   }
 }

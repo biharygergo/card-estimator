@@ -25,12 +25,12 @@ export class AppComponent {
           if (route.snapshot.data['title']) {
             routeTitle = route!.snapshot.data['title'];
           }
-          return routeTitle;
+          return {routeTitle, disablePostfix: route?.snapshot?.data['disablePostfix']};
         })
       )
-      .subscribe((title: string) => {
-        if (title) {
-          this.titleService.setTitle(`${title} - Planning Poker`);
+      .subscribe(({routeTitle, disablePostfix}) => {
+        if (routeTitle) {
+          this.titleService.setTitle(`${routeTitle}${disablePostfix ? '' : ' - Planning Poker'}`);
         }
       });
   }

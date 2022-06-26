@@ -7,7 +7,14 @@ import { LandingComponent } from './landing/landing.component';
 import { RoomComponent } from './room/room.component';
 
 const routes: Routes = [
-  { path: '', component: LandingComponent, data: { title: 'Home' } },
+  {
+    path: '',
+    component: LandingComponent,
+    data: {
+      title: 'Planning Poker - Made for Remote Teams - SCRUM Poker',
+      disablePostfix: true,
+    },
+  },
   {
     path: 'features',
     component: FeaturesComponent,

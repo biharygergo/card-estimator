@@ -13,7 +13,6 @@
             Manage rounds ({{ rounds.length }})
             <mat-icon>menu</mat-icon>
           </div>
-         
         </button>
       </div>
     </div>
@@ -38,13 +37,6 @@
           </mat-card-content>
         </mat-card>
         <mat-card class="members-card">
-          <!-- <mat-card-header>
-            <mat-card-title>Estimates</mat-card-title>
-            <mat-card-subtitle
-              >See the estimates of people who have joined your
-              room</mat-card-subtitle
-            >
-          </mat-card-header> -->
           <mat-card-content>
             <mat-list>
               <ng-container *ngIf="(room?.rounds)[currentRound].show_results">
@@ -120,27 +112,28 @@
                         (room?.rounds)[currentRound].estimates[member.id] ==
                           undefined && (room?.rounds)[currentRound].show_results
                       "
-                      >-</span
+                      >Not voted</span
                     >
-                    <mat-spinner
-                      [diameter]="20"
-                      color="accent"
+                    <div
+                      class="vote-status-container"
                       *ngIf="
                         (room?.rounds)[currentRound].estimates[member.id] ==
                           undefined &&
                         !(room?.rounds)[currentRound].show_results
                       "
-                    ></mat-spinner>
-                    <mat-icon
-                      aria-hidden="false"
-                      aria-label="Example home icon"
+                    >
+                      <span>Waiting to vote</span>
+                    </div>
+                    <div
+                      class="vote-status-container"
                       *ngIf="
                         (room?.rounds)[currentRound].estimates[member.id] !=
                           undefined &&
                         !(room?.rounds)[currentRound].show_results
                       "
-                      >done</mat-icon
                     >
+                      <span>Voted</span>
+                    </div>
                   </span>
                 </h3>
               </mat-list-item>
@@ -149,7 +142,6 @@
           <mat-card-footer class="card-footer-actions extra-padding">
             <app-notes-field [room]="room"></app-notes-field>
           </mat-card-footer>
-          
         </mat-card>
       </div>
       <div class="estimate-container">

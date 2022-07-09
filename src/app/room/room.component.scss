@@ -74,6 +74,18 @@
   gap: 6px;
 }
 
+.vote-status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.8rem;
+
+  span {
+    opacity: 0.7;
+  }
+}
+
 .navbar-right {
   display: flex;
   justify-content: flex-end;

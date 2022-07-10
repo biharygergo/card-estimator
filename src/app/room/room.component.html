@@ -1,6 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav-content class="sidenav-content">
     <div class="navbar">
+      <div class="navbar-left">
+        <app-profile-dropdown></app-profile-dropdown>
+      </div>
       <div class="navbar-right">
         <button
           mat-flat-button
@@ -89,9 +92,17 @@
 
               <h3 matSubheader>Votes</h3>
               <mat-list-item *ngFor="let member of room?.members">
-                <span matListAvatar class="avatar">{{
-                  member.name.charAt(0)
-                }}</span>
+                <span matListAvatar class="avatar">
+                  <img
+                    *ngIf="member.avatarUrl"
+                    [src]="member.avatarUrl"
+                    class="avatar-image"
+                    alt="Avatar image from your Google Account"
+                  />
+                  <ng-container *ngIf="!member.avatarUrl">
+                    {{ member.name.charAt(0) }}
+                  </ng-container></span
+                >
                 <h3 matLine class="member">
                   {{ member.name }}
                   <span class="estimate">

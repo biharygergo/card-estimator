@@ -54,6 +54,7 @@ import { NotesFieldComponent } from './room/notes-field/notes-field.component';
 import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-deck-modal.component';
 import { TopicsSidebarComponent } from './room/topics-sidebar/topics-sidebar.component';
 import { CardDeckComponent } from './room/card-deck/card-deck.component';
+import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-dropdown.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { CardDeckComponent } from './room/card-deck/card-deck.component';
     AddCardDeckModalComponent,
     TopicsSidebarComponent,
     CardDeckComponent,
+    ProfileDropdownComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

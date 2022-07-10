@@ -1,0 +1,31 @@
+<ng-container *ngIf="currentUser | async as user">
+  <button mat-icon-button class="avatar-button" [matMenuTriggerFor]="menu">
+    <img
+      *ngIf="user.photoURL"
+      [src]="user.photoURL"
+      class="avatar-image"
+      alt="Avatar image from your Google Account"
+    />
+    <ng-container *ngIf="!user.photoURL">
+      {{ user.displayName.charAt(0) }}
+    </ng-container>
+  </button>
+  <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
+    <button mat-menu-item *ngIf="user.isAnonymous" (click)="createAccount()">
+      <mat-icon>login</mat-icon>
+      <span>Create an account</span>
+    </button>
+    <button
+      mat-menu-item
+      *ngIf="!user.isAnonymous"
+      (click)="unlinkAccount()"
+    >
+      <mat-icon>heart_broken</mat-icon>
+      <span>Unlink Google account</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>account_circle</mat-icon>
+      <span>Edit avatar</span>
+    </button>
+  </mat-menu>
+</ng-container>

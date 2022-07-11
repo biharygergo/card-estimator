@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+} from '@angular/core';
 import {
   EstimatorService,
   RoomNotFoundError,
@@ -10,7 +16,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subscription } from 'rxjs';
+import {
+  distinctUntilChanged,
+  Subject,
+  Subscription,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import {
   CardSet,
   CardSetValue,
@@ -23,12 +35,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../services/analytics.service';
-import { SerializerService } from '../services/serializer.service';
 import { getHumanReadableElapsedTime } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 import { ConfigService } from '../services/config.service';
-import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
+import { MatSidenavContainer } from '@angular/material/sidenav';
+import { AuthService } from '../services/auth.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -37,9 +49,12 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss'],
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild('topicInput') topicInput: ElementRef;
-  @ViewChild(MatSidenavContainer, { read: ElementRef }) sidenav: MatSidenavContainer;
+  @ViewChild(MatSidenavContainer, { read: ElementRef })
+  sidenav: MatSidenavContainer;
+
+  destroy = new Subject<void>();
 
   room: Room;
   rounds: Round[] = [];
@@ -53,7 +68,6 @@ export class RoomComponent implements OnInit {
   );
 
   roundTopic = new FormControl('');
-  
 
   isEditingTopic = false;
   isObserver = false;
@@ -77,7 +91,8 @@ export class RoomComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -102,10 +117,24 @@ export class RoomComponent implements OnInit {
       (error) => this.onRoomUpdateError(error)
     );
 
+    this.authService.avatarUpdated
+      .pipe(
+        takeUntil(this.destroy),
+        distinctUntilChanged(),
+        tap((photoURL: string) => {
+          this.estimatorService.updateCurrentUserMemberAvatar(this.room, photoURL);
+        })
+      )
+      .subscribe();
+
     this.configService.isEnabled('adsEnabled').then((value) => {
       this.adsEnabled = value;
       this.updateShowAds();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
   }
 
   private onRoomUpdated(room: Room, roomData: RoomData, roomId: string) {
@@ -201,7 +230,7 @@ export class RoomComponent implements OnInit {
     if (this.shouldShowAloneInRoom) {
       this.openAloneInRoomModal();
     } else {
-      this.closeAllDialogs();
+      this.dialog.getDialogById(ALONE_IN_ROOM_MODAL)?.close();
     }
   }
 
@@ -252,7 +281,11 @@ export class RoomComponent implements OnInit {
 
   nextRound() {
     this.analytics.logClickedNextRound();
-    this.estimatorService.setActiveRound(this.room, this.currentRound + 1, false);
+    this.estimatorService.setActiveRound(
+      this.room,
+      this.currentRound + 1,
+      false
+    );
   }
 
   playNotificationSound() {
@@ -286,7 +319,7 @@ export class RoomComponent implements OnInit {
     this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
     this.snackBar.open('Join link copied to clipboard.', null, {
       duration: 2000,
-      horizontalPosition: 'right'
+      horizontalPosition: 'right',
     });
   }
 

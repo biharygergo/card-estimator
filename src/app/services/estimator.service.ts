@@ -93,6 +93,9 @@ export class EstimatorService {
     }
 
     member.id = userId;
+    if (user?.photoURL) {
+      member.avatarUrl = user.photoURL;
+    }
   }
 
   async createRoom(member: Member) {
@@ -194,7 +197,8 @@ export class EstimatorService {
   }
 
   newRound(room: Room) {
-    const { currentRoundId, nextRoundId, nextRoundNumber } = this.getRoundIds(room);
+    const { currentRoundId, nextRoundId, nextRoundNumber } =
+      this.getRoundIds(room);
     room.rounds[currentRoundId].finished_at = serverTimestamp();
     room.currentRound = nextRoundId;
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
@@ -204,7 +208,11 @@ export class EstimatorService {
   addRound(room: Room, topic: string) {
     const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
 
-    room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber, topic);
+    room.rounds[nextRoundId] = this.createRound(
+      room.members,
+      nextRoundNumber,
+      topic
+    );
     return this.updateRoom(room);
   }
 
@@ -279,6 +287,15 @@ export class EstimatorService {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       cardSet: CustomCardSet,
       customCardSetValue: selectedSet,
+    });
+  }
+
+  updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
+    const newMembers = [...room.members];
+    const member = newMembers.find((m) => m.id === this.activeMember.id);
+    member.avatarUrl = avatarUrl;
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      members: newMembers,
     });
   }
 }

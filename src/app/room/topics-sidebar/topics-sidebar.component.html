@@ -129,9 +129,16 @@
             </mat-list-item>
             <h3 matSubheader>Votes</h3>
             <mat-list-item *ngFor="let member of room?.members">
-              <span matListAvatar class="avatar">{{
-                member.name.charAt(0)
-              }}</span>
+              <span matListAvatar class="avatar">
+                <img
+                  *ngIf="member.avatarUrl"
+                  [src]="member.avatarUrl"
+                  class="avatar-image"
+                />
+                <ng-container *ngIf="!member.avatarUrl">
+                  <div>{{ member.name.charAt(0) }}</div>
+                </ng-container></span
+              >
               <h3 matLine class="member">
                 {{ member.name }}
                 <span class="estimate">

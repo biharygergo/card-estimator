@@ -125,4 +125,18 @@ export class AnalyticsService {
       card_set: cardSet,
     });
   }
+
+  logClickedEditAvatar() {
+    logEvent(this.analytics, 'clicked_edit_avatar');
+  }
+
+  logSelectedAvatar(avatarUrl: string) {
+    logEvent(this.analytics, 'selected_avatar', {
+      avatar_url: avatarUrl,
+    });
+  }
+
+  logClickedRandomizeAvatars() {
+    logEvent(this.analytics, 'clicked_randomize_avatars');
+  }
 }

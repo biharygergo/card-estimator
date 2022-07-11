@@ -30,6 +30,7 @@ import { AuthService } from './auth.service';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
+export class NotLoggedInError extends Error {}
 
 const LAST_ROOM_DATA = 'CARD_ESTIMATOR_LAST_ROOM_DATA';
 
@@ -76,6 +77,7 @@ export class EstimatorService {
 
   currentRoom: Observable<Room> = new Observable<Room>();
   activeMember: Member;
+  observer?: Member;
 
   constructor(private firestore: Firestore, private authService: AuthService) {}
 
@@ -124,6 +126,11 @@ export class EstimatorService {
     });
 
     return { room, member };
+  }
+
+  async joinRoomAsObserver(roomId: string, member: Member) {
+    await this.signInAsMember(member);
+    this.observer = member;
   }
 
   async joinRoom(roomId: string, member: Member) {

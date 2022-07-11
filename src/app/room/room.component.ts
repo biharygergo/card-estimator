@@ -97,23 +97,13 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
-    const observing = this.route.snapshot.queryParamMap.get('observing');
-    const roomData = retrieveRoomData();
 
-    if (!roomId) {
-      this.errorGoBackToJoinPage();
-      return;
+    if (this.route.snapshot.data.room) {
+      this.onRoomUpdated(this.route.snapshot.data.room, roomId);
     }
-
-    if (!roomData?.memberId && !observing) {
-      this.router.navigate(['join'], { queryParams: { roomId } });
-      return;
-    }
-
-    this.estimatorService.refreshCurrentRoom(roomId, roomData?.memberId);
 
     this.roomSubscription = this.estimatorService.currentRoom.subscribe(
-      (room) => this.onRoomUpdated(room, roomData, roomId),
+      (room) => this.onRoomUpdated(room, roomId),
       (error) => this.onRoomUpdateError(error)
     );
 
@@ -122,7 +112,10 @@ export class RoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy),
         distinctUntilChanged(),
         tap((photoURL: string) => {
-          this.estimatorService.updateCurrentUserMemberAvatar(this.room, photoURL);
+          this.estimatorService.updateCurrentUserMemberAvatar(
+            this.room,
+            photoURL
+          );
         })
       )
       .subscribe();
@@ -137,7 +130,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.destroy.next();
   }
 
-  private onRoomUpdated(room: Room, roomData: RoomData, roomId: string) {
+  private onRoomUpdated(room: Room, roomId: string) {
     const oldRoom: Room | undefined =
       this.room === undefined
         ? undefined
@@ -167,7 +160,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     this.currentRound = roundNumberOrFallback;
-    if (!roomData?.memberId || !this.estimatorService.activeMember) {
+    if (!this.estimatorService.activeMember) {
       this.joinAsObserver(roomId);
     } else {
       this.currentEstimate =
@@ -197,21 +190,15 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private onRoomUpdateError(error: Error) {
-    if (error instanceof RoomNotFoundError) {
-      this.errorGoBackToJoinPage();
-    } else if (error instanceof MemberNotFoundError) {
-      this.isObserver = true;
-    } else {
-      this.errorGoBackToJoinPage();
-    }
+    this.errorGoBackToJoinPage();
   }
 
   private joinAsObserver(roomId: string) {
     if (!this.isObserver) {
       this.snackBar
         .open(
-          'You are currently observing this estimation. Join with a name to estimate as well.',
-          'Join with a Name',
+          'You are currently observing this estimation.',
+          'Join as an Estimator',
           { duration: 10000 }
         )
         .onAction()
@@ -232,10 +219,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     } else {
       this.dialog.getDialogById(ALONE_IN_ROOM_MODAL)?.close();
     }
-  }
-
-  private closeAllDialogs() {
-    this.dialog.closeAll();
   }
 
   private openAloneInRoomModal() {
@@ -262,7 +245,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   private errorGoBackToJoinPage() {
     this.snackBar.open(
-      'Unable to join this room. Please check the room ID and join again.',
+      'Something went wrong. Please try again later.',
       null,
       { duration: 5000 }
     );
@@ -357,8 +340,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   async leaveRoom() {
     this.analytics.logClickedLeaveRoom();
     if (confirm('Do you really want to leave this estimation?')) {
+      this.roomSubscription?.unsubscribe();
       if (this.estimatorService.activeMember) {
-        this.roomSubscription?.unsubscribe();
         await this.estimatorService.removeMember(
           this.room.roomId,
           this.estimatorService.activeMember

@@ -49,7 +49,7 @@
             <button
               mat-button
               class="observer-link"
-              [disabled]="!roomId.value.length || isBusy"
+              [disabled]="!(roomId.value.length && name.value.length) || isBusy"
               (click)="joinRoomAsObserver()"
             >
               Join as an Observer

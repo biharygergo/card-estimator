@@ -108,11 +108,19 @@ export class CreateOrJoinRoomComponent implements OnInit {
       id: null,
       name: this.name.value,
     };
-    await this.estimatorService.joinRoomAsObserver(this.roomId.value, member);
-    this.analytics.logClickedJoinAsObserver();
-    return this.router.navigate([this.roomId.value], {
-      queryParams: { observing: 1 },
-    });
+
+    try {
+      this.isBusy = true;
+      await this.estimatorService.joinRoomAsObserver(this.roomId.value, member);
+      this.analytics.logClickedJoinAsObserver();
+      return this.router.navigate([this.roomId.value], {
+        queryParams: { observing: 1 },
+      });
+    } catch {
+      this.showUnableToJoinRoom();
+      this.isBusy = false;
+    }
+    
   }
 
   showUnableToJoinRoom() {

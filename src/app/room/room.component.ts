@@ -220,7 +220,7 @@ export class RoomComponent implements OnInit {
         maxWidth: '600px',
         disableClose: true,
         data: {
-          name: this.estimatorService.activeMember.name,
+          name: this.estimatorService.activeMember?.name || 'Observer',
           onCopyLink: () => this.copyRoomId(),
         },
       });

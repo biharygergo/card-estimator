@@ -59,6 +59,7 @@
           class="result-container"
           *ngIf="
             roundNumber !== currentRound &&
+            roundStatistics &&
             roundStatistics[roundNumber] !== undefined
           "
         >

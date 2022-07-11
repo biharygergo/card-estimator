@@ -98,6 +98,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
 
+    if (this.route.snapshot.data.room) {
+      this.onRoomUpdated(this.route.snapshot.data.room, roomId);
+    }
+
     this.roomSubscription = this.estimatorService.currentRoom.subscribe(
       (room) => this.onRoomUpdated(room, roomId),
       (error) => this.onRoomUpdateError(error)

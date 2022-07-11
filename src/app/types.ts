@@ -40,6 +40,7 @@ export interface Notes {
 export interface Member {
   id: string;
   name: string;
+  avatarUrl?: string;
 }
 
 export interface RoomData {
@@ -67,6 +68,16 @@ export type CardSetValue = {
   icon: string;
   key: CardSetOrCustom;
 };
+
+export type UserProfile = {
+  id: string;
+  displayName: string;
+  avatarUrl: string;
+}
+
+export type UserDetails = {
+  email: string;
+}
 
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {

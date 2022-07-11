@@ -1,12 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
 :root {
   --main-color: #1c4182;
   --main-dark-color: #001b55;
   --main-light-color: #2a479b;
   --accent-color: #f5a115;
-  --light-background-color: #F4F5F6;
+  --light-background-color: #f4f5f6;
 }
 html,
 body {
@@ -22,18 +22,18 @@ body {
   max-width: 300px !important;
 }
 
-
 $my-primary: mat.define-palette(mat.$indigo-palette, 500);
 $my-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme((
- color: (
-   primary: $my-primary,
-   accent: $my-accent,
- )
-));
+$my-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+    ),
+  )
+);
 @include mat.all-component-themes($my-theme);
-
 
 .card-footer {
   padding: 1rem !important;
@@ -71,14 +71,30 @@ $my-theme: mat.define-light-theme((
   }
 }
 
-
-.avatar {
-  background: #f5a115;
+.avatar,
+.avatar-button {
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: bold;
+
+  div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5a115;
+    border-radius: 50%;
+  }
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .member {

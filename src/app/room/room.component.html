@@ -1,6 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav-content class="sidenav-content">
     <div class="navbar">
+      <div class="navbar-left">
+        <app-profile-dropdown></app-profile-dropdown>
+      </div>
       <div class="navbar-right">
         <button
           mat-flat-button
@@ -8,11 +11,12 @@
           aria-label="Toggle topics sidebar"
           (click)="sidenav.toggle()"
           class="topics-toggle"
+          [matBadge]="rounds.length"
+          matBadgePosition="after"
+          matBadgeColor="accent"
+          size="small"
         >
-          <div class="center-icon-button">
-            Manage rounds ({{ rounds.length }})
-            <mat-icon>menu</mat-icon>
-          </div>
+          Manage rounds
         </button>
       </div>
     </div>
@@ -89,9 +93,16 @@
 
               <h3 matSubheader>Votes</h3>
               <mat-list-item *ngFor="let member of room?.members">
-                <span matListAvatar class="avatar">{{
-                  member.name.charAt(0)
-                }}</span>
+                <span matListAvatar class="avatar">
+                  <img
+                    *ngIf="member.avatarUrl"
+                    [src]="member.avatarUrl"
+                    class="avatar-image"
+                  />
+                  <ng-container *ngIf="!member.avatarUrl">
+                    <div>{{ member.name.charAt(0) }}</div>
+                  </ng-container></span
+                >
                 <h3 matLine class="member">
                   {{ member.name }}
                   <span class="estimate">

@@ -18,8 +18,6 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   distinctUntilChanged,
-  filter,
-  map,
   Subject,
   Subscription,
   takeUntil,
@@ -75,7 +73,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   isObserver = false;
   isMuted = true;
   shouldShowAloneInRoom = false;
-  isAloneInRoomHidden = true;
+  isAloneInRoomHidden = false;
   roundStatistics: RoundStatistics[];
 
   roomSubscription: Subscription;
@@ -232,7 +230,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.shouldShowAloneInRoom) {
       this.openAloneInRoomModal();
     } else {
-      this.closeAllDialogs();
+      this.dialog.getDialogById(ALONE_IN_ROOM_MODAL)?.close();
     }
   }
 

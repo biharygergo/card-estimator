@@ -1,0 +1,8 @@
+.avatar-button {
+    transition: transform 300ms ease-in-out;
+    will-change: transform;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}

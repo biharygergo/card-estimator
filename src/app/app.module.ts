@@ -36,6 +36,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatBadgeModule} from '@angular/material/badge';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -55,6 +56,7 @@ import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-d
 import { TopicsSidebarComponent } from './room/topics-sidebar/topics-sidebar.component';
 import { CardDeckComponent } from './room/card-deck/card-deck.component';
 import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-dropdown.component';
+import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/avatar-selector-modal.component';
 
 
 @NgModule({
@@ -76,6 +78,7 @@ import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-drop
     TopicsSidebarComponent,
     CardDeckComponent,
     ProfileDropdownComponent,
+    AvatarSelectorModalComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -109,6 +112,7 @@ import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-drop
     MatDialogModule,
     MatTooltipModule,
     MatSidenavModule,
+    MatBadgeModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

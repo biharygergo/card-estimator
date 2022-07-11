@@ -1,16 +1,23 @@
 <ng-container *ngIf="currentUser | async as user">
-  <button mat-icon-button class="avatar-button" [matMenuTriggerFor]="menu">
+  <button
+    mat-icon-button
+    class="avatar-button"
+    #tooltip="matTooltip"
+    matTooltip="Click here to select your avatar"
+    matTooltipPosition="right"
+    (click)="openAvatarSelector()"
+  >
     <img
       *ngIf="user.photoURL"
       [src]="user.photoURL"
       class="avatar-image"
       alt="Avatar image from your Google Account"
     />
-    <ng-container *ngIf="!user.photoURL">
+    <div *ngIf="!user.photoURL">
       {{ user.displayName.charAt(0) }}
-    </ng-container>
+    </div>
   </button>
-  <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
+  <!-- <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
     <button mat-menu-item *ngIf="user.isAnonymous" (click)="createAccount()">
       <mat-icon>login</mat-icon>
       <span>Create an account</span>
@@ -23,9 +30,9 @@
       <mat-icon>heart_broken</mat-icon>
       <span>Unlink Google account</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="openAvatarSelector()">
       <mat-icon>account_circle</mat-icon>
-      <span>Edit avatar</span>
+      <span>Select your avatar</span>
     </button>
-  </mat-menu>
+  </mat-menu> -->
 </ng-container>

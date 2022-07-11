@@ -290,7 +290,7 @@ export class EstimatorService {
     });
   }
 
-  updateCurrentUserMemberAvatar(room: Room, avatarUrl: string) {
+  updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
     const newMembers = [...room.members];
     const member = newMembers.find((m) => m.id === this.activeMember.id);
     member.avatarUrl = avatarUrl;

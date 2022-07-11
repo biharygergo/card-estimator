@@ -8,7 +8,7 @@ import {
   updateProfile,
   User,
 } from 'firebase/auth';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import { EMPTY, firstValueFrom, Observable, Subject } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { UserDetails, UserProfile } from '../types';
@@ -22,7 +22,7 @@ export const USER_DETAILS_COLLECTION = 'user_details';
 export class AuthService {
   public readonly user: Observable<User | null> = EMPTY;
 
-  avatarUpdated = new Subject<string>();
+  avatarUpdated = new Subject<string | null>();
 
   constructor(private auth: Auth, private firestore: Firestore) {
     this.user = user(this.auth);
@@ -58,9 +58,22 @@ export class AuthService {
     await unlink(this.auth.currentUser, provider.providerId);
   }
 
-  async updateAvatar(avatarUrl: string) {
-    await updateProfile(this.auth.currentUser, { photoURL: avatarUrl });
+  async updateAvatar(avatarUrl: string | null) {
+    await updateProfile(this.auth.currentUser, { photoURL: avatarUrl ?? '' });
     this.avatarUpdated.next(avatarUrl);
+
+    try {
+      if (!this.auth.currentUser.isAnonymous) {
+        await updateDoc(
+          doc(this.firestore, PROFILES_COLLECTION, this.auth.currentUser.uid),
+          {
+            avatarUrl,
+          } as Partial<UserProfile>
+        );
+      }
+    } catch {
+      // Silent error, this user is probably deleted
+    }
   }
 
   async createPermanentUser(user: User) {

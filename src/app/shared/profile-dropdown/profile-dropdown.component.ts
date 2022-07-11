@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
+import {
+  AvatarSelectorModalComponent,
+  AVATAR_SELECTOR_MODAL,
+} from '../avatar-selector-modal/avatar-selector-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -10,13 +16,14 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ProfileDropdownComponent implements OnInit {
   currentUser = this.auth.user;
 
-  constructor(private auth: AuthService, private snackBar: MatSnackBar) {}
+  constructor(
+    private auth: AuthService,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private analytics: AnalyticsService
+  ) {}
 
-  ngOnInit(): void {
-    this.auth.user.subscribe((user) => {
-      console.log(user);
-    });
-  }
+  ngOnInit(): void {}
 
   async createAccount() {
     try {
@@ -44,5 +51,16 @@ export class ProfileDropdownComponent implements OnInit {
         }
       );
     }
+  }
+
+  openAvatarSelector() {
+    const dialogRef = this.dialog.open(AvatarSelectorModalComponent, {
+      id: AVATAR_SELECTOR_MODAL,
+      height: '80%',
+      maxHeight: '600px',
+      width: '90%',
+      maxWidth: '600px',
+    });
+    this.analytics.logClickedEditAvatar();
   }
 }

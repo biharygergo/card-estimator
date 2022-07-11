@@ -5,6 +5,7 @@ import { FaqComponent } from './landing/faq/faq.component';
 import { FeaturesComponent } from './landing/features/features.component';
 import { LandingComponent } from './landing/landing.component';
 import { RoomComponent } from './room/room.component';
+import { RoomResolver } from './room/room.resolver';
 
 const routes: Routes = [
   {
@@ -26,7 +27,14 @@ const routes: Routes = [
     component: CreateOrJoinRoomComponent,
     data: { title: 'Join' },
   },
-  { path: ':roomId', component: RoomComponent, data: { title: 'Active room' } },
+  {
+    path: ':roomId',
+    component: RoomComponent,
+    resolve: {
+      room: RoomResolver,
+    },
+    data: { title: 'Active room' },
+  },
 ];
 
 @NgModule({

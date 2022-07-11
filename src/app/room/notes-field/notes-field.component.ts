@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, map } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { Member, Room } from 'src/app/types';
 
@@ -29,7 +30,8 @@ export class NotesFieldComponent implements OnInit {
 
   constructor(
     private estimatorService: EstimatorService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +41,7 @@ export class NotesFieldComponent implements OnInit {
         this.estimatorService.setNote(
           value,
           this.room,
-          this.estimatorService.activeMember
+          this.estimatorService.activeMember || this.estimatorService.observer
         );
       });
   }
@@ -47,7 +49,7 @@ export class NotesFieldComponent implements OnInit {
   onNoteFocus() {
     this.estimatorService.setNoteEditor(
       this.room,
-      this.estimatorService.activeMember
+      this.estimatorService.activeMember || this.estimatorService.observer
     );
     this.analytics.logFocusedNotesField();
   }
@@ -61,13 +63,13 @@ export class NotesFieldComponent implements OnInit {
   }
 
   onRoomUpdated(room: Room) {
-    if (room !== undefined && this.estimatorService.activeMember) {
+    if (room !== undefined) {
       const currentRound = room.rounds[room.currentRound];
 
       this.editedBy = currentRound.notes?.editedBy;
       this.isNoteDisabled =
         this.editedBy &&
-        this.editedBy.id !== this.estimatorService.activeMember.id;
+        this.editedBy.id !== this.auth.getUid();
 
       this.isNoteDisabled
         ? this.noteValue.disable({ emitEvent: false })

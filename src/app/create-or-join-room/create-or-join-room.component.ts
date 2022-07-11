@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EstimatorService, retrieveRoomData } from '../services/estimator.service';
+import {
+  EstimatorService,
+  retrieveRoomData,
+} from '../services/estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoomData, Member } from '../types';
@@ -25,11 +28,13 @@ export class CreateOrJoinRoomComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private analytics: AnalyticsService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const roomIdFromParams =
       this.activatedRoute.snapshot.queryParamMap.get('roomId');
+    const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');
+
     if (roomIdFromParams) {
       this.roomId.setValue(roomIdFromParams);
       this.roomId.disable();
@@ -38,20 +43,21 @@ export class CreateOrJoinRoomComponent implements OnInit {
 
     const savedRoomData = retrieveRoomData();
 
-    this.authService.getUser().then(user => {
+    this.authService.getUser().then((user) => {
       if (user?.displayName) {
         this.name.setValue(user.displayName);
       }
-      if (savedRoomData && user?.uid === savedRoomData.memberId) {
+      if (savedRoomData && user?.uid === savedRoomData.memberId && !hasError) {
         const snackbarRef = this.snackBar.open(
           `Do you want to re-join your last estimation, ${savedRoomData.roomId}?`,
           'Join',
           { duration: 10000 }
         );
-        snackbarRef.onAction().subscribe(() => this.joinLastRoom(savedRoomData));
+        snackbarRef
+          .onAction()
+          .subscribe(() => this.joinLastRoom(savedRoomData));
       }
-    })
-    
+    });
   }
 
   async joinLastRoom(savedRoomData: RoomData) {
@@ -97,7 +103,12 @@ export class CreateOrJoinRoomComponent implements OnInit {
     }
   }
 
-  joinRoomAsObserver() {
+  async joinRoomAsObserver() {
+    const member: Member = {
+      id: null,
+      name: this.name.value,
+    };
+    await this.estimatorService.joinRoomAsObserver(this.roomId.value, member);
     this.analytics.logClickedJoinAsObserver();
     return this.router.navigate([this.roomId.value], {
       queryParams: { observing: 1 },

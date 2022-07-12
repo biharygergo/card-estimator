@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
+import * as Sentry from "@sentry/angular";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,7 +19,10 @@ import {
   ReCaptchaV3Provider,
 } from '@angular/fire/app-check';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { provideRemoteConfig, getRemoteConfig } from '@angular/fire/remote-config';
+import {
+  provideRemoteConfig,
+  getRemoteConfig,
+} from '@angular/fire/remote-config';
 
 import { environment } from '../environments/environment';
 import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
@@ -34,9 +38,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -57,7 +61,7 @@ import { TopicsSidebarComponent } from './room/topics-sidebar/topics-sidebar.com
 import { CardDeckComponent } from './room/card-deck/card-deck.component';
 import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-dropdown.component';
 import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/avatar-selector-modal.component';
-
+import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -117,7 +121,25 @@ import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/ava
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [ScreenTrackingService],
+  providers: [
+    ScreenTrackingService,
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: false,
+      }),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

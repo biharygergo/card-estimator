@@ -91,6 +91,8 @@ export class CreateOrJoinRoomComponent implements OnInit {
     };
 
     try {
+      this.snackBar.dismiss();
+
       this.isBusy = true;
       await this.estimatorService.joinRoom(this.roomId.value, member);
 
@@ -111,6 +113,7 @@ export class CreateOrJoinRoomComponent implements OnInit {
 
     try {
       this.isBusy = true;
+      this.snackBar.dismiss();
       await this.estimatorService.joinRoomAsObserver(this.roomId.value, member);
       this.analytics.logClickedJoinAsObserver();
       return this.router.navigate([this.roomId.value], {

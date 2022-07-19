@@ -7,9 +7,6 @@ import {
 } from '@angular/core';
 import {
   EstimatorService,
-  RoomNotFoundError,
-  MemberNotFoundError,
-  retrieveRoomData,
   saveJoinedRoomData,
 } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,19 +25,19 @@ import {
   CardSetValue,
   CARD_SETS,
   Room,
-  RoomData,
   Round,
   RoundStatistics,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../services/analytics.service';
-import { getHumanReadableElapsedTime } from '../utils';
+import { createTimer, getHumanReadableElapsedTime } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 import { ConfigService } from '../services/config.service';
 import { MatSidenavContainer } from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
+import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -124,6 +121,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.adsEnabled = value;
       this.updateShowAds();
     });
+
+    createTimer(2)
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.showAvatarPrompt();
+      });
   }
 
   ngOnDestroy(): void {
@@ -199,7 +202,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         .open(
           'You are currently observing this estimation.',
           'Join as an Estimator',
-          { duration: 10000 }
+          { duration: 10000, horizontalPosition: 'right' }
         )
         .onAction()
         .subscribe(() => {
@@ -243,12 +246,28 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async showAvatarPrompt() {
+    const user = await this.authService.getUser();
+    if (!user.photoURL) {
+      this.snackBar.dismiss();
+      this.snackBar
+        .open(
+          'Stand out from the crowd by adding your avatar! 🤩 The avatar helps others recognize your votes.',
+          'Set my avatar',
+          { duration: 20000, horizontalPosition: 'right' }
+        )
+        .onAction()
+        .subscribe(() => {
+          this.dialog.open(...avatarModalCreator());
+          this.analytics.logClickedEditAvatar('snackbar');
+        });
+    }
+  }
+
   private errorGoBackToJoinPage() {
-    this.snackBar.open(
-      'Something went wrong. Please try again later.',
-      null,
-      { duration: 5000 }
-    );
+    this.snackBar.open('Something went wrong. Please try again later.', null, {
+      duration: 5000,
+    });
     this.router.navigate(['join']);
   }
 

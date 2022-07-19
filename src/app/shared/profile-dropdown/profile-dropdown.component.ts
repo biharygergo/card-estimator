@@ -3,10 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
-import {
-  AvatarSelectorModalComponent,
-  AVATAR_SELECTOR_MODAL,
-} from '../avatar-selector-modal/avatar-selector-modal.component';
+import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -54,13 +51,7 @@ export class ProfileDropdownComponent implements OnInit {
   }
 
   openAvatarSelector() {
-    const dialogRef = this.dialog.open(AvatarSelectorModalComponent, {
-      id: AVATAR_SELECTOR_MODAL,
-      height: '80%',
-      maxHeight: '600px',
-      width: '90%',
-      maxWidth: '600px',
-    });
-    this.analytics.logClickedEditAvatar();
+    this.dialog.open(...avatarModalCreator());
+    this.analytics.logClickedEditAvatar('profile_icon');
   }
 }

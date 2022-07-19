@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { timer } from "rxjs";
 import { Round } from "./types";
 
 export const getHumanReadableElapsedTime = (round: Round) => {
@@ -12,4 +13,8 @@ export const getHumanReadableElapsedTime = (round: Round) => {
         elapsed = `${minutes}m ${seconds}s`;
     }
     return elapsed
+}
+
+export const createTimer = (minutes: number) => {
+    return timer(1000 * 60 * minutes);
 }

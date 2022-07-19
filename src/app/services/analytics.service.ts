@@ -126,8 +126,8 @@ export class AnalyticsService {
     });
   }
 
-  logClickedEditAvatar() {
-    logEvent(this.analytics, 'clicked_edit_avatar');
+  logClickedEditAvatar(source: 'profile_icon' | 'snackbar') {
+    logEvent(this.analytics, 'clicked_edit_avatar', { source });
   }
 
   logSelectedAvatar(avatarUrl: string) {

@@ -4,6 +4,22 @@ import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { MatDialogConfig } from '@angular/material/dialog';
+
+export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
+
+export const avatarModalCreator =
+  (): ModalCreator<AvatarSelectorModalComponent> => [
+    AvatarSelectorModalComponent,
+    {
+      id: AVATAR_SELECTOR_MODAL,
+      height: '80%',
+      maxHeight: '600px',
+      width: '90%',
+      maxWidth: '600px',
+    },
+  ];
 
 type Avatar = {
   name: string;

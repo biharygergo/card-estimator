@@ -29,7 +29,7 @@
             },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self' 'unsafe-inline' *.web.app *.google-analytics.com *.googleapis.com *.google.com *.googletagmanager.com *.googlesyndication.com *.googleadservices.com *.doubleclick.net *.google.hu *.sentry.io *.gstatic.com *.dicebear.com;"
+              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.web.app *.google-analytics.com *.googleapis.com *.google.com *.googletagmanager.com *.googlesyndication.com *.googleadservices.com *.doubleclick.net *.google.hu *.sentry.io *.gstatic.com *.dicebear.com;"
             },
             {
               "key": "Referrer-Policy",

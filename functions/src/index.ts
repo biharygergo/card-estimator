@@ -74,7 +74,7 @@ exports.zoomHome = functions.https.onRequest(async (req, res) => {
 
   if (isZoom) {
     console.log("Zoom app detected.");
-    return res.redirect("https://planningpoker.live/join");
+    return res.redirect("https://card-estimator--pr60-zoom-app-ty2lv1uf.web.app/join");
   }
 
   return res.redirect(

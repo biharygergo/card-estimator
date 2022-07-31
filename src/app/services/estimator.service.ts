@@ -27,6 +27,7 @@ import {
 } from 'firebase/firestore';
 import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
+import { createHash } from '../utils';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -74,6 +75,7 @@ export const retrieveRoomData = (): RoomData | undefined => {
 })
 export class EstimatorService {
   ROOMS_COLLECTION = 'rooms';
+  INVITATIONS_COLLECTION = 'invitations';
 
   currentRoom: Observable<Room> = new Observable<Room>();
   activeMember: Member;
@@ -304,5 +306,21 @@ export class EstimatorService {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
     });
+  }
+
+  saveInvitation(invitationId: string, roomId: string) {
+    return setDoc(
+      doc(
+        this.firestore,
+        this.INVITATIONS_COLLECTION,
+        createHash(invitationId)
+      ),
+      {
+        roomId,
+        invitationId,
+        invitedBy: this.activeMember.id || null,
+        createdAt: serverTimestamp(),
+      }
+    );
   }
 }

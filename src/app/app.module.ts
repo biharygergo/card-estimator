@@ -62,6 +62,7 @@ import { CardDeckComponent } from './room/card-deck/card-deck.component';
 import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-dropdown.component';
 import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/avatar-selector-modal.component';
 import { Router } from '@angular/router';
+import { AppConfigModule } from './app-config.module';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { Router } from '@angular/router';
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,
+    AppConfigModule
   ],
   providers: [
     ScreenTrackingService,

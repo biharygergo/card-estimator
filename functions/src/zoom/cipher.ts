@@ -1,4 +1,4 @@
-import {appConfig} from "./config";
+import {appConfig} from "../config";
 import * as crypto from "crypto";
 
 function unpack(ctx: string) {

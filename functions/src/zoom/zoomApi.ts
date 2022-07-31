@@ -1,6 +1,6 @@
 import axios from "axios";
 import {URL} from "url";
-import {appConfig} from "./config";
+import {appConfig} from "../config";
 import * as crypto from "crypto";
 
 // returns a base64 encoded url

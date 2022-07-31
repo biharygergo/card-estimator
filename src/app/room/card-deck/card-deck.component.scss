@@ -1,9 +1,13 @@
 :host {
   width: 100%;
+  @media screen and (min-width: 800px) {
+    width: unset;
+  }
 }
 
 .card-deck {
   margin: 0.5rem;
+  flex: 1;
 
   @media screen and (min-width: 800px) {
     margin: 0;
@@ -27,7 +31,7 @@
     flex-wrap: nowrap;
   }
 
-  @media (hover: hover) {
+  @media (min-width: 800px) {
     transform: scale(0.8);
     transition: transform 0.2s ease-in-out;
     transition-property: transform, border-radius;

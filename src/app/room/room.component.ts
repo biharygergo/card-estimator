@@ -4,6 +4,7 @@ import {
   ViewChild,
   ElementRef,
   OnDestroy,
+  Inject,
 } from '@angular/core';
 import {
   EstimatorService,
@@ -38,6 +39,8 @@ import { ConfigService } from '../services/config.service';
 import { MatSidenavContainer } from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
+import { AppConfig, APP_CONFIG } from '../app-config.module';
+import { ZoomApiService } from '../services/zoom-api.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -89,11 +92,17 @@ export class RoomComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private analytics: AnalyticsService,
     private configService: ConfigService,
-    private authService: AuthService
+    private authService: AuthService,
+    private zoomService: ZoomApiService,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {
     const roomId = this.route.snapshot.paramMap.get('roomId');
+
+    if (this.config.isRunningInZoom) {
+      this.zoomService.configureApp();
+    }
 
     if (this.route.snapshot.data.room) {
       this.onRoomUpdated(this.route.snapshot.data.room, roomId);
@@ -315,11 +324,25 @@ export class RoomComponent implements OnInit, OnDestroy {
     setTimeout(() => this.topicInput.nativeElement.focus(), 100);
   }
 
-  copyRoomId() {
+  async copyRoomId() {
     this.analytics.logClickedShareRoom('main');
-    const host = window.origin || 'https://card-estimator.web.app';
-    this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
-    this.snackBar.open('Join link copied to clipboard.', null, {
+    let message = '';
+    if (this.config.isRunningInZoom) {
+      const { invitationUUID } = await this.zoomService.inviteAllParticipants(
+        this.room.roomId
+      );
+      await this.estimatorService.saveInvitation(
+        invitationUUID,
+        this.room.roomId
+      );
+      message = 'Invitation sent to all participants!';
+    } else {
+      const host = window.origin || 'https://card-estimator.web.app';
+      this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
+      message = 'Join link copied to clipboard.';
+    }
+
+    this.snackBar.open(message, null, {
       duration: 2000,
       horizontalPosition: 'right',
     });

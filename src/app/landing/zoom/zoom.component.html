@@ -1,0 +1,82 @@
+<app-header></app-header>
+<app-page-header title="Zoom Integration"></app-page-header>
+<main>
+  <section class="hero-section">
+    <div class="hero-text">
+      <h1>Planning Poker is now available within Zoom!</h1>
+      <p>
+        Use the Zoom integration to easily share planning poker sessions with
+        your team. You don't even need to leave your Zoom meeting to have the
+        same great planning experience as before.
+      </p>
+      <div class="cta">
+        <a mat-raised-button color="primary" href="https://zoom.com">Install</a>
+      </div>
+    </div>
+    <div class="hero-video">
+      <video
+        #video
+        autoplay
+        loop
+        muted
+        (canplay)="video.play()"
+        (loadedmetadata)="video.muted = true"
+      >
+        <source
+          src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation.mp4"
+          type="video/mp4"
+        />
+      </video>
+    </div>
+  </section>
+  <h2 class="section-title">How does it work?</h2>
+  <section class="instructions">
+    <div class="instruction">
+      <div class="instruction-text">
+        <h3>1. Install the app in Zoom</h3>
+        <p>
+          To add the app to your Zoom account, click the "Install" button above
+          or install the app from Zoom Marketplace. You'll need to grant basic
+          permissions for the app to appear inside your meeting.
+        </p>
+      </div>
+      <div class="instruction-image">
+        <img
+          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_1.png"
+          alt="Permissions screen when adding the app to Zoom"
+        />
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-text">
+        <h3>2. Open the app inside Zoom</h3>
+        <p>
+          Once the app is installed, you can open it from the "Apps" menu in
+          Zoom. The app will appear in the side-panel of your meeting.
+        </p>
+      </div>
+      <div class="instruction-image">
+        <img
+          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_1.png"
+          alt="Permissions screen when adding the app to Zoom"
+        />
+      </div>
+    </div>
+    <div class="instruction">
+      <div class="instruction-text">
+        <h3>3. Invite your colleagues in the meeting</h3>
+        <p>
+          After you've created a planning poker session, just click "Invite
+          others" and a personalized invitation will be sent to everyone in the
+          meeting.
+        </p>
+      </div>
+      <div class="instruction-image">
+        <img
+          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_1.png"
+          alt="Permissions screen when adding the app to Zoom"
+        />
+      </div>
+    </div>
+  </section>
+</main>

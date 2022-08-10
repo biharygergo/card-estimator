@@ -65,6 +65,7 @@ import { Router } from '@angular/router';
 import { AppConfigModule } from './app-config.module';
 import { PrivacyComponent } from './landing/privacy/privacy.component';
 import { TermsComponent } from './landing/terms/terms.component';
+import { ZoomComponent } from './landing/zoom/zoom.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { TermsComponent } from './landing/terms/terms.component';
     AvatarSelectorModalComponent,
     PrivacyComponent,
     TermsComponent,
+    ZoomComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

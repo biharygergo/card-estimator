@@ -63,6 +63,8 @@ import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-drop
 import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/avatar-selector-modal.component';
 import { Router } from '@angular/router';
 import { AppConfigModule } from './app-config.module';
+import { PrivacyComponent } from './landing/privacy/privacy.component';
+import { TermsComponent } from './landing/terms/terms.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +86,8 @@ import { AppConfigModule } from './app-config.module';
     CardDeckComponent,
     ProfileDropdownComponent,
     AvatarSelectorModalComponent,
+    PrivacyComponent,
+    TermsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

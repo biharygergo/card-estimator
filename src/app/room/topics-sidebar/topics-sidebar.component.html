@@ -5,14 +5,21 @@
   </p>
 </div>
 <div class="sidenav-actions">
-  <button
-    mat-button
-    aria-label="Download results as .csv"
-    (click)="downloadAsCsv()"
-    [disabled]="rounds.length <= 1"
+  <div
+    [matTooltip]="
+      config.isRunningInZoom &&
+      'Downloading results is only available on the web version of the app.'
+    "
   >
-    Download results
-  </button>
+    <button
+      mat-button
+      aria-label="Download results as .csv"
+      (click)="downloadAsCsv()"
+      [disabled]="rounds.length <= 1 || config.isRunningInZoom"
+    >
+      Download results
+    </button>
+  </div>
 </div>
 <div class="round-history-container">
   <ng-container *ngFor="let round of rounds; let roundNumber = index">

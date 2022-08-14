@@ -62,6 +62,10 @@ import { CardDeckComponent } from './room/card-deck/card-deck.component';
 import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-dropdown.component';
 import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/avatar-selector-modal.component';
 import { Router } from '@angular/router';
+import { AppConfigModule } from './app-config.module';
+import { PrivacyComponent } from './landing/privacy/privacy.component';
+import { TermsComponent } from './landing/terms/terms.component';
+import { ZoomComponent } from './landing/zoom/zoom.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +87,9 @@ import { Router } from '@angular/router';
     CardDeckComponent,
     ProfileDropdownComponent,
     AvatarSelectorModalComponent,
+    PrivacyComponent,
+    TermsComponent,
+    ZoomComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -120,6 +127,7 @@ import { Router } from '@angular/router';
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,
+    AppConfigModule
   ],
   providers: [
     ScreenTrackingService,

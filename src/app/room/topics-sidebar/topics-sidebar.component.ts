@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { SerializerService } from 'src/app/services/serializer.service';
@@ -25,6 +26,7 @@ export class TopicsSidebarComponent implements OnInit {
     private serializer: SerializerService,
     private analytics: AnalyticsService,
     private estimatorService: EstimatorService,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {}

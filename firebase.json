@@ -3,12 +3,27 @@
     {
       "target": "estimator",
       "public": "dist/estimator/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "trailingSlash": false,
       "rewrites": [
         {
-          "source": "/features",
-          "destination": "/features/index.html"
+          "source": "/api/zoomHome",
+          "function": "zoomHome",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/installZoomApp",
+          "function": "installZoomApp",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/authorizeZoomApp",
+          "function": "authorizeZoomApp",
+          "region": "us-central1"
         },
         {
           "source": "/",
@@ -16,7 +31,7 @@
         },
         {
           "source": "**",
-          "destination": "/index.original.html"
+          "destination": "/index.html"
         }
       ],
       "headers": [
@@ -29,11 +44,15 @@
             },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.web.app *.google-analytics.com *.googleapis.com *.google.com *.googletagmanager.com *.googlesyndication.com *.googleadservices.com *.doubleclick.net *.google.hu *.sentry.io *.gstatic.com *.dicebear.com;"
+              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' *.eu.ngrok.io *.web.app *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ *.google.com *.googletagmanager.com *.sentry.io *.gstatic.com https://avatars.dicebear.com;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
             },
             {
               "key": "Referrer-Policy",
               "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains; preload"
             }
           ]
         }
@@ -46,5 +65,16 @@
       "npm --prefix \"$RESOURCE_DIR\" run build"
     ],
     "source": "functions"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    }
   }
 }

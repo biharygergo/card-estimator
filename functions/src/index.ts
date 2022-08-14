@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions";
 import {firestore, initializeApp} from "firebase-admin";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
+import * as cookieParser from "cookie-parser";
+import {authorizeZoomApp, installZoomApp, zoomHome} from "./zoom/routes";
 
 initializeApp();
 
@@ -30,6 +32,17 @@ exports.clearOldRooms = functions.pubsub
 
       console.log(`Deleting ${deletePromises.length} old rooms.`);
 
-      return Promise.all(deletePromises)
-          .then(() => console.log("Deletion successful"));
+      return Promise.all(deletePromises).then(() =>
+        console.log("Deletion successful")
+      );
     });
+
+exports.authorizeZoomApp = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, async () => authorizeZoomApp(req, res));
+});
+
+exports.zoomHome = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => zoomHome(req, res));
+});
+
+exports.installZoomApp = functions.https.onRequest(installZoomApp);

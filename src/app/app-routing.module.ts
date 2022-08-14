@@ -4,6 +4,9 @@ import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-
 import { FaqComponent } from './landing/faq/faq.component';
 import { FeaturesComponent } from './landing/features/features.component';
 import { LandingComponent } from './landing/landing.component';
+import { PrivacyComponent } from './landing/privacy/privacy.component';
+import { TermsComponent } from './landing/terms/terms.component';
+import { ZoomComponent } from './landing/zoom/zoom.component';
 import { RoomComponent } from './room/room.component';
 import { RoomResolver } from './room/room.resolver';
 
@@ -22,6 +25,9 @@ const routes: Routes = [
     data: { title: 'Features' },
   },
   { path: 'faq', component: FaqComponent, data: { title: 'FAQ' } },
+  { path: 'privacy', component: PrivacyComponent, data: { title: 'Privacy Policy' } },
+  { path: 'terms', component: TermsComponent, data: { title: 'Terms and Conditions' } },
+  { path: 'zoom', component: ZoomComponent, data: { title: 'Zoom Integration' } },
   {
     path: 'join',
     component: CreateOrJoinRoomComponent,

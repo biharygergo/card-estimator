@@ -20,7 +20,10 @@ export const createTimer = (minutes: number) => {
 };
 
 export const isRunningInZoom = () => {
-  return window && window.navigator.userAgent.includes('ZoomWebKit');
+  return (
+    typeof window !== 'undefined' &&
+    window.navigator.userAgent.includes('ZoomWebKit')
+  );
 };
 
 export const createHash = (str: string, seed = 0): string => {

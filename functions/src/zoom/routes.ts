@@ -70,6 +70,7 @@ export const authorizeZoomApp = async (
     // get Access Token from Zoom
     const { access_token: accessToken } = await getToken(code, verifier);
 
+
     // fetch deeplink from Zoom API
     const deeplink = await getDeeplink(accessToken);
 

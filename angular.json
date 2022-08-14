@@ -168,8 +168,14 @@
           "builder": "@nguniversal/builders:prerender",
           "options": {
             "routes": [
-              "/"
-            ]
+              "/",
+              "/faq",
+              "/features",
+              "/terms",
+              "/privacy",
+              "/zoom"
+            ],
+            "guessRoutes": false
           },
           "configurations": {
             "production": {

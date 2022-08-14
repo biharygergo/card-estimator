@@ -38,7 +38,7 @@ exports.clearOldRooms = functions.pubsub
     });
 
 exports.authorizeZoomApp = functions.https.onRequest(async (req, res) => {
-  cookieParser()(req, res, () => authorizeZoomApp(req, res));
+  cookieParser()(req, res, async () => authorizeZoomApp(req, res));
 });
 
 exports.zoomHome = functions.https.onRequest(async (req, res) => {

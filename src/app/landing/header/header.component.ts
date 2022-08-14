@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     if (
+      typeof window !== 'undefined' &&
       window?.localStorage &&
       !window.localStorage.getItem(COOKIE_ACCEPTED_KEY)
     ) {

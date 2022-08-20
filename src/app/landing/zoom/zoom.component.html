@@ -19,6 +19,7 @@
         autoplay
         loop
         muted
+        playsinline
         (canplay)="video.play()"
         (loadedmetadata)="video.muted = true"
       >
@@ -33,7 +34,7 @@
   <section class="instructions">
     <div class="instruction">
       <div class="instruction-text">
-        <h3>1. Install the app in Zoom</h3>
+        <h3 id="howto">1. Install the app in Zoom</h3>
         <p>
           To add the app to your Zoom account, click the "Install" button above
           or install the app from Zoom Marketplace. You'll need to grant basic
@@ -81,7 +82,7 @@
     <mat-divider></mat-divider>
     <div class="instruction">
       <div class="instruction-text">
-        <h4>Uninstalling the App</h4>
+        <h4 id="uninstall">Uninstalling the App</h4>
         <p>
           If you wish to uninstall the App, go to the
           <a href="https://marketplace.zoom.us/user/installed"
@@ -93,12 +94,23 @@
     </div>
     <div class="instruction">
       <div class="instruction-text">
-        <h4>Getting Support and Reporting Bugs</h4>
+        <h4 id="support">Getting Support and Reporting Bugs</h4>
+        <p>
+          Are you stuck on a question or issue with the app? Check out the
+          <a routerLink="/faq">Frequently Asked Questions</a>, maybe your query
+          already has an answer.
+        </p>
         <p>
           If you need additional support or have found a bug, please open a
           ticket here
-          <a href="https://github.com/biharygergo/card-estimator/issues">on GitHub</a>
-          and our developers will try to help as fast as possible.
+          <a href="https://github.com/biharygergo/card-estimator/issues"
+            >on GitHub</a
+          >
+          and our developers will try to help as fast as possible. We try
+          respond to tickets within 24 hours. If you need immediate assistance,
+          please contact us at
+          <a href="mailto:hello@planningpoker.live">hello@planningpoker.live</a
+          >.
         </p>
       </div>
     </div>

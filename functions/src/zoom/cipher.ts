@@ -61,12 +61,14 @@ function decrypt(
   return JSON.parse(decrypted);
 }
 
-export function getAppContext(header: string, secret = "") {
+export function getAppContext(header: string, isDev: boolean) {
   if (!header || typeof header !== "string") {
     throw Error("context header must be a valid string");
   }
 
-  const key = secret || appConfig.zoomClientSecret;
+  const key = isDev ?
+    appConfig.zoomClientSecretDev :
+    appConfig.zoomClientSecret;
 
   // Decode and parse context
   const {iv, aad, cipherText, tag} = unpack(header);

@@ -31,7 +31,11 @@
           "region": "us-central1"
         },
         {
-          "source": "/verifyzoom",
+          "source": "/zoomverify/verifyzoom",
+          "destination": "/assets/verifyzoom.html"
+        },
+        {
+          "source": "/zoomverify/verifyzoom.html",
           "destination": "/assets/verifyzoom.html"
         },
         {

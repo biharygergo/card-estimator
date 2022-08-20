@@ -1,12 +1,12 @@
-import { contextHeader, getAppContext } from './cipher';
-import { getInstallURL, getToken, getDeeplink } from './zoomApi';
-import * as functions from 'firebase-functions';
-import { firestore } from 'firebase-admin';
-import { getHost, isRunningInEmulator } from '../config';
+import {contextHeader, getAppContext} from "./cipher";
+import {getInstallURL, getToken, getDeeplink} from "./zoomApi";
+import * as functions from "firebase-functions";
+import {firestore} from "firebase-admin";
+import {getHost, isRunningInEmulator} from "../config";
 
 export const zoomHome = async (
-  req: functions.Request,
-  res: functions.Response
+    req: functions.Request,
+    res: functions.Response
 ): Promise<void> => {
   const host = getHost(req);
   try {
@@ -16,12 +16,12 @@ export const zoomHome = async (
     const isZoom = header && appContext;
 
     if (isZoom) {
-      let roomId = '';
+      let roomId = "";
       if (appContext.iid) {
         const db = firestore();
 
-        const roomsRef = db.collection('invitations');
-        const queryRef = roomsRef.where('invitationId', '==', appContext.iid);
+        const roomsRef = db.collection("invitations");
+        const queryRef = roomsRef.where("invitationId", "==", appContext.iid);
 
         const snapshot = await queryRef.get();
         if (snapshot.docs.length) {
@@ -30,39 +30,39 @@ export const zoomHome = async (
         }
       }
 
-      const path = roomId ? `/${roomId}` : '/join';
+      const path = roomId ? `/${roomId}` : "/join";
 
       const finalUrl = `${host}${path}?s=zoom`;
-      console.log('finalUrl', finalUrl);
+      console.log("finalUrl", finalUrl);
       return res.redirect(finalUrl);
     }
 
     return res.redirect(`${host}/installZoomApp`);
   } catch (e) {
     console.error(e);
-    return res.send(
-      'An error occured. Please try again or visit https://planningpoker.live'
+    res.send(
+        "An error occured. Please try again or visit https://planningpoker.live"
     );
   }
 };
 
 export const installZoomApp = (
-  req: functions.Request,
-  res: functions.Response
+    req: functions.Request,
+    res: functions.Response
 ): void => {
   const isDev = isRunningInEmulator();
-  const { url, state, verifier } = getInstallURL(isDev, req);
+  const {url, state, verifier} = getInstallURL(isDev, req);
   console.log(isDev);
-  res.cookie('__session', JSON.stringify({ verifier, state }));
+  res.cookie("__session", JSON.stringify({verifier, state}));
   return res.redirect(url.href);
 };
 
 export const authorizeZoomApp = async (
-  req: functions.Request,
-  res: functions.Response
+    req: functions.Request,
+    res: functions.Response
 ): Promise<void> => {
   try {
-    const sessionCookie = req.cookies['__session'];
+    const sessionCookie = req.cookies["__session"];
     const parsedCookie = JSON.parse(sessionCookie);
 
     const verifier = parsedCookie.verifier;
@@ -73,11 +73,11 @@ export const authorizeZoomApp = async (
     console.log(`Got code: ${code}`);
     console.log(`Got verifier: ${verifier}`);
     // get Access Token from Zoom
-    const { access_token: accessToken } = await getToken(
-      code,
-      verifier,
-      isDev,
-      req
+    const {access_token: accessToken} = await getToken(
+        code,
+        verifier,
+        isDev,
+        req
     );
 
     // fetch deeplink from Zoom API
@@ -88,10 +88,10 @@ export const authorizeZoomApp = async (
   } catch (e) {
     console.error(e);
     res
-      .status(500)
-      .send(
-        'Oh no, an error occured! Please try again or visit the web app at https://planningpoker.live. Error: ' +
+        .status(500)
+        .send(
+            "Oh no, an error occured! Please try again or visit the web app at https://planningpoker.live. Error: " +
           ((e as any).message || e)
-      );
+        );
   }
 };

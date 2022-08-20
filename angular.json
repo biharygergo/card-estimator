@@ -180,6 +180,7 @@
               "/features",
               "/terms",
               "/privacy",
+              "/join",
               "/zoom"
             ],
             "guessRoutes": false

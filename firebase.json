@@ -16,6 +16,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/uninstallZoomApp",
+          "function": "uninstallZoomApp",
+          "region": "us-central1"
+        },
+        {
           "source": "/api/installZoomApp",
           "function": "installZoomApp",
           "region": "us-central1"
@@ -24,6 +29,10 @@
           "source": "/api/authorizeZoomApp",
           "function": "authorizeZoomApp",
           "region": "us-central1"
+        },
+        {
+          "source": "/verifyzoom",
+          "destination": "/assets/verifyzoom.html"
         },
         {
           "source": "/",

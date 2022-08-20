@@ -46,3 +46,8 @@ exports.zoomHome = functions.https.onRequest(async (req, res) => {
 });
 
 exports.installZoomApp = functions.https.onRequest(installZoomApp);
+
+exports.uninstallZoomApp = functions.https.onRequest(async (req, res) => {
+  console.log("Zoom App Uninstallation");
+  console.log(req.body);
+});

@@ -14,6 +14,7 @@ import {
   ScreenTrackingService,
 } from '@angular/fire/analytics';
 import {
+  AppCheckToken,
   CustomProvider,
   initializeAppCheck,
   provideAppCheck,
@@ -108,20 +109,19 @@ import { isRunningInZoom } from './utils';
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {
         provider = new CustomProvider({
-          getToken: () => {
-            return new Promise(async (resolve, _reject) => {
-              const functions = getFunctions();
-              const fetchAppCheckToken = httpsCallable<
-                undefined,
-                { token: string; expiresAt: number }
-              >(functions, 'fetchAppCheckToken');
-              const response = await fetchAppCheckToken();
-              const appCheckToken = {
-                token: response.data.token,
-                expireTimeMillis: response.data.expiresAt * 1000,
-              };
-              resolve(appCheckToken);
-            });
+          getToken: async () => {
+            console.log('fetching token...');
+            const functions = getFunctions();
+            const fetchAppCheckToken = httpsCallable<
+              undefined,
+              { token: string; expiresAt: number }
+            >(functions, 'fetchAppCheckToken');
+            const response = await fetchAppCheckToken();
+            const appCheckToken: AppCheckToken = {
+              token: response.data.token,
+              expireTimeMillis: response.data.expiresAt,
+            };
+            return appCheckToken;
           },
         });
       } else {

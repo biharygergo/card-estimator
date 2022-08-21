@@ -87,7 +87,7 @@ function fetchToken(): Promise<AppCheckToken> {
     console.log('got token...');
     return {
       token: response.data.token,
-      expireTimeMillis: response.data.expiresAt,
+      expireTimeMillis: response.data.expiresAt * 1000,
     };
   });
 }

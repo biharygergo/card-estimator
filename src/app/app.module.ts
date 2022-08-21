@@ -84,7 +84,6 @@ function fetchToken(): Promise<AppCheckToken> {
     'fetchAppCheckToken'
   );
   return fetchAppCheckToken().then((response) => {
-    console.log('got token...');
     return {
       token: response.data.token,
       expireTimeMillis: response.data.expiresAt * 1000,
@@ -143,7 +142,6 @@ function loadAppConfig(): Promise<any> {
     provideAnalytics(() => getAnalytics()),
     provideRemoteConfig(() => getRemoteConfig()),
     provideAppCheck((injector) => {
-      console.log('provideAppCheck', appCheckToken);
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {
         provider = new CustomProvider({

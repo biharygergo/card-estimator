@@ -124,13 +124,13 @@ import { isRunningInZoom } from './utils';
         .catch((error) => {
           console.error(error);
         });
-      if (isRunningInZoom()) {
+      if (true) {
         provider = new CustomProvider({
           getToken: () => appCheckTokenPromise as Promise<AppCheckToken>,
         });
-      } else {
+      } /* else {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
-      }
+      } */
 
       if (!environment.production) {
         (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;

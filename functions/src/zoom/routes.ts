@@ -67,6 +67,8 @@ export const authorizeZoomApp = async (
 
     const verifier = parsedCookie.verifier;
 
+    res.clearCookie("__session");
+
     const code = req.query.code as string;
     const isDev = isRunningInEmulator();
 

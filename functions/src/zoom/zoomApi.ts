@@ -112,7 +112,7 @@ export async function getToken(
   }
 
   if (!verifier || typeof verifier !== "string") {
-    throw Error("code verifier code must be a valid string");
+    console.error("Verifier was invalid", verifier);
   }
 
   const redirectUrl = getRedirectUrl(request);
@@ -120,7 +120,7 @@ export async function getToken(
   return tokenRequest(
       {
         code,
-        code_verifier: verifier,
+        code_verifier: verifier ?? undefined,
         redirect_uri: redirectUrl,
         grant_type: "authorization_code",
       },

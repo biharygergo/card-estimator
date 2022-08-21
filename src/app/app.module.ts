@@ -78,7 +78,7 @@ type FetchAppCheckTokenData = { token: string; expiresAt: number };
 
 function loadAppConfig(): Promise<any> {
   return new Promise((resolve, reject) => {
-    if (isRunningInZoom) {
+    if (isRunningInZoom()) {
       originalInitializeApp(environment.firebase);
       const functions = getFunctions();
       const fetchAppCheckToken = httpsCallable<

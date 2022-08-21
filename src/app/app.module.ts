@@ -107,26 +107,28 @@ import { isRunningInZoom } from './utils';
     provideRemoteConfig(() => getRemoteConfig()),
     provideAppCheck((injector) => {
       let provider: ReCaptchaV3Provider | CustomProvider;
+      const functions = getFunctions();
+      const fetchAppCheckToken = httpsCallable<
+        undefined,
+        { token: string; expiresAt: number }
+      >(functions, 'fetchAppCheckToken');
       if (isRunningInZoom()) {
         provider = new CustomProvider({
           getToken: () =>
             new Promise((resolve) => {
               console.log('fetching token...');
-              const functions = getFunctions();
-              const fetchAppCheckToken = httpsCallable<
-                undefined,
-                { token: string; expiresAt: number }
-              >(functions, 'fetchAppCheckToken');
-              fetchAppCheckToken().then((response) => {
-                console.log('got token...');
-                const appCheckToken: AppCheckToken = {
-                  token: response.data.token,
-                  expireTimeMillis: response.data.expiresAt,
-                };
-                resolve(appCheckToken);
-              }).catch(error => {
-                console.error(error);
-              });
+              fetchAppCheckToken()
+                .then((response) => {
+                  console.log('got token...');
+                  const appCheckToken: AppCheckToken = {
+                    token: response.data.token,
+                    expireTimeMillis: response.data.expiresAt,
+                  };
+                  resolve(appCheckToken);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
             }),
         });
       } else {

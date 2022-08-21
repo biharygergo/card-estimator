@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
-import * as Sentry from "@sentry/angular";
+import * as Sentry from '@sentry/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +14,7 @@ import {
   ScreenTrackingService,
 } from '@angular/fire/analytics';
 import {
+  CustomProvider,
   initializeAppCheck,
   provideAppCheck,
   ReCaptchaV3Provider,
@@ -23,6 +24,8 @@ import {
   provideRemoteConfig,
   getRemoteConfig,
 } from '@angular/fire/remote-config';
+
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 import { environment } from '../environments/environment';
 import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
@@ -66,6 +69,7 @@ import { AppConfigModule } from './app-config.module';
 import { PrivacyComponent } from './landing/privacy/privacy.component';
 import { TermsComponent } from './landing/terms/terms.component';
 import { ZoomComponent } from './landing/zoom/zoom.component';
+import { isRunningInZoom } from './utils';
 
 @NgModule({
   declarations: [
@@ -100,8 +104,30 @@ import { ZoomComponent } from './landing/zoom/zoom.component';
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
     provideRemoteConfig(() => getRemoteConfig()),
-    provideAppCheck(() => {
-      const provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
+    provideAppCheck((injector) => {
+      let provider: ReCaptchaV3Provider | CustomProvider;
+      if (isRunningInZoom()) {
+        provider = new CustomProvider({
+          getToken: () => {
+            return new Promise(async (resolve, _reject) => {
+              const functions = getFunctions();
+              const fetchAppCheckToken = httpsCallable<
+                undefined,
+                { token: string; expiresAt: number }
+              >(functions, 'fetchAppCheckToken');
+              const response = await fetchAppCheckToken();
+              const appCheckToken = {
+                token: response.data.token,
+                expireTimeMillis: response.data.expiresAt * 1000,
+              };
+              resolve(appCheckToken);
+            });
+          },
+        });
+      } else {
+        provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
+      }
+
       if (!environment.production) {
         (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
       }
@@ -127,7 +153,7 @@ import { ZoomComponent } from './landing/zoom/zoom.component';
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,
-    AppConfigModule
+    AppConfigModule,
   ],
   providers: [
     ScreenTrackingService,

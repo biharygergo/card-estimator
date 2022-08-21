@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import {firestore, initializeApp} from "firebase-admin";
+import {firestore, initializeApp, appCheck} from "firebase-admin";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 import * as cookieParser from "cookie-parser";
 import {authorizeZoomApp, installZoomApp, zoomHome} from "./zoom/routes";
@@ -51,3 +51,18 @@ exports.uninstallZoomApp = functions.https.onRequest(async (req, res) => {
   console.log("Zoom App Uninstallation");
   console.log(req.body);
 });
+
+exports.fetchAppCheckToken = functions.https.onCall(
+    async (authenticityData, context) => {
+      const appId = "1:417578634660:web:3617c13e4d28109aa18531";
+      try {
+        const result = await appCheck().createToken(appId);
+        const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
+        return {token: result.token, expiresAt};
+      } catch (err) {
+        console.error("Unable to create App Check token.");
+        console.error(err);
+        return "An error occured, please check the logs.";
+      }
+    }
+);

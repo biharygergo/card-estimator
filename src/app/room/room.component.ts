@@ -32,7 +32,11 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../services/analytics.service';
-import { createTimer, getHumanReadableElapsedTime } from '../utils';
+import {
+  createTimer,
+  getHumanReadableElapsedTime,
+  isRunningInZoom,
+} from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 import { ConfigService } from '../services/config.service';
@@ -328,14 +332,18 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.analytics.logClickedShareRoom('main');
     let message = '';
     if (this.config.isRunningInZoom) {
-      const { invitationUUID } = await this.zoomService.inviteAllParticipants(
-        this.room.roomId
-      );
-      await this.estimatorService.saveInvitation(
-        invitationUUID,
-        this.room.roomId
-      );
-      message = 'Invitation sent to all participants!';
+      try {
+        const { invitationUUID } = await this.zoomService.inviteAllParticipants(
+          this.room.roomId
+        );
+        await this.estimatorService.saveInvitation(
+          invitationUUID,
+          this.room.roomId
+        );
+        message = 'Invitation sent to all participants!';
+      } catch {
+        message = 'Please start a meeting first to invite others to join.';
+      }
     } else {
       const host = window.origin || 'https://card-estimator.web.app';
       this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
@@ -381,7 +389,10 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   async leaveRoom() {
     this.analytics.logClickedLeaveRoom();
-    if (confirm('Do you really want to leave this estimation?')) {
+    if (
+      isRunningInZoom() ||
+      confirm('Do you really want to leave this estimation?')
+    ) {
       this.roomSubscription?.unsubscribe();
       if (this.estimatorService.activeMember) {
         await this.estimatorService.removeMember(
@@ -391,7 +402,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         saveJoinedRoomData(undefined);
       }
 
-      this.router.navigate(['']);
+      this.router.navigate(['join']);
     }
   }
 

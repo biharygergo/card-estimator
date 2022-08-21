@@ -149,14 +149,10 @@ function loadAppConfig(): Promise<any> {
         provider = new CustomProvider({
           getToken: () =>
             new Promise((resolve) => {
-              if (appCheckToken.expireTimeMillis < Date.now()) {
-                fetchToken().then((token) => {
-                  appCheckToken = token;
-                  resolve(token);
-                });
-              } else {
-                resolve(appCheckToken);
-              }
+              fetchToken().then((token) => {
+                appCheckToken = token;
+                resolve(token);
+              });
             }),
         });
       } else {

@@ -109,20 +109,23 @@ import { isRunningInZoom } from './utils';
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {
         provider = new CustomProvider({
-          getToken: async () => {
-            console.log('fetching token...');
-            const functions = getFunctions();
-            const fetchAppCheckToken = httpsCallable<
-              undefined,
-              { token: string; expiresAt: number }
-            >(functions, 'fetchAppCheckToken');
-            const response = await fetchAppCheckToken();
-            const appCheckToken: AppCheckToken = {
-              token: response.data.token,
-              expireTimeMillis: response.data.expiresAt,
-            };
-            return appCheckToken;
-          },
+          getToken: () =>
+            new Promise((resolve) => {
+              console.log('fetching token...');
+              const functions = getFunctions();
+              const fetchAppCheckToken = httpsCallable<
+                undefined,
+                { token: string; expiresAt: number }
+              >(functions, 'fetchAppCheckToken');
+              fetchAppCheckToken().then((response) => {
+                console.log('got token...');
+                const appCheckToken: AppCheckToken = {
+                  token: response.data.token,
+                  expireTimeMillis: response.data.expiresAt,
+                };
+                resolve(appCheckToken);
+              });
+            }),
         });
       } else {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);

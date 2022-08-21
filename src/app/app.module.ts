@@ -71,7 +71,38 @@ import { PrivacyComponent } from './landing/privacy/privacy.component';
 import { TermsComponent } from './landing/terms/terms.component';
 import { ZoomComponent } from './landing/zoom/zoom.component';
 import { isRunningInZoom } from './utils';
+import { initializeApp as originalInitializeApp } from 'firebase/app';
 
+let appCheckToken: AppCheckToken;
+type FetchAppCheckTokenData = { token: string; expiresAt: number };
+
+function loadAppConfig(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (isRunningInZoom) {
+      originalInitializeApp(environment.firebase);
+      const functions = getFunctions();
+      const fetchAppCheckToken = httpsCallable<
+        undefined,
+        FetchAppCheckTokenData
+      >(functions, 'fetchAppCheckToken');
+      fetchAppCheckToken()
+        .then((response) => {
+          console.log('got token...');
+          appCheckToken = {
+            token: response.data.token,
+            expireTimeMillis: response.data.expiresAt,
+          };
+          resolve(undefined);
+        })
+        .catch((error) => {
+          console.error(error);
+          resolve(undefined);
+        });
+    } else {
+      resolve(undefined);
+    }
+  });
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -106,31 +137,15 @@ import { isRunningInZoom } from './utils';
     provideAnalytics(() => getAnalytics()),
     provideRemoteConfig(() => getRemoteConfig()),
     provideAppCheck((injector) => {
+      console.log('provideAppCheck', appCheckToken);
       let provider: ReCaptchaV3Provider | CustomProvider;
-      const functions = getFunctions();
-      const fetchAppCheckToken = httpsCallable<
-        undefined,
-        { token: string; expiresAt: number }
-      >(functions, 'fetchAppCheckToken');
-      const appCheckTokenPromise = fetchAppCheckToken()
-        .then((response) => {
-          console.log('got token...');
-          const appCheckToken: AppCheckToken = {
-            token: response.data.token,
-            expireTimeMillis: response.data.expiresAt,
-          };
-          return appCheckToken;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      if (true) {
+      if (isRunningInZoom()) {
         provider = new CustomProvider({
-          getToken: () => appCheckTokenPromise as Promise<AppCheckToken>,
+          getToken: () => Promise.resolve(appCheckToken),
         });
-      } /* else {
+      } else {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
-      } */
+      }
 
       if (!environment.production) {
         (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
@@ -175,6 +190,11 @@ import { isRunningInZoom } from './utils';
       provide: APP_INITIALIZER,
       useFactory: () => () => {},
       deps: [Sentry.TraceService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => loadAppConfig,
       multi: true,
     },
   ],

@@ -76,26 +76,32 @@ import { initializeApp as originalInitializeApp } from 'firebase/app';
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
 
+function fetchToken(): Promise<AppCheckToken> {
+  originalInitializeApp(environment.firebase);
+  const functions = getFunctions();
+  const fetchAppCheckToken = httpsCallable<undefined, FetchAppCheckTokenData>(
+    functions,
+    'fetchAppCheckToken'
+  );
+  return fetchAppCheckToken().then((response) => {
+    console.log('got token...');
+    return {
+      token: response.data.token,
+      expireTimeMillis: response.data.expiresAt,
+    };
+  });
+}
+
 function loadAppConfig(): Promise<any> {
   return new Promise((resolve, reject) => {
     if (isRunningInZoom()) {
-      originalInitializeApp(environment.firebase);
-      const functions = getFunctions();
-      const fetchAppCheckToken = httpsCallable<
-        undefined,
-        FetchAppCheckTokenData
-      >(functions, 'fetchAppCheckToken');
-      fetchAppCheckToken()
-        .then((response) => {
-          console.log('got token...');
-          appCheckToken = {
-            token: response.data.token,
-            expireTimeMillis: response.data.expiresAt,
-          };
+      fetchToken()
+        .then((token) => {
+          appCheckToken = token;
           resolve(undefined);
         })
-        .catch((error) => {
-          console.error(error);
+        .catch((e) => {
+          console.error(e);
           resolve(undefined);
         });
     } else {
@@ -141,7 +147,17 @@ function loadAppConfig(): Promise<any> {
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {
         provider = new CustomProvider({
-          getToken: () => Promise.resolve(appCheckToken),
+          getToken: () =>
+            new Promise((resolve) => {
+              if (appCheckToken.expireTimeMillis < Date.now()) {
+                fetchToken().then((token) => {
+                  appCheckToken = token;
+                  resolve(token);
+                });
+              } else {
+                resolve(appCheckToken);
+              }
+            }),
         });
       } else {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);

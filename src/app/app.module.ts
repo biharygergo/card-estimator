@@ -112,24 +112,21 @@ import { isRunningInZoom } from './utils';
         undefined,
         { token: string; expiresAt: number }
       >(functions, 'fetchAppCheckToken');
+      const appCheckTokenPromise = fetchAppCheckToken()
+        .then((response) => {
+          console.log('got token...');
+          const appCheckToken: AppCheckToken = {
+            token: response.data.token,
+            expireTimeMillis: response.data.expiresAt,
+          };
+          return appCheckToken;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       if (isRunningInZoom()) {
         provider = new CustomProvider({
-          getToken: () =>
-            new Promise((resolve) => {
-              console.log('fetching token...');
-              fetchAppCheckToken()
-                .then((response) => {
-                  console.log('got token...');
-                  const appCheckToken: AppCheckToken = {
-                    token: response.data.token,
-                    expireTimeMillis: response.data.expiresAt,
-                  };
-                  resolve(appCheckToken);
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            }),
+          getToken: () => appCheckTokenPromise as Promise<AppCheckToken>,
         });
       } else {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);

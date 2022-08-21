@@ -124,6 +124,8 @@ import { isRunningInZoom } from './utils';
                   expireTimeMillis: response.data.expiresAt,
                 };
                 resolve(appCheckToken);
+              }).catch(error => {
+                console.error(error);
               });
             }),
         });

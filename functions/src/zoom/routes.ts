@@ -33,7 +33,6 @@ export const zoomHome = async (
       const path = roomId ? `/${roomId}` : "/join";
 
       const finalUrl = `${host}${path}?s=zoom`;
-      console.log("finalUrl", finalUrl);
       return res.redirect(finalUrl);
     }
 
@@ -51,9 +50,8 @@ export const installZoomApp = (
     res: functions.Response
 ): void => {
   const isDev = isRunningInEmulator();
-  const {url, state, verifier} = getInstallURL(isDev, req);
-  console.log(isDev);
-  res.cookie("__session", JSON.stringify({verifier, state}));
+  const {url, verifier} = getInstallURL(isDev, req);
+  res.cookie("__session", verifier);
   return res.redirect(url.href);
 };
 
@@ -62,18 +60,18 @@ export const authorizeZoomApp = async (
     res: functions.Response
 ): Promise<void> => {
   try {
-    const sessionCookie = req.cookies["__session"];
-    const parsedCookie = JSON.parse(sessionCookie);
-
-    const verifier = parsedCookie.verifier;
-
-    res.clearCookie("__session");
+    let verifier: string|undefined;
+    try {
+      const sessionCookie = req.cookies["__session"];
+      verifier = sessionCookie;
+      res.clearCookie("__session");
+    } catch (err) {
+      console.error("Error while parsing session cookie: ", err);
+    }
 
     const code = req.query.code as string;
     const isDev = isRunningInEmulator();
 
-    console.log(`Got code: ${code}`);
-    console.log(`Got verifier: ${verifier}`);
     // get Access Token from Zoom
     const {access_token: accessToken} = await getToken(
         code,

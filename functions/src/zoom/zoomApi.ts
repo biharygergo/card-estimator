@@ -13,9 +13,12 @@ host.hostname = `api.${host.hostname}`;
 
 const baseURL = host.href;
 
-export function getInstallURL(isDev: boolean, request: functions.Request) {
-  const verifier = Buffer.from(rand("ascii")).toString("base64url");
+export function generateVerifier() {
+  return Buffer.from(rand("ascii")).toString("base64url");
+}
 
+export function getInstallURL(isDev: boolean, request: functions.Request) {
+  const verifier = generateVerifier();
   const challenge: string = crypto
       .createHash("sha256")
       .update(verifier)

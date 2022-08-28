@@ -141,20 +141,17 @@ function loadAppConfig(): Promise<any> {
     provideAuth(() => getAuth()),
     provideAnalytics(() => getAnalytics()),
     provideRemoteConfig(() => getRemoteConfig()),
-    provideAppCheck((injector) => {
+    provideAppCheck(() => {
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {
         provider = new CustomProvider({
           getToken: () =>
             new Promise((resolve) => {
-              if (appCheckToken.expireTimeMillis < Date.now()) {
-                fetchToken().then((token) => {
-                  appCheckToken = token;
-                  resolve(token);
-                });
-              } else {
-                resolve(appCheckToken);
-              }
+              window.setTimeout(() => {
+                // Workaround for not being able to refresh the AppCheck token here...
+                window.location.reload();
+              }, appCheckToken.expireTimeMillis - Date.now());
+              resolve(appCheckToken);
             }),
         });
       } else {

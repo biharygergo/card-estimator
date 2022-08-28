@@ -31,6 +31,16 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/generateCodeChallenge",
+          "function": "generateCodeChallenge",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/inClientOnAuthorized",
+          "function": "inClientOnAuthorized",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },

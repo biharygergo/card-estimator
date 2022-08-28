@@ -2,7 +2,14 @@ import * as functions from "firebase-functions";
 import {firestore, initializeApp, appCheck} from "firebase-admin";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 import * as cookieParser from "cookie-parser";
-import {authorizeZoomApp, installZoomApp, zoomHome} from "./zoom/routes";
+import {
+  authorizeZoomApp,
+  generateCodeChallenge,
+  inClientOnAuthorized,
+  installZoomApp,
+  zoomHome,
+} from "./zoom/routes";
+import {CallableContext} from "firebase-functions/v1/https";
 
 initializeApp();
 
@@ -53,16 +60,23 @@ exports.uninstallZoomApp = functions.https.onRequest(async (req, res) => {
 });
 
 exports.fetchAppCheckToken = functions.https.onCall(
-    async (authenticityData, context) => {
+    async (data: any, context: CallableContext) => {
       const appId = "1:417578634660:web:3617c13e4d28109aa18531";
       try {
         const result = await appCheck().createToken(appId);
         const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
         return {token: result.token, expiresAt};
       } catch (err) {
-        console.error("Unable to create App Check token.");
-        console.error(err);
+        console.error("Unable to create App Check token.", err);
         return "An error occured, please check the logs.";
       }
     }
 );
+
+exports.generateCodeChallenge = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => generateCodeChallenge(req, res));
+});
+
+exports.inClientOnAuthorized = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => inClientOnAuthorized(req, res));
+});

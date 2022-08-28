@@ -1,8 +1,27 @@
 import {contextHeader, getAppContext} from "./cipher";
-import {getInstallURL, getToken, getDeeplink} from "./zoomApi";
+import {
+  getInstallURL,
+  getToken,
+  getDeeplink,
+  generateVerifier,
+} from "./zoomApi";
 import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
 import {getHost, isRunningInEmulator} from "../config";
+
+const saveVerifierInSession = (res: functions.Response, verifier: string) => {
+  res.cookie("__session", verifier);
+};
+
+const getVerifierFromSession = (
+    req: functions.Request,
+    res: functions.Response
+) => {
+  const sessionCookie = req.cookies["__session"];
+  const verifier = sessionCookie;
+  res.clearCookie("__session");
+  return verifier;
+};
 
 export const zoomHome = async (
     req: functions.Request,
@@ -51,7 +70,7 @@ export const installZoomApp = (
 ): void => {
   const isDev = isRunningInEmulator();
   const {url, verifier} = getInstallURL(isDev, req);
-  res.cookie("__session", verifier);
+  saveVerifierInSession(res, verifier);
   return res.redirect(url.href);
 };
 
@@ -60,11 +79,9 @@ export const authorizeZoomApp = async (
     res: functions.Response
 ): Promise<void> => {
   try {
-    let verifier: string|undefined;
+    let verifier: string | undefined;
     try {
-      const sessionCookie = req.cookies["__session"];
-      verifier = sessionCookie;
-      res.clearCookie("__session");
+      verifier = getVerifierFromSession(req, res);
     } catch (err) {
       console.error("Error while parsing session cookie: ", err);
     }
@@ -94,4 +111,29 @@ export const authorizeZoomApp = async (
           ((e as any).message || e)
         );
   }
+};
+
+export const generateCodeChallenge = async (
+    req: functions.Request,
+    res: functions.Response
+) => {
+  const verifier = generateVerifier();
+  const codeChallenge = verifier;
+  saveVerifierInSession(res, verifier);
+  res.send({codeChallenge});
+};
+
+export const inClientOnAuthorized = async (
+    req: functions.Request,
+    res: functions.Response
+) => {
+  const verifier = getVerifierFromSession(req, res);
+  const isDev = isRunningInEmulator();
+  const zoomAuthorizationCode = req.body.code;
+
+  // get Access Token from Zoom
+  await getToken(zoomAuthorizationCode, verifier, isDev, req);
+  // TODO use accessToken for fetching user-data/nickname in the future.
+
+  res.send({success: true});
 };

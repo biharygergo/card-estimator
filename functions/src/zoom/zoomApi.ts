@@ -4,14 +4,6 @@ import {appConfig, getHost} from "../config";
 import * as crypto from "crypto";
 import * as functions from "firebase-functions";
 
-// returns a base64 encoded url
-const base64URL = (s: Buffer) =>
-  s
-      .toString("base64")
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=/g, "");
-
 const rand = (format: BufferEncoding, depth = 32) =>
   crypto.randomBytes(depth).toString(format);
 
@@ -21,21 +13,19 @@ host.hostname = `api.${host.hostname}`;
 
 const baseURL = host.href;
 
-export function getInstallURL(isDev: boolean, request: functions.Request) {
-  const state = rand("base64");
-  const verifier = rand("ascii");
+export function generateVerifier() {
+  return Buffer.from(rand("ascii")).toString("base64url");
+}
 
-  const digest = crypto
+export function getInstallURL(isDev: boolean, request: functions.Request) {
+  const verifier = generateVerifier();
+  const challenge: string = crypto
       .createHash("sha256")
       .update(verifier)
-      .digest("base64")
-      .toString();
-
-  const challenge = base64URL(Buffer.from(digest));
+      .digest("base64url");
 
   const redirectUrl = getRedirectUrl(request);
 
-  console.log("redirectUrl", redirectUrl);
   const url = new URL("/oauth/authorize", zoomHost);
 
   url.searchParams.set("response_type", "code");
@@ -46,9 +36,8 @@ export function getInstallURL(isDev: boolean, request: functions.Request) {
   url.searchParams.set("redirect_uri", redirectUrl);
   url.searchParams.set("code_challenge", challenge);
   url.searchParams.set("code_challenge_method", "S256");
-  url.searchParams.set("state", state);
 
-  return {url, state, verifier};
+  return {url, verifier};
 }
 
 function tokenRequest(params: any, isDev: boolean) {
@@ -57,8 +46,9 @@ function tokenRequest(params: any, isDev: boolean) {
     appConfig.zoomClientSecretDev :
     appConfig.zoomClientSecret;
 
+  const dataToSend = new URLSearchParams(params).toString();
   return axios({
-    data: new URLSearchParams(params).toString(),
+    data: dataToSend,
     baseURL: zoomHost,
     url: "/oauth/token",
     method: "POST",
@@ -97,13 +87,12 @@ function apiRequest(
 function getRedirectUrl(request: functions.Request) {
   const host = getHost(request);
   const redirectUrl = `${host}${appConfig.zoomRedirectUrl}`;
-  console.log("redirectUrl", redirectUrl);
   return redirectUrl;
 }
 
 export async function getToken(
     code: string,
-    verifier: string,
+    verifier: string | undefined,
     isDev: boolean,
     request: functions.Request
 ) {
@@ -120,7 +109,7 @@ export async function getToken(
   return tokenRequest(
       {
         code,
-        code_verifier: verifier ?? undefined,
+        code_verifier: verifier,
         redirect_uri: redirectUrl,
         grant_type: "authorization_code",
       },

@@ -73,7 +73,6 @@ export function getAppContext(header: string, isDev: boolean) {
   // Decode and parse context
   const {iv, aad, cipherText, tag} = unpack(header);
 
-  console.log(iv, aad, cipherText, tag);
   // Create sha256 hash from Client Secret (key)
   const hash = crypto.createHash("sha256").update(key).digest();
 

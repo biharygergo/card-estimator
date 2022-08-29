@@ -1,8 +1,6 @@
-import { ɵparseCookieValue } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { CookieService } from 'src/app/services/cookie.service';
 
-const COOKIE_ACCEPTED_KEY = 'cookiesAccepted';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -10,24 +8,10 @@ const COOKIE_ACCEPTED_KEY = 'cookiesAccepted';
 })
 export class HeaderComponent implements OnInit {
   isOpen = false;
-  showCookieBanner = true;
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private readonly cookieService: CookieService) {}
 
   ngOnInit(): void {
-    if (
-      typeof window !== 'undefined' &&
-      window?.localStorage &&
-      !window.localStorage.getItem(COOKIE_ACCEPTED_KEY)
-    ) {
-      const snackbarRef = this.snackBar.open(
-        `This site uses cookies to analyze traffic and improve your experience.`,
-        'Got it'
-      );
-      snackbarRef.onAction().subscribe(() => {
-        snackbarRef.dismiss();
-        window.localStorage.setItem(COOKIE_ACCEPTED_KEY, 'true');
-      });
-    }
+    this.cookieService.tryShowCookieBanner();
   }
 
   toggleMenu() {

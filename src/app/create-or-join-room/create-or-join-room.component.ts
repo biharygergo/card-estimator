@@ -10,6 +10,7 @@ import { RoomData, Member } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { take } from 'rxjs';
+import { CookieService } from '../services/cookie.service';
 
 @Component({
   selector: 'app-create-or-join-room',
@@ -27,10 +28,13 @@ export class CreateOrJoinRoomComponent implements OnInit {
     private snackBar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
     private analytics: AnalyticsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private readonly cookieService: CookieService,
   ) {}
 
   ngOnInit(): void {
+    this.cookieService.tryShowCookieBanner();
+
     const roomIdFromParams =
       this.activatedRoute.snapshot.queryParamMap.get('roomId');
     const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');

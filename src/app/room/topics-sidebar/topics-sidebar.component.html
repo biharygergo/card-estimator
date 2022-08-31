@@ -141,6 +141,7 @@
                   *ngIf="member.avatarUrl"
                   [src]="member.avatarUrl"
                   class="avatar-image"
+                  alt="A user's avatar"
                 />
                 <ng-container *ngIf="!member.avatarUrl">
                   <div>{{ member.name.charAt(0) }}</div>

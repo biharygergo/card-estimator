@@ -62,10 +62,11 @@ section {
 .instruction {
   width: 100%;
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
 
   @media screen and (max-width: 800px) {
     flex-direction: column;
+    gap: 2rem;
   }
 }
 

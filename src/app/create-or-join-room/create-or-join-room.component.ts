@@ -9,7 +9,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoomData, Member } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
-import { take } from 'rxjs';
 import { CookieService } from '../services/cookie.service';
 
 @Component({

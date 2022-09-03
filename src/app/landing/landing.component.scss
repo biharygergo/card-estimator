@@ -13,6 +13,10 @@
     color: white;
     padding: 0 8px;
 
+    a {
+      color: white;
+    }
+
     h1 {
       font-size: 3rem;
       line-height: 3.5rem;
@@ -28,6 +32,17 @@
       font-size: 1.5rem;
       color: var(--main-color);
       margin: 0 24px;
+    }
+
+    .see-features {
+      margin: 0 auto;
+      text-align: center;
+      font-size: 1.1rem;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .used-by {

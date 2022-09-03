@@ -9,7 +9,7 @@
         class="estimator-button"
         (click)="setEstimate(item.key)"
         [color]="+item.key === currentEstimate && 'accent'"
-        [disabled]="isObserver"
+        [disabled]="isObserver || (room?.rounds)[currentRound]?.show_results"
       >
         {{ item.value }}
       </button>

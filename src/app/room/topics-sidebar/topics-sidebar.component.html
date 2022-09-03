@@ -23,7 +23,10 @@
 </div>
 <div class="round-history-container">
   <ng-container *ngFor="let round of rounds; let roundNumber = index">
-    <mat-card class="flat-card">
+    <mat-card
+      class="flat-card"
+      *ngIf="(editedRound | async)?.round.id !== round.id; else editRoundCard"
+    >
       <div class="card-header">
         <span class="card-round-number">#{{ roundNumber + 1 }}</span>
 
@@ -53,6 +56,13 @@
             (click)="revoteRound(roundNumber)"
           >
             Clear votes
+          </button>
+          <button
+            mat-menu-item
+            aria-label="Edit topic name of round"
+            (click)="editedRound.next({round, roundIndex: roundNumber})"
+          >
+            Edit topic
           </button>
         </mat-menu>
       </div>
@@ -169,6 +179,16 @@
         </ng-template>
       </mat-expansion-panel>
     </mat-card>
+    <ng-template #editRoundCard>
+      <div class="add-round-container update-round" *ngIf="editedRound | async as roundInfo">
+        <add-or-update-topic
+          [roundNumber]="roundInfo.roundIndex + 1"
+          [topicName]="roundInfo.round.topic"
+          (onSaveOrUpdate)="updateRoundConfirmed($event)"
+          (onCancel)="editedRound.next(undefined)"
+        ></add-or-update-topic>
+      </div>
+    </ng-template>
   </ng-container>
   <div class="add-round-container">
     <button
@@ -180,36 +200,12 @@
     >
       Add round
     </button>
-    <mat-card *ngIf="isAddingRound" class="flat-card">
-      <div class="card-header">
-        <span class="card-round-number">#{{ rounds.length + 1 }}</span>
-      </div>
-      <mat-form-field appearance="outline" color="accent">
-        <mat-label>Topic</mat-label>
-        <textarea
-          matInput
-          cdkTextareaAutosize
-          placeholder="Describe the topic of this round"
-          [formControl]="sidebarRoundTopicForm"
-          autofocus
-        ></textarea>
-        <mat-hint
-          >Insert a JIRA ticket or a short description of what you want to vote
-          on.</mat-hint
-        >
-      </mat-form-field>
-
-      <mat-card-footer class="card-footer-actions">
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="addRoundConfirmed()"
-          [disabled]="!sidebarRoundTopicForm.value"
-        >
-          Add
-        </button>
-        <button mat-flat-button (click)="cancelAddingRound()">Cancel</button>
-      </mat-card-footer>
-    </mat-card>
+    <add-or-update-topic
+      *ngIf="isAddingRound"
+      [roundNumber]="rounds.length + 1"
+      (onSaveOrUpdate)="addRoundConfirmed($event)"
+      (onCancel)="cancelAddingRound()"
+    >
+    </add-or-update-topic>
   </div>
 </div>

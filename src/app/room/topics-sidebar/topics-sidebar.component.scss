@@ -45,24 +45,11 @@
   justify-content: flex-end;
 }
 
-.flat-card {
-  box-shadow: none;
-  border: 1px solid lightgrey;
-}
-
-.card-round-number {
-  color: var(--main-dark-color);
-  opacity: 0.8;
-  font-size: 0.7rem;
-}
-
 .add-round-container {
   padding: 16px;
-  mat-card {
-    margin: 0;
-    .mat-form-field {
-      width: 100%;
-    }
+
+  &.update-round {
+    padding-top: 0;
   }
 }
 

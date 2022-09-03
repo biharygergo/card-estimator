@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -20,7 +20,9 @@ export class TopicsSidebarComponent implements OnInit {
   @Input() selectedEstimationCardSetValue: CardSetValue | undefined;
 
   isAddingRound = false;
-  sidebarRoundTopicForm = new FormControl('');
+  editedRound = new BehaviorSubject<
+    { round: Round; roundIndex: number } | undefined
+  >(undefined);
 
   constructor(
     private serializer: SerializerService,
@@ -53,13 +55,20 @@ export class TopicsSidebarComponent implements OnInit {
     this.isAddingRound = false;
   }
 
-  async addRoundConfirmed() {
-    await this.estimatorService.addRound(
-      this.room,
-      this.sidebarRoundTopicForm.value
-    );
+  async updateRoundConfirmed(topicName: string) {
+    if (this.editedRound.value) {
+      await this.estimatorService.setTopic(
+        this.room,
+        this.editedRound.value.roundIndex,
+        topicName
+      );
+      this.editedRound.next(undefined);
+    }
+  }
+
+  async addRoundConfirmed(topicName: string) {
+    await this.estimatorService.addRound(this.room, topicName);
     this.analytics.logClickedAddRoundConfirmed();
-    this.sidebarRoundTopicForm.setValue('');
     this.isAddingRound = false;
   }
 

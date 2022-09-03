@@ -1,0 +1,16 @@
+mat-card {
+  margin: 0;
+  .mat-form-field {
+    width: 100%;
+  }
+}
+
+.card-round-number {
+  color: var(--main-dark-color);
+  opacity: 0.8;
+  font-size: 0.7rem;
+}
+
+.card-header {
+    margin-bottom: 1rem;
+}

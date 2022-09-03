@@ -67,9 +67,13 @@
 
       &:disabled {
         background-color: white;
+
+        &.mat-accent{
+          background-color: var(--accent-color);
+        }
       }
 
-      &:hover:not(.mat-accent) {
+      &:hover:not(.mat-accent):not(:disabled) {
         transform: translate3d(2px, -10px, 0px) rotate(-5deg);
       }
     }

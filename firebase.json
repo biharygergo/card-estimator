@@ -49,6 +49,10 @@
           "destination": "/assets/verifyzoom.html"
         },
         {
+          "source": "/room/*",
+          "destination": "/room/index.html"
+        },
+        {
           "source": "/",
           "destination": "/index.html"
         },

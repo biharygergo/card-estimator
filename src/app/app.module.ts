@@ -74,6 +74,7 @@ import { ZoomComponent } from './landing/zoom/zoom.component';
 import { isRunningInZoom } from './utils';
 import { initializeApp as originalInitializeApp } from 'firebase/app';
 import { AddOrUpdateTopicComponent } from './room/topics-sidebar/add-or-update-topic/add-or-update-topic.component';
+import { RoomLoadingComponent } from './room-loading/room-loading.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -134,6 +135,7 @@ function loadAppConfig(): Promise<any> {
     TermsComponent,
     ZoomComponent,
     AddOrUpdateTopicComponent,
+    RoomLoadingComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

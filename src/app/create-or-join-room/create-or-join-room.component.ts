@@ -11,11 +11,12 @@ import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
-import { combineLatest, from, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs';
 import {
   finalize,
   first,
   map,
+  skipWhile,
   switchMap,
   takeUntil,
   tap,
@@ -48,7 +49,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   roomId = new FormControl('');
   joinAs = new FormControl(JoinMode.ESTIMATOR);
 
-  isBusy = new Subject<boolean>();
+  isBusy = new BehaviorSubject<boolean>(false);
   onJoinRoomClicked = new Subject<void>();
   onCreateRoomClicked = new Subject<void>();
   destroy = new Subject<void>();
@@ -79,7 +80,9 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.roomIdFromParams,
     this.currentPath,
     this.user,
+    this.isBusy,
   ]).pipe(
+    skipWhile(([_params, _path, _user, busy]) => !!busy),
     map(([roomIdFromParams, currentPath, user]) => {
       const roomId = roomIdFromParams;
       const mode = currentPath === 'create' ? PageMode.CREATE : PageMode.JOIN;

@@ -1,4 +1,4 @@
-<div class="join-container">
+<!-- <div class="join-container">
   <div class="name-container">
     <h3 class="step-indicator">1. Set your name</h3>
     <mat-card class="name-card">
@@ -19,12 +19,11 @@
         <mat-divider></mat-divider>
         <div class="terms">
           <small
-          >By using this app you accept the
-          <a routerLink="/terms">Terms</a> and the
-          <a routerLink="/privacy">Privacy Policy</a>.</small
-        >
+            >By using this app you accept the
+            <a routerLink="/terms">Terms</a> and the
+            <a routerLink="/privacy">Privacy Policy</a>.</small
+          >
         </div>
-        
       </mat-card-content>
     </mat-card>
   </div>
@@ -77,4 +76,131 @@
       </button>
     </div>
   </div>
+</div> -->
+
+<div class="join-container">
+  <ng-container *ngIf="vm | async as viewModel">
+    <ng-container *ngIf="viewModel.mode === PageMode.CREATE">
+      <ng-container *ngTemplateOutlet="create"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="viewModel.mode === PageMode.JOIN">
+      <ng-container *ngTemplateOutlet="join"></ng-container>
+    </ng-container>
+  </ng-container>
 </div>
+
+<ng-template #create>
+  <ng-container *ngIf="vm | async as viewModel">
+    <ng-container *ngIf="viewModel.user">
+      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
+    </ng-container>
+    <mat-card class="action-card">
+      <mat-card-content>
+        <form class="full-bleed">
+          <ng-container *ngIf="!viewModel.user">
+            <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+          </ng-container>
+        </form>
+        <button
+          color="primary"
+          mat-raised-button
+          (click)="createRoom()"
+          [disabled]="isBusy"
+        >
+          Create new Room
+        </button>
+        <ng-container *ngIf="!viewModel.user">
+          <ng-container *ngTemplateOutlet="terms"></ng-container>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</ng-template>
+
+<ng-template #join>
+  <ng-container *ngIf="vm | async as viewModel">
+    <ng-container *ngIf="viewModel.user">
+      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
+    </ng-container>
+    <mat-card class="action-card">
+      <mat-card-content>
+        <ng-container *ngIf="viewModel.roomId">
+          <ng-container *ngTemplateOutlet="invitedToRoomText"></ng-container>
+        </ng-container>
+        <form class="full-bleed">
+          <ng-container *ngIf="!viewModel.user">
+            <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="!viewModel.roomId">
+            <ng-container *ngTemplateOutlet="roomIdTemplate"></ng-container>
+          </ng-container>
+        </form>
+
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!roomId.value.length || isBusy"
+          (click)="joinRoom()"
+        >
+          Join Room
+        </button>
+        <ng-container *ngIf="!viewModel.user">
+          <ng-container *ngTemplateOutlet="terms"></ng-container>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</ng-template>
+
+<ng-template #welcomeBack>
+  <div class="welcome-name-container">
+    <h1>Welcome back, {{ (user | async)?.displayName }}!</h1>
+  </div>
+</ng-template>
+
+<ng-template #invitedToRoomText>
+  <h4>
+    You've been invited to join room: <br />
+    <strong>{{ (vm | async)?.roomId }}</strong>
+  </h4>
+</ng-template>
+
+<ng-template #terms>
+  <div class="terms">
+    <small
+      >By using this app you accept the <a routerLink="/terms">Terms</a> and the
+      <a routerLink="/privacy">Privacy Policy</a>.</small
+    >
+  </div>
+</ng-template>
+
+<ng-template #roomIdTemplate>
+  <mat-form-field class="room-id" appearance="outline">
+    <mat-label>Room ID</mat-label>
+    <input
+      matInput
+      placeholder="random-room-name"
+      [formControl]="roomId"
+      (blur)="onRoomIdBlur()"
+    />
+    <mat-hint
+      >The room ID is provided by the person who created the room.</mat-hint
+    >
+  </mat-form-field>
+</ng-template>
+
+<ng-template #nameTemplate>
+  <mat-form-field class="name" appearance="outline">
+    <mat-label>Your name</mat-label>
+    <input
+      matInput
+      placeholder="Best Engineer"
+      required
+      [formControl]="name"
+      autocomplete="name"
+      (blur)="onNameBlur()"
+    />
+  </mat-form-field>
+</ng-template>
+
+<ng-template #loading>Loading...</ng-template>

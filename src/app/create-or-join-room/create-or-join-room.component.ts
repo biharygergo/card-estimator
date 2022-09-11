@@ -11,6 +11,30 @@ import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
+import { combineLatest, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { User } from 'firebase/auth';
+
+enum PageState {
+  SIGNED_IN_INVITED = 'SIGNED_IN_INVITED',
+  SIGNED_IN_CREATE = 'SIGNED_IN_CREATE',
+  SIGNED_IN_JOIN = 'SIGNED_IN_JOIN',
+  SIGNED_OUT_INVITED = 'SIGNED_OUT_INVITED',
+  SIGNED_OUT_CREATE = 'SIGNED_OUT_CREATE',
+  SIGNED_OUT_JOIN = 'SIGNED_OUT_JOIN',
+}
+
+enum PageMode {
+  CREATE = 'create',
+  JOIN = 'join',
+}
+
+interface ViewModel {
+  user: User | undefined;
+  roomId: string | undefined;
+  mode: PageMode;
+}
+
 @Component({
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
@@ -21,6 +45,37 @@ export class CreateOrJoinRoomComponent implements OnInit {
   roomId = new FormControl('');
   isBusy = false;
 
+  user = this.authService.user.pipe(tap(user => {
+    if (user) {
+      this.name.setValue(user.displayName);
+    }
+  }));
+
+  roomIdFromParams: Observable<string> = this.activatedRoute.queryParamMap.pipe(
+    map((paramMap) => paramMap.get('roomId')),
+    tap(roomId => {
+      if (roomId) {
+        this.roomId.setValue(roomId);
+        this.analytics.logAutoFilledRoomId();
+      }
+    })
+  );
+
+  currentPath: Observable<string> = this.activatedRoute.url.pipe(
+    map((segments) => [...segments]?.pop()?.path)
+  );
+
+  vm: Observable<ViewModel> = combineLatest([this.roomIdFromParams, this.currentPath, this.user]).pipe(
+    map(([roomIdFromParams, currentPath, user]) => {
+      const roomId = roomIdFromParams;
+      const mode = currentPath === 'create' ? PageMode.CREATE : PageMode.JOIN;
+      return { roomId, mode, user };
+    }),
+    tap(state => console.log(state))
+  );
+
+  readonly PageMode = PageMode;
+
   constructor(
     private estimatorService: EstimatorService,
     private router: Router,
@@ -28,28 +83,17 @@ export class CreateOrJoinRoomComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private analytics: AnalyticsService,
     private authService: AuthService,
-    private readonly cookieService: CookieService,
+    private readonly cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
     this.cookieService.tryShowCookieBanner();
 
-    const roomIdFromParams =
-      this.activatedRoute.snapshot.queryParamMap.get('roomId');
     const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');
-
-    if (roomIdFromParams) {
-      this.roomId.setValue(roomIdFromParams);
-      this.roomId.disable();
-      this.analytics.logAutoFilledRoomId();
-    }
 
     const savedRoomData = retrieveRoomData();
 
     this.authService.getUser().then((user) => {
-      if (user?.displayName) {
-        this.name.setValue(user.displayName);
-      }
       if (savedRoomData && user?.uid === savedRoomData.memberId && !hasError) {
         const snackbarRef = this.snackBar.open(
           `Do you want to re-join your last estimation, ${savedRoomData.roomId}?`,
@@ -126,7 +170,6 @@ export class CreateOrJoinRoomComponent implements OnInit {
       this.showUnableToJoinRoom();
       this.isBusy = false;
     }
-    
   }
 
   showUnableToJoinRoom() {

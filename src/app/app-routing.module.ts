@@ -34,6 +34,11 @@ const routes: Routes = [
     data: { title: 'Join' },
   },
   {
+    path: 'create',
+    component: CreateOrJoinRoomComponent,
+    data: { title: 'Create Room' },
+  },
+  {
     path: ':roomId',
     component: RoomComponent,
     resolve: {

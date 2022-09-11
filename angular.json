@@ -181,6 +181,8 @@
               "/terms",
               "/privacy",
               "/join",
+              "/create",
+              "/room",
               "/zoom"
             ],
             "guessRoutes": false

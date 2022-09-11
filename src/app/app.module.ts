@@ -45,6 +45,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import {MatSelectModule} from '@angular/material/select';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -179,6 +180,7 @@ function loadAppConfig(): Promise<any> {
     MatExpansionModule,
     MatMenuModule,
     MatDialogModule,
+    MatSelectModule,
     MatTooltipModule,
     MatSidenavModule,
     MatBadgeModule,

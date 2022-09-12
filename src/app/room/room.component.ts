@@ -227,7 +227,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   private showOrHideAloneInRoomModal() {
     this.shouldShowAloneInRoom =
-      this.room.members.length === 1 &&
+      this.room.members.length <= 1 &&
       (this.currentRound > 0 || this.currentEstimate !== undefined) &&
       !this.isAloneInRoomHidden;
     if (this.shouldShowAloneInRoom) {

@@ -1,0 +1,6 @@
+<div class="center" *ngIf="isLoading">
+    <span>Preparing room...</span>
+    <div class="loader"></div>
+</div>
+<router-outlet (activate)="isLoading = false">
+</router-outlet>

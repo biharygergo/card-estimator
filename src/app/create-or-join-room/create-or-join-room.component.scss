@@ -1,4 +1,4 @@
-$opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+$opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
 .join-container {
   position: absolute;
@@ -15,79 +15,85 @@ $opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   }
 }
 
-.step-indicator {
+.terms {
+  padding-top: 16px;
+}
+
+.welcome-name-container {
   color: white;
+  margin-bottom: 1rem;
 }
 
-.join-options-container {
-  width: 60%;
-  max-width: 1400px;
-
-  @media screen and (max-width: 800px) {
-    width: 90%;
-  }
-
-  transition: $opacityTransition;
-
-  &.disabled {
-    opacity: 0.5;
-  }
-}
-
-.join-options {
-  display: grid;
-  grid-template-columns: 1fr 50px 1fr;
-  column-gap: 16px;
-
-  @media screen and (max-width: 800px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 20px 1fr;
-    row-gap: 16px;
-  }
-}
-
-.or-container {
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.join-card {
-}
-
-.name-container {
-  width: 60%;
-  max-width: 1400px;
+.action-card {
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 350px;
   margin-bottom: 16px;
 
   @media screen and (max-width: 800px) {
+    width: 80%;
+  }
+  .mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  form {
     width: 90%;
+    :last-child {
+      margin-bottom: 1rem;
+    }
+    .mat-form-field {
+      width: 100%;
+    }
   }
 }
 
-.join-room-content {
+@keyframes appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+    rgba(5, 18, 37, 0.24) 0px 0px 8px;
+  opacity: 0;
+  transform: scale(0);
+  animation: appear 500ms ease-in-out 150ms;
+  animation-fill-mode: forwards;
+  margin-bottom: 2rem;
+}
+
+.links {
   display: flex;
   flex-direction: column;
-}
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.7;
+    cursor: pointer;
 
-.divider-container {
-  padding: 1rem 0;
-}
-.create-container {
-  display: flex;
-  flex-direction: column;
-}
-
-mat-card-footer {
-  text-align: center;
-  padding-bottom: 0.5rem;
-}
-.observer-link {
-  color: #f5a115;
-  margin-top: 6px;
-}
-
-.terms {
-  padding-top: 16px;
+    &:hover {
+      opacity: 1;
+    }
+  }
 }

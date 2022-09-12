@@ -29,7 +29,7 @@ export class LandingComponent implements OnInit {
 
   start() {
     this.analytics.logClickedStartPlanning();
-    this.router.navigate(['join']);
+    this.router.navigate(['create']);
   }
 
   scrollDown() {

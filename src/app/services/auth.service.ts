@@ -43,6 +43,10 @@ export class AuthService {
     return this.auth.currentUser?.uid;
   }
 
+  signOut() {
+    this.auth.signOut();
+  }
+
   async linkAccountWithGoogle() {
     const provider = new GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/userinfo.email');

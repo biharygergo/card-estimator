@@ -7,8 +7,8 @@
 <div class="sidenav-actions">
   <div
     [matTooltip]="
-      config.isRunningInZoom &&
-      'Downloading results is only available on the web version of the app.'
+      config.isRunningInZoom ?
+      'Downloading results is only available on the web version of the app.' : ''
     "
   >
     <button

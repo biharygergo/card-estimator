@@ -201,20 +201,28 @@
             </button>
           </div>
           <mat-card-footer class="card-footer">
-            <h3>
+            <h4>
               <span
                 >Room ID: <strong>{{ room?.roomId }}</strong></span
               >
               <button mat-stroked-button color="primary" (click)="copyRoomId()">
                 Invite others
               </button>
-            </h3>
+            </h4>
           </mat-card-footer>
           <mat-card-footer class="card-footer-actions">
             <button mat-stroked-button color="warn" (click)="leaveRoom()">
               Leave
             </button>
-            <button mat-stroked-button (click)="toggleMute()">
+            <button
+              mat-stroked-button
+              (click)="toggleMute()"
+              [matTooltip]="
+                isMuted
+                  ? 'Play notification sound on new rounds'
+                  : 'Mute all game sounds'
+              "
+            >
               {{ isMuted ? "Sound" : "Mute" }}
             </button>
 

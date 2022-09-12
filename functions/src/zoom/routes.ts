@@ -49,9 +49,9 @@ export const zoomHome = async (
         }
       }
 
-      const path = roomId ? `/${roomId}` : "/join";
+      const path = roomId ? `/join?roomId=${roomId}&s=zoom` : "/join?s=zoom";
 
-      const finalUrl = `${host}${path}?s=zoom`;
+      const finalUrl = `${host}${path}`;
       return res.redirect(finalUrl);
     }
 

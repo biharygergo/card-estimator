@@ -6,7 +6,7 @@ import {
   Firestore,
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
-import { lastValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
   RoomData,
@@ -102,14 +102,17 @@ export class EstimatorService {
     }
   }
 
-  async createRoom(member: Member) {
+  async createRoom(
+    member: Member,
+    isObserver: boolean
+  ): Promise<{ room: Room; member: Member }> {
     await this.signInAsMember(member);
 
     const room: Room = {
       id: this.createId(),
-      roomId: generate().dashed,
-      members: [member],
-      rounds: { 0: this.createRound([member], 1) },
+      roomId: generate({ words: 3 }).dashed,
+      members: isObserver ? [] : [member],
+      rounds: { 0: this.createRound(isObserver ? [] : [member], 1) },
       currentRound: 0,
       isOpen: true,
       createdAt: serverTimestamp(),
@@ -119,24 +122,28 @@ export class EstimatorService {
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
 
     this.refreshCurrentRoom(room.roomId, member.id);
-    this.activeMember = member;
 
-    saveJoinedRoomData({
-      roomId: room.roomId,
-      memberId: member.id,
-      createdAt: new Date().toISOString(),
-    });
+    if (isObserver) {
+      this.observer = member;
+    } else {
+      this.activeMember = member;
+      saveJoinedRoomData({
+        roomId: room.roomId,
+        memberId: member.id,
+        createdAt: new Date().toISOString(),
+      });
+    }
 
     return { room, member };
   }
 
-  async joinRoomAsObserver(roomId: string, member: Member) {
+  async joinRoom(roomId: string, member: Member, isObserver: boolean) {
     await this.signInAsMember(member);
-    this.observer = member;
-  }
 
-  async joinRoom(roomId: string, member: Member) {
-    await this.signInAsMember(member);
+    if (isObserver) {
+      this.observer = member;
+      return;
+    }
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       members: arrayUnion(member),

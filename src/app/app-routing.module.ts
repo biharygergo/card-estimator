@@ -7,6 +7,7 @@ import { LandingComponent } from './landing/landing.component';
 import { PrivacyComponent } from './landing/privacy/privacy.component';
 import { TermsComponent } from './landing/terms/terms.component';
 import { ZoomComponent } from './landing/zoom/zoom.component';
+import { RoomLoadingComponent } from './room-loading/room-loading.component';
 import { RoomComponent } from './room/room.component';
 import { RoomResolver } from './room/room.resolver';
 
@@ -32,6 +33,26 @@ const routes: Routes = [
     path: 'join',
     component: CreateOrJoinRoomComponent,
     data: { title: 'Join' },
+  },
+  {
+    path: 'create',
+    component: CreateOrJoinRoomComponent,
+    data: { title: 'Create Room' },
+  },
+  {
+    path: 'room',
+    component: RoomLoadingComponent,
+    data: { title: 'Loading room'},
+    children: [
+      {
+        path: ':roomId',
+        component: RoomComponent,
+        resolve: {
+          room: RoomResolver,
+        },
+        data: { title: 'Active room' },
+      },
+    ]
   },
   {
     path: ':roomId',

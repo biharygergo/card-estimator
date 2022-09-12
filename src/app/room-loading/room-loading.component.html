@@ -1,5 +1,6 @@
 <div class="center" *ngIf="isLoading">
-    <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+    <span>Preparing room...</span>
+    <div class="loader"></div>
 </div>
 <router-outlet (activate)="isLoading = false">
 </router-outlet>

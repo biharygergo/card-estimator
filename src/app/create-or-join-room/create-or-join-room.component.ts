@@ -11,12 +11,18 @@ import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
-import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs';
 import {
+  BehaviorSubject,
+  combineLatest,
+  from,
+  Observable,
+  Subject,
+} from 'rxjs';
+import {
+  filter,
   finalize,
   first,
   map,
-  skipWhile,
   switchMap,
   takeUntil,
   tap,
@@ -54,12 +60,14 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   onCreateRoomClicked = new Subject<void>();
   destroy = new Subject<void>();
 
-  user = this.authService.user.pipe(
-    tap((user) => {
+  user = combineLatest([this.authService.user, this.isBusy]).pipe(
+    filter(([_, busy]) => !busy),
+    tap(([user]) => {
       if (user) {
         this.name.setValue(user.displayName);
       }
-    })
+    }),
+    map(([user]) => user)
   );
 
   roomIdFromParams: Observable<string> = this.activatedRoute.queryParamMap.pipe(
@@ -82,7 +90,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.user,
     this.isBusy,
   ]).pipe(
-    skipWhile(([_params, _path, _user, busy]) => !!busy),
+    filter(([_params, _path, _user, busy]) => !busy),
     map(([roomIdFromParams, currentPath, user]) => {
       const roomId = roomIdFromParams;
       const mode = currentPath === 'create' ? PageMode.CREATE : PageMode.JOIN;
@@ -104,6 +112,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.isBusy.pipe(tap((busy) => console.log(busy)));
+
     this.cookieService.tryShowCookieBanner();
 
     const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');
@@ -214,6 +224,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       null,
       { duration: 2000 }
     );
+  }
+
+  signOut() {
+    return this.authService.signOut();
   }
 
   async createRoom() {

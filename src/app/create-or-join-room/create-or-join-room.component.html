@@ -27,7 +27,7 @@
           color="primary"
           mat-raised-button
           (click)="onCreateRoomClicked.next()"
-          [disabled]="isBusy | async"
+          [disabled]="(isBusy | async) || !name.value.length"
         >
           Create new Room
         </button>
@@ -38,7 +38,8 @@
     </mat-card>
     <div class="links">
       <a routerLink="/join">Join an existing room</a>
-    </div>
+<!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
+ -->    </div>
   </ng-container>
 </ng-template>
 
@@ -77,7 +78,8 @@
     </mat-card>
     <div class="links">
       <a routerLink="/create">Create a new room</a>
-    </div>
+<!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
+ -->    </div>
   </ng-container>
 </ng-template>
 

@@ -38,7 +38,7 @@ $my-theme: mat.define-light-theme(
 .card-footer {
   padding: 1rem !important;
   border-top: 0.5px solid lightgrey;
-  h3 {
+  h3, h4 {
     margin: 0;
     display: flex;
     justify-content: space-between;
@@ -51,6 +51,10 @@ $my-theme: mat.define-light-theme(
       &:hover {
         font-weight: bold;
       }
+    }
+
+    button {
+      flex-shrink: 0;
     }
   }
 }

@@ -6,7 +6,7 @@ import {
   Firestore,
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
-import { lastValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
   RoomData,
@@ -110,7 +110,7 @@ export class EstimatorService {
 
     const room: Room = {
       id: this.createId(),
-      roomId: generate().dashed,
+      roomId: generate({ words: 3 }).dashed,
       members: isObserver ? [] : [member],
       rounds: { 0: this.createRound(isObserver ? [] : [member], 1) },
       currentRound: 0,

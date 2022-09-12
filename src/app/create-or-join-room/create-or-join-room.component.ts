@@ -175,7 +175,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         if (room) {
           this.analytics.logClickedJoinLastRoom();
           this.router
-            .navigate([savedRoomData.roomId])
+            .navigate(['room', savedRoomData.roomId])
             .then(() => roomSubscrption.unsubscribe());
         }
         this.isBusy.next(false);

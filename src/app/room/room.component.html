@@ -214,7 +214,15 @@
             <button mat-stroked-button color="warn" (click)="leaveRoom()">
               Leave
             </button>
-            <button mat-stroked-button (click)="toggleMute()">
+            <button
+              mat-stroked-button
+              (click)="toggleMute()"
+              [matTooltip]="
+                isMuted
+                  ? 'Play notification sound on new rounds'
+                  : 'Mute all game sounds'
+              "
+            >
               {{ isMuted ? "Sound" : "Mute" }}
             </button>
 

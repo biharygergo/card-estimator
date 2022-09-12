@@ -210,7 +210,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       }
 
       const queryParams = isObserver ? { observing: 1 } : {};
-      return this.router.navigate([this.roomId.value], {
+      return this.router.navigate(['room', this.roomId.value], {
         queryParams,
       });
     } catch (e) {
@@ -244,7 +244,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     );
     this.analytics.logClickedCreateNewRoom();
     const queryParams = isObserver ? { observing: 1 } : {};
-    return this.router.navigate([room.roomId], {
+    return this.router.navigate(['room', room.roomId], {
       queryParams,
     });
   }

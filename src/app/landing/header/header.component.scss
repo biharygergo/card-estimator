@@ -27,6 +27,18 @@ nav {
         font-weight: 400;
         position: relative;
         text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .badge {
+          background: goldenrod;
+          color: white;
+          font-size: 0.6rem;
+          line-height: 0.8rem;
+          padding: 0px 3px;
+          border-radius: 3px;
+        }
 
         &:not(.start-planning-link)::after {
           position: absolute;

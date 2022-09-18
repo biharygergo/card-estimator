@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Analytics, logEvent } from '@angular/fire/analytics';
 import { CardSetOrCustom } from '../types';
 
+export type ZoomAppCtaLocation =
+  | 'detail_page'
+  | 'banner_landing'
+  | 'banner_join';
 @Injectable({
   providedIn: 'root',
 })
@@ -138,5 +142,23 @@ export class AnalyticsService {
 
   logClickedRandomizeAvatars() {
     logEvent(this.analytics, 'clicked_randomize_avatars');
+  }
+
+  logClickedInstallZoomApp(location: ZoomAppCtaLocation) {
+    logEvent(this.analytics, 'clicked_install_zoom_app', {
+      bannerLocation: location,
+    });
+  }
+
+  logClickedLearnMoreZoomApp(location: ZoomAppCtaLocation) {
+    logEvent(this.analytics, 'clicked_learn_more_zoom_app', {
+      bannerLocation: location,
+    });
+  }
+
+  logClickedCloseZoomAppBanner(location: ZoomAppCtaLocation) {
+    logEvent(this.analytics, 'clicked_close_zoom_app_banner', {
+      bannerLocation: location,
+    });
   }
 }

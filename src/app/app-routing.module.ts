@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: 'faq', component: FaqComponent, data: { title: 'FAQ' } },
   { path: 'privacy', component: PrivacyComponent, data: { title: 'Privacy Policy' } },
   { path: 'terms', component: TermsComponent, data: { title: 'Terms and Conditions' } },
-  { path: 'zoom', component: ZoomComponent, data: { title: 'Zoom App - Integration' } },
+  { path: 'zoom', component: ZoomComponent, data: { title: 'Zoom Integration' } },
   {
     path: 'join',
     component: CreateOrJoinRoomComponent,

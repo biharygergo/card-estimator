@@ -10,6 +10,7 @@ declare const gtag: any;
 })
 export class LandingComponent implements OnInit {
   isScrollDownHidden = false;
+
   constructor(private router: Router, private analytics: AnalyticsService) {}
 
   ngOnInit(): void {}

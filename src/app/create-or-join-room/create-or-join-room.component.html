@@ -38,8 +38,9 @@
     </mat-card>
     <div class="links">
       <a routerLink="/join">Join an existing room</a>
-<!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
- -->    </div>
+      <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
+ -->
+    </div>
   </ng-container>
 </ng-template>
 
@@ -78,8 +79,10 @@
     </mat-card>
     <div class="links">
       <a routerLink="/create">Create a new room</a>
-<!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
- -->    </div>
+      <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
+ -->
+    </div>
+    <zoom-app-banner *ngIf="!config.isRunningInZoom"></zoom-app-banner>
   </ng-container>
 </ng-template>
 

@@ -44,7 +44,7 @@ main {
       }
     }
 
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 600px) {
       flex-direction: column;
       &:nth-child(odd) {
         .block-text {

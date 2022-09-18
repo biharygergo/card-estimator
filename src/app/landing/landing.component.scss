@@ -18,18 +18,18 @@
     }
 
     h1 {
-      font-size: 3rem;
-      line-height: 3.5rem;
+      font-size: 2.5rem;
+      line-height: 2.8rem;
       font-weight: 300;
       text-align: center;
     }
 
     .start-planning-btn {
       background: white;
-      padding: 1.5rem 4rem;
+      padding: 1rem 3rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       color: var(--main-color);
       margin: 0 24px;
     }
@@ -62,15 +62,16 @@
       }
     }
 
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 600px) {
       gap: 24px;
 
       h1 {
-        font-size: 1.5rem;
-        line-height: 2rem;
+        font-size: 1.3rem;
+        line-height: 1.7rem;
       }
       .start-planning-btn {
-        padding: 1rem 2rem;
+        padding: 0.3rem 0.8rem;
+        font-size: 1rem;
       }
     }
   }
@@ -79,6 +80,12 @@
     position: absolute;
     left: 0;
     bottom: 0;
+  }
+  .banner-card {
+    mat-card-content {
+      display: flex;
+      
+    }
   }
 }
 

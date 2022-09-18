@@ -1,0 +1,61 @@
+
+.banner-card {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    transition: transform 150ms ease-in-out, opacity 150ms ease-in-out;
+    transform-origin: bottom right;
+    width: 400px;
+    z-index: 5;
+    font-size: 0.9rem;
+  
+    transform: translateX(150%);
+    opacity: 0;
+  
+    animation: slideInRight 500ms ease-in-out 150ms;
+    animation-fill-mode: forwards;
+  
+    .close-icon-button {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      height: 30px;
+      width: 30px;
+      line-height: 30px;
+  
+      mat-icon {
+        font-size: 16px;
+        line-height: 16px;
+        height: 16px;
+        width: 16px;
+      }
+    }
+  
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+  
+      h4 {
+        font-weight: 500;
+      
+        .zoom {
+          color: #2D8CFF;
+          font-weight: 1000;
+        }
+      }
+    }
+  
+    img {
+      height: 100px;
+      width: 100%;
+      margin: 0 auto;
+      object-fit: contain;
+    }
+  
+    @media screen and (max-width: 600px) {
+      left: 10px;
+      width: unset;
+    }
+  }

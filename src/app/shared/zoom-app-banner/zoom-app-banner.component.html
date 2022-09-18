@@ -1,0 +1,26 @@
+<mat-card class="banner-card" *ngIf="!isZoomBannerHidden">
+    <button mat-icon-button class="close-icon-button" aria-label="Close" (click)="onCloseClicked.next()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-card-content>
+      <img src="assets/zoom_integration.png" />
+      <div class="banner-text">
+        <h4>Use Planning Poker in your <span class="zoom">Zoom</span> meeting</h4>
+        <p>
+          Tired of switching between Zoom and your planning app? Vote right in
+          your sidebar, see your colleagues and find consensus easily.
+        </p>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <a
+        mat-raised-button
+        color="primary"
+        href="https://planningpoker.live/api/installZoomApp"
+        target="_blank"
+        rel="noreferrer"
+        >Install</a
+      >
+      <a mat-stroked-button routerLink="/zoom" color="primary">Learn more</a>
+    </mat-card-actions>
+  </mat-card>

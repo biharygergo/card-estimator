@@ -13,7 +13,7 @@ section {
   display: flex;
   max-width: 1500px;
   margin: 0 auto;
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 600px) {
     flex-direction: column;
   }
 }
@@ -64,7 +64,7 @@ section {
   display: flex;
   gap: 3rem;
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 600px) {
     flex-direction: column;
     gap: 2rem;
   }

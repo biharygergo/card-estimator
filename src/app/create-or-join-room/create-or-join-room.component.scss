@@ -30,7 +30,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   max-width: 350px;
   margin-bottom: 16px;
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 600px) {
     width: 80%;
   }
   .mat-card-content {
@@ -49,21 +49,6 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
     .mat-form-field {
       width: 100%;
     }
-  }
-}
-
-@keyframes appear {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  70% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
   }
 }
 

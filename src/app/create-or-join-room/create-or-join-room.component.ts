@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   EstimatorService,
@@ -28,6 +28,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
+import { AppConfig, APP_CONFIG } from '../app-config.module';
 
 enum PageMode {
   CREATE = 'create',
@@ -108,8 +109,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private analytics: AnalyticsService,
     private authService: AuthService,
-    private readonly cookieService: CookieService
-  ) {}
+    private readonly cookieService: CookieService,
+    @Inject(APP_CONFIG) public readonly config: AppConfig,
+  ) {
+  }
 
   ngOnInit(): void {
     this.isBusy.pipe(tap((busy) => console.log(busy)));

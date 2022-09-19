@@ -67,7 +67,7 @@
         <button
           mat-raised-button
           color="primary"
-          [disabled]="!roomId.value.length || (isBusy | async)"
+          [disabled]="!roomId.value.length || !name.value.length || (isBusy | async)"
           (click)="onJoinRoomClicked.next()"
         >
           Join Room

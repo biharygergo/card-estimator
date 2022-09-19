@@ -14,7 +14,7 @@
       alt="Avatar image from your Google Account"
     />
     <div *ngIf="!user.photoURL">
-      {{ user.displayName.charAt(0) }}
+      {{ user?.displayName?.charAt(0) }}
     </div>
   </button>
   <!-- <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">

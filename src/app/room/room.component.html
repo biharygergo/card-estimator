@@ -101,7 +101,7 @@
                     alt="A user's avatar"
                   />
                   <ng-container *ngIf="!member.avatarUrl">
-                    <div>{{ member.name.charAt(0) }}</div>
+                    <div>{{ member.name?.charAt(0) }}</div>
                   </ng-container></span
                 >
                 <h3 matLine class="member">

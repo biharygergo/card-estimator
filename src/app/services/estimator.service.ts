@@ -294,7 +294,7 @@ export class EstimatorService {
   setNote(note: string, room: Room, member: Member) {
     const newNote: Notes = {
       note,
-      editedBy: member,
+      editedBy: member || null,
     };
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${room.currentRound}.notes`]: newNote,
@@ -303,7 +303,7 @@ export class EstimatorService {
 
   setNoteEditor(room: Room, member: Member | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      [`rounds.${room.currentRound}.notes.editedBy`]: member,
+      [`rounds.${room.currentRound}.notes.editedBy`]: member || null,
     });
   }
 

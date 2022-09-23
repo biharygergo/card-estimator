@@ -93,7 +93,7 @@ export class EstimatorService {
 
     if (user && !user?.displayName) {
       try {
-        await this.authService.updateDisplayName(user, member.name)
+        await this.authService.updateDisplayName(user, member.name);
       } catch {
         console.error('Failed to update display name');
       }
@@ -315,12 +315,18 @@ export class EstimatorService {
   }
 
   updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
-    const newMembers = [...room.members];
-    const member = newMembers.find((m) => m.id === this.activeMember.id);
-    member.avatarUrl = avatarUrl;
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      members: newMembers,
-    });
+    // TODO: better handling of activeMember vs observer
+    if (this.activeMember) {
+      const newMembers = [...room.members];
+      const member = newMembers.find((m) => m.id === this.activeMember.id);
+      member.avatarUrl = avatarUrl;
+      return updateDoc(
+        doc(this.firestore, this.ROOMS_COLLECTION, room.roomId),
+        {
+          members: newMembers,
+        }
+      );
+    }
   }
 
   saveInvitation(invitationId: string, roomId: string) {

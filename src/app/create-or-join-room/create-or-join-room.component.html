@@ -1,6 +1,9 @@
 <div class="join-container">
-  <ng-container *ngIf="vm | async as viewModel">
-    <img src="/assets/logo.png" class="logo" />
+  <img src="/assets/logo.png" class="logo" />
+  <ng-container *ngIf="vm | async as viewModel; else loading">
+    <ng-container *ngIf="viewModel.user">
+      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
+    </ng-container>
     <ng-container *ngIf="viewModel.mode === PageMode.CREATE">
       <ng-container *ngTemplateOutlet="create"></ng-container>
     </ng-container>
@@ -12,13 +15,10 @@
 
 <ng-template #create>
   <ng-container *ngIf="vm | async as viewModel">
-    <ng-container *ngIf="viewModel.user">
-      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
-    </ng-container>
     <mat-card class="action-card">
       <mat-card-content>
         <form class="full-bleed">
-          <ng-container *ngIf="!viewModel.user">
+          <ng-container *ngIf="!viewModel.user?.displayName">
             <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
           </ng-container>
           <ng-container *ngTemplateOutlet="joinMode"></ng-container>
@@ -46,16 +46,13 @@
 
 <ng-template #join>
   <ng-container *ngIf="vm | async as viewModel">
-    <ng-container *ngIf="viewModel.user">
-      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
-    </ng-container>
     <mat-card class="action-card">
       <mat-card-content>
         <ng-container *ngIf="viewModel.roomId">
           <ng-container *ngTemplateOutlet="invitedToRoomText"></ng-container>
         </ng-container>
         <form class="full-bleed">
-          <ng-container *ngIf="!viewModel.user">
+          <ng-container *ngIf="!viewModel.user?.displayName">
             <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
           </ng-container>
           <ng-container *ngIf="!viewModel.roomId">
@@ -67,7 +64,9 @@
         <button
           mat-raised-button
           color="primary"
-          [disabled]="!roomId.value.length || !name.value.length || (isBusy | async)"
+          [disabled]="
+            !roomId.value.length || !name.value.length || (isBusy | async)
+          "
           (click)="onJoinRoomClicked.next()"
         >
           Join Room
@@ -82,7 +81,10 @@
       <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
  -->
     </div>
-    <zoom-app-banner *ngIf="!config.isRunningInZoom"  bannerLocation="banner_join"></zoom-app-banner>
+    <zoom-app-banner
+      *ngIf="!config.isRunningInZoom"
+      bannerLocation="banner_join"
+    ></zoom-app-banner>
   </ng-container>
 </ng-template>
 
@@ -116,6 +118,7 @@
       placeholder="random-room-name"
       [formControl]="roomId"
       (blur)="onRoomIdBlur()"
+      required
     />
   </mat-form-field>
 </ng-template>
@@ -126,10 +129,10 @@
     <input
       matInput
       placeholder="Best Engineer"
-      required
       [formControl]="name"
       autocomplete="name"
       (blur)="onNameBlur()"
+      required
     />
   </mat-form-field>
 </ng-template>
@@ -147,4 +150,10 @@
   </mat-form-field>
 </ng-template>
 
-<ng-template #loading>Loading...</ng-template>
+<ng-template #loading>
+  <mat-card class="action-card">
+    <mat-card-content>
+      <mat-progress-spinner mode="indeterminate" [diameter]="30"></mat-progress-spinner>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

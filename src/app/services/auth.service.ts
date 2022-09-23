@@ -31,8 +31,12 @@ export class AuthService {
   async loginAnonymously(displayName?: string) {
     await signInAnonymously(this.auth);
     const user = await this.getUser();
-    await updateProfile(user, { displayName });
+    await this.updateDisplayName(user, displayName);
     return user;
+  }
+
+  updateDisplayName(user: User, name: string): Promise<void> {
+    return updateProfile(user, { displayName: name });
   }
 
   getUser(): Promise<User | null> {

@@ -91,6 +91,14 @@ export class EstimatorService {
     let user = await this.authService.getUser();
     let userId = user?.uid;
 
+    if (user && !user?.displayName) {
+      try {
+        await this.authService.updateDisplayName(user, member.name)
+      } catch {
+        console.error('Failed to update display name');
+      }
+    }
+
     if (!userId) {
       const newUser = await this.authService.loginAnonymously(member.name);
       userId = newUser.uid;

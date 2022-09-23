@@ -64,7 +64,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   user = combineLatest([this.authService.user, this.isBusy]).pipe(
     filter(([_, busy]) => !busy),
     tap(([user]) => {
-      if (user) {
+      if (user && user.displayName) {
         this.name.setValue(user.displayName);
       }
     }),

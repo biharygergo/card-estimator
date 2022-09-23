@@ -91,6 +91,14 @@ export class EstimatorService {
     let user = await this.authService.getUser();
     let userId = user?.uid;
 
+    if (user && !user?.displayName) {
+      try {
+        await this.authService.updateDisplayName(user, member.name);
+      } catch {
+        console.error('Failed to update display name');
+      }
+    }
+
     if (!userId) {
       const newUser = await this.authService.loginAnonymously(member.name);
       userId = newUser.uid;
@@ -286,7 +294,7 @@ export class EstimatorService {
   setNote(note: string, room: Room, member: Member) {
     const newNote: Notes = {
       note,
-      editedBy: member,
+      editedBy: member || null,
     };
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${room.currentRound}.notes`]: newNote,
@@ -295,7 +303,7 @@ export class EstimatorService {
 
   setNoteEditor(room: Room, member: Member | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      [`rounds.${room.currentRound}.notes.editedBy`]: member,
+      [`rounds.${room.currentRound}.notes.editedBy`]: member || null,
     });
   }
 
@@ -307,12 +315,18 @@ export class EstimatorService {
   }
 
   updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
-    const newMembers = [...room.members];
-    const member = newMembers.find((m) => m.id === this.activeMember.id);
-    member.avatarUrl = avatarUrl;
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      members: newMembers,
-    });
+    // TODO: better handling of activeMember vs observer
+    if (this.activeMember) {
+      const newMembers = [...room.members];
+      const member = newMembers.find((m) => m.id === this.activeMember.id);
+      member.avatarUrl = avatarUrl;
+      return updateDoc(
+        doc(this.firestore, this.ROOMS_COLLECTION, room.roomId),
+        {
+          members: newMembers,
+        }
+      );
+    }
   }
 
   saveInvitation(invitationId: string, roomId: string) {

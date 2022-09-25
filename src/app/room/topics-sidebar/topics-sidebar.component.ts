@@ -5,7 +5,7 @@ import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { SerializerService } from 'src/app/services/serializer.service';
-import { CardSetValue, Room, Round, RoundStatistics } from 'src/app/types';
+import { CardSetValue, MemberType, Room, Round, RoundStatistics } from 'src/app/types';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -24,6 +24,7 @@ export class TopicsSidebarComponent implements OnInit {
     { round: Round; roundIndex: number } | undefined
   >(undefined);
 
+  readonly MemberType = MemberType;
   constructor(
     private serializer: SerializerService,
     private analytics: AnalyticsService,

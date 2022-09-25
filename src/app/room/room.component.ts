@@ -21,10 +21,8 @@ import {
   map,
   Observable,
   share,
-  shareReplay,
   startWith,
   Subject,
-  Subscription,
   switchMap,
   takeUntil,
   tap,
@@ -88,8 +86,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   shouldShowAloneInRoom = false;
   isAloneInRoomHidden = false;
   roundStatistics: RoundStatistics[];
-
-  roomSubscription: Subscription;
 
   adHideClicks = 0;
   adsEnabled = false;
@@ -430,7 +426,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       isRunningInZoom() ||
       confirm('Do you really want to leave this estimation?')
     ) {
-      this.roomSubscription?.unsubscribe();
       if (this.estimatorService.activeMember) {
         await this.estimatorService.removeMember(
           this.room.roomId,

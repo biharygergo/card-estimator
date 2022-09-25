@@ -3,7 +3,7 @@ import {
   EstimateConverterPipe,
   getRoomCardSetValue,
 } from './../pipes/estimate-converter.pipe';
-import { Member, Room } from './../types';
+import { Member, MemberType, Room } from './../types';
 import { getHumanReadableElapsedTime } from './../utils';
 
 const CSV_HEADERS_BEFORE_NAMES = ['Round'];
@@ -36,7 +36,11 @@ class ExportData {
             .transform(estimate, getRoomCardSetValue(room), 'exact')
             .toString();
           if (this.members[id] === undefined) {
-            this.members[id] = { name: 'Unknown Voter', id };
+            this.members[id] = {
+              name: 'Unknown Voter',
+              id,
+              type: MemberType.ESTIMATOR,
+            };
           }
           return acc;
         },

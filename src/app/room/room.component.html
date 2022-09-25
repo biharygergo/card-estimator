@@ -25,7 +25,7 @@
         <mat-card class="topic-container">
           <mat-card-content (click)="onTopicClicked()">
             <h2 *ngIf="!isEditingTopic">
-              {{ this.room && this.room.rounds[this.currentRound].topic }}
+              {{ room?.rounds[currentRound].topic }}
               <button mat-stroked-button>Edit topic</button>
             </h2>
             <input
@@ -106,7 +106,7 @@
                 >
                 <h3 matLine class="member">
                   {{ member.name }}
-                  <span class="estimate">
+                  <span class="estimate" *ngIf="member.type === MemberType.ESTIMATOR">
                     <span
                       *ngIf="
                         (room?.rounds)[currentRound].estimates[member.id] !=
@@ -146,6 +146,9 @@
                     >
                       <span>Voted</span>
                     </div>
+                  </span>
+                  <span class="observer vote-status-container" *ngIf="member.type === MemberType.OBSERVER">
+                    Observing
                   </span>
                 </h3>
               </mat-list-item>

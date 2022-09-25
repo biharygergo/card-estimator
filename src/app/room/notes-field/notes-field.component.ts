@@ -41,7 +41,7 @@ export class NotesFieldComponent implements OnInit {
         this.estimatorService.setNote(
           value,
           this.room,
-          this.estimatorService.activeMember || this.estimatorService.observer
+          this.estimatorService.activeMember
         );
       });
   }
@@ -49,7 +49,7 @@ export class NotesFieldComponent implements OnInit {
   onNoteFocus() {
     this.estimatorService.setNoteEditor(
       this.room,
-      this.estimatorService.activeMember || this.estimatorService.observer
+      this.estimatorService.activeMember
     );
     this.analytics.logFocusedNotesField();
   }
@@ -68,8 +68,7 @@ export class NotesFieldComponent implements OnInit {
 
       this.editedBy = currentRound.notes?.editedBy;
       this.isNoteDisabled =
-        this.editedBy &&
-        this.editedBy.id !== this.auth.getUid();
+        this.editedBy && this.editedBy.id !== this.auth.getUid();
 
       this.isNoteDisabled
         ? this.noteValue.disable({ emitEvent: false })

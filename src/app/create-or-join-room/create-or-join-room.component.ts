@@ -6,7 +6,7 @@ import {
 } from '../services/estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RoomData, Member } from '../types';
+import { RoomData, Member, MemberType } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -35,11 +35,6 @@ enum PageMode {
   JOIN = 'join',
 }
 
-enum JoinMode {
-  OBSERVER = 'observer',
-  ESTIMATOR = 'estimator',
-}
-
 interface ViewModel {
   user: User | undefined;
   roomId: string | undefined;
@@ -54,7 +49,7 @@ interface ViewModel {
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl('');
   roomId = new FormControl('');
-  joinAs = new FormControl(JoinMode.ESTIMATOR);
+  joinAs = new FormControl(MemberType.ESTIMATOR);
 
   isBusy = new BehaviorSubject<boolean>(false);
   onJoinRoomClicked = new Subject<void>();
@@ -100,7 +95,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   );
 
   readonly PageMode = PageMode;
-  readonly JoinMode = JoinMode;
+  readonly MemberType = MemberType;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -110,9 +105,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private analytics: AnalyticsService,
     private authService: AuthService,
     private readonly cookieService: CookieService,
-    @Inject(APP_CONFIG) public readonly config: AppConfig,
-  ) {
-  }
+    @Inject(APP_CONFIG) public readonly config: AppConfig
+  ) {}
 
   ngOnInit(): void {
     this.isBusy.pipe(tap((busy) => console.log(busy)));
@@ -169,53 +163,39 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   async joinLastRoom(savedRoomData: RoomData) {
     this.isBusy.next(true);
-    this.estimatorService.refreshCurrentRoom(
-      savedRoomData.roomId,
-      savedRoomData.memberId
-    );
-    const roomSubscrption = this.estimatorService.currentRoom.subscribe(
-      (room) => {
-        if (room) {
-          this.analytics.logClickedJoinLastRoom();
-          this.router
-            .navigate(['room', savedRoomData.roomId])
-            .then(() => roomSubscrption.unsubscribe());
-        }
-        this.isBusy.next(false);
-      },
-      (error) => {
-        this.isBusy.next(false);
-        console.error(error);
-        this.showUnableToJoinRoom();
-      }
-    );
+    try {
+      const existingRoom = await this.estimatorService.getRoom(
+        savedRoomData.roomId
+      );
+      this.analytics.logClickedJoinLastRoom();
+      this.router.navigate(['room', existingRoom.roomId]);
+      this.isBusy.next(false);
+    } catch (error) {
+      this.isBusy.next(false);
+      console.error(error);
+      this.showUnableToJoinRoom();
+    }
   }
 
   async joinRoom() {
     const member: Member = {
       id: null,
       name: this.name.value,
+      type: this.joinAs.value,
     };
 
     try {
       this.snackBar.dismiss();
-      const isObserver = this.joinAs.value === JoinMode.OBSERVER;
-      await this.estimatorService.joinRoom(
-        this.roomId.value,
-        member,
-        isObserver
-      );
+      await this.estimatorService.joinRoom(this.roomId.value, member);
 
+      const isObserver = this.joinAs.value === MemberType.OBSERVER;
       if (isObserver) {
         this.analytics.logClickedJoinAsObserver();
       } else {
         this.analytics.logClickedJoinedRoom();
       }
 
-      const queryParams = isObserver ? { observing: 1 } : {};
-      return this.router.navigate(['room', this.roomId.value], {
-        queryParams,
-      });
+      return this.router.navigate(['room', this.roomId.value]);
     } catch (e) {
       this.showUnableToJoinRoom();
     }
@@ -237,19 +217,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     const newMember: Member = {
       id: null,
       name: this.name.value,
+      type: this.joinAs.value,
     };
 
-    const isObserver = this.joinAs.value === JoinMode.OBSERVER;
+    const isObserver = this.joinAs.value === MemberType.OBSERVER;
 
-    const { room } = await this.estimatorService.createRoom(
-      newMember,
-      isObserver
-    );
+    const { room } = await this.estimatorService.createRoom(newMember);
+
     this.analytics.logClickedCreateNewRoom();
-    const queryParams = isObserver ? { observing: 1 } : {};
-    return this.router.navigate(['room', room.roomId], {
-      queryParams,
-    });
+    return this.router.navigate(['room', room.roomId]);
   }
 
   onNameBlur() {

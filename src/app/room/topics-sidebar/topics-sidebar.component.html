@@ -7,8 +7,9 @@
 <div class="sidenav-actions">
   <div
     [matTooltip]="
-      config.isRunningInZoom ?
-      'Downloading results is only available on the web version of the app.' : ''
+      config.isRunningInZoom
+        ? 'Downloading results is only available on the web version of the app.'
+        : ''
     "
   >
     <button
@@ -160,7 +161,7 @@
               <h3 matLine class="member">
                 {{ member.name }}
                 <span class="estimate">
-                  <span>{{
+                  <span *ngIf="member.type === MemberType.ESTIMATOR">{{
                     round.estimates[member.id] == undefined
                       ? "Not voted"
                       : (round.estimates[member.id]
@@ -168,6 +169,9 @@
                           : selectedEstimationCardSetValue
                           : "exact")
                   }}</span>
+                  <span *ngIf="member.type === MemberType.OBSERVER">
+                    Observer
+                  </span>
                 </span>
               </h3>
             </mat-list-item>
@@ -180,7 +184,10 @@
       </mat-expansion-panel>
     </mat-card>
     <ng-template #editRoundCard>
-      <div class="add-round-container update-round" *ngIf="editedRound | async as roundInfo">
+      <div
+        class="add-round-container update-round"
+        *ngIf="editedRound | async as roundInfo"
+      >
         <add-or-update-topic
           [roundNumber]="roundInfo.roundIndex + 1"
           [topicName]="roundInfo.round.topic"

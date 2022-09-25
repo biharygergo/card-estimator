@@ -15,9 +15,15 @@ import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  combineLatest,
   distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  share,
+  startWith,
   Subject,
-  Subscription,
+  switchMap,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -25,6 +31,7 @@ import {
   CardSet,
   CardSetValue,
   CARD_SETS,
+  MemberType,
   Room,
   Round,
   RoundStatistics,
@@ -80,12 +87,76 @@ export class RoomComponent implements OnInit, OnDestroy {
   isAloneInRoomHidden = false;
   roundStatistics: RoundStatistics[];
 
-  roomSubscription: Subscription;
-
   adHideClicks = 0;
   adsEnabled = false;
 
   showAds = false;
+
+  room$: Observable<Room> = this.route.paramMap.pipe(
+    map((params) => params.get('roomId')),
+    switchMap((roomId) =>
+      this.estimatorService
+        .getRoomById(roomId)
+        .pipe(startWith(this.route.snapshot.data.room))
+    ),
+    share(),
+    takeUntil(this.destroy)
+  );
+
+  onRoomUpdated$ = this.room$.pipe(
+    tap((room) => {
+      this.onRoomUpdated(room);
+    }),
+    takeUntil(this.destroy)
+  );
+
+  onActiveMemberUpdated$ = combineLatest([
+    this.room$,
+    this.authService.user,
+  ]).pipe(
+    filter(([_room, user]) => !!user),
+    map(([room, user]) => room.members.find((m) => m.id === user.uid)?.type),
+    distinctUntilChanged(),
+    tap((memberType) => {
+      if (memberType === MemberType.OBSERVER) {
+        this.joinAsObserver();
+      }
+    })
+  );
+
+  onRoundNumberUpdated$: Observable<number> = this.room$.pipe(
+    map((room) => room.currentRound),
+    distinctUntilChanged(),
+    tap((roundNumber) => {
+      this.currentRound = roundNumber;
+      this.playNotificationSound();
+      this.showOrHideAloneInRoomModal();
+    }),
+    takeUntil(this.destroy)
+  );
+
+  onEstimatesUpdated$ = this.room$.pipe(
+    map((room) => {
+      const currentRound = room.rounds[room.currentRound ?? 0];
+      return currentRound.estimates;
+    }),
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
+    tap((estimates) => {
+      this.currentEstimate = estimates[this.estimatorService.activeMember.id];
+      this.reCalculateStatistics();
+    })
+  );
+
+  onCardSetUpdated$: Observable<CardSet | 'CUSTOM'> = this.room$.pipe(
+    map((room) => room.cardSet),
+    distinctUntilChanged(),
+    tap(() => this.updateSelectedCardSets()),
+    takeUntil(this.destroy)
+  );
+
+  readonly MemberType = MemberType;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -102,31 +173,27 @@ export class RoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const roomId = this.route.snapshot.paramMap.get('roomId');
-
     if (this.config.isRunningInZoom) {
       this.zoomService.configureApp();
     }
 
-    if (this.route.snapshot.data.room) {
-      this.onRoomUpdated(this.route.snapshot.data.room, roomId);
-    }
-
-    this.roomSubscription = this.estimatorService.currentRoom.subscribe(
-      (room) => this.onRoomUpdated(room, roomId),
-      (error) => this.onRoomUpdateError(error)
-    );
+    this.room$.subscribe({ error: (error) => this.onRoomUpdateError(error) });
+    this.onRoomUpdated$.subscribe();
+    this.onActiveMemberUpdated$.subscribe();
+    this.onRoundNumberUpdated$.subscribe();
+    this.onEstimatesUpdated$.subscribe();
+    this.onCardSetUpdated$.subscribe();
 
     this.authService.avatarUpdated
       .pipe(
-        takeUntil(this.destroy),
         distinctUntilChanged(),
         tap((photoURL: string) => {
           this.estimatorService.updateCurrentUserMemberAvatar(
             this.room,
             photoURL
           );
-        })
+        }),
+        takeUntil(this.destroy)
       )
       .subscribe();
 
@@ -144,48 +211,12 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy.next();
+    this.destroy.complete();
   }
 
-  private onRoomUpdated(room: Room, roomId: string) {
-    const oldRoom: Room | undefined =
-      this.room === undefined
-        ? undefined
-        : JSON.parse(JSON.stringify(this.room));
-
+  private onRoomUpdated(room: Room) {
     this.room = room;
     this.rounds = Object.values(room.rounds);
-    const roundNumberOrFallback =
-      room.currentRound ?? Object.keys(room.rounds).length - 1;
-    const newRoundNumber = roundNumberOrFallback;
-
-    if (
-      oldRoom === undefined ||
-      oldRoom.cardSet !== room.cardSet ||
-      (room.customCardSetValue &&
-        JSON.stringify(oldRoom.customCardSetValue) !==
-          JSON.stringify(room.customCardSetValue))
-    ) {
-      this.updateSelectedCardSets();
-    }
-
-    if (
-      newRoundNumber !== this.currentRound &&
-      this.currentRound !== undefined
-    ) {
-      this.playNotificationSound();
-    }
-
-    this.currentRound = roundNumberOrFallback;
-    if (!this.estimatorService.activeMember) {
-      this.joinAsObserver(roomId);
-    } else {
-      this.currentEstimate =
-        this.room.rounds[this.currentRound].estimates[
-          this.estimatorService.activeMember.id
-        ];
-    }
-    this.showOrHideAloneInRoomModal();
-    this.reCalculateStatistics(room);
   }
 
   private updateSelectedCardSets() {
@@ -209,7 +240,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.errorGoBackToJoinPage();
   }
 
-  private joinAsObserver(roomId: string) {
+  private joinAsObserver() {
     if (!this.isObserver) {
       this.snackBar
         .open(
@@ -219,7 +250,9 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
         .onAction()
         .subscribe(() => {
-          this.router.navigate(['join'], { queryParams: { roomId } });
+          this.router.navigate(['join'], {
+            queryParams: { roomId: this.room.roomId },
+          });
         });
     }
     this.isObserver = true;
@@ -356,9 +389,9 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  reCalculateStatistics(room: Room) {
+  reCalculateStatistics() {
     const statistics: RoundStatistics[] = [
-      ...Object.values(room.rounds).map((round) =>
+      ...Object.values(this.room.rounds).map((round) =>
         this.calculateRoundStatistics(round)
       ),
     ];
@@ -393,7 +426,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       isRunningInZoom() ||
       confirm('Do you really want to leave this estimation?')
     ) {
-      this.roomSubscription?.unsubscribe();
       if (this.estimatorService.activeMember) {
         await this.estimatorService.removeMember(
           this.room.roomId,

@@ -141,10 +141,10 @@
   <mat-form-field appearance="outline">
     <mat-label>Join as an</mat-label>
     <mat-select [formControl]="joinAs">
-      <mat-option [value]="JoinMode.ESTIMATOR">Estimator</mat-option>
-      <mat-option [value]="JoinMode.OBSERVER">Observer</mat-option>
+      <mat-option [value]="MemberType.ESTIMATOR">Estimator</mat-option>
+      <mat-option [value]="MemberType.OBSERVER">Observer</mat-option>
     </mat-select>
-    <mat-hint *ngIf="joinAs.value === JoinMode.OBSERVER"
+    <mat-hint *ngIf="joinAs.value === MemberType.OBSERVER"
       >You can't estimate cards in this mode.</mat-hint
     >
   </mat-form-field>

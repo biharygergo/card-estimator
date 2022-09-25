@@ -50,9 +50,8 @@ export class RoomResolver implements Resolve<Room> {
       }),
       tap(({room, user}) => {
         const activeMember = room.members.find((m) => m.id === user.uid);
-        const observing = route.queryParamMap.get('observing');
 
-        if (!activeMember && !observing) {
+        if (!activeMember) {
           throw new MemberNotFoundError();
         }
       }),

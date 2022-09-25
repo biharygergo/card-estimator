@@ -20,6 +20,8 @@ export interface Room {
   createdAt: FieldValue;
   cardSet?: CardSetOrCustom;
   customCardSetValue?: CardSetValue;
+  createdById: string;
+  memberIds: string[]
 }
 
 export interface Round {
@@ -37,10 +39,16 @@ export interface Notes {
   editedBy: Member | null;
 }
 
+export enum MemberType {
+  OBSERVER = 'OBSERVER',
+  ESTIMATOR = 'ESTIMATOR',
+}
+
 export interface Member {
   id: string;
   name: string;
   avatarUrl?: string;
+  type: MemberType;
 }
 
 export interface RoomData {

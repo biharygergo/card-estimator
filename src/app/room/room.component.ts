@@ -25,6 +25,7 @@ import {
   CardSet,
   CardSetValue,
   CARD_SETS,
+  MemberType,
   Room,
   Round,
   RoundStatistics,
@@ -86,6 +87,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   adsEnabled = false;
 
   showAds = false;
+  readonly MemberType = MemberType;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -176,7 +178,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     this.currentRound = roundNumberOrFallback;
-    if (!this.estimatorService.activeMember) {
+    if (this.estimatorService.activeMember?.type === MemberType.OBSERVER) {
       this.joinAsObserver(roomId);
     } else {
       this.currentEstimate =

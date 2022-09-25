@@ -6,8 +6,8 @@ import {
   Firestore,
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { firstValueFrom, from, Observable } from 'rxjs';
+import { first, tap } from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -79,7 +79,6 @@ export class EstimatorService {
 
   currentRoom: Observable<Room> = new Observable<Room>();
   activeMember: Member;
-  observer?: Member;
 
   constructor(private firestore: Firestore, private authService: AuthService) {}
 
@@ -110,51 +109,66 @@ export class EstimatorService {
     }
   }
 
-  async createRoom(
-    member: Member,
-    isObserver: boolean
-  ): Promise<{ room: Room; member: Member }> {
+  private getRoom(roomId: string): Promise<Room> {
+    return firstValueFrom(
+      docData<Room>(
+        doc(
+          this.firestore,
+          this.ROOMS_COLLECTION,
+          roomId
+        ) as DocumentReference<Room>
+      ).pipe(
+        first(),
+        tap((room) => {
+          if (!room) {
+            throw new RoomNotFoundError();
+          }
+        })
+      )
+    );
+  }
+
+  async createRoom(member: Member): Promise<{ room: Room; member: Member }> {
     await this.signInAsMember(member);
 
     const room: Room = {
       id: this.createId(),
       roomId: generate({ words: 3 }).dashed,
-      members: isObserver ? [] : [member],
-      rounds: { 0: this.createRound(isObserver ? [] : [member], 1) },
+      members: [member],
+      rounds: { 0: this.createRound([member], 1) },
       currentRound: 0,
       isOpen: true,
       createdAt: serverTimestamp(),
       cardSet: CardSet.DEFAULT,
+      createdById: member.id,
+      memberIds: [member.id],
     };
 
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
 
     this.refreshCurrentRoom(room.roomId, member.id);
 
-    if (isObserver) {
-      this.observer = member;
-    } else {
-      this.activeMember = member;
-      saveJoinedRoomData({
-        roomId: room.roomId,
-        memberId: member.id,
-        createdAt: new Date().toISOString(),
-      });
-    }
+    this.activeMember = member;
+
+    saveJoinedRoomData({
+      roomId: room.roomId,
+      memberId: member.id,
+      createdAt: new Date().toISOString(),
+    });
 
     return { room, member };
   }
 
-  async joinRoom(roomId: string, member: Member, isObserver: boolean) {
+  async joinRoom(roomId: string, member: Member) {
     await this.signInAsMember(member);
 
-    if (isObserver) {
-      this.observer = member;
-      return;
-    }
+    const existingRoom = await this.getRoom(roomId);
+    const updatedMembers = existingRoom.members.filter(m => m.id !== member.id);
+    updatedMembers.push(member);
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
-      members: arrayUnion(member),
+      members: updatedMembers,
+      memberIds: arrayUnion(member.id),
     });
 
     this.refreshCurrentRoom(roomId, member.id);
@@ -315,18 +329,12 @@ export class EstimatorService {
   }
 
   updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
-    // TODO: better handling of activeMember vs observer
-    if (this.activeMember) {
-      const newMembers = [...room.members];
-      const member = newMembers.find((m) => m.id === this.activeMember.id);
-      member.avatarUrl = avatarUrl;
-      return updateDoc(
-        doc(this.firestore, this.ROOMS_COLLECTION, room.roomId),
-        {
-          members: newMembers,
-        }
-      );
-    }
+    const newMembers = [...room.members];
+    const member = newMembers.find((m) => m.id === this.activeMember.id);
+    member.avatarUrl = avatarUrl;
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      members: newMembers,
+    });
   }
 
   saveInvitation(invitationId: string, roomId: string) {

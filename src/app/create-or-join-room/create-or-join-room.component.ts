@@ -6,7 +6,7 @@ import {
 } from '../services/estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RoomData, Member } from '../types';
+import { RoomData, Member, MemberType } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -35,11 +35,6 @@ enum PageMode {
   JOIN = 'join',
 }
 
-enum JoinMode {
-  OBSERVER = 'observer',
-  ESTIMATOR = 'estimator',
-}
-
 interface ViewModel {
   user: User | undefined;
   roomId: string | undefined;
@@ -54,7 +49,7 @@ interface ViewModel {
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl('');
   roomId = new FormControl('');
-  joinAs = new FormControl(JoinMode.ESTIMATOR);
+  joinAs = new FormControl(MemberType.ESTIMATOR);
 
   isBusy = new BehaviorSubject<boolean>(false);
   onJoinRoomClicked = new Subject<void>();
@@ -100,7 +95,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   );
 
   readonly PageMode = PageMode;
-  readonly JoinMode = JoinMode;
+  readonly MemberType = MemberType;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -195,27 +190,24 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     const member: Member = {
       id: null,
       name: this.name.value,
+      type: this.joinAs.value
     };
 
     try {
       this.snackBar.dismiss();
-      const isObserver = this.joinAs.value === JoinMode.OBSERVER;
       await this.estimatorService.joinRoom(
         this.roomId.value,
         member,
-        isObserver
       );
 
+      const isObserver = this.joinAs.value === MemberType.OBSERVER;
       if (isObserver) {
         this.analytics.logClickedJoinAsObserver();
       } else {
         this.analytics.logClickedJoinedRoom();
       }
 
-      const queryParams = isObserver ? { observing: 1 } : {};
-      return this.router.navigate(['room', this.roomId.value], {
-        queryParams,
-      });
+      return this.router.navigate(['room', this.roomId.value]);
     } catch (e) {
       this.showUnableToJoinRoom();
     }
@@ -237,19 +229,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     const newMember: Member = {
       id: null,
       name: this.name.value,
+      type: this.joinAs.value
     };
 
-    const isObserver = this.joinAs.value === JoinMode.OBSERVER;
+    const isObserver = this.joinAs.value === MemberType.OBSERVER;
 
     const { room } = await this.estimatorService.createRoom(
       newMember,
-      isObserver
     );
+  
     this.analytics.logClickedCreateNewRoom();
-    const queryParams = isObserver ? { observing: 1 } : {};
-    return this.router.navigate(['room', room.roomId], {
-      queryParams,
-    });
+    return this.router.navigate(['room', room.roomId]);
   }
 
   onNameBlur() {

@@ -105,9 +105,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private analytics: AnalyticsService,
     private authService: AuthService,
     private readonly cookieService: CookieService,
-    @Inject(APP_CONFIG) public readonly config: AppConfig,
-  ) {
-  }
+    @Inject(APP_CONFIG) public readonly config: AppConfig
+  ) {}
 
   ngOnInit(): void {
     this.isBusy.pipe(tap((busy) => console.log(busy)));
@@ -164,41 +163,30 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   async joinLastRoom(savedRoomData: RoomData) {
     this.isBusy.next(true);
-    this.estimatorService.refreshCurrentRoom(
-      savedRoomData.roomId,
-      savedRoomData.memberId
-    );
-    const roomSubscrption = this.estimatorService.currentRoom.subscribe(
-      (room) => {
-        if (room) {
-          this.analytics.logClickedJoinLastRoom();
-          this.router
-            .navigate(['room', savedRoomData.roomId])
-            .then(() => roomSubscrption.unsubscribe());
-        }
-        this.isBusy.next(false);
-      },
-      (error) => {
-        this.isBusy.next(false);
-        console.error(error);
-        this.showUnableToJoinRoom();
-      }
-    );
+    try {
+      const existingRoom = await this.estimatorService.getRoom(
+        savedRoomData.roomId
+      );
+      this.analytics.logClickedJoinLastRoom();
+      this.router.navigate(['room', existingRoom.roomId]);
+      this.isBusy.next(false);
+    } catch (error) {
+      this.isBusy.next(false);
+      console.error(error);
+      this.showUnableToJoinRoom();
+    }
   }
 
   async joinRoom() {
     const member: Member = {
       id: null,
       name: this.name.value,
-      type: this.joinAs.value
+      type: this.joinAs.value,
     };
 
     try {
       this.snackBar.dismiss();
-      await this.estimatorService.joinRoom(
-        this.roomId.value,
-        member,
-      );
+      await this.estimatorService.joinRoom(this.roomId.value, member);
 
       const isObserver = this.joinAs.value === MemberType.OBSERVER;
       if (isObserver) {
@@ -229,15 +217,13 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     const newMember: Member = {
       id: null,
       name: this.name.value,
-      type: this.joinAs.value
+      type: this.joinAs.value,
     };
 
     const isObserver = this.joinAs.value === MemberType.OBSERVER;
 
-    const { room } = await this.estimatorService.createRoom(
-      newMember,
-    );
-  
+    const { room } = await this.estimatorService.createRoom(newMember);
+
     this.analytics.logClickedCreateNewRoom();
     return this.router.navigate(['room', room.roomId]);
   }

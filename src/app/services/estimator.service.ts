@@ -7,7 +7,7 @@ import {
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { firstValueFrom, from, Observable } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
+import { first, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -77,7 +77,6 @@ export class EstimatorService {
   ROOMS_COLLECTION = 'rooms';
   INVITATIONS_COLLECTION = 'invitations';
 
-  currentRoom: Observable<Room> = new Observable<Room>();
   activeMember: Member;
 
   constructor(private firestore: Firestore, private authService: AuthService) {}
@@ -109,7 +108,7 @@ export class EstimatorService {
     }
   }
 
-  private getRoom(roomId: string): Promise<Room> {
+  getRoom(roomId: string): Promise<Room> {
     return firstValueFrom(
       docData<Room>(
         doc(
@@ -146,8 +145,6 @@ export class EstimatorService {
 
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
 
-    this.refreshCurrentRoom(room.roomId, member.id);
-
     this.activeMember = member;
 
     saveJoinedRoomData({
@@ -171,7 +168,6 @@ export class EstimatorService {
       memberIds: arrayUnion(member.id),
     });
 
-    this.refreshCurrentRoom(roomId, member.id);
     this.activeMember = member;
 
     saveJoinedRoomData({
@@ -189,20 +185,22 @@ export class EstimatorService {
     });
   }
 
-  refreshCurrentRoom(roomId: string, memberId: string) {
-    this.currentRoom = docData<Room>(
+  getRoomById(roomId: string): Observable<Room> {
+    return docData<Room>(
       doc(
         this.firestore,
         this.ROOMS_COLLECTION,
         roomId
       ) as DocumentReference<Room>
     ).pipe(
-      tap((room) => {
+      withLatestFrom(this.authService.user),
+      tap(([room, user]) => {
         if (!room) {
           throw new RoomNotFoundError();
         }
-        this.activeMember = room.members.find((m) => m.id === memberId);
-      })
+        this.activeMember = room.members.find((m) => m.id === user.uid);
+      }),
+      map(([room]) => room)
     );
   }
 

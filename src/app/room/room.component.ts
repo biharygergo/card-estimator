@@ -16,8 +16,11 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   distinctUntilChanged,
+  map,
+  Observable,
   Subject,
   Subscription,
+  switchMap,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -87,6 +90,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   adsEnabled = false;
 
   showAds = false;
+
+
   readonly MemberType = MemberType;
 
   constructor(
@@ -114,21 +119,26 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.onRoomUpdated(this.route.snapshot.data.room, roomId);
     }
 
-    this.roomSubscription = this.estimatorService.currentRoom.subscribe(
-      (room) => this.onRoomUpdated(room, roomId),
-      (error) => this.onRoomUpdateError(error)
-    );
+    this.roomSubscription = this.estimatorService
+      .getRoomById(roomId)
+      .pipe(
+        tap((room) => {
+          this.onRoomUpdated(room, roomId);
+        }),
+        takeUntil(this.destroy)
+      )
+      .subscribe({ error: (error) => this.onRoomUpdateError(error) });
 
     this.authService.avatarUpdated
       .pipe(
-        takeUntil(this.destroy),
         distinctUntilChanged(),
         tap((photoURL: string) => {
           this.estimatorService.updateCurrentUserMemberAvatar(
             this.room,
             photoURL
           );
-        })
+        }),
+        takeUntil(this.destroy)
       )
       .subscribe();
 

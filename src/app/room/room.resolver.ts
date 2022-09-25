@@ -6,15 +6,7 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
-import {
-  catchError,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  take,
-  tap,
-} from 'rxjs';
+import { catchError, map, mergeMap, Observable, of, take, tap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import {
   EstimatorService,
@@ -34,9 +26,7 @@ export class RoomResolver implements Resolve<Room> {
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
-  resolve(
-    route: ActivatedRouteSnapshot
-  ): Observable<Room> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(
       take(1),
       mergeMap((user) => {
@@ -45,17 +35,19 @@ export class RoomResolver implements Resolve<Room> {
         if (!user?.uid) {
           throw new NotLoggedInError('User is not signed in');
         }
-        this.estimatorService.refreshCurrentRoom(roomId, user.uid);
-        return this.estimatorService.currentRoom.pipe(take(1), map(room => ({room, user})));
+        return this.estimatorService.getRoomById(roomId).pipe(
+          take(1),
+          map((room) => ({ room, user }))
+        );
       }),
-      tap(({room, user}) => {
+      tap(({ room, user }) => {
         const activeMember = room.members.find((m) => m.id === user.uid);
 
         if (!activeMember) {
           throw new MemberNotFoundError();
         }
       }),
-      map(({room}) => room),
+      map(({ room }) => room),
       catchError((error) => {
         if (error instanceof RoomNotFoundError) {
           this.showMessage(
@@ -66,7 +58,9 @@ export class RoomResolver implements Resolve<Room> {
           error instanceof MemberNotFoundError ||
           error instanceof NotLoggedInError
         ) {
-          this.showMessage('You have not joined this room before. Join as an estimator or observer now!');
+          this.showMessage(
+            'You have not joined this room before. Join as an estimator or observer now!'
+          );
           const roomId = route.paramMap.get('roomId');
           this.router.navigate(['join'], { queryParams: { roomId, error: 1 } });
         } else {

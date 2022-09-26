@@ -31,6 +31,8 @@ import {
   CardSet,
   CardSetValue,
   CARD_SETS,
+  Member,
+  MemberStatus,
   MemberType,
   Room,
   Round,
@@ -100,6 +102,19 @@ export class RoomComponent implements OnInit, OnDestroy {
         .pipe(startWith(this.route.snapshot.data.room))
     ),
     share(),
+    takeUntil(this.destroy)
+  );
+
+  members$: Observable<Member[]> = this.room$.pipe(
+    map((room) => room.members),
+    distinctUntilChanged(),
+    map((members) =>
+      members
+        .filter(
+          (m) => m.status === MemberStatus.ACTIVE || m.status === undefined
+        )
+        .sort((a, b) => a.type?.localeCompare(b.type))
+    ),
     takeUntil(this.destroy)
   );
 
@@ -427,7 +442,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       confirm('Do you really want to leave this estimation?')
     ) {
       if (this.estimatorService.activeMember) {
-        await this.estimatorService.removeMember(
+        await this.estimatorService.leaveRoom(
           this.room.roomId,
           this.estimatorService.activeMember
         );

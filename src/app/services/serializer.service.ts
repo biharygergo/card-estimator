@@ -3,7 +3,7 @@ import {
   EstimateConverterPipe,
   getRoomCardSetValue,
 } from './../pipes/estimate-converter.pipe';
-import { Member, MemberType, Room } from './../types';
+import { Member, MemberStatus, MemberType, Room } from './../types';
 import { getHumanReadableElapsedTime } from './../utils';
 
 const CSV_HEADERS_BEFORE_NAMES = ['Round'];
@@ -40,6 +40,7 @@ class ExportData {
               name: 'Unknown Voter',
               id,
               type: MemberType.ESTIMATOR,
+              status: MemberStatus.LEFT_ROOM,
             };
           }
           return acc;

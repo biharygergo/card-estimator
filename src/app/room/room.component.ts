@@ -405,12 +405,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   reCalculateStatistics() {
-    const statistics: RoundStatistics[] = [
-      ...Object.values(this.room.rounds).map((round) =>
-        this.calculateRoundStatistics(round)
-      ),
-    ];
-    this.roundStatistics = statistics;
+    if (this.room?.rounds) {
+      const statistics: RoundStatistics[] = [
+        ...Object.values(this.room.rounds).map((round) =>
+          this.calculateRoundStatistics(round)
+        ),
+      ];
+      this.roundStatistics = statistics;
+    }
   }
 
   calculateRoundStatistics(round: Round) {

@@ -6,8 +6,8 @@ import {
   Firestore,
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
-import { firstValueFrom, from, Observable } from 'rxjs';
-import { first, map, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, firstValueFrom, from, Observable } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -202,21 +202,20 @@ export class EstimatorService {
   }
 
   getRoomById(roomId: string): Observable<Room> {
-    return docData<Room>(
+    return combineLatest([this.authService.user, docData<Room>(
       doc(
         this.firestore,
         this.ROOMS_COLLECTION,
         roomId
       ) as DocumentReference<Room>
-    ).pipe(
-      withLatestFrom(this.authService.user),
-      tap(([room, user]) => {
+    )]).pipe(
+      tap(([user, room]) => {
         if (!room) {
           throw new RoomNotFoundError();
         }
         this.activeMember = room.members.find((m) => m.id === user.uid);
       }),
-      map(([room]) => room)
+      map(([_user, room]) => room)
     );
   }
 

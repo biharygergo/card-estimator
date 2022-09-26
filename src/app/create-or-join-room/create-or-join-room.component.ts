@@ -6,7 +6,7 @@ import {
 } from '../services/estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RoomData, Member, MemberType } from '../types';
+import { RoomData, Member, MemberType, MemberStatus } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -182,6 +182,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       id: null,
       name: this.name.value,
       type: this.joinAs.value,
+      status: MemberStatus.ACTIVE
     };
 
     try {
@@ -218,9 +219,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       id: null,
       name: this.name.value,
       type: this.joinAs.value,
+      status: MemberStatus.ACTIVE
     };
-
-    const isObserver = this.joinAs.value === MemberType.OBSERVER;
 
     const { room } = await this.estimatorService.createRoom(newMember);
 

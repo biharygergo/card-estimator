@@ -17,6 +17,7 @@ import {
   Notes,
   CardSetValue,
   CustomCardSet,
+  MemberStatus,
 } from './../types';
 import {
   collection,
@@ -160,7 +161,10 @@ export class EstimatorService {
     await this.signInAsMember(member);
 
     const existingRoom = await this.getRoom(roomId);
-    const updatedMembers = existingRoom.members.filter(m => m.id !== member.id);
+    const updatedMembers = existingRoom.members.filter(
+      (m) => m.id !== member.id
+    );
+
     updatedMembers.push(member);
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
@@ -177,6 +181,18 @@ export class EstimatorService {
     });
 
     return member;
+  }
+
+  async leaveRoom(roomId: string, member: Member) {
+    const room = await this.getRoom(roomId);
+    const updatedMembers = [...room.members];
+    const updatedMember = room.members.find((m) => m.id === member.id);
+
+    updatedMember.status = MemberStatus.LEFT_ROOM;
+
+    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      members: updatedMembers,
+    });
   }
 
   async removeMember(roomId: string, member: Member) {

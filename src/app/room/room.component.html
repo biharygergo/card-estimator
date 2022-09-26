@@ -92,7 +92,7 @@
               </ng-container>
 
               <h3 matSubheader>Votes</h3>
-              <mat-list-item *ngFor="let member of room?.members">
+              <mat-list-item *ngFor="let member of (members$ | async)">
                 <span matListAvatar class="avatar">
                   <img
                     *ngIf="member.avatarUrl"
@@ -106,7 +106,10 @@
                 >
                 <h3 matLine class="member">
                   {{ member.name }}
-                  <span class="estimate" *ngIf="member.type === MemberType.ESTIMATOR">
+                  <span
+                    class="estimate"
+                    *ngIf="member.type === MemberType.ESTIMATOR"
+                  >
                     <span
                       *ngIf="
                         (room?.rounds)[currentRound].estimates[member.id] !=
@@ -147,7 +150,10 @@
                       <span>Voted</span>
                     </div>
                   </span>
-                  <span class="observer vote-status-container" *ngIf="member.type === MemberType.OBSERVER">
+                  <span
+                    class="observer vote-status-container"
+                    *ngIf="member.type === MemberType.OBSERVER"
+                  >
                     Observing
                   </span>
                 </h3>

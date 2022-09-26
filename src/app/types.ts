@@ -44,11 +44,17 @@ export enum MemberType {
   ESTIMATOR = 'ESTIMATOR',
 }
 
+export enum MemberStatus {
+  ACTIVE = "ACTIVE",
+  LEFT_ROOM = "LEFT_ROOM",
+}
+
 export interface Member {
   id: string;
   name: string;
   avatarUrl?: string;
   type: MemberType;
+  status: MemberStatus;
 }
 
 export interface RoomData {

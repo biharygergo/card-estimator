@@ -183,7 +183,8 @@
               "/join",
               "/create",
               "/room",
-              "/zoom"
+              "/zoom",
+              "/history"
             ],
             "guessRoutes": false
           },

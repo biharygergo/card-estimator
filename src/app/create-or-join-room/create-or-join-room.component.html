@@ -38,7 +38,12 @@
     </mat-card>
     <div class="links">
       <a routerLink="/join">Join an existing room</a>
-      <a routerLink="/history" *ngIf="viewModel.user">Previous sessions</a>
+      <a
+        routerLink="/history"
+        [queryParams]="{backToPage: '/create'}"
+        *ngIf="viewModel.user"
+        >Previous sessions</a
+      >
 
       <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
  -->
@@ -80,7 +85,12 @@
     </mat-card>
     <div class="links">
       <a routerLink="/create">Create a new room</a>
-      <a routerLink="/history" *ngIf="viewModel.user">Previous sessions</a>
+      <a
+        routerLink="/history"
+        [queryParams]="{backToPage: '/join'}"
+        *ngIf="viewModel.user"
+        >Previous sessions</a
+      >
       <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
  -->
     </div>

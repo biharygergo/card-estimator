@@ -19,7 +19,7 @@ type ExportedDataRow = {
   notes: string;
 };
 
-class ExportData {
+export class ExportData {
   members: { [id: string]: Member };
   rows: ExportedDataRow[] = [];
   converter = new EstimateConverterPipe();
@@ -49,13 +49,14 @@ class ExportData {
       );
 
       const estimateValues = Object.values(round.estimates);
-      const average =
-        estimateValues.reduce((acc, curr) => acc + curr, 0) /
-        estimateValues.length;
+      const average = estimateValues.length
+        ? estimateValues.reduce((acc, curr) => acc + curr, 0) /
+          estimateValues.length
+        : undefined;
 
       const result = {
         estimates,
-        average: this.converter
+        average: average === undefined ? '' : this.converter
           .transform(average, getRoomCardSetValue(room), 'rounded')
           .toString(),
         duration: getHumanReadableElapsedTime(round),

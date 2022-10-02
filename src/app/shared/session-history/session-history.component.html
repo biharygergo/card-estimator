@@ -1,0 +1,69 @@
+<mat-card class="filter-card">
+  <mat-card-content>
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Search sessions</mat-label>
+      <input
+        matInput
+        placeholder="Search for topic names"
+        [formControl]="filter"
+        autocomplete="off"
+      />
+      <mat-hint>Find topics like "JIRA-1234" from your previous sessions</mat-hint>
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
+
+<ng-container *ngIf="exportData | async; let exportData">
+  <ng-container *ngIf="filteredSessions | async; let filteredSessions">
+    <div [@staggerFadeAnimation]="filteredSessions.length">
+      <div *ngFor="let session of filteredSessions" class="room-list-item">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ session.roomId }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ session.createdAt.seconds * 1000 | date: "short" }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-list>
+              <mat-list-item
+                *ngFor="let round of exportData[session.id]?.rows"
+                class="round-list-item"
+              >
+                {{ round.topic }}
+                <span class="round-average" *ngIf="round.average !== ''">{{
+                  round.average
+                }}</span>
+              </mat-list-item>
+            </mat-list>
+            <div class="actions">
+              <a
+                mat-stroked-button
+                color="primary"
+                [routerLink]="'/room/' + session.roomId"
+                >Rejoin</a
+              >
+              <button
+                mat-stroked-button
+                color="secondary"
+                (click)="downloadResults(session)"
+              >
+                Download
+              </button>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+    <div
+      class="empty-container"
+      *ngIf="!filteredSessions.length"
+      @delayedFadeAnimation
+    >
+      <span *ngIf="!(previousSessions | async)?.length && !filter.value?.length">No previous sessions.</span>
+      <span *ngIf="filter.value?.length">No results found.</span>
+    </div>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,61 @@
+.filter-card {
+  margin-top: 50%;
+}
+
+.mat-expansion-panel-header-description {
+  justify-content: flex-end;
+}
+
+.room-list-item {
+  margin-bottom: 0.5rem;
+}
+
+.round-list-item {
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+
+  .round-average {
+    background: var(--main-color);
+    color: white;
+    padding: 4px 6px;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+}
+
+mat-card {
+  margin-bottom: 2rem;
+
+  mat-card-content {
+    .filter-field {
+      width: 100%;
+    }
+    margin-bottom: 0;
+  }
+}
+
+mat-list {
+  margin-bottom: 2rem;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+::ng-deep
+  .ng-animating
+  mat-accordion
+  mat-expansion-panel
+  div.mat-expansion-panel-content {
+  height: 0px;
+  visibility: hidden;
+}
+
+.empty-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}

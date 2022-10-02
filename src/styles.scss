@@ -152,3 +152,10 @@ $my-theme: mat.define-light-theme(
     opacity: 1;
   }
 }
+
+.center-icon-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}

@@ -4,7 +4,7 @@ service cloud.firestore {
 
     match /rooms/{document} {
       allow get: if request.auth != null;
-      allow list: if false;
+      allow list: if request.auth.uid in resource.data.memberIds;
       allow update: if request.auth != null;
       allow delete: if false;
       allow create: if request.auth != null;

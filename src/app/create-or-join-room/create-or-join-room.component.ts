@@ -29,6 +29,7 @@ import {
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
+import { fadeAnimation } from '../shared/animations';
 
 enum PageMode {
   CREATE = 'create',
@@ -45,6 +46,7 @@ interface ViewModel {
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],
+  animations: [fadeAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl('');
@@ -115,22 +117,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');
 
-    const savedRoomData = retrieveRoomData();
-
-    this.authService.getUser().then((user) => {
-      if (savedRoomData && user?.uid === savedRoomData.memberId && !hasError) {
-        const snackbarRef = this.snackBar.open(
-          `Do you want to re-join your last estimation, ${savedRoomData.roomId}?`,
-          'Join',
-          { duration: 10000 }
-        );
-        snackbarRef
-          .onAction()
-          .pipe(takeUntil(this.destroy))
-          .subscribe(() => this.joinLastRoom(savedRoomData));
-      }
-    });
-
     this.onJoinRoomClicked
       .pipe(
         tap(() => {
@@ -159,22 +145,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy.next();
     this.destroy.complete();
-  }
-
-  async joinLastRoom(savedRoomData: RoomData) {
-    this.isBusy.next(true);
-    try {
-      const existingRoom = await this.estimatorService.getRoom(
-        savedRoomData.roomId
-      );
-      this.analytics.logClickedJoinLastRoom();
-      this.router.navigate(['room', existingRoom.roomId]);
-      this.isBusy.next(false);
-    } catch (error) {
-      this.isBusy.next(false);
-      console.error(error);
-      this.showUnableToJoinRoom();
-    }
   }
 
   async joinRoom() {

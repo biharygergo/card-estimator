@@ -15,7 +15,7 @@
 
 <ng-template #create>
   <ng-container *ngIf="vm | async as viewModel">
-    <mat-card class="action-card">
+    <mat-card class="action-card" @fadeAnimation>
       <mat-card-content>
         <form class="full-bleed">
           <ng-container *ngIf="!viewModel.user?.displayName">
@@ -38,6 +38,8 @@
     </mat-card>
     <div class="links">
       <a routerLink="/join">Join an existing room</a>
+      <a routerLink="/history" *ngIf="viewModel.user">Previous sessions</a>
+
       <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
  -->
     </div>
@@ -46,7 +48,7 @@
 
 <ng-template #join>
   <ng-container *ngIf="vm | async as viewModel">
-    <mat-card class="action-card">
+    <mat-card class="action-card" @fadeAnimation>
       <mat-card-content>
         <ng-container *ngIf="viewModel.roomId">
           <ng-container *ngTemplateOutlet="invitedToRoomText"></ng-container>
@@ -78,6 +80,7 @@
     </mat-card>
     <div class="links">
       <a routerLink="/create">Create a new room</a>
+      <a routerLink="/history" *ngIf="viewModel.user">Previous sessions</a>
       <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
  -->
     </div>
@@ -153,7 +156,10 @@
 <ng-template #loading>
   <mat-card class="action-card">
     <mat-card-content>
-      <mat-progress-spinner mode="indeterminate" [diameter]="30"></mat-progress-spinner>
+      <mat-progress-spinner
+        mode="indeterminate"
+        [diameter]="30"
+      ></mat-progress-spinner>
     </mat-card-content>
   </mat-card>
 </ng-template>

@@ -10,6 +10,7 @@ import { ZoomComponent } from './landing/zoom/zoom.component';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
 import { RoomComponent } from './room/room.component';
 import { RoomResolver } from './room/room.resolver';
+import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 
 const routes: Routes = [
   {
@@ -26,9 +27,21 @@ const routes: Routes = [
     data: { title: 'Features' },
   },
   { path: 'faq', component: FaqComponent, data: { title: 'FAQ' } },
-  { path: 'privacy', component: PrivacyComponent, data: { title: 'Privacy Policy' } },
-  { path: 'terms', component: TermsComponent, data: { title: 'Terms and Conditions' } },
-  { path: 'zoom', component: ZoomComponent, data: { title: 'Zoom Integration' } },
+  {
+    path: 'privacy',
+    component: PrivacyComponent,
+    data: { title: 'Privacy Policy' },
+  },
+  {
+    path: 'terms',
+    component: TermsComponent,
+    data: { title: 'Terms and Conditions' },
+  },
+  {
+    path: 'zoom',
+    component: ZoomComponent,
+    data: { title: 'Zoom Integration' },
+  },
   {
     path: 'join',
     component: CreateOrJoinRoomComponent,
@@ -40,9 +53,14 @@ const routes: Routes = [
     data: { title: 'Create Room' },
   },
   {
+    path: 'history',
+    component: SessionHistoryPageComponent,
+    data: { title: 'Session history' },
+  },
+  {
     path: 'room',
     component: RoomLoadingComponent,
-    data: { title: 'Loading room'},
+    data: { title: 'Loading room' },
     children: [
       {
         path: ':roomId',
@@ -52,7 +70,7 @@ const routes: Routes = [
         },
         data: { title: 'Active room' },
       },
-    ]
+    ],
   },
   {
     path: ':roomId',

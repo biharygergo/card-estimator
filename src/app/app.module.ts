@@ -84,6 +84,8 @@ import { initializeApp as originalInitializeApp } from 'firebase/app';
 import { AddOrUpdateTopicComponent } from './room/topics-sidebar/add-or-update-topic/add-or-update-topic.component';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
 import { ZoomAppBannerComponent } from './shared/zoom-app-banner/zoom-app-banner.component';
+import { SessionHistoryComponent } from './shared/session-history/session-history.component';
+import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -146,6 +148,8 @@ function loadAppConfig(): Promise<any> {
     AddOrUpdateTopicComponent,
     RoomLoadingComponent,
     ZoomAppBannerComponent,
+    SessionHistoryComponent,
+    SessionHistoryPageComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

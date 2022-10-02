@@ -6,8 +6,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getAuth, provideAuth } from '@angular/fire/auth';
+import {
+  connectFirestoreEmulator,
+  getFirestore,
+  provideFirestore,
+} from '@angular/fire/firestore';
+import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import {
   getAnalytics,
   provideAnalytics,
@@ -26,7 +30,11 @@ import {
   getRemoteConfig,
 } from '@angular/fire/remote-config';
 
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import {
+  connectFunctionsEmulator,
+  getFunctions,
+  httpsCallable,
+} from 'firebase/functions';
 
 import { environment } from '../environments/environment';
 import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
@@ -76,6 +84,8 @@ import { initializeApp as originalInitializeApp } from 'firebase/app';
 import { AddOrUpdateTopicComponent } from './room/topics-sidebar/add-or-update-topic/add-or-update-topic.component';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
 import { ZoomAppBannerComponent } from './shared/zoom-app-banner/zoom-app-banner.component';
+import { SessionHistoryComponent } from './shared/session-history/session-history.component';
+import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -138,14 +148,30 @@ function loadAppConfig(): Promise<any> {
     AddOrUpdateTopicComponent,
     RoomLoadingComponent,
     ZoomAppBannerComponent,
+    SessionHistoryComponent,
+    SessionHistoryPageComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      if (environment.useEmulators) {
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
+      }
+      return firestore;
+    }),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (environment.useEmulators) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true,
+        });
+      }
+      return auth;
+    }),
     provideAnalytics(() => getAnalytics()),
     provideRemoteConfig(() => getRemoteConfig()),
     provideAppCheck(() => {

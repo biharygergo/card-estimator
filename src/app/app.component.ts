@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, ActivatedRoute, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -25,12 +26,17 @@ export class AppComponent {
           if (route.snapshot.data['title']) {
             routeTitle = route!.snapshot.data['title'];
           }
-          return {routeTitle, disablePostfix: route?.snapshot?.data['disablePostfix']};
+          return {
+            routeTitle,
+            disablePostfix: route?.snapshot?.data['disablePostfix'],
+          };
         })
       )
-      .subscribe(({routeTitle, disablePostfix}) => {
+      .subscribe(({ routeTitle, disablePostfix }) => {
         if (routeTitle) {
-          this.titleService.setTitle(`${routeTitle}${disablePostfix ? '' : ' - Planning Poker'}`);
+          this.titleService.setTitle(
+            `${routeTitle}${disablePostfix ? '' : ' - Planning Poker'}`
+          );
         }
       });
   }

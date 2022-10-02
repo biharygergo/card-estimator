@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import {
   arrayRemove,
   arrayUnion,
+  collectionData,
   docData,
   Firestore,
+  query,
+  where,
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
-import { combineLatest, firstValueFrom, from, Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
+import { first, map, switchMap, tap } from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -21,6 +24,7 @@ import {
 } from './../types';
 import {
   collection,
+  CollectionReference,
   doc,
   serverTimestamp,
   setDoc,
@@ -202,13 +206,16 @@ export class EstimatorService {
   }
 
   getRoomById(roomId: string): Observable<Room> {
-    return combineLatest([this.authService.user, docData<Room>(
-      doc(
-        this.firestore,
-        this.ROOMS_COLLECTION,
-        roomId
-      ) as DocumentReference<Room>
-    )]).pipe(
+    return combineLatest([
+      this.authService.user,
+      docData<Room>(
+        doc(
+          this.firestore,
+          this.ROOMS_COLLECTION,
+          roomId
+        ) as DocumentReference<Room>
+      ),
+    ]).pipe(
       tap(([user, room]) => {
         if (!room) {
           throw new RoomNotFoundError();
@@ -363,6 +370,26 @@ export class EstimatorService {
         invitedBy: this.activeMember.id || null,
         createdAt: serverTimestamp(),
       }
+    );
+  }
+
+  getPreviousSessions(): Observable<Room[]> {
+    return this.authService.user.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of([]);
+        }
+        const ref = collection(
+          this.firestore,
+          this.ROOMS_COLLECTION
+        ) as CollectionReference<Room>;
+        const q = query<Room>(
+          ref,
+          where('memberIds', 'array-contains', user.uid)
+        );
+
+        return collectionData<Room>(q);
+      })
     );
   }
 }

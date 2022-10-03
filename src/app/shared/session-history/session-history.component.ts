@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
+  BehaviorSubject,
   debounceTime,
   map,
   Observable,
   startWith,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -13,19 +15,21 @@ import {
   SerializerService,
 } from 'src/app/services/serializer.service';
 import { Room } from 'src/app/types';
-import { delayedFadeAnimation, staggerFadeAnimation } from '../animations';
+import { delayedFadeAnimation, fadeAnimation, staggerFadeAnimation } from '../animations';
 
 @Component({
   selector: 'session-history',
   templateUrl: './session-history.component.html',
   styleUrls: ['./session-history.component.scss'],
-  animations: [staggerFadeAnimation, delayedFadeAnimation]
+  animations: [staggerFadeAnimation, delayedFadeAnimation, fadeAnimation],
 })
 export class SessionHistoryComponent implements OnInit {
   filter = new FormControl();
 
-  previousSessions: Observable<Room[]> =
-    this.estimatorService.getPreviousSessions();
+  isLoading = new BehaviorSubject(true);
+  previousSessions: Observable<Room[]> = this.estimatorService
+    .getPreviousSessions()
+    .pipe(tap(() => this.isLoading.next(false)));
 
   exportData: Observable<{ [roomId: string]: ExportData }> =
     this.previousSessions.pipe(

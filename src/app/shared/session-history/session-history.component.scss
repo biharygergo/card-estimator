@@ -59,3 +59,14 @@ mat-list {
   justify-content: center;
   color: white;
 }
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: white !important;
+  }

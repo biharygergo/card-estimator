@@ -13,6 +13,10 @@
   </mat-card-content>
 </mat-card>
 
+<div class="spinner-container" *ngIf="isLoading | async" @fadeAnimation>
+  <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+</div>
+
 <ng-container *ngIf="exportData | async; let exportData">
   <ng-container *ngIf="filteredSessions | async; let filteredSessions">
     <div [@staggerFadeAnimation]="filteredSessions.length">

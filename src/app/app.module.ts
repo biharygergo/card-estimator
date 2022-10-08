@@ -86,6 +86,7 @@ import { RoomLoadingComponent } from './room-loading/room-loading.component';
 import { ZoomAppBannerComponent } from './shared/zoom-app-banner/zoom-app-banner.component';
 import { SessionHistoryComponent } from './shared/session-history/session-history.component';
 import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
+import { ResizeMonitorDirective } from './shared/directives/resize-monitor.directive';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -150,6 +151,7 @@ function loadAppConfig(): Promise<any> {
     ZoomAppBannerComponent,
     SessionHistoryComponent,
     SessionHistoryPageComponent,
+    ResizeMonitorDirective,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

@@ -116,11 +116,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isBusy.pipe(tap((busy) => console.log(busy)));
-
     this.cookieService.tryShowCookieBanner();
-
-    const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');
 
     this.onJoinRoomClicked
       .pipe(

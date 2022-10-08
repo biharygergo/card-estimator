@@ -30,26 +30,30 @@ export class ResizeMonitorDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.resizeObserver = new ResizeObserver((entries) => {
-      this.zone.run(() => {
-        if (entries.length && entries[0].contentRect) {
-          const width = entries[0].contentRect.width;
-          const height = entries[0].contentRect.height;
-          console.log(entries[0])
-          this.onSizeChange.next({ width, height });
-        }
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver((entries) => {
+        this.zone.run(() => {
+          if (entries.length && entries[0].contentRect) {
+            const width = entries[0].contentRect.width;
+            const height = entries[0].contentRect.height;
+            this.onSizeChange.next({ width, height });
+          }
+        });
       });
-    });
 
-    this.resizeObserver.observe((this.elementRef.nativeElement as HTMLDivElement).firstElementChild);
+      this.resizeObserver.observe(
+        (this.elementRef.nativeElement as HTMLDivElement).firstElementChild
+      );
+    }
 
     this.onSizeChange
       .pipe(
         tap((data) => this.onResized.emit(data)),
-        tap(data => {
-          (this.elementRef.nativeElement as HTMLDivElement).style.height = data.height + 'px';
+        tap((data) => {
+          (this.elementRef.nativeElement as HTMLDivElement).style.height =
+            data.height + 'px';
         }),
-        takeUntil(this.destroyed),
+        takeUntil(this.destroyed)
       )
       .subscribe();
   }

@@ -26,7 +26,7 @@ import { delayedFadeAnimation, fadeAnimation, staggerFadeAnimation } from '../an
 export class SessionHistoryComponent implements OnInit {
   filter = new FormControl();
 
-  isLoading = new BehaviorSubject(true);
+  isLoading = new BehaviorSubject(false);
   previousSessions: Observable<Room[]> = this.estimatorService
     .getPreviousSessions()
     .pipe(tap(() => this.isLoading.next(false)));
@@ -61,7 +61,9 @@ export class SessionHistoryComponent implements OnInit {
     private readonly serializerService: SerializerService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isLoading.next(true);
+  }
 
   downloadResults(room: Room) {
     this.serializerService.exportRoomAsCsv(room);

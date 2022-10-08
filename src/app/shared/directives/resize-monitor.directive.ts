@@ -61,6 +61,6 @@ export class ResizeMonitorDirective implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
-    this.resizeObserver.unobserve(this.elementRef.nativeElement);
+    this.resizeObserver?.unobserve(this.elementRef.nativeElement);
   }
 }

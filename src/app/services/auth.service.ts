@@ -3,6 +3,7 @@ import { Auth, user } from '@angular/fire/auth';
 import {
   linkWithPopup,
   signInAnonymously,
+  signInWithRedirect,
   unlink,
   updateEmail,
   updateProfile,

@@ -1,0 +1,23 @@
+<div class="banner banner-info" *ngIf="(user |async)?.isAnonymous">
+  <div class="banner-main">
+    <mat-icon class="banner-icon" color="primary"> info </mat-icon>
+    <div class="banner-content">
+      <p>
+        Create a permanent user account to store your previous sessions and
+        votes securely. Without a permanent account, you'll lose access to your
+        data when switching devices or browsers.
+      </p>
+    </div>
+  </div>
+
+  <div class="banner-action">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSignUpClicked.next()"
+      [disabled]="isBusy | async"
+    >
+      Sign up with Google
+    </button>
+  </div>
+</div>

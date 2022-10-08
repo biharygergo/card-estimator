@@ -6,8 +6,12 @@
 }
 
 .content-container {
+    padding-top: 10%;
     width: 100%;
     max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .back-navbar {

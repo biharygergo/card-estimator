@@ -30,7 +30,7 @@ export class ResizeMonitorDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (window.ResizeObserver) {
+    if (typeof window !== 'undefined' && window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver((entries) => {
         this.zone.run(() => {
           if (entries.length && entries[0].contentRect) {

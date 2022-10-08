@@ -140,6 +140,9 @@
 
 .members-card {
   margin-top: 1rem;
+  flex-shrink: 0;
+  transition: height 200ms ease-out;
+  overflow: hidden;
 }
 
 .ad-explainer {

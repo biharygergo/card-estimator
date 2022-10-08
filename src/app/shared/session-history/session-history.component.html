@@ -8,13 +8,18 @@
         [formControl]="filter"
         autocomplete="off"
       />
-      <mat-hint>Find topics like "JIRA-1234" from your previous sessions</mat-hint>
+      <mat-hint
+        >Find topics like "JIRA-1234" from your previous sessions</mat-hint
+      >
     </mat-form-field>
   </mat-card-content>
 </mat-card>
 
-<div class="spinner-container" *ngIf="isLoading | async" @fadeAnimation>
-  <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+<div class="spinner-container" *ngIf="isLoading | async">
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="30"
+  ></mat-progress-spinner>
 </div>
 
 <ng-container *ngIf="exportData | async; let exportData">
@@ -49,13 +54,22 @@
                 [routerLink]="'/room/' + session.roomId"
                 >Rejoin</a
               >
-              <button
-                mat-stroked-button
-                color="secondary"
-                (click)="downloadResults(session)"
+              <div
+                [matTooltip]="
+                  config.isRunningInZoom
+                    ? 'Downloading results is only available on the web version of the app.'
+                    : ''
+                "
               >
-                Download
-              </button>
+                <button
+                  mat-stroked-button
+                  color="secondary"
+                  (click)="downloadResults(session)"
+                  [disabled]="config.isRunningInZoom"
+                >
+                  Download
+                </button>
+              </div>
             </div>
           </mat-expansion-panel>
         </mat-accordion>
@@ -66,7 +80,9 @@
       *ngIf="!filteredSessions.length"
       @delayedFadeAnimation
     >
-      <span *ngIf="!(previousSessions | async)?.length && !filter.value?.length">No previous sessions.</span>
+      <span *ngIf="!(previousSessions | async)?.length && !filter.value?.length"
+        >No previous sessions.</span
+      >
       <span *ngIf="filter.value?.length">No results found.</span>
     </div>
   </ng-container>

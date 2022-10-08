@@ -29,6 +29,9 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   width: 100%;
   max-width: 350px;
   margin-bottom: 16px;
+  transition: height 300ms 100ms ease-out ;
+  overflow: hidden;
+  flex-shrink: 0;
 
   @media screen and (max-width: 600px) {
     width: 80%;
@@ -58,10 +61,6 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   border-radius: 8px;
   box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
     rgba(5, 18, 37, 0.24) 0px 0px 8px;
-  opacity: 0;
-  transform: scale(0);
-  animation: appear 500ms ease-in-out 150ms;
-  animation-fill-mode: forwards;
   margin-bottom: 2rem;
 }
 

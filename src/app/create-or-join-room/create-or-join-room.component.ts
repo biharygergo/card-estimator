@@ -29,7 +29,8 @@ import {
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
-import { fadeAnimation } from '../shared/animations';
+import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
+import { ResizeEventData } from '../shared/directives/resize-monitor.directive';
 
 enum PageMode {
   CREATE = 'create',
@@ -46,7 +47,7 @@ interface ViewModel {
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],
-  animations: [fadeAnimation],
+  animations: [fadeAnimation, delayedFadeAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl('');
@@ -82,6 +83,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     map((segments) => [...segments]?.pop()?.path)
   );
 
+  pageMode: Observable<PageMode> = this.currentPath.pipe(map(path => {
+    return path === 'create' ? PageMode.CREATE : PageMode.JOIN;
+  }));
+
   vm: Observable<ViewModel> = combineLatest([
     this.roomIdFromParams,
     this.currentPath,
@@ -111,11 +116,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isBusy.pipe(tap((busy) => console.log(busy)));
-
     this.cookieService.tryShowCookieBanner();
-
-    const hasError = this.activatedRoute.snapshot.queryParamMap.get('error');
 
     this.onJoinRoomClicked
       .pipe(

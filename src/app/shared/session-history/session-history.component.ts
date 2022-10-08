@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   BehaviorSubject,
@@ -9,6 +9,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import {
   ExportData,
@@ -58,7 +59,8 @@ export class SessionHistoryComponent implements OnInit {
 
   constructor(
     private estimatorService: EstimatorService,
-    private readonly serializerService: SerializerService
+    private readonly serializerService: SerializerService,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {

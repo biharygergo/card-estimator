@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   BehaviorSubject,
@@ -11,6 +11,7 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -27,7 +28,8 @@ export class AnonymousUserBannerComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {

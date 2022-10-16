@@ -16,7 +16,7 @@ service cloud.firestore {
       allow update, create, delete: if request.auth.uid == userId;
     }
     
-    match /user_details/{userId} {
+    match /userDetails/{userId} {
       allow read, write: if request.auth.uid == userId;
     }
     

@@ -161,4 +161,16 @@ export class AnalyticsService {
       bannerLocation: location,
     });
   }
+
+  logClickedSignUpWithGoogle(location: 'history' | 'profile-modal') {
+    logEvent(this.analytics, 'clicked_sign_up_with_google', {
+      buttonLocation: location,
+    });
+  }
+
+  logClickedSignIn(location: 'join' | 'create') {
+    logEvent(this.analytics, 'clicked_sign_in_with_google', {
+      buttonLocation: location,
+    });
+  }
 }

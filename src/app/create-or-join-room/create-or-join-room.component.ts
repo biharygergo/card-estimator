@@ -27,6 +27,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
@@ -152,6 +153,12 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.onSignInClicked
       .pipe(
         switchMap(() => from(this.authService.signInWithGoogle())),
+        withLatestFrom(this.currentPath),
+        tap(([_, currentPath]) => {
+          this.analytics.logClickedSignIn(
+            currentPath === 'create' ? 'create' : 'join'
+          );
+        }),
         takeUntil(this.destroy)
       )
       .subscribe();

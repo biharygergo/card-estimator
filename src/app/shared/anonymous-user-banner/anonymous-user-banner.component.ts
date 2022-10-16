@@ -12,6 +12,7 @@ import {
   tap,
 } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -31,6 +32,7 @@ export class AnonymousUserBannerComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly snackBar: MatSnackBar,
+    private readonly analyticsService: AnalyticsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -59,6 +61,11 @@ export class AnonymousUserBannerComponent implements OnInit {
               );
               return of({});
             })
+          );
+        }),
+        tap(() => {
+          this.analyticsService.logClickedSignUpWithGoogle(
+            this.bannerStyle === 'default' ? 'history' : 'profile-modal'
           );
         }),
         takeUntil(this.destroy)

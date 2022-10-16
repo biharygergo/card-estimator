@@ -90,7 +90,11 @@ export type UserProfile = {
 }
 
 export type UserDetails = {
+  id: string;
+  displayName: string;
+  avatarUrl: string;
   email: string;
+  createdAt: FieldValue;
 }
 
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {

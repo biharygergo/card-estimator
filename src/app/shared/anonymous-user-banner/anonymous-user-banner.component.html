@@ -1,0 +1,27 @@
+<div
+  class="banner banner-info"
+  *ngIf="(user | async)?.isAnonymous && !config.isRunningInZoom"
+  [class.banner-gray]="bannerStyle === 'gray'"
+>
+  <div class="banner-main">
+    <mat-icon class="banner-icon" color="primary"> info </mat-icon>
+    <div class="banner-content">
+      <p>
+        Create a permanent user account to store your previous sessions and
+        votes securely. Anonymous accounts lose access to historical data when
+        switching devices or browsers.
+      </p>
+    </div>
+  </div>
+
+  <div class="banner-action">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSignUpClicked.next()"
+      [disabled]="isBusy | async"
+    >
+      Sign up with Google
+    </button>
+  </div>
+</div>

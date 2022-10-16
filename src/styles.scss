@@ -38,7 +38,8 @@ $my-theme: mat.define-light-theme(
 .card-footer {
   padding: 1rem !important;
   border-top: 0.5px solid lightgrey;
-  h3, h4 {
+  h3,
+  h4 {
     margin: 0;
     display: flex;
     justify-content: space-between;
@@ -126,7 +127,6 @@ $my-theme: mat.define-light-theme(
   border: 1px solid lightgrey !important;
 }
 
-
 @keyframes appear {
   0% {
     transform: scale(0);
@@ -158,4 +158,26 @@ $my-theme: mat.define-light-theme(
   align-items: center !important;
   justify-content: center !important;
   gap: 6px !important;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-right,
+.navbar-left {
+  padding: 1rem;
+
+  @media screen and (min-width: 800px) {
+    padding: 1rem 2.5rem;
+  }
+}
+
+.navbar-right {
+  display: flex;
+  justify-content: flex-end;
 }

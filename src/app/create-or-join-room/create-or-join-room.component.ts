@@ -23,6 +23,7 @@ import {
   finalize,
   first,
   map,
+  startWith,
   switchMap,
   takeUntil,
   tap,
@@ -55,8 +56,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   joinAs = new FormControl(MemberType.ESTIMATOR);
 
   isBusy = new BehaviorSubject<boolean>(false);
+  isLoadingUser = new BehaviorSubject<boolean>(true);
   onJoinRoomClicked = new Subject<void>();
   onCreateRoomClicked = new Subject<void>();
+  onSignInClicked = new Subject<void>();
+
   destroy = new Subject<void>();
 
   user = combineLatest([this.authService.user, this.isBusy]).pipe(
@@ -83,9 +87,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     map((segments) => [...segments]?.pop()?.path)
   );
 
-  pageMode: Observable<PageMode> = this.currentPath.pipe(map(path => {
-    return path === 'create' ? PageMode.CREATE : PageMode.JOIN;
-  }));
+  pageMode: Observable<PageMode> = this.currentPath.pipe(
+    map((path) => {
+      return path === 'create' ? PageMode.CREATE : PageMode.JOIN;
+    })
+  );
 
   vm: Observable<ViewModel> = combineLatest([
     this.roomIdFromParams,
@@ -98,7 +104,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       const roomId = roomIdFromParams;
       const mode = currentPath === 'create' ? PageMode.CREATE : PageMode.JOIN;
       return { roomId, mode, user };
-    })
+    }),
+    tap(() => this.isLoadingUser.next(false))
   );
 
   readonly PageMode = PageMode;
@@ -141,6 +148,13 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         finalize(() => this.isBusy.next(false))
       )
       .subscribe();
+
+    this.onSignInClicked
+      .pipe(
+        switchMap(() => from(this.authService.signInWithGoogle())),
+        takeUntil(this.destroy),
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {
@@ -153,7 +167,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       id: null,
       name: this.name.value,
       type: this.joinAs.value,
-      status: MemberStatus.ACTIVE
+      status: MemberStatus.ACTIVE,
     };
 
     try {
@@ -190,7 +204,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       id: null,
       name: this.name.value,
       type: this.joinAs.value,
-      status: MemberStatus.ACTIVE
+      status: MemberStatus.ACTIVE,
     };
 
     const { room } = await this.estimatorService.createRoom(newMember);

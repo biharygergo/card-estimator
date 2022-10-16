@@ -357,6 +357,15 @@ export class EstimatorService {
     });
   }
 
+  updateCurrentUserMemberName(room: Room, name: string) {
+    const newMembers = [...room.members];
+    const member = newMembers.find((m) => m.id === this.activeMember.id);
+    member.name = name;
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      members: newMembers,
+    });
+  }
+
   saveInvitation(invitationId: string, roomId: string) {
     return setDoc(
       doc(

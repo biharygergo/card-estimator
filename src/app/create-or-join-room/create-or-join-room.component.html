@@ -1,13 +1,30 @@
 <div class="join-container">
+  <div class="navbar" *ngIf="!(isLoadingUser | async)">
+    <ng-container *ngIf="vm | async as viewModel">
+      <div class="navbar-left">
+        <app-profile-dropdown *ngIf="viewModel.user"></app-profile-dropdown>
+      </div>
+      <div class="navbar-right">
+        <button
+          mat-button
+          *ngIf="!viewModel.user && !config.isRunningInZoom"
+          class="sign-in-button"
+          #tooltip="matTooltip"
+          matTooltip="Created a permanent account before? Jump right back."
+          matTooltipPosition="right"
+          (click)="onSignInClicked.next()"
+        >
+          Sign in
+        </button>
+      </div>
+    </ng-container>
+  </div>
   <img src="/assets/logo.png" class="logo" />
   <ng-container *ngIf="(vm | async)?.user">
     <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
   </ng-container>
   <ng-container *ngIf="pageMode | async; let pageMode">
-    <mat-card
-      class="action-card"
-      resizeMonitor
-    >
+    <mat-card class="action-card" resizeMonitor>
       <div class="transitioning-container" @delayedFadeAnimation>
         <ng-container *ngIf="pageMode === PageMode.CREATE">
           <ng-container *ngTemplateOutlet="create"></ng-container>

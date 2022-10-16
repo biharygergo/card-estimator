@@ -54,6 +54,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSelectModule } from '@angular/material/select';
+import {MatTabsModule} from '@angular/material/tabs';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -87,6 +88,7 @@ import { ZoomAppBannerComponent } from './shared/zoom-app-banner/zoom-app-banner
 import { SessionHistoryComponent } from './shared/session-history/session-history.component';
 import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 import { ResizeMonitorDirective } from './shared/directives/resize-monitor.directive';
+import { AnonymousUserBannerComponent } from './shared/anonymous-user-banner/anonymous-user-banner.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -152,6 +154,7 @@ function loadAppConfig(): Promise<any> {
     SessionHistoryComponent,
     SessionHistoryPageComponent,
     ResizeMonitorDirective,
+    AnonymousUserBannerComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -214,6 +217,7 @@ function loadAppConfig(): Promise<any> {
     MatDialogModule,
     MatSelectModule,
     MatTooltipModule,
+    MatTabsModule,
     MatSidenavModule,
     MatBadgeModule,
     ClipboardModule,

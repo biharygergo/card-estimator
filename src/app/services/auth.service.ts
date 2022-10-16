@@ -10,13 +10,14 @@ import {
   User,
   UserInfo,
 } from 'firebase/auth';
-import { doc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
 import {
-  EMPTY,
-  firstValueFrom,
-  Observable,
-  Subject,
-} from 'rxjs';
+  doc,
+  Firestore,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from '@angular/fire/firestore';
+import { EMPTY, firstValueFrom, Observable, Subject } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { UserDetails, UserProfile } from '../types';
 
@@ -112,12 +113,17 @@ export class AuthService {
   }
 
   async createPermanentUser(user: User) {
-    await setDoc(doc(this.firestore, USER_DETAILS_COLLECTION, user.uid), {
+    const userDetails: UserDetails = {
       id: user.uid,
       email: user.email,
       displayName: user.displayName,
       avatarUrl: user.photoURL,
-    } as UserDetails);
+      createdAt: serverTimestamp(),
+    };
+    await setDoc(
+      doc(this.firestore, USER_DETAILS_COLLECTION, user.uid),
+      userDetails
+    );
   }
 
   async updateUserDetails(userId: string, userDetails: Partial<UserDetails>) {

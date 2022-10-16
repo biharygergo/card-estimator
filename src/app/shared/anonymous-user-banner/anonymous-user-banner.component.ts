@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   BehaviorSubject,
@@ -25,6 +25,8 @@ export class AnonymousUserBannerComponent implements OnInit {
   destroy = new Subject<void>();
 
   user = this.authService.user;
+
+  @Input() bannerStyle: 'default' | 'gray' = 'default';
 
   constructor(
     private readonly authService: AuthService,

@@ -154,10 +154,10 @@
                   class="avatar-image"
                   alt="A user's avatar"
                 />
-                <ng-container *ngIf="!member.avatarUrl">
-                  <div>{{ member.name?.charAt(0) }}</div>
-                </ng-container></span
-              >
+                <div *ngIf="!member.avatarUrl">
+                  {{ member.name?.charAt(0) }}
+                </div>
+              </span>
               <h3 matLine class="member">
                 {{ member.name }}
                 <span class="estimate">

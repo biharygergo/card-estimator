@@ -25,9 +25,10 @@ export class AuthService {
   public readonly user: Observable<User | null> = EMPTY;
 
   avatarUpdated = new Subject<string | null>();
+  nameUpdated = new Subject<string>();
 
   constructor(private auth: Auth, private firestore: Firestore) {
-    this.user = user(this.auth).pipe(tap(user => console.log(user)));
+    this.user = user(this.auth).pipe();
   }
 
   async loginAnonymously(displayName?: string) {
@@ -38,6 +39,7 @@ export class AuthService {
   }
 
   updateDisplayName(user: User, name: string): Promise<void> {
+    this.nameUpdated.next(name);
     return updateProfile(user, { displayName: name });
   }
 
@@ -72,7 +74,7 @@ export class AuthService {
     const googleProviderData = userCredential.user.providerData.find(
       (providerData) => providerData.providerId === provider.providerId
     );
-    await this.handleSignInResult(googleProviderData, {isNewUser: true});
+    return this.handleSignInResult(googleProviderData, {isNewUser: true});
   }
 
   private async handleSignInResult(providerData: UserInfo, options: {isNewUser: boolean}) {

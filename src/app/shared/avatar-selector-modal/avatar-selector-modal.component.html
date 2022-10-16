@@ -1,29 +1,88 @@
 <div class="dialog-content">
   <div mat-dialog-content>
-    <div class="avatar-selector">
-      <div class="avatar-selector-item clear">
-        <div class="avatar avatar-image" (click)="selectAvatar(null)">
-          <div>{{ user?.displayName.charAt(0) }}</div>
+    <mat-tab-group
+      mat-align-tabs="center"
+      [selectedIndex]="selectedTabIndex"
+      (selectedIndexChange)="selectedTabIndex = $event"
+      [dynamicHeight]="true"
+    >
+      <mat-tab label="Profile">
+        <div class="tab-content">
+          <anonymous-user-banner bannerStyle="gray"></anonymous-user-banner>
+          <div class="profile-overview">
+            <div class="profile-image">
+              <div class="avatar">
+                <img
+                  *ngIf="user?.photoURL"
+                  [src]="user?.photoURL"
+                  alt="The user's avatar"
+                  class="avatar-image"
+                />
+                <div *ngIf="!user?.photoURL">
+                  {{ user?.displayName?.charAt(0) }}
+                </div>
+              </div>
+            </div>
+            <div class="profile-details">
+              <mat-form-field class="name" appearance="outline">
+                <mat-label>Account type</mat-label>
+                <input matInput [formControl]="accountTypeForm" />
+              </mat-form-field>
+              <mat-form-field class="name" appearance="outline">
+                <mat-label>Your name</mat-label>
+                <input
+                  matInput
+                  placeholder="Best Engineer"
+                  [formControl]="displayNameForm"
+                  autocomplete="name"
+                />
+              </mat-form-field>
+              <button
+                mat-flat-button
+                color="primary"
+                [disabled]="!isNameUpdated || (isSavingUser | async)"
+                (click)="onClickUpdateUserName.next()"
+              >
+                Update name
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <button
-        mat-icon-button
-        class="avatar-selector-item"
-        *ngFor="let avatar of avatars"
-        [class.selected]="user?.photoURL === avatar.url"
-      >
-        <img
-          [src]="avatar.url"
-          (click)="selectAvatar(avatar)"
-          class="avatar-image"
-          loading="lazy"
-          alt="A user's avatar"
-        />
-      </button>
-    </div>
+      </mat-tab>
+      <mat-tab label="Avatar"
+        ><div class="avatar-selector">
+          <div class="avatar-selector-item clear">
+            <div class="avatar avatar-image" (click)="selectAvatar(null)">
+              <div>{{ user?.displayName.charAt(0) }}</div>
+            </div>
+          </div>
+          <button
+            mat-icon-button
+            class="avatar-selector-item"
+            *ngFor="let avatar of avatars"
+            [class.selected]="user?.photoURL === avatar.url"
+          >
+            <img
+              [src]="avatar.url"
+              (click)="selectAvatar(avatar)"
+              class="avatar-image"
+              loading="lazy"
+              alt="A user's avatar"
+            />
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
   <div mat-dialog-actions>
     <button mat-flat-button mat-dialog-close>Close</button>
-    <button mat-button (click)="randomizeAvatars()" color="primary">Randomize avatars</button>
+    <button
+      mat-button
+      (click)="randomizeAvatars()"
+      color="primary"
+      *ngIf="selectedTabIndex === 1"
+    >
+      Randomize avatars
+    </button>
   </div>
 </div>

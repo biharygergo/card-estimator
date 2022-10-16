@@ -1,4 +1,8 @@
-<div class="banner banner-info" *ngIf="(user | async)?.isAnonymous && !config.isRunningInZoom">
+<div
+  class="banner banner-info"
+  *ngIf="(user | async)?.isAnonymous && !config.isRunningInZoom"
+  [class.banner-gray]="bannerStyle === 'gray'"
+>
   <div class="banner-main">
     <mat-icon class="banner-icon" color="primary"> info </mat-icon>
     <div class="banner-content">

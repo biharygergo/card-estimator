@@ -51,7 +51,7 @@ export class ProfileDropdownComponent implements OnInit {
   }
 
   openAvatarSelector() {
-    this.dialog.open(...avatarModalCreator());
+    this.dialog.open(...avatarModalCreator({}));
     this.analytics.logClickedEditAvatar('profile_icon');
   }
 }

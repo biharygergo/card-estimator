@@ -171,6 +171,14 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  onNameUpdated$: Observable<string> = this.authService.nameUpdated.pipe(
+    distinctUntilChanged(),
+    tap((photoURL: string) => {
+      this.estimatorService.updateCurrentUserMemberName(this.room, photoURL);
+    }),
+    takeUntil(this.destroy)
+  );
+
   readonly MemberType = MemberType;
 
   constructor(
@@ -198,6 +206,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.onRoundNumberUpdated$.subscribe();
     this.onEstimatesUpdated$.subscribe();
     this.onCardSetUpdated$.subscribe();
+    this.onNameUpdated$.subscribe();
 
     this.authService.avatarUpdated
       .pipe(
@@ -319,7 +328,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
         .onAction()
         .subscribe(() => {
-          this.dialog.open(...avatarModalCreator());
+          this.dialog.open(...avatarModalCreator({openAtTab: 'avatar'}));
           this.analytics.logClickedEditAvatar('snackbar');
         });
     }

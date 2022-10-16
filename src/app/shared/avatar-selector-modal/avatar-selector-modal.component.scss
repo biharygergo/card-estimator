@@ -8,12 +8,17 @@
     flex: auto;
 }
 
+.tab-content {
+    padding-top: 1rem;
+}
+
 .avatar-selector {
     display: grid;
     overflow: auto;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 16px;
     padding: 8px;
+    padding-top: 1rem;
 }
 
 .avatar-selector-item {
@@ -54,4 +59,32 @@
     height: 70px;
     border-radius: 50%;
     overflow: hidden;
+}
+
+.profile-overview {
+    display: flex;
+    gap: 16px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    .profile-image {
+        flex: 1;
+        padding: 0.5rem;
+        padding-left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-details {
+        flex: 3;
+
+        mat-form-field {
+            width: 100%;
+        }
+    }
+}
+
+.section-title {
+    margin-top: 1rem;
 }

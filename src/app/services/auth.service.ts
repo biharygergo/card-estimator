@@ -87,7 +87,6 @@ export class AuthService {
     providerData: UserInfo,
     options: { isNewUser: boolean }
   ) {
-    await this.updateAvatar(providerData.photoURL);
     await updateEmail(this.auth.currentUser, providerData.email);
     if (options.isNewUser) {
       await this.createPermanentUser(this.auth.currentUser);

@@ -99,7 +99,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
         tap(() => {
           this.snackBar.open('Profile updated!', null, {
             horizontalPosition: 'right',
-            duration: 2000,
+            duration: 3000,
           });
           this.isSavingUser.next(false);
         }),

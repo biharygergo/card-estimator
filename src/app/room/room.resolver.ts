@@ -74,6 +74,9 @@ export class RoomResolver implements Resolve<Room> {
   }
 
   showMessage(message: string) {
-    this.snackBar.open(message, null, { duration: 5000 });
+    this.snackBar.open(message, null, {
+      duration: 5000,
+      horizontalPosition: 'right',
+    });
   }
 }

@@ -152,7 +152,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.onSignInClicked
       .pipe(
         switchMap(() => from(this.authService.signInWithGoogle())),
-        takeUntil(this.destroy),
+        takeUntil(this.destroy)
       )
       .subscribe();
   }
@@ -191,7 +191,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.snackBar.open(
       'Unable to join room. Please check the ID and try again.',
       null,
-      { duration: 2000 }
+      { duration: 3000, horizontalPosition: 'right' }
     );
   }
 

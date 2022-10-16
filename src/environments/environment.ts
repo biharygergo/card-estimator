@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   firebase: {
     apiKey: 'AIzaSyDcAquwdgHCtC-DUQ_-fMa0tdqUBKVi5C8',
-    authDomain: 'card-estimator.firebaseapp.com',
+    authDomain: 'planningpoker.live',
     databaseURL: 'https://card-estimator.firebaseio.com',
     projectId: 'card-estimator',
     storageBucket: 'card-estimator.appspot.com',

@@ -117,7 +117,7 @@ export class AuthService {
       id: user.uid,
       email: user.email,
       displayName: user.displayName,
-      avatarUrl: user.photoURL,
+      avatarUrl: user.photoURL.includes('dicebear') ? user.photoURL : null,
       createdAt: serverTimestamp(),
     };
     await setDoc(

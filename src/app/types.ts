@@ -21,7 +21,7 @@ export interface Room {
   cardSet?: CardSetOrCustom;
   customCardSetValue?: CardSetValue;
   createdById: string;
-  memberIds: string[]
+  memberIds: string[];
 }
 
 export interface Round {
@@ -45,8 +45,8 @@ export enum MemberType {
 }
 
 export enum MemberStatus {
-  ACTIVE = "ACTIVE",
-  LEFT_ROOM = "LEFT_ROOM",
+  ACTIVE = 'ACTIVE',
+  LEFT_ROOM = 'LEFT_ROOM',
 }
 
 export interface Member {
@@ -87,15 +87,15 @@ export type UserProfile = {
   id: string;
   displayName: string;
   avatarUrl: string;
-}
+};
 
 export type UserDetails = {
   id: string;
   displayName: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   email: string;
   createdAt: FieldValue;
-}
+};
 
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {

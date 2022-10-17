@@ -20,6 +20,7 @@ import {
 import { EMPTY, firstValueFrom, Observable, Subject } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { UserDetails, UserProfile } from '../types';
+import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 
 export const PROFILES_COLLECTION = 'profiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
@@ -88,7 +89,13 @@ export class AuthService {
     providerData: UserInfo,
     options: { isNewUser: boolean }
   ) {
-    await updateEmail(this.auth.currentUser, providerData.email);
+    if (
+      new SupportedPhotoUrlPipe().isSupported(
+        this.auth.currentUser.photoURL
+      ) === false
+    ) {
+      await updateProfile(this.auth.currentUser, { photoURL: '' });
+    }
     if (options.isNewUser) {
       await this.createPermanentUser(this.auth.currentUser);
     }
@@ -117,7 +124,7 @@ export class AuthService {
       id: user.uid,
       email: user.email,
       displayName: user.displayName,
-      avatarUrl: user.photoURL.includes('dicebear') ? user.photoURL : null,
+      avatarUrl: new SupportedPhotoUrlPipe().transform(user.photoURL),
       createdAt: serverTimestamp(),
     };
     await setDoc(

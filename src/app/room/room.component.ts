@@ -337,7 +337,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   private errorGoBackToJoinPage() {
     this.snackBar.open('Something went wrong. Please try again later.', null, {
       duration: 5000,
-      horizontalPosition: 'right',
     });
     this.router.navigate(['join']);
   }
@@ -409,7 +408,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     this.snackBar.open(message, null, {
-      duration: 3000,
+      duration: 2000,
       horizontalPosition: 'right',
     });
   }

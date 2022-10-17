@@ -89,6 +89,7 @@ import { SessionHistoryComponent } from './shared/session-history/session-histor
 import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 import { ResizeMonitorDirective } from './shared/directives/resize-monitor.directive';
 import { AnonymousUserBannerComponent } from './shared/anonymous-user-banner/anonymous-user-banner.component';
+import { SupportedPhotoUrlPipe } from './shared/supported-photo-url.pipe';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -155,6 +156,7 @@ function loadAppConfig(): Promise<any> {
     SessionHistoryPageComponent,
     ResizeMonitorDirective,
     AnonymousUserBannerComponent,
+    SupportedPhotoUrlPipe,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

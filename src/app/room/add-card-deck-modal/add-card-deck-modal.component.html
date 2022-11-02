@@ -1,38 +1,68 @@
 <div class="dialog-content">
-    <h1 mat-dialog-title>Set a custom card deck</h1>
-    <div mat-dialog-content>
-        <form [formGroup]="cardDeckForm" class="card-deck-form">
-            <mat-form-field appearance="outline">
-                <mat-label>Deck name</mat-label>
-                <input matInput placeholder="Team deck #1" formControlName="cardDeckName" autocomplete="off" />
-                <mat-hint>Name your card deck, so you can re-use it in your next planning
-                    meeting.</mat-hint>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Deck values</mat-label>
-                <input matInput placeholder="1,5,10,15,20" formControlName="cardDeckValues" autocomplete="off" />
-                <mat-hint>Card values as a comma separated list in ascending order. You can use numbers or words as
-                    well.</mat-hint>
-                <mat-error *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']">
-                    Maximum 6 cards can be set.
-                </mat-error>
-                <mat-error *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']">
-                    All cards must be unique.
-                </mat-error>
-            </mat-form-field>
-        </form>
-        {{ cardDeckForm.errors }}
-        <div class="preview-cards">
-            <mat-card class="preview-card" *ngFor="let card of cardPreview" [ngClass]="{ filled: card !== undefined }">
-                {{ card ?? "?" }}
-            </mat-card>
-        </div>
+  <h1 mat-dialog-title>Set a custom card deck</h1>
+  <div mat-dialog-content>
+    <form [formGroup]="cardDeckForm" class="card-deck-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Deck name</mat-label>
+        <input
+          matInput
+          placeholder="Team deck #1"
+          formControlName="cardDeckName"
+          autocomplete="off"
+        />
+        <mat-hint
+          >Name your card deck, so you can re-use it in your next planning
+          meeting.</mat-hint
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Deck values</mat-label>
+        <input
+          matInput
+          placeholder="1,5,10,15,20"
+          formControlName="cardDeckValues"
+          autocomplete="off"
+        />
+        <mat-hint
+          >Card values as a comma separated list in ascending order. You can use
+          numbers or words as well.</mat-hint
+        >
+        <mat-error
+          *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']"
+        >
+          Maximum 6 cards can be set.
+        </mat-error>
+        <mat-error
+          *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']"
+        >
+          All cards must be unique.
+        </mat-error>
+      </mat-form-field>
+      <small *ngIf="showIdealSizeWarning" class="warning-text"
+        ><strong>Careful!</strong> Adding more than {{ CARD_DECK_IDEAL_SIZE }} cards may result in some
+        funky UI glitches. You can add maximum {{ MAX_CARD_DECK_SIZE }} cards.</small
+      >
+    </form>
+    <div class="preview-cards">
+      <mat-card
+        class="preview-card"
+        *ngFor="let card of cardPreview"
+        [ngClass]="{ filled: card !== undefined }"
+      >
+        {{ card ?? "?" }}
+      </mat-card>
     </div>
-    <div mat-dialog-actions>
-        <button mat-flat-button mat-dialog-close color="secondary">Cancel</button>
-        <button mat-flat-button color="primary" cdkFocusInitial [disabled]="!cardDeckForm.valid"
-            (click)="onSaveClick()">
-            Save
-        </button>
-    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-flat-button mat-dialog-close color="secondary">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      cdkFocusInitial
+      [disabled]="!cardDeckForm.valid"
+      (click)="onSaveClick()"
+    >
+      Save
+    </button>
+  </div>
 </div>

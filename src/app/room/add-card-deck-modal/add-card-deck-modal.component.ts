@@ -5,7 +5,12 @@ import { debounceTime } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { CardSetValue, isNumeric } from 'src/app/types';
-import { cardDeckValidator, convertInputToCards } from './validator';
+import {
+  cardDeckValidator,
+  convertInputToCards,
+  CARD_DECK_IDEAL_SIZE,
+  MAX_CARD_DECK_SIZE,
+} from './validator';
 
 export type AddCardDeckModalData = {
   roomId: string;
@@ -25,7 +30,11 @@ export class AddCardDeckModalComponent implements OnInit {
     ]),
   });
 
-  cardPreview: string[] = new Array(6).fill(undefined);
+  cardPreview: string[] = new Array(CARD_DECK_IDEAL_SIZE).fill(undefined);
+
+  showIdealSizeWarning = false;
+  readonly CARD_DECK_IDEAL_SIZE = CARD_DECK_IDEAL_SIZE;
+  readonly MAX_CARD_DECK_SIZE = MAX_CARD_DECK_SIZE;
 
   constructor(
     public dialogRef: MatDialogRef<AddCardDeckModalComponent>,
@@ -40,9 +49,11 @@ export class AddCardDeckModalComponent implements OnInit {
       .valueChanges.pipe(debounceTime(50))
       .subscribe((value) => {
         const cards = convertInputToCards(value);
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < CARD_DECK_IDEAL_SIZE; i++) {
           this.cardPreview[i] = cards[i] ?? undefined;
         }
+
+        this.showIdealSizeWarning = cards.length > CARD_DECK_IDEAL_SIZE;
       });
   }
 

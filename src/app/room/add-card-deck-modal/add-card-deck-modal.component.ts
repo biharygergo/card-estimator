@@ -30,9 +30,8 @@ export class AddCardDeckModalComponent implements OnInit {
     ]),
   });
 
-  cardPreview: string[] = new Array(CARD_DECK_IDEAL_SIZE).fill(undefined);
+  cardPreview: string[] = new Array(MAX_CARD_DECK_SIZE).fill(undefined);
 
-  showIdealSizeWarning = false;
   readonly CARD_DECK_IDEAL_SIZE = CARD_DECK_IDEAL_SIZE;
   readonly MAX_CARD_DECK_SIZE = MAX_CARD_DECK_SIZE;
 
@@ -49,11 +48,9 @@ export class AddCardDeckModalComponent implements OnInit {
       .valueChanges.pipe(debounceTime(50))
       .subscribe((value) => {
         const cards = convertInputToCards(value);
-        for (let i = 0; i < CARD_DECK_IDEAL_SIZE; i++) {
+        for (let i = 0; i < MAX_CARD_DECK_SIZE; i++) {
           this.cardPreview[i] = cards[i] ?? undefined;
         }
-
-        this.showIdealSizeWarning = cards.length > CARD_DECK_IDEAL_SIZE;
       });
   }
 

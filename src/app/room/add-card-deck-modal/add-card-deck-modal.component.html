@@ -30,7 +30,7 @@
         <mat-error
           *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']"
         >
-          Maximum 6 cards can be set.
+          Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
         </mat-error>
         <mat-error
           *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']"
@@ -38,19 +38,18 @@
           All cards must be unique.
         </mat-error>
       </mat-form-field>
-      <small *ngIf="showIdealSizeWarning" class="warning-text"
-        ><strong>Careful!</strong> Adding more than {{ CARD_DECK_IDEAL_SIZE }} cards may result in some
-        funky UI glitches. You can add maximum {{ MAX_CARD_DECK_SIZE }} cards.</small
-      >
     </form>
     <div class="preview-cards">
-      <mat-card
+      <ng-container *ngFor="let card of cardPreview; let i = index">
+        <mat-card
         class="preview-card"
-        *ngFor="let card of cardPreview"
+        *ngIf="i < CARD_DECK_IDEAL_SIZE || card !== undefined"
         [ngClass]="{ filled: card !== undefined }"
       >
         {{ card ?? "?" }}
       </mat-card>
+      </ng-container>
+      
     </div>
   </div>
   <div mat-dialog-actions>

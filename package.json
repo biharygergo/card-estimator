@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "develop": "firebase emulators:start & npm run start",
+    "simulator": "firebase emulators:start",
     "build": "npm run prerender",
     "test": "ng test",
     "lint": "ng lint",

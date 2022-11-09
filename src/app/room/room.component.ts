@@ -87,7 +87,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   isMuted = true;
   shouldShowAloneInRoom = false;
   isAloneInRoomHidden = false;
-  roundStatistics: RoundStatistics[];
+  roundStatistics: RoundStatistics[] = [];
 
   adHideClicks = 0;
   adsEnabled = false;

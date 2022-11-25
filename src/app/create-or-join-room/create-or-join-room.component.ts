@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
-import { AuthService } from '../services/auth.service';
+import { AuthIntent, AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
 import {
@@ -172,7 +172,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(async () => {
           if (this.config.isRunningInZoom) {
-            return this.signInWithGoogleInZoom();
+            return from(this.signInWithGoogleInZoom());
           }
           return from(this.authService.signInWithGoogle());
         }),
@@ -192,18 +192,14 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  async signInWithGoogleInZoom() {
+  signInWithGoogleInZoom() {
     this.dialog.open(
       ...authProgressDialogCreator({
         initialState: AuthProgressState.IN_PROGRESS,
         startAccountSetupOnOpen: false,
       })
     );
-    await this.zoomService.configureApp();
-    await this.zoomService.openUrl(
-      `${window.origin}/api/startGoogleAuth?intent=signIn`
-    );
-    return Promise.resolve();
+    return this.zoomService.openUrl(this.authService.getApiAuthUrl(AuthIntent.SIGN_IN), true);
   }
 
   async joinRoom() {

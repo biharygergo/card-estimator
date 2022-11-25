@@ -137,7 +137,10 @@ export class ZoomApiService {
     }
   }
 
-  openUrl(url: string) {
+  async openUrl(url: string, initialize?: boolean) {
+    if (initialize) {
+      await this.configureApp();
+    }
     return zoomSdk.openUrl({
       url,
     });

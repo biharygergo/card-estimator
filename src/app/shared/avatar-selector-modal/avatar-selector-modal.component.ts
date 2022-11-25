@@ -14,6 +14,7 @@ export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 export interface AvatarDialogData {
   openAtTab?: 'profile' | 'avatar';
 }
+
 export const avatarModalCreator = ({
   openAtTab,
 }: AvatarDialogData): ModalCreator<AvatarSelectorModalComponent> => [

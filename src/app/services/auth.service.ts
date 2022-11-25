@@ -46,7 +46,7 @@ export type ParsedSessionCookie = {
   returnToPath?: string;
   idToken: string;
   createdAt: FieldValue;
-}
+};
 
 @Injectable({
   providedIn: 'root',
@@ -88,6 +88,12 @@ export class AuthService {
 
   signOut() {
     this.auth.signOut();
+  }
+
+  getApiAuthUrl(authIntent: AuthIntent, returnToPath?: string): string {
+    return `${window.origin}/api/startGoogleAuth?intent=${authIntent}${
+      returnToPath ? `&returnPath=${encodeURIComponent(returnToPath)}` : ''
+    }`;
   }
 
   async signInWithGoogle(idToken?: string) {

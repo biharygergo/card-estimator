@@ -10,8 +10,14 @@ import {
   zoomHome,
 } from "./zoom/routes";
 import {CallableContext} from "firebase-functions/v1/https";
+import {
+  googleAuthSuccess,
+  startGoogleOauthFlow,
+  zoomAuthSuccess,
+} from "./zoom/googleAuth";
 
 initializeApp();
+firestore().settings({ignoreUndefinedProperties: true});
 
 exports.clearOldRooms = functions.pubsub
     .schedule("every 24 hours")
@@ -80,3 +86,19 @@ exports.generateCodeChallenge = functions.https.onRequest(async (req, res) => {
 exports.inClientOnAuthorized = functions.https.onRequest(async (req, res) => {
   cookieParser()(req, res, () => inClientOnAuthorized(req, res));
 });
+
+exports.startGoogleAuth = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => startGoogleOauthFlow(req, res));
+});
+
+exports.onZoomAuthResponseRedirectToGoogle = functions.https.onRequest(
+    async (req, res) => {
+      cookieParser()(req, res, () => zoomAuthSuccess(req, res));
+    }
+);
+
+exports.onGoogleAuthResponseDeeplink = functions.https.onRequest(
+    async (req, res) => {
+      cookieParser()(req, res, () => googleAuthSuccess(req, res));
+    }
+);

@@ -37,6 +37,21 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/startGoogleAuth",
+          "function": "startGoogleAuth",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onZoomAuthResponseRedirectToGoogle",
+          "function": "onZoomAuthResponseRedirectToGoogle",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onGoogleAuthResponseDeeplink",
+          "function": "onGoogleAuthResponseDeeplink",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },

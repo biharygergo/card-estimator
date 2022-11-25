@@ -1,12 +1,9 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  EstimatorService,
-  retrieveRoomData,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RoomData, Member, MemberType, MemberStatus } from '../types';
+import { Member, MemberType, MemberStatus } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -32,7 +29,12 @@ import {
 import { User } from 'firebase/auth';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
-import { ResizeEventData } from '../shared/directives/resize-monitor.directive';
+import { ZoomApiService } from '../services/zoom-api.service';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  authProgressDialogCreator,
+  AuthProgressState,
+} from '../shared/auth-progress-dialog/auth-progress-dialog.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -120,11 +122,27 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private analytics: AnalyticsService,
     private authService: AuthService,
     private readonly cookieService: CookieService,
+    private readonly zoomService: ZoomApiService,
+    private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
   ngOnInit(): void {
     this.cookieService.tryShowCookieBanner();
+
+    const sessionCookie = this.authService.getSessionCookie();
+    if (
+      this.config.isRunningInZoom &&
+      sessionCookie &&
+      typeof sessionCookie !== 'string'
+    ) {
+      this.dialog.open(
+        ...authProgressDialogCreator({
+          initialState: AuthProgressState.IN_PROGRESS,
+          startAccountSetupOnOpen: true,
+        })
+      );
+    }
 
     this.onJoinRoomClicked
       .pipe(
@@ -152,7 +170,12 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     this.onSignInClicked
       .pipe(
-        switchMap(() => from(this.authService.signInWithGoogle())),
+        switchMap(async () => {
+          if (this.config.isRunningInZoom) {
+            return this.signInWithGoogleInZoom();
+          }
+          return from(this.authService.signInWithGoogle());
+        }),
         withLatestFrom(this.currentPath),
         tap(([_, currentPath]) => {
           this.analytics.logClickedSignIn(
@@ -167,6 +190,20 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  async signInWithGoogleInZoom() {
+    this.dialog.open(
+      ...authProgressDialogCreator({
+        initialState: AuthProgressState.IN_PROGRESS,
+        startAccountSetupOnOpen: false,
+      })
+    );
+    await this.zoomService.configureApp();
+    await this.zoomService.openUrl(
+      `${window.origin}/api/startGoogleAuth?intent=signIn`
+    );
+    return Promise.resolve();
   }
 
   async joinRoom() {

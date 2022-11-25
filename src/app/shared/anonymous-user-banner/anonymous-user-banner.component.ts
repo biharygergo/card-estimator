@@ -44,10 +44,6 @@ export class AnonymousUserBannerComponent implements OnInit {
           return from(this.authService.linkAccountWithGoogle()).pipe(
             tap(() => {
               this.isBusy.next(false);
-              this.snackBar.open(`Your account is now set up, awesome!`, null, {
-                duration: 3000,
-                horizontalPosition: 'right',
-              });
             }),
             catchError((error) => {
               this.isBusy.next(false);

@@ -220,7 +220,7 @@ export class EstimatorService {
         if (!room) {
           throw new RoomNotFoundError();
         }
-        this.activeMember = room.members.find((m) => m.id === user.uid);
+        this.activeMember = room.members.find((m) => m.id === user?.uid);
       }),
       map(([_user, room]) => room)
     );

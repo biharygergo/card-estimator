@@ -69,7 +69,18 @@ export class AnonymousUserBannerComponent implements OnInit {
             // This promise never resolves, as the app will be reloaded on Auth success
             signInPromise = new Promise(() => {});
           } else {
-            signInPromise = this.authService.linkAccountWithGoogle();
+            signInPromise = this.authService
+              .linkAccountWithGoogle()
+              .catch((error) => {
+                if (error.code === 'auth/credential-already-in-use') {
+                  this.dialog.open(
+                    ...authProgressDialogCreator({
+                      initialState: AuthProgressState.ACCOUNT_EXISTS,
+                      startAccountSetupOnOpen: false,
+                    })
+                  );
+                }
+              });
           }
           return from(signInPromise).pipe(
             tap(() => {
@@ -77,23 +88,15 @@ export class AnonymousUserBannerComponent implements OnInit {
             }),
             catchError((error) => {
               this.isBusy.next(false);
-              if (error.code === 'auth/credential-already-in-use') {
-                this.dialog.open(
-                  ...authProgressDialogCreator({
-                    initialState: AuthProgressState.ACCOUNT_EXISTS,
-                    startAccountSetupOnOpen: false,
-                  })
-                );
-              } else {
-                this.snackBar.open(
-                  `Failed to link account with Google. The issue is: ${error.message}`,
-                  null,
-                  {
-                    duration: 3000,
-                    horizontalPosition: 'right',
-                  }
-                );
-              }
+              console.error('error here', error);
+              this.snackBar.open(
+                `Failed to link account with Google. The issue is: ${error.message}`,
+                null,
+                {
+                  duration: 3000,
+                  horizontalPosition: 'right',
+                }
+              );
 
               return of({});
             })

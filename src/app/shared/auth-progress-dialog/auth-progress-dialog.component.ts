@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   AuthIntent,
   AuthService,
@@ -53,6 +53,8 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
+    private readonly dialog: MatDialog,
+    public dialogRef: MatDialogRef<AuthProgressDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData
   ) {
     this.state.next(dialogData.initialState);
@@ -94,10 +96,12 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   }
 
   returnToPrevious() {
+    this.dialogRef.close();
     this.router.navigateByUrl(this.returnPath);
   }
 
   signOut() {
+    this.dialog.closeAll();
     this.authService.signOut();
   }
 }

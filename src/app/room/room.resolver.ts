@@ -14,7 +14,7 @@ import {
   NotLoggedInError,
   RoomNotFoundError,
 } from '../services/estimator.service';
-import { Room } from '../types';
+import { MemberStatus, Room } from '../types';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +45,13 @@ export class RoomResolver implements Resolve<Room> {
 
         if (!activeMember) {
           throw new MemberNotFoundError();
+        }
+
+        if (activeMember.status === MemberStatus.LEFT_ROOM) {
+          this.estimatorService.joinRoom(room.roomId, {
+            ...activeMember,
+            status: MemberStatus.ACTIVE,
+          });
         }
       }),
       map(({ room }) => room),

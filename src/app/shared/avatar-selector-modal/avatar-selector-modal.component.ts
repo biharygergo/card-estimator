@@ -75,9 +75,9 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.auth.user.pipe(takeUntil(this.destroy)).subscribe((user) => {
       this.user = user;
-      this.displayNameForm.setValue(user.displayName);
+      this.displayNameForm.setValue(user?.displayName);
       this.accountTypeForm.setValue(
-        user.isAnonymous ? 'Anonymous' : 'Permanent'
+        user?.isAnonymous ? 'Anonymous' : 'Permanent'
       );
     });
 

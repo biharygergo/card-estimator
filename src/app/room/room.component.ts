@@ -15,11 +15,13 @@ import { FormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  catchError,
   combineLatest,
   distinctUntilChanged,
   filter,
   map,
   Observable,
+  of,
   share,
   startWith,
   Subject,
@@ -97,9 +99,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Observable<Room> = this.route.paramMap.pipe(
     map((params) => params.get('roomId')),
     switchMap((roomId) =>
-      this.estimatorService
-        .getRoomById(roomId)
-        .pipe(startWith(this.route.snapshot.data.room))
+      this.estimatorService.getRoomById(roomId).pipe(
+        startWith(this.route.snapshot.data.room)
+      )
     ),
     share(),
     takeUntil(this.destroy)

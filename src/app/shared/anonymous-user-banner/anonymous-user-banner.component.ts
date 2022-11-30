@@ -49,7 +49,7 @@ export class AnonymousUserBannerComponent implements OnInit {
   ngOnInit(): void {
     this.onSignUpClicked
       .pipe(
-        switchMap(() => {
+        switchMap(async () => {
           this.isBusy.next(true);
           let signInPromise: Promise<void>;
           if (this.config.isRunningInZoom) {
@@ -59,7 +59,7 @@ export class AnonymousUserBannerComponent implements OnInit {
                 startAccountSetupOnOpen: false,
               })
             );
-            this.zoomApiService.openUrl(
+            await this.zoomApiService.openUrl(
               this.authService.getApiAuthUrl(
                 AuthIntent.LINK_ACCOUNT,
                 this.activatedRoute.snapshot.toString()

@@ -33,6 +33,7 @@ export class ZoomApiService {
         'sendAppInvitationToAllParticipants',
         'expandApp',
         'onMyUserContextChange',
+        'openUrl'
       ],
     });
 
@@ -134,5 +135,14 @@ export class ZoomApiService {
     } else {
       return zoomSdk.sendAppInvitationToAllParticipants();
     }
+  }
+
+  async openUrl(url: string, initialize?: boolean) {
+    if (initialize) {
+      await this.configureApp();
+    }
+    return zoomSdk.openUrl({
+      url,
+    });
   }
 }

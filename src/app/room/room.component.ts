@@ -328,7 +328,11 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
         .onAction()
         .subscribe(() => {
-          this.dialog.open(...avatarModalCreator({openAtTab: 'avatar'}));
+          this.dialog.open(
+            ...avatarModalCreator({
+              openAtTab: 'avatar',
+            })
+          );
           this.analytics.logClickedEditAvatar('snackbar');
         });
     }

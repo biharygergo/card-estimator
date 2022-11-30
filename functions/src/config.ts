@@ -11,7 +11,7 @@ export const appConfig = {
 
 export function getHost(req: functions.Request) {
   const devHost =
-    req.cookies?.devHostOverride ?? "https://80f7-37-76-30-37.eu.ngrok.io";
+    req.cookies?.devHostOverride ?? "https://b59a-80-99-77-114.eu.ngrok.io";
   return isRunningInEmulator() ? devHost : "https://planningpoker.live";
 }
 

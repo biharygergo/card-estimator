@@ -17,14 +17,18 @@ export function generateVerifier() {
   return Buffer.from(rand("ascii")).toString("base64url");
 }
 
-export function getInstallURL(isDev: boolean, request: functions.Request) {
+export function getInstallURL(
+    isDev: boolean,
+    request: functions.Request,
+    redirectUrlOverride?: string
+) {
   const verifier = generateVerifier();
   const challenge: string = crypto
       .createHash("sha256")
       .update(verifier)
       .digest("base64url");
 
-  const redirectUrl = getRedirectUrl(request);
+  const redirectUrl = redirectUrlOverride ?? getRedirectUrl(request);
 
   const url = new URL("/oauth/authorize", zoomHost);
 
@@ -94,7 +98,8 @@ export async function getToken(
     code: string,
     verifier: string | undefined,
     isDev: boolean,
-    request: functions.Request
+    request: functions.Request,
+    redirectUriOverride?: string
 ) {
   if (!code || typeof code !== "string") {
     throw Error("authorization code must be a valid string");
@@ -104,7 +109,7 @@ export async function getToken(
     console.error("Verifier was invalid", verifier);
   }
 
-  const redirectUrl = getRedirectUrl(request);
+  const redirectUrl = redirectUriOverride ?? getRedirectUrl(request);
 
   return tokenRequest(
       {
@@ -117,13 +122,15 @@ export async function getToken(
   );
 }
 
-export function getDeeplink(token: string) {
+export function getDeeplink(token: string, action?: any) {
   return apiRequest("POST", "/zoomapp/deeplink", token, {
-    action: JSON.stringify({
-      url: "/",
-      role_name: "Owner",
-      verified: 1,
-      role_id: 0,
-    }),
+    action: JSON.stringify(action),
   }).then((data) => Promise.resolve(data.deeplink));
 }
+
+export const setSessionVariable = (
+    res: functions.Response,
+    verifier: string
+) => {
+  res.cookie("__session", verifier);
+};

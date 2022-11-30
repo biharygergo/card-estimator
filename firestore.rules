@@ -18,5 +18,9 @@ service cloud.firestore {
       allow write: if request.auth.uid == request.resource.data.invitedBy;
       allow read: if false;
     }
+
+    match /authSessions/{sessionId} {
+      allow list, update, delete, create, get: if false;
+    }
   }
 }

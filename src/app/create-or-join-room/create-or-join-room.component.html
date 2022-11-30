@@ -7,7 +7,7 @@
       <div class="navbar-right">
         <button
           mat-button
-          *ngIf="!viewModel.user && !config.isRunningInZoom"
+          *ngIf="!viewModel.user"
           class="sign-in-button"
           #tooltip="matTooltip"
           matTooltip="Created a permanent account before? Jump right back."
@@ -112,7 +112,7 @@
       [queryParams]="{ backToPage: '/' + (pageMode | async) }"
       >Previous sessions</a
     >
-    <!--       <a (click)="signOut()" *ngIf="viewModel.user">Delete temporary account</a>
+    <!--         <a (click)="signOut()" *ngIf="(vm | async)?.user">Delete temporary account</a>
  -->
   </div>
 </ng-template>

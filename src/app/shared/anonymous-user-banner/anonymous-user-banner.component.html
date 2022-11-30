@@ -1,6 +1,6 @@
 <div
   class="banner banner-info"
-  *ngIf="(user | async)?.isAnonymous"
+  *ngIf="(user | async)?.isAnonymous && !config.isRunningInZoom"
   [class.banner-gray]="bannerStyle === 'gray'"
 >
   <div class="banner-main">

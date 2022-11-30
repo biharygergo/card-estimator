@@ -5,7 +5,6 @@ import {
   AuthService,
   ParsedSessionCookie,
 } from 'src/app/services/auth.service';
-import Cookies from 'js-cookie';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { FirebaseError } from '@angular/fire/app';
@@ -14,10 +13,10 @@ import { Router } from '@angular/router';
 export const AUTH_PROGRESS_MODAL = 'auth-progress-modal';
 
 export enum AuthProgressState {
-  IN_PROGRESS,
-  SUCCESS,
-  ERROR,
-  ACCOUNT_EXISTS,
+  IN_PROGRESS = 'IN_PROGRESS',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+  ACCOUNT_EXISTS = 'ACCOUNT_EXISTS',
 }
 export interface AuthProgressDialogData {
   initialState: AuthProgressState;
@@ -30,7 +29,7 @@ export const authProgressDialogCreator = (
   {
     id: AUTH_PROGRESS_MODAL,
     width: '90%',
-    maxWidth: '250px',
+    maxWidth: '300px',
     data,
   },
 ];

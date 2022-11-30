@@ -1,18 +1,19 @@
-<ng-container *ngIf="state | async; let state">
+<ng-container *ngIf="state | async as state">
   <div mat-dialog-content>
     <div class="content-container">
       <ng-container *ngIf="state === AuthProgressState.IN_PROGRESS">
-        <p>Waiting for authentication with Zoom and Google to finish.</p>
         <mat-spinner diameter="40"></mat-spinner>
+        <p>Waiting for authentication with Zoom and Google to finish.</p>
       </ng-container>
       <ng-container *ngIf="state === AuthProgressState.SUCCESS">
+        <mat-icon color="success">check</mat-icon>
         <p>
           Awesome, you are now signed in to your permanent Planning Poker
           account!
         </p>
-        <mat-icon>check</mat-icon>
       </ng-container>
       <ng-container *ngIf="state === AuthProgressState.ERROR">
+        <mat-icon>error</mat-icon>
         <p>
           An unknown error occurred during account set-up. Please try again or
           file an issue on Github if the problem persists.
@@ -20,9 +21,9 @@
         <p>
           The error is: <strong>{{ errorMessage }}</strong>
         </p>
-        <mat-icon>error</mat-icon>
       </ng-container>
       <ng-container *ngIf="state === AuthProgressState.ACCOUNT_EXISTS">
+        <mat-icon>error</mat-icon>
         <p>
           A previous Planning Poker account has already been linked to this
           Google account. We currently do not support linking multiple accounts,
@@ -35,7 +36,6 @@
           feature, put some friendly pressure on the developers and file an
           issue on Github.
         </p>
-        <mat-icon>error</mat-icon>
       </ng-container>
     </div>
   </div>
@@ -54,7 +54,7 @@
       (click)="signOut()"
       *ngIf="state === AuthProgressState.ACCOUNT_EXISTS"
     >
-      Sign out
+      Sign out of temporary account
     </button>
   </div>
 </ng-container>

@@ -62,7 +62,7 @@ export class AnonymousUserBannerComponent implements OnInit {
             this.zoomApiService.openUrl(
               this.authService.getApiAuthUrl(
                 AuthIntent.LINK_ACCOUNT,
-                this.activatedRoute.snapshot.toString(),
+                this.activatedRoute.snapshot.toString()
               )
             );
             // This promise never resolves, as the app will be reloaded on Auth success
@@ -76,14 +76,26 @@ export class AnonymousUserBannerComponent implements OnInit {
             }),
             catchError((error) => {
               this.isBusy.next(false);
-              this.snackBar.open(
-                `Failed to link account with Google. The issue is: ${error.message}`,
-                null,
-                {
-                  duration: 3000,
-                  horizontalPosition: 'right',
-                }
-              );
+              if (
+                error.code === 'auth/credential-already-in-use'
+              ) {
+                this.dialog.open(
+                  ...authProgressDialogCreator({
+                    initialState: AuthProgressState.ACCOUNT_EXISTS,
+                    startAccountSetupOnOpen: false,
+                  })
+                );
+              } else {
+                this.snackBar.open(
+                  `Failed to link account with Google. The issue is: ${error.message}`,
+                  null,
+                  {
+                    duration: 3000,
+                    horizontalPosition: 'right',
+                  }
+                );
+              }
+
               return of({});
             })
           );

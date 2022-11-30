@@ -63,7 +63,8 @@ export class AnonymousUserBannerComponent implements OnInit {
               this.authService.getApiAuthUrl(
                 AuthIntent.LINK_ACCOUNT,
                 this.activatedRoute.snapshot.toString()
-              )
+              ),
+              true
             );
             // This promise never resolves, as the app will be reloaded on Auth success
             signInPromise = new Promise(() => {});
@@ -76,9 +77,7 @@ export class AnonymousUserBannerComponent implements OnInit {
             }),
             catchError((error) => {
               this.isBusy.next(false);
-              if (
-                error.code === 'auth/credential-already-in-use'
-              ) {
+              if (error.code === 'auth/credential-already-in-use') {
                 this.dialog.open(
                   ...authProgressDialogCreator({
                     initialState: AuthProgressState.ACCOUNT_EXISTS,

@@ -7,7 +7,7 @@
       <div class="navbar-right">
         <button
           mat-button
-          *ngIf="!viewModel.user"
+          *ngIf="!viewModel.user && !config.isRunningInZoom"
           class="sign-in-button"
           #tooltip="matTooltip"
           matTooltip="Created a permanent account before? Jump right back."

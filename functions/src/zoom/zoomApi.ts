@@ -17,7 +17,11 @@ export function generateVerifier() {
   return Buffer.from(rand("ascii")).toString("base64url");
 }
 
-export function getInstallURL(isDev: boolean, request: functions.Request, redirectUrlOverride?: string) {
+export function getInstallURL(
+    isDev: boolean,
+    request: functions.Request,
+    redirectUrlOverride?: string
+) {
   const verifier = generateVerifier();
   const challenge: string = crypto
       .createHash("sha256")
@@ -95,7 +99,7 @@ export async function getToken(
     verifier: string | undefined,
     isDev: boolean,
     request: functions.Request,
-    redirectUriOverride?: string,
+    redirectUriOverride?: string
 ) {
   if (!code || typeof code !== "string") {
     throw Error("authorization code must be a valid string");
@@ -124,6 +128,9 @@ export function getDeeplink(token: string, action?: any) {
   }).then((data) => Promise.resolve(data.deeplink));
 }
 
-export const setSessionVariable = (res: functions.Response, verifier: string) => {
+export const setSessionVariable = (
+    res: functions.Response,
+    verifier: string
+) => {
   res.cookie("__session", verifier);
 };

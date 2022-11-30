@@ -50,11 +50,10 @@ export const zoomHome = async (
       if (appContext.act) {
         const action = JSON.parse(appContext.act);
         const sessionId = action.session;
-        const sessionData = await (await firestore().collection(AUTH_SESSIONS).doc(sessionId).get()).data();
-        setSessionVariable(
-            res,
-            JSON.stringify(sessionData)
-        );
+        const sessionData = await (
+          await firestore().collection(AUTH_SESSIONS).doc(sessionId).get()
+        ).data();
+        setSessionVariable(res, JSON.stringify(sessionData));
       }
 
       const path = roomId ? `/join?roomId=${roomId}&s=zoom` : "/join?s=zoom";

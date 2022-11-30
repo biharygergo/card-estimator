@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MOCK_ANALYTICS_SERVICE_PROVIDER } from '../services/testing/mock_analytics_service';
 
 import { LandingComponent } from './landing.component';
 
@@ -8,7 +9,8 @@ describe('LandingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LandingComponent ]
+      declarations: [ LandingComponent ],
+      providers: [MOCK_ANALYTICS_SERVICE_PROVIDER]
     })
     .compileComponents();
   }));

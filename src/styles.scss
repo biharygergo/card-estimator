@@ -64,8 +64,11 @@ $my-theme: mat.define-light-theme(
   margin-top: 1rem !important;
   border-top: 0.5px solid lightgrey;
   padding: 1rem !important;
-  display: flex !important;
-  justify-content: flex-end;
+
+  &.align-right {
+    display: flex !important;
+    justify-content: flex-end;
+  }
 
   button:not(:last-of-type) {
     margin-right: 0.5rem;

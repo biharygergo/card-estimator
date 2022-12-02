@@ -10,6 +10,21 @@ export enum CardSet {
 
 export const CustomCardSet = 'CUSTOM';
 export type CardSetOrCustom = CardSet | typeof CustomCardSet;
+
+export enum TimerState {
+  STOPPED = 'stopped',
+  INIT = 'init',
+  ACTIVE = 'active',
+}
+
+export interface Timer {
+  initialCountdownLength: number;
+  countdownLength: number;
+  extraSecondsAdded: number;
+  startedAt: FieldValue|null;
+  state: TimerState;
+}
+
 export interface Room {
   id: string;
   roomId: string;
@@ -22,6 +37,7 @@ export interface Room {
   customCardSetValue?: CardSetValue;
   createdById: string;
   memberIds: string[];
+  timer?: Timer;
 }
 
 export interface Round {

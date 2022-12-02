@@ -1,0 +1,59 @@
+<div class="timer-container">
+  <div class="progress">
+    <mat-progress-bar
+      mode="determinate"
+      [value]="progressValue"
+      [color]="durationLeft < 10 ? 'accent' : 'primary'"
+    ></mat-progress-bar>
+    <span class="time-left">
+      <ng-container *ngIf="timer.state === TimerState.INIT"
+        >{{ durationLeft }} second timer</ng-container
+      >
+      <ng-container *ngIf="timer.state !== TimerState.INIT && durationLeft > 0"
+        >{{ durationLeft }} seconds remaining</ng-container
+      >
+      <ng-container
+        *ngIf="timer.state !== TimerState.INIT && durationLeft === 0"
+        >Time is up!</ng-container
+      ></span
+    >
+  </div>
+
+  <div class="controls">
+    <button
+      mat-stroked-button
+      (click)="addSeconds()"
+      *ngIf="
+        timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
+      "
+    >
+      +30s
+    </button>
+    <button
+      mat-stroked-button
+      (click)="resetTimer(true)"
+      *ngIf="timer.state === TimerState.STOPPED"
+    >
+      Reset
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="startTimer(true)"
+      *ngIf="
+        timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
+      "
+      [disabled]="durationLeft === 0"
+    >
+      Start
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="stopTimer(true)"
+      *ngIf="timer.state === TimerState.ACTIVE"
+    >
+      Pause
+    </button>
+  </div>
+</div>

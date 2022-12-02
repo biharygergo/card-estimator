@@ -1,0 +1,28 @@
+.timer-container {
+    display: flex;
+}
+
+.progress {
+    flex: 1 1 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0.8rem;
+    padding-right: 1rem;
+
+    .mat-progress-bar {
+        border-radius: 4px;
+    }
+
+    .time-left {
+        font-size: 0.7rem;
+    }
+}
+
+.controls {
+    flex: 1 0 40%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}

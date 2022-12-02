@@ -224,6 +224,9 @@
             </h4>
           </mat-card-footer>
           <mat-card-footer class="card-footer-actions">
+            <countdown-timer [room]="room$"></countdown-timer>
+          </mat-card-footer>
+          <mat-card-footer class="card-footer-actions align-right">
             <button mat-stroked-button color="warn" (click)="leaveRoom()">
               Leave
             </button>

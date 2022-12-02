@@ -54,7 +54,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSelectModule } from '@angular/material/select';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -91,6 +92,7 @@ import { ResizeMonitorDirective } from './shared/directives/resize-monitor.direc
 import { AnonymousUserBannerComponent } from './shared/anonymous-user-banner/anonymous-user-banner.component';
 import { SupportedPhotoUrlPipe } from './shared/supported-photo-url.pipe';
 import { AuthProgressDialogComponent } from './shared/auth-progress-dialog/auth-progress-dialog.component';
+import { CountdownTimerComponent } from './room/countdown-timer/countdown-timer.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -159,6 +161,7 @@ function loadAppConfig(): Promise<any> {
     AnonymousUserBannerComponent,
     SupportedPhotoUrlPipe,
     AuthProgressDialogComponent,
+    CountdownTimerComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -222,6 +225,7 @@ function loadAppConfig(): Promise<any> {
     MatSelectModule,
     MatTooltipModule,
     MatTabsModule,
+    MatProgressBarModule,
     MatSidenavModule,
     MatBadgeModule,
     ClipboardModule,

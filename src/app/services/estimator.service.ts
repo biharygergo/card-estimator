@@ -21,6 +21,7 @@ import {
   CardSetValue,
   CustomCardSet,
   MemberStatus,
+  Timer,
 } from './../types';
 import {
   collection,
@@ -241,6 +242,12 @@ export class EstimatorService {
   setShowResults(room: Room, round: number, showResults: boolean) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${round}.show_results`]: showResults,
+    });
+  }
+
+  setTimer(room: Room, timer: Timer) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+      timer,
     });
   }
 

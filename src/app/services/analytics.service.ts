@@ -173,4 +173,20 @@ export class AnalyticsService {
       buttonLocation: location,
     });
   }
+
+  logClickedStartTimer() {
+    logEvent(this.analytics, 'clicked_start_timer');
+  }
+
+  logClickedStopTimer() {
+    logEvent(this.analytics, 'clicked_stop_timer');
+  }
+
+  logClickedResetTimer() {
+    logEvent(this.analytics, 'clicked_reset_timer');
+  }
+
+  logClickedAddTimeToTimer() {
+    logEvent(this.analytics, 'clicked_add_time_to_timer');
+  }
 }

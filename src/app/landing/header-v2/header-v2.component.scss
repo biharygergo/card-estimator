@@ -11,7 +11,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
@@ -89,7 +89,7 @@ nav {
     margin-left: auto;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 800px) {
     .logo-container {
         img {
             height: 30px;

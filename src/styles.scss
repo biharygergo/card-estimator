@@ -10,7 +10,13 @@
 
   --text-on-white: #3F4759;
   --text-on-gray: #44474F;
+  --background-dark: #001A43;
 }
+
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;

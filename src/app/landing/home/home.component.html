@@ -1,5 +1,5 @@
 <section class="hero-header-section">
-<div class="hero-header">
+  <div class="hero-header">
     <div class="header-intro">
       <h1>
         Real-time online planning poker<br />
@@ -7,11 +7,15 @@
       </h1>
       <p>Better estimation sessions for the whole team.</p>
       <div>
-        <button mat-flat-button [routerLink]="'/create'" class="start-planning-btn">
-            Start Planning
-          </button>
+        <button
+          mat-flat-button
+          [routerLink]="'/create'"
+          class="start-planning-btn"
+        >
+          Start Planning
+        </button>
       </div>
-      
+
       <div class="used-by">
         Trusted by teams at hundreds of companies, including:
         <ul class="logo-list">
@@ -21,7 +25,44 @@
       </div>
     </div>
     <div class="header-cards">
-        <img src="/assets/header_cards.png" />
+      <img src="/assets/header_cards.png" />
+    </div>
+  </div>
+</section>
+<section class="features-section">
+  <div class="features-content">
+    <h2>All the features you need for a smooth planning session</h2>
+    <div class="features-grid">
+      <div class="feature-card wide">
+        <h3>Easy-to-use and accessible UI</h3>
+      </div>
+      <div class="feature-card">
+        <h3>Manage rounds and download results</h3>
+      </div>
+      <div class="feature-card">
+        <h3>Use any kind of card set</h3>
+        <img src="/assets/card_set.png" />
+      </div>
+      <div class="feature-card wide">
+        <h3>Available on the web and as a Zoom App</h3>
+        <img src="/assets/zoom_app.png" />
+      </div>
+    </div>
+  </div>
+</section>
+<section class="demo-video-section">
+  <div class="demo-video-section-content">
+    <h2>Create your room in seconds and customize it to your team</h2>
+    <div class="video-container">
+      <video #video loop muted (loadedmetadata)="video.muted = true">
+        <source
+          src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <button mat-fab color="primary" aria-label="Play demo video" (click)="video.play()" [class.hidden]="!video.paused">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
     </div>
   </div>
 </section>

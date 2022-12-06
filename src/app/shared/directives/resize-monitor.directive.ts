@@ -2,6 +2,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  Input,
   NgZone,
   OnDestroy,
   OnInit,
@@ -18,6 +19,7 @@ export interface ResizeEventData {
   selector: '[resizeMonitor]',
 })
 export class ResizeMonitorDirective implements OnInit, OnDestroy {
+  @Input() verticalSpacing: number;
   @Output() readonly onResized = new EventEmitter<ResizeEventData>();
 
   readonly onSizeChange = new Subject<ResizeEventData>();
@@ -51,7 +53,7 @@ export class ResizeMonitorDirective implements OnInit, OnDestroy {
         tap((data) => this.onResized.emit(data)),
         tap((data) => {
           (this.elementRef.nativeElement as HTMLDivElement).style.height =
-            data.height + 'px';
+            data.height + this.verticalSpacing + 'px';
         }),
         takeUntil(this.destroyed)
       )

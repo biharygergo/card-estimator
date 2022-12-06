@@ -24,7 +24,7 @@
     <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
   </ng-container>
   <ng-container *ngIf="pageMode | async; let pageMode">
-    <mat-card class="action-card" resizeMonitor>
+    <mat-card class="action-card" resizeMonitor [verticalSpacing]="50">
       <div class="transitioning-container" @delayedFadeAnimation>
         <ng-container *ngIf="pageMode === PageMode.CREATE">
           <ng-container *ngTemplateOutlet="create"></ng-container>

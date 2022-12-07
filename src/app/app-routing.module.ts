@@ -17,39 +17,38 @@ import { SessionHistoryPageComponent } from './session-history-page/session-hist
 const routes: Routes = [
   {
     path: '',
-    component: LandingComponent,
-    data: {
-      title: 'Planning Poker - Made for Remote Teams - SCRUM Poker',
-      disablePostfix: true,
-    },
-  },
-  {
-    path: 'landing-v2',
     component: WrapperComponent,
     children: [
-      {path: 'home', component: HomeComponent}
-    ]
-  },
-  {
-    path: 'features',
-    component: FeaturesComponent,
-    data: { title: 'Features' },
-  },
-  { path: 'faq', component: FaqComponent, data: { title: 'FAQ' } },
-  {
-    path: 'privacy',
-    component: PrivacyComponent,
-    data: { title: 'Privacy Policy' },
-  },
-  {
-    path: 'terms',
-    component: TermsComponent,
-    data: { title: 'Terms and Conditions' },
-  },
-  {
-    path: 'zoom',
-    component: ZoomComponent,
-    data: { title: 'Zoom Integration' },
+      {
+        path: '',
+        component: HomeComponent,
+        data: {
+          title: 'Planning Poker - Made for Remote Teams - SCRUM Poker',
+          disablePostfix: true,
+        },
+      },
+      {
+        path: 'features',
+        component: FeaturesComponent,
+        data: { title: 'Features' },
+      },
+      { path: 'faq', component: FaqComponent, data: { title: 'FAQ' } },
+      {
+        path: 'privacy',
+        component: PrivacyComponent,
+        data: { title: 'Privacy Policy' },
+      },
+      {
+        path: 'terms',
+        component: TermsComponent,
+        data: { title: 'Terms and Conditions' },
+      },
+      {
+        path: 'zoom',
+        component: ZoomComponent,
+        data: { title: 'Zoom Integration' },
+      },
+    ],
   },
   {
     path: 'join',
@@ -80,14 +79,6 @@ const routes: Routes = [
         data: { title: 'Active room' },
       },
     ],
-  },
-  {
-    path: ':roomId',
-    component: RoomComponent,
-    resolve: {
-      room: RoomResolver,
-    },
-    data: { title: 'Active room' },
   },
 ];
 

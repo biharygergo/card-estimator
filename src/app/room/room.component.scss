@@ -6,8 +6,17 @@
   right: 0;
 }
 
+@keyframes backgroundTransition {
+  100% {
+    background: var(--main-color);
+  }
+}
+
 .sidenav-content {
-  background: var(--main-color);
+  background: var(--background-dark);
+
+  animation: backgroundTransition 300ms;
+  animation-fill-mode: forwards;
 }
 
 .topics-sidenav {

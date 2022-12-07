@@ -15,21 +15,33 @@ nav {
     margin: 0 auto;
   }
 
-  .logo-container {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    img {
-      height: 36px;
-      width: 36px;
-      filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
-      border-radius: 6px;
+  a {
+    text-decoration: none;
+
+    &:hover {
+      .logo-container span {
+        color: #345ca8;
+      }
     }
 
-    span {
-      color: var(--text-on-white);
-      font-size: 1.2rem;
-      font-weight: bold;
+    .logo-container {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+
+      img {
+        height: 36px;
+        width: 36px;
+        filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
+        border-radius: 6px;
+      }
+
+      span {
+        color: var(--text-on-white);
+        font-size: 1.2rem;
+        font-weight: bold;
+        transition: color 300ms linear;
+      }
     }
   }
 
@@ -58,13 +70,13 @@ nav {
 
         transition: background 100ms linear;
         &:hover {
-            background: #D9E2FF;
+          background: #d9e2ff;
         }
 
         &.active {
-            background: #D9E2FF;
-            border: 1px solid #345CA8;
-            color: #345CA8;
+          background: #d9e2ff;
+          border: 1px solid #345ca8;
+          color: #345ca8;
         }
 
         .badge {
@@ -77,10 +89,8 @@ nav {
           padding: 1px 6px;
           border-radius: 40px;
         }
-
       }
     }
-
   }
 
   .mobile-nav-toggle {
@@ -91,22 +101,21 @@ nav {
 
   @media screen and (max-width: 800px) {
     .logo-container {
-        img {
-            height: 30px;
-            width: 30px;
-        } 
-        span {
-            font-size: 1rem;
-        }
+      img {
+        height: 30px;
+        width: 30px;
+      }
+      span {
+        font-size: 1rem;
+      }
     }
     .desktop-start-planning-link {
-        display: none;
+      display: none;
     }
     .mobile-nav-toggle {
       display: block;
       transition: transform 200ms ease-in-out;
     }
-
 
     &.open {
       ul {
@@ -115,7 +124,7 @@ nav {
 
       .mobile-nav-toggle {
         transform: rotate(90deg);
-        color: #345CA8;
+        color: #345ca8;
       }
     }
 

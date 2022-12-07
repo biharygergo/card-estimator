@@ -71,7 +71,7 @@
       </button>
     </div>
     <div class="steps-container">
-      <mat-tab-group>
+      <mat-tab-group dynamicHeight>
         <mat-tab label="Get ready"
           ><div class="step-content">
             <p>
@@ -107,6 +107,79 @@
           </div>
         </mat-tab>
       </mat-tab-group>
+    </div>
+  </div>
+</section>
+<section class="about-section">
+  <div class="about-section-content">
+    <div class="about-section-left">
+      <mat-accordion multi>
+        <mat-expansion-panel [expanded]="true" disabled hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> What is Planning Poker? </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            Planning poker, also called SCRUM poker or pointing poker, is a
+            consensus-based, gamified technique for estimating, mostly used to
+            estimate effort or relative size of development goals in software
+            development.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>How to play?</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            In planning poker, members of the group make estimates by playing
+            numbered cards face-down to the table, instead of speaking them
+            aloud. The cards are revealed, and the estimates are then discussed.
+            By hiding the figures in this way, the group can avoid the cognitive
+            bias of anchoring, where the first number spoken aloud sets a
+            precedent for subsequent estimates.
+          </p>
+          <p>
+            When played online, members are together in a real-time estimation
+            "room" or "session" and their cards are displayed on the screen. The
+            same rules are applied, but everything is more convenient and
+            automated.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>About this app</mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <div class="made-by">
+        <p>Developed & Designed by:</p>
+        <div class="authors">
+          <a
+            class="made-by-box"
+            href="https://github.com/biharygergo"
+            rel="noopener"
+            ><img
+              class="made-by-img"
+              src="/assets/gergely-bihary.png"
+              alt="A profile picture of Gergely Bihary"
+            />
+            Gergely Bihary</a
+          >
+          <a
+            class="made-by-box"
+            href="https://github.com/biharygergo"
+            rel="noopener"
+            ><img
+              class="made-by-img"
+              src="/assets/kristof_nagy.jpeg"
+              alt="A profile picture of Kristóf Nagy"
+            />
+            Kristóf Nagy</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="about-section-right">
+      <img src="/assets/meeting_table.png" />
     </div>
   </div>
 </section>

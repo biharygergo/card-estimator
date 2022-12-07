@@ -55,7 +55,7 @@
   .header-cards {
     flex: 1 1 50%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     img {
       width: 90%;
       min-width: 400px;
@@ -86,6 +86,10 @@
       .logo-list {
         justify-content: center;
       }
+    }
+
+    .header-cards {
+      justify-content: center;
     }
   }
 }
@@ -187,6 +191,7 @@
 
     .video-container {
       position: relative;
+      margin-bottom: 2rem;
 
       video {
         width: 100%;
@@ -199,10 +204,39 @@
         left: 50%;
         transform: translate(-50%, -50%);
 
+        background: white;
+        color: #18325d;
         &.hidden {
             display: none;
         }
       }
+    }
+  }
+
+  .steps-container {
+    display: flex;
+    justify-content: center;
+    color: #BFC6DC;
+
+    .mat-tab-label {
+      color: #BFC6DC;
+      font-size: 1.1rem;
+    }
+
+    .mat-tab-header-pagination-chevron {
+      border-color: #BFC6DC;
+    }
+
+    .mat-tab-header {
+      border-bottom: 1px solid #3F4759;
+    }
+
+    .step-content {
+      padding: 2rem 0;
+      color: #BFC6DC;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
     }
   }
 }

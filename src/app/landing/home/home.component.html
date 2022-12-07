@@ -60,9 +60,53 @@
           type="video/mp4"
         />
       </video>
-      <button mat-fab color="primary" aria-label="Play demo video" (click)="video.play()" [class.hidden]="!video.paused">
+      <button
+        mat-fab
+        color="primary"
+        aria-label="Play demo video"
+        (click)="video.play()"
+        [class.hidden]="!video.paused"
+      >
         <mat-icon>play_arrow</mat-icon>
       </button>
+    </div>
+    <div class="steps-container">
+      <mat-tab-group>
+        <mat-tab label="Get ready"
+          ><div class="step-content">
+            <p>
+              The team lead or SCRUM Master prepares the agenda for the meeting
+              and selects items from the backlog.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Create room and invite others"
+          ><div class="step-content">
+            <p>
+              The leader creates a room on planningpoker.live and invites
+              colleagues to join. Just copy the invite link to the clipboard and
+              send it to your colleagues.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Set cards and manage rounds"
+          ><div class="step-content">
+            <p>
+              You can discuss topics from the backlog ad-hoc or create the
+              agenda before the meeting starts in the topics sidebar.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Vote and find consensus"
+          ><div class="step-content">
+            <p>
+              Each member votes on the active topic and the leader reveals the
+              results. The group discusses the result and finds consensus. Use
+              the countdown timer to make sure everybody stays on time.
+            </p>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
     </div>
   </div>
 </section>

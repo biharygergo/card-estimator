@@ -7,7 +7,7 @@
   position: relative;
   overflow: hidden;
   padding: 24px 24px 0 24px;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   gap: 8px;
 
@@ -59,9 +59,10 @@
 
     img {
       width: 100%;
+      transform: scale(1.1);
       min-width: 400px;
       object-fit: contain;
-      margin-bottom: -40%;
+      margin-bottom: -25%;
     }
   }
 

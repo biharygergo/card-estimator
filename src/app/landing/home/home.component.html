@@ -54,7 +54,13 @@
   <div class="demo-video-section-content">
     <h2>Create your room in seconds and customize it to your team</h2>
     <div class="video-container">
-      <video #video loop muted (loadedmetadata)="video.muted = true">
+      <video
+        #video
+        loop
+        muted
+        (loadedmetadata)="video.muted = true"
+        [controls]="!video.paused"
+      >
         <source
           src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
           type="video/mp4"
@@ -76,7 +82,8 @@
           ><div class="step-content">
             <p>
               The team lead or SCRUM Master prepares the agenda for the meeting
-              and selects items from the backlog.
+              and selects items from the backlog. A planning session takes about
+              30 minutes to complete.
             </p>
           </div>
         </mat-tab>
@@ -84,25 +91,28 @@
           ><div class="step-content">
             <p>
               The leader creates a room on planningpoker.live and invites
-              colleagues to join. Just copy the invite link to the clipboard and
-              send it to your colleagues.
+              colleagues to join. Copy the invite link to the clipboard and send
+              it to your colleagues, they'll be able to join in seconds.
             </p>
           </div>
         </mat-tab>
         <mat-tab label="Set cards and manage rounds"
           ><div class="step-content">
             <p>
-              You can discuss topics from the backlog ad-hoc or create the
-              agenda before the meeting starts in the topics sidebar.
+              Discuss topics from the backlog ad-hoc or create the agenda before
+              the meeting starts in the topics sidebar. After the meeting, the
+              results can be downloaded or uploaded to your project-management
+              tool (ex.: JIRA).
             </p>
           </div>
         </mat-tab>
         <mat-tab label="Vote and find consensus"
           ><div class="step-content">
             <p>
-              Each member votes on the active topic and the leader reveals the
-              results. The group discusses the result and finds consensus. Use
-              the countdown timer to make sure everybody stays on time.
+              During the game, each team member votes on the active topic and
+              the leader reveals the results. The group discusses the result and
+              finds consensus. The countdown timer helps to make sure everybody
+              stays on time.
             </p>
           </div>
         </mat-tab>
@@ -140,14 +150,42 @@
           <p>
             When played online, members are together in a real-time estimation
             "room" or "session" and their cards are displayed on the screen. The
-            same rules are applied, but everything is more convenient and
-            automated.
+            same rules apply, but everything is more convenient and automated.
+          </p>
+          <p>
+            A planning poker session is usually around 30 minutes long, and is
+            lead by a SCRUM master or team-lead. The game allows each member to
+            contribute to project planning and encourages lively discussion.
+          </p>
+          <p>
+            The game can be played with different card sets which denote story
+            points or developer hours, depending on the team's taste. Card sets
+            can be configured when the game is started.
           </p>
         </mat-expansion-panel>
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>About this app</mat-panel-title>
           </mat-expansion-panel-header>
+          <p>
+            This is a free,
+            <a
+              href="https://github.com/biharygergo/card-estimator"
+              rel="noopener"
+              target="_blank"
+              >open-source</a
+            >
+            application developed as a hobby project. It is running on Google
+            Cloud servers hosted in the EU. The app is completely free to use,
+            with possible paid features coming in the future (if we have time to
+            develop them).
+          </p>
+          <p>
+            If you have any issues, concerns, feature ideas or you'd just like
+            to send someone an email, please message us at
+            <a href="mailto:info@planningpoker.live">info@planningpoker.live</a
+            >.
+          </p>
         </mat-expansion-panel>
       </mat-accordion>
       <div class="made-by">
@@ -166,7 +204,7 @@
           >
           <a
             class="made-by-box"
-            href="https://github.com/biharygergo"
+            href="https://www.kristofnagy.com/"
             rel="noopener"
             ><img
               class="made-by-img"

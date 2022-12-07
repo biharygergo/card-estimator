@@ -56,8 +56,9 @@
     flex: 1 1 50%;
     display: flex;
     justify-content: flex-end;
+
     img {
-      width: 90%;
+      width: 100%;
       min-width: 400px;
       object-fit: contain;
       margin-bottom: -40%;
@@ -307,6 +308,12 @@
         .mat-expansion-indicator::after {
           color: white;
         }
+
+        p {
+          a {
+            color: white;
+          }
+        }
       }
 
       .made-by {
@@ -319,9 +326,9 @@
         gap: 1rem;
 
         .made-by-box {
-          background: #D9E2FF;
+          background: #d9e2ff;
           border-radius: 6px;
-          color: #345CA8;
+          color: #345ca8;
           padding: 0.5rem 1rem;
           display: inline-flex;
           align-items: center;

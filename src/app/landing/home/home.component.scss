@@ -1,11 +1,12 @@
 .hero-header-section {
   background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
+  overflow: hidden;
+
 }
 
 .hero-header {
   display: flex;
   position: relative;
-  overflow: hidden;
   padding: 24px 24px 0 24px;
   max-width: 1000px;
   margin: 0 auto;
@@ -63,6 +64,7 @@
       min-width: 400px;
       object-fit: contain;
       margin-bottom: -25%;
+      margin-right: -20%;
     }
   }
 
@@ -92,6 +94,10 @@
 
     .header-cards {
       justify-content: center;
+
+      img {
+        margin-right: 0;
+      }
     }
   }
 }

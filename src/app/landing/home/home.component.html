@@ -25,7 +25,11 @@
       </div>
     </div>
     <div class="header-cards">
-      <img src="/assets/header_cards.png" />
+      <picture>
+        <source srcset="/assets/header_cards.webp" type="image/webp">
+        <source srcset="/assets/header_cards.png" type="image/jpeg"> 
+        <img src="/assets/header_cards.png" alt="Two cards with numbers">
+      </picture>
     </div>
   </div>
 </section>
@@ -35,17 +39,38 @@
     <div class="features-grid">
       <div class="feature-card wide">
         <h3>Easy-to-use and accessible UI</h3>
+        <picture>
+          <source srcset="/assets/easy_accessible.webp" type="image/webp">
+          <source srcset="/assets/easy_accessible.png" type="image/jpeg"> 
+          <img src="/assets/easy_accessible.png" alt="UI components laid out visually">
+        </picture>
       </div>
       <div class="feature-card">
         <h3>Manage rounds and download results</h3>
+        <picture>
+          <source srcset="/assets/topics.webp" type="image/webp">
+          <source srcset="/assets/topics.png" type="image/jpeg"> 
+          <img src="/assets/topics.png" alt="Two example JIRA topic cards">
+        </picture>
       </div>
       <div class="feature-card">
         <h3>Use any kind of card set</h3>
-        <img src="/assets/card_set.png" />
+        <picture>
+          <source srcset="/assets/card_set.webp" type="image/webp">
+          <source srcset="/assets/card_set.png" type="image/jpeg"> 
+          <img src="/assets/card_set.png" alt="An example planning poker card set">
+        </picture>
       </div>
       <div class="feature-card wide">
-        <h3>Available on the web and as a Zoom App</h3>
-        <img src="/assets/zoom_app.png" />
+        <h3>
+          Available on the web and<br />
+          as a Zoom App
+        </h3>
+        <picture>
+          <source srcset="/assets/zoom_app.webp" type="image/webp">
+          <source srcset="/assets/zoom_app.png" type="image/jpeg"> 
+          <img src="/assets/zoom_app.png" alt="The app running inside Zoom">
+        </picture>
       </div>
     </div>
   </div>
@@ -60,21 +85,27 @@
         muted
         (loadedmetadata)="video.muted = true"
         [controls]="!video.paused"
+        poster="/assets/video_poster.webp"
       >
         <source
           src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
           type="video/mp4"
         />
       </video>
-      <button
-        mat-fab
-        color="primary"
-        aria-label="Play demo video"
-        (click)="video.play()"
+      <div
+        class="start-video-overlay"
         [class.hidden]="!video.paused"
+        (click)="video.play()"
       >
-        <mat-icon>play_arrow</mat-icon>
-      </button>
+        <button
+          mat-fab
+          color="primary"
+          aria-label="Play demo video"
+          (click)="video.play()"
+        >
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      </div>
     </div>
     <div class="steps-container">
       <mat-tab-group dynamicHeight>
@@ -218,7 +249,11 @@
       </div>
     </div>
     <div class="about-section-right">
-      <img src="/assets/meeting_table.png" />
+      <picture>
+        <source srcset="/assets/meeting_table.webp" type="image/webp">
+        <source srcset="/assets/meeting_table.png" type="image/jpeg"> 
+        <img src="/assets/meeting_table.png" alt="People having a meeting around a table">
+      </picture>
     </div>
   </div>
 </section>

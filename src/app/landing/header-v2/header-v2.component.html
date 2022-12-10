@@ -2,7 +2,11 @@
   <div class="header-container">
     <a routerLink="/">
       <div class="logo-container">
-        <img src="/assets/logo.png" alt="Planning Poker logo" />
+        <picture>
+          <source srcset="/assets/logo.webp" type="image/webp" />
+          <source srcset="/assets/logo.png" type="image/png" />
+          <img src="/assets/logo.png" alt="Planning Poker logo" />
+        </picture>
         <span>Planning Poker</span>
       </div>
     </a>

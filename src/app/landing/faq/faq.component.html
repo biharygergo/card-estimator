@@ -1,8 +1,10 @@
 <app-page-header title="FAQ"></app-page-header>
 <main>
-  <app-faq-row
-    *ngFor="let faq of faqs"
-    [question]="faq.question"
-    [answer]="faq.answer"
-  ></app-faq-row>
+  <div class="faq-rows">
+    <app-faq-row
+      *ngFor="let faq of faqs"
+      [question]="faq.question"
+      [answer]="faq.answer"
+    ></app-faq-row>
+  </div>
 </main>

@@ -1,148 +1,152 @@
 <app-page-header title="Zoom Integration"></app-page-header>
 <main>
-  <section class="hero-section">
-    <div class="hero-text">
-      <h1>Planning Poker is now available within Zoom!</h1>
-      <p>
-        Use the Zoom integration to easily share planning poker sessions with
-        your team. You don't even need to leave your Zoom meeting to have the
-        same great planning experience as before.
-      </p>
-      <div class="cta">
-        <a
-          mat-raised-button
-          color="primary"
-          href="https://planningpoker.live/api/installZoomApp"
-          class="install-btn"
-          >Install in Zoom</a
-        >
-      </div>
-    </div>
-    <div class="hero-video">
-      <video
-        #video
-        autoplay
-        loop
-        muted
-        playsinline
-        (canplay)="video.play()"
-        (loadedmetadata)="video.muted = true"
-      >
-        <source
-          src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation.mp4"
-          type="video/mp4"
-        />
-      </video>
-    </div>
-  </section>
-  <h2 class="section-title">How does it work?</h2>
-  <section class="instructions">
-    <div class="instruction">
-      <div class="instruction-text">
-        <h3 id="howto">1. Install the app in Zoom</h3>
+  <div class="main-content">
+    <section class="hero-section">
+      <div class="hero-text">
+        <h1>Planning Poker is now available within Zoom!</h1>
         <p>
-          To add the app to your Zoom account, click the "Install" button above
-          or install the app from Zoom Marketplace. You'll need to grant basic
-          permissions for the app to appear inside your meeting.
+          Use the Zoom integration to easily share planning poker sessions with
+          your team. You don't even need to leave your Zoom meeting to have the
+          same great planning experience as before.
         </p>
-      </div>
-      <div class="instruction-image">
-        <img
-          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_1.png"
-          alt="Permissions screen when adding the app to Zoom"
-        />
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-text">
-        <h3>2. Open the app inside Zoom</h3>
-        <p>
-          Once the app is installed, you can open it from the "Apps" menu in
-          Zoom. The app will appear in the side-panel of your meeting.
-        </p>
-      </div>
-      <div class="instruction-image">
-        <img
-          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_2.png"
-          alt="Apps screen inside Zoom"
-        />
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-text">
-        <h3>3. Invite your colleagues in the meeting</h3>
-        <p>
-          After you've created a planning poker session, just click "Invite
-          others" and a personalized invitation will be sent to everyone in the
-          meeting.
-        </p>
-      </div>
-      <div class="instruction-image">
-        <img
-          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_3.png"
-          alt="The app is running inside Zoom"
-        />
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-text">
-        <h3>4. Estimate projects together, in real-time</h3>
-        <p>
-          Once you are all in the same meeting and the app is open for everyone,
-          you can start planning your project. Set a topic by clicking "Edit"
-          next to "Topic of Round #1" and decide which card set you want to use.
-        </p>
-        <p>
-          Each member votes on their own, and once all votes are cast the leader
-          presses "Reveal Votes" to reveal all votes. To start the next round,
-          click "New Round" (or "Next Round", if you've set the topics
-          beforehand from the sidebar) The team continues this process until all
-          topics have been voted on.
-        </p>
-      </div>
-      <div class="instruction-image">
-        <img
-          src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_4.png"
-          alt="An ongoing planning session with participants in Zoom"
-        />
-      </div>
-    </div>
-    <mat-divider></mat-divider>
-    <div class="instruction">
-      <div class="instruction-text">
-        <h4 id="uninstall">Uninstalling the App</h4>
-        <p>
-          If you wish to uninstall the App, go to the
-          <a href="https://marketplace.zoom.us/user/installed"
-            >installed apps section on Zoom Marketplace</a
-          >
-          and click Uninstall next to "Planning Poker".
-        </p>
-      </div>
-    </div>
-    <div class="instruction">
-      <div class="instruction-text">
-        <h4 id="support">Getting Support and Reporting Bugs</h4>
-        <p>
-          Are you stuck on a question or issue with the app? Check out the
-          <a routerLink="/faq">Frequently Asked Questions</a>, maybe your query
-          already has an answer.
-        </p>
-        <p>
-          If you need additional support or have found a bug, please open a
-          ticket here
+        <div class="cta">
           <a
-            href="https://github.com/biharygergo/card-estimator/issues"
-            rel="noopener"
-            >on GitHub</a
+            mat-raised-button
+            color="primary"
+            href="https://planningpoker.live/api/installZoomApp"
+            class="install-btn"
+            >Install in Zoom</a
           >
-          and our developers will try to help as fast as possible. We try
-          respond to tickets within 24 hours. If you need immediate assistance,
-          please contact us at
-          <a href="mailto:hello@planningpoker.live">hello@planningpoker.live</a
-          >.
-        </p>
+        </div>
       </div>
-    </div>
-  </section>
+      <div class="hero-video">
+        <video
+          #video
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="video.play()"
+          (loadedmetadata)="video.muted = true"
+        >
+          <source
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+    </section>
+    <h2 class="section-title">How does it work?</h2>
+    <section class="instructions">
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3 id="howto">1. Install the app in Zoom</h3>
+          <p>
+            To add the app to your Zoom account, click the "Install" button
+            above or install the app from Zoom Marketplace. You'll need to grant
+            basic permissions for the app to appear inside your meeting.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_1.png"
+            alt="Permissions screen when adding the app to Zoom"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3>2. Open the app inside Zoom</h3>
+          <p>
+            Once the app is installed, you can open it from the "Apps" menu in
+            Zoom. The app will appear in the side-panel of your meeting.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_2.png"
+            alt="Apps screen inside Zoom"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3>3. Invite your colleagues in the meeting</h3>
+          <p>
+            After you've created a planning poker session, just click "Invite
+            others" and a personalized invitation will be sent to everyone in
+            the meeting.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_3.png"
+            alt="The app is running inside Zoom"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3>4. Estimate projects together, in real-time</h3>
+          <p>
+            Once you are all in the same meeting and the app is open for
+            everyone, you can start planning your project. Set a topic by
+            clicking "Edit" next to "Topic of Round #1" and decide which card
+            set you want to use.
+          </p>
+          <p>
+            Each member votes on their own, and once all votes are cast the
+            leader presses "Reveal Votes" to reveal all votes. To start the next
+            round, click "New Round" (or "Next Round", if you've set the topics
+            beforehand from the sidebar) The team continues this process until
+            all topics have been voted on.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_4.png"
+            alt="An ongoing planning session with participants in Zoom"
+          />
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h4 id="uninstall">Uninstalling the App</h4>
+          <p>
+            If you wish to uninstall the App, go to the
+            <a href="https://marketplace.zoom.us/user/installed"
+              >installed apps section on Zoom Marketplace</a
+            >
+            and click Uninstall next to "Planning Poker".
+          </p>
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h4 id="support">Getting Support and Reporting Bugs</h4>
+          <p>
+            Are you stuck on a question or issue with the app? Check out the
+            <a routerLink="/faq">Frequently Asked Questions</a>, maybe your
+            query already has an answer.
+          </p>
+          <p>
+            If you need additional support or have found a bug, please open a
+            ticket here
+            <a
+              href="https://github.com/biharygergo/card-estimator/issues"
+              rel="noopener"
+              >on GitHub</a
+            >
+            and our developers will try to help as fast as possible. We try
+            respond to tickets within 24 hours. If you need immediate
+            assistance, please contact us at
+            <a href="mailto:hello@planningpoker.live"
+              >hello@planningpoker.live</a
+            >.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
 </main>

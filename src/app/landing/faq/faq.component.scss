@@ -1,6 +1,9 @@
 main {
     padding: 50px 10%;
-    max-width: 1500px;
-    margin: 0 auto;
     background: white;
+
+    .faq-rows {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 }

@@ -58,6 +58,11 @@ const faqs: FaqRow[] = [
       'In the "Manage Rounds" section, click on the menu icon "..." on the round you\'d like to restart and click "Revote". This will clear previous votes and set the round as the currently active one.',
   },
   {
+    question: 'How can I start a countdown timer?',
+    answer:
+      'The countdown timer is located in the right column of the app, under the main game buttons. To start a 30 second timer, just press "Start". If you wish to set a longer timer, press "+30s", which will add 30 seconds to the timer. You can pause and reset the timer once it has started. The timer will automatically start for all members of the room.',
+  },
+  {
     question: 'How can I contribute to the development of this app?',
     answer:
       'Open the <a href="https://github.com/biharygergo/card-estimator" target="_blank">repository</a> of this project, give it a star, fork it and add a new feature!',

@@ -6,3 +6,18 @@
         padding-top: 48px;
     }
 }
+
+.footer {
+    padding: 2rem 1rem;
+
+    .links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+
+        a {
+            color: #d9e2ff;
+            text-decoration: none;
+        }
+    }
+}

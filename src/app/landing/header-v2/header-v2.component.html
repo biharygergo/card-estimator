@@ -1,6 +1,6 @@
 <nav [ngClass]="{ open: isOpen }">
   <div class="header-container">
-    <a routerLink="/">
+    <a routerLink="/" (click)="closeMenu()">
       <div class="logo-container">
         <picture>
           <source srcset="/assets/logo.webp" type="image/webp" />
@@ -16,17 +16,25 @@
           routerLink="/"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMenu()"
           >Home</a
         >
       </li>
       <li>
-        <a routerLink="/features" routerLinkActive="active">Features</a>
+        <a
+          routerLink="/features"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          >Features</a
+        >
       </li>
       <li>
-        <a routerLink="/faq" routerLinkActive="active">FAQ</a>
+        <a routerLink="/faq" routerLinkActive="active" (click)="closeMenu()"
+          >FAQ</a
+        >
       </li>
       <li>
-        <a routerLink="/zoom" routerLinkActive="active"
+        <a routerLink="/zoom" routerLinkActive="active" (click)="closeMenu()"
           >Zoom<span class="badge">New</span></a
         >
       </li>

@@ -18,4 +18,8 @@ export class HeaderV2Component implements OnInit {
     this.isOpen = !this.isOpen;
   }
 
+  closeMenu() {
+    this.isOpen = false;
+  }
+
 }

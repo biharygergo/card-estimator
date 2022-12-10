@@ -57,12 +57,17 @@
     display: flex;
     justify-content: flex-end;
 
+    picture {
+      margin-bottom: -25%;
+      margin-right: -20%;
+    }
+
     img {
+      transform: scale(1.05);
       width: 100%;
       min-width: 400px;
       object-fit: contain;
-      margin-bottom: -25%;
-      margin-right: -20%;
+      
     }
   }
 
@@ -76,7 +81,7 @@
       text-align: center;
 
       h1 {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
         line-height: 1.7rem;
       }
       .start-planning-btn {
@@ -93,7 +98,7 @@
     .header-cards {
       justify-content: center;
 
-      img {
+      picture {
         margin-right: 0;
       }
     }
@@ -159,9 +164,6 @@
 
   @media screen and (max-width: 800px) {
     .features-content {
-      h2 {
-        font-size: 1.1rem;
-      }
 
       .features-grid {
         gap: 16px;
@@ -356,6 +358,7 @@
 
       .authors {
         display: flex;
+        flex-wrap: wrap;
         gap: 1rem;
 
         .made-by-box {
@@ -409,6 +412,14 @@
       .about-section-left {
         flex: 1 1 100%;
         order: 2;
+
+        .mat-expansion-panel {
+          .mat-expansion-panel-header-title {
+            font-size: 1.2rem;
+            line-height: 1.2rem;
+          }
+        }
+        
       }
 
       .about-section-right {

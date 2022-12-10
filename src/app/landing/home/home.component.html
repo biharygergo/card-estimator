@@ -1,0 +1,283 @@
+<section class="hero-header-section">
+  <div class="hero-header">
+    <div class="header-intro">
+      <h1>
+        Real-time online planning poker<br />
+        for remote scrum teams
+      </h1>
+      <p>Better estimation sessions for the whole team.</p>
+      <div>
+        <button
+          mat-flat-button
+          [routerLink]="'/create'"
+          class="start-planning-btn"
+        >
+          Start Planning
+        </button>
+      </div>
+
+      <div class="used-by">
+        Trusted by teams at hundreds of companies, including:
+        <ul class="logo-list">
+          <li>
+            <img src="/assets/logos/google_logo.webp" alt="Google logo" />
+          </li>
+          <li>
+            <img src="/assets/logos/netflix_logo.webp" alt="Netflix logo" />
+          </li>
+          <li><img src="/assets/logos/prezi_logo.webp" alt="Prezi logo" /></li>
+        </ul>
+      </div>
+    </div>
+    <div class="header-cards">
+      <picture>
+        <source srcset="/assets/header_cards.webp" type="image/webp" />
+        <source srcset="/assets/header_cards.jpeg" type="image/jpeg" />
+        <img src="/assets/header_cards.jpeg" alt="Two cards with numbers" />
+      </picture>
+    </div>
+  </div>
+</section>
+<section class="features-section">
+  <div class="features-content">
+    <h2>Essential features for a smooth planning session</h2>
+    <div class="features-grid">
+      <div class="feature-card wide">
+        <h3>Easy-to-use and accessible UI</h3>
+        <picture>
+          <source srcset="/assets/easy_accessible.webp" type="image/webp" />
+          <source srcset="/assets/easy_accessible.jpeg" type="image/jpeg" />
+          <img
+            src="/assets/easy_accessible.jpeg"
+            alt="UI components laid out visually"
+          />
+        </picture>
+      </div>
+      <div class="feature-card">
+        <h3>Simple round management and exports</h3>
+        <picture>
+          <source srcset="/assets/topics.webp" type="image/webp" />
+          <source srcset="/assets/topics.jpeg" type="image/jpeg" />
+          <img src="/assets/topics.jpeg" alt="Two example JIRA topic cards" />
+        </picture>
+      </div>
+      <div class="feature-card">
+        <h3>Customizable card sets</h3>
+        <picture>
+          <source srcset="/assets/card_set.webp" type="image/webp" />
+          <source srcset="/assets/card_set.jpeg" type="image/jpeg" />
+          <img
+            src="/assets/card_set.jpeg"
+            alt="An example planning poker card set"
+          />
+        </picture>
+      </div>
+      <div class="feature-card wide">
+        <h3>
+          Available on the web<br />
+          and in Zoom
+        </h3>
+        <picture>
+          <source srcset="/assets/zoom_app.webp" type="image/webp" />
+          <source srcset="/assets/zoom_app.jpeg" type="image/jpeg" />
+          <img src="/assets/zoom_app.jpeg" alt="The app running inside Zoom" />
+        </picture>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="demo-video-section">
+  <div class="demo-video-section-content">
+    <h2>Get started in seconds and have the whole team involved</h2>
+    <div class="video-container">
+      <video
+        #video
+        loop
+        muted
+        (loadedmetadata)="video.muted = true"
+        [controls]="!video.paused"
+        poster="/assets/video_poster.webp"
+      >
+        <source
+          src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <div
+        class="start-video-overlay"
+        [class.hidden]="!video.paused"
+        (click)="video.play()"
+      >
+        <button
+          mat-fab
+          color="primary"
+          aria-label="Play demo video"
+          (click)="video.play()"
+        >
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="steps-container">
+      <mat-tab-group dynamicHeight>
+        <mat-tab label="Get ready"
+          ><div class="step-content">
+            <p>
+              The team lead or SCRUM Master prepares the agenda for the meeting
+              and selects items from the backlog. A planning session takes about
+              30 minutes to complete.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Create room & invite others"
+          ><div class="step-content">
+            <p>
+              First, the leader creates a room on planningpoker.live then they
+              copy the invitation link and send it to the team to join.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Set cards & manage rounds"
+          ><div class="step-content">
+            <p>
+              Discuss tickets on the spot or create the agenda beforehand using
+              the topic sidebar. Use the default card set, Fibonacci or create a
+              completely custom one. The results of the meeting can be
+              downloaded as a .csv or uploaded to your project-management tool
+              like JIRA.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Vote & find consensus"
+          ><div class="step-content">
+            <p>
+              During the game, each team member votes on the active topic and
+              the leader reveals the results. The group discusses the result and
+              finds consensus. The countdown timer helps to make sure everybody
+              stays on time.
+            </p>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</section>
+<section class="about-section">
+  <div class="about-section-content">
+    <div class="about-section-left">
+      <mat-accordion multi>
+        <mat-expansion-panel [expanded]="true" disabled hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> What is Planning Poker? </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            Planning poker, also called SCRUM poker or pointing poker, is a
+            consensus-based, gamified technique for estimating, mostly used to
+            estimate effort or relative size of development goals in software
+            development.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>How to play?</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            In planning poker, members of the group make estimates by playing
+            numbered cards face-down to the table, instead of speaking them
+            aloud. The cards are revealed, and the estimates are then discussed.
+            By hiding the figures in this way, the group can avoid the cognitive
+            bias of anchoring, where the first number spoken aloud sets a
+            precedent for subsequent estimates.
+          </p>
+          <p>
+            When played online, members are together in a real-time estimation
+            "room" or "session" and their cards are displayed on the screen. The
+            same rules apply, but everything is more convenient and automated.
+          </p>
+          <p>
+            A planning poker session is usually around 30 minutes, and is lead
+            by a SCRUM master or team-lead. The game allows each member to
+            contribute to project planning and encourages lively discussions.
+          </p>
+          <p>
+            The game can be played with different card sets which denote story
+            points or developer hours, depending on the team's taste. Card sets
+            can be configured when the game starts.
+          </p>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>About this app</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>
+            This is a free,
+            <a
+              href="https://github.com/biharygergo/card-estimator"
+              rel="noopener"
+              target="_blank"
+              >open-source</a
+            >
+            application developed as a hobby project. It is running on Google
+            Cloud servers hosted in the EU. The app is completely free to use,
+            with possible paid features coming in the future (if we have time to
+            develop them).
+          </p>
+          <p>
+            If you have any issues, concerns, feature ideas or you'd just like
+            to send someone an email, please message us at
+            <a href="mailto:info@planningpoker.live">info@planningpoker.live</a
+            >.
+          </p>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <div class="made-by">
+        <p>Developed & Designed by:</p>
+        <div class="authors">
+          <a
+            class="made-by-box"
+            href="https://gergelybihary.com"
+            rel="noopener"
+            target="_blank"
+          >
+            <picture>
+              <source srcset="/assets/gergely-bihary.webp" type="image/webp" />
+              <source srcset="/assets/gergely-bihary.jpeg" type="image/jpeg" />
+              <img
+                src="/assets/gergely-bihary.jpeg"
+                alt="A profile picture of Gergely Bihary"
+              />
+            </picture>
+
+            Gergely Bihary</a
+          >
+          <a
+            class="made-by-box"
+            href="https://www.kristofnagy.com/"
+            rel="noopener"
+            target="_blank"
+          >
+            <picture>
+              <source srcset="/assets/kristof_nagy.webp" type="image/webp" />
+              <source srcset="/assets/kristof_nagy.jpeg" type="image/jpeg" />
+              <img
+                src="/assets/kristof_nagy.jpeg"
+                alt="A profile picture of Kristóf Nagy"
+              />
+            </picture>
+            Kristóf Nagy</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="about-section-right">
+      <picture>
+        <source srcset="/assets/meeting_table.webp" type="image/webp" />
+        <source srcset="/assets/meeting_table.jpeg" type="image/jpeg" />
+        <img
+          src="/assets/meeting_table.jpeg"
+          alt="People having a meeting around a table"
+        />
+      </picture>
+    </div>
+  </div>
+</section>

@@ -7,15 +7,25 @@
   --main-light-color: #2a479b;
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
+
+  --text-on-white: #3F4759;
+  --text-on-gray: #44474F;
+  --background-dark: #001A43;
 }
+
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: var(--main-color);
+  background: var(--background-dark);
+
 }
 
 .mat-menu-panel {

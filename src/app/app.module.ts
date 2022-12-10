@@ -93,6 +93,9 @@ import { AnonymousUserBannerComponent } from './shared/anonymous-user-banner/ano
 import { SupportedPhotoUrlPipe } from './shared/supported-photo-url.pipe';
 import { AuthProgressDialogComponent } from './shared/auth-progress-dialog/auth-progress-dialog.component';
 import { CountdownTimerComponent } from './room/countdown-timer/countdown-timer.component';
+import { HeaderV2Component } from './landing/header-v2/header-v2.component';
+import { HomeComponent } from './landing/home/home.component';
+import { WrapperComponent } from './landing/wrapper/wrapper.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -162,6 +165,9 @@ function loadAppConfig(): Promise<any> {
     SupportedPhotoUrlPipe,
     AuthProgressDialogComponent,
     CountdownTimerComponent,
+    HeaderV2Component,
+    HomeComponent,
+    WrapperComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

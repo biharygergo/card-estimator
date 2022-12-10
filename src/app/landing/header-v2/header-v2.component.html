@@ -1,0 +1,50 @@
+<nav [ngClass]="{ open: isOpen }">
+  <div class="header-container">
+    <a routerLink="/">
+      <div class="logo-container">
+        <picture>
+          <source srcset="/assets/logo.webp" type="image/webp" />
+          <source srcset="/assets/logo.png" type="image/png" />
+          <img src="/assets/logo.png" alt="Planning Poker logo" />
+        </picture>
+        <span>Planning Poker</span>
+      </div>
+    </a>
+    <ul>
+      <li>
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Home</a
+        >
+      </li>
+      <li>
+        <a routerLink="/features" routerLinkActive="active">Features</a>
+      </li>
+      <li>
+        <a routerLink="/faq" routerLinkActive="active">FAQ</a>
+      </li>
+      <li>
+        <a routerLink="/zoom" routerLinkActive="active"
+          >Zoom<span class="badge">New</span></a
+        >
+      </li>
+    </ul>
+    <a
+      mat-flat-button
+      color="primary"
+      routerLink="/create"
+      class="desktop-start-planning-link"
+      >Start Planning</a
+    >
+    <button
+      mat-icon-button
+      aria-label="Toggle navigation menu"
+      class="mobile-nav-toggle"
+      (click)="toggleMenu()"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</nav>

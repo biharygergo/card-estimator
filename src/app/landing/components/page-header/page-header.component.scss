@@ -8,4 +8,8 @@ header {
       text-align: center;
       font-weight: 300;
     }
+
+    @media screen and (max-width: 800px) {
+      background: linear-gradient(180deg, #345ca8 30.32%, #80c2f2 100%);
+    }
   }

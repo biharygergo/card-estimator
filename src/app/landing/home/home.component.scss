@@ -1,6 +1,10 @@
 .hero-header-section {
   background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
   overflow: hidden;
+
+  @media screen and (max-width: 800px) {
+    background: linear-gradient(180deg, #345ca8 30.32%, #80c2f2 100%);
+  }
 }
 
 .hero-header {
@@ -58,7 +62,7 @@
     justify-content: flex-end;
 
     picture {
-      margin-bottom: -25%;
+      margin-bottom: -30%;
       margin-right: -20%;
     }
 

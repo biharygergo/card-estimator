@@ -78,6 +78,14 @@
     <button mat-flat-button cdkFocusInitial mat-dialog-close>Close</button>
     <button
       mat-button
+      color="warn"
+      (click)="signOut()"
+      *ngIf="selectedTabIndex === 0 && user && !user?.isAnonymous"
+    >
+      Sign out
+    </button>
+    <button
+      mat-button
       (click)="randomizeAvatars()"
       color="primary"
       *ngIf="selectedTabIndex === 1"

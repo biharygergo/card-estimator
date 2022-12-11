@@ -61,8 +61,8 @@ export class AnonymousUserBannerComponent implements OnInit {
             );
             await this.zoomApiService.openUrl(
               this.authService.getApiAuthUrl(
-                AuthIntent.LINK_ACCOUNT,
-                this.activatedRoute.snapshot.toString()
+                AuthIntent.LINK_ACCOUNT
+                // this.activatedRoute.snapshot.toString()
               ),
               true
             );

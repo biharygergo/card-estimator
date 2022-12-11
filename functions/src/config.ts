@@ -15,6 +15,12 @@ export function getHost(req: functions.Request) {
   return `${protocol}${host}` ?? "https://planningpoker.live";
 }
 
-export function isRunningInEmulator() {
-  return process.env.FUNCTIONS_EMULATOR === "true";
+export function isRunningInDevMode(req: functions.Request) {
+  const host = req.headers["x-forwarded-host"] as string;
+  const isDev =
+    process.env.FUNCTIONS_EMULATOR === "true" ||
+    host.includes("localhost") ||
+    host.includes("staging.planningpoker.live") ||
+    host.includes("ngrok");
+  return isDev;
 }

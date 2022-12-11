@@ -1,14 +1,18 @@
 {
+  "projects": {
+    "default": "card-estimator"
+  },
   "targets": {
     "card-estimator": {
       "hosting": {
         "estimator": [
           "card-estimator"
+        ],
+        "staging": [
+          "staging-planning-poker-live"
         ]
       }
     }
   },
-  "projects": {
-    "default": "card-estimator"
-  }
+  "etags": {}
 }

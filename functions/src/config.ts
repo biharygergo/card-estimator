@@ -10,11 +10,17 @@ export const appConfig = {
 };
 
 export function getHost(req: functions.Request) {
-  const devHost =
-    req.cookies?.devHostOverride ?? "https://b59a-80-99-77-114.eu.ngrok.io";
-  return isRunningInEmulator() ? devHost : "https://planningpoker.live";
+  const host = req.headers["x-forwarded-host"] as string;
+  const protocol = host.startsWith("localhost") ? "http://" : "https://";
+  return `${protocol}${host}` ?? "https://planningpoker.live";
 }
 
-export function isRunningInEmulator() {
-  return process.env.FUNCTIONS_EMULATOR === "true";
+export function isRunningInDevMode(req: functions.Request) {
+  const host = req.headers["x-forwarded-host"] as string;
+  const isDev =
+    process.env.FUNCTIONS_EMULATOR === "true" ||
+    host.includes("localhost") ||
+    host.includes("staging.planningpoker.live") ||
+    host.includes("ngrok");
+  return isDev;
 }

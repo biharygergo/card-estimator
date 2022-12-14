@@ -1,12 +1,23 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import {
   AuthIntent,
   AuthService,
   ParsedSessionCookie,
 } from 'src/app/services/auth.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
-import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { FirebaseError } from '@angular/fire/app';
 import { Router } from '@angular/router';
 
@@ -34,6 +45,11 @@ export const authProgressDialogCreator = (
   },
 ];
 
+enum AuthAction {
+  SIGN_IN,
+  LINK_ACCOUNT,
+}
+
 @Component({
   selector: 'app-auth-progress-dialog',
   templateUrl: './auth-progress-dialog.component.html',
@@ -41,6 +57,9 @@ export const authProgressDialogCreator = (
 })
 export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   state = new BehaviorSubject<AuthProgressState>(AuthProgressState.IN_PROGRESS);
+  authIntent = new Subject<AuthIntent>();
+  sessionCookie: ParsedSessionCookie | undefined;
+
   returnPath: string | undefined;
   hasAction: boolean = false;
 
@@ -49,6 +68,22 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   readonly AuthProgressState = AuthProgressState;
 
   private readonly destroy = new Subject<void>();
+
+  onAuthAction: Observable<AuthAction | undefined> = combineLatest([
+    this.authService.user,
+    this.authIntent,
+  ]).pipe(
+    map(([user, authIntent]) => {
+      if (authIntent === AuthIntent.SIGN_IN) {
+        return AuthAction.SIGN_IN;
+      } else if (user && authIntent === AuthIntent.LINK_ACCOUNT) {
+        return AuthAction.LINK_ACCOUNT;
+      }
+
+      return undefined;
+    }),
+    takeUntil(this.destroy)
+  );
 
   constructor(
     private readonly authService: AuthService,
@@ -67,23 +102,16 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
     });
 
     if (this.dialogData.startAccountSetupOnOpen) {
+      this.onAuthAction.subscribe((authAction) =>
+        this.handleAuthAction(authAction)
+      );
       try {
-        const sessionCookie =
+        this.sessionCookie =
           this.authService.getSessionCookie() as ParsedSessionCookie;
         this.authService.clearSessionCookie();
-        this.returnPath = sessionCookie.returnToPath;
-        if (sessionCookie.authIntent === AuthIntent.LINK_ACCOUNT) {
-          await this.authService.linkAccountWithGoogle(sessionCookie.idToken);
-        } else {
-          await this.authService.signInWithGoogle(sessionCookie.idToken);
-        }
+        this.returnPath = this.sessionCookie.returnToPath;
+        this.authIntent.next(this.sessionCookie.authIntent);
       } catch (e) {
-        if (
-          (e as FirebaseError)?.code ===
-          'auth/account-exists-with-different-credential'
-        ) {
-          this.state.next(AuthProgressState.ACCOUNT_EXISTS);
-        }
         this.state.next(AuthProgressState.ERROR);
         this.errorMessage = e.message;
       }
@@ -93,6 +121,34 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  async handleAuthAction(authAction: AuthAction) {
+    if (authAction === undefined) {
+      return;
+    }
+
+    try {
+      if (authAction === AuthAction.LINK_ACCOUNT) {
+        await this.authService.linkAccountWithGoogle(
+          this.sessionCookie.idToken
+        );
+      } else if (authAction === AuthAction.SIGN_IN) {
+        await this.authService.signInWithGoogle(this.sessionCookie.idToken);
+      }
+      this.state.next(AuthProgressState.SUCCESS);
+    } catch (e) {
+      if (
+        (e as FirebaseError)?.code ===
+          'auth/account-exists-with-different-credential' ||
+        (e as FirebaseError)?.code === 'auth/credential-already-in-use'
+      ) {
+        this.state.next(AuthProgressState.ACCOUNT_EXISTS);
+      } else {
+        this.state.next(AuthProgressState.ERROR);
+      }
+      this.errorMessage = e.message;
+    }
   }
 
   returnToPrevious() {

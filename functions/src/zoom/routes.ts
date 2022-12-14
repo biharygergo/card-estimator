@@ -8,7 +8,7 @@ import {
 } from "./zoomApi";
 import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
-import {getHost, isRunningInEmulator} from "../config";
+import {getHost, isRunningInDevMode} from "../config";
 import {AUTH_SESSIONS} from "../shared/collections";
 
 export const getSessionVariable = (
@@ -28,7 +28,7 @@ export const zoomHome = async (
   const host = getHost(req);
   try {
     const header = req.header(contextHeader);
-    const isDev = isRunningInEmulator();
+    const isDev = isRunningInDevMode(req);
     const appContext = getAppContext(header as string, isDev);
     const isZoom = header && appContext;
 
@@ -75,7 +75,7 @@ export const installZoomApp = (
     req: functions.Request,
     res: functions.Response
 ): void => {
-  const isDev = isRunningInEmulator();
+  const isDev = isRunningInDevMode(req);
   const {url, verifier} = getInstallURL(isDev, req);
   setSessionVariable(res, verifier);
   return res.redirect(url.href);
@@ -94,7 +94,7 @@ export const authorizeZoomApp = async (
     }
 
     const code = req.query.code as string;
-    const isDev = isRunningInEmulator();
+    const isDev = isRunningInDevMode(req);
 
     // get Access Token from Zoom
     const {access_token: accessToken} = await getToken(
@@ -135,7 +135,7 @@ export const inClientOnAuthorized = async (
     res: functions.Response
 ) => {
   const verifier = getSessionVariable(req, res);
-  const isDev = isRunningInEmulator();
+  const isDev = isRunningInDevMode(req);
   const zoomAuthorizationCode = req.body.code;
 
   // get Access Token from Zoom

@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -69,6 +69,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private analytics: AnalyticsService,
     private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<AvatarSelectorModalComponent>,
     @Inject(MAT_DIALOG_DATA) private dialogData: AvatarDialogData
   ) {}
 
@@ -133,5 +134,10 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       this.user?.displayName !== this.displayNameForm.value &&
       this.displayNameForm.value
     );
+  }
+
+  signOut() {
+    this.auth.signOut();
+    this.dialogRef.close();
   }
 }

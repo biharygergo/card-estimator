@@ -2,7 +2,7 @@ import axios from "axios";
 import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
 
-import {getHost, isRunningInEmulator} from "../config";
+import {getHost, isRunningInDevMode} from "../config";
 import {getSessionVariable} from "./routes";
 import {
   getDeeplink,
@@ -50,7 +50,7 @@ export async function startGoogleOauthFlow(
     req: functions.Request,
     res: functions.Response
 ) {
-  const isDev = isRunningInEmulator();
+  const isDev = isRunningInDevMode(req);
 
   const {url, verifier} = getInstallURL(
       isDev,
@@ -68,7 +68,7 @@ export async function zoomAuthSuccess(
     res: functions.Response
 ) {
   const code = req.query.code as string;
-  const isDev = isRunningInEmulator();
+  const isDev = isRunningInDevMode(req);
   const authIntent = getAuthIntent(req);
   const returnToPath = getReturnToPath(req);
 

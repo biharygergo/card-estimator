@@ -59,6 +59,7 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   state = new BehaviorSubject<AuthProgressState>(AuthProgressState.IN_PROGRESS);
   authIntent = new Subject<AuthIntent>();
   sessionCookie: ParsedSessionCookie | undefined;
+  authFinished = false;
 
   returnPath: string | undefined;
   hasAction: boolean = false;
@@ -124,7 +125,7 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   }
 
   async handleAuthAction(authAction: AuthAction) {
-    if (authAction === undefined) {
+    if (authAction === undefined || this.authFinished) {
       return;
     }
 
@@ -136,6 +137,7 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
       } else if (authAction === AuthAction.SIGN_IN) {
         await this.authService.signInWithGoogle(this.sessionCookie.idToken);
       }
+      this.authFinished = true;
       this.state.next(AuthProgressState.SUCCESS);
     } catch (e) {
       if (

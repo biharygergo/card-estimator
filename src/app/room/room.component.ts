@@ -50,7 +50,10 @@ import {
 } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
-import { ConfigService } from '../services/config.service';
+import {
+  ConfigService,
+  FEEDBACK_FORM_FILLED_COOKIE_KEY,
+} from '../services/config.service';
 import { MatSidenavContainer } from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
@@ -99,9 +102,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   room$: Observable<Room> = this.route.paramMap.pipe(
     map((params) => params.get('roomId')),
     switchMap((roomId) =>
-      this.estimatorService.getRoomById(roomId).pipe(
-        startWith(this.route.snapshot.data.room)
-      )
+      this.estimatorService
+        .getRoomById(roomId)
+        .pipe(startWith(this.route.snapshot.data.room))
     ),
     share(),
     takeUntil(this.destroy)
@@ -181,7 +184,20 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  showFeedbackForm$ = this.estimatorService.getPreviousSessions().pipe(
+    map((sessions) => sessions.length),
+    map((sessionCount) => {
+      return (
+        sessionCount > 1 &&
+        this.configService.getCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY) ===
+          undefined
+      );
+    })
+  );
+
   readonly MemberType = MemberType;
+
+  openedFeedbackForm: boolean = false;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -528,5 +544,16 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   increaseHideAdsCounter() {
     this.adHideClicks += 1;
+  }
+
+  openFeedbackForm() {
+    if (this.config.isRunningInZoom) {
+      this.zoomService.openUrl(window.origin + '/api/giveFeedback');
+    } else {
+      window.open('https://forms.gle/Rhd8mAQqCmewhfCR7');
+    }
+
+    this.openedFeedbackForm = true;
+    this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true');
   }
 }

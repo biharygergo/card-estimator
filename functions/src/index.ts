@@ -70,3 +70,7 @@ exports.onGoogleAuthResponseDeeplink = functions.https.onRequest(
       cookieParser()(req, res, () => googleAuthSuccess(req, res));
     }
 );
+
+exports.giveFeedback = functions.https.onRequest(async (req, res) => {
+  res.redirect('https://forms.gle/Rhd8mAQqCmewhfCR7');
+});

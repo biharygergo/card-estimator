@@ -2,9 +2,23 @@
   <mat-sidenav-content class="sidenav-content">
     <div class="navbar">
       <div class="navbar-left">
-        <app-profile-dropdown></app-profile-dropdown>
+        <app-profile-dropdown class="profile-dropdown"></app-profile-dropdown>
       </div>
       <div class="navbar-right">
+        <a
+          mat-flat-button
+          *ngIf="showFeedbackForm$ | async"
+          aria-label="Open feedback form"
+          (click)="openFeedbackForm()"
+          href="https://forms.gle/Rhd8mAQqCmewhfCR7"
+          target="_blank"
+          size="small"
+          class="feedback-button"
+          matTooltip="Help improve this app by filling out a short survey"
+          [disabled]="openedFeedbackForm"
+        >
+          {{ openedFeedbackForm ? "Thank you!" : "📣 Give feedback" }}
+        </a>
         <button
           mat-flat-button
           color="primary"

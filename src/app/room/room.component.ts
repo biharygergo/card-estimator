@@ -186,6 +186,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   showFeedbackForm$ = this.estimatorService.getPreviousSessions().pipe(
     map((sessions) => sessions.length),
+    distinctUntilChanged(),
     map((sessionCount) => {
       return (
         sessionCount > 1 &&

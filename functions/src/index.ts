@@ -72,5 +72,5 @@ exports.onGoogleAuthResponseDeeplink = functions.https.onRequest(
 );
 
 exports.giveFeedback = functions.https.onRequest(async (req, res) => {
-  res.redirect('https://forms.gle/Rhd8mAQqCmewhfCR7');
+  res.redirect("https://forms.gle/Rhd8mAQqCmewhfCR7");
 });

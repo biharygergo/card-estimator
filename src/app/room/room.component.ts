@@ -190,8 +190,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       return (
         sessionCount > 1 &&
         this.configService.getCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY) ===
-          undefined &&
-        !this.config.isRunningInZoom
+          undefined
       );
     })
   );
@@ -548,6 +547,12 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   openFeedbackForm() {
+    if (this.config.isRunningInZoom) {
+      this.zoomService.openUrl(window.origin + '/api/giveFeedback');
+    } else {
+      window.open('https://forms.gle/Rhd8mAQqCmewhfCR7');
+    }
+
     this.openedFeedbackForm = true;
     this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true');
   }

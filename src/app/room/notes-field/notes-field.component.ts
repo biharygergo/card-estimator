@@ -22,7 +22,7 @@ export class NotesFieldComponent implements OnInit {
   }
 
   cachedRound: number;
-  noteValue = new FormControl(null);
+  noteValue = new FormControl<string>('');
   isNoteDisabled: boolean;
   editedBy: Member | null;
 

@@ -11,7 +11,7 @@ import {
   saveJoinedRoomData,
 } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -85,7 +85,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.selectedEstimationCardSetValue
   );
 
-  roundTopic = new FormControl('');
+  roundTopic = new UntypedFormControl('');
 
   isEditingTopic = false;
   isObserver = false;

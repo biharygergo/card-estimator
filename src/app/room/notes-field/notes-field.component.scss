@@ -1,16 +1,3 @@
-:host {
+.mat-mdc-form-field {
   width: 100%;
-}
-
-.mat-form-field {
-  width: 100%;
-}
-
-.mat-hint {
-  opacity: 0;
-  transition: opacity 200ms linear;
-
-  &.visible {
-    opacity: 1;
-  }
 }

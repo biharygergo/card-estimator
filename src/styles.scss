@@ -28,7 +28,7 @@ body {
 
 }
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
   max-width: 300px !important;
 }
 
@@ -43,6 +43,9 @@ $my-theme: mat.define-light-theme(
     ),
   )
 );
+
+
+@include mat.core();
 @include mat.all-component-themes($my-theme);
 
 .card-footer {
@@ -94,16 +97,25 @@ $my-theme: mat.define-light-theme(
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
 
-  div {
-    height: 100%;
-    width: 100%;
+  &.avatar-button {
+    padding: 0;
+    img {
+      height: 40px;
+      width: 40px;
+    }
+  }
+
+  .avatar-text {
+    height: 90%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f5a115;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    background: #f5a115 !important;
     border-radius: 50%;
   }
 }
@@ -119,6 +131,7 @@ $my-theme: mat.define-light-theme(
   display: flex !important;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 0 !important;
 }
 
 .statistic {

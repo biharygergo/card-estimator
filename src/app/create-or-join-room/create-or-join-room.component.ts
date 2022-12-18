@@ -54,9 +54,9 @@ interface ViewModel {
   animations: [fadeAnimation, delayedFadeAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
-  name = new FormControl('');
-  roomId = new FormControl('');
-  joinAs = new FormControl(MemberType.ESTIMATOR);
+  name = new FormControl<string>('');
+  roomId = new FormControl<string>('');
+  joinAs = new FormControl<MemberType>(MemberType.ESTIMATOR);
 
   isBusy = new BehaviorSubject<boolean>(false);
   isLoadingUser = new BehaviorSubject<boolean>(true);

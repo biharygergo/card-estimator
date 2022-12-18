@@ -12,7 +12,7 @@ export class AddOrUpdateTopicComponent implements OnInit {
   @Output() onSaveOrUpdate = new EventEmitter<string>();
   @Output() onCancel = new EventEmitter<void>();
 
-  topicNameFormControl = new FormControl('');
+  topicNameFormControl = new FormControl<string>('');
 
   constructor() { }
 

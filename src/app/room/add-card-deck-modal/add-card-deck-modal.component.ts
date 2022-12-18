@@ -23,8 +23,8 @@ export type AddCardDeckModalData = {
 })
 export class AddCardDeckModalComponent implements OnInit {
   cardDeckForm = new FormGroup({
-    cardDeckName: new FormControl('', [Validators.required]),
-    cardDeckValues: new FormControl('', [
+    cardDeckName: new FormControl<string>('', [Validators.required]),
+    cardDeckValues: new FormControl<string>('', [
       Validators.required,
       cardDeckValidator(),
     ]),

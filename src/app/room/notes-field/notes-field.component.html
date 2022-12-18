@@ -1,5 +1,5 @@
 <form>
-  <mat-form-field appearance="outline" color="accent">
+  <mat-form-field appearance="outline" color="accent" subscriptSizing="dynamic">
     <mat-label>Notes</mat-label>
     <textarea
       matInput
@@ -7,9 +7,10 @@
       [formControl]="noteValue"
       (blur)="onNoteBlur()"
       (focus)="onNoteFocus()"
+      rows="1"
       cdkTextareaAutosize
     ></textarea>
-    <mat-hint [ngClass]="{ visible: isNoteDisabled && editedBy }"
+    <mat-hint *ngIf="isNoteDisabled && editedBy"
       >{{ editedBy?.name || "Nobody" }} is taking notes</mat-hint
     >
   </mat-form-field>

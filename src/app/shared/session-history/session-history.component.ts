@@ -25,7 +25,7 @@ import { delayedFadeAnimation, fadeAnimation, staggerFadeAnimation } from '../an
   animations: [staggerFadeAnimation, delayedFadeAnimation, fadeAnimation],
 })
 export class SessionHistoryComponent implements OnInit {
-  filter = new FormControl();
+  filter = new FormControl<string>('');
 
   isLoading = new BehaviorSubject(false);
   previousSessions: Observable<Room[]> = this.estimatorService

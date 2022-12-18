@@ -16,7 +16,7 @@
           [disabled]="openedFeedbackForm"
         >
           {{ openedFeedbackForm ? "Thank you!" : "📣 Give feedback" }}
-      </button>
+        </button>
         <button
           mat-flat-button
           color="primary"
@@ -34,7 +34,7 @@
     </div>
     <div class="room-container">
       <div class="meta-container">
-        <mat-card class="topic-container">
+        <mat-card appearance="outlined" class="topic-container">
           <mat-card-content (click)="onTopicClicked()">
             <h2 *ngIf="!isEditingTopic">
               {{ room?.rounds[currentRound].topic }}
@@ -52,7 +52,12 @@
             />
           </mat-card-content>
         </mat-card>
-        <mat-card class="members-card" resizeMonitor [verticalSpacing]="24">
+        <mat-card
+          appearance="outlined"
+          class="members-card"
+          resizeMonitor
+          [verticalSpacing]="0"
+        >
           <div>
             <mat-card-content>
               <mat-list>
@@ -106,17 +111,17 @@
 
                 <h3 matSubheader>Votes</h3>
                 <mat-list-item *ngFor="let member of members$ | async">
-                  <span matListAvatar class="avatar">
+                  <span matListItemAvatar class="avatar">
                     <img
                       *ngIf="member.avatarUrl"
                       [src]="member.avatarUrl"
                       class="avatar-image"
                       alt="A user's avatar"
                     />
-                    <ng-container *ngIf="!member.avatarUrl">
-                      <div>{{ member.name?.charAt(0) }}</div>
-                    </ng-container></span
-                  >
+                    <div class="avatar-text" *ngIf="!member.avatarUrl">
+                      {{ member.name?.charAt(0) }}
+                    </div>
+                  </span>
                   <h3 matLine class="member">
                     {{ member.name }}
                     <span
@@ -175,9 +180,9 @@
                 </mat-list-item>
               </mat-list>
             </mat-card-content>
-            <mat-card-footer class="card-footer-actions extra-padding">
+            <div class="card-footer-actions extra-padding">
               <app-notes-field [room]="room"></app-notes-field>
-            </mat-card-footer>
+            </div>
           </div>
         </mat-card>
       </div>
@@ -189,7 +194,7 @@
         [currentEstimate]="currentEstimate"
       ></app-card-deck>
       <div class="estimate-container">
-        <mat-card>
+        <mat-card appearance="outlined">
           <div class="action-buttons-container">
             <button
               mat-flat-button
@@ -274,7 +279,7 @@
                 "
               >
                 <mat-icon>{{ cardSet.icon }}</mat-icon>
-                <span
+                <span class="card-set-title"
                   >{{ cardSet.title }} ({{
                     getCardSetDisplayValues(cardSet)
                   }})</span

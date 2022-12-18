@@ -18,7 +18,7 @@
                   alt="The user's avatar"
                   class="avatar-image"
                 />
-                <div *ngIf="!user?.photoURL">
+                <div class="avatar-text" *ngIf="!user?.photoURL">
                   {{ user?.displayName?.charAt(0) }}
                 </div>
               </div>
@@ -61,10 +61,10 @@
             class="avatar-selector-item"
             *ngFor="let avatar of avatars"
             [class.selected]="user?.photoURL === avatar.url"
+            (click)="selectAvatar(avatar)"
           >
             <img
               [src]="avatar.url"
-              (click)="selectAvatar(avatar)"
               class="avatar-image"
               loading="lazy"
               alt="A user's avatar"

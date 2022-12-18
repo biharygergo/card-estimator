@@ -6,7 +6,7 @@ import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
@@ -62,8 +62,8 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   readonly onClickUpdateUserName = new Subject<void>();
   destroy = new Subject<void>();
 
-  displayNameForm = new FormControl('');
-  accountTypeForm = new FormControl({ value: '', disabled: true });
+  displayNameForm = new UntypedFormControl('');
+  accountTypeForm = new UntypedFormControl({ value: '', disabled: true });
 
   constructor(
     private auth: AuthService,
@@ -116,6 +116,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   }
 
   selectAvatar(avatar: Avatar | null) {
+    console.log(avatar);
     this.auth.updateAvatar(avatar ? avatar.url : null);
     this.analytics.logSelectedAvatar(avatar?.url ?? 'default');
   }

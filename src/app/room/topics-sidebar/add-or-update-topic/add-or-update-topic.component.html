@@ -1,21 +1,23 @@
-<mat-card class="flat-card">
-  <div class="card-header">
-    <span class="card-round-number">#{{ roundNumber }}</span>
-  </div>
-  <mat-form-field appearance="outline" color="accent">
-    <mat-label>Topic</mat-label>
-    <textarea
-      matInput
-      cdkTextareaAutosize
-      placeholder="Describe the topic of this round"
-      [formControl]="topicNameFormControl"
-      autofocus
-    ></textarea>
-    <mat-hint
-      >Insert a JIRA ticket or a short description of what you want to vote
-      on.</mat-hint
-    >
-  </mat-form-field>
+<mat-card appearance="outlined" class="flat-card">
+  <mat-card-content>
+    <div class="card-header">
+      <span class="card-round-number">#{{ roundNumber }}</span>
+    </div>
+    <mat-form-field appearance="outline" color="accent">
+      <mat-label>Topic</mat-label>
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        placeholder="Describe the topic of this round"
+        [formControl]="topicNameFormControl"
+        autofocus
+      ></textarea>
+      <mat-hint
+        >Insert a short description of the topic.</mat-hint
+      >
+    </mat-form-field>
+  </mat-card-content>
+ 
 
   <mat-card-footer class="card-footer-actions align-right">
     <button

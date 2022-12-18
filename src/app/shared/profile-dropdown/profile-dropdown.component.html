@@ -12,7 +12,7 @@
       class="avatar-image"
       alt="Avatar image from your Google Account"
     />
-    <div *ngIf="!user.photoURL">
+    <div class="avatar-text" *ngIf="!user.photoURL">
       {{ user?.displayName?.charAt(0) }}
     </div>
   </button>

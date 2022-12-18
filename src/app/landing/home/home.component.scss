@@ -261,8 +261,7 @@
         font-size: 1.1rem;
       }
 
-      &.mdc-tab--active,
-      &.mat-mdc-focus-indicator {
+      &.mdc-tab--active {
         .mdc-tab__text-label {
           color: #afc6ff;
           opacity: 1;

@@ -1,4 +1,4 @@
-<mat-card class="filter-card">
+<mat-card appearance="outlined" class="filter-card">
   <mat-card-content>
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Search sessions</mat-label>
@@ -33,7 +33,7 @@
                 {{ session.roomId }}
               </mat-panel-title>
               <mat-panel-description>
-                {{ session.createdAt.seconds * 1000 | date: "short" }}
+                {{ session.createdAt.seconds * 1000 | date : "short" }}
               </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-list>
@@ -42,9 +42,12 @@
                 class="round-list-item"
               >
                 {{ round.topic }}
-                <span class="round-average" *ngIf="round.average !== ''">{{
-                  round.average
-                }}</span>
+                <span
+                  matListItemMeta
+                  class="round-average"
+                  *ngIf="round.average !== ''"
+                  >{{ round.average }}</span
+                >
               </mat-list-item>
             </mat-list>
             <div class="actions">

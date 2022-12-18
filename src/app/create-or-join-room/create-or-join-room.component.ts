@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthIntent, AuthService } from '../services/auth.service';
@@ -30,7 +30,7 @@ import { User } from 'firebase/auth';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
 import { ZoomApiService } from '../services/zoom-api.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {
   authProgressDialogCreator,
   AuthProgressState,

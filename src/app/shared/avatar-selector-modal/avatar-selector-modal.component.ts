@@ -5,9 +5,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatLegacyDialogConfig as MatDialogConfig, MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormControl } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -116,6 +116,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   }
 
   selectAvatar(avatar: Avatar | null) {
+    console.log(avatar);
     this.auth.updateAvatar(avatar ? avatar.url : null);
     this.analytics.logSelectedAvatar(avatar?.url ?? 'default');
   }

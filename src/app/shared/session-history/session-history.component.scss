@@ -22,7 +22,6 @@
 
 mat-card {
   margin-bottom: 2rem;
-
   mat-card-content {
     .filter-field {
       width: 100%;
@@ -63,6 +62,6 @@ mat-list {
   padding: 0.5rem;
 }
 
-::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+::ng-deep .mat-mdc-progress-spinner circle, .mat-mdc-progress-spinner circle {
   stroke: white !important;
   }

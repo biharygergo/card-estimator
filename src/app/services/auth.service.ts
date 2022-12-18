@@ -28,7 +28,7 @@ import { EMPTY, firstValueFrom, Observable, Subject } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { UserDetails, UserProfile } from '../types';
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
 
 export const PROFILES_COLLECTION = 'profiles';

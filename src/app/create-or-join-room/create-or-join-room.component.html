@@ -24,7 +24,12 @@
     <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
   </ng-container>
   <ng-container *ngIf="pageMode | async; let pageMode">
-    <mat-card class="action-card" resizeMonitor [verticalSpacing]="50">
+    <mat-card
+      appearance="outlined"
+      class="action-card"
+      resizeMonitor
+      [verticalSpacing]="36"
+    >
       <div class="transitioning-container" @delayedFadeAnimation>
         <ng-container *ngIf="pageMode === PageMode.CREATE">
           <ng-container *ngTemplateOutlet="create"></ng-container>
@@ -49,7 +54,7 @@
       </form>
       <button
         color="primary"
-        mat-raised-button
+        mat-flat-button
         (click)="onCreateRoomClicked.next()"
         [disabled]="(isBusy | async) || !name.value.length"
       >
@@ -79,7 +84,7 @@
       </form>
 
       <button
-        mat-raised-button
+        mat-flat-button
         color="primary"
         [disabled]="
           !roomId.value.length || !name.value.length || (isBusy | async)

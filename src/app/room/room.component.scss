@@ -89,14 +89,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
 
   button {
     height: 50px;
     flex: 1 0 100%;
-    &:not(:last-child) {
-      margin-right: 1rem;
-    }
     &:disabled {
       background-color: lightgray;
     }
@@ -122,6 +119,7 @@
     justify-content: space-between;
     align-items: center;
   }
+
   mat-card-subtitle {
     margin-bottom: 0;
   }
@@ -156,13 +154,13 @@
   margin-top: 0.2rem;
   min-height: 90px;
 
-  .mat-card {
+  .mat-mdc-card {
     height: 100%;
     padding: 0;
   }
 }
 
-.mat-menu-item.selected {
+.mat-mdc-menu-item.selected {
   .mat-icon {
     color: #f5a115;
   }

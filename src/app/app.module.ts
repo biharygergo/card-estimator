@@ -96,6 +96,7 @@ import { CountdownTimerComponent } from './room/countdown-timer/countdown-timer.
 import { HeaderV2Component } from './landing/header-v2/header-v2.component';
 import { HomeComponent } from './landing/home/home.component';
 import { WrapperComponent } from './landing/wrapper/wrapper.component';
+import { StarRatingComponent } from './shared/star-rating/star-rating.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -168,6 +169,7 @@ function loadAppConfig(): Promise<any> {
     HeaderV2Component,
     HomeComponent,
     WrapperComponent,
+    StarRatingComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

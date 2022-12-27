@@ -59,6 +59,7 @@ import { AuthService } from '../services/auth.service';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
+import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -184,12 +185,17 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  showFeedbackForm$ = this.estimatorService.getPreviousSessions().pipe(
-    map((sessions) => sessions.length),
+  showFeedbackForm$ = combineLatest([
+    this.onRoundNumberUpdated$,
+    this.estimatorService.getPreviousSessions(),
+  ]).pipe(
+    map(([roundNumber, sessions]) => [roundNumber, sessions.length]),
     distinctUntilChanged(),
-    map((sessionCount) => {
+    map(([roundNumber, sessionCount]) => {
+      console.log(roundNumber)
       return (
         sessionCount > 1 &&
+        roundNumber > 1 &&
         this.configService.getCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY) ===
           undefined
       );
@@ -226,6 +232,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.onEstimatesUpdated$.subscribe();
     this.onCardSetUpdated$.subscribe();
     this.onNameUpdated$.subscribe();
+    this.showFeedbackForm$.subscribe((shouldShow) => {
+      if (shouldShow) {
+        this.openFeedbackSnackbar();
+      }
+    });
 
     this.authService.avatarUpdated
       .pipe(
@@ -310,6 +321,23 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.openAloneInRoomModal();
     } else {
       this.dialog.getDialogById(ALONE_IN_ROOM_MODAL)?.close();
+    }
+  }
+
+  private openFeedbackSnackbar() {
+    if (!this.openedFeedbackForm) {
+      this.snackBar
+        .openFromComponent(StarRatingComponent, {
+          horizontalPosition: 'right',
+        })
+        .onAction()
+        .pipe(takeUntil(this.destroy))
+        .subscribe(() => {
+          this.openFeedbackForm();
+        });
+
+      this.openedFeedbackForm = true;
+      this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true');
     }
   }
 
@@ -553,8 +581,5 @@ export class RoomComponent implements OnInit, OnDestroy {
     } else {
       window.open('https://forms.gle/Rhd8mAQqCmewhfCR7');
     }
-
-    this.openedFeedbackForm = true;
-    this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true');
   }
 }

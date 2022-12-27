@@ -1,0 +1,40 @@
+.star-rating {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  width: 400px;
+
+  @media only screen and (max-width: 500px) {
+    width: unset;
+  }
+
+  .stars-description {
+    margin-bottom: 0;
+  }
+
+  .stars {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    mat-icon {
+      color: var(--accent-color);
+      cursor: pointer;
+      transition: transform 100ms ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .mat-mdc-outlined-button {
+        border-color: rgba($color: #ffff, $alpha: 0.4);
+    }
+  }
+}

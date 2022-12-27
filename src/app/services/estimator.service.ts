@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  addDoc,
   arrayRemove,
   arrayUnion,
   collectionData,
@@ -10,7 +11,13 @@ import {
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import { first, map, switchMap, tap } from 'rxjs/operators';
+import {
+  first,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -82,6 +89,7 @@ export const retrieveRoomData = (): RoomData | undefined => {
 export class EstimatorService {
   ROOMS_COLLECTION = 'rooms';
   INVITATIONS_COLLECTION = 'invitations';
+  FEEDBACK_COLLECTION = 'feedbacks';
 
   activeMember: Member;
 
@@ -405,6 +413,26 @@ export class EstimatorService {
         );
 
         return collectionData<Room>(q);
+      })
+    );
+  }
+
+  submitFeedback(rating: number) {
+    return from(this.authService.getUser()).pipe(
+      take(1),
+      switchMap((user) => {
+        const userId = user.uid;
+        return addDoc(
+          collection(
+            this.firestore,
+            this.FEEDBACK_COLLECTION
+          ),
+          {
+            userId,
+            rating,
+            createdAt: serverTimestamp(),
+          }
+        );
       })
     );
   }

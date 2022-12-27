@@ -22,5 +22,9 @@ service cloud.firestore {
     match /authSessions/{sessionId} {
       allow list, update, delete, create, get: if false;
     }
+
+     match /feedbacks/{feedbackId} {
+      allow write, read: if request.auth.uid == request.resource.data.userId;
+    }
   }
 }

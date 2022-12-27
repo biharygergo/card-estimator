@@ -1,0 +1,35 @@
+<div class="star-rating">
+  <ng-container *ngIf="!submitted">
+    <p class="stars-description">
+      How would you rate your experience with this app today?
+    </p>
+    <div class="stars">
+      <mat-icon
+        *ngFor="let starValue of stars; let i = index"
+        (click)="toggleStarsUntil(i)"
+      >
+        {{ starValue ? "star" : "star_outline" }}
+      </mat-icon>
+    </div>
+    <div class="actions">
+      <button mat-flat-button (click)="submit()">Submit feedback</button>
+      <button mat-stroked-button color="secondary" (click)="closeSnackbar()">
+        Close
+      </button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="submitted">
+    <p>
+      Thank you for providing your feedback! Would you be willing to share more
+      details with us to improve this app?
+    </p>
+    <div class="actions">
+      <button mat-flat-button (click)="clickedOpenDetailedFeedback()">
+        Open feedback form
+      </button>
+      <button mat-stroked-button color="secondary" (click)="closeSnackbar()">
+        Close
+      </button>
+    </div>
+  </ng-container>
+</div>

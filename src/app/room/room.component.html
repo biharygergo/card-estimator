@@ -7,18 +7,6 @@
       <div class="navbar-right">
         <button
           mat-flat-button
-          *ngIf="showFeedbackForm$ | async"
-          aria-label="Open feedback form"
-          (click)="openFeedbackForm()"
-          size="small"
-          class="feedback-button"
-          matTooltip="Help improve this app by filling out a short survey"
-          [disabled]="openedFeedbackForm"
-        >
-          {{ openedFeedbackForm ? "Thank you!" : "Feedback" }}
-        </button>
-        <button
-          mat-flat-button
           color="primary"
           aria-label="Toggle topics sidebar"
           (click)="sidenav.toggle()"

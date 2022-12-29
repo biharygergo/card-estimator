@@ -26,23 +26,26 @@
   <ng-container *ngFor="let round of rounds; let roundNumber = index">
     <mat-card
       appearance="outlined"
-      class="flat-card"
+      class="topic-card"
       *ngIf="(editedRound | async)?.round.id !== round.id; else editRoundCard"
+      (click)="detailsPanel.toggle()"
+      (keyup.enter)="detailsPanel.toggle()"
+      tabindex="0"
     >
       <mat-card-content>
         <div class="card-header">
           <span class="card-round-number">#{{ roundNumber + 1 }}</span>
 
-          <button mat-icon-button [matMenuTriggerFor]="menu">
+          <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
             <button
               mat-menu-item
               aria-label="View the results of the given round"
-              (click)="detailsPanel.toggle()"
+              (click)="detailsPanel.toggle(); $event.stopPropagation()"
             >
-              Details
+              {{ detailsPanel.expanded ? 'Collapse' : 'Expand' }}
             </button>
             <button
               mat-menu-item
@@ -76,6 +79,7 @@
 
         <mat-expansion-panel
           class="flat-accordion"
+          (click)="$event.stopPropagation()"
           #detailsPanel
         >
           <ng-template matExpansionPanelContent>

@@ -55,7 +55,10 @@
                 mat-stroked-button
                 color="primary"
                 [routerLink]="'/room/' + session.roomId"
-                >Rejoin</a
+                >
+                <mat-icon>history</mat-icon>
+                Rejoin
+                </a
               >
               <div
                 [matTooltip]="
@@ -70,6 +73,7 @@
                   (click)="downloadResults(session)"
                   [disabled]="config.isRunningInZoom"
                 >
+                  <mat-icon>download_for_offline</mat-icon>
                   Download
                 </button>
               </div>

@@ -27,13 +27,15 @@
         timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
       "
     >
-      +30s
+      <mat-icon>add</mat-icon>
+      30s
     </button>
     <button
       mat-stroked-button
       (click)="resetTimer(true)"
       *ngIf="timer.state === TimerState.STOPPED"
     >
+      <mat-icon>restart_alt</mat-icon>
       Reset
     </button>
     <button
@@ -45,6 +47,7 @@
       "
       [disabled]="durationLeft === 0"
     >
+      <mat-icon>play_arrow</mat-icon>
       Start
     </button>
     <button
@@ -53,6 +56,7 @@
       (click)="stopTimer(true)"
       *ngIf="timer.state === TimerState.ACTIVE"
     >
+      <mat-icon>pause</mat-icon>
       Pause
     </button>
   </div>

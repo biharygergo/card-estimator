@@ -18,7 +18,8 @@
       (click)="downloadAsCsv()"
       [disabled]="rounds.length <= 1 || config.isRunningInZoom"
     >
-      Download results
+      <mat-icon>download_for_offline</mat-icon>
+      Download
     </button>
   </div>
 </div>
@@ -36,7 +37,11 @@
         <div class="card-header">
           <span class="card-round-number">#{{ roundNumber + 1 }}</span>
 
-          <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            (click)="$event.stopPropagation()"
+          >
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
@@ -45,7 +50,8 @@
               aria-label="View the results of the given round"
               (click)="detailsPanel.toggle(); $event.stopPropagation()"
             >
-              {{ detailsPanel.expanded ? 'Collapse' : 'Expand' }}
+              <mat-icon>unfold_more</mat-icon>
+              {{ detailsPanel.expanded ? "Collapse" : "Expand" }}
             </button>
             <button
               mat-menu-item
@@ -53,6 +59,7 @@
               (click)="setActiveRound(roundNumber)"
               [disabled]="roundNumber === currentRound"
             >
+              <mat-icon>play_arrow</mat-icon>
               Vote now
             </button>
             <button
@@ -60,6 +67,7 @@
               aria-label="Revote selected round"
               (click)="revoteRound(roundNumber)"
             >
+              <mat-icon>clear_all</mat-icon>
               Clear votes
             </button>
             <button
@@ -67,6 +75,7 @@
               aria-label="Edit topic name of round"
               (click)="editedRound.next({round, roundIndex: roundNumber})"
             >
+              <mat-icon>edit</mat-icon>
               Edit topic
             </button>
           </mat-menu>
@@ -122,6 +131,7 @@
       *ngIf="!isAddingRound"
       class="add-round-button"
     >
+      <mat-icon>add</mat-icon>
       Add round
     </button>
     <add-or-update-topic

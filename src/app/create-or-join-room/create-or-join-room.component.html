@@ -14,6 +14,7 @@
           matTooltipPosition="right"
           (click)="onSignInClicked.next()"
         >
+          <mat-icon>account_circle</mat-icon>
           Sign in
         </button>
       </div>
@@ -58,6 +59,7 @@
         (click)="onCreateRoomClicked.next()"
         [disabled]="(isBusy | async) || !name.value.length"
       >
+        <mat-icon>add</mat-icon>
         Create new Room
       </button>
       <ng-container *ngIf="!viewModel.user">
@@ -91,6 +93,7 @@
         "
         (click)="onJoinRoomClicked.next()"
       >
+        <mat-icon>login</mat-icon>
         Join Room
       </button>
       <ng-container *ngIf="!viewModel.user">

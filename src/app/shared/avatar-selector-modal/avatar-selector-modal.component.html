@@ -43,6 +43,7 @@
                 [disabled]="!isNameUpdated || (isSavingUser | async)"
                 (click)="onClickUpdateUserName.next()"
               >
+                <mat-icon>done</mat-icon>
                 Update name
               </button>
             </div>
@@ -75,13 +76,17 @@
     </mat-tab-group>
   </div>
   <div mat-dialog-actions>
-    <button mat-flat-button cdkFocusInitial mat-dialog-close>Close</button>
+    <button mat-flat-button cdkFocusInitial mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
     <button
       mat-button
       color="warn"
       (click)="signOut()"
       *ngIf="selectedTabIndex === 0 && user && !user?.isAnonymous"
     >
+      <mat-icon>logout</mat-icon>
       Sign out
     </button>
     <button
@@ -90,6 +95,7 @@
       color="primary"
       *ngIf="selectedTabIndex === 1"
     >
+      <mat-icon>shuffle</mat-icon>
       Randomize avatars
     </button>
   </div>

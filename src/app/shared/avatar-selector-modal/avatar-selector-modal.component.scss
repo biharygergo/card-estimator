@@ -14,7 +14,6 @@
 
 .avatar-selector {
     display: grid;
-    overflow: auto;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 16px;
     padding: 8px;

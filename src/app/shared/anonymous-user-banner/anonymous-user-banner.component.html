@@ -28,6 +28,7 @@
       (click)="onSignUpClicked.next()"
       [disabled]="isBusy | async"
     >
+      <mat-icon>account_circle</mat-icon>
       Sign up with Google
     </button>
     <button
@@ -36,6 +37,7 @@
       (click)="hideBanner()"
       *ngIf="hideable"
     >
+      <mat-icon>schedule</mat-icon>
       Maybe later
     </button>
   </div>

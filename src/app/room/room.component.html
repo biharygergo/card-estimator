@@ -27,7 +27,10 @@
           <mat-card-content (click)="onTopicClicked()">
             <h2 *ngIf="!isEditingTopic">
               {{ room?.rounds[currentRound].topic }}
-              <button mat-stroked-button>Edit topic</button>
+              <button mat-stroked-button>
+                <mat-icon>edit</mat-icon>
+                Edit topic
+              </button>
             </h2>
             <input
               placeholder="Add a JIRA ticket or a short description of the current round"
@@ -116,7 +119,8 @@
                 >Room ID: <strong>{{ room?.roomId }}</strong></span
               >
               <button mat-stroked-button color="primary" (click)="copyRoomId()">
-                Invite others
+                <mat-icon>link</mat-icon>
+                Invite
               </button>
             </h4>
           </mat-card-footer>
@@ -125,18 +129,15 @@
           </mat-card-footer>
           <mat-card-footer class="card-footer-actions align-right">
             <button mat-stroked-button color="warn" (click)="leaveRoom()">
+              <mat-icon>exit_to_app</mat-icon>
               Leave
             </button>
             <button
               mat-stroked-button
               (click)="toggleMute()"
-              [matTooltip]="
-                isMuted
-                  ? 'Play notification sound on new rounds'
-                  : 'Mute all game sounds'
-              "
             >
-              {{ isMuted ? "Sound" : "Mute" }}
+              <mat-icon>{{ isMuted ? 'volume_mute' : 'volume_up'}}</mat-icon>
+              {{ isMuted ? "Muted" : "Sound" }}
             </button>
 
             <button
@@ -146,7 +147,8 @@
               class="estimator-settings-button"
               (click)="clickedUnitsButton()"
             >
-              Choose cards
+              <mat-icon>style</mat-icon>
+              Set cards
             </button>
             <mat-menu #menu="matMenu">
               <button

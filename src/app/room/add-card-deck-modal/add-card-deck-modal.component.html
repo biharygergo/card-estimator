@@ -42,18 +42,20 @@
     <div class="preview-cards">
       <ng-container *ngFor="let card of cardPreview; let i = index">
         <mat-card
-        class="preview-card"
-        *ngIf="i < CARD_DECK_IDEAL_SIZE || card !== undefined"
-        [ngClass]="{ filled: card !== undefined }"
-      >
-        {{ card ?? "?" }}
-      </mat-card>
+          class="preview-card"
+          *ngIf="i < CARD_DECK_IDEAL_SIZE || card !== undefined"
+          [ngClass]="{ filled: card !== undefined }"
+        >
+          {{ card ?? "?" }}
+        </mat-card>
       </ng-container>
-      
     </div>
   </div>
   <div mat-dialog-actions>
-    <button mat-flat-button mat-dialog-close color="secondary">Cancel</button>
+    <button mat-flat-button mat-dialog-close color="secondary">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
     <button
       mat-flat-button
       color="primary"
@@ -61,6 +63,7 @@
       [disabled]="!cardDeckForm.valid"
       (click)="onSaveClick()"
     >
+      <mat-icon>done</mat-icon>
       Save
     </button>
   </div>

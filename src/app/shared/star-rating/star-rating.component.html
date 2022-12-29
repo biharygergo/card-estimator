@@ -12,8 +12,11 @@
       </mat-icon>
     </div>
     <div class="actions">
-      <button mat-flat-button (click)="submit()">Submit feedback</button>
+      <button mat-flat-button (click)="submit()">
+        <mat-icon>done</mat-icon>
+        Submit feedback</button>
       <button mat-stroked-button color="secondary" (click)="closeSnackbar()">
+        <mat-icon>close</mat-icon>
         Close
       </button>
     </div>
@@ -25,9 +28,11 @@
     </p>
     <div class="actions">
       <button mat-flat-button (click)="clickedOpenDetailedFeedback()">
+        <mat-icon>open_in_new</mat-icon>
         Open feedback form
       </button>
       <button mat-stroked-button color="secondary" (click)="closeSnackbar()">
+        <mat-icon>close</mat-icon>
         Close
       </button>
     </div>

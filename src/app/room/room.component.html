@@ -282,6 +282,10 @@
             </mat-menu>
           </mat-card-footer>
         </mat-card>
+        <anonymous-user-banner
+          [hideable]="true"
+          *ngIf="(sessionCount$ | async) > 1"
+        ></anonymous-user-banner>
       </div>
 
       <app-github-badge *ngIf="!config.isRunningInZoom"></app-github-badge>

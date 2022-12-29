@@ -1,16 +1,23 @@
 <div
   class="banner banner-info"
-  *ngIf="(user | async)?.isAnonymous"
+  *ngIf="(user | async)?.isAnonymous && (!hideable || (hideable && !isHidden))"
   [class.banner-gray]="bannerStyle === 'gray'"
 >
   <div class="banner-main">
     <mat-icon class="banner-icon" color="primary"> info </mat-icon>
     <div class="banner-content">
       <p>
-        Create a permanent user account to store your previous sessions and
-        votes securely. Anonymous accounts lose access to historical data when
-        switching devices or browsers.
+        You are currently using Planning Poker with an anonymous account. Create
+        a free a permanent account in two clicks to:
       </p>
+      <ul>
+        <li>Store your session and voting history securely</li>
+        <li>
+          Use the same profile across multiple devices and platforms (web & Zoom
+          app)
+        </li>
+        <li>Be the first to try new features</li>
+      </ul>
     </div>
   </div>
 
@@ -22,6 +29,14 @@
       [disabled]="isBusy | async"
     >
       Sign up with Google
+    </button>
+    <button
+      mat-flat-button
+      color="secondary"
+      (click)="hideBanner()"
+      *ngIf="hideable"
+    >
+      Maybe later
     </button>
   </div>
 </div>

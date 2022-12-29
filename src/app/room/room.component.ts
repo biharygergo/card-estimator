@@ -185,14 +185,16 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  sessionCount$ = this.estimatorService
+    .getPreviousSessions()
+    .pipe(map((sessions) => sessions.length));
+
   showFeedbackForm$ = combineLatest([
     this.onRoundNumberUpdated$,
-    this.estimatorService.getPreviousSessions(),
+    this.sessionCount$,
   ]).pipe(
-    map(([roundNumber, sessions]) => [roundNumber, sessions.length]),
     distinctUntilChanged(),
     map(([roundNumber, sessionCount]) => {
-      console.log(roundNumber)
       return (
         sessionCount > 1 &&
         roundNumber > 1 &&

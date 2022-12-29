@@ -46,7 +46,7 @@
                   matListItemMeta
                   class="round-average"
                   *ngIf="round.average !== ''"
-                  >{{ round.average }}</span
+                  >{{ round.average | number:'1.0-1' }}</span
                 >
               </mat-list-item>
             </mat-list>

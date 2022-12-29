@@ -34,7 +34,7 @@
             <mat-chip>
               {{
                 statistics.average
-                  | number
+                  | number : "1.0-1"
                   | estimateConverter
                     : selectedEstimationCardSetValue
                     : "rounded"

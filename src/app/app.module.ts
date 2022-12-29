@@ -56,7 +56,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
+import { MatChipsModule } from '@angular/material/chips';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -97,6 +97,7 @@ import { HeaderV2Component } from './landing/header-v2/header-v2.component';
 import { HomeComponent } from './landing/home/home.component';
 import { WrapperComponent } from './landing/wrapper/wrapper.component';
 import { StarRatingComponent } from './shared/star-rating/star-rating.component';
+import { RoundResultsComponent } from './room/round-results/round-results.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -170,6 +171,7 @@ function loadAppConfig(): Promise<any> {
     HomeComponent,
     WrapperComponent,
     StarRatingComponent,
+    RoundResultsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -236,6 +238,7 @@ function loadAppConfig(): Promise<any> {
     MatProgressBarModule,
     MatSidenavModule,
     MatBadgeModule,
+    MatChipsModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

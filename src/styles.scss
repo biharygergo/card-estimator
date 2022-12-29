@@ -8,9 +8,9 @@
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
 
-  --text-on-white: #3F4759;
-  --text-on-gray: #44474F;
-  --background-dark: #001A43;
+  --text-on-white: #3f4759;
+  --text-on-gray: #44474f;
+  --background-dark: #001a43;
 }
 
 * {
@@ -25,7 +25,6 @@ body {
 body {
   margin: 0;
   background: var(--background-dark);
-
 }
 
 .mat-mdc-menu-panel {
@@ -44,28 +43,19 @@ $my-theme: mat.define-light-theme(
   )
 );
 
-
 @include mat.core();
 @include mat.all-component-themes($my-theme);
 
-.card-footer {
+.room-id-container {
   padding: 1rem !important;
   border-top: 0.5px solid lightgrey;
-  h3,
+
   h4 {
     margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    small {
-      cursor: pointer;
-      color: #f5a115;
-
-      &:hover {
-        font-weight: bold;
-      }
-    }
+    gap: 0.5rem;
 
     button {
       flex-shrink: 0;
@@ -130,6 +120,7 @@ $my-theme: mat.define-light-theme(
   display: flex !important;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 0 !important;
 }
 
@@ -137,10 +128,6 @@ $my-theme: mat.define-light-theme(
   display: flex !important;
   flex-direction: row;
   justify-content: space-between;
-
-  span {
-    color: #f5a115;
-  }
 }
 
 .note-wrapper {

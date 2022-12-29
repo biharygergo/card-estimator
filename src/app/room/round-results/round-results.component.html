@@ -1,0 +1,139 @@
+<mat-list>
+  <ng-container *ngIf="(room?.rounds)[currentRound].show_results">
+    <ng-container *ngIf="roundStatistics[currentRound] as statistics">
+      <h3 matSubheader>Statistics</h3>
+      <mat-list-item>
+        <h3 matLine class="statistic">
+          <div>Result</div>
+          <div>
+            <mat-chip-set>
+              <mat-chip
+                class="consensus"
+                *ngIf="statistics.consensus.isConsensus"
+                matTooltip="Easier done than said! Everyone voted the same way in this round."
+              >
+                <span matChipAvatar>🎉</span>
+                <strong>Consensus</strong>
+              </mat-chip>
+              <mat-chip matTooltip="This option got the most votes.">
+                {{
+                  statistics.consensus.value
+                    | estimateConverter
+                      : selectedEstimationCardSetValue
+                      : "exact"
+                }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </h3>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine class="statistic">
+          Average
+          <mat-chip-set>
+            <mat-chip>
+              {{
+                statistics.average
+                  | number : "1.0-1"
+                  | estimateConverter
+                    : selectedEstimationCardSetValue
+                    : "rounded"
+              }}
+            </mat-chip>
+          </mat-chip-set>
+        </h3>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine class="statistic">
+          Highest
+          <mat-chip-set>
+            <mat-chip class="voter">
+              {{ statistics.highestVote.voter }}
+            </mat-chip>
+            <mat-chip>
+              {{
+                statistics.highestVote.value
+                  | estimateConverter : selectedEstimationCardSetValue : "exact"
+              }}
+            </mat-chip>
+          </mat-chip-set>
+        </h3>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine class="statistic">
+          Lowest
+          <mat-chip-set>
+            <mat-chip class="voter">
+              {{ statistics.lowestVote.voter }}
+            </mat-chip>
+            <mat-chip>
+              {{
+                statistics.lowestVote.value
+                  | estimateConverter : selectedEstimationCardSetValue : "exact"
+              }}
+            </mat-chip>
+          </mat-chip-set>
+        </h3>
+      </mat-list-item>
+    </ng-container>
+  </ng-container>
+
+  <h3 matSubheader>Votes</h3>
+  <mat-list-item *ngFor="let member of members">
+    <span matListItemAvatar class="avatar">
+      <img
+        *ngIf="member.avatarUrl"
+        [src]="member.avatarUrl"
+        class="avatar-image"
+        alt="A user's avatar"
+      />
+      <div class="avatar-text" *ngIf="!member.avatarUrl">
+        {{ member.name?.charAt(0) }}
+      </div>
+    </span>
+    <h3 matLine class="member">
+      {{ member.name }}
+      <mat-chip-set>
+        <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
+          <mat-chip
+            *ngIf="
+              (room?.rounds)[currentRound].estimates[member.id] != undefined &&
+              (room?.rounds)[currentRound].show_results
+            "
+            >{{
+              (room?.rounds)[currentRound].estimates[member.id]
+                | estimateConverter : selectedEstimationCardSetValue : "exact"
+            }}</mat-chip
+          >
+          <mat-chip
+            *ngIf="
+              (room?.rounds)[currentRound].estimates[member.id] == undefined &&
+              (room?.rounds)[currentRound].show_results
+            "
+          >
+            Not voted
+          </mat-chip>
+          <mat-chip
+            *ngIf="
+              (room?.rounds)[currentRound].estimates[member.id] == undefined &&
+              !(room?.rounds)[currentRound].show_results
+            "
+          >
+            Waiting to vote
+          </mat-chip>
+          <mat-chip
+            *ngIf="
+              (room?.rounds)[currentRound].estimates[member.id] != undefined &&
+              !(room?.rounds)[currentRound].show_results
+            "
+          >
+            Voted
+          </mat-chip>
+        </ng-container>
+        <mat-chip *ngIf="member.type === MemberType.OBSERVER">
+          Observing
+        </mat-chip>
+      </mat-chip-set>
+    </h3>
+  </mat-list-item>
+</mat-list>

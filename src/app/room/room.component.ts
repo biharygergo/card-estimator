@@ -15,13 +15,11 @@ import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  catchError,
   combineLatest,
   distinctUntilChanged,
   filter,
   map,
   Observable,
-  of,
   share,
   startWith,
   Subject,
@@ -495,7 +493,29 @@ export class RoomComponent implements OnInit, OnDestroy {
       const lowest = estimates[0];
       const highest = estimates[estimates.length - 1];
 
-      return { average, elapsed, lowestVote: lowest, highestVote: highest };
+      const votesCount: { [estimateKey: string]: number } = estimates.reduce(
+        (acc, curr) => {
+          acc[curr.value] = acc[curr.value] ? acc[curr.value] + 1 : 1;
+          return acc;
+        },
+        {}
+      );
+
+      // [estimateKey, numberOfVotes]
+      const mostPopularVoteEntry: [string, number] = Object.entries<number>(
+        votesCount
+      ).sort((a, b) => b[1] - a[1])[0];
+
+      return {
+        average,
+        elapsed,
+        lowestVote: lowest,
+        highestVote: highest,
+        consensus: {
+          value: +mostPopularVoteEntry[0],
+          isConsensus: mostPopularVoteEntry[1] === estimates.length
+        }
+      };
     }
   }
 

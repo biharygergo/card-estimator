@@ -1,0 +1,17 @@
+mat-chip-set {
+    display: inline-flex;
+  
+    mat-chip {
+      &.consensus {
+        background: var(--accent-color);
+  
+        strong {
+          color: white;
+        }
+      }
+  
+      &.voter {
+        background: #d9e2ff;
+      }
+    }
+  }

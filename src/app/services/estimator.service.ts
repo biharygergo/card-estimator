@@ -11,13 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import {
-  first,
-  map,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
+import { first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -144,9 +138,15 @@ export class EstimatorService {
   async createRoom(member: Member): Promise<{ room: Room; member: Member }> {
     await this.signInAsMember(member);
 
+    let roomId = generate({ words: 3 }).dashed;
+
+    if (await this.doesRoomAlreadyExist(roomId)) {
+      roomId = generate({ words: 4 }).dashed;
+    }
+
     const room: Room = {
       id: this.createId(),
-      roomId: generate({ words: 3 }).dashed,
+      roomId,
       members: [member],
       rounds: { 0: this.createRound([member], 1) },
       currentRound: 0,
@@ -168,6 +168,12 @@ export class EstimatorService {
     });
 
     return { room, member };
+  }
+
+  async doesRoomAlreadyExist(roomId: string): Promise<boolean> {
+    return this.getRoom(roomId)
+      .then((room) => !!room)
+      .catch(() => false);
   }
 
   async joinRoom(roomId: string, member: Member) {
@@ -422,17 +428,11 @@ export class EstimatorService {
       take(1),
       switchMap((user) => {
         const userId = user.uid;
-        return addDoc(
-          collection(
-            this.firestore,
-            this.FEEDBACK_COLLECTION
-          ),
-          {
-            userId,
-            rating,
-            createdAt: serverTimestamp(),
-          }
-        );
+        return addDoc(collection(this.firestore, this.FEEDBACK_COLLECTION), {
+          userId,
+          rating,
+          createdAt: serverTimestamp(),
+        });
       })
     );
   }

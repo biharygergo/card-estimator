@@ -21,7 +21,7 @@ export interface Timer {
   initialCountdownLength: number;
   countdownLength: number;
   extraSecondsAdded: number;
-  startedAt: FieldValue|null;
+  startedAt: FieldValue | null;
   state: TimerState;
 }
 
@@ -90,6 +90,7 @@ export interface RoundStatistics {
     voter: string;
   };
   elapsed?: string;
+  consensus: { value: number; isConsensus: boolean };
 }
 
 export type CardSetValue = {

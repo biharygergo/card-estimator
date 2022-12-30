@@ -6,6 +6,7 @@ import {
   collectionData,
   docData,
   Firestore,
+  orderBy,
   query,
   where,
 } from '@angular/fire/firestore';
@@ -415,7 +416,8 @@ export class EstimatorService {
         ) as CollectionReference<Room>;
         const q = query<Room>(
           ref,
-          where('memberIds', 'array-contains', user.uid)
+          where('memberIds', 'array-contains', user.uid),
+          orderBy('createdAt', 'desc'),
         );
 
         return collectionData<Room>(q);

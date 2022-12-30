@@ -1,9 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-  combineLatest,
-  map,
-  Observable,
-} from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { getRoomCardSetValue } from 'src/app/pipes/estimate-converter.pipe';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { ExportData } from 'src/app/services/serializer.service';
@@ -51,8 +47,8 @@ export class VelocityComponent implements OnInit {
           sessions[oneBeforeCurrentIndex]
         );
 
-        // The previous session was non-numeric
-        if (velocity.total === undefined) {
+        // The previous session was non-numeric or no votes
+        if (velocity.total === undefined || velocity.total === 0) {
           return undefined;
         }
 

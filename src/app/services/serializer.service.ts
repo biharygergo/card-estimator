@@ -13,6 +13,7 @@ type ExportedDataRow = {
   estimates: {
     [id: string]: string;
   };
+  mostPopularVote: string;
   average: string;
   duration: string;
   topic: string;
@@ -24,48 +25,74 @@ export class ExportData {
   rows: ExportedDataRow[] = [];
   converter = new EstimateConverterPipe();
 
-  constructor(room: Room) {
+  constructor(room: Room, onlyRevealedRounds = false) {
     this.members = room.members.reduce((acc, curr) => {
       acc[curr.id] = curr;
       return acc;
     }, {});
-    this.rows = Object.values(room.rounds).map((round) => {
-      const estimates = Object.entries(round.estimates).reduce(
-        (acc, [id, estimate]) => {
-          acc[id] = this.converter
-            .transform(estimate, getRoomCardSetValue(room), 'exact')
+    const cardSet = getRoomCardSetValue(room);
+
+    this.rows = Object.values(room.rounds)
+      .filter((round) => (onlyRevealedRounds ? round.show_results : true))
+      .map((round) => {
+        const estimates = Object.entries(round.estimates).reduce(
+          (acc, [id, estimate]) => {
+            acc[id] = this.converter
+              .transform(estimate, cardSet, 'exact')
+              .toString();
+            if (this.members[id] === undefined) {
+              this.members[id] = {
+                name: 'Unknown Voter',
+                id,
+                type: MemberType.ESTIMATOR,
+                status: MemberStatus.LEFT_ROOM,
+              };
+            }
+            return acc;
+          },
+          {}
+        );
+        const estimateValues = Object.values(round.estimates);
+        let mostPopularVoteCard = '';
+
+        if (estimateValues.length) {
+          const votesCount: { [estimateKey: string]: number } =
+            estimateValues.reduce((acc, curr) => {
+              acc[curr] = acc[curr] ? acc[curr] + 1 : 1;
+              return acc;
+            }, {});
+
+          // [estimateKey, numberOfVotes]
+          const mostPopularVoteEntry: [string, number] = Object.entries<number>(
+            votesCount
+          ).sort((a, b) => b[1] - a[1])[0];
+
+          mostPopularVoteCard = this.converter
+            .transform(mostPopularVoteEntry[0], cardSet, 'exact')
             .toString();
-          if (this.members[id] === undefined) {
-            this.members[id] = {
-              name: 'Unknown Voter',
-              id,
-              type: MemberType.ESTIMATOR,
-              status: MemberStatus.LEFT_ROOM,
-            };
-          }
-          return acc;
-        },
-        {}
-      );
+        }
 
-      const estimateValues = Object.values(round.estimates);
-      const average = estimateValues.length
-        ? estimateValues.reduce((acc, curr) => acc + curr, 0) /
-          estimateValues.length
-        : undefined;
+        const average = estimateValues.length
+          ? estimateValues.reduce((acc, curr) => acc + curr, 0) /
+            estimateValues.length
+          : undefined;
 
-      const result = {
-        estimates,
-        average: average === undefined ? '' : this.converter
-          .transform(average, getRoomCardSetValue(room), 'rounded')
-          .toString(),
-        duration: getHumanReadableElapsedTime(round),
-        topic: round.topic,
-        notes: `"${round.notes?.note}"` || '',
-      };
+        const result: ExportedDataRow = {
+          estimates,
+          average:
+            average === undefined
+              ? ''
+              : this.converter
+                  .transform(average, cardSet, 'rounded')
+                  .toString(),
+          mostPopularVote: mostPopularVoteCard,
+          duration: getHumanReadableElapsedTime(round),
+          topic: round.topic,
+          notes: `"${round.notes?.note}"` || '',
+        };
 
-      return result;
-    });
+        return result;
+      });
   }
 }
 

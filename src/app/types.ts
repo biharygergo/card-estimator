@@ -148,9 +148,7 @@ export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
 };
 
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
-  const values = Object.values(cardSet.values);
-  const isNumericCard = values.every((value) => isNumeric(value));
-  if (isNumericCard) {
+  if (isNumericCardSet(cardSet)) {
     return value;
   }
 
@@ -164,4 +162,9 @@ export function isNumeric(str: any) {
     !isNaN(+str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
     !isNaN(parseFloat(str))
   ); // ...and ensure strings of whitespace fail
+}
+
+export function isNumericCardSet(cardSet: CardSetValue) {
+  const values = Object.values(cardSet.values);
+  return values.every((value) => isNumeric(value));
 }

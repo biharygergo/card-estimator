@@ -115,6 +115,16 @@
   color: #001A43;
   font-weight: bold;
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  mat-icon {
+    color: #001A43;
+    font-size: 0.8rem;
+    height: 0.8rem;
+    width: 0.8rem;
+  }
 }
 
 .topic-card {

@@ -98,6 +98,7 @@ import { HomeComponent } from './landing/home/home.component';
 import { WrapperComponent } from './landing/wrapper/wrapper.component';
 import { StarRatingComponent } from './shared/star-rating/star-rating.component';
 import { RoundResultsComponent } from './room/round-results/round-results.component';
+import { VelocityComponent } from './room/velocity/velocity.component';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -172,6 +173,7 @@ function loadAppConfig(): Promise<any> {
     WrapperComponent,
     StarRatingComponent,
     RoundResultsComponent,
+    VelocityComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

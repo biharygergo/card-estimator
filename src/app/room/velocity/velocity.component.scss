@@ -15,7 +15,7 @@
 
   .summary {
     display: flex;
-    flex: 1 0 50%;
+    flex: 1 1 50%;
     flex-direction: column;
     justify-content: center;
 
@@ -46,7 +46,7 @@
   .cards {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    flex: 1 1 50%;
+    flex: 1 2 50%;
     justify-content: center;
     gap: 0.1rem;
 
@@ -73,7 +73,8 @@
       justify-content: center;
       color: #345ca8;
       font-weight: bold;
-      min-width: 7ch;
+      font-size: 24px;
+      min-width: 4ch;
 
       transition: all 100ms linear;
 

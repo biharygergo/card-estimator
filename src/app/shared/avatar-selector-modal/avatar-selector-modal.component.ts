@@ -116,7 +116,6 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   }
 
   selectAvatar(avatar: Avatar | null) {
-    console.log(avatar);
     this.auth.updateAvatar(avatar ? avatar.url : null);
     this.analytics.logSelectedAvatar(avatar?.url ?? 'default');
   }

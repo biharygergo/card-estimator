@@ -1,0 +1,57 @@
+<div class="velocity-container">
+  <mat-icon
+    class="info"
+    matTooltip="Velocity is the sum of the majority vote on rounds where the results have been revealed. Velocity trend is compared to your last session created before the current one. Velocity calculation works with numbered card sets only."
+    >info</mat-icon
+  >
+  <ng-container *ngIf="velocity$ | async as velocity">
+    <div class="summary">
+      <ng-container *ngIf="velocity.total !== undefined; else nonNumeric">
+        <h1>{{ velocity.total }}</h1>
+        <h3>velocity</h3>
+        <small
+          *ngIf="previousSessionVelocity$ | async as previousSessionVelocity"
+        >
+          <mat-icon class="trend-icon">{{
+            previousSessionVelocity.changePercent >= 0
+              ? "trending_up"
+              : "trending_down"
+          }}</mat-icon>
+          {{ previousSessionVelocity.changePercent }}% from last session</small
+        >
+      </ng-container>
+      <ng-template #nonNumeric>
+        The selected card set can not be used for velocity measurement yet.
+      </ng-template>
+    </div>
+    <div
+      class="cards"
+      (click)="
+        velocity.cards.length > 3
+          ? (isCardsExpanded = !isCardsExpanded)
+          : (isCardsExpanded = false)
+      "
+      [class.expanded]="isCardsExpanded"
+      [class.expandable]="velocity.cards.length > 3"
+      [matTooltip]="
+        velocity.cards.length > 3
+          ? isCardsExpanded
+            ? 'Hide all cards'
+            : 'Show all cards'
+          : ''
+      "
+      *ngIf="velocity.cards.length; else noCardsYet"
+    >
+      <div
+        class="card"
+        *ngFor="let card of velocity.cards; let i = index"
+        [class.hidden]="!isCardsExpanded && i > 2"
+      >
+        {{ card }}
+      </div>
+    </div>
+    <ng-template #noCardsYet>
+      <span>No revealed votes yet.</span>
+    </ng-template>
+  </ng-container>
+</div>

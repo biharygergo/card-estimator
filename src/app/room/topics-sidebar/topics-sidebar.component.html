@@ -4,6 +4,7 @@
     Manage the rounds in this estimation and download results for later use.
   </p>
 </div>
+<app-velocity [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
 <div class="sidenav-actions">
   <div
     [matTooltip]="
@@ -35,7 +36,19 @@
     >
       <mat-card-content>
         <div class="card-header">
-          <span class="card-round-number">#{{ roundNumber + 1 }}</span>
+          <span class="card-round-number">
+            #{{ roundNumber + 1 }}
+            <mat-icon
+              [matTooltip]="
+                round.show_results
+                  ? 'Results revealed'
+                  : 'Results not yet revealed'
+              "
+              >{{
+                round.show_results ? "visibility" : "visibility_off"
+              }}</mat-icon
+            >
+          </span>
 
           <button
             mat-icon-button

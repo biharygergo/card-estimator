@@ -1,4 +1,5 @@
-import {firestore, initializeApp} from "firebase-admin";
+import {initializeApp} from "firebase-admin/app";
+import {firestore} from "firebase-admin";
 import {createUserProfile} from "./onUserCreateUpdate";
 
 initializeApp({projectId: "card-estimator"});

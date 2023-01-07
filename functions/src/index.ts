@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
-import {firestore, initializeApp, appCheck} from "firebase-admin";
+import {initializeApp} from "firebase-admin/app";
+import {firestore, appCheck} from "firebase-admin";
 import * as cookieParser from "cookie-parser";
 import {
   authorizeZoomApp,

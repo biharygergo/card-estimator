@@ -11,8 +11,12 @@ export const appConfig = {
 
 export function getHost(req: functions.Request) {
   const host = req.headers["x-forwarded-host"] as string;
+  if (!host) {
+    return "https://planningpoker.live";
+  }
+
   const protocol = host.startsWith("localhost") ? "http://" : "https://";
-  return `${protocol}${host}` ?? "https://planningpoker.live";
+  return `${protocol}${host}`;
 }
 
 export function isRunningInDevMode(req: functions.Request) {

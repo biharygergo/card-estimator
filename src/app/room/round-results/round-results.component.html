@@ -92,7 +92,19 @@
       </div>
     </span>
     <h3 matLine class="member">
-      {{ member.name }}
+      <span class="member-name">
+        {{ member.name }}
+        <mat-icon
+          class="verified-icon"
+          *ngIf="userProfiles[member.id]"
+          [matTooltip]="
+            member.name +
+            ' is verified. Get your blue checkmark by signing up for a permanent account.'
+          "
+          >verified</mat-icon
+        >
+      </span>
+
       <mat-chip-set>
         <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
           <mat-chip

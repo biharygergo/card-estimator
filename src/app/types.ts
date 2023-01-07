@@ -100,10 +100,12 @@ export type CardSetValue = {
   key: CardSetOrCustom;
 };
 
+export type UserProfileMap = { [userId: string]: UserProfile };
+
 export type UserProfile = {
   id: string;
   displayName: string;
-  avatarUrl: string;
+  createdAt: FieldValue;
 };
 
 export type UserDetails = {

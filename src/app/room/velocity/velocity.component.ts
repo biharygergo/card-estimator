@@ -48,7 +48,7 @@ export class VelocityComponent implements OnInit {
         );
 
         // The previous session was non-numeric or no votes
-        if (velocity.total === undefined || velocity.total === 0) {
+        if (velocity?.total === undefined || velocity?.total === 0) {
           return undefined;
         }
 
@@ -61,7 +61,10 @@ export class VelocityComponent implements OnInit {
     );
   }
 
-  calculateVelocity(room: Room) {
+  calculateVelocity(room?: Room): Velocity|undefined {
+    if (!room) {
+      return undefined
+    }
     const exportData = new ExportData(room, true);
 
     const isAllNumericCardSet = isNumericCardSet(getRoomCardSetValue(room));

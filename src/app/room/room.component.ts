@@ -21,6 +21,7 @@ import {
   map,
   Observable,
   share,
+  shareReplay,
   startWith,
   Subject,
   switchMap,
@@ -37,6 +38,7 @@ import {
   Room,
   Round,
   RoundStatistics,
+  UserProfileMap,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
@@ -200,6 +202,13 @@ export class RoomComponent implements OnInit, OnDestroy {
           undefined
       );
     })
+  );
+
+  userProfiles$: Observable<UserProfileMap> = this.members$.pipe(
+    switchMap((members) =>
+      this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
+    ),
+    shareReplay(1),
   );
 
   readonly MemberType = MemberType;
@@ -513,8 +522,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         highestVote: highest,
         consensus: {
           value: +mostPopularVoteEntry[0],
-          isConsensus: mostPopularVoteEntry[1] === estimates.length
-        }
+          isConsensus: mostPopularVoteEntry[1] === estimates.length,
+        },
       };
     }
   }

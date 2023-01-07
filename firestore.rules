@@ -13,6 +13,11 @@ service cloud.firestore {
     match /userDetails/{userId} {
       allow read, write: if request.auth.uid == userId;
     }
+
+    match /userProfiles/{userId} {
+      allow get: if true;
+      allow list, update, create, delete: if false;
+    }
     
     match /invitations/{invitationId} {
       allow write: if request.auth.uid == request.resource.data.invitedBy;

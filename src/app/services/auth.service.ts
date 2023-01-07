@@ -11,27 +11,35 @@ import {
   signInAnonymously,
   signInWithPopup,
   unlink,
-  updateEmail,
   updateProfile,
   User,
   UserInfo,
 } from 'firebase/auth';
 import {
   doc,
+  docData,
+  DocumentReference,
   FieldValue,
   Firestore,
   serverTimestamp,
   setDoc,
   updateDoc,
 } from '@angular/fire/firestore';
-import { EMPTY, firstValueFrom, Observable, Subject } from 'rxjs';
+import {
+  combineLatest,
+  EMPTY,
+  firstValueFrom,
+  map,
+  Observable,
+  Subject,
+} from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
-import { UserDetails, UserProfile } from '../types';
+import { UserDetails, UserProfile, UserProfileMap } from '../types';
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
 
-export const PROFILES_COLLECTION = 'profiles';
+export const PROFILES_COLLECTION = 'userProfiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
 
 // TODO(biharygergo): This is duplicated between /functions
@@ -74,7 +82,9 @@ export class AuthService {
 
   async updateDisplayName(user: User, name: string): Promise<void> {
     this.nameUpdated.next(name);
-    await this.updateUserDetails(user.uid, { displayName: name });
+    if (!user.isAnonymous) {
+      await this.updateUserDetails(user.uid, { displayName: name });
+    }
     return updateProfile(user, { displayName: name });
   }
 
@@ -167,7 +177,9 @@ export class AuthService {
 
   async updateAvatar(avatarUrl: string | null) {
     await updateProfile(this.auth.currentUser, { photoURL: avatarUrl ?? '' });
-    await this.updateUserDetails(this.auth.currentUser.uid, { avatarUrl });
+    if (!this.auth.currentUser?.isAnonymous) {
+      await this.updateUserDetails(this.auth.currentUser.uid, { avatarUrl });
+    }
     this.avatarUpdated.next(avatarUrl);
   }
 
@@ -179,6 +191,7 @@ export class AuthService {
       avatarUrl: new SupportedPhotoUrlPipe().transform(user.photoURL),
       createdAt: serverTimestamp(),
     };
+
     await setDoc(
       doc(this.firestore, USER_DETAILS_COLLECTION, user.uid),
       userDetails
@@ -212,5 +225,30 @@ export class AuthService {
 
   clearSessionCookie() {
     Cookies.remove('__session');
+  }
+
+  getUserProfile(userId: string): Observable<UserProfile | undefined> {
+    return docData<UserProfile | undefined>(
+      doc(
+        this.firestore,
+        `${PROFILES_COLLECTION}/${userId}`
+      ) as DocumentReference<UserProfile>
+    );
+  }
+
+  getUserProfiles(
+    userIds: string[]
+  ): Observable<UserProfileMap> {
+    const userProfileObservables = userIds.map((userId) =>
+      this.getUserProfile(userId).pipe(map((profile) => ({ profile, userId })))
+    );
+    return combineLatest(userProfileObservables).pipe(
+      map((profiles) => {
+        return profiles.reduce((acc, curr) => {
+          acc[curr.userId] = curr.profile;
+          return acc;
+        }, {});
+      })
+    );
   }
 }

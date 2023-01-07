@@ -1,5 +1,6 @@
 mat-chip-set {
     display: inline-flex;
+    margin-left: auto;
   
     mat-chip {
       &.consensus {
@@ -14,6 +15,15 @@ mat-chip-set {
         background: #d9e2ff;
       }
     }
+  }
+
+  .member {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0 !important;
+    flex-wrap: wrap;
   }
 
   .member-name {

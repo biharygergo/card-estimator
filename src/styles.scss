@@ -116,14 +116,6 @@ $my-theme: mat.define-light-theme(
   border-radius: 50%;
 }
 
-.member {
-  display: flex !important;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0 !important;
-}
-
 .statistic {
   display: flex !important;
   flex-direction: row;

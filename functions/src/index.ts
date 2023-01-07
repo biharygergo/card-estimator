@@ -14,7 +14,10 @@ import {
   startGoogleOauthFlow,
   zoomAuthSuccess,
 } from "./zoom/googleAuth";
-import { onUserDetailsCreate, onUserDetailsUpdate } from "./profile/onUserCreateUpdate";
+import {
+  onUserDetailsCreate,
+  onUserDetailsUpdate,
+} from "./profile/onUserCreateUpdate";
 
 initializeApp();
 firestore().settings({ignoreUndefinedProperties: true});
@@ -76,5 +79,9 @@ exports.giveFeedback = functions.https.onRequest(async (req, res) => {
   res.redirect("https://forms.gle/Rhd8mAQqCmewhfCR7");
 });
 
-exports.onUserDetailsCreate = functions.firestore.document('userDetails/{userId}').onCreate(onUserDetailsCreate);
-exports.onUserDetailsUpdate = functions.firestore.document('userDetails/{userId}').onUpdate(onUserDetailsUpdate);
+exports.onUserDetailsCreate = functions.firestore
+    .document("userDetails/{userId}")
+    .onCreate(onUserDetailsCreate);
+exports.onUserDetailsUpdate = functions.firestore
+    .document("userDetails/{userId}")
+    .onUpdate(onUserDetailsUpdate);

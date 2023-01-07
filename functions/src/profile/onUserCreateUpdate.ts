@@ -1,8 +1,8 @@
-import { firestore } from 'firebase-admin';
-import { Change, EventContext } from 'firebase-functions/v1';
-import { DocumentSnapshot } from 'firebase-functions/v1/firestore';
+import {firestore} from "firebase-admin";
+import {Change, EventContext} from "firebase-functions/v1";
+import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 
-const PROFILES_COLLECTION = 'userProfiles';
+const PROFILES_COLLECTION = "userProfiles";
 
 // TODO: Keep these in sync with app
 type UserProfile = {
@@ -26,13 +26,13 @@ export function createUserProfile(userDetails: UserDetails) {
     createdAt: firestore.Timestamp.now(),
   };
   return firestore()
-    .doc(`${PROFILES_COLLECTION}/${userProfile.id}`)
-    .set(userProfile);
+      .doc(`${PROFILES_COLLECTION}/${userProfile.id}`)
+      .set(userProfile);
 }
 
 export function onUserDetailsCreate(
-  snap: DocumentSnapshot,
-  context: EventContext
+    snap: DocumentSnapshot,
+    context: EventContext
 ) {
   const userDetails = snap.data() as UserDetails;
   return createUserProfile(userDetails);
@@ -44,6 +44,6 @@ export function onUserDetailsUpdate(change: Change<DocumentSnapshot>) {
     displayName: updatedDetails.displayName,
   };
   return firestore()
-    .doc(`${PROFILES_COLLECTION}/${updatedDetails.id}`)
-    .update(userProfile);
+      .doc(`${PROFILES_COLLECTION}/${updatedDetails.id}`)
+      .update(userProfile);
 }

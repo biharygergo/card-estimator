@@ -13,10 +13,15 @@ import {
 })
 export class EstimateConverterPipe implements PipeTransform {
   transform(
-    value: number | string,
+    value: number | string | null,
     activeCardSetValue: CardSetValue,
     transformType: 'exact' | 'rounded'
   ): string | number {
+    if (value === null) {
+      console.error('Invalid option null (pass) given to pipe.');
+      return 0;
+    }
+
     if (transformType === 'exact') {
       return activeCardSetValue.values[+value] ?? +value;
     } else {

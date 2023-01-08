@@ -58,6 +58,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LandingComponent } from './landing/landing.component';
@@ -236,6 +237,7 @@ function loadAppConfig(): Promise<any> {
     MatDialogModule,
     MatSelectModule,
     MatTooltipModule,
+    MatCheckboxModule,
     MatTabsModule,
     MatProgressBarModule,
     MatSidenavModule,

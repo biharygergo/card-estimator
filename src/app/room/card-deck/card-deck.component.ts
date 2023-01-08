@@ -31,4 +31,13 @@ export class CardDeckComponent implements OnInit {
       this.estimatorService.activeMember.id
     );
   }
+
+  setWildcard() {
+    this.estimatorService.setEstimate(
+      this.room,
+      this.currentRound,
+      null,
+      this.estimatorService.activeMember.id
+    );
+  }
 }

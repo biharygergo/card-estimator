@@ -109,7 +109,15 @@
         <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
           <mat-chip
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] != undefined &&
+              (room?.rounds)[currentRound].estimates[member.id] === null &&
+              (room?.rounds)[currentRound].show_results
+            "
+            >Pass</mat-chip
+          >
+          <mat-chip
+            *ngIf="
+              (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
+              (room?.rounds)[currentRound].estimates[member.id] !== null &&
               (room?.rounds)[currentRound].show_results
             "
             >{{
@@ -119,7 +127,7 @@
           >
           <mat-chip
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] == undefined &&
+              (room?.rounds)[currentRound].estimates[member.id] === undefined &&
               (room?.rounds)[currentRound].show_results
             "
           >
@@ -127,7 +135,7 @@
           </mat-chip>
           <mat-chip
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] == undefined &&
+              (room?.rounds)[currentRound].estimates[member.id] === undefined &&
               !(room?.rounds)[currentRound].show_results
             "
           >
@@ -135,7 +143,7 @@
           </mat-chip>
           <mat-chip
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] != undefined &&
+              (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
               !(room?.rounds)[currentRound].show_results
             "
           >

@@ -308,7 +308,7 @@ export class EstimatorService {
   setEstimate(
     room: Room,
     roundNumber: number,
-    estimate: number,
+    estimate: number|null,
     userId: string
   ) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
@@ -319,6 +319,12 @@ export class EstimatorService {
   setRoomCardSet(roomId: string, selectedSet: CardSet) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       cardSet: selectedSet,
+    });
+  }
+
+  toggleShowPassOption(roomId: string, showPassOption: boolean) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      showPassOption,
     });
   }
 

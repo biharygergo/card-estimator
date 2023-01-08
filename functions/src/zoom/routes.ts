@@ -7,9 +7,9 @@ import {
   setSessionVariable,
 } from "./zoomApi";
 import * as functions from "firebase-functions";
-import {firestore} from "firebase-admin";
 import {getHost, isRunningInDevMode} from "../config";
 import {AUTH_SESSIONS} from "../shared/collections";
+import {getFirestore} from "firebase-admin/firestore";
 
 export const getSessionVariable = (
     req: functions.Request,
@@ -35,7 +35,7 @@ export const zoomHome = async (
     if (isZoom) {
       let roomId = "";
       if (appContext.iid) {
-        const db = firestore();
+        const db = getFirestore();
 
         const roomsRef = db.collection("invitations");
         const queryRef = roomsRef.where("invitationId", "==", appContext.iid);
@@ -51,7 +51,7 @@ export const zoomHome = async (
         const action = JSON.parse(appContext.act);
         const sessionId = action.session;
         const sessionData = await (
-          await firestore().collection(AUTH_SESSIONS).doc(sessionId).get()
+          await getFirestore().collection(AUTH_SESSIONS).doc(sessionId).get()
         ).data();
         setSessionVariable(res, JSON.stringify(sessionData));
       }

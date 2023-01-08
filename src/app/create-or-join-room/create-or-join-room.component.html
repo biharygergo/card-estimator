@@ -2,7 +2,7 @@
   <div class="navbar" *ngIf="!(isLoadingUser | async)">
     <ng-container *ngIf="vm | async as viewModel">
       <div class="navbar-left">
-        <app-profile-dropdown *ngIf="viewModel.user"></app-profile-dropdown>
+        <app-profile-dropdown></app-profile-dropdown>
       </div>
       <div class="navbar-right">
         <button
@@ -117,7 +117,6 @@
     >
     <a
       routerLink="/history"
-      [queryParams]="{ backToPage: '/' + (pageMode | async) }"
       >Previous sessions</a
     >
     <!--         <a (click)="signOut()" *ngIf="(vm | async)?.user">Delete temporary account</a>

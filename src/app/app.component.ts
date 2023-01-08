@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { NavigationEnd, ActivatedRoute, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { NavigationService } from './services/navigation.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,11 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent {
   title = 'estimator';
-  constructor(private router: Router, private titleService: Title) {}
+  constructor(
+    private router: Router,
+    private titleService: Title,
+    private readonly navigationService: NavigationService,
+  ) {}
 
   ngOnInit() {
     this.router.events

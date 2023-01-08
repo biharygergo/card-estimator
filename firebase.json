@@ -57,6 +57,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/reportAnIssue",
+          "function": "reportAnIssue",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },
@@ -155,6 +160,11 @@
         {
           "source": "/api/giveFeedback",
           "function": "giveFeedback",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/reportAnIssue",
+          "function": "reportAnIssue",
           "region": "us-central1"
         },
         {

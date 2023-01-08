@@ -1,11 +1,11 @@
 import {initializeApp} from "firebase-admin/app";
-import {firestore} from "firebase-admin";
 import {createUserProfile} from "./onUserCreateUpdate";
+import {getFirestore} from "firebase-admin/firestore";
 
 initializeApp({projectId: "card-estimator"});
 
 async function migrateAllUserDetailsToProfiles() {
-  const snapshot = await firestore().collection("userDetails").get();
+  const snapshot = await getFirestore().collection("userDetails").get();
   const promises: Promise<any>[] = [];
   snapshot.forEach((doc) => {
     promises.push(createUserProfile(doc.data() as any));

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
 @Component({
@@ -17,7 +19,9 @@ export class ProfileDropdownComponent implements OnInit {
     private auth: AuthService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    @Inject(APP_CONFIG) public config: AppConfig,
+    private readonly zoomService: ZoomApiService
   ) {}
 
   ngOnInit(): void {}
@@ -53,5 +57,14 @@ export class ProfileDropdownComponent implements OnInit {
   openAvatarSelector() {
     this.dialog.open(...avatarModalCreator({}));
     this.analytics.logClickedEditAvatar('profile_icon');
+  }
+
+  reportAnIssue() {
+    const apiUrl = window.origin + '/api/reportAnIssue';
+    if (this.config.isRunningInZoom) {
+      this.zoomService.openUrl(apiUrl, true);
+    } else {
+      window.open(apiUrl);
+    }
   }
 }

@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
-import {firestore, appCheck} from "firebase-admin";
+import {appCheck} from "firebase-admin";
 import * as cookieParser from "cookie-parser";
 import {
   authorizeZoomApp,
@@ -19,9 +19,10 @@ import {
   onUserDetailsCreate,
   onUserDetailsUpdate,
 } from "./profile/onUserCreateUpdate";
+import {getFirestore} from "firebase-admin/firestore";
 
 initializeApp();
-firestore().settings({ignoreUndefinedProperties: true});
+getFirestore().settings({ignoreUndefinedProperties: true});
 
 exports.authorizeZoomApp = functions.https.onRequest(async (req, res) => {
   cookieParser()(req, res, async () => authorizeZoomApp(req, res));
@@ -78,6 +79,13 @@ exports.onGoogleAuthResponseDeeplink = functions.https.onRequest(
 
 exports.giveFeedback = functions.https.onRequest(async (req, res) => {
   res.redirect("https://forms.gle/Rhd8mAQqCmewhfCR7");
+});
+
+exports.reportAnIssue = functions.https.onRequest(async (req, res) => {
+  res.redirect(
+      // eslint-disable-next-line max-len
+      "mailto:info@planningpoker.live?subject=Issue%20Report%20-%20Planning%20Poker&body=Dear%20Developers%2C%0D%0A%0D%0AI%20have%20run%20into%20the%20following%20issue%20while%20using%20the%20Planning%20Poker%20app%3A%0D%0A%0D%0A%3CDescribe%20your%20issue%20in%20detail%20here%3E%0D%0A%0D%0AHave%20a%20great%20day%2C%0D%0A%3CYour%20name%3E"
+  );
 });
 
 exports.onUserDetailsCreate = functions.firestore

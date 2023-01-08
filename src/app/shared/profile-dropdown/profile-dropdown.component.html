@@ -1,37 +1,25 @@
-<ng-container *ngIf="currentUser | async as user">
-  <button
-    mat-icon-button
-    class="avatar-button"
-    #tooltip="matTooltip"
-    matTooltip="View profile"
-    (click)="openAvatarSelector()"
-  >
-    <img
-      *ngIf="user?.photoURL"
-      [src]="user.photoURL"
-      class="avatar-image"
-      alt="Avatar image from your Google Account"
-    />
-    <div class="avatar-text" *ngIf="!user.photoURL">
-      {{ user?.displayName?.charAt(0) }}
-    </div>
+<ng-container>
+  <button mat-stroked-button [matMenuTriggerFor]="menu" class="menu-button">
+    <mat-icon>more_vert</mat-icon>
+    Menu
   </button>
-  <!-- <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
-    <button mat-menu-item *ngIf="user.isAnonymous" (click)="createAccount()">
-      <mat-icon>login</mat-icon>
-      <span>Create an account</span>
-    </button>
+  <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
     <button
       mat-menu-item
-      *ngIf="!user.isAnonymous"
-      (click)="unlinkAccount()"
+      (click)="openAvatarSelector()"
+      *ngIf="currentUser | async as user"
     >
-      <mat-icon>heart_broken</mat-icon>
-      <span>Unlink Google account</span>
-    </button>
-    <button mat-menu-item (click)="openAvatarSelector()">
       <mat-icon>account_circle</mat-icon>
-      <span>Select your avatar</span>
+      <span>My account</span>
     </button>
-  </mat-menu> -->
+    <a mat-menu-item routerLink="/history">
+      <mat-icon>history</mat-icon>
+      <span>Previous sessions</span>
+    </a>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="reportAnIssue()">
+      <mat-icon>bug_report</mat-icon>
+      <span>Report an issue</span>
+    </button>
+  </mat-menu>
 </ng-container>

@@ -35,8 +35,9 @@ export class ExportData {
     this.rows = Object.values(room.rounds)
       .filter((round) => (onlyRevealedRounds ? round.show_results : true))
       .map((round) => {
-        const estimates = Object.entries(round.estimates).reduce(
-          (acc, [id, estimate]) => {
+        const estimates = Object.entries(round.estimates)
+          .filter((estimate) => estimate[1] !== null)
+          .reduce((acc, [id, estimate]) => {
             acc[id] = this.converter
               .transform(estimate, cardSet, 'exact')
               .toString();
@@ -49,10 +50,10 @@ export class ExportData {
               };
             }
             return acc;
-          },
-          {}
+          }, {});
+        const estimateValues = Object.values(round.estimates).filter(
+          (estimate) => estimate !== null
         );
-        const estimateValues = Object.values(round.estimates);
         let mostPopularVoteCard = '';
 
         if (estimateValues.length) {

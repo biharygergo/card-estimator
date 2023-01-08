@@ -12,4 +12,7 @@ export class RoomLoadingComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  roomLoaded() {
+    window.setTimeout(() => this.isLoading = false, 10);
+  }
 }

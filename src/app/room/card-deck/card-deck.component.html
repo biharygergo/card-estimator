@@ -14,5 +14,16 @@
         {{ item.value }}
       </button>
     </div>
+    <div class="estimator-button-container" *ngIf="room?.showPassOption">
+      <button
+        mat-raised-button
+        class="estimator-button pass-option-button"
+        (click)="setWildcard()"
+        [color]="currentEstimate === null && 'accent'"
+        [disabled]="isObserver || (room?.rounds)[currentRound]?.show_results"
+      >
+        ?
+      </button>
+    </div>
   </div>
 </div>

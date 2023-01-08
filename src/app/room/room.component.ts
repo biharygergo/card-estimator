@@ -492,6 +492,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         value: round.estimates[member],
         voter: this.room.members.find((m) => m.id === member)?.name,
       }))
+      .filter(e => e.value !== null)
       .sort((a, b) => a.value - b.value);
 
     if (estimates.length) {
@@ -560,6 +561,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   setEstimationCardSet(key: CardSet) {
     this.analytics.logSelectedCardSet(key);
     this.estimatorService.setRoomCardSet(this.room.roomId, key);
+  }
+
+  toggleShowPassOption() {
+    this.analytics.logTogglePassOption(!this.room.showPassOption);
+    this.estimatorService.toggleShowPassOption(this.room.roomId, !this.room.showPassOption);
   }
 
   getCardSetDisplayValues(cardSet: CardSetValue | undefined) {

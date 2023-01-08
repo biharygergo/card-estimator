@@ -130,6 +130,12 @@ export class AnalyticsService {
     });
   }
 
+  logTogglePassOption(showPassOption: boolean) {
+    logEvent(this.analytics, 'toggled_pass_option', {
+      show_pass_option: showPassOption,
+    });
+  }
+
   logClickedEditAvatar(source: 'profile_icon' | 'snackbar') {
     logEvent(this.analytics, 'clicked_edit_avatar', { source });
   }

@@ -133,11 +133,8 @@
               <mat-icon>exit_to_app</mat-icon>
               Leave
             </button>
-            <button
-              mat-stroked-button
-              (click)="toggleMute()"
-            >
-              <mat-icon>{{ isMuted ? 'volume_mute' : 'volume_up'}}</mat-icon>
+            <button mat-stroked-button (click)="toggleMute()">
+              <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
               {{ isMuted ? "Muted" : "Sound" }}
             </button>
 
@@ -168,6 +165,18 @@
                   }})</span
                 >
               </button>
+              <mat-divider></mat-divider>
+              <div mat-menu-item role="menuitemcheckbox" class="pass-option">
+                <mat-checkbox
+                  (click)="toggleShowPassOption(); $event.stopPropagation()"
+                  [checked]="room?.showPassOption"
+                  class="pass-option-checkbox"
+                  ><span class="pass-option-label"
+                    >Include "Pass" (?) card</span
+                  ></mat-checkbox
+                >
+              </div>
+
               <mat-divider></mat-divider>
 
               <button mat-menu-item (click)="openAddCardDeckModal()">

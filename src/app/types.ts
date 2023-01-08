@@ -34,6 +34,7 @@ export interface Room {
   isOpen: boolean;
   createdAt: FieldValue;
   cardSet?: CardSetOrCustom;
+  showPassOption?: boolean;
   customCardSetValue?: CardSetValue;
   createdById: string;
   memberIds: string[];
@@ -45,7 +46,7 @@ export interface Round {
   topic: string;
   started_at: FieldValue;
   finished_at: FieldValue;
-  estimates: { [memberId: string]: number };
+  estimates: { [memberId: string]: number | null };
   show_results: boolean;
   notes?: Notes;
 }

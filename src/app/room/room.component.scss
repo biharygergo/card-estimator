@@ -147,3 +147,17 @@
     color: #f5a115;
   }
 }
+
+.pass-option {
+  padding-left: 8px;
+
+  ::ng-deep .pass-option-checkbox svg.mdc-checkbox__checkmark {
+    color: white !important;
+  }
+
+
+  .pass-option-label {
+    padding-left: 4px;
+    font-size: 16px;
+  }
+}

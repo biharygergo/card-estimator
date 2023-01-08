@@ -17,10 +17,13 @@
 .back-navbar {
     display: flex;
     width: 100%;
+    padding: 0.5rem 2rem;
 
     .back-button {
-        margin: 1rem;
-        margin-left: 0;
         color: white;
+    }
+
+    @media screen and (max-width: 800px) {
+        padding: 0.5rem;
     }
 }

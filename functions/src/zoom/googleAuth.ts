@@ -12,6 +12,7 @@ import {
 } from "./zoomApi";
 
 import {AUTH_SESSIONS} from "../shared/collections";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 
 export enum AuthIntent {
   SIGN_IN = "signIn",
@@ -173,13 +174,13 @@ export async function googleAuthSuccess(
 
     const sessionData: AuthSession = {
       idToken: googleAccessToken.id_token,
-      createdAt: firestore.Timestamp.now(),
+      createdAt: Timestamp.now(),
       authIntent: state.authIntent,
       returnToPath: state.returnToPath,
     };
 
     // Save idToken into temporary storage
-    const savedAuthSession = await firestore()
+    const savedAuthSession = await getFirestore()
         .collection(AUTH_SESSIONS)
         .add(sessionData);
 

@@ -1,4 +1,4 @@
-import {firestore} from "firebase-admin";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {Change, EventContext} from "firebase-functions/v1";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 
@@ -8,7 +8,7 @@ const PROFILES_COLLECTION = "userProfiles";
 type UserProfile = {
   id: string;
   displayName: string;
-  createdAt: firestore.Timestamp;
+  createdAt: Timestamp;
 };
 
 type UserDetails = {
@@ -16,16 +16,16 @@ type UserDetails = {
   displayName: string;
   avatarUrl: string | null;
   email: string;
-  createdAt: firestore.Timestamp;
+  createdAt: Timestamp;
 };
 
 export function createUserProfile(userDetails: UserDetails) {
   const userProfile: UserProfile = {
     id: userDetails.id,
     displayName: userDetails.displayName,
-    createdAt: firestore.Timestamp.now(),
+    createdAt: Timestamp.now(),
   };
-  return firestore()
+  return getFirestore()
       .doc(`${PROFILES_COLLECTION}/${userProfile.id}`)
       .set(userProfile);
 }
@@ -43,7 +43,7 @@ export function onUserDetailsUpdate(change: Change<DocumentSnapshot>) {
   const userProfile: Partial<UserProfile> = {
     displayName: updatedDetails.displayName,
   };
-  return firestore()
+  return getFirestore()
       .doc(`${PROFILES_COLLECTION}/${updatedDetails.id}`)
       .update(userProfile);
 }

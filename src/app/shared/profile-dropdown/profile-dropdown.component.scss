@@ -1,8 +1,4 @@
-.avatar-button {
-    transition: transform 300ms ease-in-out;
-    will-change: transform;
-
-    &:hover {
-        transform: scale(1.1);
-    }
+.menu-button {
+    color: white !important;
+    border-color: rgba(255,255,255,0.6) !important;
 }

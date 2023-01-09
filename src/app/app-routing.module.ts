@@ -10,8 +10,6 @@ import { TermsComponent } from './landing/terms/terms.component';
 import { WrapperComponent } from './landing/wrapper/wrapper.component';
 import { ZoomComponent } from './landing/zoom/zoom.component';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
-import { RoomComponent } from './room/room.component';
-import { RoomResolver } from './room/room.resolver';
 import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 
 const routes: Routes = [
@@ -69,16 +67,7 @@ const routes: Routes = [
     path: 'room',
     component: RoomLoadingComponent,
     data: { title: 'Loading room' },
-    children: [
-      {
-        path: ':roomId',
-        component: RoomComponent,
-        resolve: {
-          room: RoomResolver,
-        },
-        data: { title: 'Active room' },
-      },
-    ],
+    loadChildren: () => import('./room/room.module').then(m => m.RoomModule)
   },
 ];
 

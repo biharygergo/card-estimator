@@ -20,14 +20,13 @@ import {
   finalize,
   first,
   map,
-  startWith,
   switchMap,
   takeUntil,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
-import { AppConfig, APP_CONFIG } from '../app-config.module';
+import { AppConfig, AppConfigModule, APP_CONFIG } from '../app-config.module';
 import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,6 +34,9 @@ import {
   authProgressDialogCreator,
   AuthProgressState,
 } from '../shared/auth-progress-dialog/auth-progress-dialog.component';
+import { CommonModule } from '@angular/common';
+import { SharedModule } from '../shared/shared.module';
+import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -48,6 +50,13 @@ interface ViewModel {
 }
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    SharedModule,
+    ZoomAppBannerComponent,
+    AppConfigModule,
+  ],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],

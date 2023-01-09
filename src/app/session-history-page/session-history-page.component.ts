@@ -1,9 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { NavigationService } from '../services/navigation.service';
+import { SharedModule } from '../shared/shared.module';
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    SharedModule
+  ],
   selector: 'app-session-history-page',
   templateUrl: './session-history-page.component.html',
   styleUrls: ['./session-history-page.component.scss'],

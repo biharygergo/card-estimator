@@ -33,26 +33,12 @@ import {
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
 import { environment } from '../environments/environment';
-import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { LandingComponent } from './landing/landing.component';
-import { HeaderComponent } from './landing/header/header.component';
-import { FeaturesComponent } from './landing/features/features.component';
-import { FaqComponent } from './landing/faq/faq.component';
-import { PageHeaderComponent } from './landing/components/page-header/page-header.component';
-import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
-import { Router, RouterModule } from '@angular/router';
-import { PrivacyComponent } from './landing/privacy/privacy.component';
-import { TermsComponent } from './landing/terms/terms.component';
-import { ZoomComponent } from './landing/zoom/zoom.component';
+import { Router } from '@angular/router';
 import { isRunningInZoom } from './utils';
 import { initializeApp as originalInitializeApp } from 'firebase/app';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
-import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
-import { HeaderV2Component } from './landing/header-v2/header-v2.component';
-import { HomeComponent } from './landing/home/home.component';
-import { WrapperComponent } from './landing/wrapper/wrapper.component';
-import { SharedModule } from './shared/shared.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppConfigModule } from './app-config.module';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -92,24 +78,12 @@ function loadAppConfig(): Promise<any> {
 @NgModule({
   declarations: [
     AppComponent,
-    CreateOrJoinRoomComponent,
-    LandingComponent,
-    HeaderComponent,
-    FeaturesComponent,
-    FaqComponent,
-    PageHeaderComponent,
-    FaqRowComponent,
-    PrivacyComponent,
-    TermsComponent,
-    ZoomComponent,
     RoomLoadingComponent,
-    SessionHistoryPageComponent,
-    HeaderV2Component,
-    HomeComponent,
-    WrapperComponent,
   ],
   imports: [
     AppRoutingModule,
+    AppConfigModule,
+    MatSnackBarModule,
     BrowserAnimationsModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
@@ -156,7 +130,6 @@ function loadAppConfig(): Promise<any> {
         isTokenAutoRefreshEnabled: true,
       });
     }),
-    SharedModule,
   ],
   providers: [
     ScreenTrackingService,

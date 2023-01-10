@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { NavigationService } from '../services/navigation.service';
 import { SharedModule } from '../shared/shared.module';
 
@@ -7,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     SharedModule
   ],
   selector: 'app-session-history-page',

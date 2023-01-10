@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EstimatorService } from '../services/estimator.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
@@ -53,6 +53,7 @@ interface ViewModel {
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     SharedModule,
     ZoomAppBannerComponent,
     AppConfigModule,

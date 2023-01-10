@@ -1,4 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { Subject, takeUntil, tap } from 'rxjs';
 import {
   AnalyticsService,
@@ -8,6 +13,14 @@ import {
 const ZOOM_APP_PROMO_SEEN_KEY = 'zoomAppPromoSeen';
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   selector: 'zoom-app-banner',
   templateUrl: './zoom-app-banner.component.html',
   styleUrls: ['./zoom-app-banner.component.scss'],

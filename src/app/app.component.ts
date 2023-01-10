@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, ActivatedRoute, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { NavigationService } from './services/navigation.service';
 
 @Component({

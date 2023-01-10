@@ -30,76 +30,15 @@ import {
   getRemoteConfig,
 } from '@angular/fire/remote-config';
 
-import {
-  connectFunctionsEmulator,
-  getFunctions,
-  httpsCallable,
-} from 'firebase/functions';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 import { environment } from '../environments/environment';
-import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
-import { RoomComponent } from './room/room.component';
-
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatChipsModule } from '@angular/material/chips';
-import { ClipboardModule } from '@angular/cdk/clipboard';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { LandingComponent } from './landing/landing.component';
-import { EstimateConverterPipe } from './pipes/estimate-converter.pipe';
-import { AloneInRoomModalComponent } from './room/alone-in-room-modal/alone-in-room-modal.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { GithubBadgeComponent } from './room/github-badge/github-badge.component';
-import { HeaderComponent } from './landing/header/header.component';
-import { FeaturesComponent } from './landing/features/features.component';
-import { FaqComponent } from './landing/faq/faq.component';
-import { PageHeaderComponent } from './landing/components/page-header/page-header.component';
-import { FaqRowComponent } from './landing/faq/faq-row/faq-row.component';
-import { NotesFieldComponent } from './room/notes-field/notes-field.component';
-import { AddCardDeckModalComponent } from './room/add-card-deck-modal/add-card-deck-modal.component';
-import { TopicsSidebarComponent } from './room/topics-sidebar/topics-sidebar.component';
-import { CardDeckComponent } from './room/card-deck/card-deck.component';
-import { ProfileDropdownComponent } from './shared/profile-dropdown/profile-dropdown.component';
-import { AvatarSelectorModalComponent } from './shared/avatar-selector-modal/avatar-selector-modal.component';
 import { Router } from '@angular/router';
-import { AppConfigModule } from './app-config.module';
-import { PrivacyComponent } from './landing/privacy/privacy.component';
-import { TermsComponent } from './landing/terms/terms.component';
-import { ZoomComponent } from './landing/zoom/zoom.component';
 import { isRunningInZoom } from './utils';
 import { initializeApp as originalInitializeApp } from 'firebase/app';
-import { AddOrUpdateTopicComponent } from './room/topics-sidebar/add-or-update-topic/add-or-update-topic.component';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
-import { ZoomAppBannerComponent } from './shared/zoom-app-banner/zoom-app-banner.component';
-import { SessionHistoryComponent } from './shared/session-history/session-history.component';
-import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
-import { ResizeMonitorDirective } from './shared/directives/resize-monitor.directive';
-import { AnonymousUserBannerComponent } from './shared/anonymous-user-banner/anonymous-user-banner.component';
-import { SupportedPhotoUrlPipe } from './shared/supported-photo-url.pipe';
-import { AuthProgressDialogComponent } from './shared/auth-progress-dialog/auth-progress-dialog.component';
-import { CountdownTimerComponent } from './room/countdown-timer/countdown-timer.component';
-import { HeaderV2Component } from './landing/header-v2/header-v2.component';
-import { HomeComponent } from './landing/home/home.component';
-import { WrapperComponent } from './landing/wrapper/wrapper.component';
-import { StarRatingComponent } from './shared/star-rating/star-rating.component';
-import { RoundResultsComponent } from './room/round-results/round-results.component';
-import { VelocityComponent } from './room/velocity/velocity.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AppConfigModule } from './app-config.module';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -139,47 +78,14 @@ function loadAppConfig(): Promise<any> {
 @NgModule({
   declarations: [
     AppComponent,
-    CreateOrJoinRoomComponent,
-    RoomComponent,
-    LandingComponent,
-    EstimateConverterPipe,
-    AloneInRoomModalComponent,
-    GithubBadgeComponent,
-    HeaderComponent,
-    FeaturesComponent,
-    FaqComponent,
-    PageHeaderComponent,
-    FaqRowComponent,
-    NotesFieldComponent,
-    AddCardDeckModalComponent,
-    TopicsSidebarComponent,
-    CardDeckComponent,
-    ProfileDropdownComponent,
-    AvatarSelectorModalComponent,
-    PrivacyComponent,
-    TermsComponent,
-    ZoomComponent,
-    AddOrUpdateTopicComponent,
     RoomLoadingComponent,
-    ZoomAppBannerComponent,
-    SessionHistoryComponent,
-    SessionHistoryPageComponent,
-    ResizeMonitorDirective,
-    AnonymousUserBannerComponent,
-    SupportedPhotoUrlPipe,
-    AuthProgressDialogComponent,
-    CountdownTimerComponent,
-    HeaderV2Component,
-    HomeComponent,
-    WrapperComponent,
-    StarRatingComponent,
-    RoundResultsComponent,
-    VelocityComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
+    AppConfigModule,
+    MatSnackBarModule,
     BrowserAnimationsModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
       const firestore = getFirestore();
@@ -224,29 +130,6 @@ function loadAppConfig(): Promise<any> {
         isTokenAutoRefreshEnabled: true,
       });
     }),
-    MatCardModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatListModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatExpansionModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatSelectModule,
-    MatTooltipModule,
-    MatCheckboxModule,
-    MatTabsModule,
-    MatProgressBarModule,
-    MatSidenavModule,
-    MatBadgeModule,
-    MatChipsModule,
-    ClipboardModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppConfigModule,
   ],
   providers: [
     ScreenTrackingService,

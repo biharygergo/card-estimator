@@ -114,7 +114,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => room.members),
-    distinctUntilChanged(),
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
     map((members) =>
       members
         .filter(
@@ -190,7 +192,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
     first(),
     map((sessions) => sessions.length),
-    share(),
+    share()
   );
 
   showFeedbackForm$ = combineLatest([

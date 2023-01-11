@@ -18,6 +18,7 @@ import {
   combineLatest,
   distinctUntilChanged,
   filter,
+  first,
   map,
   Observable,
   share,
@@ -187,7 +188,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   sessionCount$ = this.estimatorService
     .getPreviousSessions()
-    .pipe(map((sessions) => sessions.length));
+    .pipe(first(), map((sessions) => sessions.length), share());
 
   showFeedbackForm$ = combineLatest([
     this.onRoundNumberUpdated$,

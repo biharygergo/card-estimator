@@ -1,5 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { combineLatest, map, Observable } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  BehaviorSubject,
+  combineLatest,
+  first,
+  map,
+  Observable,
+  share,
+  Subject,
+  take,
+  takeUntil,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 import { getRoomCardSetValue } from 'src/app/pipes/estimate-converter.pipe';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { ExportData } from 'src/app/services/serializer.service';
@@ -15,7 +27,7 @@ interface Velocity {
   templateUrl: './velocity.component.html',
   styleUrls: ['./velocity.component.scss'],
 })
-export class VelocityComponent implements OnInit {
+export class VelocityComponent implements OnInit, OnDestroy {
   @Input() roomId!: string;
 
   isCardsExpanded = false;
@@ -25,6 +37,10 @@ export class VelocityComponent implements OnInit {
     { previousSession: Velocity; changePercent: number } | undefined
   >;
 
+  private readonly destroyed = new Subject<void>();
+
+  private previousSessions$: Observable<Room[]>;
+
   constructor(private readonly estimatorService: EstimatorService) {}
 
   ngOnInit() {
@@ -32,38 +48,52 @@ export class VelocityComponent implements OnInit {
       .getRoomById(this.roomId)
       .pipe(map(this.calculateVelocity));
 
+    this.previousSessions$ = this.estimatorService
+      .getPreviousSessions()
+      .pipe(first(), takeUntil(this.destroyed));
+
     this.previousSessionVelocity$ = combineLatest([
       this.velocity$,
-      this.estimatorService.getPreviousSessions(),
+      this.previousSessions$,
     ]).pipe(
-      map(([currentVelocity, sessions]) => {
-        const oneBeforeCurrentIndex =
-          sessions.findIndex((room) => room.roomId === this.roomId) + 1;
-        if (oneBeforeCurrentIndex > sessions.length) {
-          return undefined;
-        }
-
-        const velocity = this.calculateVelocity(
-          sessions[oneBeforeCurrentIndex]
-        );
-
-        // The previous session was non-numeric or no votes
-        if (velocity?.total === undefined || velocity?.total === 0) {
-          return undefined;
-        }
-
-        return {
-          previousSession: velocity,
-          changePercent:
-            Math.round((currentVelocity.total / velocity.total) * 100) - 100,
-        };
-      })
+      map(([currentVelocity, previousSessions]) =>
+        this.calculatePreviousSessionVelocity(currentVelocity, previousSessions)
+      )
     );
   }
 
-  calculateVelocity(room?: Room): Velocity|undefined {
+  ngOnDestroy(): void {
+    this.destroyed.next();
+    this.destroyed.complete();
+  }
+
+  calculatePreviousSessionVelocity(
+    currentVelocity: Velocity,
+    sessions: Room[]
+  ) {
+    const oneBeforeCurrentIndex =
+      sessions.findIndex((room) => room.roomId === this.roomId) + 1;
+    if (oneBeforeCurrentIndex > sessions.length) {
+      return undefined;
+    }
+
+    const velocity = this.calculateVelocity(sessions[oneBeforeCurrentIndex]);
+
+    // The previous session was non-numeric or no votes
+    if (velocity?.total === undefined || velocity?.total === 0) {
+      return undefined;
+    }
+
+    return {
+      previousSession: velocity,
+      changePercent:
+        Math.round((currentVelocity.total / velocity.total) * 100) - 100,
+    };
+  }
+
+  calculateVelocity(room?: Room): Velocity | undefined {
     if (!room) {
-      return undefined
+      return undefined;
     }
     const exportData = new ExportData(room, true);
 

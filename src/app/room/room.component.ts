@@ -114,7 +114,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => room.members),
-    distinctUntilChanged(),
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
     map((members) =>
       members
         .filter(
@@ -122,6 +124,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
         .sort((a, b) => a.type?.localeCompare(b.type))
     ),
+    share(),
     takeUntil(this.destroy)
   );
 
@@ -186,9 +189,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  sessionCount$ = this.estimatorService
-    .getPreviousSessions()
-    .pipe(first(), map((sessions) => sessions.length), share());
+  sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
+    first(),
+    map((sessions) => sessions.length),
+    share()
+  );
 
   showFeedbackForm$ = combineLatest([
     this.onRoundNumberUpdated$,
@@ -206,10 +211,13 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   userProfiles$: Observable<UserProfileMap> = this.members$.pipe(
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
     switchMap((members) =>
       this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
     ),
-    shareReplay(1),
+    shareReplay(1)
   );
 
   readonly MemberType = MemberType;
@@ -493,7 +501,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         value: round.estimates[member],
         voter: this.room.members.find((m) => m.id === member)?.name,
       }))
-      .filter(e => e.value !== null)
+      .filter((e) => e.value !== null)
       .sort((a, b) => a.value - b.value);
 
     if (estimates.length) {
@@ -566,7 +574,10 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   toggleShowPassOption() {
     this.analytics.logTogglePassOption(!this.room.showPassOption);
-    this.estimatorService.toggleShowPassOption(this.room.roomId, !this.room.showPassOption);
+    this.estimatorService.toggleShowPassOption(
+      this.room.roomId,
+      !this.room.showPassOption
+    );
   }
 
   getCardSetDisplayValues(cardSet: CardSetValue | undefined) {

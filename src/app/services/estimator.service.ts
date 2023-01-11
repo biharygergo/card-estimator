@@ -4,7 +4,9 @@ import {
   arrayRemove,
   arrayUnion,
   collectionData,
+  collectionSnapshots,
   docData,
+  docSnapshots,
   Firestore,
   orderBy,
   query,
@@ -12,7 +14,7 @@ import {
 } from '@angular/fire/firestore';
 import * as generate from 'project-name-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import { first, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
   RoomData,
   Room,
@@ -308,7 +310,7 @@ export class EstimatorService {
   setEstimate(
     room: Room,
     roundNumber: number,
-    estimate: number|null,
+    estimate: number | null,
     userId: string
   ) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
@@ -423,10 +425,13 @@ export class EstimatorService {
         const q = query<Room>(
           ref,
           where('memberIds', 'array-contains', user.uid),
-          orderBy('createdAt', 'desc'),
+          orderBy('createdAt', 'desc')
         );
 
-        return collectionData<Room>(q);
+        return collectionSnapshots<Room>(q).pipe(
+          filter((snapshots) => !snapshots.some((s) => s.metadata.fromCache)),
+          map((snapshots) => snapshots.map((s) => s.data()))
+        );
       })
     );
   }

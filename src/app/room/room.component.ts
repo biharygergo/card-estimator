@@ -169,8 +169,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
     ),
     tap((estimates) => {
-      this.currentEstimate = estimates[this.estimatorService.activeMember.id];
-      this.reCalculateStatistics();
+      if (this.estimatorService.activeMember) {
+        this.currentEstimate = estimates[this.estimatorService.activeMember.id];
+        this.reCalculateStatistics();
+      }
     })
   );
 

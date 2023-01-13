@@ -37,8 +37,8 @@ export class ZoomApiService {
       ],
     });
 
-    this.userContextStatus.next(configResponse.auth.status);
-    if (configResponse.auth.status === 'authorized') {
+    this.userContextStatus.next(configResponse.auth?.status);
+    if (configResponse.auth?.status === 'authorized') {
       this.isInGuestMode.next(false);
     }
 

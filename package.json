@@ -35,7 +35,7 @@
     "@sentry/tracing": "^7.27.0",
     "@zoom/appssdk": "^0.16.7",
     "express": "^4.15.2",
-    "firebase": "^9.1.0",
+    "firebase": "^9.15.0",
     "js-cookie": "^3.0.1",
     "project-name-generator": "^2.1.9",
     "rxfire": "^6.0.0",

@@ -46,26 +46,28 @@
 
 <ng-template #create>
   <ng-container *ngIf="vm | async as viewModel; else loading">
-    <mat-card-content>
-      <form class="full-bleed">
-        <ng-container *ngIf="!viewModel.user?.displayName">
-          <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+    <ng-container *ngIf="!(isBusy | async); else loading">
+      <mat-card-content>
+        <form class="full-bleed">
+          <ng-container *ngIf="!viewModel.user?.displayName">
+            <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+          </ng-container>
+          <ng-container *ngTemplateOutlet="joinMode"></ng-container>
+        </form>
+        <button
+          color="primary"
+          mat-flat-button
+          (click)="onCreateRoomClicked.next()"
+          [disabled]="(isBusy | async) || !name.value.length"
+        >
+          <mat-icon>add</mat-icon>
+          Create new Room
+        </button>
+        <ng-container *ngIf="!viewModel.user">
+          <ng-container *ngTemplateOutlet="terms"></ng-container>
         </ng-container>
-        <ng-container *ngTemplateOutlet="joinMode"></ng-container>
-      </form>
-      <button
-        color="primary"
-        mat-flat-button
-        (click)="onCreateRoomClicked.next()"
-        [disabled]="(isBusy | async) || !name.value.length"
-      >
-        <mat-icon>add</mat-icon>
-        Create new Room
-      </button>
-      <ng-container *ngIf="!viewModel.user">
-        <ng-container *ngTemplateOutlet="terms"></ng-container>
-      </ng-container>
-    </mat-card-content>
+      </mat-card-content>
+    </ng-container>
   </ng-container>
 </ng-template>
 
@@ -115,10 +117,7 @@
     <a routerLink="/join" *ngIf="(pageMode | async) === PageMode.CREATE"
       >Join an existing room</a
     >
-    <a
-      routerLink="/history"
-      >Previous sessions</a
-    >
+    <a routerLink="/history">Previous sessions</a>
     <!--         <a (click)="signOut()" *ngIf="(vm | async)?.user">Delete temporary account</a>
  -->
   </div>

@@ -91,6 +91,7 @@
         #video
         loop
         muted
+        preload="none"
         (loadedmetadata)="video.muted = true"
         [controls]="!video.paused"
         poster="/assets/video_poster.webp"

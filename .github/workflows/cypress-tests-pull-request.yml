@@ -18,3 +18,4 @@ jobs:
           start: npm run start:emulator
         env:
           CYPRESS_APP_CHECK_TOKEN: ${{secrets.APP_CHECK_TOKEN}}
+          FIREBASE_TOKEN: ${{secrets.FIREBASE_CI_TOKEN}}

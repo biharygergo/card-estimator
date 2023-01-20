@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import * as Sentry from '@sentry/angular';
+import Cookies from 'js-cookie';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   connectFirestoreEmulator,
   getFirestore,
+  initializeFirestore,
   provideFirestore,
 } from '@angular/fire/firestore';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
@@ -76,10 +78,7 @@ function loadAppConfig(): Promise<any> {
   });
 }
 @NgModule({
-  declarations: [
-    AppComponent,
-    RoomLoadingComponent,
-  ],
+  declarations: [AppComponent, RoomLoadingComponent],
   imports: [
     AppRoutingModule,
     AppConfigModule,
@@ -88,9 +87,16 @@ function loadAppConfig(): Promise<any> {
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
-      const firestore = getFirestore();
+      let firestore;
+
       if (environment.useEmulators) {
+        const app = initializeApp(environment.firebase);
+        firestore = initializeFirestore(app, {
+          experimentalAutoDetectLongPolling: true,
+        });
         connectFirestoreEmulator(firestore, 'localhost', 8080);
+      } else {
+        firestore = getFirestore();
       }
       return firestore;
     }),
@@ -122,8 +128,16 @@ function loadAppConfig(): Promise<any> {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
       }
 
-      if (!environment.production) {
-        (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      if (
+        !environment.production ||
+        (typeof window !== 'undefined' && window.origin.includes('localhost'))
+      ) {
+        if (typeof window !== 'undefined') {
+          (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
+            Cookies.get('APP_CHECK_CI_TOKEN');
+        } else {
+          (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+        }
       }
       return initializeAppCheck(undefined, {
         provider,

@@ -21,6 +21,7 @@
         (click)="setWildcard()"
         [color]="currentEstimate === null && 'accent'"
         [disabled]="isObserver || (room?.rounds)[currentRound]?.show_results"
+        id="pass-option-card"
       >
         ?
       </button>

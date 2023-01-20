@@ -49,3 +49,7 @@ Thumbs.db
 *.log
 sonar-project.properties
 .scannerwork
+
+cypress.env.json
+/cypress/videos
+/cypress/screenshots

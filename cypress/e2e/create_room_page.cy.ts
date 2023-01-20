@@ -7,7 +7,7 @@ describe('Creating a room as a new user', () => {
   beforeEach(() => {
     clearFirebaseLocalStorage();
     setAppCheckCookie();
-    cy.visit('http://localhost:4200/create');
+    cy.visit('/create');
     cy.contains('Got it').click();
   });
 
@@ -26,7 +26,7 @@ describe('Creating a room as a new user', () => {
 describe('Creating a room as a returning user', () => {
   beforeEach(() => {
     setAppCheckCookie();
-    cy.visit('http://localhost:4200/create');
+    cy.visit('/create');
     cy.contains('Got it').click();
   });
 

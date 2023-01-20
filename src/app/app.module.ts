@@ -128,7 +128,10 @@ function loadAppConfig(): Promise<any> {
         provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
       }
 
-      if (!environment.production) {
+      if (
+        !environment.production ||
+        (typeof window !== 'undefined' && window.origin.includes('localhost'))
+      ) {
         if (typeof window !== 'undefined') {
           (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
             Cookies.get('APP_CHECK_CI_TOKEN');

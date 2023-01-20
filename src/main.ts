@@ -11,7 +11,11 @@ if (environment.production) {
 }
 
 function bootstrap() {
-  if (environment.production) {
+  if (
+    environment.production &&
+    typeof window !== 'undefined' &&
+    !window.origin.includes('localhost')
+  ) {
     Sentry.init({
       dsn: 'https://d71076cd76b04dc88d3ee08f8226af9b@o200611.ingest.sentry.io/6568379',
       integrations: [

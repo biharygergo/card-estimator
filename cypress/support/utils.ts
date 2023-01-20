@@ -8,7 +8,7 @@ export function clearFirebaseLocalStorage() {
 
 export function createNewRoom(userName: string) {
   clearFirebaseLocalStorage();
-  cy.visit('http://localhost:4200/create');
+  cy.visit('/create');
 
   cy.get('#name').click().type('Test User');
   cy.get('#create-room-button').click();

@@ -4,6 +4,7 @@
       mode="determinate"
       [value]="progressValue"
       [color]="durationLeft < 10 ? 'accent' : 'primary'"
+      id="timer-progress-bar"
     ></mat-progress-bar>
     <span class="time-left">
       <ng-container *ngIf="timer.state === TimerState.INIT"
@@ -26,6 +27,7 @@
       *ngIf="
         timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
       "
+      id="add-time-button"
     >
       <mat-icon>add</mat-icon>
       30s
@@ -34,6 +36,7 @@
       mat-stroked-button
       (click)="resetTimer(true)"
       *ngIf="timer.state === TimerState.STOPPED"
+      id="reset-button"
     >
       <mat-icon>restart_alt</mat-icon>
       Reset
@@ -46,6 +49,7 @@
         timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
       "
       [disabled]="durationLeft === 0"
+      id="start-button"
     >
       <mat-icon>play_arrow</mat-icon>
       Start
@@ -55,6 +59,7 @@
       color="primary"
       (click)="stopTimer(true)"
       *ngIf="timer.state === TimerState.ACTIVE"
+      id="pause-button"
     >
       <mat-icon>pause</mat-icon>
       Pause

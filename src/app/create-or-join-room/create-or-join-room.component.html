@@ -59,6 +59,7 @@
           mat-flat-button
           (click)="onCreateRoomClicked.next()"
           [disabled]="(isBusy | async) || !name.value.length"
+          id="create-room-button"
         >
           <mat-icon>add</mat-icon>
           Create new Room
@@ -94,6 +95,7 @@
           !roomId.value.length || !name.value.length || (isBusy | async)
         "
         (click)="onJoinRoomClicked.next()"
+        id="join-room-button"
       >
         <mat-icon>login</mat-icon>
         Join Room
@@ -125,7 +127,7 @@
 
 <ng-template #welcomeBack>
   <div class="welcome-name-container">
-    <h1>Welcome back, {{ (user | async)?.displayName }}!</h1>
+    <h1 id="welcome-back">Welcome back, {{ (user | async)?.displayName }}!</h1>
   </div>
 </ng-template>
 
@@ -154,6 +156,7 @@
       [formControl]="roomId"
       (blur)="onRoomIdBlur()"
       required
+      id="room-id"
     />
   </mat-form-field>
 </ng-template>
@@ -168,6 +171,7 @@
       autocomplete="name"
       (blur)="onNameBlur()"
       required
+      id="name"
     />
   </mat-form-field>
 </ng-template>

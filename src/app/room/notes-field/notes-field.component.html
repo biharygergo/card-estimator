@@ -9,6 +9,7 @@
       (focus)="onNoteFocus()"
       rows="1"
       cdkTextareaAutosize
+      id="notes-field"
     ></textarea>
     <mat-hint *ngIf="isNoteDisabled && editedBy"
       >{{ editedBy?.name || "Nobody" }} is taking notes</mat-hint

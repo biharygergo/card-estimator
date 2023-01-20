@@ -15,7 +15,7 @@
     "prerender": "ng run estimator:prerender",
     "sonar": "sonar-scanner",
     "analyze": "webpack-bundle-analyzer dist/estimator/browser/stats.json",
-    "start-with-emulator": "firebase emulators:start"
+    "start:emulator": "firebase emulators:start"
   },
   "private": true,
   "dependencies": {

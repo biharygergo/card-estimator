@@ -1,7 +1,9 @@
 name: Run Cypress E2E Tests
 
 on: [push]
-
+env:
+  CYPRESS_APP_CHECK_TOKEN: ${{secrets.APP_CHECK_TOKEN}}
+  FIREBASE_TOKEN: ${{secrets.FIREBASE_CI_TOKEN}}
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -27,6 +29,3 @@ jobs:
           build: npm run build
           start: npm run start:emulator
           wait-on: 'http://localhost:6001'
-        env:
-          CYPRESS_APP_CHECK_TOKEN: ${{secrets.APP_CHECK_TOKEN}}
-          FIREBASE_TOKEN: ${{secrets.FIREBASE_CI_TOKEN}}

@@ -4,6 +4,7 @@ on: [push]
 env:
   CYPRESS_APP_CHECK_TOKEN: ${{secrets.APP_CHECK_TOKEN}}
   FIREBASE_TOKEN: ${{secrets.FIREBASE_CI_TOKEN}}
+  FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
 jobs:
   cypress-run:
     runs-on: ubuntu-latest

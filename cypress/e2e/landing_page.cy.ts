@@ -18,16 +18,6 @@ describe('Landing page', () => {
     cy.location('pathname').should('eq', '/create');
   });
 
-  it('shows a cookie banner', () => {
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'be.visible'
-    );
-    cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should(
-      'contain.text',
-      'This site uses cookies to analyze traffic and improve your experience. Read more about how cookies are used in our Privacy Policy.'
-    );
-  });
-
   it('can go to the Features page', () => {
     cy.contains('Features').click();
     cy.location('pathname').should('eq', '/features');

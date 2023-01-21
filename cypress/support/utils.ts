@@ -13,5 +13,6 @@ export function createNewRoom(userName: string) {
   cy.get('#name').click().type('Test User');
   cy.get('#create-room-button').click();
   cy.location('pathname').should('include', '/room');
+  cy.wait(1000);
   return cy.url();
 }

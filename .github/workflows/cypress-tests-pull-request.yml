@@ -6,17 +6,27 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
+      # Cache emulator
+      - name: Cache firebase emulators
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FIREBASE_EMULATORS_PATH }}
+          key:
+            ${{ runner.os }}-firebase-emulators-${{
+            hashFiles('emulator-cache/**') }}
+        continue-on-error: true
+      # Checkout repo
       - name: Checkout
         uses: actions/checkout@v3
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
+      - run: cd functions && npm ci && npm run build
       - name: Cypress run
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
         with:
-          build_functions: cd functions && npm run install && npm run build
           build: npm run build
           start: npm run start:emulator
-          wait-on: http://localhost:6001
+          wait-on: 'http://localhost:6001'
         env:
           CYPRESS_APP_CHECK_TOKEN: ${{secrets.APP_CHECK_TOKEN}}
           FIREBASE_TOKEN: ${{secrets.FIREBASE_CI_TOKEN}}

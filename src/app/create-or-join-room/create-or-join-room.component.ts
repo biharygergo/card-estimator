@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
-import { AuthIntent, AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
 import {
@@ -37,6 +37,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
+import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -180,11 +181,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     this.onSignInClicked
       .pipe(
-        switchMap(async () => {
-          if (this.config.isRunningInZoom) {
-            return from(this.signInWithGoogleInZoom());
-          }
-          return from(this.authService.signInWithGoogle());
+        tap(() => {
+          this.dialog.open(...signUpOrLoginDialogCreator({intent: SignUpOrLoginIntent.SIGN_IN}));
         }),
         withLatestFrom(this.currentPath),
         tap(([_, currentPath]) => {
@@ -200,16 +198,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy.next();
     this.destroy.complete();
-  }
-
-  signInWithGoogleInZoom() {
-    this.dialog.open(
-      ...authProgressDialogCreator({
-        initialState: AuthProgressState.IN_PROGRESS,
-        startAccountSetupOnOpen: false,
-      })
-    );
-    return this.zoomService.openUrl(this.authService.getApiAuthUrl(AuthIntent.SIGN_IN), true);
   }
 
   async joinRoom() {

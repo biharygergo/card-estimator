@@ -168,7 +168,7 @@ export class AnalyticsService {
     });
   }
 
-  logClickedSignUpWithGoogle(location: 'history' | 'profile-modal') {
+  logClickedSignUpWithGoogle(location: 'history' | 'profile-modal' | 'sign-in-dialog') {
     logEvent(this.analytics, 'clicked_sign_up_with_google', {
       buttonLocation: location,
     });

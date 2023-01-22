@@ -92,7 +92,7 @@ function loadAppConfig(): Promise<any> {
       if (environment.useEmulators) {
         const app = initializeApp(environment.firebase);
         firestore = initializeFirestore(app, {
-          experimentalAutoDetectLongPolling: true,
+          experimentalForceLongPolling: true,
         });
         connectFirestoreEmulator(firestore, 'localhost', 8080);
       } else {

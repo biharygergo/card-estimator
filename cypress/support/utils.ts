@@ -10,7 +10,7 @@ export function createNewRoom(userName: string) {
   clearFirebaseLocalStorage();
   cy.visit('/create');
 
-  cy.get('#name').click().type('Test User');
+  cy.get('#name').click().type(userName);
   cy.get('#create-room-button').click();
   cy.location('pathname').should('include', '/room');
   cy.wait(1000);

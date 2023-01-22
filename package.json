@@ -8,7 +8,6 @@
     "build": "npm run prerender",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "dev:ssr": "ng run estimator:serve-ssr",
     "serve:ssr": "node dist/estimator/server/main.js",
     "build:ssr": "ng build && ng run estimator:server",

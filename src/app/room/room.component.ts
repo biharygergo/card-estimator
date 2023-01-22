@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import {
   EstimatorService,
-  saveJoinedRoomData,
 } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
@@ -551,7 +550,6 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.room.roomId,
           this.estimatorService.activeMember
         );
-        saveJoinedRoomData(undefined);
       }
 
       this.router.navigate(['join']);

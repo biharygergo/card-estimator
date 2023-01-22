@@ -28,7 +28,7 @@ jobs:
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
         with:
           browser: chrome
-          build: npm run build
+          build: npm run build:dev
           start: npm run start:emulator
           wait-on: 'http://localhost:6001'
       # after the test run completes

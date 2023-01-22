@@ -14,9 +14,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.FIREBASE_EMULATORS_PATH }}
-          key:
-            ${{ runner.os }}-firebase-emulators-${{
-            hashFiles('emulator-cache/**') }}
+          key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('emulator-cache/**') }}
         continue-on-error: true
       # Checkout repo
       - name: Checkout

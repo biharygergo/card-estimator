@@ -4,9 +4,11 @@ import {
   getAdditionalUserInfo,
   linkWithCredential,
   signInWithCredential,
+  signInWithEmailAndPassword,
   user,
 } from '@angular/fire/auth';
 import {
+  EmailAuthProvider,
   linkWithPopup,
   signInAnonymously,
   signInWithPopup,
@@ -117,10 +119,7 @@ export class AuthService {
 
     const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
 
-    const googleProviderData = userCredential.user.providerData.find(
-      (providerData) => providerData.providerId === provider.providerId
-    );
-    await this.handleSignInResult(googleProviderData, { isNewUser });
+    await this.handleSignInResult({ isNewUser });
     this.snackbar.open(`You are now signed in, welcome back!`, null, {
       duration: 3000,
       horizontalPosition: 'right',
@@ -137,20 +136,45 @@ export class AuthService {
         )
       : await linkWithPopup(this.auth.currentUser, provider);
 
-    const googleProviderData = userCredential.user.providerData.find(
-      (providerData) => providerData.providerId === provider.providerId
-    );
-    await this.handleSignInResult(googleProviderData, { isNewUser: true });
+    await this.handleSignInResult({ isNewUser: true });
     this.snackbar.open(`Your account is now set up, awesome!`, null, {
       duration: 3000,
       horizontalPosition: 'right',
     });
   }
 
-  private async handleSignInResult(
-    providerData: UserInfo,
-    options: { isNewUser: boolean }
-  ) {
+  async signInWithEmailAndPassword(email: string, password: string) {
+    const userCredential = await signInWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+
+    const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
+
+    await this.handleSignInResult({ isNewUser });
+    this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  async linkAccountWithEmailAndPassword(email: string, password: string) {
+    const credential = EmailAuthProvider.credential(email, password);
+
+    const userCredential = await linkWithCredential(
+      this.auth.currentUser,
+      credential
+    );
+
+    await this.handleSignInResult({ isNewUser: true });
+    this.snackbar.open(`Your account is now set up, awesome!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  private async handleSignInResult(options: { isNewUser: boolean }) {
     if (
       new SupportedPhotoUrlPipe().isSupported(
         this.auth.currentUser.photoURL
@@ -236,9 +260,7 @@ export class AuthService {
     );
   }
 
-  getUserProfiles(
-    userIds: string[]
-  ): Observable<UserProfileMap> {
+  getUserProfiles(userIds: string[]): Observable<UserProfileMap> {
     const userProfileObservables = userIds.map((userId) =>
       this.getUserProfile(userId).pipe(map((profile) => ({ profile, userId })))
     );

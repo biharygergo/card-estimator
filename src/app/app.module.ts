@@ -132,7 +132,7 @@ function loadAppConfig(): Promise<any> {
         !environment.production ||
         (typeof window !== 'undefined' && window.origin.includes('localhost'))
       ) {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && !window.origin.includes('4200')) {
           (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
             Cookies.get('APP_CHECK_CI_TOKEN');
         } else {

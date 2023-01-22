@@ -1,30 +1,17 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
-import {
-  BehaviorSubject,
-  catchError,
-  EMPTY,
-  from,
-  of,
-  Subject,
-  switchMap,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
-import { AuthIntent, AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import {
   ConfigService,
   HIDE_PERMANENT_ACCOUNT_BANNER_KEY,
 } from 'src/app/services/config.service';
-import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import {
-  authProgressDialogCreator,
-  AuthProgressState,
-} from '../auth-progress-dialog/auth-progress-dialog.component';
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 
 @Component({
   selector: 'anonymous-user-banner',
@@ -47,9 +34,7 @@ export class AnonymousUserBannerComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly snackBar: MatSnackBar,
     private readonly analyticsService: AnalyticsService,
-    private readonly zoomApiService: ZoomApiService,
     private readonly dialog: MatDialog,
     private readonly configService: ConfigService,
     @Inject(APP_CONFIG) public config: AppConfig
@@ -58,60 +43,12 @@ export class AnonymousUserBannerComponent implements OnInit {
   ngOnInit(): void {
     this.onSignUpClicked
       .pipe(
-        switchMap(async () => {
-          this.isBusy.next(true);
-          let signInPromise: Promise<void>;
-          if (this.config.isRunningInZoom) {
-            this.dialog.open(
-              ...authProgressDialogCreator({
-                initialState: AuthProgressState.IN_PROGRESS,
-                startAccountSetupOnOpen: false,
-              })
-            );
-            await this.zoomApiService.openUrl(
-              this.authService.getApiAuthUrl(
-                AuthIntent.LINK_ACCOUNT
-                // this.activatedRoute.snapshot.toString()
-              ),
-              true
-            );
-            // This promise never resolves, as the app will be reloaded on Auth success
-            signInPromise = new Promise(() => {});
-          } else {
-            signInPromise = this.authService
-              .linkAccountWithGoogle()
-              .catch((error) => {
-                if (error.code === 'auth/credential-already-in-use') {
-                  this.dialog.open(
-                    ...authProgressDialogCreator({
-                      initialState: AuthProgressState.ACCOUNT_EXISTS,
-                      startAccountSetupOnOpen: false,
-                    })
-                  );
-                }
-              });
-          }
-          return from(signInPromise).pipe(
-            tap(() => {
-              this.isBusy.next(false);
-            }),
-            catchError((error) => {
-              this.isBusy.next(false);
-              console.error('error here', error);
-              this.snackBar.open(
-                `Failed to link account with Google. The issue is: ${error.message}`,
-                null,
-                {
-                  duration: 3000,
-                  horizontalPosition: 'right',
-                }
-              );
-
-              return of({});
+        tap(() => {
+          this.dialog.open(
+            ...signUpOrLoginDialogCreator({
+              intent: SignUpOrLoginIntent.LINK_ACCOUNT,
             })
           );
-        }),
-        tap(() => {
           this.analyticsService.logClickedSignUpWithGoogle(
             this.bannerStyle === 'default' ? 'history' : 'profile-modal'
           );

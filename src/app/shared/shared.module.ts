@@ -33,7 +33,7 @@ import { ProfileDropdownComponent } from './profile-dropdown/profile-dropdown.co
 import { SessionHistoryComponent } from './session-history/session-history.component';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { SupportedPhotoUrlPipe } from './supported-photo-url.pipe';
-import { ZoomAppBannerComponent } from './zoom-app-banner/zoom-app-banner.component';
+import { SignUpOrLoginDialogComponent } from './sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +47,7 @@ import { ZoomAppBannerComponent } from './zoom-app-banner/zoom-app-banner.compon
     ResizeMonitorDirective,
     RoundResultsComponent,
     EstimateConverterPipe,
+    SignUpOrLoginDialogComponent,
   ],
   imports: [
     CommonModule,

@@ -3,16 +3,21 @@ import {
   addDoc,
   arrayRemove,
   arrayUnion,
-  collectionData,
   collectionSnapshots,
   docData,
-  docSnapshots,
   Firestore,
   orderBy,
   query,
   where,
 } from '@angular/fire/firestore';
-import * as generate from 'project-name-generator';
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+  starWars,
+} from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
@@ -141,10 +146,16 @@ export class EstimatorService {
   async createRoom(member: Member): Promise<{ room: Room; member: Member }> {
     await this.signInAsMember(member);
 
-    let roomId = generate({ words: 3 }).dashed;
+    const customConfig: Config = {
+      dictionaries: [adjectives, colors, animals, starWars],
+      separator: '-',
+      length: 3,
+    };
+
+    let roomId = uniqueNamesGenerator(customConfig);
 
     if (await this.doesRoomAlreadyExist(roomId)) {
-      roomId = generate({ words: 4 }).dashed;
+      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 });
     }
 
     const room: Room = {

@@ -21,7 +21,6 @@ import {
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
-  RoomData,
   Room,
   Member,
   CardSet,
@@ -47,43 +46,6 @@ import { createHash } from '../utils';
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
 export class NotLoggedInError extends Error {}
-
-const LAST_ROOM_DATA = 'CARD_ESTIMATOR_LAST_ROOM_DATA';
-
-export const saveJoinedRoomData = (roomData: RoomData | undefined) => {
-  if (window.localStorage) {
-    if (roomData) {
-      window.localStorage.setItem(LAST_ROOM_DATA, JSON.stringify(roomData));
-    } else {
-      window.localStorage.removeItem(LAST_ROOM_DATA);
-    }
-  }
-};
-
-const isNewerThanTwoWeeks = (roomDate: Date) => {
-  const twoWeeksAgo = new Date();
-  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-
-  return twoWeeksAgo.getTime() < roomDate.getTime();
-};
-
-export const retrieveRoomData = (): RoomData | undefined => {
-  if (window.localStorage) {
-    const data = JSON.parse(window.localStorage.getItem(LAST_ROOM_DATA)) as
-      | RoomData
-      | undefined;
-    if (
-      data &&
-      data.createdAt &&
-      isNewerThanTwoWeeks(new Date(data.createdAt))
-    ) {
-      return data;
-    } else {
-      saveJoinedRoomData(undefined);
-      return undefined;
-    }
-  }
-};
 
 @Injectable({
   providedIn: 'root',
@@ -175,12 +137,6 @@ export class EstimatorService {
 
     this.activeMember = member;
 
-    saveJoinedRoomData({
-      roomId: room.roomId,
-      memberId: member.id,
-      createdAt: new Date().toISOString(),
-    });
-
     return { room, member };
   }
 
@@ -206,12 +162,6 @@ export class EstimatorService {
     });
 
     this.activeMember = member;
-
-    saveJoinedRoomData({
-      roomId,
-      memberId: member.id,
-      createdAt: new Date().toISOString(),
-    });
 
     return member;
   }
@@ -249,7 +199,12 @@ export class EstimatorService {
         if (!room) {
           throw new RoomNotFoundError();
         }
-        this.activeMember = room.members.find((m) => m.id === user?.uid);
+        const member = room.members.find((m) => m.id === user?.uid);
+        if (!member) {
+          throw new MemberNotFoundError();
+        }
+
+        this.activeMember = member;
       }),
       map(([_user, room]) => room)
     );

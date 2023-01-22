@@ -1,5 +1,10 @@
 <ng-container>
-  <button mat-stroked-button [matMenuTriggerFor]="menu" class="menu-button">
+  <button
+    mat-stroked-button
+    [matMenuTriggerFor]="menu"
+    class="menu-button"
+    id="menu-button"
+  >
     <mat-icon>more_vert</mat-icon>
     Menu
   </button>
@@ -8,6 +13,7 @@
       mat-menu-item
       (click)="openAvatarSelector()"
       *ngIf="currentUser | async as user"
+      id="account-menu-item"
     >
       <mat-icon>account_circle</mat-icon>
       <span>My account</span>

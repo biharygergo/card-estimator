@@ -115,18 +115,6 @@
             "scripts": []
           }
         },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "estimator:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "estimator:serve:production"
-            }
-          }
-        },
         "deploy": {
           "builder": "@angular/fire:deploy",
           "options": {}

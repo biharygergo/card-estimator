@@ -5,8 +5,12 @@ import { AuthService } from 'src/app/services/auth.service';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  MatDialogConfig,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
+import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
@@ -34,20 +38,87 @@ type Avatar = {
   url: string;
 };
 
-const createAvatars = (count: number, seed?: string): Avatar[] => {
+const createAvatars = (
+  count: number,
+  facialHair: string,
+  hair: string,
+  skinTone: string,
+  seed?: string
+): Avatar[] => {
   const avatars: Avatar[] = [];
+  if (facialHair === '') {
+    facialHair = facialHairOptions[1].value;
+  }
+  if (hair === '') {
+    hair = hairOptions.map(option => option.value).join(',');
+  }
+  if (skinTone === '') {
+    skinTone = skinToneOptions.map(option => option.value).join(',');
+  }
+
   for (let i = 0; i < count; i++) {
     avatars.push({
       name: `Avatar ${i + 1}`,
       url: `https://avatars.dicebear.com/api/avataaars/${
         seed ?? ''
-      }${i}.svg?style=circle&backgroundColor=%23ffffff&mouth=default,smile&eyebrow=default,defaultNatural,flat,flatNatural,raised,raisedExcited,raisedExcitedNatural&eyes=default,roll,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky`,
+      }${i}.svg?style=circle&backgroundColor=%23ffffff&mouth=default,smile&eyebrow=default,defaultNatural,flat,flatNatural,raised,raisedExcited,raisedExcitedNatural&eyes=default,roll,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}`,
     });
   }
   return avatars;
 };
+
+const hairOptions: SelectOption[] = [
+  'bigHair',
+  'bun',
+  'curly',
+  'curvy',
+  'dreads',
+  'eyepatch',
+  'frizzle',
+  'fro',
+  'hat',
+  'hijab',
+  'shaggy',
+  'shavedSides',
+  'shortCurly',
+  'shortFlat',
+  'shortRound',
+  'shortWaved',
+  'sides',
+  'straight01',
+  'turban',
+  'winterHat02',
+].map((value) => ({ label: value, value }));
+
+const skinToneOptions: SelectOption[] = [
+  '614335',
+  'ae5d29',
+  'd08b5b',
+  'edb98a',
+  'f8d25c',
+  'fd9841',
+  'ffdbb4',
+].map((colorCode) => ({ value: colorCode, label: colorCode }));
+
+const facialHairOptions: SelectOption[] = [
+  {
+    label: 'None',
+    value: '0',
+  },
+  {
+    label: 'Maybe',
+    value: '50',
+  },
+  { label: 'Always', value: '100' },
+];
+
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
 export const AVATAR_SELECTOR_MODAL = 'avatar-selector-modal';
-const AVATAR_COUNT = 109;
+const AVATAR_COUNT = 59;
 @Component({
   selector: 'app-avatar-selector-modal',
   templateUrl: './avatar-selector-modal.component.html',
@@ -56,7 +127,30 @@ const AVATAR_COUNT = 109;
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   selectedTabIndex = this.dialogData.openAtTab === 'avatar' ? 1 : 0;
 
-  avatars = createAvatars(AVATAR_COUNT);
+  facialHairOptions: SelectOption[] = facialHairOptions;
+  hairOptions: SelectOption[] = hairOptions;
+  skinToneOptions: SelectOption[] = skinToneOptions;
+
+  selectedFacialHairOption = facialHairOptions[1].value;
+  selectedHairOptions = hairOptions.reduce((acc, curr) => {
+    acc[curr.value] = true;
+    return acc;
+  }, {});
+  selectedSkinToneOptions = skinToneOptions.reduce((acc, curr) => {
+    acc[curr.value] = true;
+    return acc;
+  }, {});
+
+  avatars = createAvatars(
+    AVATAR_COUNT,
+    this.selectedFacialHairOption,
+    Object.keys(this.selectedHairOptions)
+      .filter((key) => this.selectedHairOptions[key])
+      .join(','),
+    Object.keys(this.selectedSkinToneOptions)
+      .filter((key) => this.selectedSkinToneOptions[key])
+      .join(',')
+  );
   user: User | undefined;
   readonly isSavingUser = new BehaviorSubject<boolean>(false);
   readonly onClickUpdateUserName = new Subject<void>();
@@ -121,7 +215,17 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   }
 
   randomizeAvatars() {
-    this.avatars = createAvatars(AVATAR_COUNT, Math.random().toString());
+    this.avatars = createAvatars(
+      AVATAR_COUNT,
+      this.selectedFacialHairOption,
+      Object.keys(this.selectedHairOptions)
+      .filter((key) => this.selectedHairOptions[key])
+      .join(','),
+    Object.keys(this.selectedSkinToneOptions)
+      .filter((key) => this.selectedSkinToneOptions[key])
+      .join(','),
+      Math.random().toString()
+    );
     this.analytics.logClickedRandomizeAvatars();
   }
 

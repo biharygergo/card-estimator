@@ -94,3 +94,15 @@
 .section-title {
     margin-top: 1rem;
 }
+
+.customizer-panel {
+    box-shadow: none;
+    border: 1px solid var(--main-color)
+}
+.configuration-row {
+    padding: 0.5rem 0rem;
+}
+
+.chip-selector {
+    margin-bottom: 0.5rem;
+}

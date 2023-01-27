@@ -26,7 +26,11 @@
             <div class="profile-details">
               <mat-form-field class="name" appearance="outline">
                 <mat-label>Account type</mat-label>
-                <input matInput [formControl]="accountTypeForm" id="account-type-input" />
+                <input
+                  matInput
+                  [formControl]="accountTypeForm"
+                  id="account-type-input"
+                />
               </mat-form-field>
               <mat-form-field class="name" appearance="outline">
                 <mat-label>Your name</mat-label>
@@ -50,8 +54,81 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Avatar"
-        ><div class="avatar-selector">
+      <mat-tab label="Avatar">
+        <div class="configuration-row">
+          <mat-accordion displayMode="flat">
+            <mat-expansion-panel class="customizer-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Customize avatars</mat-panel-title>
+              </mat-expansion-panel-header>
+              <!-- <span>Facial hair</span>
+              <mat-chip-listbox
+                aria-label="Facial hair options"
+                selectable
+                class="chip-selector"
+              >
+                <mat-chip-option
+                  *ngFor="let option of facialHairOptions"
+                  [selected]="selectedFacialHairOption === option.value"
+                  (click)="selectedFacialHairOption = option.value"
+                  >{{ option.label }}</mat-chip-option
+                >
+              </mat-chip-listbox> -->
+              <span>Hair</span>
+              <mat-chip-listbox
+                aria-label="Facial hair options"
+                class="chip-selector"
+                multiple
+                selectable
+              >
+                <mat-chip-option
+                  *ngFor="let option of hairOptions"
+                  [selected]="selectedHairOptions[option.value] === true"
+                  (click)="
+                    selectedHairOptions[option.value] =
+                      !selectedHairOptions[option.value]
+                  "
+                  >{{ option.label }}</mat-chip-option
+                >
+              </mat-chip-listbox>
+              <span>Skin tone</span>
+              <mat-chip-listbox
+                aria-label="Skin tone options"
+                class="chip-selector"
+                multiple
+                selectable
+              >
+                <mat-chip-option
+                  *ngFor="let option of skinToneOptions"
+                  [selected]="selectedSkinToneOptions[option.value] === true"
+                  (click)="
+                    selectedSkinToneOptions[option.value] =
+                      !selectedSkinToneOptions[option.value]
+                  "
+                  [style.backgroundColor]="'#' + option.value"
+                  >#{{ option.label }}</mat-chip-option
+                >
+              </mat-chip-listbox>
+              <small>
+                Avatars provided by DiceBar:
+                https://dicebear.com/styles/avataaars <br />
+                The options selected above provide seed for avatar generation.
+                Generated avatars might still include items that don't fit the
+                filters.
+              </small>
+              <mat-action-row>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="randomizeAvatars()"
+                >
+                  Generate avatars
+                </button>
+              </mat-action-row>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <div class="avatar-selector">
           <div class="avatar-selector-item clear">
             <div class="avatar avatar-image" (click)="selectAvatar(null)">
               <div>{{ user?.displayName?.charAt(0) }}</div>
@@ -96,7 +173,7 @@
       *ngIf="selectedTabIndex === 1"
     >
       <mat-icon>shuffle</mat-icon>
-      Randomize avatars
+      Generate new avatars
     </button>
   </div>
 </div>

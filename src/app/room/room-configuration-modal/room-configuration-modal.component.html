@@ -1,0 +1,52 @@
+<div class="modal-container">
+  <div mat-dialog-content>
+    <h1>Configure room</h1>
+    <p>Lorem ipsum dolor sit amet consecetur sit malit.</p>
+    <mat-tab-group
+      class="custom-tab-group"
+      mat-align-tabs="center"
+      [dynamicHeight]="true"
+      backgroundColor="primary"
+    >
+      <mat-tab label="Room">
+        <div class="tab-content">
+          <h3>Permissions</h3>
+          <div class="permissions-container">
+            <div
+              class="permission"
+              *ngFor="let configuration of permissionForms"
+            >
+              <h4 class="permission-title">
+                <mat-icon>{{ configuration.icon }}</mat-icon
+                >{{ configuration.prompt }}
+              </h4>
+              <mat-chip-listbox
+                aria-label="Topic editors"
+                class="chip-selector"
+                multiple
+                selectable
+              >
+                <mat-chip-option
+                  *ngFor="let option of configuration.options"
+                  [selected]="configuration.isSelected(option.value)"
+                  (click)="configuration.toggleOption(option.value)"
+                  >{{ option.label }}</mat-chip-option
+                >
+              </mat-chip-listbox>
+              <mat-divider></mat-divider>
+            </div>
+          </div>
+          <h4>Personalize room ID</h4>
+          <mat-form-field class="room-id" appearance="outline">
+            <mat-label>Room ID</mat-label>
+            <input matInput [formControl]="personalizedRoomId" required />
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="Members"> </mat-tab>
+    </mat-tab-group>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary">Save</button>
+  </div>
+</div>

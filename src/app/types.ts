@@ -57,6 +57,7 @@ export interface Notes {
 }
 
 export enum MemberType {
+  CREATOR = 'CREATOR',
   OBSERVER = 'OBSERVER',
   ESTIMATOR = 'ESTIMATOR',
 }

@@ -1,0 +1,31 @@
+.tab-content {
+    padding-top: 0.5rem;
+}
+.permissions-container {
+  max-height: 200px;
+  overflow-y: scroll;
+  background: var(--light-background-color);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.permission {
+  margin: 1rem 0;
+  .permission-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .chip-selector {
+    margin-bottom: 1rem;
+  }
+}
+
+.room-id {
+    width: 100%;
+}

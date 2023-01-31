@@ -192,3 +192,28 @@ $my-theme: mat.define-light-theme(
     }
   }
 }
+
+
+.custom-tab-group {
+  .mdc-tab-indicator {
+    display: none;
+  }
+  .mat-mdc-tab-header {
+    border-radius: 46px;
+    background-color: #edf0ff !important;
+  }
+
+  .mat-mdc-tab {
+    .mdc-tab__text-label {
+      color: #44474f !important;
+      font-weight: bold;
+    }
+    &.mdc-tab--active {
+      background-color: #d9e2ff !important;
+      border-radius: 46px;
+      .mdc-tab__text-label {
+        color: #345ca8 !important;
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@ import { AddOrUpdateTopicComponent } from './topics-sidebar/add-or-update-topic/
 import { TopicsSidebarComponent } from './topics-sidebar/topics-sidebar.component';
 import { VelocityComponent } from './velocity/velocity.component';
 import { SharedModule } from '../shared/shared.module';
+import { RoomConfigurationModalComponent } from './room-configuration-modal/room-configuration-modal.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,7 @@ const routes: Routes = [
     AddOrUpdateTopicComponent,
     CountdownTimerComponent,
     VelocityComponent,
+    RoomConfigurationModalComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })

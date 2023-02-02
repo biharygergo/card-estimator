@@ -18,3 +18,6 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Contribution
 This section is a work in progress.
+
+# License
+This work is published on Github for educational purposes. You may not use the material for commercial purposes.

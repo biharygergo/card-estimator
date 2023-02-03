@@ -1,9 +1,13 @@
+.mat-mdc-dialog-content {
+  max-height: 80vh;
+}
+
 .tab-content {
     padding-top: 0.5rem;
 }
 .permissions-container {
-  max-height: 200px;
-  overflow-y: scroll;
+  // max-height: 200px;
+  // overflow-y: scroll;
   background: var(--light-background-color);
   border-radius: 16px;
   padding: 1rem;

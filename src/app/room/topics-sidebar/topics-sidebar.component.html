@@ -17,7 +17,11 @@
       mat-button
       aria-label="Download results as .csv"
       (click)="downloadAsCsv()"
-      [disabled]="rounds.length <= 1 || config.isRunningInZoom"
+      [disabled]="
+        rounds.length <= 1 ||
+        config.isRunningInZoom ||
+        !(permissionsService.canDownloadResults() | async)
+      "
     >
       <mat-icon>download_for_offline</mat-icon>
       Download
@@ -70,7 +74,10 @@
               mat-menu-item
               aria-label="Set selected round as active"
               (click)="setActiveRound(roundNumber)"
-              [disabled]="roundNumber === currentRound"
+              [disabled]="
+                roundNumber === currentRound ||
+                !(permissionsService.canCreateRounds() | async)
+              "
             >
               <mat-icon>play_arrow</mat-icon>
               Vote now
@@ -79,6 +86,7 @@
               mat-menu-item
               aria-label="Revote selected round"
               (click)="revoteRound(roundNumber)"
+              [disabled]="!(permissionsService.canCreateRounds() | async)"
             >
               <mat-icon>clear_all</mat-icon>
               Clear votes
@@ -87,6 +95,7 @@
               mat-menu-item
               aria-label="Edit topic name of round"
               (click)="editedRound.next({round, roundIndex: roundNumber})"
+              [disabled]="!(permissionsService.canEditTopic() | async)"
             >
               <mat-icon>edit</mat-icon>
               Edit topic
@@ -143,6 +152,7 @@
       (click)="addRound()"
       *ngIf="!isAddingRound"
       class="add-round-button"
+      [disabled]="!(permissionsService.canCreateRounds() | async)"
     >
       <mat-icon>add</mat-icon>
       Add round

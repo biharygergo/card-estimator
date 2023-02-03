@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 import { Room } from 'src/app/types';
 
 @Component({
@@ -15,9 +16,11 @@ export class CardDeckComponent implements OnInit {
   @Input() estimationValues: { key: string; value: string }[];
   @Input() currentEstimate: number;
 
+  
   constructor(
     private analytics: AnalyticsService,
-    private estimatorService: EstimatorService
+    private estimatorService: EstimatorService,
+    public permissionsService: PermissionsService,
   ) {}
 
   ngOnInit(): void {}

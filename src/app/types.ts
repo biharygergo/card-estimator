@@ -39,6 +39,7 @@ export interface Room {
   createdById: string;
   memberIds: string[];
   timer?: Timer;
+  configuration?: RoomConfiguration;
 }
 
 export interface Round {
@@ -57,7 +58,6 @@ export interface Notes {
 }
 
 export enum MemberType {
-  CREATOR = 'CREATOR',
   OBSERVER = 'OBSERVER',
   ESTIMATOR = 'ESTIMATOR',
 }
@@ -116,6 +116,142 @@ export type UserDetails = {
   avatarUrl: string | null;
   email: string;
   createdAt: FieldValue;
+};
+
+export enum UserRole {
+  ROOM_MEMBER_ESTIMATOR = 'ROOM_MEMBER_ESTIMATOR',
+  ROOM_MEMBER_OBSERVER = 'ROOM_MEMBER_OBSERVER',
+  ROOM_CREATOR = 'ROOM_CREATOR',
+}
+
+export enum RoomPermissionId {
+  CAN_VOTE = 'CAN_VOTE',
+  CAN_EDIT_TOPIC = 'CAN_EDIT_TOPIC',
+  CAN_CREATE_ROUND = 'CAN_CREATE_ROUND',
+  CAN_TAKE_NOTES = 'CAN_TAKE_NOTES',
+  CAN_REVEAL_RESULTS = 'CAN_REVEAL_RESULTS',
+  CAN_VIEW_VELOCITY = 'CAN_VIEW_VELOCITY',
+  CAN_DOWNLOAD_RESULTS = 'CAN_DOWNLOAD_RESULTS',
+  CAN_CHANGE_CARD_SETS = 'CAN_CHANGE_CARD_SETS',
+  CAN_SET_TIMER = 'CAN_SET_TIMER',
+}
+
+export interface RoomPermission {
+  id: RoomPermissionId;
+  label: string;
+}
+
+export interface RoomPermissionValue {
+  permissionId: string;
+  value: Array<UserRole>;
+}
+
+export interface PermissionsMap {
+  [permissionId: string]: RoomPermissionValue;
+}
+
+export const PERMISSIONS_CATALOG: RoomPermission[] = [
+  {
+    id: RoomPermissionId.CAN_VOTE,
+    label: 'Vote on topics',
+  },
+  {
+    id: RoomPermissionId.CAN_EDIT_TOPIC,
+    label: 'Edit topics',
+  },
+  {
+    id: RoomPermissionId.CAN_CREATE_ROUND,
+    label: 'Create rounds',
+  },
+  {
+    id: RoomPermissionId.CAN_TAKE_NOTES,
+    label: 'Take notes',
+  },
+  {
+    id: RoomPermissionId.CAN_REVEAL_RESULTS,
+    label: 'Reveal results',
+  },
+  {
+    id: RoomPermissionId.CAN_VIEW_VELOCITY,
+    label: 'View velocity',
+  },
+  {
+    id: RoomPermissionId.CAN_DOWNLOAD_RESULTS,
+    label: 'Download results',
+  },
+  {
+    id: RoomPermissionId.CAN_CHANGE_CARD_SETS,
+    label: 'Modify card sets',
+  },
+  {
+    id: RoomPermissionId.CAN_SET_TIMER,
+    label: 'Set the timer',
+  },
+];
+
+export const PERMISSIONS_CATALOG_MAP: {
+  [permissionId in RoomPermissionId]: RoomPermission;
+} = PERMISSIONS_CATALOG.reduce((acc, curr) => {
+  acc[curr.id] = curr;
+  return acc;
+}, {} as any);
+
+const ALL_ROLES_ALLOWED = [
+  UserRole.ROOM_CREATOR,
+  UserRole.ROOM_MEMBER_ESTIMATOR,
+  UserRole.ROOM_MEMBER_OBSERVER,
+];
+
+export const DEFAULT_PERMISSIONS: PermissionsMap = {
+  [RoomPermissionId.CAN_VOTE]: {
+    permissionId: RoomPermissionId.CAN_VOTE,
+    value: [UserRole.ROOM_CREATOR, UserRole.ROOM_MEMBER_ESTIMATOR],
+  },
+  [RoomPermissionId.CAN_EDIT_TOPIC]: {
+    permissionId: RoomPermissionId.CAN_EDIT_TOPIC,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_CREATE_ROUND]: {
+    permissionId: RoomPermissionId.CAN_CREATE_ROUND,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_TAKE_NOTES]: {
+    permissionId: RoomPermissionId.CAN_TAKE_NOTES,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_REVEAL_RESULTS]: {
+    permissionId: RoomPermissionId.CAN_REVEAL_RESULTS,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_VIEW_VELOCITY]: {
+    permissionId: RoomPermissionId.CAN_VIEW_VELOCITY,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_DOWNLOAD_RESULTS]: {
+    permissionId: RoomPermissionId.CAN_DOWNLOAD_RESULTS,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_CHANGE_CARD_SETS]: {
+    permissionId: RoomPermissionId.CAN_CHANGE_CARD_SETS,
+    value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_SET_TIMER]: {
+    permissionId: RoomPermissionId.CAN_SET_TIMER,
+    value: ALL_ROLES_ALLOWED,
+  },
+};
+
+/** Simplified permissions model to see if a user has a given permission or not */
+export type UserPermissions = {
+  [permissionId in RoomPermissionId]: boolean;
+};
+
+export interface RoomConfiguration {
+  permissions: PermissionsMap;
+}
+
+export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {
+  permissions: DEFAULT_PERMISSIONS,
 };
 
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {

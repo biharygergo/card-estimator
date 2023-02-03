@@ -1,18 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  map,
+  share,
+  Subject,
+  takeUntil,
+} from 'rxjs';
+import { EstimatorService } from 'src/app/services/estimator.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 import { ModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
-import { MemberType } from 'src/app/types';
+import {
+  DEFAULT_PERMISSIONS,
+  DEFAULT_ROOM_CONFIGURATION,
+  PermissionsMap,
+  PERMISSIONS_CATALOG_MAP,
+  Room,
+  RoomConfiguration,
+  RoomPermissionId,
+  UserRole,
+} from 'src/app/types';
 
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
-export const roomConfigurationModalCreator =
-  (): ModalCreator<RoomConfigurationModalComponent> => [
-    RoomConfigurationModalComponent,
-    {
-      id: ROOM_CONFIGURATION_MODAL,
-      width: '90%',
-      maxWidth: '600px',
+
+export interface RoomConfigurationModalData {
+  roomId: string;
+}
+
+export const roomConfigurationModalCreator = ({
+  roomId,
+}: RoomConfigurationModalData): ModalCreator<RoomConfigurationModalComponent> => [
+  RoomConfigurationModalComponent,
+  {
+    id: ROOM_CONFIGURATION_MODAL,
+    width: '90%',
+    maxWidth: '600px',
+    data: {
+      roomId,
     },
-  ];
+  },
+];
+
+interface SelectOption<T> {
+  value: T;
+  label: string;
+}
 
 class ChipOption<T> {
   selectedValues: T[] = [];
@@ -21,14 +55,11 @@ class ChipOption<T> {
   constructor(
     public prompt: string,
     public icon: string,
-    public options: { value: T; label: string }[],
-    initialSelection: T[]
+    public options: SelectOption<T>[],
+    initialSelection: T[],
+    private onSelectionUpdated: () => {},
   ) {
-    this.selectedValues = [...initialSelection];
-    this.selectedValuesMap = initialSelection.reduce((acc, curr) => {
-      acc[this.createKey(curr)] = curr;
-      return acc;
-    }, {});
+    this.setSelection(initialSelection);
   }
 
   toggleOption(option: T) {
@@ -40,6 +71,16 @@ class ChipOption<T> {
     }
 
     this.selectedValues = Object.values(this.selectedValuesMap);
+    this.onSelectionUpdated();
+
+  }
+
+  setSelection(values: T[]) {
+    this.selectedValues = [...values];
+    this.selectedValuesMap = values.reduce((acc, curr) => {
+      acc[this.createKey(curr)] = curr;
+      return acc;
+    }, {});
   }
 
   isSelected(option: T) {
@@ -51,61 +92,172 @@ class ChipOption<T> {
   }
 }
 
-const CREATOR_OPTION = { value: MemberType.CREATOR, label: 'Creator' };
-const ESTIMATOR_OPTION = { value: MemberType.ESTIMATOR, label: 'Estimators' };
-const OBSERVER_OPTION = { value: MemberType.OBSERVER, label: 'Observers' };
+const CREATOR_OPTION = { value: UserRole.ROOM_CREATOR, label: 'Creator' };
+const ESTIMATOR_OPTION = {
+  value: UserRole.ROOM_MEMBER_ESTIMATOR,
+  label: 'Estimators',
+};
+const OBSERVER_OPTION = {
+  value: UserRole.ROOM_MEMBER_OBSERVER,
+  label: 'Observers',
+};
+
+function createChipOptionForPermission(
+  permission: RoomPermissionId,
+  icon: string,
+  onSelectionUpdated: () => {},
+  defaultOptions: SelectOption<UserRole>[] = [
+    CREATOR_OPTION,
+    ESTIMATOR_OPTION,
+    OBSERVER_OPTION,
+  ],
+) {
+  return new ChipOption(
+    PERMISSIONS_CATALOG_MAP[permission].label,
+    icon,
+    defaultOptions,
+    [...DEFAULT_PERMISSIONS[permission].value],
+    onSelectionUpdated
+  );
+}
 
 @Component({
   selector: 'app-room-configuration-modal',
   templateUrl: './room-configuration-modal.component.html',
   styleUrls: ['./room-configuration-modal.component.scss'],
 })
-export class RoomConfigurationModalComponent {
+export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   permissionConfiguration = {
-    voters: new ChipOption(
-      'Who can vote on topics?',
+    [RoomPermissionId.CAN_VOTE]: createChipOptionForPermission(
+      RoomPermissionId.CAN_VOTE,
       'ballot',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
     ),
-    topicEditors: new ChipOption(
-      'Who can edit topic names?',
+    [RoomPermissionId.CAN_EDIT_TOPIC]: createChipOptionForPermission(
+      RoomPermissionId.CAN_EDIT_TOPIC,
       'edit',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.OBSERVER, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
     ),
-    roundCreators: new ChipOption(
-      'Who can create new rounds?',
+    [RoomPermissionId.CAN_CREATE_ROUND]: createChipOptionForPermission(
+      RoomPermissionId.CAN_CREATE_ROUND,
       'add_circle',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.OBSERVER, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
     ),
-    noteTakers: new ChipOption(
-      'Who can take notes?',
+    [RoomPermissionId.CAN_TAKE_NOTES]: createChipOptionForPermission(
+      RoomPermissionId.CAN_TAKE_NOTES,
       'edit_note',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.OBSERVER, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
     ),
-    roundRevealers: new ChipOption(
-      'Who can reveal the vote results?',
+    [RoomPermissionId.CAN_REVEAL_RESULTS]: createChipOptionForPermission(
+      RoomPermissionId.CAN_REVEAL_RESULTS,
       'visibility',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.OBSERVER, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
     ),
-    velocityViewers: new ChipOption(
-      'Who can view the team velocity?',
+    [RoomPermissionId.CAN_VIEW_VELOCITY]: createChipOptionForPermission(
+      RoomPermissionId.CAN_VIEW_VELOCITY,
       'monitoring',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.OBSERVER, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
     ),
-    resultDownloaders: new ChipOption(
-      'Who can export the results?',
+    [RoomPermissionId.CAN_DOWNLOAD_RESULTS]: createChipOptionForPermission(
+      RoomPermissionId.CAN_DOWNLOAD_RESULTS,
       'download',
-      [CREATOR_OPTION, ESTIMATOR_OPTION, OBSERVER_OPTION],
-      [MemberType.CREATOR, MemberType.OBSERVER, MemberType.ESTIMATOR]
+      () => this.saveRoomConfiguration(),
+    ),
+    [RoomPermissionId.CAN_CHANGE_CARD_SETS]: createChipOptionForPermission(
+      RoomPermissionId.CAN_CHANGE_CARD_SETS,
+      'style',
+      () => this.saveRoomConfiguration(),
+    ),
+    [RoomPermissionId.CAN_SET_TIMER]: createChipOptionForPermission(
+      RoomPermissionId.CAN_SET_TIMER,
+      'schedule',
+      () => this.saveRoomConfiguration(),
     ),
   };
 
   permissionForms = Object.values(this.permissionConfiguration);
   personalizedRoomId = new FormControl<string>('', [Validators.minLength(8)]);
+
+  room: Room;
+
+  destroy = new Subject<void>();
+  isBusy = new BehaviorSubject<boolean>(false);
+  errorMessage = new Subject<string>();
+
+  room$ = this.estimatorService
+    .getRoomById(this.dialogData.roomId)
+    .pipe(takeUntil(this.destroy), share());
+
+  onConfigurationChanged$ = this.room$.pipe(
+    map((room) => room.configuration),
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
+    takeUntil(this.destroy)
+  );
+
+  constructor(
+    private readonly estimatorService: EstimatorService,
+    private readonly permissionsService: PermissionsService,
+    @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData
+  ) {}
+
+  ngOnInit() {
+    this.room$.subscribe((room) => {
+      this.room = room;
+    });
+
+    this.onConfigurationChanged$.subscribe((roomConfiguration) => {
+      if (roomConfiguration) {
+        Object.entries(roomConfiguration.permissions).forEach(
+          ([permissionId, permissionValue]) => {
+            const permissionForm: ChipOption<UserRole> | undefined =
+              this.permissionConfiguration[permissionId];
+            if (permissionForm) {
+              permissionForm.setSelection([...permissionValue.value]);
+            }
+          }
+        );
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy.next();
+    this.destroy.complete();
+  }
+
+  async saveRoomConfiguration() {
+    try {
+      this.isBusy.next(true);
+
+      const roomConfiguration: RoomConfiguration =
+        this.room.configuration ?? DEFAULT_ROOM_CONFIGURATION;
+
+      // Update permission values
+      Object.entries(this.permissionConfiguration).forEach(
+        ([permissionId, chipOption]) => {
+          const selectedValues = chipOption.selectedValues;
+          if (roomConfiguration.permissions[permissionId]) {
+            roomConfiguration.permissions[permissionId].value = selectedValues;
+          } else {
+            roomConfiguration.permissions[permissionId] = {
+              permissionId,
+              value: selectedValues,
+            };
+          }
+        }
+      );
+
+      await this.estimatorService.setConfiguration(
+        this.room.roomId,
+        roomConfiguration
+      );
+    } catch (e) {
+      console.error(e);
+      this.errorMessage.next(e.message);
+    } finally {
+      this.isBusy.next(false);
+    }
+  }
 }

@@ -6,9 +6,7 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import {
-  EstimatorService,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -27,15 +25,18 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
   CardSetValue,
   CARD_SETS,
+  DEFAULT_ROOM_CONFIGURATION,
   Member,
   MemberStatus,
   MemberType,
   Room,
+  RoomPermissionId,
   Round,
   RoundStatistics,
   UserProfileMap,
@@ -61,6 +62,7 @@ import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
 import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { PermissionsService } from '../services/permissions.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -191,6 +193,27 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  onPermissionsUpdated$ = this.room$.pipe(
+    map((room) => {
+      return {
+        permissions:
+          room.configuration?.permissions ||
+          DEFAULT_ROOM_CONFIGURATION.permissions,
+        room,
+      };
+    }),
+    distinctUntilChanged(
+      (prev, curr) =>
+        JSON.stringify(prev.permissions) === JSON.stringify(curr.permissions)
+    ),
+    tap(({ room }) => {
+      this.permissionsService.initializePermissions(
+        room,
+        this.estimatorService.activeMember.id
+      );
+    })
+  );
+
   sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
     first(),
     map((sessions) => sessions.length),
@@ -239,6 +262,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private configService: ConfigService,
     private authService: AuthService,
     private zoomService: ZoomApiService,
+    public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -259,6 +283,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.openFeedbackSnackbar();
       }
     });
+    this.onPermissionsUpdated$.subscribe();
 
     this.authService.avatarUpdated
       .pipe(
@@ -452,10 +477,20 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   onTopicClicked() {
-    this.analytics.logClickedTopicName();
-    this.isEditingTopic = true;
-    this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
-    setTimeout(() => this.topicInput.nativeElement.focus(), 100);
+    return this.permissionsService
+      .hasPermission(RoomPermissionId.CAN_EDIT_TOPIC)
+      .pipe(
+        map((hasPermission) => {
+          if (hasPermission) {
+            this.analytics.logClickedTopicName();
+            this.isEditingTopic = true;
+            this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
+            setTimeout(() => this.topicInput.nativeElement.focus(), 100);
+          }
+        }),
+        first()
+      )
+      .subscribe();
   }
 
   async copyRoomId() {

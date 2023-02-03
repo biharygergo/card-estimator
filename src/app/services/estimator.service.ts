@@ -30,6 +30,7 @@ import {
   CustomCardSet,
   MemberStatus,
   Timer,
+  RoomConfiguration,
 } from './../types';
 import {
   collection,
@@ -231,6 +232,12 @@ export class EstimatorService {
   setTimer(room: Room, timer: Timer) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       timer,
+    });
+  }
+
+  setConfiguration(roomId: string, configuration: RoomConfiguration) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      configuration,
     });
   }
 

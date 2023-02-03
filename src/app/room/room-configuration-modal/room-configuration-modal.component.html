@@ -8,7 +8,7 @@
       [dynamicHeight]="true"
       backgroundColor="primary"
     >
-      <mat-tab label="Room">
+      <mat-tab label="Permissions">
         <div class="tab-content">
           <h3>Permissions</h3>
           <div class="permissions-container">
@@ -36,17 +36,18 @@
               <mat-divider></mat-divider>
             </div>
           </div>
-          <h4>Personalize room ID</h4>
+          <!-- <h4>Personalize room ID</h4>
           <mat-form-field class="room-id" appearance="outline">
             <mat-label>Room ID</mat-label>
             <input matInput [formControl]="personalizedRoomId" required />
-          </mat-form-field>
+          </mat-form-field> -->
         </div>
       </mat-tab>
       <mat-tab label="Members"> </mat-tab>
+      <mat-tab label="Security"> </mat-tab>
     </mat-tab-group>
   </div>
   <div mat-dialog-actions>
-    <button mat-flat-button color="primary">Save</button>
+    <button mat-flat-button mat-dialog-close>Close</button>
   </div>
 </div>

@@ -36,7 +36,10 @@
           <mat-card-content (click)="onTopicClicked()">
             <h2 *ngIf="!isEditingTopic">
               {{ room?.rounds[currentRound].topic }}
-              <button mat-stroked-button>
+              <button
+                mat-stroked-button
+                [disabled]="!(permissionsService.canEditTopic() | async)"
+              >
                 <mat-icon>edit</mat-icon>
                 Edit topic
               </button>
@@ -95,6 +98,7 @@
               color="primary"
               (click)="newRound()"
               *ngIf="currentRound === rounds.length - 1"
+              [disabled]="!(permissionsService.canCreateRounds() | async)"
             >
               <div class="center-icon-button">
                 <mat-icon>add</mat-icon>
@@ -105,6 +109,7 @@
               mat-flat-button
               color="primary"
               (click)="nextRound()"
+              [disabled]="!(permissionsService.canCreateRounds() | async)"
               *ngIf="currentRound < rounds.length - 1"
             >
               <div class="center-icon-button">
@@ -116,7 +121,10 @@
               mat-stroked-button
               color="primary"
               (click)="showResults()"
-              [disabled]="(room?.rounds)[currentRound]?.show_results"
+              [disabled]="
+                (room?.rounds)[currentRound]?.show_results ||
+                !(permissionsService.canRevealResults() | async)
+              "
             >
               <div class="center-icon-button">
                 <mat-icon>visibility</mat-icon>
@@ -160,6 +168,7 @@
               class="estimator-settings-button"
               (click)="clickedUnitsButton()"
               id="card-sets-button"
+              [disabled]="!(permissionsService.canChangeCardSet() | async)"
             >
               <mat-icon>style</mat-icon>
               Set cards

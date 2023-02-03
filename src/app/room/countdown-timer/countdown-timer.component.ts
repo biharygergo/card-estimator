@@ -17,6 +17,7 @@ import {
 } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 import { Room, Timer, TimerState } from 'src/app/types';
 
 const INITIAL_TIMER_STATE = {
@@ -48,7 +49,8 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   readonly TimerState = TimerState;
   constructor(
     private readonly estimatorService: EstimatorService,
-    private readonly analyitics: AnalyticsService
+    private readonly analyitics: AnalyticsService,
+    public readonly permissionsService: PermissionsService,
   ) {}
 
   ngOnInit(): void {

@@ -14,6 +14,7 @@ import {
   NotLoggedInError,
   RoomNotFoundError,
 } from '../services/estimator.service';
+import { PermissionsService } from '../services/permissions.service';
 import { MemberStatus, Room } from '../types';
 
 @Injectable({
@@ -24,7 +25,8 @@ export class RoomResolver implements Resolve<Room> {
     private estimatorService: EstimatorService,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private readonly permissionsService: PermissionsService
   ) {}
   resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(
@@ -53,6 +55,9 @@ export class RoomResolver implements Resolve<Room> {
             status: MemberStatus.ACTIVE,
           });
         }
+      }),
+      tap(({ room, user }) => {
+        this.permissionsService.initializePermissions(room, user.uid);
       }),
       map(({ room }) => room),
       catchError((error) => {

@@ -142,10 +142,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.authService.user,
   ]).pipe(
     filter(([_room, user]) => !!user),
-    map(([room, user]) => room.members.find((m) => m.id === user.uid)?.type),
+    map(([room, user]) => room.members.find((m) => m.id === user.uid)),
     distinctUntilChanged(),
-    tap((memberType) => {
-      if (memberType === MemberType.OBSERVER) {
+    tap((member) => {
+      console.log('member updated', member);
+      if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
+        this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
+      } else if (member?.type === MemberType.OBSERVER) {
         this.joinAsObserver();
       }
     })
@@ -584,7 +587,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       confirm('Do you really want to leave this estimation?')
     ) {
       if (this.estimatorService.activeMember) {
-        await this.estimatorService.leaveRoom(
+        await this.estimatorService.updateMemberStatus(
           this.room.roomId,
           this.estimatorService.activeMember
         );

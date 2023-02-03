@@ -11,6 +11,11 @@ import {
   where,
 } from '@angular/fire/firestore';
 import {
+  Functions,
+  httpsCallable,
+  httpsCallableData,
+} from '@angular/fire/functions';
+import {
   uniqueNamesGenerator,
   Config,
   adjectives,
@@ -31,6 +36,7 @@ import {
   MemberStatus,
   Timer,
   RoomConfiguration,
+  AuthorizationMetadata,
 } from './../types';
 import {
   collection,
@@ -58,7 +64,11 @@ export class EstimatorService {
 
   activeMember: Member;
 
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService,
+    private functions: Functions
+  ) {}
 
   createId() {
     return doc(collection(this.firestore, '_')).id;
@@ -167,21 +177,19 @@ export class EstimatorService {
     return member;
   }
 
-  async leaveRoom(roomId: string, member: Member) {
+  async updateMemberStatus(
+    roomId: string,
+    member: Member,
+    status = MemberStatus.LEFT_ROOM
+  ) {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
     const updatedMember = room.members.find((m) => m.id === member.id);
 
-    updatedMember.status = MemberStatus.LEFT_ROOM;
+    updatedMember.status = status;
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       members: updatedMembers,
-    });
-  }
-
-  async removeMember(roomId: string, member: Member) {
-    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
-      members: arrayRemove(member),
     });
   }
 
@@ -420,6 +428,52 @@ export class EstimatorService {
           createdAt: serverTimestamp(),
         });
       })
+    );
+  }
+
+  setRoomPassword(roomId: string, password: string) {
+    return httpsCallable(
+      this.functions,
+      'setRoomPassword'
+    )({ password, roomId });
+  }
+
+  getAuthorizationMetadata(roomId: string): Observable<AuthorizationMetadata> {
+    return docData<AuthorizationMetadata>(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'authorization'
+      ) as DocumentReference<AuthorizationMetadata>
+    );
+  }
+
+  isPasswordSet(roomId: string): Observable<boolean> {
+    return docData<any>(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'passwordProtection'
+      ) as DocumentReference<any>
+    ).pipe(map((data) => !!data?.value));
+  }
+
+  togglePasswordProtection(roomId: string, isEnabled: boolean) {
+    return setDoc(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'authorization'
+      ),
+      {
+        passwordProtectionEnabled: isEnabled,
+      }
     );
   }
 }

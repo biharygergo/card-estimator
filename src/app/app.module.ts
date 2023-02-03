@@ -41,6 +41,10 @@ import { initializeApp as originalInitializeApp } from 'firebase/app';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppConfigModule } from './app-config.module';
+import {
+  connectFunctionsEmulator,
+  provideFunctions,
+} from '@angular/fire/functions';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -111,6 +115,13 @@ function loadAppConfig(): Promise<any> {
     }),
     provideAnalytics(() => getAnalytics()),
     provideRemoteConfig(() => getRemoteConfig()),
+    provideFunctions(() => {
+      const functions = getFunctions();
+      if (environment.useEmulators) {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
+      return functions;
+    }),
     provideAppCheck(() => {
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {

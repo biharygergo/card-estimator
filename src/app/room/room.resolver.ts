@@ -6,7 +6,17 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
-import { catchError, map, mergeMap, Observable, of, take, tap } from 'rxjs';
+import {
+  catchError,
+  delay,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import {
   EstimatorService,
@@ -42,19 +52,26 @@ export class RoomResolver implements Resolve<Room> {
           map((room) => ({ room, user }))
         );
       }),
-      tap(({ room, user }) => {
+      switchMap(({ room, user }) => {
         const activeMember = room.members.find((m) => m.id === user.uid);
 
         if (!activeMember) {
           throw new MemberNotFoundError();
         }
 
-        if (activeMember.status === MemberStatus.LEFT_ROOM) {
-          this.estimatorService.joinRoom(room.roomId, {
-            ...activeMember,
-            status: MemberStatus.ACTIVE,
-          });
+        if (activeMember.status !== MemberStatus.ACTIVE) {
+          return of(
+            this.estimatorService.joinRoom(room.roomId, {
+              ...activeMember,
+              status: MemberStatus.ACTIVE,
+            })
+          ).pipe(
+            delay(1000),
+            map(() => ({ room, user }))
+          );
         }
+
+        return of({ room, user });
       }),
       tap(({ room, user }) => {
         this.permissionsService.initializePermissions(room, user.uid);

@@ -3,11 +3,18 @@
 }
 
 .tab-content {
-    padding-top: 0.5rem;
+  padding-top: 1rem;
 }
 .permissions-container {
   // max-height: 200px;
   // overflow-y: scroll;
+  background: var(--light-background-color);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab-section {
   background: var(--light-background-color);
   border-radius: 16px;
   padding: 1rem;
@@ -31,5 +38,36 @@
 }
 
 .room-id {
-    width: 100%;
+  width: 100%;
+}
+
+// TODO: Move this to a shared stylesheet
+.member {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0 !important;
+  flex-wrap: wrap;
+}
+
+.member-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .verified-icon {
+    height: 16px;
+    width: 16px;
+    font-size: 16px;
+    color: #345ca8;
+  }
+}
+
+.participants-list {
+  margin: 1rem 0rem;
+}
+
+.update-password-button {
+  margin-top: 1rem;
 }

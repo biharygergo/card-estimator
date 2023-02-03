@@ -65,6 +65,7 @@ export enum MemberType {
 export enum MemberStatus {
   ACTIVE = 'ACTIVE',
   LEFT_ROOM = 'LEFT_ROOM',
+  REMOVED_FROM_ROOM = 'REMOVED_FROM_ROOM',
 }
 
 export interface Member {
@@ -247,7 +248,11 @@ export type UserPermissions = {
 };
 
 export interface RoomConfiguration {
-  permissions: PermissionsMap;
+  permissions?: PermissionsMap;
+}
+
+export interface AuthorizationMetadata {
+  passwordProtectionEnabled: boolean;
 }
 
 export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {

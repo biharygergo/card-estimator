@@ -18,8 +18,10 @@ export class PermissionsService {
   constructor() {}
 
   initializePermissions(room: Room, userId: string) {
-    const permissions =
-      room.configuration?.permissions || DEFAULT_ROOM_CONFIGURATION.permissions;
+    const permissions = {
+      ...DEFAULT_ROOM_CONFIGURATION.permissions,
+      ...room.configuration?.permissions,
+    };
 
     let userRole: UserRole | undefined;
     if (room.createdById === userId) {

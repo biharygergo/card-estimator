@@ -5,6 +5,7 @@ import {
   BehaviorSubject,
   distinctUntilChanged,
   map,
+  Observable,
   share,
   Subject,
   takeUntil,
@@ -13,8 +14,11 @@ import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { ModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import {
+  AuthorizationMetadata,
   DEFAULT_PERMISSIONS,
   DEFAULT_ROOM_CONFIGURATION,
+  Member,
+  MemberStatus,
   PermissionsMap,
   PERMISSIONS_CATALOG_MAP,
   Room,
@@ -57,7 +61,7 @@ class ChipOption<T> {
     public icon: string,
     public options: SelectOption<T>[],
     initialSelection: T[],
-    private onSelectionUpdated: () => {},
+    private onSelectionUpdated: () => {}
   ) {
     this.setSelection(initialSelection);
   }
@@ -72,7 +76,6 @@ class ChipOption<T> {
 
     this.selectedValues = Object.values(this.selectedValuesMap);
     this.onSelectionUpdated();
-
   }
 
   setSelection(values: T[]) {
@@ -110,7 +113,7 @@ function createChipOptionForPermission(
     CREATOR_OPTION,
     ESTIMATOR_OPTION,
     OBSERVER_OPTION,
-  ],
+  ]
 ) {
   return new ChipOption(
     PERMISSIONS_CATALOG_MAP[permission].label,
@@ -131,52 +134,52 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     [RoomPermissionId.CAN_VOTE]: createChipOptionForPermission(
       RoomPermissionId.CAN_VOTE,
       'ballot',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_EDIT_TOPIC]: createChipOptionForPermission(
       RoomPermissionId.CAN_EDIT_TOPIC,
       'edit',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_CREATE_ROUND]: createChipOptionForPermission(
       RoomPermissionId.CAN_CREATE_ROUND,
       'add_circle',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_TAKE_NOTES]: createChipOptionForPermission(
       RoomPermissionId.CAN_TAKE_NOTES,
       'edit_note',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_REVEAL_RESULTS]: createChipOptionForPermission(
       RoomPermissionId.CAN_REVEAL_RESULTS,
       'visibility',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_VIEW_VELOCITY]: createChipOptionForPermission(
       RoomPermissionId.CAN_VIEW_VELOCITY,
       'monitoring',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_DOWNLOAD_RESULTS]: createChipOptionForPermission(
       RoomPermissionId.CAN_DOWNLOAD_RESULTS,
       'download',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_CHANGE_CARD_SETS]: createChipOptionForPermission(
       RoomPermissionId.CAN_CHANGE_CARD_SETS,
       'style',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
     [RoomPermissionId.CAN_SET_TIMER]: createChipOptionForPermission(
       RoomPermissionId.CAN_SET_TIMER,
       'schedule',
-      () => this.saveRoomConfiguration(),
+      () => this.saveRoomConfiguration()
     ),
   };
 
   permissionForms = Object.values(this.permissionConfiguration);
-  personalizedRoomId = new FormControl<string>('', [Validators.minLength(8)]);
+  roomPassword = new FormControl<string>('', [Validators.minLength(8)]);
 
   room: Room;
 
@@ -195,6 +198,31 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     ),
     takeUntil(this.destroy)
   );
+
+  members$: Observable<Member[]> = this.room$.pipe(
+    map((room) => room.members),
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
+    map((members) =>
+      members
+        .filter(
+          (m) => m.status === MemberStatus.ACTIVE || m.status === undefined
+        )
+        .sort((a, b) => a.type?.localeCompare(b.type))
+    ),
+    share(),
+    takeUntil(this.destroy)
+  );
+
+  authorizationMetadata$: Observable<AuthorizationMetadata> =
+    this.estimatorService
+      .getAuthorizationMetadata(this.dialogData.roomId)
+      .pipe(takeUntil(this.destroy));
+
+  isPasswordSet$: Observable<boolean> = this.estimatorService
+    .isPasswordSet(this.dialogData.roomId)
+    .pipe(takeUntil(this.destroy));
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -258,6 +286,36 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       this.errorMessage.next(e.message);
     } finally {
       this.isBusy.next(false);
+    }
+  }
+
+  removeMember(member: Member) {
+    this.estimatorService.updateMemberStatus(
+      this.room.roomId,
+      member,
+      MemberStatus.REMOVED_FROM_ROOM
+    );
+  }
+
+  async saveRoomPassword() {
+    try {
+      await this.estimatorService.setRoomPassword(
+        this.room.roomId,
+        this.roomPassword.value
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async togglePasswordProtection() {
+    try {
+      await this.estimatorService.togglePasswordProtection(
+        this.room.roomId,
+        true
+      );
+    } catch (e) {
+      console.error(e);
     }
   }
 }

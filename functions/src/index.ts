@@ -20,6 +20,10 @@ import {
   onUserDetailsUpdate,
 } from "./profile/onUserCreateUpdate";
 import {getFirestore} from "firebase-admin/firestore";
+import {
+  enterProtectedRoom,
+  setRoomPassword,
+} from "./room/password-protection";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -91,6 +95,17 @@ exports.reportAnIssue = functions.https.onRequest(async (req, res) => {
 exports.onUserDetailsCreate = functions.firestore
     .document("userDetails/{userId}")
     .onCreate(onUserDetailsCreate);
+
 exports.onUserDetailsUpdate = functions.firestore
     .document("userDetails/{userId}")
     .onUpdate(onUserDetailsUpdate);
+
+exports.setRoomPassword = functions.https.onCall(
+    async (data: any, context: CallableContext) =>
+      setRoomPassword(data, context)
+);
+
+exports.enterProtectedRoom = functions.https.onCall(
+    async (data: any, context: CallableContext) =>
+      enterProtectedRoom(data, context)
+);

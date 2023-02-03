@@ -34,6 +34,7 @@ import {
   map,
   Observable,
   Subject,
+  tap,
 } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { UserDetails, UserProfile, UserProfileMap } from '../types';
@@ -72,7 +73,11 @@ export class AuthService {
     private firestore: Firestore,
     private snackbar: MatSnackBar
   ) {
-    this.user = user(this.auth).pipe();
+    this.user = user(this.auth).pipe(
+      tap(user => {
+        user?.getIdTokenResult(true).then((result) => console.log(result));
+      })
+    );
   }
 
   async loginAnonymously(displayName?: string) {

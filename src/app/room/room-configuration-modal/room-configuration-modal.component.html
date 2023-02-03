@@ -10,8 +10,7 @@
     >
       <mat-tab label="Permissions">
         <div class="tab-content">
-          <h3>Permissions</h3>
-          <div class="permissions-container">
+          <div class="tab-section">
             <div
               class="permission"
               *ngFor="let configuration of permissionForms"
@@ -35,7 +34,11 @@
               </mat-chip-listbox>
               <mat-divider></mat-divider>
             </div>
+            <button mat-stroked-button>
+              <mat-icon>restart_alt</mat-icon>Reset defaults
+            </button>
           </div>
+
           <!-- <h4>Personalize room ID</h4>
           <mat-form-field class="room-id" appearance="outline">
             <mat-label>Room ID</mat-label>
@@ -43,8 +46,103 @@
           </mat-form-field> -->
         </div>
       </mat-tab>
-      <mat-tab label="Members"> </mat-tab>
-      <mat-tab label="Security"> </mat-tab>
+      <mat-tab label="Participants">
+        <div class="tab-content">
+          <div class="tab-section">
+            <button mat-stroked-button>
+              <mat-icon>groups</mat-icon>Manage organization
+            </button>
+            <mat-list class="participants-list">
+              <mat-list-item *ngFor="let member of members$ | async">
+                <span matListItemAvatar class="avatar">
+                  <img
+                    *ngIf="member.avatarUrl"
+                    [src]="member.avatarUrl"
+                    class="avatar-image"
+                    alt="A user's avatar"
+                  />
+                  <div class="avatar-text" *ngIf="!member.avatarUrl">
+                    {{ member.name?.charAt(0) }}
+                  </div>
+                </span>
+                <h3 matLine class="member">
+                  <span class="member-name">
+                    {{ member.name }}
+                  </span>
+                </h3>
+                <small matLine>
+                  {{ member.type | titlecase }}
+                </small>
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="menu"
+                  matListItemMeta
+                >
+                  <mat-icon>more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item>
+                    <mat-icon>group_add</mat-icon> Add to organization
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button mat-menu-item (click)="removeMember(member)">
+                    <mat-icon>person_remove</mat-icon> Remove from room
+                  </button>
+                </mat-menu>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Security">
+        <div class="tab-content">
+          <div class="tab-section">
+            <p>
+              <strong>Room password</strong><br /><small
+                >Only people who know the password will be able to enter the
+                planning session.</small
+              >
+            </p>
+
+            <mat-form-field class="room-id" appearance="outline">
+              <mat-label>New password</mat-label>
+              <input matInput type="password" [formControl]="roomPassword" />
+              <mat-hint *ngIf="isPasswordSet$ | async"
+                >This room has a password saved.</mat-hint
+              >
+            </mat-form-field>
+            <mat-checkbox
+              class="example-margin"
+              (click)="togglePasswordProtection()"
+              [checked]="
+                (authorizationMetadata$ | async)?.passwordProtectionEnabled
+              "
+              >Enable password protection</mat-checkbox
+            >
+            <div>
+              <button
+                mat-stroked-button
+                color="primary"
+                class="update-password-button"
+                (click)="saveRoomPassword()"
+              >
+                Update password
+              </button>
+            </div>
+          </div>
+          <div class="tab-section">
+            <p>
+              <strong>Organization</strong><br /><small
+                >Only people who are part of your organization will be able to
+                enter the room.</small
+              >
+              <mat-checkbox class="example-margin"
+                >Enable organization-only protection</mat-checkbox
+              >
+            </p>
+          </div>
+        </div>
+      </mat-tab>
     </mat-tab-group>
   </div>
   <div mat-dialog-actions>

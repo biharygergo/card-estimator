@@ -48,7 +48,6 @@ export class PermissionsService {
     });
 
     this.userPermissions.next(newPermissions);
-    console.log('Permissions updated', this.userPermissions.value);
   }
 
   hasPermission(permissionId: RoomPermissionId): Observable<boolean> {

@@ -6,18 +6,25 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import { EstimatorService } from '../services/estimator.service';
+import {
+  EstimatorService,
+  MemberNotFoundError,
+  RoomNotFoundError,
+} from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  catchError,
   combineLatest,
   distinctUntilChanged,
+  EMPTY,
   filter,
   first,
   map,
   Observable,
+  of,
   share,
   shareReplay,
   startWith,
@@ -63,6 +70,8 @@ import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
 import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
+import { isEqual } from 'lodash';
+import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -110,15 +119,14 @@ export class RoomComponent implements OnInit, OnDestroy {
         .getRoomById(roomId)
         .pipe(startWith(this.route.snapshot.data.room))
     ),
+    catchError((e) => this.onRoomUpdateError(e)),
     share(),
     takeUntil(this.destroy)
   );
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => room.members),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     map((members) =>
       members
         .filter(
@@ -143,9 +151,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   ]).pipe(
     filter(([_room, user]) => !!user),
     map(([room, user]) => room.members.find((m) => m.id === user.uid)),
-    distinctUntilChanged(),
+    distinctUntilChanged(isEqual),
     tap((member) => {
-      console.log('member updated', member);
       if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
         this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
       } else if (member?.type === MemberType.OBSERVER) {
@@ -170,9 +177,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       const currentRound = room.rounds[room.currentRound ?? 0];
       return currentRound.estimates;
     }),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     tap((estimates) => {
       if (this.estimatorService.activeMember) {
         this.currentEstimate = estimates[this.estimatorService.activeMember.id];
@@ -205,10 +210,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         room,
       };
     }),
-    distinctUntilChanged(
-      (prev, curr) =>
-        JSON.stringify(prev.permissions) === JSON.stringify(curr.permissions)
-    ),
+    distinctUntilChanged(isEqual),
     tap(({ room }) => {
       this.permissionsService.initializePermissions(
         room,
@@ -227,7 +229,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.onRoundNumberUpdated$,
     this.sessionCount$,
   ]).pipe(
-    distinctUntilChanged(),
+    distinctUntilChanged(isEqual),
     map(([roundNumber, sessionCount]) => {
       return (
         sessionCount > 1 &&
@@ -239,9 +241,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   userProfiles$: Observable<UserProfileMap> = this.members$.pipe(
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     switchMap((members) =>
       this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
     ),
@@ -274,7 +274,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.zoomService.configureApp();
     }
 
-    this.room$.subscribe({ error: (error) => this.onRoomUpdateError(error) });
+    this.room$.subscribe();
     this.onRoomUpdated$.subscribe();
     this.onActiveMemberUpdated$.subscribe();
     this.onRoundNumberUpdated$.subscribe();
@@ -340,8 +340,25 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  private onRoomUpdateError(error: Error) {
-    this.errorGoBackToJoinPage();
+  private onRoomUpdateError(error: any): Observable<any> {
+    if (error?.code === 'permission-denied') {
+      return this.dialog
+        .open(...roomAuthenticationModalCreator({ roomId: this.room.roomId }))
+        .afterClosed()
+        .pipe(
+          switchMap((result) => {
+            if (result && result?.joined) {
+              return this.estimatorService.getRoomById(this.room.roomId);
+            } else {
+              this.errorGoBackToJoinPage();
+              return EMPTY;
+            }
+          })
+        );
+    } else {
+      this.errorGoBackToJoinPage();
+      return EMPTY;
+    }
   }
 
   private joinAsObserver() {

@@ -12,6 +12,7 @@ export interface RoomAccess {
 export interface RoomAccessValue {
   expiresAt: Timestamp;
   hash: string;
+  roomId: string;
 }
 
 export async function getCustomClaims(userId: string): Promise<CustomClaims> {

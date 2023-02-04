@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EstimatorService } from '../services/estimator.service';
+import {
+  EstimatorService,
+  RoomNotFoundError,
+} from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus } from '../types';
@@ -11,11 +14,14 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
+  EMPTY,
   from,
   Observable,
+  of,
   Subject,
 } from 'rxjs';
 import {
+  catchError,
   filter,
   finalize,
   first,
@@ -37,7 +43,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
-import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -140,6 +150,12 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cookieService.tryShowCookieBanner();
+    /* 
+    this.dialog.open(
+      ...roomAuthenticationModalCreator({
+        roomId: 'regulatory-indigo-constrictor',
+      })
+    ); */
 
     const sessionCookie = this.authService.getSessionCookie();
     if (
@@ -160,12 +176,40 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         tap(() => {
           this.isBusy.next(true);
         }),
-        switchMap(() => from(this.joinRoom())),
-        first(),
-        takeUntil(this.destroy),
-        finalize(() => this.isBusy.next(false))
+        switchMap(() =>
+          from(this.joinRoom()).pipe(
+            catchError((e) => {
+              if (e.code !== 'permission-denied') {
+                this.showUnableToJoinRoom();
+                return of(false);
+              } else {
+                const dialogRef = this.dialog.open(
+                  ...roomAuthenticationModalCreator({
+                    roomId: this.roomId.value,
+                  })
+                );
+                return dialogRef.afterClosed().pipe(
+                  first(),
+                  switchMap((result) => {
+                    if (result !== '' && result?.joined) {
+                      return from(this.joinRoom());
+                    } else {
+                      return of(false);
+                    }
+                  })
+                );
+              }
+            })
+          )
+        ),
+        tap(() => this.isBusy.next(false)),
+        takeUntil(this.destroy)
       )
-      .subscribe();
+      .subscribe((success) => {
+        if (success) {
+          this.router.navigate(['room', this.roomId.value]);
+        }
+      });
 
     this.onCreateRoomClicked
       .pipe(
@@ -173,7 +217,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           this.isBusy.next(true);
         }),
         switchMap(() => from(this.createRoom())),
-        first(),
         takeUntil(this.destroy),
         finalize(() => this.isBusy.next(false))
       )
@@ -182,7 +225,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.onSignInClicked
       .pipe(
         tap(() => {
-          this.dialog.open(...signUpOrLoginDialogCreator({intent: SignUpOrLoginIntent.SIGN_IN}));
+          this.dialog.open(
+            ...signUpOrLoginDialogCreator({
+              intent: SignUpOrLoginIntent.SIGN_IN,
+            })
+          );
         }),
         withLatestFrom(this.currentPath),
         tap(([_, currentPath]) => {
@@ -200,7 +247,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  async joinRoom() {
+  async joinRoom(): Promise<boolean> {
     const member: Member = {
       id: null,
       name: this.name.value,
@@ -208,21 +255,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       status: MemberStatus.ACTIVE,
     };
 
-    try {
-      this.snackBar.dismiss();
-      await this.estimatorService.joinRoom(this.roomId.value, member);
+    this.snackBar.dismiss();
+    await this.estimatorService.joinRoom(this.roomId.value, member);
 
-      const isObserver = this.joinAs.value === MemberType.OBSERVER;
-      if (isObserver) {
-        this.analytics.logClickedJoinAsObserver();
-      } else {
-        this.analytics.logClickedJoinedRoom();
-      }
-
-      return this.router.navigate(['room', this.roomId.value]);
-    } catch (e) {
-      this.showUnableToJoinRoom();
+    const isObserver = this.joinAs.value === MemberType.OBSERVER;
+    if (isObserver) {
+      this.analytics.logClickedJoinAsObserver();
+    } else {
+      this.analytics.logClickedJoinedRoom();
     }
+
+    return true;
   }
 
   showUnableToJoinRoom() {

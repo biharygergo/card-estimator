@@ -34,6 +34,7 @@ import { SessionHistoryComponent } from './session-history/session-history.compo
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { SupportedPhotoUrlPipe } from './supported-photo-url.pipe';
 import { SignUpOrLoginDialogComponent } from './sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { RoomAuthenticationModalComponent } from './room-authentication-modal/room-authentication-modal.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { SignUpOrLoginDialogComponent } from './sign-up-or-login-dialog/sign-up-
     RoundResultsComponent,
     EstimateConverterPipe,
     SignUpOrLoginDialogComponent,
+    RoomAuthenticationModalComponent,
   ],
   imports: [
     CommonModule,

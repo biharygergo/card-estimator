@@ -103,6 +103,10 @@ export class AuthService {
     return this.auth.currentUser?.uid;
   }
 
+  refreshIdToken() {
+    return this.auth.currentUser?.getIdToken(true);
+  }
+
   signOut() {
     this.auth.signOut();
   }

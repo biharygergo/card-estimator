@@ -41,7 +41,7 @@ export class RoomResolver implements Resolve<Room> {
   resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(
       take(1),
-      mergeMap((user) => {
+      switchMap((user) => {
         const roomId = route.paramMap.get('roomId');
 
         if (!user?.uid) {
@@ -85,7 +85,8 @@ export class RoomResolver implements Resolve<Room> {
           this.router.navigate(['join'], { queryParams: { error: 1 } });
         } else if (
           error instanceof MemberNotFoundError ||
-          error instanceof NotLoggedInError
+          error instanceof NotLoggedInError ||
+          error?.code === 'permission-denied'
         ) {
           this.showMessage(
             'You have not joined this room before. Join as an estimator or observer now!'

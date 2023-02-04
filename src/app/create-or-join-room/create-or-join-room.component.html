@@ -75,36 +75,38 @@
 
 <ng-template #join>
   <ng-container *ngIf="vm | async as viewModel; else loading">
-    <mat-card-content>
-      <ng-container *ngIf="viewModel.roomId">
-        <ng-container *ngTemplateOutlet="invitedToRoomText"></ng-container>
-      </ng-container>
-      <form class="full-bleed">
-        <ng-container *ngIf="!viewModel.user?.displayName">
-          <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+    <ng-container *ngIf="!(isBusy | async); else loading">
+      <mat-card-content>
+        <ng-container *ngIf="viewModel.roomId">
+          <ng-container *ngTemplateOutlet="invitedToRoomText"></ng-container>
         </ng-container>
-        <ng-container *ngIf="!viewModel.roomId">
-          <ng-container *ngTemplateOutlet="roomIdTemplate"></ng-container>
-        </ng-container>
-        <ng-container *ngTemplateOutlet="joinMode"></ng-container>
-      </form>
+        <form class="full-bleed">
+          <ng-container *ngIf="!viewModel.user?.displayName">
+            <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="!viewModel.roomId">
+            <ng-container *ngTemplateOutlet="roomIdTemplate"></ng-container>
+          </ng-container>
+          <ng-container *ngTemplateOutlet="joinMode"></ng-container>
+        </form>
 
-      <button
-        mat-flat-button
-        color="primary"
-        [disabled]="
-          !roomId.value.length || !name.value.length || (isBusy | async)
-        "
-        (click)="onJoinRoomClicked.next()"
-        id="join-room-button"
-      >
-        <mat-icon>login</mat-icon>
-        Join Room
-      </button>
-      <ng-container *ngIf="!viewModel.user">
-        <ng-container *ngTemplateOutlet="terms"></ng-container>
-      </ng-container>
-    </mat-card-content>
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="
+            !roomId.value.length || !name.value.length || (isBusy | async)
+          "
+          (click)="onJoinRoomClicked.next()"
+          id="join-room-button"
+        >
+          <mat-icon>login</mat-icon>
+          Join Room
+        </button>
+        <ng-container *ngIf="!viewModel.user">
+          <ng-container *ngTemplateOutlet="terms"></ng-container>
+        </ng-container>
+      </mat-card-content>
+    </ng-container>
   </ng-container>
   <zoom-app-banner
     *ngIf="!config.isRunningInZoom"

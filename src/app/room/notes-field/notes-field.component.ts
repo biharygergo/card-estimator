@@ -54,7 +54,6 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
       .canTakeNotes()
       .pipe(takeUntil(this.destroy))
       .subscribe((canTakeNotes) => {
-        console.log('can take notes', canTakeNotes);
         this.hasPermission = canTakeNotes;
         !canTakeNotes
           ? this.noteValue.disable({ emitEvent: false })

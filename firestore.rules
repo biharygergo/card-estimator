@@ -13,8 +13,8 @@ service cloud.firestore {
       function isAccessAllowed(request) {
         let isPasswordProtected = isPasswordProtected();
         
-        let roomAccessValue = 'roomAccess' in request.auth.token ? request.auth.token.roomAccess[roomId] : {};
-        let isExpired = 'expiresAt' in roomAccessValue ? roomAccessValue.expiresAt._seconds < request.time.seconds() : false;
+        let roomAccessValue = hasSavedPasswordAccessForUserId(request) ? getPasswordAccessForUserId(request) : {};
+        let isExpired = 'expiresAt' in roomAccessValue ? roomAccessValue.expiresAt < request.time : false;
         let isHashMatching = 'hash' in roomAccessValue ? roomAccessValue.hash == getPasswordHash() : false;
       
         return request.auth != null && (
@@ -39,6 +39,14 @@ service cloud.firestore {
       function getPasswordHash() {
         return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection) ? 
         get(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection).data.value : '';
+      }
+
+      function hasSavedPasswordAccessForUserId(request) {
+        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection/accessList/$(request.auth.uid));
+      }
+
+      function getPasswordAccessForUserId(request) {
+        return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection/accessList/$(request.auth.uid)).data;
       }
 
       // TODO this needs improvement!

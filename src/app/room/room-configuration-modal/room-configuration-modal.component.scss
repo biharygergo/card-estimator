@@ -69,5 +69,21 @@
 }
 
 .update-password-button {
-  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.status-badge {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  margin-left: 1rem;
+
+  &.inactive {
+    background: #ffdad6;
+  }
+
+  &.active {
+    background: #d4e3c4;
+  }
+
 }

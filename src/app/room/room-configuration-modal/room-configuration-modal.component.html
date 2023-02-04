@@ -1,7 +1,6 @@
 <div class="modal-container">
   <div mat-dialog-content>
     <h1>Configure room</h1>
-    <p>Lorem ipsum dolor sit amet consecetur sit malit.</p>
     <mat-tab-group
       class="custom-tab-group"
       mat-align-tabs="center"
@@ -98,19 +97,40 @@
         <div class="tab-content">
           <div class="tab-section">
             <p>
-              <strong>Room password</strong><br /><small
+              <strong>Room password</strong>
+              <ng-container>
+                <span
+                  class="status-badge inactive"
+                  [class.active]="authorizationMetadata?.passwordProtectionEnabled === true"
+                  >{{
+                    authorizationMetadata?.passwordProtectionEnabled ? "Enabled" : "Disabled"
+                  }}</span
+                >
+              </ng-container>
+              <br /><small
                 >Only people who know the password will be able to enter the
-                planning session.</small
+                planning session. Existing participants will need to re-join if
+                a new password is set.</small
               >
             </p>
 
             <mat-form-field class="room-id" appearance="outline">
-              <mat-label>New password</mat-label>
+              <mat-label>{{
+                (isPasswordSet$ | async) ? "Update password" : "Create password"
+              }}</mat-label>
               <input matInput type="password" [formControl]="roomPassword" />
-              <mat-hint *ngIf="isPasswordSet$ | async"
-                >This room has a password saved.</mat-hint
-              >
             </mat-form-field>
+            <div>
+              <button
+                mat-stroked-button
+                color="primary"
+                class="update-password-button"
+                (click)="saveRoomPassword()"
+                [disabled]="!roomPassword.value || !roomPassword.valid"
+              >
+                Save password
+              </button>
+            </div>
             <mat-checkbox
               class="example-margin"
               (click)="togglePasswordProtection()"
@@ -119,16 +139,6 @@
               "
               >Enable password protection</mat-checkbox
             >
-            <div>
-              <button
-                mat-stroked-button
-                color="primary"
-                class="update-password-button"
-                (click)="saveRoomPassword()"
-              >
-                Update password
-              </button>
-            </div>
           </div>
           <div class="tab-section">
             <p>

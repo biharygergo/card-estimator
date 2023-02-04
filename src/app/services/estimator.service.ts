@@ -24,7 +24,7 @@ import {
   starWars,
 } from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
   Room,
   Member,
@@ -215,7 +215,7 @@ export class EstimatorService {
 
         this.activeMember = member;
       }),
-      map(([_user, room]) => room)
+      map(([_user, room]) => room),
     );
   }
 
@@ -431,11 +431,22 @@ export class EstimatorService {
     );
   }
 
-  setRoomPassword(roomId: string, password: string) {
-    return httpsCallable(
+  async setRoomPassword(roomId: string, password: string) {
+    const result = await httpsCallable(
       this.functions,
       'setRoomPassword'
     )({ password, roomId });
+    await this.authService.refreshIdToken();
+    return result;
+  }
+
+  async joinRoomWithPassword(roomId: string, password: string) {
+    const result = await httpsCallable(
+      this.functions,
+      'enterProtectedRoom'
+    )({ password, roomId });
+    await this.authService.refreshIdToken();
+    return result;
   }
 
   getAuthorizationMetadata(roomId: string): Observable<AuthorizationMetadata> {

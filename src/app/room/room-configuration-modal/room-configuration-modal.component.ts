@@ -6,8 +6,11 @@ import {
   distinctUntilChanged,
   map,
   Observable,
+  of,
   share,
   Subject,
+  switchMap,
+  take,
   takeUntil,
 } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -26,7 +29,8 @@ import {
   RoomPermissionId,
   UserRole,
 } from 'src/app/types';
-
+import { isEqual } from 'lodash';
+import { MatSnackBar } from '@angular/material/snack-bar';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -191,19 +195,15 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     .getRoomById(this.dialogData.roomId)
     .pipe(takeUntil(this.destroy), share());
 
-  onConfigurationChanged$ = this.room$.pipe(
+  onConfigurationChanged$: Observable<RoomConfiguration> = this.room$.pipe(
     map((room) => room.configuration),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     takeUntil(this.destroy)
   );
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => room.members),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     map((members) =>
       members
         .filter(
@@ -220,19 +220,26 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       .getAuthorizationMetadata(this.dialogData.roomId)
       .pipe(takeUntil(this.destroy));
 
+  authorizationMetadata: AuthorizationMetadata | undefined;
+
   isPasswordSet$: Observable<boolean> = this.estimatorService
     .isPasswordSet(this.dialogData.roomId)
-    .pipe(takeUntil(this.destroy));
+    .pipe(share(), takeUntil(this.destroy));
 
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly permissionsService: PermissionsService,
+    private readonly snackbar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData
   ) {}
 
   ngOnInit() {
     this.room$.subscribe((room) => {
       this.room = room;
+    });
+
+    this.authorizationMetadata$.subscribe((meta) => {
+      this.authorizationMetadata = meta;
     });
 
     this.onConfigurationChanged$.subscribe((roomConfiguration) => {
@@ -303,19 +310,33 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
         this.room.roomId,
         this.roomPassword.value
       );
+      this.showMessage('Password saved!');
+      this.roomPassword.reset();
     } catch (e) {
       console.error(e);
     }
   }
 
   async togglePasswordProtection() {
-    try {
-      await this.estimatorService.togglePasswordProtection(
-        this.room.roomId,
-        true
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    this.authorizationMetadata$
+      .pipe(
+        switchMap((meta) =>
+          of(
+            this.estimatorService.togglePasswordProtection(
+              this.room.roomId,
+              !meta?.passwordProtectionEnabled
+            )
+          )
+        ),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  private showMessage(message: string) {
+    this.snackbar.open(message, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
   }
 }

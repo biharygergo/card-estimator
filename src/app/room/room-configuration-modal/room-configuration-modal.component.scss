@@ -37,6 +37,24 @@
   }
 }
 
+.role-option {
+  background: transparent;
+  border: 1px solid;
+  --mdc-chip-label-text-color: black;
+  --mdc-chip-with-icon-selected-icon-color: black;
+  font-weight: 500;
+
+  &.mat-mdc-chip-selected {
+    --mdc-chip-label-text-color: black;
+    --mdc-chip-with-icon-selected-icon-color: black;
+    background: #d4e3c4;
+    border: none;
+  }
+  .mat-mdc-chip-action-label {
+    font-weight: 500;
+  }
+}
+
 .room-id {
   width: 100%;
 }
@@ -85,5 +103,4 @@
   &.active {
     background: #d4e3c4;
   }
-
 }

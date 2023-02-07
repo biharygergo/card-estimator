@@ -12,7 +12,7 @@
           <div class="tab-section">
             <div
               class="permission"
-              *ngFor="let configuration of permissionForms"
+              *ngFor="let configuration of permissionForms; let i = index"
             >
               <h4 class="permission-title">
                 <mat-icon>{{ configuration.icon }}</mat-icon
@@ -28,14 +28,12 @@
                   *ngFor="let option of configuration.options"
                   [selected]="configuration.isSelected(option.value)"
                   (click)="configuration.toggleOption(option.value)"
+                  class="role-option"
                   >{{ option.label }}</mat-chip-option
                 >
               </mat-chip-listbox>
-              <mat-divider></mat-divider>
+              <mat-divider *ngIf="i < permissionForms.length - 1"></mat-divider>
             </div>
-            <button mat-stroked-button>
-              <mat-icon>restart_alt</mat-icon>Reset defaults
-            </button>
           </div>
 
           <!-- <h4>Personalize room ID</h4>
@@ -97,13 +95,17 @@
         <div class="tab-content">
           <div class="tab-section">
             <p>
-              <strong>Room password</strong>
+              <strong>Password protection</strong>
               <ng-container>
                 <span
                   class="status-badge inactive"
-                  [class.active]="authorizationMetadata?.passwordProtectionEnabled === true"
+                  [class.active]="
+                    authorizationMetadata?.passwordProtectionEnabled === true
+                  "
                   >{{
-                    authorizationMetadata?.passwordProtectionEnabled ? "Enabled" : "Disabled"
+                    authorizationMetadata?.passwordProtectionEnabled
+                      ? "Enabled"
+                      : "Disabled"
                   }}</span
                 >
               </ng-container>
@@ -131,18 +133,27 @@
                 Save password
               </button>
             </div>
-            <mat-checkbox
-              class="example-margin"
-              (click)="togglePasswordProtection()"
-              [checked]="
-                (authorizationMetadata$ | async)?.passwordProtectionEnabled
+            <span
+              [matTooltip]="
+                !(isPasswordSet$ | async)
+                  ? 'You must save a password first to enable this protection'
+                  : ''
               "
-              >Enable password protection</mat-checkbox
             >
+              <mat-checkbox
+                class="example-margin"
+                (click)="togglePasswordProtection()"
+                [checked]="
+                  (authorizationMetadata$ | async)?.passwordProtectionEnabled
+                "
+                [disabled]="!(isPasswordSet$ | async)"
+                >Enable password protection</mat-checkbox
+              >
+            </span>
           </div>
           <div class="tab-section">
             <p>
-              <strong>Organization</strong><br /><small
+              <strong>Organization protection</strong><br /><small
                 >Only people who are part of your organization will be able to
                 enter the room.</small
               >

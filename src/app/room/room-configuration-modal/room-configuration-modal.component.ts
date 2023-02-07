@@ -12,6 +12,7 @@ import {
   switchMap,
   take,
   takeUntil,
+  withLatestFrom,
 } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
@@ -224,7 +225,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   isPasswordSet$: Observable<boolean> = this.estimatorService
     .isPasswordSet(this.dialogData.roomId)
-    .pipe(share(), takeUntil(this.destroy));
+    .pipe(takeUntil(this.destroy));
 
   constructor(
     private readonly estimatorService: EstimatorService,

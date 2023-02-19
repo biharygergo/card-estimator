@@ -9,6 +9,7 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { organizationModalCreator } from '../organization-modal/organization-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -71,6 +72,10 @@ export class ProfileDropdownComponent implements OnInit {
     this.dialog.open(
       ...roomConfigurationModalCreator({ roomId: currentRoomId })
     );
+  }
+
+  openOrganizationModal() {
+    this.dialog.open(...organizationModalCreator());
   }
 
   reportAnIssue() {

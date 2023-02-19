@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>Organization settings</h1>
+<div mat-dialog-content>
+  <ng-container *ngIf="organization !== null; else loading">
+    <form class="organization-form" [formGroup]="organizationForm">
+      <mat-form-field class="form-input" appearance="outline">
+        <mat-label>Organization's name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field class="form-input" appearance="outline">
+        <mat-label>Organization's logo</mat-label>
+        <input matInput formControlName="logoUrl" />
+      </mat-form-field>
+    </form>
+    <div class="members-section">
+        <h5 class="section-title"><mat-icon>people</mat-icon> Manage members</h5>
+    </div>
+  </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" (click)="saveOrganization()">
+    Save
+  </button>
+</div>
+<ng-template #loading>
+  <div class="loading">
+    <mat-progress-spinner
+      mode="indeterminate"
+      [diameter]="30"
+    ></mat-progress-spinner>
+  </div>
+</ng-template>

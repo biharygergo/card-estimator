@@ -35,6 +35,7 @@ import { StarRatingComponent } from './star-rating/star-rating.component';
 import { SupportedPhotoUrlPipe } from './supported-photo-url.pipe';
 import { SignUpOrLoginDialogComponent } from './sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { RoomAuthenticationModalComponent } from './room-authentication-modal/room-authentication-modal.component';
+import { OrganizationModalComponent } from './organization-modal/organization-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { RoomAuthenticationModalComponent } from './room-authentication-modal/ro
     EstimateConverterPipe,
     SignUpOrLoginDialogComponent,
     RoomAuthenticationModalComponent,
+    OrganizationModalComponent,
   ],
   imports: [
     CommonModule,

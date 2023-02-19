@@ -259,6 +259,15 @@ export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {
   permissions: DEFAULT_PERMISSIONS,
 };
 
+export interface Organization {
+  id: string;
+  name: string;
+  createdAt: FieldValue;
+  createdById: string;
+  memberIds: string[];
+  logoUrl: string;
+}
+
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {
     values: { 0: '0', 0.5: '0.5', 1: '1', 2: '2', 3: '3', 5: '5' },

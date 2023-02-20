@@ -161,6 +161,8 @@
       placeholder="random-room-name"
       [formControl]="roomId"
       (blur)="onRoomIdBlur()"
+      autocomplete="off"
+      spellcheck="false"
       required
       id="room-id"
     />

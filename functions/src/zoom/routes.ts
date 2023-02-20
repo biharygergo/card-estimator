@@ -56,7 +56,7 @@ export const zoomHome = async (
         setSessionVariable(res, JSON.stringify(sessionData));
       }
 
-      const path = roomId ? `/join?roomId=${roomId}&s=zoom` : "/join?s=zoom";
+      const path = roomId ? `/join?roomId=${roomId}&s=zoom` : "/create?s=zoom";
 
       const finalUrl = `${host}${path}`;
       return res.redirect(finalUrl);

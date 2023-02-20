@@ -60,6 +60,7 @@ import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selec
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
+import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -220,6 +221,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     ),
     shareReplay(1)
   );
+
+  user$ = this.authService.user;
 
   readonly MemberType = MemberType;
 
@@ -630,5 +633,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     } else {
       window.open('https://forms.gle/Rhd8mAQqCmewhfCR7');
     }
+  }
+
+  onCreateAccountClicked() {
+    this.dialog.open(
+      ...signUpOrLoginDialogCreator({
+        intent: SignUpOrLoginIntent.LINK_ACCOUNT,
+      })
+    );
   }
 }

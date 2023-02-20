@@ -43,7 +43,6 @@
     </button>
     <button
       mat-stroked-button
-      color="primary"
       (click)="startTimer(true)"
       *ngIf="
         timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
@@ -56,7 +55,6 @@
     </button>
     <button
       mat-stroked-button
-      color="primary"
       (click)="stopTimer(true)"
       *ngIf="timer.state === TimerState.ACTIVE"
       id="pause-button"

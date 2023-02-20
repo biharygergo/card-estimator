@@ -12,8 +12,7 @@
         <small>
           {{
             intent === SignUpOrLoginIntent.LINK_ACCOUNT
-              ? "Enjoy all the benefits of a permanent account, your existing data is
-          automatically transferred."
+              ? "Store your sessions in the cloud, sign in on multiple devices and try new features with a permanent account. Creating an account takes just a couple of clicks and your current data is preserved."
               : "On a new device? No problem, sign back in to your account."
           }}
         </small>
@@ -85,8 +84,8 @@
         <div class="traditional">
           <small>{{
             intent === SignUpOrLoginIntent.LINK_ACCOUNT
-              ? "Or, register with your e-mail address:"
-              : "Or, sign-in with your e-mail address:"
+              ? "Or, register with your work e-mail address:"
+              : "Or, sign-in with your work e-mail address:"
           }}</small>
           <form [formGroup]="form">
             <mat-form-field appearance="outline">
@@ -99,7 +98,6 @@
                 id="email-input"
               />
               <mat-icon matSuffix>alternate_email</mat-icon>
-              <mat-hint>Most people use their work e-mail here.</mat-hint>
               <mat-error *ngIf="form.controls.email.errors?.['email']"
                 >This does not look like a valid e-mail.</mat-error
               >

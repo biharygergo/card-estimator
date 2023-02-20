@@ -179,4 +179,16 @@ $my-theme: mat.define-light-theme(
 .navbar-right {
   display: flex;
   justify-content: flex-end;
+  gap: 0.5rem;
+
+  .create-account-button {
+    @media screen and (max-width: 500px) {
+      .mdc-button__label {
+        display: none;
+      }
+      mat-icon {
+        margin-right: 0;
+      }
+    }
+  }
 }

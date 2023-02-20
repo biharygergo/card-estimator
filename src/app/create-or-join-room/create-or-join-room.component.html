@@ -114,15 +114,20 @@
 
 <ng-template #links>
   <div class="links">
-    <a routerLink="/create" *ngIf="(pageMode | async) === PageMode.JOIN"
-      >Create a new room</a
+    <a
+      mat-button
+      routerLink="/create"
+      *ngIf="(pageMode | async) === PageMode.JOIN"
+      ><mat-icon>add</mat-icon>Create a new room</a
     >
-    <a routerLink="/join" *ngIf="(pageMode | async) === PageMode.CREATE"
-      >Join an existing room</a
+    <a
+      mat-button
+      routerLink="/join"
+      *ngIf="(pageMode | async) === PageMode.CREATE"
     >
-    <a routerLink="/history">Previous sessions</a>
-    <!--         <a (click)="signOut()" *ngIf="(vm | async)?.user">Delete temporary account</a>
- -->
+      <mat-icon>login</mat-icon>
+      Join an existing room</a
+    >
   </div>
 </ng-template>
 
@@ -156,6 +161,8 @@
       placeholder="random-room-name"
       [formControl]="roomId"
       (blur)="onRoomIdBlur()"
+      autocomplete="off"
+      spellcheck="false"
       required
       id="room-id"
     />
@@ -184,10 +191,20 @@
       <mat-option [value]="MemberType.ESTIMATOR">Estimator</mat-option>
       <mat-option [value]="MemberType.OBSERVER">Observer</mat-option>
     </mat-select>
-    <mat-hint *ngIf="joinAs.value === MemberType.OBSERVER"
-      >You can't estimate cards in this mode.</mat-hint
-    >
   </mat-form-field>
+  <mat-card
+    *ngIf="joinAs.value === MemberType.OBSERVER"
+    class="observer-info"
+    appearance="outlined"
+  >
+    <mat-card-content>
+      <small>
+        Observers have access to all room features, but they can not vote.
+        Choose this if you are the facilitator, but not part of the estimation
+        process.
+      </small>
+    </mat-card-content>
+  </mat-card>
 </ng-template>
 
 <ng-template #loading>

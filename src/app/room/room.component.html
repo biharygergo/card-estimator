@@ -7,6 +7,15 @@
       <div class="navbar-right">
         <button
           mat-flat-button
+          *ngIf="(user$ | async)?.isAnonymous"
+          class="create-account-button"
+          (click)="onCreateAccountClicked()"
+        >
+          <mat-icon>account_circle</mat-icon>
+          Create an account
+        </button>
+        <button
+          mat-flat-button
           color="primary"
           aria-label="Toggle topics sidebar"
           (click)="sidenav.toggle()"
@@ -120,7 +129,7 @@
               <span
                 >Room ID: <strong>{{ room?.roomId }}</strong></span
               >
-              <button mat-stroked-button color="primary" (click)="copyRoomId()">
+              <button mat-stroked-button (click)="copyRoomId()">
                 <mat-icon>link</mat-icon>
                 Invite
               </button>

@@ -28,9 +28,7 @@ export class AnonymousUserBannerComponent implements OnInit {
   @Input() bannerStyle: 'default' | 'gray' = 'default';
 
   @Input() hideable: boolean;
-  isHidden: boolean = !!this.configService.getCookie(
-    HIDE_PERMANENT_ACCOUNT_BANNER_KEY
-  );
+  isHidden: boolean = false;
 
   constructor(
     private readonly authService: AuthService,
@@ -60,6 +58,5 @@ export class AnonymousUserBannerComponent implements OnInit {
 
   hideBanner() {
     this.isHidden = true;
-    this.configService.setCookie(HIDE_PERMANENT_ACCOUNT_BANNER_KEY, 'true', 30);
   }
 }

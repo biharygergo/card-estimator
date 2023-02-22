@@ -1,18 +1,28 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { isEqual } from 'lodash';
+import {
+  distinctUntilChanged,
+  map,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { Organization } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
-export const organizationModalCreator = (): ModalCreator<OrganizationModalComponent> => [
-  OrganizationModalComponent,
-  {
-    id: 'organizationModal',
-    width: '90%',
-    maxWidth: '600px',
-  },
-];
+export const organizationModalCreator =
+  (): ModalCreator<OrganizationModalComponent> => [
+    OrganizationModalComponent,
+    {
+      id: 'organizationModal',
+      width: '90%',
+      maxWidth: '600px',
+    },
+  ];
 
 @Component({
   selector: 'app-organization-modal',
@@ -31,6 +41,15 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       }
     })
   );
+
+  members$ = this.organization$.pipe(
+    map((organization) => organization.memberIds),
+    distinctUntilChanged(isEqual),
+    switchMap((memberIds) => this.authService.getUserProfiles(memberIds)),
+    map(userProfilesMap => Object.values(userProfilesMap)),
+    tap(console.log),
+  );
+
   organization: Organization | null | undefined = null;
 
   destroy = new Subject<void>();
@@ -40,7 +59,10 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     logoUrl: new FormControl<string>(''),
   });
 
-  constructor(private readonly organizationService: OrganizationService) {}
+  constructor(
+    private readonly organizationService: OrganizationService,
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.organization$.pipe(takeUntil(this.destroy)).subscribe();

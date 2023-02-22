@@ -36,6 +36,8 @@ import { SupportedPhotoUrlPipe } from './supported-photo-url.pipe';
 import { SignUpOrLoginDialogComponent } from './sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { RoomAuthenticationModalComponent } from './room-authentication-modal/room-authentication-modal.component';
 import { OrganizationModalComponent } from './organization-modal/organization-modal.component';
+import { FileUploadDragDropComponent } from './file-upload-drag-drop/file-upload-drag-drop.component';
+import { DragDropDirective } from './directives/drag-drop.directive';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { OrganizationModalComponent } from './organization-modal/organization-mo
     SignUpOrLoginDialogComponent,
     RoomAuthenticationModalComponent,
     OrganizationModalComponent,
+    FileUploadDragDropComponent,
+    DragDropDirective,
   ],
   imports: [
     CommonModule,

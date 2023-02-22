@@ -1,0 +1,39 @@
+.box {
+  background: rgba(237, 240, 255, 0.25);
+  border: 1px dashed #575e71;
+  border-radius: 4px;
+  padding: 2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background 200ms linear;
+
+  &.dragOver {
+    border-style: solid;
+  }
+
+  .box-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .box-file {
+    display: none;
+  }
+
+  .icon-container {
+    background: #edf0ff;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #345ca8;
+  }
+}

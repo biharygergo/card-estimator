@@ -2,17 +2,48 @@
 <div mat-dialog-content>
   <ng-container *ngIf="organization !== null; else loading">
     <form class="organization-form" [formGroup]="organizationForm">
+      <mat-label>Organization's name</mat-label>
       <mat-form-field class="form-input" appearance="outline">
-        <mat-label>Organization's name</mat-label>
-        <input matInput formControlName="name" />
+        <input matInput formControlName="name" placeholder="Best Company Ltd." />
       </mat-form-field>
-      <mat-form-field class="form-input" appearance="outline">
-        <mat-label>Organization's logo</mat-label>
-        <input matInput formControlName="logoUrl" />
-      </mat-form-field>
+      <mat-label>Organization's logo</mat-label>
+      <file-upload-drag-drop></file-upload-drag-drop>
     </form>
+    <mat-divider></mat-divider>
     <div class="members-section">
         <h5 class="section-title"><mat-icon>people</mat-icon> Manage members</h5>
+        <mat-list class="members-list">
+          <mat-list-item *ngFor="let member of members$ | async">
+            <span matListItemAvatar class="avatar">
+              <img
+                *ngIf="member.avatarUrl"
+                [src]="member.avatarUrl"
+                class="avatar-image"
+                alt="A user's avatar"
+              />
+              <div class="avatar-text" *ngIf="!member.avatarUrl">
+                {{ member.displayName?.charAt(0) }}
+              </div>
+            </span>
+            <h3 matLine class="member">
+              <span class="member-name">
+                {{ member.displayName }}
+              </span>
+            </h3>
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              matListItemMeta
+            >
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>group_remove</mat-icon> Remove from organization
+              </button>
+            </mat-menu>
+          </mat-list-item>
+        </mat-list>
     </div>
   </ng-container>
 </div>

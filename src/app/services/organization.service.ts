@@ -16,9 +16,11 @@ import {
   CollectionReference,
   collectionData,
   serverTimestamp,
+  addDoc,
 } from '@angular/fire/firestore';
-import { Organization } from '../types';
+import { InvitationData, Organization } from '../types';
 import { filter, map, mapTo, Observable, switchMap } from 'rxjs';
+import { FileUploadService } from './file-upload.service';
 
 const ORGANIZATION_COLLECTION = 'organizations';
 
@@ -26,7 +28,11 @@ const ORGANIZATION_COLLECTION = 'organizations';
   providedIn: 'root',
 })
 export class OrganizationService {
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService,
+    private fileUploadService: FileUploadService
+  ) {}
 
   private createId() {
     return doc(collection(this.firestore, '_')).id;
@@ -36,7 +42,7 @@ export class OrganizationService {
     organizationDto: Pick<Organization, 'name' | 'logoUrl'>
   ): Promise<void> {
     const user = await this.authService.getUser();
-  
+
     const organization: Organization = {
       ...organizationDto,
       id: this.createId(),
@@ -51,9 +57,22 @@ export class OrganizationService {
     );
   }
 
-  async updateOrganization(organization: Partial<Organization>): Promise<void> {
+  async updateLogo(file: File, organizationId: string) {
+    const downloadUrl = await this.fileUploadService.uploadFile(
+      `organizations/${organizationId}/logos/logo-${Date.now()}`,
+      file
+    );
+    return this.updateOrganization(organizationId, {
+      logoUrl: downloadUrl,
+    });
+  }
+
+  async updateOrganization(
+    organizationId: string,
+    organization: Partial<Organization>
+  ): Promise<void> {
     await updateDoc(
-      doc(this.firestore, ORGANIZATION_COLLECTION, organization.id),
+      doc(this.firestore, ORGANIZATION_COLLECTION, organizationId),
       organization
     );
   }
@@ -65,6 +84,28 @@ export class OrganizationService {
         ORGANIZATION_COLLECTION,
         organizationId
       ) as DocumentReference<Organization>
+    );
+  }
+
+  async inviteMemberByEmail(organizationId: string, email: string) {
+    const user = await this.authService.getUser();
+
+    const invitation: InvitationData = {
+      createdAt: serverTimestamp(),
+      invitationEmail: email,
+      organizationId,
+      emailStatus: 'pending',
+      invitedById: user.uid,
+    };
+
+    await addDoc(
+      collection(
+        this.firestore,
+        ORGANIZATION_COLLECTION,
+        organizationId,
+        'memberInvitations'
+      ),
+      invitation
     );
   }
 

@@ -259,6 +259,14 @@ export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {
   permissions: DEFAULT_PERMISSIONS,
 };
 
+export type InvitationData = {
+  invitedById: string;
+  invitationEmail: string;
+  organizationId: string;
+  createdAt: FieldValue;
+  emailStatus: 'pending' | 'success' | 'failure';
+};
+
 export interface Organization {
   id: string;
   name: string;

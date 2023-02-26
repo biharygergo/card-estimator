@@ -6,34 +6,55 @@
 }
 
 .organization-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
 
-    .form-input {
-        width: 100%;
-    }
+.form-input {
+  width: 100%;
 }
 
 .section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-
-.members-section {
-    margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .member {
-    display: flex !important;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0 !important;
-    flex-wrap: wrap;
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0 !important;
+  flex-wrap: wrap;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  border-radius: 6px;
+  background: var(--light-background-color);
+
+  padding: 1rem;
+  gap: 1rem;
+  img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: white;
   }
-  
+}
+
+.empty-state {
+  background: var(--light-background-color);
+  padding: 1rem;
+  border-radius: 6px;
+}

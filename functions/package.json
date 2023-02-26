@@ -15,6 +15,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "@types/node": "^18.11.18",
     "axios": "^1.2.2",
     "bcrypt": "^5.1.0",

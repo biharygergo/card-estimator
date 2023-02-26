@@ -62,6 +62,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/acceptOrganizationInvitation",
+          "function": "acceptOrganizationInvitation",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },
@@ -165,6 +170,11 @@
         {
           "source": "/api/reportAnIssue",
           "function": "reportAnIssue",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/acceptOrganizationInvitation",
+          "function": "acceptOrganizationInvitation",
           "region": "us-central1"
         },
         {

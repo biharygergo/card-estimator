@@ -45,6 +45,11 @@ import {
   connectFunctionsEmulator,
   provideFunctions,
 } from '@angular/fire/functions';
+import {
+  connectStorageEmulator,
+  getStorage,
+  provideStorage,
+} from '@angular/fire/storage';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -114,6 +119,13 @@ function loadAppConfig(): Promise<any> {
       return auth;
     }),
     provideAnalytics(() => getAnalytics()),
+    provideStorage(() => {
+      const storage = getStorage();
+      if (environment.useEmulators) {
+        connectStorageEmulator(storage, 'localhost', 9199);
+      }
+      return storage;
+    }),
     provideRemoteConfig(() => getRemoteConfig()),
     provideFunctions(() => {
       const functions = getFunctions();

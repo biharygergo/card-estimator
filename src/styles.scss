@@ -193,7 +193,6 @@ $my-theme: mat.define-light-theme(
   }
 }
 
-
 .custom-tab-group {
   .mdc-tab-indicator {
     display: none;
@@ -216,4 +215,15 @@ $my-theme: mat.define-light-theme(
       }
     }
   }
+}
+
+.tab-content {
+  padding-top: 1rem;
+}
+
+.tab-section {
+  background: var(--light-background-color);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }

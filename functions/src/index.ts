@@ -24,6 +24,10 @@ import {
   enterProtectedRoom,
   setRoomPassword,
 } from "./room/password-protection";
+import {
+  acceptInvitation,
+  onOrganizationInviteCreated,
+} from "./organization/invitation";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -101,11 +105,20 @@ exports.onUserDetailsUpdate = functions.firestore
     .onUpdate(onUserDetailsUpdate);
 
 exports.setRoomPassword = functions.https.onCall(
-    async (data: any, context: CallableContext) =>
-      setRoomPassword(data, context)
+    async (data: any, context: CallableContext) => setRoomPassword(data, context)
 );
 
 exports.enterProtectedRoom = functions.https.onCall(
     async (data: any, context: CallableContext) =>
       enterProtectedRoom(data, context)
+);
+
+exports.onOrganizationInvitation = functions.firestore
+    .document("organizations/{organizationId}/memberInvitations/{invitationId}")
+    .onCreate(onOrganizationInviteCreated);
+
+exports.acceptOrganizationInvitation = functions.https.onRequest(
+    async (req, res) => {
+      cookieParser()(req, res, () => acceptInvitation(req, res));
+    }
 );

@@ -1,11 +1,23 @@
-<div class="box" appDragDrop>
+<div class="box" appDragDrop (files)="fileDropped($event)">
   <div class="box-input">
-    <input class="box-file" type="file" id="file" />
+    <input
+      class="box-file"
+      type="file"
+      id="file"
+      #fileUpload
+      accept="image/*"
+      (change)="onFileSelected($event)"
+    />
     <div class="icon-container">
       <mat-icon>upload</mat-icon>
     </div>
     <label for="file"
-      ><button mat-button class="file-upload-button">Click to upload</button
+      ><button
+        mat-button
+        class="file-upload-button"
+        (click)="fileUpload.click()"
+      >
+        Click to upload</button
       ><span> or drag logo here</span>.</label
     >
   </div>

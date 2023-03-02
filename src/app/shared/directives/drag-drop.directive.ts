@@ -43,9 +43,7 @@ export class DragDropDirective {
     evt.preventDefault();
     evt.stopPropagation();
     this.isDrop = true;
-  
-    console.log('drop detected');
-  
+    
     let files: FileHandle[] = [];
     for (let i = 0; i < evt.dataTransfer.files.length; i++) {
       const file = evt.dataTransfer.files[i];

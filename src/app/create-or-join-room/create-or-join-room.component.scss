@@ -56,13 +56,37 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   }
 }
 
+.organization-logo-container {
+  display: inline-flex;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.logos {
+  display: flex;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  position: relative;
+}
+
 .logo {
   width: 70px;
   height: 70px;
   border-radius: 8px;
   box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
     rgba(5, 18, 37, 0.24) 0px 0px 8px;
-  margin-bottom: 2rem;
+
+  &.organization-logo {
+    background: white;
+    object-fit: contain;
+    margin-bottom: 0;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .links {

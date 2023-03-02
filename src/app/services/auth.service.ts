@@ -73,11 +73,7 @@ export class AuthService {
     private firestore: Firestore,
     private snackbar: MatSnackBar
   ) {
-    this.user = user(this.auth).pipe(
-      tap(user => {
-        user?.getIdTokenResult(true).then((result) => console.log(result));
-      })
-    );
+    this.user = user(this.auth).pipe();
   }
 
   async loginAnonymously(displayName?: string) {

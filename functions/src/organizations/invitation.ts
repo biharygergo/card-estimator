@@ -3,7 +3,8 @@ import {EventContext} from "firebase-functions/v1";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 import {sendEmail} from "../email";
 import * as functions from "firebase-functions";
-import {getAuth} from "firebase-admin/auth";
+import {getAuth, UserRecord} from "firebase-admin/auth";
+import {getHost} from "../config";
 
 // TODO: move to shared types package
 type InvitationData = {
@@ -28,19 +29,21 @@ export async function acceptInvitation(
   ).data() as InvitationData;
 
   if (!invitation) {
-    throw new functions.https.HttpsError(
-        "not-found",
-        "This invitation does not exist."
+    req.res?.redirect(
+        `${getHost(req)}/organizationInvitation?result=invitation-not-found`
     );
+    return;
   }
 
-  const user = await getAuth().getUserByEmail(invitation.invitationEmail);
+  let user: UserRecord | undefined;
 
-  if (!user) {
-    throw new functions.https.HttpsError(
-        "failed-precondition",
-        "No user account exists for this e-mail."
+  try {
+    user = await getAuth().getUserByEmail(invitation.invitationEmail);
+  } catch {
+    req.res?.redirect(
+        `${getHost(req)}/organizationInvitation?result=user-not-found`
     );
+    return;
   }
 
   const organization = (
@@ -48,16 +51,18 @@ export async function acceptInvitation(
   ).data();
 
   if (!organization) {
-    throw new functions.https.HttpsError(
-        "not-found",
-        "This Organization does not exist."
+    req.res?.redirect(
+        `${getHost(req)}/organizationInvitation?result=organization-not-found`
     );
+    return;
   }
 
   const updatedMemberIds = [...organization.memberIds, user.uid];
   await getFirestore()
       .doc(`organizations/${organizationId}`)
       .update({memberIds: updatedMemberIds});
+
+  req.res?.redirect(`${getHost(req)}/organizationInvitation?result=success`);
 }
 
 export async function onOrganizationInviteCreated(

@@ -253,6 +253,7 @@ export interface RoomConfiguration {
 
 export interface AuthorizationMetadata {
   passwordProtectionEnabled: boolean;
+  organizationProtection: string;
 }
 
 export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {

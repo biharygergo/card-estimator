@@ -33,6 +33,14 @@
                   id="account-type-input"
                 />
               </mat-form-field>
+              <mat-form-field class="name" appearance="outline" *ngIf="emailControl.value">
+                <mat-label>E-mail</mat-label>
+                <input
+                  matInput
+                  [formControl]="emailControl"
+                  id="email-input"
+                />
+              </mat-form-field>
               <mat-form-field class="name" appearance="outline">
                 <mat-label>Your name</mat-label>
                 <input

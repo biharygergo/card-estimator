@@ -19,6 +19,8 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
 import { WrapperComponent } from './wrapper/wrapper.component';
 import { ZoomComponent } from './zoom/zoom.component';
+import { OrganizationInvitationComponent } from './organization-invitation/organization-invitation.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [
   {
@@ -50,6 +52,11 @@ const routes: Routes = [
     component: ZoomComponent,
     data: { title: 'Zoom Integration' },
   },
+  {
+    path: 'organizationInvitation',
+    component: OrganizationInvitationComponent,
+    data: { title: 'Organization invitation' },
+  },
 ];
 
 @NgModule({
@@ -64,6 +71,7 @@ const routes: Routes = [
     HomeComponent,
     WrapperComponent,
     HeaderV2Component,
+    OrganizationInvitationComponent,
   ],
   imports: [
     CommonModule,
@@ -76,7 +84,8 @@ const routes: Routes = [
     MatDividerModule,
     MatIconModule,
     MatTabsModule,
-    ZoomAppBannerComponent
+    MatDialogModule,
+    ZoomAppBannerComponent,
   ],
 })
 export class LandingModule {}

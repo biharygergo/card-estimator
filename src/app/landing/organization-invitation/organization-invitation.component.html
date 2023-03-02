@@ -1,0 +1,52 @@
+<div class="page-container">
+  <mat-card>
+    <ng-container *ngIf="invitationResult === 'success'">
+      <mat-card-content>
+        <h1><mat-icon>done</mat-icon></h1>
+        <h2>Invitation accepted</h2>
+        <p>You are now a member of this organization, amazing! You can now:</p>
+        <ul>
+          <li>Join rooms created for your organization only</li>
+          <li>Get a more personalized planning experience</li>
+          <li>Be the first to try new organization features</li>
+        </ul>
+        <br/>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-flat-button color="primary" routerLink="/join"
+          >Join a room now</a
+        >
+      </mat-card-actions>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        invitationResult === 'invitation-not-found' ||
+        invitationResult === 'organization-not-found'
+      "
+    >
+      <mat-card-content>
+        <h1><mat-icon>error</mat-icon></h1>
+        <h2>Invitation or Organization not found</h2>
+        <p>
+          Oh-oh, this invitation does not seem to be working. Please ask the
+          person who invited you to resend the invite.
+        </p>
+      </mat-card-content>
+    </ng-container>
+    <ng-container *ngIf="invitationResult === 'user-not-found'">
+      <mat-card-content>
+        <h1><mat-icon>person_search</mat-icon></h1>
+        <h2>User not found</h2>
+        <p>
+          No PlanningPoker.live permanent account was found for this e-mail
+          address. Create an account with the e-mail address where you've
+          received this invitation and then try clicking on the link in the
+          e-mail again.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button (click)="openAuthModal()">Create account</button>
+      </mat-card-actions>
+    </ng-container>
+  </mat-card>
+</div>

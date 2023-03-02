@@ -24,7 +24,15 @@ import {
   starWars,
 } from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import { catchError, filter, first, map, switchMap, take, tap } from 'rxjs/operators';
+import {
+  catchError,
+  filter,
+  first,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   Room,
   Member,
@@ -215,7 +223,7 @@ export class EstimatorService {
 
         this.activeMember = member;
       }),
-      map(([_user, room]) => room),
+      map(([_user, room]) => room)
     );
   }
 
@@ -473,7 +481,15 @@ export class EstimatorService {
     ).pipe(map((data) => !!data?.value));
   }
 
-  togglePasswordProtection(roomId: string, isEnabled: boolean) {
+  async togglePasswordProtection(roomId: string, isEnabled: boolean) {
+    const existingMeta = await firstValueFrom(
+      this.getAuthorizationMetadata(roomId)
+    );
+
+    const meta: AuthorizationMetadata = {
+      ...existingMeta,
+      passwordProtectionEnabled: isEnabled,
+    };
     return setDoc(
       doc(
         this.firestore,
@@ -482,9 +498,33 @@ export class EstimatorService {
         'metadata',
         'authorization'
       ),
-      {
-        passwordProtectionEnabled: isEnabled,
-      }
+      meta
+    );
+  }
+
+  async toggleOrganizationProtection(
+    roomId: string,
+    isEnabled: boolean,
+    organizationId: string
+  ) {
+    const existingMeta = await firstValueFrom(
+      this.getAuthorizationMetadata(roomId)
+    );
+
+    const meta: AuthorizationMetadata = {
+      ...existingMeta,
+      organizationProtection: isEnabled ? organizationId : null,
+    };
+
+    return setDoc(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'authorization'
+      ),
+      meta
     );
   }
 }

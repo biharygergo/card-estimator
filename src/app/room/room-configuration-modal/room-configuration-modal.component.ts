@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -23,6 +23,7 @@ import {
   DEFAULT_ROOM_CONFIGURATION,
   Member,
   MemberStatus,
+  Organization,
   PermissionsMap,
   PERMISSIONS_CATALOG_MAP,
   Room,
@@ -32,6 +33,9 @@ import {
 } from 'src/app/types';
 import { isEqual } from 'lodash';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { organizationModalCreator } from 'src/app/shared/organization-modal/organization-modal.component';
+import { OrganizationService } from 'src/app/services/organization.service';
+import { AuthService } from 'src/app/services/auth.service';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -227,10 +231,17 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     .isPasswordSet(this.dialogData.roomId)
     .pipe(takeUntil(this.destroy));
 
+  organization$: Observable<Organization | undefined> =
+    this.organizationService.getMyOrganization();
+  organization: Organization | undefined;
+
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly permissionsService: PermissionsService,
     private readonly snackbar: MatSnackBar,
+    private dialog: MatDialog,
+    public readonly authService: AuthService,
+    private readonly organizationService: OrganizationService,
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData
   ) {}
 
@@ -242,6 +253,10 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.authorizationMetadata$.subscribe((meta) => {
       this.authorizationMetadata = meta;
     });
+
+    this.organization$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((org) => (this.organization = org));
 
     this.onConfigurationChanged$.subscribe((roomConfiguration) => {
       if (roomConfiguration) {
@@ -334,10 +349,35 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  async toggleOrganizationProtection() {
+    this.authorizationMetadata$
+      .pipe(
+        switchMap((meta) =>
+          of(
+            this.estimatorService.toggleOrganizationProtection(
+              this.room.roomId,
+              !meta?.organizationProtection,
+              this.organization.id
+            )
+          )
+        ),
+        take(1)
+      )
+      .subscribe();
+  }
+
   private showMessage(message: string) {
     this.snackbar.open(message, null, {
       duration: 3000,
       horizontalPosition: 'right',
     });
+  }
+
+  openOrganizationModal() {
+    this.dialog.open(...organizationModalCreator());
+  }
+
+  addToOrganization(memberId: string) {
+    this.organizationService.addMember(this.organization.id, memberId);
   }
 }

@@ -11,25 +11,44 @@ service cloud.firestore {
       allow create: if request.auth != null;
 
       function isAccessAllowed(request) {
-        let isPasswordProtected = isPasswordProtected();
-        
-        let roomAccessValue = hasSavedPasswordAccessForUserId(request) ? getPasswordAccessForUserId(request) : {};
+        let meta = hasMetadataSet() ? getAuthorizationMetadata().data : {};
+
+        let isPasswordProtected = meta.get('passwordProtectionEnabled', false); // metaExists ? meta.get('passwordProtectionEnabled', false) : false;
+        let organizationOnlyProtectedId = meta.get('organizationProtection', false); // metaExists && 'organizationProtection' in meta ? meta.organizationProtection : false;
+
+        let roomAccessValue = isPasswordProtected ? hasSavedPasswordAccessForUserId(request) ? getPasswordAccessForUserId(request) : {} : {};
         let isExpired = 'expiresAt' in roomAccessValue ? roomAccessValue.expiresAt < request.time : false;
         let isHashMatching = 'hash' in roomAccessValue ? roomAccessValue.hash == getPasswordHash() : false;
       
         return request.auth != null && (
-          !isPasswordProtected || 
-          (
-            isPasswordProtected && 
-            !isExpired &&
-            isHashMatching
-          )
-        );
+            !isPasswordProtected || 
+            (
+              !isExpired &&
+              isHashMatching
+            )
+          ) && (
+            (organizationOnlyProtectedId == '' || organizationOnlyProtectedId == false || organizationOnlyProtectedId == null) || (
+              request.auth.uid in getOrganization(organizationOnlyProtectedId).data.memberIds
+            )
+          );
+      }
+
+      function hasMetadataSet() {
+        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization);
+      }
+
+      function getAuthorizationMetadata() {
+        return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization);
       }
 
       function isPasswordProtected() {
         return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization) &&
          get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization).data.passwordProtectionEnabled;
+      }
+
+      function organizationOnlyProtectedId() {
+        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization) &&
+         get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization).data.organizationProtection;
       }
     
       function getRoom() {
@@ -47,6 +66,10 @@ service cloud.firestore {
 
       function getPasswordAccessForUserId(request) {
         return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection/accessList/$(request.auth.uid)).data;
+      }
+
+      function getOrganization(organizationId) {
+        return get(/databases/$(database)/documents/organizations/$(organizationId));
       }
 
       // TODO this needs improvement!
@@ -74,12 +97,12 @@ service cloud.firestore {
       allow read: if request.auth.uid in resource.data.memberIds;
       allow write: if request.auth.uid == request.resource.data.createdById;
 
-      function getOrganization() {
+      function getOrganization(organizationId) {
         return get(/databases/$(database)/documents/organizations/$(organizationId));
       }
-
+      
       match /memberInvitations/{invitationId} {
-        allow read, write: if request.auth.uid in getOrganization().data.memberIds;
+        allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;
       }
     }
     

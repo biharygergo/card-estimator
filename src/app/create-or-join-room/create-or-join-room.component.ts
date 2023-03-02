@@ -2,11 +2,10 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   EstimatorService,
-  RoomNotFoundError,
 } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Member, MemberType, MemberStatus } from '../types';
+import { Member, MemberType, MemberStatus, Organization } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -33,8 +32,7 @@ import {
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
 import { AppConfig, AppConfigModule, APP_CONFIG } from '../app-config.module';
-import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
-import { ZoomApiService } from '../services/zoom-api.service';
+import { delayedFadeAnimation, fadeAnimation, slideInRightAnimation } from '../shared/animations';
 import { MatDialog } from '@angular/material/dialog';
 import {
   authProgressDialogCreator,
@@ -48,6 +46,7 @@ import {
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
+import { OrganizationService } from '../services/organization.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -72,7 +71,7 @@ interface ViewModel {
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation],
+  animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl<string>('');
@@ -132,6 +131,16 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     tap(() => this.isLoadingUser.next(false))
   );
 
+  organization: Observable<Organization | undefined> = this.user.pipe(
+    switchMap((user) => {
+      if (!user?.isAnonymous) {
+        return this.organizationService.getMyOrganization();
+      } else {
+        return undefined;
+      }
+    })
+  );
+
   readonly PageMode = PageMode;
   readonly MemberType = MemberType;
 
@@ -143,8 +152,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private analytics: AnalyticsService,
     private authService: AuthService,
     private readonly cookieService: CookieService,
-    private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
+    private readonly organizationService: OrganizationService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 

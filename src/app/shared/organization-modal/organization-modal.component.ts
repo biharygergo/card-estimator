@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { isEqual } from 'lodash';
 import {
   distinctUntilChanged,
@@ -14,6 +15,10 @@ import { OrganizationService } from 'src/app/services/organization.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Organization } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -68,8 +73,9 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly organizationService: OrganizationService,
-    private readonly authService: AuthService,
-    private readonly toastService: ToastService
+    public readonly authService: AuthService,
+    private readonly toastService: ToastService,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -117,7 +123,6 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async inviteMember() {
-    console.log('inviting', this.invitationEmail.value);
     await this.organizationService.inviteMemberByEmail(
       this.organization.id,
       this.invitationEmail.value
@@ -127,5 +132,18 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       `Invitation sent to ${this.invitationEmail.value}`
     );
     this.invitationEmail.reset();
+  }
+
+  async removeFromOrganization(memberId: string) {
+    await this.organizationService.removeMember(this.organization.id, memberId);
+    this.toastService.showMessage('Member removed!');
+  }
+
+  openCreateAccountModal() {
+    this.dialog.open(
+      ...signUpOrLoginDialogCreator({
+        intent: SignUpOrLoginIntent.LINK_ACCOUNT,
+      })
+    );
   }
 }

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Organization settings</h1>
+<h1 mat-dialog-title>My organization</h1>
 <div mat-dialog-content>
   <ng-container *ngIf="organization !== null; else loading">
     <ng-container *ngIf="!organization && showIntro">
@@ -9,10 +9,27 @@
           With an organization, you can create rooms just for your teammates,
           personalize the app with your logo and much more!
         </p>
+
+        <mat-card
+          *ngIf="(authService.user | async)?.isAnonymous"
+          class="alert-card"
+        >
+          <mat-card-content>
+            <h1><mat-icon>error</mat-icon></h1>
+            <p>
+              Organizations require a permanent PlanningPoker.live account.
+              Create one in a couple of clicks before setting up your team.
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-flat-button color="primary" (click)="openCreateAccountModal()">Create account</button>
+          </mat-card-actions>
+        </mat-card>
         <button
           mat-flat-button
           color="primary"
           (click)="createEmptyOrganization()"
+          [disabled]="(authService.user | async)?.isAnonymous"
         >
           Let's set it up!
         </button>
@@ -39,33 +56,34 @@
                     placeholder="Best Company Ltd."
                   />
                 </mat-form-field>
-
-                <h5 class="section-title">
-                  <mat-icon>diamond</mat-icon> Organization's logo
-                </h5>
-
-                <small
-                  >The logo will be used to personalize the welcome screen of
-                  the app. Select an image that fits nicely in a square logo
-                  container, similar to Planning Poker's own logo.</small
-                >
-                <div class="logo-container" *ngIf="organization?.logoUrl">
-                  <img class="logo" [src]="organization?.logoUrl" />
-                  <button mat-button (click)="removeLogo()">Remove logo</button>
-                </div>
-                <file-upload-drag-drop
-                  (onFileDropped)="onLogoDropped($event)"
-                  *ngIf="!organization?.logoUrl"
-                ></file-upload-drag-drop>
-                <button
-                  mat-flat-button
-                  color="primary"
-                  (click)="saveOrganization()"
-                  *ngIf="organization || !showIntro"
-                >
-                  Save
-                </button>
               </form>
+
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="saveOrganization()"
+                *ngIf="organization || !showIntro"
+                class="save-button"
+              >
+                Save
+              </button>
+              <h5 class="section-title">
+                <mat-icon>diamond</mat-icon> Organization's logo
+              </h5>
+
+              <small
+                >The logo will be used to personalize the welcome screen of the
+                app. Select an image that fits nicely in a square logo
+                container, similar to Planning Poker's own logo.</small
+              >
+              <div class="logo-container" *ngIf="organization?.logoUrl">
+                <img class="logo" [src]="organization?.logoUrl" />
+                <button mat-button (click)="removeLogo()">Remove logo</button>
+              </div>
+              <file-upload-drag-drop
+                (onFileDropped)="onLogoDropped($event)"
+                *ngIf="!organization?.logoUrl"
+              ></file-upload-drag-drop>
             </div>
           </div>
         </mat-tab>
@@ -94,6 +112,11 @@
                         {{ member.displayName }}
                       </span>
                     </h3>
+                    <small
+                      matLine
+                      *ngIf="member.id === organization?.createdById"
+                      >Admin</small
+                    >
                     <button
                       mat-icon-button
                       [matMenuTriggerFor]="menu"
@@ -105,6 +128,7 @@
                       <button
                         mat-menu-item
                         [disabled]="member.id === organization?.createdById"
+                        (click)="removeFromOrganization(member.id)"
                       >
                         <mat-icon>group_remove</mat-icon> Remove from
                         organization

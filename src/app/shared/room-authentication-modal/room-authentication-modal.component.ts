@@ -39,7 +39,11 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
     .getAuthorizationMetadata(this.dialogData.roomId)
     .pipe(
       map((authMeta) => {
-        return authMeta?.passwordProtectionEnabled ? 'password' : 'unknown';
+        return authMeta?.passwordProtectionEnabled
+          ? 'password'
+          : authMeta?.organizationProtection
+          ? 'organization'
+          : 'unknown';
       }),
       takeUntil(this.destroy)
     );
@@ -66,7 +70,7 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
         this.dialogData.roomId,
         this.roomPassword.value
       );
-      this.dialogRef.close({joined: true});
+      this.dialogRef.close({ joined: true });
       this.router.navigate(['room', this.dialogData.roomId]);
     } catch (e) {
       console.error(e);

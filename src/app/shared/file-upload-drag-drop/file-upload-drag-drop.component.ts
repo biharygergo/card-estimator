@@ -16,7 +16,6 @@ export class FileUploadDragDropComponent {
   }
 
   fileDropped(files: FileHandle[]): void {
-    console.log('Got file in component...');
     this.files = files;
     this.onFileDropped.emit(files.pop().file);
   }

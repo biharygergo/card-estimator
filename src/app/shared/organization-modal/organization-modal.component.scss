@@ -9,11 +9,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 2rem;
 }
 
 .form-input {
   width: 100%;
+}
+
+.save-button {
+  margin-bottom: 1rem;
 }
 
 .section-title {
@@ -31,6 +34,10 @@
   align-items: center;
   margin-bottom: 0 !important;
   flex-wrap: wrap;
+}
+
+.members-section {
+  margin-bottom: 0.5rem;
 }
 
 .logo-container {
@@ -57,4 +64,9 @@
   background: var(--light-background-color);
   padding: 1rem;
   border-radius: 6px;
+}
+
+
+.alert-card {
+  margin-bottom: 1rem;
 }

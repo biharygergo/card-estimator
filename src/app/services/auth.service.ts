@@ -103,6 +103,11 @@ export class AuthService {
     return this.auth.currentUser?.getIdToken(true);
   }
 
+  async getCustomClaims() {
+    const token = await this.auth.currentUser?.getIdTokenResult();
+    return token.claims;
+  }
+
   signOut() {
     this.auth.signOut();
   }

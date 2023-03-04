@@ -236,4 +236,15 @@ $my-theme: mat.define-light-theme(
   background: var(--main-color);
   padding: 1rem;
   color: white;
+
+  .premium-banner-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

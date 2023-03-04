@@ -1,11 +1,11 @@
 <div class="premium-banner" *ngIf="!(authService.user | async)?.isAnonymous">
   <mat-icon class="premium-lock">lock_open</mat-icon>
-  <h2>You've unlocked a Premium feature</h2>
+  <h2 class="title">Preview this Premium feature <mat-chip>{{ organization?.memberIds.length ?? 0 }}/5 members</mat-chip></h2>
   <p>
-    Create an organization for <strong>up to 5 members for free</strong>. Organizations allow
-    enhanced security, more customization and much more coming in the near
-    future. If you have a larger team subscribe to Premium for unlimited
-    organization members.
+    Create an organization for <strong>up to 5 members for free</strong>.
+    Organizations allow enhanced security, more customization and much more
+    coming in the near future. If you have a larger team subscribe to Premium
+    for unlimited organization members.
   </p>
   <button mat-flat-button>Get Premium for unlimited members</button>
 </div>

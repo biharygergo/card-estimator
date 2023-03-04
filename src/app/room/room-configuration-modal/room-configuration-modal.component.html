@@ -1,12 +1,28 @@
 <div class="modal-container">
-  <div class="premium-banner">
+  <div class="premium-banner" *ngIf="!(hasConfigurationAccess$ | async)">
     <mat-icon class="premium-lock">lock</mat-icon>
     <h2>You've found a Premium feature!</h2>
     <p>
       Setting up your room's security and permissions is a new feature available
-      for Premium subscribers. See how it suits your team with a 14-day free trial.
+      for Premium subscribers. See how it suits your team with a 14-day free
+      trial.
     </p>
-    <button mat-flat-button>Try Premium now 🚀</button>
+    <div class="premium-banner-buttons">
+      <button
+        mat-flat-button
+        *ngIf="(authService.user | async)?.isAnonymous"
+        (click)="openAuthModal()"
+      >
+        Create an account
+      </button>
+      <button
+        mat-flat-button
+        (click)="subscribeToPremium()"
+        [disabled]="(authService.user | async)?.isAnonymous"
+      >
+        Try Premium now 🚀
+      </button>
+    </div>
   </div>
   <div mat-dialog-content>
     <h1>Room security & permissions</h1>
@@ -54,7 +70,7 @@
                 class="update-password-button"
                 (click)="saveRoomPassword()"
                 [disabled]="
-                  !roomPassword.value || !roomPassword.valid || !isRoomCreator
+                  !roomPassword.value || !roomPassword.valid || !(hasConfigurationAccess$ | async)
                 "
               >
                 Save password
@@ -73,7 +89,7 @@
                 [checked]="
                   (authorizationMetadata$ | async)?.passwordProtectionEnabled
                 "
-                [disabled]="!(isPasswordSet$ | async) || !isRoomCreator"
+                [disabled]="!(isPasswordSet$ | async) || !(hasConfigurationAccess$ | async)"
                 >Enable password protection</mat-checkbox
               >
             </span>
@@ -107,7 +123,7 @@
                   [checked]="
                     (authorizationMetadata$ | async)?.organizationProtection
                   "
-                  [disabled]="!organization || !isRoomCreator"
+                  [disabled]="!organization || !(hasConfigurationAccess$ | async)"
                   >Enable organization-only protection</mat-checkbox
                 >
               </span>
@@ -138,7 +154,7 @@
                     [selected]="configuration.isSelected(option.value)"
                     (click)="configuration.toggleOption(option.value)"
                     class="role-option"
-                    [disabled]="!isRoomCreator"
+                    [disabled]="!(hasConfigurationAccess$ | async)"
                     >{{ option.label }}</mat-chip-option
                   >
                 </mat-chip-listbox>
@@ -214,7 +230,7 @@
                   <button
                     mat-menu-item
                     (click)="removeMember(member)"
-                    [disabled]="!isRoomCreator"
+                    [disabled]="!(hasConfigurationAccess$ | async)"
                   >
                     <mat-icon>person_remove</mat-icon> Remove from room
                   </button>
@@ -230,14 +246,3 @@
     <button mat-flat-button mat-dialog-close>Close</button>
   </div>
 </div>
-<ng-template #mustBeCreator>
-  <mat-card
-    *ngIf="!isRoomCreator"
-    appearance="outlined"
-    class="creator-warning"
-  >
-    <mat-card-content>
-      Only the room creator can modify these settings.
-    </mat-card-content>
-  </mat-card>
-</ng-template>

@@ -8,14 +8,16 @@ import {
   UserPermissions,
   UserRole,
 } from '../types';
+import { PaymentService } from './payment.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PermissionsService {
   userPermissions = new BehaviorSubject<Partial<UserPermissions>>({});
+  isPremiumSubscriber = new BehaviorSubject<boolean>(false);
 
-  constructor() {}
+  constructor(private readonly paymentsService: PaymentService) {}
 
   initializePermissions(room: Room, userId: string) {
     const permissions = {
@@ -48,6 +50,10 @@ export class PermissionsService {
     });
 
     this.userPermissions.next(newPermissions);
+
+    this.paymentsService
+      .isPremiumSubscriber()
+      .then((isPremium) => this.isPremiumSubscriber.next(isPremium));
   }
 
   hasPermission(permissionId: RoomPermissionId): Observable<boolean> {
@@ -90,5 +96,9 @@ export class PermissionsService {
 
   canSetTimer(): Observable<boolean> {
     return this.hasPermission(RoomPermissionId.CAN_SET_TIMER);
+  }
+
+  hasPremiumAccess(): Observable<boolean> {
+    return this.isPremiumSubscriber;
   }
 }

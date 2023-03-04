@@ -50,6 +50,7 @@ import {
   getStorage,
   provideStorage,
 } from '@angular/fire/storage';
+import { MatDialogModule } from '@angular/material/dialog';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -92,6 +93,7 @@ function loadAppConfig(): Promise<any> {
     AppRoutingModule,
     AppConfigModule,
     MatSnackBarModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),

@@ -38,6 +38,7 @@ import { RoomAuthenticationModalComponent } from './room-authentication-modal/ro
 import { OrganizationModalComponent } from './organization-modal/organization-modal.component';
 import { FileUploadDragDropComponent } from './file-upload-drag-drop/file-upload-drag-drop.component';
 import { DragDropDirective } from './directives/drag-drop.directive';
+import { SubscriptionResultComponent } from './subscription-result/subscription-result.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { DragDropDirective } from './directives/drag-drop.directive';
     OrganizationModalComponent,
     FileUploadDragDropComponent,
     DragDropDirective,
+    SubscriptionResultComponent,
   ],
   imports: [
     CommonModule,

@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   BehaviorSubject,
+  combineLatest,
   distinctUntilChanged,
   map,
   Observable,
@@ -36,6 +37,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { organizationModalCreator } from 'src/app/shared/organization-modal/organization-modal.component';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { PaymentService } from 'src/app/services/payment.service';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -238,8 +244,23 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   organization: Organization | undefined;
 
   user$ = this.authService.user;
+  isPremiumSubscriber$ = this.permissionsService
+    .hasPremiumAccess()
+    .pipe(takeUntil(this.destroy));
 
   isRoomCreator = false;
+
+  hasConfigurationAccess$ = combineLatest([
+    this.room$,
+    this.user$,
+    this.isPremiumSubscriber$,
+  ]).pipe(
+    map(([room, user, isPremium]) => {
+      return room.createdById === user.uid && isPremium;
+    }),
+    share(),
+    takeUntil(this.destroy)
+  );
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -248,6 +269,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     public readonly authService: AuthService,
     private readonly organizationService: OrganizationService,
+    private readonly paymentService: PaymentService,
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData
   ) {}
 
@@ -385,7 +407,19 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.dialog.open(...organizationModalCreator());
   }
 
+  openAuthModal() {
+    this.dialog.open(
+      ...signUpOrLoginDialogCreator({
+        intent: SignUpOrLoginIntent.LINK_ACCOUNT,
+      })
+    );
+  }
+
   addToOrganization(memberId: string) {
     this.organizationService.addMember(this.organization.id, memberId);
+  }
+
+  subscribeToPremium() {
+    return this.paymentService.startSubscriptionToPremium();
   }
 }

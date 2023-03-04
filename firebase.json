@@ -3,7 +3,11 @@
     {
       "target": "estimator",
       "public": "dist/estimator/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "trailingSlash": false,
       "rewrites": [
         {
@@ -114,7 +118,11 @@
     {
       "target": "staging",
       "public": "dist/estimator/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "trailingSlash": false,
       "rewrites": [
         {
@@ -255,5 +263,8 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "extensions": {
+    "firestore-stripe-payments": "stripe/firestore-stripe-payments@0.3.2"
   }
 }

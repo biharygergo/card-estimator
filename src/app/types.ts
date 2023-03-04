@@ -277,6 +277,11 @@ export interface Organization {
   logoUrl: string;
 }
 
+export enum SubscriptionResult {
+  SUCCESS = 'success',
+  CANCEL = 'cancel',
+}
+
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {
     values: { 0: '0', 0.5: '0.5', 1: '1', 2: '2', 3: '3', 5: '5' },
@@ -331,3 +336,4 @@ export function isNumericCardSet(cardSet: CardSetValue) {
   const values = Object.values(cardSet.values);
   return values.every((value) => isNumeric(value));
 }
+

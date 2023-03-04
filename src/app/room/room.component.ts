@@ -68,7 +68,10 @@ import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selec
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
-import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
@@ -125,12 +128,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   members$: Observable<Member[]> = this.room$.pipe(
-    map((room) => room.members),
+    map((room) => [room.members, room.memberIds]),
     distinctUntilChanged(isEqual),
-    map((members) =>
+    map(([members, memberIds]) =>
       members
         .filter(
-          (m) => m.status === MemberStatus.ACTIVE || m.status === undefined
+          (m) =>
+            (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
+            memberIds.includes(m.id)
         )
         .sort((a, b) => a.type?.localeCompare(b.type))
     ),

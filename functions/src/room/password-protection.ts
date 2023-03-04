@@ -2,10 +2,7 @@ import * as functions from "firebase-functions";
 import {hash, compare} from "bcrypt";
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {CallableContext} from "firebase-functions/v1/https";
-import {
-  getCustomClaims,
-  RoomAccessValue,
-} from "../shared/customClaims";
+import {getCustomClaims, RoomAccessValue} from "../shared/customClaims";
 
 const ROOMS_COLLECTION = "rooms";
 
@@ -97,6 +94,8 @@ export async function setRoomPassword(data: any, context: CallableContext) {
       .collection("metadata")
       .doc("passwordProtection")
       .set({value: passwordHash});
+
+  await roomDoc.update({memberIds: [userId]});
 
   // Update the user's custom claims
   await setRoomAccessCustomClaims(userId, roomId, passwordHash);

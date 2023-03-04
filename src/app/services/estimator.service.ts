@@ -57,6 +57,7 @@ import {
 import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
+import { OrganizationService } from './organization.service';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -75,7 +76,8 @@ export class EstimatorService {
   constructor(
     private firestore: Firestore,
     private authService: AuthService,
-    private functions: Functions
+    private functions: Functions,
+    private readonly organizationService: OrganizationService
   ) {}
 
   createId() {
@@ -516,7 +518,15 @@ export class EstimatorService {
       organizationProtection: isEnabled ? organizationId : null,
     };
 
-    return setDoc(
+    const currentRoom = await this.getRoom(roomId);
+    const organization = await firstValueFrom(
+      this.organizationService.getOrganization(organizationId)
+    );
+    const memberIds = currentRoom.memberIds.filter((memberId) =>
+      organization.memberIds.includes(memberId)
+    );
+
+    await setDoc(
       doc(
         this.firestore,
         this.ROOMS_COLLECTION,
@@ -526,5 +536,10 @@ export class EstimatorService {
       ),
       meta
     );
+
+    // Update room members to be organization-only
+    if (isEnabled) {
+      await this.updateRoom({ ...currentRoom, memberIds });
+    }
   }
 }

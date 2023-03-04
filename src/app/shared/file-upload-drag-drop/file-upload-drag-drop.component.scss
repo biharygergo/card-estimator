@@ -9,6 +9,11 @@
 
   transition: background 200ms linear;
 
+  &:hover {
+    border-style: solid;
+    cursor: pointer;
+  }
+
   &.dragOver {
     border-style: solid;
   }

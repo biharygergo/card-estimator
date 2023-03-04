@@ -19,17 +19,22 @@
       <span>My account</span>
     </button>
     <button
+      mat-menu-item
+      (click)="openOrganizationModal()"
+      *ngIf="currentUser | async as user"
+    >
+      <mat-icon>groups</mat-icon>
+      <span>My organization</span>
+    </button>
+    <button
       *ngIf="currentRoomId$ | async as currentRoomId"
       mat-menu-item
       (click)="openRoomConfigurationModal(currentRoomId)"
     >
       <mat-icon>settings</mat-icon>
-      <span>Configure room</span>
+      <span>Room security & permissions</span>
     </button>
-    <button mat-menu-item (click)="openOrganizationModal()">
-      <mat-icon>groups</mat-icon>
-      <span>My organization</span>
-    </button>
+
     <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>
       <span>Previous sessions</span>

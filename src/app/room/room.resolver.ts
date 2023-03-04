@@ -59,7 +59,10 @@ export class RoomResolver implements Resolve<Room> {
           throw new MemberNotFoundError();
         }
 
-        if (activeMember.status !== MemberStatus.ACTIVE) {
+        if (
+          activeMember.status !== MemberStatus.ACTIVE ||
+          !room.memberIds.includes(user.uid)
+        ) {
           return of(
             this.estimatorService.joinRoom(room.roomId, {
               ...activeMember,

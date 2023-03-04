@@ -6,15 +6,15 @@ service cloud.firestore {
     match /rooms/{roomId} {
       allow get: if isAccessAllowed(request);
       allow list: if request.auth.uid in resource.data.memberIds;
-      allow update: if request.auth != null;
+      allow update: if isAccessAllowed(request);
       allow delete: if false;
-      allow create: if request.auth != null;
+      allow create: if isAccessAllowed(request);
 
       function isAccessAllowed(request) {
         let meta = hasMetadataSet() ? getAuthorizationMetadata().data : {};
 
-        let isPasswordProtected = meta.get('passwordProtectionEnabled', false); // metaExists ? meta.get('passwordProtectionEnabled', false) : false;
-        let organizationOnlyProtectedId = meta.get('organizationProtection', false); // metaExists && 'organizationProtection' in meta ? meta.organizationProtection : false;
+        let isPasswordProtected = meta.get('passwordProtectionEnabled', false);
+        let organizationOnlyProtectedId = meta.get('organizationProtection', false);
 
         let roomAccessValue = isPasswordProtected ? hasSavedPasswordAccessForUserId(request) ? getPasswordAccessForUserId(request) : {} : {};
         let isExpired = 'expiresAt' in roomAccessValue ? roomAccessValue.expiresAt < request.time : false;

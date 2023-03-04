@@ -207,12 +207,14 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   );
 
   members$: Observable<Member[]> = this.room$.pipe(
-    map((room) => room.members),
+    map((room) => [room.members, room.memberIds]),
     distinctUntilChanged(isEqual),
-    map((members) =>
+    map(([members, memberIds]) =>
       members
         .filter(
-          (m) => m.status === MemberStatus.ACTIVE || m.status === undefined
+          (m) =>
+            (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
+            memberIds.includes(m.id)
         )
         .sort((a, b) => a.type?.localeCompare(b.type))
     ),
@@ -235,6 +237,10 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.organizationService.getMyOrganization();
   organization: Organization | undefined;
 
+  user$ = this.authService.user;
+
+  isRoomCreator = false;
+
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly permissionsService: PermissionsService,
@@ -248,6 +254,8 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.room$.subscribe((room) => {
       this.room = room;
+      this.isRoomCreator =
+        room.createdById === this.estimatorService.activeMember.id;
     });
 
     this.authorizationMetadata$.subscribe((meta) => {

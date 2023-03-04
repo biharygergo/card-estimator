@@ -87,9 +87,10 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  createEmptyOrganization() {
+  async createEmptyOrganization() {
+    const user = await this.authService.getUser();
     this.organizationService.createOrganization({
-      name: '',
+      name: `${user.displayName}'s Organization`,
       logoUrl: null,
     });
   }

@@ -2,3 +2,9 @@
     color: white !important;
     border-color: rgba(255,255,255,0.6) !important;
 }
+
+.item-with-premium {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

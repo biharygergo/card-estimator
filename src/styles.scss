@@ -227,3 +227,13 @@ $my-theme: mat.define-light-theme(
   padding: 1rem;
   margin-bottom: 1rem;
 }
+
+.premium-lock {
+  color: var(--accent-color) !important;
+}
+
+.premium-banner {
+  background: var(--main-color);
+  padding: 1rem;
+  color: white;
+}

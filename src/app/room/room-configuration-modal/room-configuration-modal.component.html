@@ -1,12 +1,120 @@
 <div class="modal-container">
+  <div class="premium-banner">
+    <mat-icon class="premium-lock">lock</mat-icon>
+    <h2>You've found a Premium feature!</h2>
+    <p>
+      Setting up your room's security and permissions is a new feature available
+      for Premium subscribers. See how it suits your team with a 14-day free trial.
+    </p>
+    <button mat-flat-button>Try Premium now 🚀</button>
+  </div>
   <div mat-dialog-content>
-    <h1>Configure room</h1>
+    <h1>Room security & permissions</h1>
     <mat-tab-group
       class="custom-tab-group"
       mat-align-tabs="center"
       [dynamicHeight]="true"
       backgroundColor="primary"
     >
+      <mat-tab label="Security">
+        <div class="tab-content">
+          <div class="tab-section">
+            <p>
+              <strong>Password protection</strong>
+              <ng-container>
+                <span
+                  class="status-badge inactive"
+                  [class.active]="
+                    authorizationMetadata?.passwordProtectionEnabled === true
+                  "
+                  >{{
+                    authorizationMetadata?.passwordProtectionEnabled
+                      ? "Enabled"
+                      : "Disabled"
+                  }}</span
+                >
+              </ng-container>
+              <br /><small
+                >Only people who know the password will be able to enter the
+                planning session. Existing participants will need to re-join if
+                a new password is set.</small
+              >
+            </p>
+
+            <mat-form-field class="room-id" appearance="outline">
+              <mat-label>{{
+                (isPasswordSet$ | async) ? "Update password" : "Create password"
+              }}</mat-label>
+              <input matInput type="password" [formControl]="roomPassword" />
+            </mat-form-field>
+            <div>
+              <button
+                mat-stroked-button
+                color="primary"
+                class="update-password-button"
+                (click)="saveRoomPassword()"
+                [disabled]="
+                  !roomPassword.value || !roomPassword.valid || !isRoomCreator
+                "
+              >
+                Save password
+              </button>
+            </div>
+            <span
+              [matTooltip]="
+                !(isPasswordSet$ | async)
+                  ? 'You must save a password first to enable this protection'
+                  : ''
+              "
+            >
+              <mat-checkbox
+                class="example-margin"
+                (click)="togglePasswordProtection()"
+                [checked]="
+                  (authorizationMetadata$ | async)?.passwordProtectionEnabled
+                "
+                [disabled]="!(isPasswordSet$ | async) || !isRoomCreator"
+                >Enable password protection</mat-checkbox
+              >
+            </span>
+          </div>
+          <div class="tab-section">
+            <p>
+              <strong>Organization protection</strong>
+              <span
+                class="status-badge inactive"
+                [class.active]="!!authorizationMetadata?.organizationProtection"
+                >{{
+                  authorizationMetadata?.organizationProtection
+                    ? "Enabled"
+                    : "Disabled"
+                }}</span
+              >
+              <br /><small
+                >Only people who are part of your organization will be able to
+                enter the room.</small
+              >
+              <span
+                [matTooltip]="
+                  !(authorizationMetadata$ | async)?.organizationProtection
+                    ? 'You must create an organization first to enable this protection'
+                    : ''
+                "
+              >
+                <mat-checkbox
+                  class="example-margin"
+                  (click)="toggleOrganizationProtection()"
+                  [checked]="
+                    (authorizationMetadata$ | async)?.organizationProtection
+                  "
+                  [disabled]="!organization || !isRoomCreator"
+                  >Enable organization-only protection</mat-checkbox
+                >
+              </span>
+            </p>
+          </div>
+        </div>
+      </mat-tab>
       <mat-tab label="Permissions">
         <div class="tab-content">
           <div class="tab-section">
@@ -30,6 +138,7 @@
                     [selected]="configuration.isSelected(option.value)"
                     (click)="configuration.toggleOption(option.value)"
                     class="role-option"
+                    [disabled]="!isRoomCreator"
                     >{{ option.label }}</mat-chip-option
                   >
                 </mat-chip-listbox>
@@ -94,116 +203,24 @@
                     mat-menu-item
                     [disabled]="
                       !organization ||
-                      organization.memberIds.includes(member.id)
+                      organization.memberIds.includes(member.id) ||
+                      organization.createdById !== (user$ | async)?.uid
                     "
                     (click)="addToOrganization(member.id)"
                   >
                     <mat-icon>group_add</mat-icon> Add to organization
                   </button>
                   <mat-divider></mat-divider>
-                  <button mat-menu-item (click)="removeMember(member)">
+                  <button
+                    mat-menu-item
+                    (click)="removeMember(member)"
+                    [disabled]="!isRoomCreator"
+                  >
                     <mat-icon>person_remove</mat-icon> Remove from room
                   </button>
                 </mat-menu>
               </mat-list-item>
             </mat-list>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Security">
-        <div class="tab-content">
-          <div class="tab-section">
-            <p>
-              <strong>Password protection</strong>
-              <ng-container>
-                <span
-                  class="status-badge inactive"
-                  [class.active]="
-                    authorizationMetadata?.passwordProtectionEnabled === true
-                  "
-                  >{{
-                    authorizationMetadata?.passwordProtectionEnabled
-                      ? "Enabled"
-                      : "Disabled"
-                  }}</span
-                >
-              </ng-container>
-              <br /><small
-                >Only people who know the password will be able to enter the
-                planning session. Existing participants will need to re-join if
-                a new password is set.</small
-              >
-            </p>
-
-            <mat-form-field class="room-id" appearance="outline">
-              <mat-label>{{
-                (isPasswordSet$ | async) ? "Update password" : "Create password"
-              }}</mat-label>
-              <input matInput type="password" [formControl]="roomPassword" />
-            </mat-form-field>
-            <div>
-              <button
-                mat-stroked-button
-                color="primary"
-                class="update-password-button"
-                (click)="saveRoomPassword()"
-                [disabled]="!roomPassword.value || !roomPassword.valid"
-              >
-                Save password
-              </button>
-            </div>
-            <span
-              [matTooltip]="
-                !(isPasswordSet$ | async)
-                  ? 'You must save a password first to enable this protection'
-                  : ''
-              "
-            >
-              <mat-checkbox
-                class="example-margin"
-                (click)="togglePasswordProtection()"
-                [checked]="
-                  (authorizationMetadata$ | async)?.passwordProtectionEnabled
-                "
-                [disabled]="!(isPasswordSet$ | async)"
-                >Enable password protection</mat-checkbox
-              >
-            </span>
-          </div>
-          <div class="tab-section">
-            <p>
-              <strong>Organization protection</strong>
-              <span
-                class="status-badge inactive"
-                [class.active]="!!authorizationMetadata?.organizationProtection"
-                >{{
-                  authorizationMetadata?.organizationProtection
-                    ? "Enabled"
-                    : "Disabled"
-                }}</span
-              >
-              <br /><small
-                >Only people who are part of your organization will be able to
-                enter the room.</small
-              >
-              <span
-                [matTooltip]="
-                  !(authorizationMetadata$ | async)?.organizationProtection
-                    ? 'You must create an organization first to enable this protection'
-                    : ''
-                "
-              >
-                <mat-checkbox
-                  class="example-margin"
-                  (click)="toggleOrganizationProtection()"
-                  [checked]="
-                    (authorizationMetadata$ | async)?.organizationProtection
-                  "
-                  [disabled]="!organization"
-                  >Enable organization-only protection</mat-checkbox
-                >
-              </span>
-            </p>
           </div>
         </div>
       </mat-tab>
@@ -213,3 +230,14 @@
     <button mat-flat-button mat-dialog-close>Close</button>
   </div>
 </div>
+<ng-template #mustBeCreator>
+  <mat-card
+    *ngIf="!isRoomCreator"
+    appearance="outlined"
+    class="creator-warning"
+  >
+    <mat-card-content>
+      Only the room creator can modify these settings.
+    </mat-card-content>
+  </mat-card>
+</ng-template>

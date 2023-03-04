@@ -1,3 +1,14 @@
+<div class="premium-banner" *ngIf="!(authService.user | async)?.isAnonymous">
+  <mat-icon class="premium-lock">lock_open</mat-icon>
+  <h2>You've unlocked a Premium feature</h2>
+  <p>
+    Create an organization for <strong>up to 5 members for free</strong>. Organizations allow
+    enhanced security, more customization and much more coming in the near
+    future. If you have a larger team subscribe to Premium for unlimited
+    organization members.
+  </p>
+  <button mat-flat-button>Get Premium for unlimited members</button>
+</div>
 <h1 mat-dialog-title>My organization</h1>
 <div mat-dialog-content>
   <ng-container *ngIf="organization !== null; else loading">
@@ -9,22 +20,6 @@
           With an organization, you can create rooms just for your teammates,
           personalize the app with your logo and much more!
         </p>
-
-        <mat-card
-          *ngIf="(authService.user | async)?.isAnonymous"
-          class="alert-card"
-        >
-          <mat-card-content>
-            <h1><mat-icon>error</mat-icon></h1>
-            <p>
-              Organizations require a permanent PlanningPoker.live account.
-              Create one in a couple of clicks before setting up your team.
-            </p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-flat-button color="primary" (click)="openCreateAccountModal()">Create account</button>
-          </mat-card-actions>
-        </mat-card>
         <button
           mat-flat-button
           color="primary"
@@ -33,6 +28,27 @@
         >
           Let's set it up!
         </button>
+        <mat-card
+          *ngIf="(authService.user | async)?.isAnonymous"
+          class="alert-card"
+          appearance="outlined"
+        >
+          <mat-card-content>
+            <p>
+              Organizations require a permanent PlanningPoker.live account.
+              Create one in a couple of clicks before setting up your team.
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="openCreateAccountModal()"
+            >
+              Create account
+            </button>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </ng-container>
     <ng-container *ngIf="organization || !showIntro">
@@ -55,6 +71,10 @@
                     formControlName="name"
                     placeholder="Best Company Ltd."
                   />
+                  <mat-hint
+                    >Set your company's name here, like: "Great Code
+                    LLC"</mat-hint
+                  >
                 </mat-form-field>
               </form>
 
@@ -65,7 +85,7 @@
                 *ngIf="organization || !showIntro"
                 class="save-button"
               >
-                Save
+                Update
               </button>
               <h5 class="section-title">
                 <mat-icon>diamond</mat-icon> Organization's logo
@@ -163,6 +183,9 @@
       </mat-tab-group>
     </ng-container>
   </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>Close</button>
 </div>
 <ng-template #loading>
   <div class="loading">

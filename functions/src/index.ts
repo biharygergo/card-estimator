@@ -27,7 +27,8 @@ import {
 import {
   acceptInvitation,
   onOrganizationInviteCreated,
-} from "./organization/invitation";
+} from "./organizations/invitation";
+import {onOrganizationUpdated} from "./organizations/protection";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -112,6 +113,10 @@ exports.enterProtectedRoom = functions.https.onCall(
     async (data: any, context: CallableContext) =>
       enterProtectedRoom(data, context)
 );
+
+exports.onOrganizationUpdated= functions.firestore
+    .document("organizations/{organizationId}")
+    .onUpdate(onOrganizationUpdated);
 
 exports.onOrganizationInvitation = functions.firestore
     .document("organizations/{organizationId}/memberInvitations/{invitationId}")

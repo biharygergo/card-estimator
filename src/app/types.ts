@@ -40,6 +40,7 @@ export interface Room {
   memberIds: string[];
   timer?: Timer;
   configuration?: RoomConfiguration;
+  subscriptionMetadata?: SubscriptionMetadata;
 }
 
 export interface Round {
@@ -256,6 +257,11 @@ export interface AuthorizationMetadata {
   organizationProtection: string;
 }
 
+export interface SubscriptionMetadata {
+  createdWithPlan: 'premium' | 'basic';
+  createdWithOrganization?: string;
+}
+
 export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {
   permissions: DEFAULT_PERMISSIONS,
 };
@@ -275,6 +281,7 @@ export interface Organization {
   createdById: string;
   memberIds: string[];
   logoUrl: string;
+  activePlan: 'basic' | 'premium';
 }
 
 export enum SubscriptionResult {

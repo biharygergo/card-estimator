@@ -106,3 +106,28 @@
 .chip-selector {
     margin-bottom: 0.5rem;
 }
+
+.data-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.data-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.subscription-chip {
+    background: #3f51b5;
+    margin-bottom: 1rem;
+    .label {
+        color: white !important;
+    }
+}
+
+.learn-more-button {
+    margin-left: 0.5rem;
+}

@@ -39,6 +39,7 @@ import { OrganizationModalComponent } from './organization-modal/organization-mo
 import { FileUploadDragDropComponent } from './file-upload-drag-drop/file-upload-drag-drop.component';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { SubscriptionResultComponent } from './subscription-result/subscription-result.component';
+import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-more.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { SubscriptionResultComponent } from './subscription-result/subscription-
     FileUploadDragDropComponent,
     DragDropDirective,
     SubscriptionResultComponent,
+    PremiumLearnMoreComponent,
   ],
   imports: [
     CommonModule,

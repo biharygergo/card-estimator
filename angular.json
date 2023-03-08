@@ -76,6 +76,15 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": ""
@@ -88,6 +97,9 @@
           "configurations": {
             "production": {
               "browserTarget": "estimator:build:production"
+            },
+            "test": {
+              "browserTarget": "estimator:build:test"
             }
           }
         },

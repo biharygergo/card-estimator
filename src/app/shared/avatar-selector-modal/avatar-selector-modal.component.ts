@@ -1,17 +1,23 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { User } from 'firebase/auth';
-import { BehaviorSubject, from, of, Subject } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
 import {
+  MatDialog,
   MatDialogConfig,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  PaymentService,
+  StripeSubscription,
+} from 'src/app/services/payment.service';
+import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -27,6 +33,7 @@ export const avatarModalCreator = ({
     id: AVATAR_SELECTOR_MODAL,
     width: '90%',
     maxWidth: '600px',
+    maxHeight: '90vh',
     data: {
       openAtTab,
     },
@@ -160,11 +167,22 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   accountTypeForm = new UntypedFormControl({ value: '', disabled: true });
   emailControl = new FormControl<string>({ value: '', disabled: true });
 
+  subscription$: Observable<StripeSubscription> =
+    this.paymentsService.getSubscription();
+
+  activePlan$ = this.subscription$.pipe(
+    map((subscription) => subscription?.items?.[0]?.plan)
+  );
+
+  isLoadingStripe = false;
+
   constructor(
     private auth: AuthService,
     private analytics: AnalyticsService,
     private snackBar: MatSnackBar,
+    private readonly paymentsService: PaymentService,
     public dialogRef: MatDialogRef<AvatarSelectorModalComponent>,
+    private readonly dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) private dialogData: AvatarDialogData
   ) {}
 
@@ -245,5 +263,21 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   signOut() {
     this.auth.signOut();
     this.dialogRef.close();
+  }
+
+  async subscribeToPremium() {
+    this.isLoadingStripe = true;
+    await this.paymentsService.startSubscriptionToPremium();
+    this.isLoadingStripe = false;
+  }
+
+  async redirectToCustomerPortal() {
+    this.isLoadingStripe = true;
+    const result = await this.paymentsService.createPortalLink();
+    window.location.assign((result.data as any).url);
+  }
+
+  openLearnMore() {
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

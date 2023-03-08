@@ -12,9 +12,12 @@ import {
 } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationService } from 'src/app/services/organization.service';
+import { PaymentService } from 'src/app/services/payment.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Organization } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
@@ -27,6 +30,7 @@ export const organizationModalCreator =
       id: 'organizationModal',
       width: '90%',
       maxWidth: '600px',
+      maxHeight: '90vh',
     },
   ];
 
@@ -71,11 +75,15 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     Validators.email,
   ]);
 
+  isLoadingStripe = false;
+
   constructor(
     private readonly organizationService: OrganizationService,
     public readonly authService: AuthService,
     private readonly toastService: ToastService,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly paymentsService: PaymentService,
+    public readonly permissionsService: PermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -146,5 +154,15 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
+  }
+
+  async subscribeToPremium() {
+    this.isLoadingStripe = true;
+    await this.paymentsService.startSubscriptionToPremium();
+    this.isLoadingStripe = false;
+  }
+
+  openLearnMore() {
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

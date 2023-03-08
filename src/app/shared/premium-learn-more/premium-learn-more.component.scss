@@ -1,0 +1,41 @@
+.sidebar {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+
+  .banner {
+    background: var(--light-blue);
+    margin-bottom: 1rem;
+    padding: 2rem 1rem;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .details {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.content {
+  display: flex;
+  gap: 1rem;
+
+  .details {
+    flex: 2 1 0;
+    padding-right: 1rem;
+  }
+}
+
+.discount {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8rem;
+}

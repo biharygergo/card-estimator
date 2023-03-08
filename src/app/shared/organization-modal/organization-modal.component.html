@@ -1,16 +1,34 @@
-<div class="premium-banner" *ngIf="!(authService.user | async)?.isAnonymous">
-  <mat-icon class="premium-lock">lock_open</mat-icon>
-  <h2 class="title">Preview this Premium feature <mat-chip>{{ organization?.memberIds.length ?? 0 }}/5 members</mat-chip></h2>
-  <p>
-    Create an organization for <strong>up to 5 members for free</strong>.
-    Organizations allow enhanced security, more customization and much more
-    coming in the near future. If you have a larger team subscribe to Premium
-    for unlimited organization members.
-  </p>
-  <button mat-flat-button>Get Premium for unlimited members</button>
-</div>
-<h1 mat-dialog-title>My organization</h1>
+<h1 mat-dialog-title class="dialog-title">
+  My organization <mat-chip class="beta-chip">Beta</mat-chip>
+</h1>
 <div mat-dialog-content>
+  <div
+    class="premium-banner"
+    *ngIf="
+      !(permissionsService.hasPremiumAccess() | async) &&
+      organization?.activePlan !== 'premium'
+    "
+  >
+    <mat-icon class="premium-lock">lock_open</mat-icon>
+    <h2 class="title">Preview this Premium feature</h2>
+    <p>Create an organization for <strong>up to 5 members for free</strong>.</p>
+    <div class="premium-banner-buttons">
+      <button
+        mat-flat-button
+        (click)="subscribeToPremium()"
+        [disabled]="isLoadingStripe"
+      >
+        {{
+          isLoadingStripe
+            ? "Redirecting you to Stripe..."
+            : "Get Premium for unlimited members"
+        }}
+      </button>
+      <button mat-button (click)="openLearnMore()" class="learn-more">
+        Learn more
+      </button>
+    </div>
+  </div>
   <ng-container *ngIf="organization !== null; else loading">
     <ng-container *ngIf="!organization && showIntro">
       <div class="empty-state">
@@ -84,6 +102,9 @@
                 (click)="saveOrganization()"
                 *ngIf="organization || !showIntro"
                 class="save-button"
+                [disabled]="
+                  organization?.name === organizationForm.controls.name.value
+                "
               >
                 Update
               </button>
@@ -113,17 +134,20 @@
               <div class="members-section" *ngIf="organization?.memberIds">
                 <h5 class="section-title">
                   <mat-icon>people</mat-icon> Manage members
+                  <mat-chip *ngIf="organization?.activePlan === 'basic'"
+                    >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
+                  >
                 </h5>
                 <mat-list class="members-list">
                   <mat-list-item *ngFor="let member of members$ | async">
                     <span matListItemAvatar class="avatar">
                       <img
-                        *ngIf="member.avatarUrl"
+                        *ngIf="member?.avatarUrl"
                         [src]="member.avatarUrl"
                         class="avatar-image"
                         alt="A user's avatar"
                       />
-                      <div class="avatar-text" *ngIf="!member.avatarUrl">
+                      <div class="avatar-text" *ngIf="!member?.avatarUrl">
                         {{ member.displayName?.charAt(0) }}
                       </div>
                     </span>

@@ -3,12 +3,26 @@ service cloud.firestore {
 
   match /databases/{database}/documents {
 
+    function isPremiumSubscriber(request) {
+      return 'stripeRole' in request.auth.token ? request.auth.token.stripeRole == 'premium' : false;
+    }
+
     match /rooms/{roomId} {
       allow get: if isAccessAllowed(request);
       allow list: if request.auth.uid in resource.data.memberIds;
-      allow update: if isAccessAllowed(request);
+      allow update: if isAccessAllowed(request) && !isUpdatingSubscriptionMetadata(request, resource);
       allow delete: if false;
-      allow create: if isAccessAllowed(request);
+      allow create: if isAccessAllowed(request) && isValidPlanInSubscriptionMetadata(request);
+
+      function isValidPlanInSubscriptionMetadata(request) {
+        let subscriptionMetadata = 'subscriptionMetadata' in request.resource.data ? request.resource.data.subscriptionMetadata : {};
+        let currentPlan = subscriptionMetadata.get('createdWithPlan', 'basic');
+        return !(!isPremiumSubscriber(request) && currentPlan != 'basic')
+      }
+
+      function isUpdatingSubscriptionMetadata(request, resource) {
+        return request.resource.data.diff(resource.data).affectedKeys().hasAny(['subscriptionMetadata'])
+      }
 
       function isAccessAllowed(request) {
         let meta = hasMetadataSet() ? getAuthorizationMetadata().data : {};
@@ -40,16 +54,6 @@ service cloud.firestore {
       function getAuthorizationMetadata() {
         return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization);
       }
-
-      function isPasswordProtected() {
-        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization) &&
-         get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization).data.passwordProtectionEnabled;
-      }
-
-      function organizationOnlyProtectedId() {
-        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization) &&
-         get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization).data.organizationProtection;
-      }
     
       function getRoom() {
         return get(/databases/$(database)/documents/rooms/$(roomId));
@@ -72,9 +76,8 @@ service cloud.firestore {
         return get(/databases/$(database)/documents/organizations/$(organizationId));
       }
 
-      // TODO this needs improvement!
       match /metadata/authorization {
-        allow write: if request.auth.uid == getRoom().data.createdById;
+        allow write: if request.auth.uid == getRoom().data.createdById && isPremiumSubscriber(request);
         allow read: if true;
       }
 
@@ -96,6 +99,7 @@ service cloud.firestore {
     match /organizations/{organizationId} {
       allow read: if request.auth.uid in resource.data.memberIds;
       allow write: if request.auth.uid == request.resource.data.createdById;
+      allow update: if request.auth.uid == resource.data.createdById;
 
       function getOrganization(organizationId) {
         return get(/databases/$(database)/documents/organizations/$(organizationId));

@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { SubscriptionResult } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
@@ -16,6 +15,7 @@ export const subscriptionResultModalCreator = (
     id: 'subscriptionResult',
     width: '90%',
     maxWidth: '600px',
+    maxHeight: '90vh',
     data,
   },
 ];
@@ -30,10 +30,10 @@ export class SubscriptionResultComponent {
 
   constructor(
     public dialogRef: MatDialogRef<SubscriptionResultComponent>,
-    private router: Router,
     @Inject(MAT_DIALOG_DATA)
     private readonly dialogData: SubscriptionResultModalData
   ) {
     this.subscriptionResult = dialogData.result;
   }
+
 }

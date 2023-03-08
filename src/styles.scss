@@ -8,6 +8,7 @@
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
 
+  --light-blue: #d9e2ff;
   --text-on-white: #3f4759;
   --text-on-gray: #44474f;
   --background-dark: #001a43;
@@ -236,15 +237,31 @@ $my-theme: mat.define-light-theme(
   background: var(--main-color);
   padding: 1rem;
   color: white;
+  font-size: 0.8rem;
+  border-radius: 24px;
+  margin-bottom: 1rem;
 
   .premium-banner-buttons {
     display: flex;
     gap: 0.5rem;
+
+    .learn-more {
+      color: white;
+    }
   }
 
   .title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.2rem;
+    font-size: 1rem;
+  }
+}
+
+.dialog-title {
+  .beta-chip {
+    background-color: var(--light-blue) !important;
+    margin-left: 0.5rem;
   }
 }

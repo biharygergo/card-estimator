@@ -80,8 +80,16 @@ export async function onOrganizationInviteCreated(
   const emailResult = await sendEmail({
     emailTitle: "Hey there!",
     emailBody: `
-You've just been invited to join '${organization?.name}' on PlanningPoker.live. 
-Accept this invitation by clicking on the button below.`,
+You've just been invited to join <strong>'${organization?.name}'</strong> on PlanningPoker.live. 
+Accept this invitation by clicking on the button below. <br/><br/>
+
+What to expect when joining an organization?
+<ul>
+  <li>First, you'll need to create an account with this email address.</li>
+  <li>Click on the link below and it will link the invitation with your registration.</li>
+  <li>Check the "My Organization" menu, your new org will show up!</li>
+</ul>
+`,
     buttonLabel: "Accept invitation",
     buttonUrl: `https://planningpoker.live/api/acceptOrganizationInvitation?invitationId=${invitationId}&organizationId=${organizationId}`,
     subject: `Invitation to join '${organization?.name}'`,

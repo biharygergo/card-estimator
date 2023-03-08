@@ -1,4 +1,5 @@
 <div class="dialog-content">
+  <h1 mat-dialog-title>My account</h1>
   <div mat-dialog-content>
     <mat-tab-group
       mat-align-tabs="center"
@@ -6,71 +7,165 @@
       (selectedIndexChange)="selectedTabIndex = $event"
       [dynamicHeight]="true"
       class="custom-tab-group"
+      mat-align-tabs="center"
+      backgroundColor="primary"
     >
       <mat-tab label="Profile">
         <div class="tab-content">
-          <anonymous-user-banner bannerStyle="gray"></anonymous-user-banner>
-          <div class="profile-overview">
-            <div class="profile-image">
-              <div class="avatar">
-                <img
-                  *ngIf="user?.photoURL"
-                  [src]="user?.photoURL"
-                  alt="The user's avatar"
-                  class="avatar-image"
-                />
-                <div class="avatar-text" *ngIf="!user?.photoURL">
-                  {{ user?.displayName?.charAt(0) }}
+          <div class="tab-section">
+            <anonymous-user-banner bannerStyle="gray"></anonymous-user-banner>
+            <div class="profile-overview">
+              <div class="profile-image">
+                <div class="avatar">
+                  <img
+                    *ngIf="user?.photoURL"
+                    [src]="user?.photoURL"
+                    alt="The user's avatar"
+                    class="avatar-image"
+                  />
+                  <div class="avatar-text" *ngIf="!user?.photoURL">
+                    {{ user?.displayName?.charAt(0) }}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="profile-details">
-              <mat-form-field class="name" appearance="outline">
-                <mat-label>Account type</mat-label>
-                <input
-                  matInput
-                  [formControl]="accountTypeForm"
-                  id="account-type-input"
-                />
-              </mat-form-field>
-              <mat-form-field class="name" appearance="outline" *ngIf="emailControl.value">
-                <mat-label>E-mail</mat-label>
-                <input
-                  matInput
-                  [formControl]="emailControl"
-                  id="email-input"
-                />
-              </mat-form-field>
-              <mat-form-field class="name" appearance="outline">
-                <mat-label>Your name</mat-label>
-                <input
-                  matInput
-                  placeholder="Best Engineer"
-                  [formControl]="displayNameForm"
-                  autocomplete="name"
-                />
-              </mat-form-field>
-              <button
-                mat-flat-button
-                color="primary"
-                [disabled]="!isNameUpdated || (isSavingUser | async)"
-                (click)="onClickUpdateUserName.next()"
-              >
-                <mat-icon>done</mat-icon>
-                Update name
-              </button>
+              <div class="profile-details">
+                <mat-form-field class="name" appearance="outline">
+                  <mat-label>Account type</mat-label>
+                  <input
+                    matInput
+                    [formControl]="accountTypeForm"
+                    id="account-type-input"
+                  />
+                </mat-form-field>
+                <mat-form-field
+                  class="name"
+                  appearance="outline"
+                  *ngIf="emailControl.value"
+                >
+                  <mat-label>E-mail</mat-label>
+                  <input
+                    matInput
+                    [formControl]="emailControl"
+                    id="email-input"
+                  />
+                </mat-form-field>
+                <mat-form-field class="name" appearance="outline">
+                  <mat-label>Your name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Best Engineer"
+                    [formControl]="displayNameForm"
+                    autocomplete="name"
+                  />
+                </mat-form-field>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  [disabled]="!isNameUpdated || (isSavingUser | async)"
+                  (click)="onClickUpdateUserName.next()"
+                >
+                  <mat-icon>done</mat-icon>
+                  Update name
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </mat-tab>
+      <mat-tab label="Subscription">
+        <div class="tab-content">
+          <div class="tab-section">
+            <h2 class="section-title">Manage subscription</h2>
+            <ng-container
+              *ngIf="subscription$ | async as subscription; else noSubscription"
+            >
+              <mat-chip class="subscription-chip"
+                ><span class="label">Premium</span></mat-chip
+              >
+              <div class="data-items">
+                <div class="data-item">
+                  <strong>Status</strong>
+                  <span>{{ subscription.status | titlecase }}</span>
+                </div>
+                <div class="data-item">
+                  <strong>Plan</strong>
+                  <span *ngIf="activePlan$ | async as plan"
+                    >{{ plan?.amount / 100 }} {{ plan?.currency }}/{{
+                      plan?.interval
+                    }}</span
+                  >
+                </div>
+                <div class="data-item">
+                  <strong>Created at</strong>
+                  <span>{{
+                    subscription.created.toMillis() | date : "medium"
+                  }}</span>
+                </div>
+                <div class="data-item">
+                  <strong>{{
+                    subscription.cancel_at_period_end
+                      ? "Ends at"
+                      : "Next
+                    payment at"
+                  }}</strong>
+                  <span>{{
+                    subscription.current_period_end.toMillis() | date : "medium"
+                  }}</span>
+                </div>
+              </div>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="redirectToCustomerPortal()"
+                [disabled]="isLoadingStripe"
+              >
+                <mat-icon>edit</mat-icon>
+                {{
+                  isLoadingStripe
+                    ? "Redirecting you to Stripe..."
+                    : "Manage subscription"
+                }}
+              </button>
+            </ng-container>
+            <ng-template #noSubscription>
+              <p>
+                You don't have an active Premium subscription. Subscribe now to
+                unlock new features, such as password protected rooms,
+                organizations, invitations and more.
+              </p>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="subscribeToPremium()"
+                [disabled]="isLoadingStripe"
+              >
+                {{
+                  isLoadingStripe
+                    ? "Redirecting you to Stripe..."
+                    : "Subscribe to Premium"
+                }}
+              </button>
+              <button
+                mat-button
+                class="learn-more-button"
+                (click)="openLearnMore()"
+              >
+                Learn more
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </mat-tab>
       <mat-tab label="Avatar">
-        <div class="configuration-row">
-          <mat-accordion displayMode="flat">
-            <mat-expansion-panel class="customizer-panel">
-              <mat-expansion-panel-header>
-                <mat-panel-title>Customize avatars</mat-panel-title>
-              </mat-expansion-panel-header>
-              <!-- <span>Facial hair</span>
+        <div class="tab-content">
+          <div class="tab-section">
+            <div class="configuration-row">
+              <mat-accordion displayMode="flat">
+                <mat-expansion-panel class="customizer-panel">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Customize avatars</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <!-- <span>Facial hair</span>
               <mat-chip-listbox
                 aria-label="Facial hair options"
                 selectable
@@ -83,80 +178,84 @@
                   >{{ option.label }}</mat-chip-option
                 >
               </mat-chip-listbox> -->
-              <span>Hair</span>
-              <mat-chip-listbox
-                aria-label="Facial hair options"
-                class="chip-selector"
-                multiple
-                selectable
+                  <span>Hair</span>
+                  <mat-chip-listbox
+                    aria-label="Facial hair options"
+                    class="chip-selector"
+                    multiple
+                    selectable
+                  >
+                    <mat-chip-option
+                      *ngFor="let option of hairOptions"
+                      [selected]="selectedHairOptions[option.value] === true"
+                      (click)="
+                        selectedHairOptions[option.value] =
+                          !selectedHairOptions[option.value]
+                      "
+                      >{{ option.label }}</mat-chip-option
+                    >
+                  </mat-chip-listbox>
+                  <span>Skin tone</span>
+                  <mat-chip-listbox
+                    aria-label="Skin tone options"
+                    class="chip-selector"
+                    multiple
+                    selectable
+                  >
+                    <mat-chip-option
+                      *ngFor="let option of skinToneOptions"
+                      [selected]="
+                        selectedSkinToneOptions[option.value] === true
+                      "
+                      (click)="
+                        selectedSkinToneOptions[option.value] =
+                          !selectedSkinToneOptions[option.value]
+                      "
+                      [style.backgroundColor]="'#' + option.value"
+                      >#{{ option.label }}</mat-chip-option
+                    >
+                  </mat-chip-listbox>
+                  <small>
+                    Avatars provided by DiceBear:
+                    https://dicebear.com/styles/avataaars <br />
+                    The options selected above provide seed for avatar
+                    generation. Generated avatars might still include items that
+                    don't fit the filters.
+                  </small>
+                  <mat-action-row>
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      (click)="randomizeAvatars()"
+                    >
+                      Generate avatars
+                    </button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+            <div class="avatar-selector">
+              <div class="avatar-selector-item clear">
+                <div class="avatar avatar-image" (click)="selectAvatar(null)">
+                  <div>{{ user?.displayName?.charAt(0) }}</div>
+                </div>
+              </div>
+              <button
+                mat-icon-button
+                class="avatar-selector-item"
+                *ngFor="let avatar of avatars"
+                [class.selected]="user?.photoURL === avatar.url"
+                (click)="selectAvatar(avatar)"
               >
-                <mat-chip-option
-                  *ngFor="let option of hairOptions"
-                  [selected]="selectedHairOptions[option.value] === true"
-                  (click)="
-                    selectedHairOptions[option.value] =
-                      !selectedHairOptions[option.value]
-                  "
-                  >{{ option.label }}</mat-chip-option
-                >
-              </mat-chip-listbox>
-              <span>Skin tone</span>
-              <mat-chip-listbox
-                aria-label="Skin tone options"
-                class="chip-selector"
-                multiple
-                selectable
-              >
-                <mat-chip-option
-                  *ngFor="let option of skinToneOptions"
-                  [selected]="selectedSkinToneOptions[option.value] === true"
-                  (click)="
-                    selectedSkinToneOptions[option.value] =
-                      !selectedSkinToneOptions[option.value]
-                  "
-                  [style.backgroundColor]="'#' + option.value"
-                  >#{{ option.label }}</mat-chip-option
-                >
-              </mat-chip-listbox>
-              <small>
-                Avatars provided by DiceBear:
-                https://dicebear.com/styles/avataaars <br />
-                The options selected above provide seed for avatar generation.
-                Generated avatars might still include items that don't fit the
-                filters.
-              </small>
-              <mat-action-row>
-                <button
-                  mat-flat-button
-                  color="primary"
-                  (click)="randomizeAvatars()"
-                >
-                  Generate avatars
-                </button>
-              </mat-action-row>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </div>
-        <div class="avatar-selector">
-          <div class="avatar-selector-item clear">
-            <div class="avatar avatar-image" (click)="selectAvatar(null)">
-              <div>{{ user?.displayName?.charAt(0) }}</div>
+                <img
+                  [src]="avatar.url"
+                  class="avatar-image"
+                  loading="lazy"
+                  alt="A user's avatar"
+                />
+              </button>
             </div>
           </div>
-          <button
-            mat-icon-button
-            class="avatar-selector-item"
-            *ngFor="let avatar of avatars"
-            [class.selected]="user?.photoURL === avatar.url"
-            (click)="selectAvatar(avatar)"
-          >
-            <img
-              [src]="avatar.url"
-              class="avatar-image"
-              loading="lazy"
-              alt="A user's avatar"
-            />
-          </button>
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -179,7 +278,7 @@
       mat-button
       (click)="randomizeAvatars()"
       color="primary"
-      *ngIf="selectedTabIndex === 1"
+      *ngIf="selectedTabIndex === 2"
     >
       <mat-icon>shuffle</mat-icon>
       Generate new avatars

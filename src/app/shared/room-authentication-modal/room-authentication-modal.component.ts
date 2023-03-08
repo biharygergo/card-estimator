@@ -21,6 +21,7 @@ export const roomAuthenticationModalCreator = (
     id: ROOM_AUTHENTICATION_MODAL,
     width: '90%',
     maxWidth: '600px',
+    maxHeight: '90vh',
     data,
   },
 ];

@@ -68,12 +68,6 @@ export class ProfileDropdownComponent implements OnInit {
     this.analytics.logClickedEditAvatar('profile_icon');
   }
 
-  openRoomConfigurationModal(currentRoomId: string) {
-    this.dialog.open(
-      ...roomConfigurationModalCreator({ roomId: currentRoomId })
-    );
-  }
-
   openOrganizationModal() {
     this.dialog.open(...organizationModalCreator());
   }

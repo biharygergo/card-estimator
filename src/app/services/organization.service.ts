@@ -12,15 +12,15 @@ import {
   DocumentReference,
   query,
   where,
-  orderBy,
   CollectionReference,
   collectionData,
   serverTimestamp,
   addDoc,
 } from '@angular/fire/firestore';
 import { InvitationData, Organization } from '../types';
-import { filter, map, mapTo, Observable, switchMap } from 'rxjs';
+import { map, Observable, switchMap, of } from 'rxjs';
 import { FileUploadService } from './file-upload.service';
+import { PaymentService } from './payment.service';
 
 const ORGANIZATION_COLLECTION = 'organizations';
 
@@ -31,7 +31,8 @@ export class OrganizationService {
   constructor(
     private firestore: Firestore,
     private authService: AuthService,
-    private fileUploadService: FileUploadService
+    private fileUploadService: FileUploadService,
+    private readonly paymentService: PaymentService
   ) {}
 
   private createId() {
@@ -42,6 +43,7 @@ export class OrganizationService {
     organizationDto: Pick<Organization, 'name' | 'logoUrl'>
   ): Promise<void> {
     const user = await this.authService.getUser();
+    const isPremium = await this.paymentService.isPremiumSubscriber();
 
     const organization: Organization = {
       ...organizationDto,
@@ -49,6 +51,7 @@ export class OrganizationService {
       createdById: user.uid,
       memberIds: [user.uid],
       createdAt: serverTimestamp(),
+      activePlan: isPremium ? 'premium' : 'basic',
     };
 
     await setDoc(
@@ -134,8 +137,10 @@ export class OrganizationService {
     ) as CollectionReference<Organization>;
 
     return this.authService.user.pipe(
-      filter((user) => !!user),
       switchMap((user) => {
+        if (!user) {
+          return of(undefined);
+        }
         const q = query<Organization>(
           ref,
           where('memberIds', 'array-contains', user.uid)

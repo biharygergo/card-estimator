@@ -45,6 +45,7 @@ import {
   Timer,
   RoomConfiguration,
   AuthorizationMetadata,
+  SubscriptionMetadata,
 } from './../types';
 import {
   collection,
@@ -58,6 +59,7 @@ import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
 import { OrganizationService } from './organization.service';
+import { PaymentService } from './payment.service';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -77,6 +79,7 @@ export class EstimatorService {
     private firestore: Firestore,
     private authService: AuthService,
     private functions: Functions,
+    private readonly paymentService: PaymentService,
     private readonly organizationService: OrganizationService
   ) {}
 
@@ -141,6 +144,8 @@ export class EstimatorService {
       roomId = uniqueNamesGenerator({ ...customConfig, length: 4 });
     }
 
+    const subscriptionMetadata = await this.getSubscriptionMetadata();
+    
     const room: Room = {
       id: this.createId(),
       roomId,
@@ -152,6 +157,7 @@ export class EstimatorService {
       cardSet: CardSet.DEFAULT,
       createdById: member.id,
       memberIds: [member.id],
+      subscriptionMetadata,
     };
 
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
@@ -159,6 +165,19 @@ export class EstimatorService {
     this.activeMember = member;
 
     return { room, member };
+  }
+
+  private async getSubscriptionMetadata(): Promise<SubscriptionMetadata> {
+    const isPremium = await this.paymentService.isPremiumSubscriber();
+    const organization = await firstValueFrom(
+      this.organizationService.getMyOrganization()
+    );
+    const subscriptionMetadata: SubscriptionMetadata = {
+      createdWithPlan: isPremium ? 'premium' : 'basic',
+      createdWithOrganization: organization ? organization.id : null,
+    };
+
+    return subscriptionMetadata;
   }
 
   async doesRoomAlreadyExist(roomId: string): Promise<boolean> {
@@ -229,9 +248,9 @@ export class EstimatorService {
     );
   }
 
-  updateRoom(room: Room) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      ...room,
+  updateRoom(roomId: string, fields: Partial<Room>) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      ...fields,
     });
   }
 
@@ -273,9 +292,11 @@ export class EstimatorService {
     const { currentRoundId, nextRoundId, nextRoundNumber } =
       this.getRoundIds(room);
     room.rounds[currentRoundId].finished_at = serverTimestamp();
-    room.currentRound = nextRoundId;
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
-    return this.updateRoom(room);
+    return this.updateRoom(room.roomId, {
+      rounds: room.rounds,
+      currentRound: nextRoundId,
+    });
   }
 
   addRound(room: Room, topic: string) {
@@ -286,7 +307,7 @@ export class EstimatorService {
       nextRoundNumber,
       topic
     );
-    return this.updateRoom(room);
+    return this.updateRoom(room.roomId, { rounds: room.rounds });
   }
 
   setActiveRound(room: Room, roundId: number, shouldRevote: boolean) {
@@ -295,7 +316,10 @@ export class EstimatorService {
       const round = room.rounds[roundId];
       room.rounds[roundId] = this.revoteRound(round);
     }
-    return this.updateRoom(room);
+    return this.updateRoom(room.roomId, {
+      currentRound: roundId,
+      rounds: room.rounds,
+    });
   }
 
   setEstimate(
@@ -539,7 +563,7 @@ export class EstimatorService {
 
     // Update room members to be organization-only
     if (isEnabled) {
-      await this.updateRoom({ ...currentRoom, memberIds });
+      await this.updateRoom(roomId, { memberIds });
     }
   }
 }

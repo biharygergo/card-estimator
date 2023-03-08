@@ -42,6 +42,7 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -56,6 +57,7 @@ export const roomConfigurationModalCreator = ({
     id: ROOM_CONFIGURATION_MODAL,
     width: '90%',
     maxWidth: '600px',
+    maxHeight: '90vh',
     data: {
       roomId,
     },
@@ -248,8 +250,6 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     .hasPremiumAccess()
     .pipe(takeUntil(this.destroy));
 
-  isRoomCreator = false;
-
   hasConfigurationAccess$ = combineLatest([
     this.room$,
     this.user$,
@@ -261,6 +261,10 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     share(),
     takeUntil(this.destroy)
   );
+
+  hasConfigurationAccess: boolean = false;
+
+  isLoadingStripe = false;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -276,8 +280,6 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.room$.subscribe((room) => {
       this.room = room;
-      this.isRoomCreator =
-        room.createdById === this.estimatorService.activeMember.id;
     });
 
     this.authorizationMetadata$.subscribe((meta) => {
@@ -287,6 +289,10 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.organization$
       .pipe(takeUntil(this.destroy))
       .subscribe((org) => (this.organization = org));
+
+    this.hasConfigurationAccess$.subscribe(
+      (access) => (this.hasConfigurationAccess = access)
+    );
 
     this.onConfigurationChanged$.subscribe((roomConfiguration) => {
       if (roomConfiguration) {
@@ -419,7 +425,13 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.organizationService.addMember(this.organization.id, memberId);
   }
 
-  subscribeToPremium() {
-    return this.paymentService.startSubscriptionToPremium();
+  async subscribeToPremium() {
+    this.isLoadingStripe = true;
+    await this.paymentService.startSubscriptionToPremium();
+    this.isLoadingStripe = false;
+  }
+
+  openLearnMore() {
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

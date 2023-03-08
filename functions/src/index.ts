@@ -29,6 +29,10 @@ import {
   onOrganizationInviteCreated,
 } from "./organizations/invitation";
 import {onOrganizationUpdated} from "./organizations/protection";
+import {
+  onCustomerSubscriptionCreated,
+  onCustomerSubscriptionUpdated,
+} from "./customers/subscription";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -114,7 +118,7 @@ exports.enterProtectedRoom = functions.https.onCall(
       enterProtectedRoom(data, context)
 );
 
-exports.onOrganizationUpdated= functions.firestore
+exports.onOrganizationUpdated = functions.firestore
     .document("organizations/{organizationId}")
     .onUpdate(onOrganizationUpdated);
 
@@ -127,3 +131,11 @@ exports.acceptOrganizationInvitation = functions.https.onRequest(
       cookieParser()(req, res, () => acceptInvitation(req, res));
     }
 );
+
+exports.onUserSubscriptionCreated = functions.firestore
+    .document("customers/{customerId}/subscriptions/{subscriptionId}")
+    .onCreate(onCustomerSubscriptionCreated);
+
+exports.onUserSubscriptionUpdated = functions.firestore
+    .document("customers/{customerId}/subscriptions/{subscriptionId}")
+    .onUpdate(onCustomerSubscriptionUpdated);

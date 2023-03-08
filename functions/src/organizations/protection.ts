@@ -1,6 +1,6 @@
-import { FieldValue, getFirestore } from 'firebase-admin/firestore';
-import { Change } from 'firebase-functions/v1';
-import { DocumentSnapshot } from 'firebase-functions/v1/firestore';
+import {FieldValue, getFirestore} from "firebase-admin/firestore";
+import {Change} from "firebase-functions/v1";
+import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 
 export async function onOrganizationUpdated(change: Change<DocumentSnapshot>) {
   const beforeOrg = change.before.data();
@@ -12,28 +12,28 @@ export async function onOrganizationUpdated(change: Change<DocumentSnapshot>) {
     JSON.stringify(beforeOrg?.memberIds) !== JSON.stringify(afterOrg?.memberIds)
   ) {
     const removedMembers = beforeOrg.memberIds.filter(
-      (id: string) => afterOrg.memberIds.indexOf(id) < 0
+        (id: string) => afterOrg.memberIds.indexOf(id) < 0
     );
 
-    console.log('removed', removedMembers);
+    console.log("removed", removedMembers);
 
     const roomIdsWithProtection = await getFirestore()
-      .collectionGroup('metadata')
-      .where('organizationProtection', '==', change.after.id)
-      .get()
-      .then((snapshot) =>
-        snapshot.docs.map((doc) => doc.ref.parent.parent?.id)
-      );
+        .collectionGroup("metadata")
+        .where("organizationProtection", "==", change.after.id)
+        .get()
+        .then((snapshot) =>
+          snapshot.docs.map((doc) => doc.ref.parent.parent?.id)
+        );
 
     if (removedMembers?.length) {
       const memberId = removedMembers[0];
       await Promise.all(
-        roomIdsWithProtection.map((roomId) => {
-          console.log('removing', memberId, roomId);
-          return getFirestore()
-            .doc(`rooms/${roomId}`)
-            .update({ memberIds: FieldValue.arrayRemove(memberId) });
-        })
+          roomIdsWithProtection.map((roomId) => {
+            console.log("removing", memberId, roomId);
+            return getFirestore()
+                .doc(`rooms/${roomId}`)
+                .update({memberIds: FieldValue.arrayRemove(memberId)});
+          })
       );
     }
 

@@ -75,6 +75,7 @@ import {
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
+import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -443,7 +444,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         .open(
           'Stand out from the crowd by adding your avatar! 🤩 The avatar helps others recognize your votes.',
           'Set my avatar',
-          { duration: 20000, horizontalPosition: 'right' }
+          { duration: 10000, horizontalPosition: 'right' }
         )
         .onAction()
         .subscribe(() => {
@@ -700,6 +701,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       ...signUpOrLoginDialogCreator({
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
+    );
+  }
+
+  openRoomConfigurationModal() {
+    this.dialog.open(
+      ...roomConfigurationModalCreator({ roomId: this.room.roomId })
     );
   }
 }

@@ -4,13 +4,15 @@
       <div class="header">
         <h3>
           {{
-            intent === SignUpOrLoginIntent.LINK_ACCOUNT
-              ? "Create a free Planning Poker account"
-              : "Sign in to Planning Poker"
+            dialogData.titleOverride ||
+              (intent === SignUpOrLoginIntent.LINK_ACCOUNT
+                ? "Create a free Planning Poker account"
+                : "Sign in to Planning Poker")
           }}
         </h3>
         <small>
           {{
+            dialogData.descriptionOverride ||
             intent === SignUpOrLoginIntent.LINK_ACCOUNT
               ? "Store your sessions in the cloud, sign in on multiple devices and try new features with a permanent account. Creating an account takes just a couple of clicks and your current data is preserved."
               : "On a new device? No problem, sign back in to your account."

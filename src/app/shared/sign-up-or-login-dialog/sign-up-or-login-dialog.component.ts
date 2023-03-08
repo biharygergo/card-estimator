@@ -37,6 +37,8 @@ export enum SignUpOrLoginIntent {
 
 export interface SignUpOrLoginDialogData {
   intent: SignUpOrLoginIntent;
+  titleOverride?: string;
+  descriptionOverride?: string;
 }
 export const signUpOrLoginDialogCreator = (
   data: SignUpOrLoginDialogData
@@ -84,7 +86,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     private readonly zoomApiService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    private readonly dialogData: SignUpOrLoginDialogData,
+    public readonly dialogData: SignUpOrLoginDialogData,
     public dialogRef: MatDialogRef<SignUpOrLoginDialogComponent>,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {

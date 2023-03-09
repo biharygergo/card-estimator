@@ -57,7 +57,6 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     distinctUntilChanged(isEqual),
     switchMap((memberIds) => this.authService.getUserProfiles(memberIds)),
     map((userProfilesMap) => Object.values(userProfilesMap)),
-    tap(console.log)
   );
 
   organization: Organization | null | undefined = null;

@@ -9,12 +9,12 @@
       organization?.activePlan !== 'premium'
     "
   >
-    <mat-icon class="premium-lock">lock_open</mat-icon>
-    <h2 class="title">Preview this Premium feature</h2>
+    <h2 class="title">Preview this Premium Feature</h2>
     <p>Create an organization for <strong>up to 5 members for free</strong>.</p>
     <div class="premium-banner-buttons">
       <button
         mat-flat-button
+        color="primary"
         (click)="subscribeToPremium()"
         [disabled]="isLoadingStripe"
       >
@@ -40,33 +40,21 @@
         </p>
         <button
           mat-flat-button
+          *ngIf="(authService.user | async)?.isAnonymous"
+          color="primary"
+          (click)="openCreateAccountModal()"
+          class="create-account-button"
+        >
+          Create an account first
+        </button>
+        <button
+          mat-flat-button
           color="primary"
           (click)="createEmptyOrganization()"
           [disabled]="(authService.user | async)?.isAnonymous"
         >
           Let's set it up!
         </button>
-        <mat-card
-          *ngIf="(authService.user | async)?.isAnonymous"
-          class="alert-card"
-          appearance="outlined"
-        >
-          <mat-card-content>
-            <p>
-              Organizations require a permanent PlanningPoker.live account.
-              Create one in a couple of clicks before setting up your team.
-            </p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="openCreateAccountModal()"
-            >
-              Create account
-            </button>
-          </mat-card-actions>
-        </mat-card>
       </div>
     </ng-container>
     <ng-container *ngIf="organization || !showIntro">

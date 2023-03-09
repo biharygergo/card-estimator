@@ -145,7 +145,7 @@ export class EstimatorService {
     }
 
     const subscriptionMetadata = await this.getSubscriptionMetadata();
-    
+
     const room: Room = {
       id: this.createId(),
       roomId,

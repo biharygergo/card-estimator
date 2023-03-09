@@ -4,14 +4,17 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:test": "ng serve --configuration test",
     "simulator": "firebase emulators:start",
     "build": "npm run prerender",
+    "build:test": "npm run prerender:test",
     "test": "ng test",
     "lint": "ng lint",
     "dev:ssr": "ng run estimator:serve-ssr",
     "serve:ssr": "node dist/estimator/server/main.js",
     "build:ssr": "ng build && ng run estimator:server",
     "prerender": "ng run estimator:prerender",
+    "prerender:test": "ng run estimator:prerender:test-production",
     "sonar": "sonar-scanner",
     "analyze": "webpack-bundle-analyzer dist/estimator/browser/stats.json",
     "start:emulator": "firebase use default && firebase emulators:start"

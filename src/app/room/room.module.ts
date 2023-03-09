@@ -15,6 +15,7 @@ import { TopicsSidebarComponent } from './topics-sidebar/topics-sidebar.componen
 import { VelocityComponent } from './velocity/velocity.component';
 import { SharedModule } from '../shared/shared.module';
 import { RoomConfigurationModalComponent } from './room-configuration-modal/room-configuration-modal.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const routes: Routes = [
   {
@@ -41,6 +42,11 @@ const routes: Routes = [
     VelocityComponent,
     RoomConfigurationModalComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MatSlideToggleModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class RoomModule {}

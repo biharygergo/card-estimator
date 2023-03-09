@@ -13,6 +13,7 @@ import {
   switchMap,
   take,
   takeUntil,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -202,6 +203,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   destroy = new Subject<void>();
   isBusy = new BehaviorSubject<boolean>(false);
+  isSavingPassword = false;
   errorMessage = new Subject<string>();
 
   room$ = this.estimatorService
@@ -214,22 +216,32 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  members$: Observable<Member[]> = this.room$.pipe(
-    map((room) => [room.members, room.memberIds]),
-    distinctUntilChanged(isEqual),
-    map(([members, memberIds]) =>
-      members
-        .filter(
-          (m) =>
-            (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
-            memberIds.includes(m.id)
-        )
-        .sort((a, b) => a.type?.localeCompare(b.type))
-    ),
-    share(),
-    takeUntil(this.destroy)
-  );
-
+  members$: Observable<Array<Member & { isPermanent: boolean }>> =
+    this.room$.pipe(
+      map((room) => [room.members, room.memberIds]),
+      distinctUntilChanged(isEqual),
+      map(([members, memberIds]) =>
+        members
+          .filter(
+            (m) =>
+              (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
+              memberIds.includes(m.id)
+          )
+          .sort((a, b) => a.type?.localeCompare(b.type))
+      ),
+      switchMap((members) => {
+        return this.authService.getUserProfiles(members.map((m) => m.id)).pipe(
+          map((membersMap) =>
+            members.map((member) => ({
+              ...member,
+              isPermanent: !!membersMap[member.id],
+            }))
+          )
+        );
+      }),
+      share(),
+      takeUntil(this.destroy)
+    );
   authorizationMetadata$: Observable<AuthorizationMetadata> =
     this.estimatorService
       .getAuthorizationMetadata(this.dialogData.roomId)
@@ -257,6 +269,9 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   ]).pipe(
     map(([room, user, isPremium]) => {
       return room.createdById === user.uid && isPremium;
+    }),
+    tap((hasAccess) => {
+      hasAccess ? this.roomPassword.enable() : this.roomPassword.disable();
     }),
     share(),
     takeUntil(this.destroy)
@@ -358,6 +373,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   async saveRoomPassword() {
     try {
+      this.isSavingPassword = true;
       await this.estimatorService.setRoomPassword(
         this.room.roomId,
         this.roomPassword.value
@@ -366,6 +382,8 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       this.roomPassword.reset();
     } catch (e) {
       console.error(e);
+    } finally {
+      this.isSavingPassword = false;
     }
   }
 

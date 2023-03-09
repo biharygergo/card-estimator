@@ -234,19 +234,24 @@ $my-theme: mat.define-light-theme(
 }
 
 .premium-banner {
-  background: var(--main-color);
+  background: #edf0ff;
+  border: 1px solid #345ca8;
+  border-radius: 18px;
   padding: 1rem;
   color: white;
   font-size: 0.8rem;
-  border-radius: 24px;
   margin-bottom: 1rem;
+
+  p {
+    color: #15448F;
+  }
 
   .premium-banner-buttons {
     display: flex;
     gap: 0.5rem;
 
     .learn-more {
-      color: white;
+      color: #575E71;
     }
   }
 
@@ -256,6 +261,7 @@ $my-theme: mat.define-light-theme(
     align-items: center;
     margin-bottom: 0.2rem;
     font-size: 1rem;
+    color: #001A43;
   }
 }
 

@@ -1,9 +1,3 @@
-
-.permissions-container {
-  max-height: 400px;
-  overflow-y: scroll;
-}
-
 .permission {
   margin: 1rem 0;
   .permission-title {
@@ -33,6 +27,11 @@
     background: #d4e3c4;
     border: none;
   }
+
+  &.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+    opacity: 0.8;
+  }
+  
   .mat-mdc-chip-action-label {
     font-weight: 500;
   }
@@ -90,4 +89,19 @@
 
 .creator-warning {
   margin: 0.5rem 0;
+}
+
+.protection-detail {
+  display: flex;
+  gap: 3rem;
+
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  mat-slide-toggle {
+    transform: scale(1.3);
+  }
 }

@@ -40,7 +40,10 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
     .getAuthorizationMetadata(this.dialogData.roomId)
     .pipe(
       map((authMeta) => {
-        return authMeta?.passwordProtectionEnabled
+        return authMeta?.passwordProtectionEnabled &&
+          authMeta?.organizationProtection
+          ? 'both'
+          : authMeta?.passwordProtectionEnabled
           ? 'password'
           : authMeta?.organizationProtection
           ? 'organization'
@@ -48,6 +51,8 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.destroy)
     );
+
+  isJoiningRoom = false;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -67,6 +72,7 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
   async joinRoomWithPassword() {
     this.errorMessage.next('');
     try {
+      this.isJoiningRoom = true;
       await this.estimatorService.joinRoomWithPassword(
         this.dialogData.roomId,
         this.roomPassword.value
@@ -76,6 +82,8 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
     } catch (e) {
       console.error(e);
       this.errorMessage.next(e.message);
+    } finally {
+      this.isJoiningRoom = false;
     }
   }
 }

@@ -2,7 +2,18 @@
   <div mat-dialog-content>
     <p><mat-icon>lock</mat-icon></p>
     <div *ngIf="authTypeRequired$ | async as authTypeRequired; else loading">
-      <ng-container *ngIf="authTypeRequired === 'password'">
+      <ng-container *ngIf="authTypeRequired === 'both'">
+        <p>
+          <strong>
+            This room is protected by a password and it's only open for
+            organization members. </strong
+          >If you keep seeing this screen, you are likely entering a wrong
+          password or you are not part of the organization.
+        </p>
+      </ng-container>
+      <ng-container
+        *ngIf="authTypeRequired === 'password' || authTypeRequired === 'both'"
+      >
         <p>
           This room is protected by a password. Please enter it below to join
           this planning session.
@@ -27,11 +38,14 @@
     <button
       mat-flat-button
       color="primary"
-      [disabled]="!roomPassword.valid"
+      [disabled]="!roomPassword.valid || isJoiningRoom"
       (click)="joinRoomWithPassword()"
-      *ngIf="(authTypeRequired$ | async) === 'password'"
+      *ngIf="
+        (authTypeRequired$ | async) === 'password' ||
+        (authTypeRequired$ | async) === 'both'
+      "
     >
-      Join room
+      {{ isJoiningRoom ? "Joining room..." : "Join room" }}
     </button>
     <button mat-flat-button mat-dialog-close>Cancel</button>
   </div>

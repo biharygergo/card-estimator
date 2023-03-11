@@ -26,7 +26,7 @@
     <div class="organization-logo-container" *ngIf="(organization | async) as org">
       <mat-icon @delayedFadeAnimation>add</mat-icon>
       <img *ngIf="org.logoUrl" [src]="org.logoUrl" class="logo organization-logo" @slideInRightAnimation/>
-      <h5 *ngIf="!org.logoUrl" class="logo organization-logo" @slideInRightAnimation> {{ org.name }} </h5>
+      <h5 *ngIf="!org.logoUrl" class="logo organization-logo text-only" @slideInRightAnimation> {{ org.name }} </h5>
     </div>
   </div>
   <ng-container *ngIf="(vm | async)?.user">

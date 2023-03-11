@@ -69,19 +69,17 @@ export class PaymentService {
     }
 
     if (this.config.isRunningInZoom) {
-      if (
+      /* if (
         confirm(
           'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
         )
-      ) {
-        this.zoomService.openUrl(`${window.location.origin}/join?flow=premium`);
-        return;
-      }
+      ) */
+      await this.zoomService.openUrl(`${window.location.origin}/join?flow=premium`);
       return;
     }
 
     const session = await createCheckoutSession(this.payments, {
-      price: 'price_1MhxFgCG1hllVHnccUeyTdNX', // Premium plan
+      price: 'price_1MkYV6CG1hllVHncXLgIFXLK', // Premium plan
       automatic_tax: true,
       allow_promotion_codes: true,
       tax_id_collection: true,
@@ -107,15 +105,14 @@ export class PaymentService {
 
   async createPortalLink() {
     if (this.config.isRunningInZoom) {
-      if (
+      /* if (
         confirm(
           'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.'
         )
-      ) {
-        this.zoomService.openUrl(
-          `${window.location.origin}/join?flow=manageSubscription`
-        );
-      }
+      ) { */
+      await this.zoomService.openUrl(
+        `${window.location.origin}/join?flow=manageSubscription`
+      );
       return;
     }
     const result = await httpsCallable(
@@ -123,7 +120,6 @@ export class PaymentService {
       'ext-firestore-stripe-payments-createPortalLink'
     )({ returnUrl: window.location.href });
     window.location.assign((result.data as any).url);
-
   }
 
   getSubscription(): Observable<Subscription | undefined> {

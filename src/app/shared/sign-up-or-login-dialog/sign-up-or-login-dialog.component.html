@@ -19,14 +19,14 @@
               dialogData.titleOverride ||
                 (intent === SignUpOrLoginIntent.LINK_ACCOUNT
                   ? "Create a free account"
-                  : "Sign in to your account")
+                  : "Sign in or create an account")
             }}
           </h2>
           <small
             >{{
               intent === SignUpOrLoginIntent.LINK_ACCOUNT
                 ? "Sign up"
-                : "Sign in"
+                : "Sign up or login"
             }}
             with your work account in a single click.</small
           >
@@ -77,7 +77,7 @@
           <small>{{
             intent === SignUpOrLoginIntent.LINK_ACCOUNT
               ? "Or, register with your work e-mail address:"
-              : "Or, sign-in with your work e-mail address:"
+              : "Or, login or register with your work e-mail address:"
           }}</small>
           <form [formGroup]="form">
             <mat-form-field appearance="outline">
@@ -111,7 +111,7 @@
           <button
             mat-stroked-button
             [disabled]="!form.valid"
-            (click)="onCreateAccountClicked.next()"
+            (click)="onCreateAccountClicked.next('sign-in')"
             id="create-account-button"
           >
             {{
@@ -120,6 +120,16 @@
                 : "Sign in"
             }}
           </button>
+          <ng-container *ngIf="intent === SignUpOrLoginIntent.SIGN_IN">
+            <h5 align="center">or</h5>
+            <button
+              mat-stroked-button
+              [disabled]="!form.valid"
+              (click)="onCreateAccountClicked.next('sign-up')"
+            >
+              Create a new account
+            </button>
+          </ng-container>
         </div>
       </ng-template>
     </div>

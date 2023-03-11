@@ -11,7 +11,7 @@ export const premiumLearnMoreModalCreator =
       maxHeight: '100vh',
       height: '100%',
       width: '100%',
-      panelClass: 'full-screen-modal'
+      panelClass: 'full-screen-modal',
     },
   ];
 
@@ -24,9 +24,10 @@ export class PremiumLearnMoreComponent {
   @Input() pageMode: 'modal' | 'page' = 'modal';
 
   isLoadingStripe = false;
+  isPremium$ = this.paymentService.isPremiumSubscriber();
 
   constructor(private readonly paymentService: PaymentService) {}
-  
+
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     await this.paymentService.startSubscriptionToPremium();

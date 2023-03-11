@@ -75,7 +75,10 @@
     <mat-card appearance="outlined" class="get-premium-card">
       <mat-card-content>
         <h2>Subscribe to Premium today</h2>
-        <p class="premium-description">Start with a 14 day free-trial, so you can explore all premium features.</p>
+        <p class="premium-description">
+          Start with a 14 day free-trial, so you can explore all premium
+          features.
+        </p>
 
         <h3 class="plan-title">Premium Plan</h3>
         <div class="plan">
@@ -87,7 +90,9 @@
             <span class="free-trial">14 days free</span>
           </div>
           <div class="yearly">
-            <span><span class="saving">Save €30</span> with annual billing</span>
+            <span
+              ><span class="saving">Save €30</span> with annual billing</span
+            >
             <span class="yearly-price">€150 /year</span>
           </div>
         </div>
@@ -95,8 +100,13 @@
           <p class="description">Secure global payment and invoicing with</p>
           <img src="/assets/stripe.png" class="stripe-logo" />
         </div>
-        
-        <button mat-flat-button color="primary" (click)="subscribeToPremium()">
+
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="subscribeToPremium()"
+          [disabled]="isPremium$ | async"
+        >
           {{ isLoadingStripe ? "Redirecting to Stripe..." : "Get Premium now" }}
         </button>
       </mat-card-content>

@@ -59,7 +59,7 @@ export const signUpOrLoginDialogCreator = (
 })
 export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();
-  onCreateAccountClicked = new Subject<void>();
+  onCreateAccountClicked = new Subject<'sign-in' | 'sign-up'>();
 
   form = new FormGroup({
     email: new FormControl<string>('', {
@@ -118,7 +118,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
     this.onCreateAccountClicked
       .pipe(
-        switchMap(() => {
+        switchMap((signupType) => {
           this.isBusy.next(true);
           this.errorMessage$.next('');
           const email = this.form.value.email;
@@ -130,10 +130,10 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
               password
             );
           } else {
-            signInPromise = this.authService.signInWithEmailAndPassword(
-              email,
-              password
-            );
+            signInPromise =
+              signupType === 'sign-in'
+                ? this.authService.signInWithEmailAndPassword(email, password)
+                : this.authService.signUpWithEmailAndPassword(email, password);
           }
           return from(signInPromise).pipe(
             map(() => true),

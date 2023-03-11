@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Auth,
+  createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
   signInWithCredential,
@@ -164,6 +165,20 @@ export class AuthService {
 
     await this.handleSignInResult({ isNewUser });
     this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  async signUpWithEmailAndPassword(email: string, password: string) {
+    const userCredential = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+
+    await this.handleSignInResult({ isNewUser: true });
+    this.snackbar.open(`Your account is now set up, awesome!`, null, {
       duration: 3000,
       horizontalPosition: 'right',
     });

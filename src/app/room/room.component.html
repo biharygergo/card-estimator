@@ -147,7 +147,11 @@
             <countdown-timer [room]="room$"></countdown-timer>
           </mat-card-footer>
           <mat-card-footer class="card-footer-actions align-right">
-            <button mat-stroked-button [matMenuTriggerFor]="roomSettingsMenu">
+            <button
+              mat-stroked-button
+              [matMenuTriggerFor]="roomSettingsMenu"
+              id="room-options-button"
+            >
               <mat-icon>settings</mat-icon>
               Room settings
             </button>

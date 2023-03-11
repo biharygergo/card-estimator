@@ -15,13 +15,7 @@ import {
   Subscription,
 } from '@stripe/firestore-stripe-payments';
 import { collection, CollectionReference } from 'firebase/firestore';
-import {
-  Observable,
-  of,
-  switchMap,
-  map,
-  firstValueFrom,
-} from 'rxjs';
+import { Observable, of, switchMap, map, firstValueFrom } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import {
   signUpOrLoginDialogCreator,
@@ -55,12 +49,14 @@ export class PaymentService {
   async startSubscriptionToPremium() {
     let user = await this.authService.getUser();
 
-    if (user?.isAnonymous) {
+    if (!user || user?.isAnonymous) {
       const dialogRef = this.dialog.open(
         ...signUpOrLoginDialogCreator({
-          intent: SignUpOrLoginIntent.LINK_ACCOUNT,
+          intent: user
+            ? SignUpOrLoginIntent.LINK_ACCOUNT
+            : SignUpOrLoginIntent.SIGN_IN,
           titleOverride:
-            'Before you subscribe to Premium, please create a permanent account',
+            'Before you subscribe to Premium, please log in or create a permanent account',
         })
       );
 
@@ -93,7 +89,7 @@ export class PaymentService {
       mode: 'subscription',
       success_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=success`,
       trial_from_plan: true,
-      promotion_code: 'promo_1MjPfYCG1hllVHncKWqjTLxd'
+      // promotion_code: 'promo_1MjPfYCG1hllVHncKWqjTLxd'
     });
     window.location.assign(session.url);
   }
@@ -109,11 +105,25 @@ export class PaymentService {
     return claims?.stripeRole === 'premium';
   }
 
-  createPortalLink() {
-    return httpsCallable(
+  async createPortalLink() {
+    if (this.config.isRunningInZoom) {
+      if (
+        confirm(
+          'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.'
+        )
+      ) {
+        this.zoomService.openUrl(
+          `${window.location.origin}/join?flow=manageSubscription`
+        );
+      }
+      return;
+    }
+    const result = await httpsCallable(
       this.functions,
       'ext-firestore-stripe-payments-createPortalLink'
     )({ returnUrl: window.location.href });
+    window.location.assign((result.data as any).url);
+
   }
 
   getSubscription(): Observable<Subscription | undefined> {

@@ -22,7 +22,7 @@ export class PermissionsService {
   initializePermissions(room: Room, userId: string) {
     const permissions = {
       ...DEFAULT_ROOM_CONFIGURATION.permissions,
-      ...room.configuration?.permissions,
+      ...(room.configuration?.permissions || {}),
     };
 
     let userRole: UserRole | undefined;
@@ -41,6 +41,8 @@ export class PermissionsService {
         .map((m) => m.id)
         .includes(userId)
     ) {
+      userRole = UserRole.ROOM_MEMBER_OBSERVER;
+    } else {
       userRole = UserRole.ROOM_MEMBER_OBSERVER;
     }
 

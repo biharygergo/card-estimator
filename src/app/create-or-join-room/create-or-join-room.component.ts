@@ -159,12 +159,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cookieService.tryShowCookieBanner();
-    /* 
-    this.dialog.open(
-      ...roomAuthenticationModalCreator({
-        roomId: 'regulatory-indigo-constrictor',
-      })
-    ); */
 
     const sessionCookie = this.authService.getSessionCookie();
     if (

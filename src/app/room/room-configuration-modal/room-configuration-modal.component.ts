@@ -446,7 +446,6 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     await this.paymentService.startSubscriptionToPremium();
-    this.isLoadingStripe = false;
   }
 
   openLearnMore() {

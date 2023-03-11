@@ -158,7 +158,6 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     await this.paymentsService.startSubscriptionToPremium();
-    this.isLoadingStripe = false;
   }
 
   openLearnMore() {

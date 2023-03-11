@@ -2,15 +2,13 @@ import {Timestamp} from "firebase-admin/firestore";
 import {getAuth} from "firebase-admin/auth";
 
 export interface CustomClaims {
-  roomAccess?: RoomAccess;
-  subscription?: "premium";
+  stripeRole?: "premium";
 }
 export interface RoomAccess {
   [roomId: string]: RoomAccessValue;
 }
 
 export interface RoomAccessValue {
-  expiresAt: Timestamp;
   hash: string;
   roomId: string;
 }

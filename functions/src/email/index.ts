@@ -1,4 +1,4 @@
-import * as sgMail from "@sendgrid/mail";
+import * as sgMail from '@sendgrid/mail';
 
 export function sendEmail(params: {
   emailTitle: string;
@@ -10,17 +10,18 @@ export function sendEmail(params: {
   buttonLabel: string;
 }) {
   if (!process.env.SENDGRID_API_KEY) {
-    throw Error("No API key found!");
+    throw Error('No API key found!');
   }
 
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: params.to,
-    from: "Robots at PlanningPoker.live <robots-noreply@planningpoker.live>",
-    templateId: "d-0f5c7ae9340544be94467ce9c3a50ea8",
+    from: 'Robots at PlanningPoker.live <robots-noreply@planningpoker.live>',
+    templateId: 'd-0f5c7ae9340544be94467ce9c3a50ea8',
     dynamicTemplateData: {
       ...params,
     },
   };
-  sgMail.send(msg);
+  console.log('<Sending email> To: ', params.to);
+  return sgMail.send(msg);
 }

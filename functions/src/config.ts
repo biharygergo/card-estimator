@@ -27,6 +27,5 @@ export function isRunningInDevMode(req: functions.Request) {
     host.includes("staging.planningpoker.live") ||
     host.includes("test.planningpoker.live") ||
     host.includes("ngrok");
-  console.log("Returning isDev", isDev);
   return isDev;
 }

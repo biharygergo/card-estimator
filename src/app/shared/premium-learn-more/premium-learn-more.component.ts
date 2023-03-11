@@ -26,6 +26,5 @@ export class PremiumLearnMoreComponent {
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     await this.paymentService.startSubscriptionToPremium();
-    this.isLoadingStripe = false;
   }
 }

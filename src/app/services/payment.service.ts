@@ -74,7 +74,7 @@ export class PaymentService {
           'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
         )
       ) */
-      await this.zoomService.openUrl(`${window.location.origin}/join?flow=premium`);
+      await this.zoomService.openUrl(`${window.location.origin}/join?flow=premium`, true);
       return;
     }
 
@@ -111,7 +111,7 @@ export class PaymentService {
         )
       ) { */
       await this.zoomService.openUrl(
-        `${window.location.origin}/join?flow=manageSubscription`
+        `${window.location.origin}/join?flow=manageSubscription`, true
       );
       return;
     }

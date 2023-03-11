@@ -1,4 +1,3 @@
-import {Timestamp} from "firebase-admin/firestore";
 import {getAuth} from "firebase-admin/auth";
 
 export interface CustomClaims {

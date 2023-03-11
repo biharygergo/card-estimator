@@ -19,7 +19,7 @@
               dialogData.titleOverride ||
                 (intent === SignUpOrLoginIntent.LINK_ACCOUNT
                   ? "Create a free account"
-                  : "Sign in")
+                  : "Sign in to your account")
             }}
           </h2>
           <small
@@ -124,7 +124,7 @@
       </ng-template>
     </div>
     <div class="side-panel">
-      <div class="branding">
+      <div class="branding" *ngIf="!(isBusy | async)">
         <img src="/assets/logo.png" />
         <h4>Real-time online planning poker for remote scrum teams.</h4>
       </div>

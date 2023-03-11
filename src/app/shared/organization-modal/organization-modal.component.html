@@ -76,6 +76,7 @@
                     matInput
                     formControlName="name"
                     placeholder="Best Company Ltd."
+                    [disabled]="!isOrganizationCreator"
                   />
                   <mat-hint
                     >Set your company's name here, like: "Great Code
@@ -91,7 +92,8 @@
                 *ngIf="organization || !showIntro"
                 class="save-button"
                 [disabled]="
-                  organization?.name === organizationForm.controls.name.value
+                  organization?.name === organizationForm.controls.name.value ||
+                  !isOrganizationCreator
                 "
               >
                 Update
@@ -107,7 +109,13 @@
               >
               <div class="logo-container" *ngIf="organization?.logoUrl">
                 <img class="logo" [src]="organization?.logoUrl" />
-                <button mat-button (click)="removeLogo()">Remove logo</button>
+                <button
+                  mat-button
+                  (click)="removeLogo()"
+                  [disabled]="!isOrganizationCreator"
+                >
+                  Remove logo
+                </button>
               </div>
               <file-upload-drag-drop
                 (onFileDropped)="onLogoDropped($event)"
@@ -177,13 +185,14 @@
                   matInput
                   [formControl]="invitationEmail"
                   placeholder="colleague@company.com"
+                  [disabled]="!isOrganizationCreator"
                 />
                 <button
                   mat-icon-button
                   matSuffix
                   (click)="inviteMember()"
                   [attr.aria-label]="'Invite member'"
-                  [disabled]="!invitationEmail.valid"
+                  [disabled]="!invitationEmail.valid || !isOrganizationCreator"
                   color="primary"
                 >
                   <mat-icon>send</mat-icon>

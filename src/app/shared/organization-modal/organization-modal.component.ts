@@ -56,7 +56,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     map((organization) => organization.memberIds),
     distinctUntilChanged(isEqual),
     switchMap((memberIds) => this.authService.getUserProfiles(memberIds)),
-    map((userProfilesMap) => Object.values(userProfilesMap)),
+    map((userProfilesMap) => Object.values(userProfilesMap))
   );
 
   organization: Organization | null | undefined = null;
@@ -75,6 +75,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   ]);
 
   isLoadingStripe = false;
+  isOrganizationCreator = false;
 
   constructor(
     private readonly organizationService: OrganizationService,
@@ -87,6 +88,22 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.organization$.pipe(takeUntil(this.destroy)).subscribe();
+    this.organization$
+      .pipe(
+        switchMap((organization) =>
+          this.authService.user.pipe(
+            map(
+              (user) =>
+                user && organization && user.uid === organization.createdById
+            )
+          )
+        ),
+        takeUntil(this.destroy)
+      )
+      .subscribe(
+        (isOrganizationCreator) =>
+          (this.isOrganizationCreator = isOrganizationCreator)
+      );
   }
 
   ngOnDestroy(): void {
@@ -118,6 +135,9 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async onLogoDropped(file: File) {
+    if (!this.isOrganizationCreator) {
+      return;
+    }
     this.toastService.showMessage('Uploading logo...');
     await this.organizationService.updateLogo(file, this.organization.id);
     this.toastService.showMessage('Logo uploaded.');

@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  EstimatorService,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus, Organization } from '../types';
@@ -14,6 +12,7 @@ import {
   BehaviorSubject,
   combineLatest,
   EMPTY,
+  firstValueFrom,
   from,
   Observable,
   of,
@@ -32,7 +31,11 @@ import {
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
 import { AppConfig, AppConfigModule, APP_CONFIG } from '../app-config.module';
-import { delayedFadeAnimation, fadeAnimation, slideInRightAnimation } from '../shared/animations';
+import {
+  delayedFadeAnimation,
+  fadeAnimation,
+  slideInRightAnimation,
+} from '../shared/animations';
 import { MatDialog } from '@angular/material/dialog';
 import {
   authProgressDialogCreator,
@@ -47,6 +50,8 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { OrganizationService } from '../services/organization.service';
+import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
+import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -87,7 +92,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
 
   user = combineLatest([this.authService.user, this.isBusy]).pipe(
-    filter(([_, busy]) => !busy),
+    // filter(([_, busy]) => !busy),
     tap(([user]) => {
       if (user && user.displayName) {
         this.name.setValue(user.displayName);
@@ -104,6 +109,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         this.analytics.logAutoFilledRoomId();
       }
     })
+  );
+
+  flowFromParams$: Observable<string> = this.activatedRoute.queryParamMap.pipe(
+    map((paramMap) => paramMap.get('flow'))
   );
 
   currentPath: Observable<string> = this.activatedRoute.url.pipe(
@@ -243,6 +252,27 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
+
+    this.flowFromParams$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(async (flowParam) => {
+        if (flowParam === 'premium') {
+          this.dialog.open(...premiumLearnMoreModalCreator());
+        } else if (flowParam === 'manageSubscription') {
+          const user = await this.authService.getUser();
+          if (user) {
+            this.dialog.open(
+              ...avatarModalCreator({ openAtTab: 'subscription' })
+            );
+          } else {
+            this.dialog.open(
+              ...signUpOrLoginDialogCreator({
+                intent: SignUpOrLoginIntent.SIGN_IN,
+              })
+            );
+          }
+        }
+      });
   }
 
   ngOnDestroy() {

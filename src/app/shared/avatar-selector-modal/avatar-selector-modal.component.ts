@@ -22,7 +22,7 @@ import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-lear
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
 export interface AvatarDialogData {
-  openAtTab?: 'profile' | 'avatar';
+  openAtTab?: 'profile' | 'avatar' | 'subscription';
 }
 
 export const avatarModalCreator = ({
@@ -132,7 +132,9 @@ const AVATAR_COUNT = 59;
   styleUrls: ['./avatar-selector-modal.component.scss'],
 })
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
-  selectedTabIndex = this.dialogData.openAtTab === 'avatar' ? 1 : 0;
+  selectedTabIndex = { profile: 0, subscription: 1, avatar: 2 }[
+    this.dialogData.openAtTab ?? 'profile'
+  ];
 
   facialHairOptions: SelectOption[] = facialHairOptions;
   hairOptions: SelectOption[] = hairOptions;

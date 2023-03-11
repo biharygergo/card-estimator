@@ -142,6 +142,7 @@
                 class="chip-selector"
                 multiple
                 selectable
+                [disabled]="!hasConfigurationAccess"
               >
                 <mat-chip-option
                   *ngFor="let option of configuration.options"

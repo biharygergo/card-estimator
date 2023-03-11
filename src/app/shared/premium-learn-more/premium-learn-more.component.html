@@ -2,48 +2,79 @@
 <div mat-dialog-content class="content">
   <div class="details">
     <p>
-      Our premium subscription now offers improved room security, team
-      management, custom branding support and much more coming soon. Subscribe
-      now to enjoy all these features and
-      <strong
-        >support the maintenance and improvement of this open-source
-        project</strong
-      >.
+      Elevate your team's collaboration to the next level with our premium
+      subscription. Enjoy enhanced room security, team management, and custom
+      branding support, with even more exciting features on the horizon.
     </p>
-    <ul>
+    <p>
+      By subscribing now, you'll have access to all of these premium features
+      and support the ongoing maintenance and improvement of our open-source
+      project.
+    </p>
+    <mat-divider></mat-divider>
+    <ul class="features-list">
       <li>
+        <mat-icon>check_circle</mat-icon>
         Create private rooms protected by a password or available only for
         members of your organization
       </li>
       <li>
+        <mat-icon>check_circle</mat-icon>
         Create an organization with branding support to customize your
         experience
       </li>
-      <li>Adjust room member permissions to your preferences</li>
-      <li>Unlock your full planning history</li>
       <li>
-        <strong>Coming soon</strong> Integrate with JIRA for seamless
-        imports/exports
+        <mat-icon>check_circle</mat-icon>Adjust room member permissions to your
+        preferences
       </li>
       <li>
-        <strong>Coming soon</strong> Create sub-teams in your organization,
-        invite members to rooms
+        <mat-icon>check_circle</mat-icon>Unlock your full planning history
+      </li>
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span
+          ><strong>Coming soon</strong> Integrate with JIRA for seamless
+          imports/exports</span
+        >
+      </li>
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span
+          ><strong>Coming soon</strong> Create sub-teams in your organization,
+          invite members to rooms</span
+        >
       </li>
     </ul>
   </div>
 
   <div class="sidebar">
     <div class="banner">
-      <span class="price">15€ / month</span>
-      <span class="discount">
+      <h1 class="price">
+        15€ /
+        <span
+          class="tooltip-text"
+          matTooltip="Each subscription is assigned to a single user, who can create premium rooms and invite colleagues to join their organization. For small and medium-sized companies, one facilitator is usually sufficient, but larger teams with multiple SCRUM masters may require additional facilitators to keep everyone on track."
+          >facilitator</span
+        >
+        / month
+      </h1>
+      <!-- <span class="discount">
         Only 10€/month (33% off) for your first three months. Thank you for
         being an early adopter!
-      </span>
-      <span class="details"
-        >With a 14 day free-trial, so you can explore all premium
-        features.</span
-      >
+      </span> -->
     </div>
-    <button mat-flat-button color="primary">Get Premium now</button>
+    <div class="banner">
+      With a 14 day free-trial, so you can explore all premium features.
+    </div>
+    <div class="banner secondary">
+      Secure global payment and invoicing with:
+      <img src="/assets/stripe.png" class="stripe-logo" />
+    </div>
   </div>
 </div>
+<mat-dialog-actions>
+  <button mat-flat-button color="primary" (click)="subscribeToPremium()">
+    {{ isLoadingStripe ? "Redirecting to Stripe..." : "Get Premium now" }}
+  </button>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

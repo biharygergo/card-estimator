@@ -7,7 +7,7 @@
 .content {
   display: flex;
   padding: 0;
-  
+
   @media only screen and (max-width: 600px) {
     flex-direction: column;
   }
@@ -18,15 +18,14 @@
   display: flex;
   flex-direction: column;
 
-  .header {
-    padding: 1rem;
-    background: #d9e2ff;
-    color: #15448f;
+  .title {
+    color: #001a43;
+    text-align: center;
   }
 
   .error {
     padding: 1rem;
-    background: #FFB4AB;
+    background: #ffb4ab;
     color: #690005;
   }
 
@@ -80,7 +79,7 @@
   flex: 2 1 0;
   position: relative;
 
-  img {
+  .background-image {
     position: absolute;
     top: 0;
     left: 0;
@@ -90,6 +89,21 @@
     height: 100%;
     object-position: center left;
     object-fit: cover;
+  }
+
+  .branding {
+    z-index: 1;
+    position: relative;
+    padding: 2rem 1rem;
+    color: white;
+
+    img {
+      height: 40px;
+      width: 40px;
+      border-radius: 8px;
+      box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+        rgba(5, 18, 37, 0.24) 0px 0px 8px;
+    }
   }
 
   @media only screen and (max-width: 600px) {

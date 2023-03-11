@@ -1,34 +1,47 @@
-<div>
-  <div mat-dialog-content>
-    <ng-container *ngIf="subscriptionResult === 'success'">
-      <mat-icon>check</mat-icon>
-      <h2>Yay, you are subscribed to Premium!</h2>
-      <p>
-        Thanks for subscribing to a Premium plan, you are amazing! Here are some
-        the features you've just unlocked:
-      </p>
-      <ul>
-        <li>
-          Protect your planning sessions with a password, invitations and fine
-          tune permissions
-        </li>
-        <li>Add unlimited members to your organization</li>
-        <li>View your full planning history</li>
-        <li>Support open-source app development</li>
-        <li>(Coming Soon) Integrate with Jira</li>
-      </ul>
-    </ng-container>
-    <ng-container *ngIf="subscriptionResult === 'cancel'">
-      <mat-icon>sentiment_dissatisfied</mat-icon>
-      <h2>Maybe next time</h2>
-      <p>
-        It seems like your payment process was cancelled. If you think something has gone
-        wrong, don't hesitate to email us at
-        <a href="mailto:info@planningpoker.live">info@planningpoker.live</a>.
-      </p>
-    </ng-container>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-flat-button mat-dialog-close>Close</button>
-  </div>
+<h1 mat-dialog-title>
+  {{ subscriptionResult === "success" ? "Subscribed to Premium" : "Oops!" }}
+</h1>
+<div mat-dialog-content>
+  <ng-container *ngIf="subscriptionResult === 'success'">
+    <p class="description">
+      Thanks for subscribing to a Premium plan, you are amazing! Here are some
+      the features you've just unlocked:
+    </p>
+    <mat-divider></mat-divider>
+    <ul class="features-list">
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span
+          >Protect your planning sessions with a password, invitations and fine
+          tune permissions</span
+        >
+      </li>
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span>Add unlimited members to your organization</span>
+      </li>
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span>View your full planning history</span>
+      </li>
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span>Support open-source app development</span>
+      </li>
+      <li>
+        <mat-icon>check_circle</mat-icon>
+        <span>Integrate with Jira (Coming Soon)</span>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-container *ngIf="subscriptionResult === 'cancel'">
+    <p>
+      It seems like your payment process was cancelled. If you think something
+      has gone wrong, don't hesitate to email us at <br /><br />
+      <a href="mailto:info@planningpoker.live">info@planningpoker.live</a>.
+    </p>
+  </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>Close</button>
 </div>

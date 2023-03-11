@@ -1,5 +1,5 @@
 .permission {
-  margin: 1rem 0;
+  margin-bottom: 1rem;
   .permission-title {
     display: flex;
     align-items: center;
@@ -31,7 +31,7 @@
   &.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
     opacity: 0.8;
   }
-  
+
   .mat-mdc-chip-action-label {
     font-weight: 500;
   }

@@ -2,9 +2,8 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { map, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
-import { Member } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
 const ROOM_AUTHENTICATION_MODAL = 'roomAuthenticationModal';
@@ -26,6 +25,8 @@ export const roomAuthenticationModalCreator = (
   },
 ];
 
+type RequiredAuth = 'both' | 'password' | 'organization' | 'unknown';
+
 @Component({
   selector: 'app-room-authentication-modal',
   templateUrl: './room-authentication-modal.component.html',
@@ -36,7 +37,8 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   errorMessage = new Subject<string>();
 
-  authTypeRequired$ = this.estimatorService
+  authTypeRequired: RequiredAuth = 'unknown';
+  authTypeRequired$: Observable<RequiredAuth> = this.estimatorService
     .getAuthorizationMetadata(this.dialogData.roomId)
     .pipe(
       map((authMeta) => {
@@ -49,6 +51,7 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
           ? 'organization'
           : 'unknown';
       }),
+      map((result) => result as RequiredAuth),
       takeUntil(this.destroy)
     );
 
@@ -62,7 +65,11 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
     private readonly dialogData: RoomAuthenticationModalData
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authTypeRequired$.subscribe(
+      (value) => (this.authTypeRequired = value)
+    );
+  }
 
   ngOnDestroy(): void {
     this.destroy.next();

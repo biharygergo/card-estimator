@@ -39,19 +39,6 @@
           <div class="protection-detail">
             <p>
               <strong>Password protection</strong>
-              <ng-container>
-                <span
-                  class="status-badge inactive"
-                  [class.active]="
-                    authorizationMetadata?.passwordProtectionEnabled === true
-                  "
-                  >{{
-                    authorizationMetadata?.passwordProtectionEnabled
-                      ? "Enabled"
-                      : "Disabled"
-                  }}</span
-                >
-              </ng-container>
               <br />
               <small
                 >Only people who know the password will be able to enter the
@@ -109,15 +96,6 @@
           <div class="protection-detail">
             <p>
               <strong>Organization protection</strong>
-              <span
-                class="status-badge inactive"
-                [class.active]="!!authorizationMetadata?.organizationProtection"
-                >{{
-                  authorizationMetadata?.organizationProtection
-                    ? "Enabled"
-                    : "Disabled"
-                }}</span
-              >
               <br /><small
                 >Only people who are part of your organization will be able to
                 enter the room. Existing participants will need to re-join if

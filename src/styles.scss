@@ -271,3 +271,20 @@ $my-theme: mat.define-light-theme(
     margin-left: 0.5rem;
   }
 }
+
+.features-list {
+  padding: 0;
+
+  li {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    mat-icon {
+      color: #48a81c;
+      flex-shrink: 0;
+    }
+  }
+}

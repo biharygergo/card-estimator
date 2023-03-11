@@ -1,24 +1,6 @@
 <div mat-dialog-content resizeMonitor [verticalSpacing]="0" id="sign-up-modal">
   <div class="content">
     <div class="main-panel">
-      <div class="header">
-        <h3>
-          {{
-            dialogData.titleOverride ||
-              (intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                ? "Create a free Planning Poker account"
-                : "Sign in to Planning Poker")
-          }}
-        </h3>
-        <small>
-          {{
-            dialogData.descriptionOverride ||
-            intent === SignUpOrLoginIntent.LINK_ACCOUNT
-              ? "Store your sessions in the cloud, sign in on multiple devices and try new features with a permanent account. Creating an account takes just a couple of clicks and your current data is preserved."
-              : "On a new device? No problem, sign back in to your account."
-          }}
-        </small>
-      </div>
       <div class="error" *ngIf="errorMessage$ | async as errorMessage">
         Oh-oh, something went wrong: {{ errorMessage }}
       </div>
@@ -32,6 +14,14 @@
       </ng-container>
       <ng-template #notBusy>
         <div class="social">
+          <h2 class="title">
+            {{
+              dialogData.titleOverride ||
+                (intent === SignUpOrLoginIntent.LINK_ACCOUNT
+                  ? "Create a free account"
+                  : "Sign in")
+            }}
+          </h2>
           <small
             >{{
               intent === SignUpOrLoginIntent.LINK_ACCOUNT
@@ -134,12 +124,17 @@
       </ng-template>
     </div>
     <div class="side-panel">
+      <div class="branding">
+        <img src="/assets/logo.png" />
+        <h4>Real-time online planning poker for remote scrum teams.</h4>
+      </div>
       <picture>
         <source srcset="/assets/easy_accessible.webp" type="image/webp" />
         <source srcset="/assets/easy_accessible.jpeg" type="image/jpeg" />
         <img
           src="/assets/easy_accessible.jpeg"
           alt="UI components laid out visually"
+          class="background-image"
         />
       </picture>
     </div>

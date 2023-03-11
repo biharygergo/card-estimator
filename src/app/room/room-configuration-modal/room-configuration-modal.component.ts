@@ -218,9 +218,9 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   members$: Observable<Array<Member & { isPermanent: boolean }>> =
     this.room$.pipe(
-      map((room) => [room.members, room.memberIds]),
+      map((room) => [room.members, room.memberIds, room.createdById]),
       distinctUntilChanged(isEqual),
-      map(([members, memberIds]) =>
+      map(([members, memberIds, createdById]) =>
         members
           .filter(
             (m) =>
@@ -228,6 +228,12 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
               memberIds.includes(m.id)
           )
           .sort((a, b) => a.type?.localeCompare(b.type))
+          .map(member => {
+            if (member.id === createdById) {
+              return {...member, type: 'CREATOR'}
+            }
+            return member;
+          })
       ),
       switchMap((members) => {
         return this.authService.getUserProfiles(members.map((m) => m.id)).pipe(

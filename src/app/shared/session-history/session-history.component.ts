@@ -11,6 +11,7 @@ import {
 } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { EstimatorService } from 'src/app/services/estimator.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 import {
   ExportData,
   SerializerService,
@@ -60,6 +61,7 @@ export class SessionHistoryComponent implements OnInit {
   constructor(
     private estimatorService: EstimatorService,
     private readonly serializerService: SerializerService,
+    public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 

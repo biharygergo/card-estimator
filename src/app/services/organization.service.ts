@@ -99,6 +99,7 @@ export class OrganizationService {
       organizationId,
       emailStatus: 'pending',
       invitedById: user.uid,
+      status: 'pending'
     };
 
     await addDoc(

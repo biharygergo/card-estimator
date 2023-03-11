@@ -272,6 +272,8 @@ export type InvitationData = {
   organizationId: string;
   createdAt: FieldValue;
   emailStatus: 'pending' | 'success' | 'failure';
+  status: 'pending' | 'accepted';
+  acceptedAt?: FieldValue;
 };
 
 export interface Organization {

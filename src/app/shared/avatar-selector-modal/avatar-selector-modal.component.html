@@ -90,7 +90,7 @@
                 <div class="data-item">
                   <strong>Plan</strong>
                   <span *ngIf="activePlan$ | async as plan"
-                    >{{ plan?.amount / 100 }} {{ plan?.currency }}/{{
+                    >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
                       plan?.interval
                     }}</span
                   >

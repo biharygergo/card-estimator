@@ -236,7 +236,7 @@ export class AuthService {
     const userDetails: UserDetails = {
       id: user.uid,
       email: user.email,
-      displayName: user.displayName,
+      displayName: user.displayName ?? user.email?.split('@')[0],
       avatarUrl: new SupportedPhotoUrlPipe().transform(user.photoURL),
       createdAt: serverTimestamp(),
     };

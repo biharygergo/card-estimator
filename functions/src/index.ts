@@ -20,6 +20,19 @@ import {
   onUserDetailsUpdate,
 } from "./profile/onUserCreateUpdate";
 import {getFirestore} from "firebase-admin/firestore";
+import {
+  enterProtectedRoom,
+  setRoomPassword,
+} from "./room/password-protection";
+import {
+  acceptInvitation,
+  onOrganizationInviteCreated,
+} from "./organizations/invitation";
+import {onOrganizationUpdated} from "./organizations/protection";
+import {
+  onCustomerSubscriptionCreated,
+  onCustomerSubscriptionUpdated,
+} from "./customers/subscription";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -91,6 +104,38 @@ exports.reportAnIssue = functions.https.onRequest(async (req, res) => {
 exports.onUserDetailsCreate = functions.firestore
     .document("userDetails/{userId}")
     .onCreate(onUserDetailsCreate);
+
 exports.onUserDetailsUpdate = functions.firestore
     .document("userDetails/{userId}")
     .onUpdate(onUserDetailsUpdate);
+
+exports.setRoomPassword = functions.https.onCall(
+    async (data: any, context: CallableContext) => setRoomPassword(data, context)
+);
+
+exports.enterProtectedRoom = functions.https.onCall(
+    async (data: any, context: CallableContext) =>
+      enterProtectedRoom(data, context)
+);
+
+exports.onOrganizationUpdated = functions.firestore
+    .document("organizations/{organizationId}")
+    .onUpdate(onOrganizationUpdated);
+
+exports.onOrganizationInvitation = functions.firestore
+    .document("organizations/{organizationId}/memberInvitations/{invitationId}")
+    .onCreate(onOrganizationInviteCreated);
+
+exports.acceptOrganizationInvitation = functions.https.onRequest(
+    async (req, res) => {
+      cookieParser()(req, res, () => acceptInvitation(req, res));
+    }
+);
+
+exports.onUserSubscriptionCreated = functions.firestore
+    .document("customers/{customerId}/subscriptions/{subscriptionId}")
+    .onCreate(onCustomerSubscriptionCreated);
+
+exports.onUserSubscriptionUpdated = functions.firestore
+    .document("customers/{customerId}/subscriptions/{subscriptionId}")
+    .onUpdate(onCustomerSubscriptionUpdated);

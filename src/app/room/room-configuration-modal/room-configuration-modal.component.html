@@ -1,0 +1,245 @@
+<h1 mat-dialog-title class="dialog-title">
+  Room security & permissions <mat-chip class="beta-chip">Beta</mat-chip>
+</h1>
+<div mat-dialog-content>
+  <div class="premium-banner" *ngIf="!(isPremiumSubscriber$ | async)">
+    <h2 class="title">Premium Feature</h2>
+    <p>
+      Setting up your room's security and permissions is a new feature available
+      for Premium subscribers. See how it suits your team with a 14-day free
+      trial.
+    </p>
+    <div class="premium-banner-buttons">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="subscribeToPremium()"
+        [disabled]="isLoadingStripe"
+      >
+        {{
+          isLoadingStripe
+            ? "Redirecting you to Stripe..."
+            : "Subscribe to Premium"
+        }}
+      </button>
+      <button mat-button (click)="openLearnMore()" class="learn-more">
+        Learn more
+      </button>
+    </div>
+  </div>
+  <mat-tab-group
+    class="custom-tab-group"
+    mat-align-tabs="center"
+    [dynamicHeight]="true"
+    backgroundColor="primary"
+  >
+    <mat-tab label="Security">
+      <div class="tab-content">
+        <div class="tab-section">
+          <div class="protection-detail">
+            <p>
+              <strong>Password protection</strong>
+              <br />
+              <small
+                >Only people who know the password will be able to enter the
+                planning session. Existing participants will need to re-join if
+                a new password is set.</small
+              >
+            </p>
+
+            <div class="toggle-container">
+              <span
+                [matTooltip]="
+                  !(isPasswordSet$ | async)
+                    ? 'You must save a password first to enable this protection'
+                    : ''
+                "
+              >
+                <mat-slide-toggle
+                  color="primary"
+                  (change)="togglePasswordProtection()"
+                  [checked]="
+                    (authorizationMetadata$ | async)?.passwordProtectionEnabled
+                  "
+                  [disabled]="
+                    !(isPasswordSet$ | async) || !hasConfigurationAccess
+                  "
+                ></mat-slide-toggle
+              ></span>
+            </div>
+          </div>
+
+          <mat-form-field class="room-id" appearance="outline">
+            <mat-label>{{
+              (isPasswordSet$ | async) ? "Update password" : "Create password"
+            }}</mat-label>
+            <input matInput type="password" [formControl]="roomPassword" />
+            <mat-error *ngIf="roomPassword.errors?.minlength">Password must be at least 8 characters long</mat-error>
+          </mat-form-field>
+          <div>
+            <button
+              mat-flat-button
+              color="primary"
+              class="update-password-button"
+              (click)="saveRoomPassword()"
+              [disabled]="
+                !roomPassword.value ||
+                !roomPassword.valid ||
+                !hasConfigurationAccess ||
+                isSavingPassword
+              "
+            >
+              {{ isSavingPassword ? 'Setting password...' : 'Save password' }}
+            </button>
+          </div>
+        </div>
+        <div class="tab-section">
+          <div class="protection-detail">
+            <p>
+              <strong>Organization protection</strong>
+              <br /><small
+                >Only people who are part of your organization will be able to
+                enter the room. Existing participants will need to re-join if
+                organization protection is set.</small
+              >
+            </p>
+            <div class="toggle-container">
+              <span
+                [matTooltip]="
+                  !organization
+                    ? 'You must create an organization first to enable this protection'
+                    : ''
+                "
+              >
+                <mat-slide-toggle
+                  color="primary"
+                  (change)="toggleOrganizationProtection()"
+                  [checked]="
+                    (authorizationMetadata$ | async)?.organizationProtection
+                  "
+                  [disabled]="!(hasConfigurationAccess && organization)"
+                >
+                </mat-slide-toggle>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Permissions">
+      <div class="tab-content">
+        <div class="tab-section">
+          <div class="permissions-container">
+            <div
+              class="permission"
+              *ngFor="let configuration of permissionForms; let i = index"
+            >
+              <h4 class="permission-title">
+                <mat-icon>{{ configuration.icon }}</mat-icon
+                >{{ configuration.prompt }}
+              </h4>
+              <mat-chip-listbox
+                aria-label="Topic editors"
+                class="chip-selector"
+                multiple
+                selectable
+                [disabled]="!hasConfigurationAccess"
+              >
+                <mat-chip-option
+                  *ngFor="let option of configuration.options"
+                  [selected]="configuration.isSelected(option.value)"
+                  (click)="configuration.toggleOption(option.value)"
+                  class="role-option"
+                  [disabled]="!hasConfigurationAccess"
+                  >{{ option.label }}</mat-chip-option
+                >
+              </mat-chip-listbox>
+              <mat-divider *ngIf="i < permissionForms.length - 1"></mat-divider>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Participants">
+      <div class="tab-content">
+        <div class="tab-section">
+          <span
+            [matTooltip]="
+              (authService.user | async)?.isAnonymous
+                ? 'You need to create a permanent account before creating an organization'
+                : ''
+            "
+            ><button
+              mat-stroked-button
+              (click)="openOrganizationModal()"
+              [disabled]="(authService.user | async)?.isAnonymous"
+            >
+              <mat-icon>groups</mat-icon
+              >{{
+                organization ? "Manage organization" : "Create organization"
+              }}
+            </button>
+          </span>
+          <mat-list class="participants-list">
+            <mat-list-item *ngFor="let member of members$ | async">
+              <span matListItemAvatar class="avatar">
+                <img
+                  *ngIf="member.avatarUrl"
+                  [src]="member.avatarUrl"
+                  class="avatar-image"
+                  alt="A user's avatar"
+                />
+                <div class="avatar-text" *ngIf="!member.avatarUrl">
+                  {{ member.name?.charAt(0) }}
+                </div>
+              </span>
+              <h3 matLine class="member">
+                <span class="member-name">
+                  {{ member.name }}
+                  <mat-icon class="verified-icon" *ngIf="member.isPermanent"
+                    >verified</mat-icon
+                  >
+                </span>
+              </h3>
+              <small matLine>
+                {{ member.type | titlecase }}
+              </small>
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                matListItemMeta
+              >
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button
+                  mat-menu-item
+                  [disabled]="
+                    !organization ||
+                    organization.memberIds.includes(member.id) ||
+                    organization.createdById !== (user$ | async)?.uid ||
+                    !member.isPermanent
+                  "
+                  (click)="addToOrganization(member.id)"
+                >
+                  <mat-icon>group_add</mat-icon> Add to organization
+                </button>
+                <mat-divider></mat-divider>
+                <button
+                  mat-menu-item
+                  (click)="removeMember(member)"
+                  [disabled]="!hasConfigurationAccess"
+                >
+                  <mat-icon>person_remove</mat-icon> Remove from room
+                </button>
+              </mat-menu>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>Close</button>
+</div>

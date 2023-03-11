@@ -1,13 +1,90 @@
 rules_version = '2';
 service cloud.firestore {
+
   match /databases/{database}/documents {
 
-    match /rooms/{document} {
-      allow get: if request.auth != null;
+    function isPremiumSubscriber(request) {
+      return 'stripeRole' in request.auth.token ? request.auth.token.stripeRole == 'premium' : false;
+    }
+
+    match /rooms/{roomId} {
+      allow get: if isAccessAllowed(request);
       allow list: if request.auth.uid in resource.data.memberIds;
-      allow update: if request.auth != null;
+      allow update: if isAccessAllowed(request) && !isUpdatingSubscriptionMetadata(request, resource);
       allow delete: if false;
-      allow create: if request.auth != null;
+      allow create: if isAccessAllowed(request) && isValidPlanInSubscriptionMetadata(request);
+
+      function isValidPlanInSubscriptionMetadata(request) {
+        let subscriptionMetadata = 'subscriptionMetadata' in request.resource.data ? request.resource.data.subscriptionMetadata : {};
+        let currentPlan = subscriptionMetadata.get('createdWithPlan', 'basic');
+        return !(!isPremiumSubscriber(request) && currentPlan != 'basic')
+      }
+
+      function isUpdatingSubscriptionMetadata(request, resource) {
+        return request.resource.data.diff(resource.data).affectedKeys().hasAny(['subscriptionMetadata'])
+      }
+
+      function isAccessAllowed(request) {
+        let meta = hasMetadataSet() ? getAuthorizationMetadata().data : {};
+
+        let isPasswordProtected = meta.get('passwordProtectionEnabled', false);
+        let organizationOnlyProtectedId = meta.get('organizationProtection', false);
+
+        let roomAccessValue = isPasswordProtected ? hasSavedPasswordAccessForUserId(request) ? getPasswordAccessForUserId(request) : {} : {};
+        let isExpired = 'expiresAt' in roomAccessValue ? roomAccessValue.expiresAt < request.time : false;
+        let isHashMatching = 'hash' in roomAccessValue ? roomAccessValue.hash == getPasswordHash() : false;
+      
+        return request.auth != null && (
+            !isPasswordProtected || 
+            (
+              !isExpired &&
+              isHashMatching
+            )
+          ) && (
+            (organizationOnlyProtectedId == '' || organizationOnlyProtectedId == false || organizationOnlyProtectedId == null) || (
+              request.auth.uid in getOrganization(organizationOnlyProtectedId).data.memberIds
+            )
+          );
+      }
+
+      function hasMetadataSet() {
+        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization);
+      }
+
+      function getAuthorizationMetadata() {
+        return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/authorization);
+      }
+    
+      function getRoom() {
+        return get(/databases/$(database)/documents/rooms/$(roomId));
+      }
+
+      function getPasswordHash() {
+        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection) ? 
+        get(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection).data.value : '';
+      }
+
+      function hasSavedPasswordAccessForUserId(request) {
+        return exists(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection/accessList/$(request.auth.uid));
+      }
+
+      function getPasswordAccessForUserId(request) {
+        return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection/accessList/$(request.auth.uid)).data;
+      }
+
+      function getOrganization(organizationId) {
+        return get(/databases/$(database)/documents/organizations/$(organizationId));
+      }
+
+      match /metadata/authorization {
+        allow write: if request.auth.uid == getRoom().data.createdById && isPremiumSubscriber(request);
+        allow read: if true;
+      }
+
+      match /metadata/passwordProtection {
+        allow write: if false;
+        allow read: if isAccessAllowed(request);
+      }
     }
 
     match /userDetails/{userId} {
@@ -17,6 +94,20 @@ service cloud.firestore {
     match /userProfiles/{userId} {
       allow get: if true;
       allow list, update, create, delete: if false;
+    }
+
+    match /organizations/{organizationId} {
+      allow read: if request.auth.uid in resource.data.memberIds;
+      allow write: if request.auth.uid == request.resource.data.createdById;
+      allow update: if request.auth.uid == resource.data.createdById;
+
+      function getOrganization(organizationId) {
+        return get(/databases/$(database)/documents/organizations/$(organizationId));
+      }
+      
+      match /memberInvitations/{invitationId} {
+        allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;
+      }
     }
     
     match /invitations/{invitationId} {
@@ -30,6 +121,29 @@ service cloud.firestore {
 
      match /feedbacks/{feedbackId} {
       allow write, read: if request.auth.uid == request.resource.data.userId;
+    }
+
+    match /customers/{uid} {
+      allow read, write: if request.auth.uid == uid;
+
+      match /checkout_sessions/{id} {
+        allow read, write: if request.auth.uid == uid;
+      }
+      match /subscriptions/{id} {
+        allow read: if request.auth.uid == uid;
+      }
+    }
+
+    match /products/{id} {
+      allow read: if true;
+
+      match /prices/{id} {
+        allow read: if true;
+      }
+
+      match /tax_rates/{id} {
+        allow read: if true;
+      }
     }
   }
 }

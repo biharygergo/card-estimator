@@ -1,11 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
+import { roomConfigurationModalCreator } from 'src/app/room/room-configuration-modal/room-configuration-modal.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { organizationModalCreator } from '../organization-modal/organization-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -15,13 +19,18 @@ import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-mod
 export class ProfileDropdownComponent implements OnInit {
   currentUser = this.auth.user;
 
+  currentRoomId$: Observable<string | null> = this.activeRoute.paramMap.pipe(
+    map((paramMap) => paramMap.get('roomId'))
+  );
+
   constructor(
     private auth: AuthService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
     @Inject(APP_CONFIG) public config: AppConfig,
-    private readonly zoomService: ZoomApiService
+    private readonly zoomService: ZoomApiService,
+    private readonly activeRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {}
@@ -57,6 +66,10 @@ export class ProfileDropdownComponent implements OnInit {
   openAvatarSelector() {
     this.dialog.open(...avatarModalCreator({}));
     this.analytics.logClickedEditAvatar('profile_icon');
+  }
+
+  openOrganizationModal() {
+    this.dialog.open(...organizationModalCreator());
   }
 
   reportAnIssue() {

@@ -37,6 +37,8 @@ export enum SignUpOrLoginIntent {
 
 export interface SignUpOrLoginDialogData {
   intent: SignUpOrLoginIntent;
+  titleOverride?: string;
+  descriptionOverride?: string;
 }
 export const signUpOrLoginDialogCreator = (
   data: SignUpOrLoginDialogData
@@ -57,7 +59,7 @@ export const signUpOrLoginDialogCreator = (
 })
 export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();
-  onCreateAccountClicked = new Subject<void>();
+  onCreateAccountClicked = new Subject<'sign-in' | 'sign-up'>();
 
   form = new FormGroup({
     email: new FormControl<string>('', {
@@ -84,7 +86,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     private readonly zoomApiService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    private readonly dialogData: SignUpOrLoginDialogData,
+    public readonly dialogData: SignUpOrLoginDialogData,
     public dialogRef: MatDialogRef<SignUpOrLoginDialogComponent>,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {
@@ -116,7 +118,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
     this.onCreateAccountClicked
       .pipe(
-        switchMap(() => {
+        switchMap((signupType) => {
           this.isBusy.next(true);
           this.errorMessage$.next('');
           const email = this.form.value.email;
@@ -128,10 +130,10 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
               password
             );
           } else {
-            signInPromise = this.authService.signInWithEmailAndPassword(
-              email,
-              password
-            );
+            signInPromise =
+              signupType === 'sign-in'
+                ? this.authService.signInWithEmailAndPassword(email, password)
+                : this.authService.signUpWithEmailAndPassword(email, password);
           }
           return from(signInPromise).pipe(
             map(() => true),

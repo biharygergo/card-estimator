@@ -1,0 +1,107 @@
+.permission {
+  margin-bottom: 1rem;
+  .permission-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .chip-selector {
+    margin-bottom: 1rem;
+  }
+}
+
+.role-option {
+  background: transparent;
+  border: 1px solid;
+  --mdc-chip-label-text-color: black;
+  --mdc-chip-with-icon-selected-icon-color: black;
+  font-weight: 500;
+
+  &.mat-mdc-chip-selected {
+    --mdc-chip-label-text-color: black;
+    --mdc-chip-with-icon-selected-icon-color: black;
+    background: #d4e3c4;
+    border: none;
+  }
+
+  &.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+    opacity: 0.8;
+  }
+
+  .mat-mdc-chip-action-label {
+    font-weight: 500;
+  }
+}
+
+.room-id {
+  width: 100%;
+}
+
+// TODO: Move this to a shared stylesheet
+.member {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0 !important;
+  flex-wrap: wrap;
+}
+
+.member-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .verified-icon {
+    height: 16px;
+    width: 16px;
+    font-size: 16px;
+    color: #345ca8;
+  }
+}
+
+.participants-list {
+  margin: 1rem 0rem;
+}
+
+.update-password-button {
+  margin-bottom: 1rem;
+}
+
+.status-badge {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  margin-left: 1rem;
+
+  &.inactive {
+    background: #ffdad6;
+  }
+
+  &.active {
+    background: #d4e3c4;
+  }
+}
+
+.creator-warning {
+  margin: 0.5rem 0;
+}
+
+.protection-detail {
+  display: flex;
+  gap: 3rem;
+
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  mat-slide-toggle {
+    transform: scale(1.3);
+  }
+}

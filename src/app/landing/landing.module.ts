@@ -19,6 +19,10 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
 import { WrapperComponent } from './wrapper/wrapper.component';
 import { ZoomComponent } from './zoom/zoom.component';
+import { OrganizationInvitationComponent } from './organization-invitation/organization-invitation.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { PremiumComponent } from './premium/premium.component';
+import { PremiumLearnMoreComponent } from '../shared/premium-learn-more/premium-learn-more.component';
 
 const routes: Routes = [
   {
@@ -50,6 +54,16 @@ const routes: Routes = [
     component: ZoomComponent,
     data: { title: 'Zoom Integration' },
   },
+  {
+    path: 'organizationInvitation',
+    component: OrganizationInvitationComponent,
+    data: { title: 'Organization invitation' },
+  },
+  {
+    path: 'premium',
+    loadComponent: () => import('./premium/premium.component').then(mod => mod.PremiumComponent),
+    data: { title: 'Premium' },
+  },
 ];
 
 @NgModule({
@@ -64,11 +78,13 @@ const routes: Routes = [
     HomeComponent,
     WrapperComponent,
     HeaderV2Component,
+    OrganizationInvitationComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     ZoomAppBannerComponent,
+    PremiumComponent,
     MatCardModule,
     MatButtonModule,
     MatSnackBarModule,
@@ -76,7 +92,8 @@ const routes: Routes = [
     MatDividerModule,
     MatIconModule,
     MatTabsModule,
-    ZoomAppBannerComponent
+    MatDialogModule,
+    ZoomAppBannerComponent,
   ],
 })
 export class LandingModule {}

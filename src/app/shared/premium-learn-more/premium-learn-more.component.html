@@ -1,0 +1,115 @@
+<div class="content">
+  <div class="close-button" *ngIf="pageMode === 'modal'">
+    <button mat-button mat-dialog-close>
+      <mat-icon>arrow_back</mat-icon>Back
+    </button>
+  </div>
+
+  <div class="details">
+    <div class="details-inner">
+      <h1 class="title">Why you should upgrade to Planning Poker Premium</h1>
+      <p class="description">
+        By subscribing now, you'll have access to all of these premium features
+        and support the ongoing maintenance and improvement of our open-source
+        project.
+      </p>
+      <ul class="premium-features-list">
+        <li>
+          <div class="icon">
+            <mat-icon>security</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Private rooms</h5>
+            Create private rooms protected by a password
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>apartment</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Organizations & branding</h5>
+            Create an organization with branding support
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>settings_input_composite</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Custom permissions</h5>
+            Adjust room member permissions to your preferences
+          </div>
+        </li>
+        <li class="spacer-below">
+          <div class="icon">
+            <mat-icon>manage_history</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Full history</h5>
+            Unlock your full planning history
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>integration_instructions</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Integrate with JIRA <span class="badge">Coming soon</span></h5>
+            Seamless ticket imports and exports
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>group_work</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Team management <span class="badge">Coming soon</span></h5>
+            Create sub-teams in your organization, invite members to rooms
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="sidebar">
+    <mat-card appearance="outlined" class="get-premium-card">
+      <mat-card-content>
+        <h2>Subscribe to Premium today</h2>
+        <p class="premium-description">
+          Start with a 14 day free-trial, so you can explore all premium
+          features.
+        </p>
+
+        <h3 class="plan-title">Premium Plan</h3>
+        <div class="plan">
+          <div class="monthly">
+            <div class="logo-container">
+              <img class="logo" src="/assets/logo.png" />
+            </div>
+            <h2 class="monthly-price">€15 /month</h2>
+            <span class="free-trial">14 days free</span>
+          </div>
+          <div class="yearly">
+            <span
+              ><span class="saving">Save €30</span> with annual billing</span
+            >
+            <span class="yearly-price">€150 /year</span>
+          </div>
+        </div>
+        <div class="stripe">
+          <p class="description">Secure global payment and invoicing with</p>
+          <img src="/assets/stripe.png" class="stripe-logo" />
+        </div>
+
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="subscribeToPremium()"
+          [disabled]="isPremium$ | async"
+        >
+          {{ isLoadingStripe ? "Redirecting to Stripe..." : "Get Premium now" }}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

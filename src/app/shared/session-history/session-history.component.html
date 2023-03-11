@@ -55,12 +55,11 @@
                 mat-stroked-button
                 color="primary"
                 [routerLink]="'/room/' + session.roomId"
-                >
+              >
                 <mat-icon>history</mat-icon>
                 Rejoin
-                </a
-              >
-              <div
+              </a>
+              <!-- <div
                 [matTooltip]="
                   config.isRunningInZoom
                     ? 'Downloading results is only available on the web version of the app.'
@@ -71,12 +70,15 @@
                   mat-stroked-button
                   color="secondary"
                   (click)="downloadResults(session)"
-                  [disabled]="config.isRunningInZoom"
+                  [disabled]="
+                    config.isRunningInZoom ||
+                    !(permissionsService.canDownloadResults() | async)
+                  "
                 >
                   <mat-icon>download_for_offline</mat-icon>
                   Download
                 </button>
-              </div>
+              </div> -->
             </div>
           </mat-expansion-panel>
         </mat-accordion>

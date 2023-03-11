@@ -6,7 +6,17 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
-import { catchError, map, mergeMap, Observable, of, take, tap } from 'rxjs';
+import {
+  catchError,
+  delay,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import {
   EstimatorService,
@@ -14,6 +24,7 @@ import {
   NotLoggedInError,
   RoomNotFoundError,
 } from '../services/estimator.service';
+import { PermissionsService } from '../services/permissions.service';
 import { MemberStatus, Room } from '../types';
 
 @Injectable({
@@ -24,12 +35,13 @@ export class RoomResolver implements Resolve<Room> {
     private estimatorService: EstimatorService,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private readonly permissionsService: PermissionsService
   ) {}
   resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(
       take(1),
-      mergeMap((user) => {
+      switchMap((user) => {
         const roomId = route.paramMap.get('roomId');
 
         if (!user?.uid) {
@@ -40,19 +52,32 @@ export class RoomResolver implements Resolve<Room> {
           map((room) => ({ room, user }))
         );
       }),
-      tap(({ room, user }) => {
+      switchMap(({ room, user }) => {
         const activeMember = room.members.find((m) => m.id === user.uid);
 
         if (!activeMember) {
           throw new MemberNotFoundError();
         }
 
-        if (activeMember.status === MemberStatus.LEFT_ROOM) {
-          this.estimatorService.joinRoom(room.roomId, {
-            ...activeMember,
-            status: MemberStatus.ACTIVE,
-          });
+        if (
+          activeMember.status !== MemberStatus.ACTIVE ||
+          !room.memberIds.includes(user.uid)
+        ) {
+          return of(
+            this.estimatorService.joinRoom(room.roomId, {
+              ...activeMember,
+              status: MemberStatus.ACTIVE,
+            })
+          ).pipe(
+            delay(1000),
+            map(() => ({ room, user }))
+          );
         }
+
+        return of({ room, user });
+      }),
+      tap(({ room, user }) => {
+        this.permissionsService.initializePermissions(room, user.uid);
       }),
       map(({ room }) => room),
       catchError((error) => {
@@ -63,7 +88,8 @@ export class RoomResolver implements Resolve<Room> {
           this.router.navigate(['join'], { queryParams: { error: 1 } });
         } else if (
           error instanceof MemberNotFoundError ||
-          error instanceof NotLoggedInError
+          error instanceof NotLoggedInError ||
+          error?.code === 'permission-denied'
         ) {
           this.showMessage(
             'You have not joined this room before. Join as an estimator or observer now!'

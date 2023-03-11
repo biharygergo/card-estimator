@@ -11,6 +11,11 @@ import {
   where,
 } from '@angular/fire/firestore';
 import {
+  Functions,
+  httpsCallable,
+  httpsCallableData,
+} from '@angular/fire/functions';
+import {
   uniqueNamesGenerator,
   Config,
   adjectives,
@@ -19,7 +24,15 @@ import {
   starWars,
 } from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
+import {
+  catchError,
+  filter,
+  first,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   Room,
   Member,
@@ -30,6 +43,9 @@ import {
   CustomCardSet,
   MemberStatus,
   Timer,
+  RoomConfiguration,
+  AuthorizationMetadata,
+  SubscriptionMetadata,
 } from './../types';
 import {
   collection,
@@ -42,6 +58,8 @@ import {
 import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
+import { OrganizationService } from './organization.service';
+import { PaymentService } from './payment.service';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -57,7 +75,13 @@ export class EstimatorService {
 
   activeMember: Member;
 
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService,
+    private functions: Functions,
+    private readonly paymentService: PaymentService,
+    private readonly organizationService: OrganizationService
+  ) {}
 
   createId() {
     return doc(collection(this.firestore, '_')).id;
@@ -120,6 +144,8 @@ export class EstimatorService {
       roomId = uniqueNamesGenerator({ ...customConfig, length: 4 });
     }
 
+    const subscriptionMetadata = await this.getSubscriptionMetadata();
+
     const room: Room = {
       id: this.createId(),
       roomId,
@@ -131,6 +157,7 @@ export class EstimatorService {
       cardSet: CardSet.DEFAULT,
       createdById: member.id,
       memberIds: [member.id],
+      subscriptionMetadata,
     };
 
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
@@ -138,6 +165,19 @@ export class EstimatorService {
     this.activeMember = member;
 
     return { room, member };
+  }
+
+  private async getSubscriptionMetadata(): Promise<SubscriptionMetadata> {
+    const isPremium = await this.paymentService.isPremiumSubscriber();
+    const organization = await firstValueFrom(
+      this.organizationService.getMyOrganization()
+    );
+    const subscriptionMetadata: SubscriptionMetadata = {
+      createdWithPlan: isPremium ? 'premium' : 'basic',
+      createdWithOrganization: organization ? organization.id : null,
+    };
+
+    return subscriptionMetadata;
   }
 
   async doesRoomAlreadyExist(roomId: string): Promise<boolean> {
@@ -166,21 +206,19 @@ export class EstimatorService {
     return member;
   }
 
-  async leaveRoom(roomId: string, member: Member) {
+  async updateMemberStatus(
+    roomId: string,
+    member: Member,
+    status = MemberStatus.LEFT_ROOM
+  ) {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
     const updatedMember = room.members.find((m) => m.id === member.id);
 
-    updatedMember.status = MemberStatus.LEFT_ROOM;
+    updatedMember.status = status;
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       members: updatedMembers,
-    });
-  }
-
-  async removeMember(roomId: string, member: Member) {
-    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
-      members: arrayRemove(member),
     });
   }
 
@@ -210,9 +248,9 @@ export class EstimatorService {
     );
   }
 
-  updateRoom(room: Room) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      ...room,
+  updateRoom(roomId: string, fields: Partial<Room>) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      ...fields,
     });
   }
 
@@ -234,6 +272,12 @@ export class EstimatorService {
     });
   }
 
+  setConfiguration(roomId: string, configuration: RoomConfiguration) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      configuration,
+    });
+  }
+
   private getRoundIds(room: Room) {
     const currentRoundId =
       room.currentRound ?? Object.keys(room.rounds).length - 1;
@@ -248,9 +292,11 @@ export class EstimatorService {
     const { currentRoundId, nextRoundId, nextRoundNumber } =
       this.getRoundIds(room);
     room.rounds[currentRoundId].finished_at = serverTimestamp();
-    room.currentRound = nextRoundId;
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
-    return this.updateRoom(room);
+    return this.updateRoom(room.roomId, {
+      rounds: room.rounds,
+      currentRound: nextRoundId,
+    });
   }
 
   addRound(room: Room, topic: string) {
@@ -261,7 +307,7 @@ export class EstimatorService {
       nextRoundNumber,
       topic
     );
-    return this.updateRoom(room);
+    return this.updateRoom(room.roomId, { rounds: room.rounds });
   }
 
   setActiveRound(room: Room, roundId: number, shouldRevote: boolean) {
@@ -270,7 +316,10 @@ export class EstimatorService {
       const round = room.rounds[roundId];
       room.rounds[roundId] = this.revoteRound(round);
     }
-    return this.updateRoom(room);
+    return this.updateRoom(room.roomId, {
+      currentRound: roundId,
+      rounds: room.rounds,
+    });
   }
 
   setEstimate(
@@ -414,5 +463,107 @@ export class EstimatorService {
         });
       })
     );
+  }
+
+  async setRoomPassword(roomId: string, password: string) {
+    const result = await httpsCallable(
+      this.functions,
+      'setRoomPassword'
+    )({ password, roomId });
+    await this.authService.refreshIdToken();
+    return result;
+  }
+
+  async joinRoomWithPassword(roomId: string, password: string) {
+    const result = await httpsCallable(
+      this.functions,
+      'enterProtectedRoom'
+    )({ password, roomId });
+    await this.authService.refreshIdToken();
+    return result;
+  }
+
+  getAuthorizationMetadata(roomId: string): Observable<AuthorizationMetadata> {
+    return docData<AuthorizationMetadata>(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'authorization'
+      ) as DocumentReference<AuthorizationMetadata>
+    );
+  }
+
+  isPasswordSet(roomId: string): Observable<boolean> {
+    return docData<any>(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'passwordProtection'
+      ) as DocumentReference<any>
+    ).pipe(map((data) => !!data?.value));
+  }
+
+  async togglePasswordProtection(roomId: string, isEnabled: boolean) {
+    const existingMeta = await firstValueFrom(
+      this.getAuthorizationMetadata(roomId)
+    );
+
+    const meta: AuthorizationMetadata = {
+      ...existingMeta,
+      passwordProtectionEnabled: isEnabled,
+    };
+    return setDoc(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'authorization'
+      ),
+      meta
+    );
+  }
+
+  async toggleOrganizationProtection(
+    roomId: string,
+    isEnabled: boolean,
+    organizationId: string
+  ) {
+    const existingMeta = await firstValueFrom(
+      this.getAuthorizationMetadata(roomId)
+    );
+
+    const meta: AuthorizationMetadata = {
+      ...existingMeta,
+      organizationProtection: isEnabled ? organizationId : null,
+    };
+
+    const currentRoom = await this.getRoom(roomId);
+    const organization = await firstValueFrom(
+      this.organizationService.getOrganization(organizationId)
+    );
+    const memberIds = currentRoom.memberIds.filter((memberId) =>
+      organization.memberIds.includes(memberId)
+    );
+
+    await setDoc(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'authorization'
+      ),
+      meta
+    );
+
+    // Update room members to be organization-only
+    if (isEnabled) {
+      await this.updateRoom(roomId, { memberIds });
+    }
   }
 }

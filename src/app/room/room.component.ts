@@ -8,18 +8,23 @@ import {
 } from '@angular/core';
 import {
   EstimatorService,
+  MemberNotFoundError,
+  RoomNotFoundError,
 } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  catchError,
   combineLatest,
   distinctUntilChanged,
+  EMPTY,
   filter,
   first,
   map,
   Observable,
+  of,
   share,
   shareReplay,
   startWith,
@@ -27,15 +32,18 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
   CardSetValue,
   CARD_SETS,
+  DEFAULT_ROOM_CONFIGURATION,
   Member,
   MemberStatus,
   MemberType,
   Room,
+  RoomPermissionId,
   Round,
   RoundStatistics,
   UserProfileMap,
@@ -60,7 +68,14 @@ import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selec
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
-import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { PermissionsService } from '../services/permissions.service';
+import { isEqual } from 'lodash';
+import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
+import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -108,19 +123,20 @@ export class RoomComponent implements OnInit, OnDestroy {
         .getRoomById(roomId)
         .pipe(startWith(this.route.snapshot.data.room))
     ),
+    catchError((e) => this.onRoomUpdateError(e)),
     share(),
     takeUntil(this.destroy)
   );
 
   members$: Observable<Member[]> = this.room$.pipe(
-    map((room) => room.members),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
-    map((members) =>
+    map((room) => [room.members, room.memberIds]),
+    distinctUntilChanged(isEqual),
+    map(([members, memberIds]) =>
       members
         .filter(
-          (m) => m.status === MemberStatus.ACTIVE || m.status === undefined
+          (m) =>
+            (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
+            memberIds.includes(m.id)
         )
         .sort((a, b) => a.type?.localeCompare(b.type))
     ),
@@ -140,10 +156,12 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.authService.user,
   ]).pipe(
     filter(([_room, user]) => !!user),
-    map(([room, user]) => room.members.find((m) => m.id === user.uid)?.type),
-    distinctUntilChanged(),
-    tap((memberType) => {
-      if (memberType === MemberType.OBSERVER) {
+    map(([room, user]) => room.members.find((m) => m.id === user.uid)),
+    distinctUntilChanged(isEqual),
+    tap((member) => {
+      if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
+        this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
+      } else if (member?.type === MemberType.OBSERVER) {
         this.joinAsObserver();
       }
     })
@@ -165,9 +183,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       const currentRound = room.rounds[room.currentRound ?? 0];
       return currentRound.estimates;
     }),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     tap((estimates) => {
       if (this.estimatorService.activeMember) {
         this.currentEstimate = estimates[this.estimatorService.activeMember.id];
@@ -191,6 +207,24 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  onPermissionsUpdated$ = this.room$.pipe(
+    map((room) => {
+      return {
+        permissions:
+          room.configuration?.permissions ||
+          DEFAULT_ROOM_CONFIGURATION.permissions,
+        room,
+      };
+    }),
+    distinctUntilChanged(isEqual),
+    tap(({ room }) => {
+      this.permissionsService.initializePermissions(
+        room,
+        this.estimatorService.activeMember.id
+      );
+    })
+  );
+
   sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
     first(),
     map((sessions) => sessions.length),
@@ -201,7 +235,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.onRoundNumberUpdated$,
     this.sessionCount$,
   ]).pipe(
-    distinctUntilChanged(),
+    distinctUntilChanged(isEqual),
     map(([roundNumber, sessionCount]) => {
       return (
         sessionCount > 1 &&
@@ -213,9 +247,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   userProfiles$: Observable<UserProfileMap> = this.members$.pipe(
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
-    ),
+    distinctUntilChanged(isEqual),
     switchMap((members) =>
       this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
     ),
@@ -239,6 +271,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private configService: ConfigService,
     private authService: AuthService,
     private zoomService: ZoomApiService,
+    public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -247,7 +280,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.zoomService.configureApp();
     }
 
-    this.room$.subscribe({ error: (error) => this.onRoomUpdateError(error) });
+    this.room$.subscribe();
     this.onRoomUpdated$.subscribe();
     this.onActiveMemberUpdated$.subscribe();
     this.onRoundNumberUpdated$.subscribe();
@@ -259,6 +292,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.openFeedbackSnackbar();
       }
     });
+    this.onPermissionsUpdated$.subscribe();
 
     this.authService.avatarUpdated
       .pipe(
@@ -312,8 +346,25 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  private onRoomUpdateError(error: Error) {
-    this.errorGoBackToJoinPage();
+  private onRoomUpdateError(error: any): Observable<any> {
+    if (error?.code === 'permission-denied') {
+      return this.dialog
+        .open(...roomAuthenticationModalCreator({ roomId: this.room.roomId }))
+        .afterClosed()
+        .pipe(
+          switchMap((result) => {
+            if (result && result?.joined) {
+              return this.estimatorService.getRoomById(this.room.roomId);
+            } else {
+              this.errorGoBackToJoinPage();
+              return EMPTY;
+            }
+          })
+        );
+    } else {
+      this.errorGoBackToJoinPage();
+      return EMPTY;
+    }
   }
 
   private joinAsObserver() {
@@ -393,7 +444,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         .open(
           'Stand out from the crowd by adding your avatar! 🤩 The avatar helps others recognize your votes.',
           'Set my avatar',
-          { duration: 20000, horizontalPosition: 'right' }
+          { duration: 10000, horizontalPosition: 'right' }
         )
         .onAction()
         .subscribe(() => {
@@ -452,10 +503,20 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   onTopicClicked() {
-    this.analytics.logClickedTopicName();
-    this.isEditingTopic = true;
-    this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
-    setTimeout(() => this.topicInput.nativeElement.focus(), 100);
+    return this.permissionsService
+      .hasPermission(RoomPermissionId.CAN_EDIT_TOPIC)
+      .pipe(
+        map((hasPermission) => {
+          if (hasPermission) {
+            this.analytics.logClickedTopicName();
+            this.isEditingTopic = true;
+            this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
+            setTimeout(() => this.topicInput.nativeElement.focus(), 100);
+          }
+        }),
+        first()
+      )
+      .subscribe();
   }
 
   async copyRoomId() {
@@ -549,7 +610,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       confirm('Do you really want to leave this estimation?')
     ) {
       if (this.estimatorService.activeMember) {
-        await this.estimatorService.leaveRoom(
+        await this.estimatorService.updateMemberStatus(
           this.room.roomId,
           this.estimatorService.activeMember
         );
@@ -640,6 +701,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       ...signUpOrLoginDialogCreator({
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
+    );
+  }
+
+  openRoomConfigurationModal() {
+    this.dialog.open(
+      ...roomConfigurationModalCreator({ roomId: this.room.roomId })
     );
   }
 }

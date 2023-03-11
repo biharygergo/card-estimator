@@ -25,6 +25,7 @@ export function isRunningInDevMode(req: functions.Request) {
     process.env.FUNCTIONS_EMULATOR === "true" ||
     host.includes("localhost") ||
     host.includes("staging.planningpoker.live") ||
+    host.includes("test.planningpoker.live") ||
     host.includes("ngrok");
   return isDev;
 }

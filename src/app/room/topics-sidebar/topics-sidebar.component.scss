@@ -44,6 +44,11 @@
 .add-round-button {
   width: 100%;
   background-color: var(--main-color);
+
+  &:disabled {
+    color: white;
+    opacity: 0.5;
+  }
 }
 
 .blob {

@@ -12,6 +12,13 @@
           "staging-planning-poker-live"
         ]
       }
+    },
+    "planning-poker-test-dc808": {
+      "hosting": {
+        "estimator": [
+          "planning-poker-test-dc808"
+        ]
+      }
     }
   },
   "etags": {}

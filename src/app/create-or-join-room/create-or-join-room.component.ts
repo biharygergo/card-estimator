@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Member, MemberType, MemberStatus } from '../types';
+import { Member, MemberType, MemberStatus, Organization } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -11,11 +11,15 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
+  EMPTY,
+  firstValueFrom,
   from,
   Observable,
+  of,
   Subject,
 } from 'rxjs';
 import {
+  catchError,
   filter,
   finalize,
   first,
@@ -27,8 +31,11 @@ import {
 } from 'rxjs/operators';
 import { User } from 'firebase/auth';
 import { AppConfig, AppConfigModule, APP_CONFIG } from '../app-config.module';
-import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
-import { ZoomApiService } from '../services/zoom-api.service';
+import {
+  delayedFadeAnimation,
+  fadeAnimation,
+  slideInRightAnimation,
+} from '../shared/animations';
 import { MatDialog } from '@angular/material/dialog';
 import {
   authProgressDialogCreator,
@@ -37,7 +44,14 @@ import {
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
-import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
+import { OrganizationService } from '../services/organization.service';
+import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
+import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -62,7 +76,7 @@ interface ViewModel {
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation],
+  animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl<string>('');
@@ -97,6 +111,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     })
   );
 
+  flowFromParams$: Observable<string> = this.activatedRoute.queryParamMap.pipe(
+    map((paramMap) => paramMap.get('flow'))
+  );
+
   currentPath: Observable<string> = this.activatedRoute.url.pipe(
     map((segments) => [...segments]?.pop()?.path)
   );
@@ -122,6 +140,16 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     tap(() => this.isLoadingUser.next(false))
   );
 
+  organization: Observable<Organization | undefined> = this.user.pipe(
+    switchMap((user) => {
+      if (!user?.isAnonymous) {
+        return this.organizationService.getMyOrganization();
+      } else {
+        return of(undefined);
+      }
+    })
+  );
+
   readonly PageMode = PageMode;
   readonly MemberType = MemberType;
 
@@ -133,8 +161,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private analytics: AnalyticsService,
     private authService: AuthService,
     private readonly cookieService: CookieService,
-    private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
+    private readonly organizationService: OrganizationService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -160,12 +188,40 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         tap(() => {
           this.isBusy.next(true);
         }),
-        switchMap(() => from(this.joinRoom())),
-        first(),
-        takeUntil(this.destroy),
-        finalize(() => this.isBusy.next(false))
+        switchMap(() =>
+          from(this.joinRoom()).pipe(
+            catchError((e) => {
+              if (e.code !== 'permission-denied') {
+                this.showUnableToJoinRoom();
+                return of(false);
+              } else {
+                const dialogRef = this.dialog.open(
+                  ...roomAuthenticationModalCreator({
+                    roomId: this.roomId.value,
+                  })
+                );
+                return dialogRef.afterClosed().pipe(
+                  first(),
+                  switchMap((result) => {
+                    if (result !== '' && result?.joined) {
+                      return from(this.joinRoom());
+                    } else {
+                      return of(false);
+                    }
+                  })
+                );
+              }
+            })
+          )
+        ),
+        tap(() => this.isBusy.next(false)),
+        takeUntil(this.destroy)
       )
-      .subscribe();
+      .subscribe((success) => {
+        if (success) {
+          this.router.navigate(['room', this.roomId.value]);
+        }
+      });
 
     this.onCreateRoomClicked
       .pipe(
@@ -173,7 +229,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           this.isBusy.next(true);
         }),
         switchMap(() => from(this.createRoom())),
-        first(),
         takeUntil(this.destroy),
         finalize(() => this.isBusy.next(false))
       )
@@ -182,7 +237,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.onSignInClicked
       .pipe(
         tap(() => {
-          this.dialog.open(...signUpOrLoginDialogCreator({intent: SignUpOrLoginIntent.SIGN_IN}));
+          this.dialog.open(
+            ...signUpOrLoginDialogCreator({
+              intent: SignUpOrLoginIntent.SIGN_IN,
+            })
+          );
         }),
         withLatestFrom(this.currentPath),
         tap(([_, currentPath]) => {
@@ -193,6 +252,27 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
+
+    this.flowFromParams$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(async (flowParam) => {
+        if (flowParam === 'premium') {
+          this.dialog.open(...premiumLearnMoreModalCreator());
+        } else if (flowParam === 'manageSubscription') {
+          const user = await this.authService.getUser();
+          if (user) {
+            this.dialog.open(
+              ...avatarModalCreator({ openAtTab: 'subscription' })
+            );
+          } else {
+            this.dialog.open(
+              ...signUpOrLoginDialogCreator({
+                intent: SignUpOrLoginIntent.SIGN_IN,
+              })
+            );
+          }
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -200,7 +280,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  async joinRoom() {
+  async joinRoom(): Promise<boolean> {
     const member: Member = {
       id: null,
       name: this.name.value,
@@ -208,21 +288,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       status: MemberStatus.ACTIVE,
     };
 
-    try {
-      this.snackBar.dismiss();
-      await this.estimatorService.joinRoom(this.roomId.value, member);
+    this.snackBar.dismiss();
+    await this.estimatorService.joinRoom(this.roomId.value, member);
 
-      const isObserver = this.joinAs.value === MemberType.OBSERVER;
-      if (isObserver) {
-        this.analytics.logClickedJoinAsObserver();
-      } else {
-        this.analytics.logClickedJoinedRoom();
-      }
-
-      return this.router.navigate(['room', this.roomId.value]);
-    } catch (e) {
-      this.showUnableToJoinRoom();
+    const isObserver = this.joinAs.value === MemberType.OBSERVER;
+    if (isObserver) {
+      this.analytics.logClickedJoinAsObserver();
+    } else {
+      this.analytics.logClickedJoinedRoom();
     }
+
+    return true;
   }
 
   showUnableToJoinRoom() {

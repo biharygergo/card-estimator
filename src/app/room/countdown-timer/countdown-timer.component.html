@@ -23,6 +23,7 @@
   <div class="controls">
     <button
       mat-stroked-button
+      [disabled]="!(permissionsService.canSetTimer() | async)"
       (click)="addSeconds()"
       *ngIf="
         timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
@@ -34,6 +35,7 @@
     </button>
     <button
       mat-stroked-button
+      [disabled]="!(permissionsService.canSetTimer() | async)"
       (click)="resetTimer(true)"
       *ngIf="timer.state === TimerState.STOPPED"
       id="reset-button"
@@ -47,7 +49,7 @@
       *ngIf="
         timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
       "
-      [disabled]="durationLeft === 0"
+      [disabled]="durationLeft === 0 || !(permissionsService.canSetTimer() | async)"
       id="start-button"
     >
       <mat-icon>play_arrow</mat-icon>
@@ -55,6 +57,7 @@
     </button>
     <button
       mat-stroked-button
+      [disabled]="!(permissionsService.canSetTimer() | async)"
       (click)="stopTimer(true)"
       *ngIf="timer.state === TimerState.ACTIVE"
       id="pause-button"

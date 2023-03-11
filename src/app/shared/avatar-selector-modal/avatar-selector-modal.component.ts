@@ -1,22 +1,28 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { User } from 'firebase/auth';
-import { BehaviorSubject, from, of, Subject } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
 import {
+  MatDialog,
   MatDialogConfig,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  PaymentService,
+  StripeSubscription,
+} from 'src/app/services/payment.service';
+import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
 export interface AvatarDialogData {
-  openAtTab?: 'profile' | 'avatar';
+  openAtTab?: 'profile' | 'avatar' | 'subscription';
 }
 
 export const avatarModalCreator = ({
@@ -27,6 +33,7 @@ export const avatarModalCreator = ({
     id: AVATAR_SELECTOR_MODAL,
     width: '90%',
     maxWidth: '600px',
+    maxHeight: '90vh',
     data: {
       openAtTab,
     },
@@ -50,10 +57,10 @@ const createAvatars = (
     facialHair = facialHairOptions[1].value;
   }
   if (hair === '') {
-    hair = hairOptions.map(option => option.value).join(',');
+    hair = hairOptions.map((option) => option.value).join(',');
   }
   if (skinTone === '') {
-    skinTone = skinToneOptions.map(option => option.value).join(',');
+    skinTone = skinToneOptions.map((option) => option.value).join(',');
   }
 
   for (let i = 0; i < count; i++) {
@@ -125,7 +132,9 @@ const AVATAR_COUNT = 59;
   styleUrls: ['./avatar-selector-modal.component.scss'],
 })
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
-  selectedTabIndex = this.dialogData.openAtTab === 'avatar' ? 1 : 0;
+  selectedTabIndex = { profile: 0, subscription: 1, avatar: 2 }[
+    this.dialogData.openAtTab ?? 'profile'
+  ];
 
   facialHairOptions: SelectOption[] = facialHairOptions;
   hairOptions: SelectOption[] = hairOptions;
@@ -158,12 +167,24 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   displayNameForm = new UntypedFormControl('');
   accountTypeForm = new UntypedFormControl({ value: '', disabled: true });
+  emailControl = new FormControl<string>({ value: '', disabled: true });
+
+  subscription$: Observable<StripeSubscription> =
+    this.paymentsService.getSubscription();
+
+  activePlan$ = this.subscription$.pipe(
+    map((subscription) => subscription?.items?.[0]?.plan)
+  );
+
+  isLoadingStripe = false;
 
   constructor(
     private auth: AuthService,
     private analytics: AnalyticsService,
     private snackBar: MatSnackBar,
+    private readonly paymentsService: PaymentService,
     public dialogRef: MatDialogRef<AvatarSelectorModalComponent>,
+    private readonly dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) private dialogData: AvatarDialogData
   ) {}
 
@@ -174,6 +195,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       this.accountTypeForm.setValue(
         user?.isAnonymous ? 'Anonymous' : 'Permanent'
       );
+      this.emailControl.setValue(user?.email);
     });
 
     this.onClickUpdateUserName
@@ -219,11 +241,11 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       AVATAR_COUNT,
       this.selectedFacialHairOption,
       Object.keys(this.selectedHairOptions)
-      .filter((key) => this.selectedHairOptions[key])
-      .join(','),
-    Object.keys(this.selectedSkinToneOptions)
-      .filter((key) => this.selectedSkinToneOptions[key])
-      .join(','),
+        .filter((key) => this.selectedHairOptions[key])
+        .join(','),
+      Object.keys(this.selectedSkinToneOptions)
+        .filter((key) => this.selectedSkinToneOptions[key])
+        .join(','),
       Math.random().toString()
     );
     this.analytics.logClickedRandomizeAvatars();
@@ -243,5 +265,19 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   signOut() {
     this.auth.signOut();
     this.dialogRef.close();
+  }
+
+  async subscribeToPremium() {
+    this.isLoadingStripe = true;
+    await this.paymentsService.startSubscriptionToPremium();
+  }
+
+  async redirectToCustomerPortal() {
+    this.isLoadingStripe = true;
+    await this.paymentsService.createPortalLink();
+  }
+
+  openLearnMore() {
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

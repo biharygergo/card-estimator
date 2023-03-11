@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Auth,
+  createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
   signInWithCredential,
@@ -34,6 +35,7 @@ import {
   map,
   Observable,
   Subject,
+  tap,
 } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { UserDetails, UserProfile, UserProfileMap } from '../types';
@@ -98,6 +100,15 @@ export class AuthService {
     return this.auth.currentUser?.uid;
   }
 
+  refreshIdToken() {
+    return this.auth.currentUser?.getIdToken(true);
+  }
+
+  async getCustomClaims() {
+    const token = await this.auth.currentUser?.getIdTokenResult();
+    return token.claims;
+  }
+
   signOut() {
     this.auth.signOut();
   }
@@ -159,6 +170,20 @@ export class AuthService {
     });
   }
 
+  async signUpWithEmailAndPassword(email: string, password: string) {
+    const userCredential = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+
+    await this.handleSignInResult({ isNewUser: true });
+    this.snackbar.open(`Your account is now set up, awesome!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
   async linkAccountWithEmailAndPassword(email: string, password: string) {
     const credential = EmailAuthProvider.credential(email, password);
 
@@ -211,7 +236,7 @@ export class AuthService {
     const userDetails: UserDetails = {
       id: user.uid,
       email: user.email,
-      displayName: user.displayName,
+      displayName: user.displayName ?? user.email?.split('@')[0],
       avatarUrl: new SupportedPhotoUrlPipe().transform(user.photoURL),
       createdAt: serverTimestamp(),
     };

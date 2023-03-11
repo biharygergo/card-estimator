@@ -3,7 +3,11 @@
     {
       "target": "estimator",
       "public": "dist/estimator/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "trailingSlash": false,
       "rewrites": [
         {
@@ -62,6 +66,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/acceptOrganizationInvitation",
+          "function": "acceptOrganizationInvitation",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },
@@ -92,7 +101,7 @@
             },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' https://us-central1-card-estimator.cloudfunctions.net https://card-estimator.firebaseapp.com/ *.eu.ngrok.io *.web.app *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ www.google.com *.google.com *.google.hu *.googletagmanager.com *.sentry.io *.gstatic.com https://avatars.dicebear.com;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
+              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' *.planningpoker.live https://us-central1-card-estimator.cloudfunctions.net https://us-central1-planning-poker-test-dc808.cloudfunctions.net https://card-estimator.firebaseapp.com/ *.eu.ngrok.io *.web.app *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ www.google.com *.google.com *.google.hu *.googletagmanager.com *.sentry.io *.gstatic.com https://avatars.dicebear.com *.doubleclick.net;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
             },
             {
               "key": "Referrer-Policy",
@@ -109,7 +118,11 @@
     {
       "target": "staging",
       "public": "dist/estimator/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "trailingSlash": false,
       "rewrites": [
         {
@@ -168,6 +181,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/acceptOrganizationInvitation",
+          "function": "acceptOrganizationInvitation",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },
@@ -198,7 +216,7 @@
             },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' https://us-central1-card-estimator.cloudfunctions.net https://card-estimator.firebaseapp.com/ *.eu.ngrok.io *.web.app *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ www.google.com *.google.com *.google.hu *.googletagmanager.com *.sentry.io *.gstatic.com https://avatars.dicebear.com;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
+              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' *.planningpoker.live https://us-central1-card-estimator.cloudfunctions.net https://us-central1-planning-poker-test-dc808.cloudfunctions.net https://card-estimator.firebaseapp.com/ *.eu.ngrok.io *.web.app *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ www.google.com *.google.com *.google.hu *.googletagmanager.com *.sentry.io *.gstatic.com https://avatars.dicebear.com *.doubleclick.net;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com"
             },
             {
               "key": "Referrer-Policy",
@@ -245,5 +263,8 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "extensions": {
+    "firestore-stripe-payments": "stripe/firestore-stripe-payments@0.3.2"
   }
 }

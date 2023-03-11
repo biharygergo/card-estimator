@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 import { SerializerService } from 'src/app/services/serializer.service';
 import { CardSetValue, MemberType, Room, Round, RoundStatistics } from 'src/app/types';
 
@@ -28,6 +29,7 @@ export class TopicsSidebarComponent implements OnInit {
     private serializer: SerializerService,
     private analytics: AnalyticsService,
     private estimatorService: EstimatorService,
+    public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 

@@ -46,6 +46,7 @@ describe('Inside the room', () => {
   });
 
   it('can set custom card sets', () => {
+    cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();
     cy.get('.pass-option-checkbox').click();
     cy.contains('Fibonacci').click();

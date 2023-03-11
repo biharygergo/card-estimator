@@ -288,3 +288,11 @@ $my-theme: mat.define-light-theme(
     }
   }
 }
+
+.full-page-container {
+  min-height: 100vh;
+}
+
+.full-screen-modal {
+  border-radius: 0;
+}

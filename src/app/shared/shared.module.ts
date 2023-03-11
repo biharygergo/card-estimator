@@ -100,6 +100,7 @@ import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-mo
     ResizeMonitorDirective,
     RoundResultsComponent,
     EstimateConverterPipe,
+    PremiumLearnMoreComponent,
     MatCardModule,
     MatInputModule,
     MatButtonModule,

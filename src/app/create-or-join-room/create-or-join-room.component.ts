@@ -92,7 +92,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
 
   user = combineLatest([this.authService.user, this.isBusy]).pipe(
-    // filter(([_, busy]) => !busy),
+    filter(([_, busy]) => !busy),
     tap(([user]) => {
       if (user && user.displayName) {
         this.name.setValue(user.displayName);
@@ -145,7 +145,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       if (!user?.isAnonymous) {
         return this.organizationService.getMyOrganization();
       } else {
-        return undefined;
+        return of(undefined);
       }
     })
   );

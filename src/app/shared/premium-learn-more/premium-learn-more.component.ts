@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PaymentService } from 'src/app/services/payment.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
@@ -7,9 +7,11 @@ export const premiumLearnMoreModalCreator =
     PremiumLearnMoreComponent,
     {
       id: 'premiumLearnMoreModal',
-      width: '90%',
-      maxWidth: '800px',
-      maxHeight: '90vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      height: '100%',
+      width: '100%',
+      panelClass: 'full-screen-modal'
     },
   ];
 
@@ -19,6 +21,8 @@ export const premiumLearnMoreModalCreator =
   styleUrls: ['./premium-learn-more.component.scss'],
 })
 export class PremiumLearnMoreComponent {
+  @Input() pageMode: 'modal' | 'page' = 'modal';
+
   isLoadingStripe = false;
 
   constructor(private readonly paymentService: PaymentService) {}

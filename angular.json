@@ -218,7 +218,8 @@
               "/create",
               "/room",
               "/zoom",
-              "/history"
+              "/history",
+              "/premium"
             ],
             "guessRoutes": false
           },

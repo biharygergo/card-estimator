@@ -280,6 +280,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.zoomService.configureApp();
     }
 
+    this.room$.subscribe();
     this.onRoomUpdated$.subscribe();
     this.onActiveMemberUpdated$.subscribe();
     this.onRoundNumberUpdated$.subscribe();

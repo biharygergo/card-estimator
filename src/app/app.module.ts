@@ -1,5 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
+import {
+  NgModule,
+  APP_INITIALIZER,
+  ErrorHandler,
+  InjectionToken,
+  Optional,
+} from '@angular/core';
 import * as Sentry from '@sentry/angular';
 import Cookies from 'js-cookie';
 
@@ -31,6 +37,8 @@ import {
   provideRemoteConfig,
   getRemoteConfig,
 } from '@angular/fire/remote-config';
+import type { app } from 'firebase-admin';
+export const FIREBASE_ADMIN = new InjectionToken<app.App>('firebase-admin');
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
@@ -136,7 +144,67 @@ function loadAppConfig(): Promise<any> {
       }
       return functions;
     }),
-    provideAppCheck(() => {
+    provideAppCheck(
+      (injector) => {
+        const admin = injector.get<app.App | null>(FIREBASE_ADMIN, null);
+        if (admin) {
+          const provider = new CustomProvider({
+            getToken: () =>
+              admin
+                .appCheck()
+                .createToken(environment.firebase.appId, {
+                  ttlMillis: 604_800_000 /* 1 week */,
+                })
+                .then(({ token, ttlMillis: expireTimeMillis }) => ({
+                  token,
+                  expireTimeMillis,
+                })),
+          });
+          return initializeAppCheck(undefined, {
+            provider,
+            isTokenAutoRefreshEnabled: false,
+          });
+        } else {
+          let provider: ReCaptchaV3Provider | CustomProvider;
+          if (isRunningInZoom()) {
+            provider = new CustomProvider({
+              getToken: () =>
+                new Promise((resolve) => {
+                  window.setTimeout(() => {
+                    // Workaround for not being able to refresh the AppCheck token here...
+                    window.location.reload();
+                  }, appCheckToken.expireTimeMillis - Date.now());
+                  resolve(appCheckToken);
+                }),
+            });
+          } else {
+            provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
+          }
+
+          if (
+            !environment.production ||
+            (typeof window !== 'undefined' &&
+              window.origin.includes('localhost'))
+          ) {
+            if (
+              typeof window !== 'undefined' &&
+              !window.origin.includes('4200')
+            ) {
+              (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
+                Cookies.get('APP_CHECK_CI_TOKEN');
+            } else {
+              (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+            }
+          }
+          return initializeAppCheck(undefined, {
+            provider,
+            isTokenAutoRefreshEnabled: true,
+          });
+        }
+      },
+      [new Optional(), FIREBASE_ADMIN]
+    ),
+    /*  provideAppCheck(() => {
       let provider: ReCaptchaV3Provider | CustomProvider;
       if (isRunningInZoom()) {
         provider = new CustomProvider({
@@ -168,7 +236,7 @@ function loadAppConfig(): Promise<any> {
         provider,
         isTokenAutoRefreshEnabled: true,
       });
-    }),
+    }), */
   ],
   providers: [
     ScreenTrackingService,

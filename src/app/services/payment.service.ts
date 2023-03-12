@@ -94,7 +94,7 @@ export class PaymentService {
 
   async isPremiumSubscriber() {
     const user = await this.authService.getUser();
-    if (user?.isAnonymous) {
+    if (!user || user?.isAnonymous) {
       return false;
     }
 

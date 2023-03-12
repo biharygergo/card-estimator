@@ -106,7 +106,7 @@ export class AuthService {
 
   async getCustomClaims() {
     const token = await this.auth.currentUser?.getIdTokenResult();
-    return token.claims;
+    return token?.claims;
   }
 
   signOut() {

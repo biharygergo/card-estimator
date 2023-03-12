@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Analytics, logEvent } from '@angular/fire/analytics';
-import { CardSetOrCustom } from '../types';
+import {
+  CardSetOrCustom,
+  RoomPermissionId,
+  SubscriptionResult,
+} from '../types';
 
 export type ZoomAppCtaLocation =
   | 'detail_page'
@@ -168,7 +172,9 @@ export class AnalyticsService {
     });
   }
 
-  logClickedSignUpWithGoogle(location: 'history' | 'profile-modal' | 'sign-in-dialog') {
+  logClickedSignUpWithGoogle(
+    location: 'history' | 'profile-modal' | 'sign-in-dialog'
+  ) {
     logEvent(this.analytics, 'clicked_sign_up_with_google', {
       buttonLocation: location,
     });
@@ -194,5 +200,83 @@ export class AnalyticsService {
 
   logClickedAddTimeToTimer() {
     logEvent(this.analytics, 'clicked_add_time_to_timer');
+  }
+
+  logClickedOpenRoomConfigurationModal() {
+    logEvent(this.analytics, 'clicked_open_room_configuration_modal');
+  }
+
+  logClickedCreateAccount(where: string) {
+    logEvent(this.analytics, 'clicked_create_account', { location: where });
+  }
+
+  logClickedSavePermissions(updatedPermission: RoomPermissionId) {
+    logEvent(this.analytics, 'updated_permissions', {
+      permissionId: updatedPermission,
+    });
+  }
+
+  logClickedManageSubscription(arg0: string) {
+    logEvent(this.analytics, 'clicked_manage_subscription', { location: arg0 });
+  }
+
+  logClickedJoinRoomWithPassword() {
+    logEvent(this.analytics, 'clicked_join_room_with_password');
+  }
+
+  logSubscriptionResultReceived(result: SubscriptionResult) {
+    logEvent(this.analytics, 'subscription_result_received', { result });
+  }
+
+  logClickedInviteOrganizationMember() {
+    logEvent(this.analytics, 'clicked_invite_organization_member');
+  }
+
+  logClickedRemoveLogo() {
+    logEvent(this.analytics, 'clicked_remove_organization_logo');
+  }
+
+  logClickedUploadLogo() {
+    logEvent(this.analytics, 'clicked_upload_organization_logo');
+  }
+
+  logClickedUpdateOrganization() {
+    logEvent(this.analytics, 'clicked_update_organization');
+  }
+
+  logClickedGetStartedOrganization() {
+    logEvent(this.analytics, 'clicked_get_started_organization');
+  }
+
+  logClickedReportAnIssue(arg0: string) {
+    logEvent(this.analytics, 'clicked_report_an_issue', { location: arg0 });
+  }
+
+  logClickedLearnMorePremium(arg0: string) {
+    logEvent(this.analytics, 'clicked_learn_more_premium', { location: arg0 });
+  }
+
+  logClickedSubscribeToPremium(arg0: string) {
+    logEvent(this.analytics, 'clicked_subscribe_to_premium', {
+      location: arg0,
+    });
+  }
+
+  logClickedOpenOrganizationModal(arg0: string) {
+    logEvent(this.analytics, 'clicked_open_organization_modal', {
+      location: arg0,
+    });
+  }
+
+  logToggleOrganizationProtection() {
+    logEvent(this.analytics, 'clicked_toggle_organization_protection');
+  }
+
+  logToggledPassword() {
+    logEvent(this.analytics, 'clicked_toggle_password_protection');
+  }
+
+  logClickedSaveRoomPassword() {
+    logEvent(this.analytics, 'clicked_save_room_password');
   }
 }

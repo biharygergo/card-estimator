@@ -70,6 +70,7 @@ export class ProfileDropdownComponent implements OnInit {
 
   openOrganizationModal() {
     this.dialog.open(...organizationModalCreator());
+    this.analytics.logClickedOpenOrganizationModal('profile_icon');
   }
 
   reportAnIssue() {
@@ -79,5 +80,6 @@ export class ProfileDropdownComponent implements OnInit {
     } else {
       window.open(apiUrl);
     }
+    this.analytics.logClickedReportAnIssue('profile_icon');
   }
 }

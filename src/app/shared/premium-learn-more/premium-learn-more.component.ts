@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
@@ -26,10 +27,14 @@ export class PremiumLearnMoreComponent {
   isLoadingStripe = false;
   isPremium$ = this.paymentService.isPremiumSubscriber();
 
-  constructor(private readonly paymentService: PaymentService) {}
+  constructor(
+    private readonly paymentService: PaymentService,
+    private readonly analyticsService: AnalyticsService
+  ) {}
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
+    this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
     await this.paymentService.startSubscriptionToPremium();
   }
 }

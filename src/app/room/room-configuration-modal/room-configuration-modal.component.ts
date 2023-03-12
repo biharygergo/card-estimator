@@ -44,6 +44,7 @@ import {
   SignUpOrLoginIntent,
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -152,47 +153,47 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     [RoomPermissionId.CAN_VOTE]: createChipOptionForPermission(
       RoomPermissionId.CAN_VOTE,
       'ballot',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_VOTE)
     ),
     [RoomPermissionId.CAN_EDIT_TOPIC]: createChipOptionForPermission(
       RoomPermissionId.CAN_EDIT_TOPIC,
       'edit',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_EDIT_TOPIC)
     ),
     [RoomPermissionId.CAN_CREATE_ROUND]: createChipOptionForPermission(
       RoomPermissionId.CAN_CREATE_ROUND,
       'add_circle',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_CREATE_ROUND)
     ),
     [RoomPermissionId.CAN_TAKE_NOTES]: createChipOptionForPermission(
       RoomPermissionId.CAN_TAKE_NOTES,
       'edit_note',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_TAKE_NOTES)
     ),
     [RoomPermissionId.CAN_REVEAL_RESULTS]: createChipOptionForPermission(
       RoomPermissionId.CAN_REVEAL_RESULTS,
       'visibility',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_REVEAL_RESULTS)
     ),
     [RoomPermissionId.CAN_VIEW_VELOCITY]: createChipOptionForPermission(
       RoomPermissionId.CAN_VIEW_VELOCITY,
       'monitoring',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_VIEW_VELOCITY)
     ),
     [RoomPermissionId.CAN_DOWNLOAD_RESULTS]: createChipOptionForPermission(
       RoomPermissionId.CAN_DOWNLOAD_RESULTS,
       'download',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_DOWNLOAD_RESULTS)
     ),
     [RoomPermissionId.CAN_CHANGE_CARD_SETS]: createChipOptionForPermission(
       RoomPermissionId.CAN_CHANGE_CARD_SETS,
       'style',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_CHANGE_CARD_SETS)
     ),
     [RoomPermissionId.CAN_SET_TIMER]: createChipOptionForPermission(
       RoomPermissionId.CAN_SET_TIMER,
       'schedule',
-      () => this.saveRoomConfiguration()
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_SET_TIMER)
     ),
   };
 
@@ -228,9 +229,9 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
               memberIds.includes(m.id)
           )
           .sort((a, b) => a.type?.localeCompare(b.type))
-          .map(member => {
+          .map((member) => {
             if (member.id === createdById) {
-              return {...member, type: 'CREATOR'}
+              return { ...member, type: 'CREATOR' };
             }
             return member;
           })
@@ -295,6 +296,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     public readonly authService: AuthService,
     private readonly organizationService: OrganizationService,
     private readonly paymentService: PaymentService,
+    private readonly analyticsService: AnalyticsService,
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData
   ) {}
 
@@ -335,7 +337,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  async saveRoomConfiguration() {
+  async saveRoomConfiguration(updatedPermission: RoomPermissionId) {
     try {
       this.isBusy.next(true);
 
@@ -367,6 +369,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     } finally {
       this.isBusy.next(false);
     }
+    this.analyticsService.logClickedSavePermissions(updatedPermission);
   }
 
   removeMember(member: Member) {
@@ -391,6 +394,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     } finally {
       this.isSavingPassword = false;
     }
+    this.analyticsService.logClickedSaveRoomPassword();
   }
 
   async togglePasswordProtection() {
@@ -407,6 +411,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
         take(1)
       )
       .subscribe();
+    this.analyticsService.logToggledPassword();
   }
 
   async toggleOrganizationProtection() {
@@ -424,6 +429,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
         take(1)
       )
       .subscribe();
+      this.analyticsService.logToggleOrganizationProtection();
   }
 
   private showMessage(message: string) {
@@ -435,6 +441,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   openOrganizationModal() {
     this.dialog.open(...organizationModalCreator());
+    this.analyticsService.logClickedOpenOrganizationModal('room_configuration');
   }
 
   openAuthModal() {
@@ -450,11 +457,13 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   }
 
   async subscribeToPremium() {
+    this.analyticsService.logClickedSubscribeToPremium('room_configuration');
     this.isLoadingStripe = true;
     await this.paymentService.startSubscriptionToPremium();
   }
 
   openLearnMore() {
+    this.analyticsService.logClickedLearnMorePremium('room_configuration');
     this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

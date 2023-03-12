@@ -269,15 +269,18 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
+    this.analytics.logClickedSubscribeToPremium('profile');
     await this.paymentsService.startSubscriptionToPremium();
   }
 
   async redirectToCustomerPortal() {
     this.isLoadingStripe = true;
+    this.analytics.logClickedManageSubscription('profile');
     await this.paymentsService.createPortalLink();
   }
 
   openLearnMore() {
+    this.analytics.logClickedLearnMorePremium('profile');
     this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

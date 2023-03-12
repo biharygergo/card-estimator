@@ -10,6 +10,7 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { PaymentService } from 'src/app/services/payment.service';
@@ -83,7 +84,8 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly dialog: MatDialog,
     private readonly paymentsService: PaymentService,
-    public readonly permissionsService: PermissionsService
+    public readonly permissionsService: PermissionsService,
+    private readonly analytics: AnalyticsService
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +119,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       name: `${user.displayName}'s Organization`,
       logoUrl: null,
     });
+    this.analytics.logClickedGetStartedOrganization();
   }
 
   async saveOrganization() {
@@ -132,6 +135,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       });
       this.toastService.showMessage('Organization updated.');
     }
+    this.analytics.logClickedUpdateOrganization();
   }
 
   async onLogoDropped(file: File) {
@@ -141,6 +145,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     this.toastService.showMessage('Uploading logo...');
     await this.organizationService.updateLogo(file, this.organization.id);
     this.toastService.showMessage('Logo uploaded.');
+    this.analytics.logClickedUploadLogo();
   }
 
   async removeLogo() {
@@ -148,6 +153,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       logoUrl: null,
     });
     this.toastService.showMessage('Logo removed.');
+    this.analytics.logClickedRemoveLogo();
   }
 
   async inviteMember() {
@@ -160,6 +166,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       `Invitation sent to ${this.invitationEmail.value}`
     );
     this.invitationEmail.reset();
+    this.analytics.logClickedInviteOrganizationMember();
   }
 
   async removeFromOrganization(memberId: string) {
@@ -177,10 +184,12 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
+    this.analytics.logClickedSubscribeToPremium('organization_modal');
     await this.paymentsService.startSubscriptionToPremium();
   }
 
   openLearnMore() {
+    this.analytics.logClickedLearnMorePremium('organization_modal');
     this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

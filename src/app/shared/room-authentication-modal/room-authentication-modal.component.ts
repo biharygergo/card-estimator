@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 
@@ -61,6 +62,7 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
     private readonly estimatorService: EstimatorService,
     public dialogRef: MatDialogRef<RoomAuthenticationModalComponent>,
     private router: Router,
+    private readonly analytics: AnalyticsService,
     @Inject(MAT_DIALOG_DATA)
     private readonly dialogData: RoomAuthenticationModalData
   ) {}
@@ -92,5 +94,6 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
     } finally {
       this.isJoiningRoom = false;
     }
+    this.analytics.logClickedJoinRoomWithPassword();
   }
 }

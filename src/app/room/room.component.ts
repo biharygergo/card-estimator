@@ -697,6 +697,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   onCreateAccountClicked() {
+    this.analytics.logClickedCreateAccount('room');
     this.dialog.open(
       ...signUpOrLoginDialogCreator({
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
@@ -705,6 +706,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   openRoomConfigurationModal() {
+    this.analytics.logClickedOpenRoomConfigurationModal();
     this.dialog.open(
       ...roomConfigurationModalCreator({ roomId: this.room.roomId })
     );

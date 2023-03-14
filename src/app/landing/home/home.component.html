@@ -5,7 +5,7 @@
         Real-time online planning poker <wbr />
         for remote scrum teams
       </h1>
-      <p>Better estimation sessions for the whole team.</p>
+      <h2 class="header-description">Better sprint planning <wbr /> and agile estimation for the whole team</h2>
       <div>
         <button
           mat-flat-button
@@ -14,16 +14,6 @@
         >
           Start Planning
         </button>
-      </div>
-
-      <div class="used-by">
-        Trusted by teams at hundreds of companies, including:
-        <ul class="logo-list">
-          <li>
-            <img src="/assets/logos/netflix_logo.webp" alt="Netflix logo" />
-          </li>
-          <li><img src="/assets/logos/prezi_logo.webp" alt="Prezi logo" /></li>
-        </ul>
       </div>
     </div>
     <div class="header-cards">
@@ -35,9 +25,29 @@
     </div>
   </div>
 </section>
+<section class="used-by-section">
+  <div class="used-by-content">
+    <h2>Agile practitioners rely on us for lean planning meetings at:</h2>
+    <div class="logo-carousel">
+      <ul class="logo-carousel-track">
+        <li *ngFor="let logo of logos; let i = index">
+          <picture>
+            <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
+            <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
+            <img
+              src="/assets/logos/{{ logo }}.png"
+              alt="Logo of {{ companies[i] }}"
+              [loading]="i < 5 ? 'eager' : 'lazy'"
+            />
+          </picture>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
 <section class="features-section">
   <div class="features-content">
-    <h2>Essential features for a smooth planning session</h2>
+    <h2>Essential features for a smooth estimation session</h2>
     <div class="features-grid">
       <div class="feature-card wide">
         <h3>Easy-to-use and accessible UI</h3>

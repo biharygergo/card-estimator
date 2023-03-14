@@ -123,6 +123,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         .getRoomById(roomId)
         .pipe(startWith(this.route.snapshot.data.room))
     ),
+    filter(room => !!room),
     catchError((e) => this.onRoomUpdateError(e)),
     share(),
     takeUntil(this.destroy)

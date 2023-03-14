@@ -1,54 +1,56 @@
 <div class="dialog-content">
   <h1 mat-dialog-title>Set a custom card deck</h1>
   <div mat-dialog-content>
-    <form [formGroup]="cardDeckForm" class="card-deck-form">
-      <mat-form-field appearance="outline">
-        <mat-label>Deck name</mat-label>
-        <input
-          matInput
-          placeholder="Team deck #1"
-          formControlName="cardDeckName"
-          autocomplete="off"
-        />
-        <mat-hint
-          >Name your card deck, so you can re-use it in your next planning
-          meeting.</mat-hint
-        >
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Deck values</mat-label>
-        <input
-          matInput
-          placeholder="1,5,10,15,20"
-          formControlName="cardDeckValues"
-          autocomplete="off"
-        />
-        <mat-hint
-          >Card values as a comma separated list in ascending order. You can use
-          numbers or words as well.</mat-hint
-        >
-        <mat-error
-          *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']"
-        >
-          Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
-        </mat-error>
-        <mat-error
-          *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']"
-        >
-          All cards must be unique.
-        </mat-error>
-      </mat-form-field>
-    </form>
-    <div class="preview-cards">
-      <ng-container *ngFor="let card of cardPreview; let i = index">
-        <mat-card
-          class="preview-card"
-          *ngIf="i < CARD_DECK_IDEAL_SIZE || card !== undefined"
-          [ngClass]="{ filled: card !== undefined }"
-        >
-          {{ card ?? "?" }}
-        </mat-card>
-      </ng-container>
+    <div class="tab-section">
+      <form [formGroup]="cardDeckForm" class="card-deck-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Deck name</mat-label>
+          <input
+            matInput
+            placeholder="Team deck #1"
+            formControlName="cardDeckName"
+            autocomplete="off"
+          />
+          <mat-hint
+            >Name your card deck, so you can re-use it in your next planning
+            meeting.</mat-hint
+          >
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Deck values</mat-label>
+          <input
+            matInput
+            placeholder="1,5,10,15,20"
+            formControlName="cardDeckValues"
+            autocomplete="off"
+          />
+          <mat-hint
+            >Card values as a comma separated list in ascending order. You can
+            use numbers or words as well.</mat-hint
+          >
+          <mat-error
+            *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']"
+          >
+            Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
+          </mat-error>
+          <mat-error
+            *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']"
+          >
+            All cards must be unique.
+          </mat-error>
+        </mat-form-field>
+      </form>
+      <div class="preview-cards">
+        <ng-container *ngFor="let card of cardPreview; let i = index">
+          <mat-card
+            class="preview-card"
+            *ngIf="i < CARD_DECK_IDEAL_SIZE || card !== undefined"
+            [ngClass]="{ filled: card !== undefined }"
+          >
+            {{ card ?? "?" }}
+          </mat-card>
+        </ng-container>
+      </div>
     </div>
   </div>
   <div mat-dialog-actions>

@@ -5,6 +5,7 @@ import {
   BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
+  first,
   map,
   Observable,
   of,
@@ -45,6 +46,7 @@ import {
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { ToastService } from 'src/app/services/toast.service';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -291,7 +293,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly permissionsService: PermissionsService,
-    private readonly snackbar: MatSnackBar,
+    private readonly toastService: ToastService,
     private dialog: MatDialog,
     public readonly authService: AuthService,
     private readonly organizationService: OrganizationService,
@@ -372,12 +374,13 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.analyticsService.logClickedSavePermissions(updatedPermission);
   }
 
-  removeMember(member: Member) {
-    this.estimatorService.updateMemberStatus(
+  async removeMember(member: Member) {
+    await this.estimatorService.updateMemberStatus(
       this.room.roomId,
       member,
       MemberStatus.REMOVED_FROM_ROOM
     );
+    this.showMessage('Member removed');
   }
 
   async saveRoomPassword() {
@@ -390,6 +393,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       this.showMessage('Password saved!');
       this.roomPassword.reset();
     } catch (e) {
+      this.showMessage('Error saving password: ' + e.message);
       console.error(e);
     } finally {
       this.isSavingPassword = false;
@@ -400,23 +404,30 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   async togglePasswordProtection() {
     this.authorizationMetadata$
       .pipe(
+        first(),
         switchMap((meta) =>
           of(
             this.estimatorService.togglePasswordProtection(
               this.room.roomId,
               !meta?.passwordProtectionEnabled
             )
-          )
-        ),
-        take(1)
+          ).pipe(map(() => !meta?.passwordProtectionEnabled))
+        )
       )
-      .subscribe();
+      .subscribe((isEnabled) =>
+        this.showMessage(
+          isEnabled
+            ? 'Password protection enabled'
+            : 'Password protection disabled'
+        )
+      );
     this.analyticsService.logToggledPassword();
   }
 
   async toggleOrganizationProtection() {
     this.authorizationMetadata$
       .pipe(
+        first(),
         switchMap((meta) =>
           of(
             this.estimatorService.toggleOrganizationProtection(
@@ -424,19 +435,21 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
               !meta?.organizationProtection,
               this.organization.id
             )
-          )
-        ),
-        take(1)
+          ).pipe(map(() => !meta?.organizationProtection))
+        )
       )
-      .subscribe();
-      this.analyticsService.logToggleOrganizationProtection();
+      .subscribe((isEnabled) =>
+        this.showMessage(
+          isEnabled
+            ? 'Organization protection enabled'
+            : 'Organization protection disabled'
+        )
+      );
+    this.analyticsService.logToggleOrganizationProtection();
   }
 
   private showMessage(message: string) {
-    this.snackbar.open(message, null, {
-      duration: 3000,
-      horizontalPosition: 'right',
-    });
+    this.toastService.showMessage(message);
   }
 
   openOrganizationModal() {
@@ -452,8 +465,9 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  addToOrganization(memberId: string) {
-    this.organizationService.addMember(this.organization.id, memberId);
+  async addToOrganization(memberId: string) {
+    await this.organizationService.addMember(this.organization.id, memberId);
+    this.showMessage('Added to organization!')
   }
 
   async subscribeToPremium() {

@@ -125,7 +125,7 @@ export class PaymentService {
   getSubscription(): Observable<Subscription | undefined> {
     return this.authService.user.pipe(
       switchMap((user) => {
-        if (user?.isAnonymous) {
+        if (!user || user?.isAnonymous) {
           return of(undefined);
         }
 

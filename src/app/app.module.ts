@@ -33,10 +33,6 @@ import {
   ReCaptchaV3Provider,
 } from '@angular/fire/app-check';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import {
-  provideRemoteConfig,
-  getRemoteConfig,
-} from '@angular/fire/remote-config';
 import type { app } from 'firebase-admin';
 export const FIREBASE_ADMIN = new InjectionToken<app.App>('firebase-admin');
 
@@ -137,7 +133,6 @@ function loadAppConfig(): Promise<any> {
       }
       return storage;
     }),
-    provideRemoteConfig(() => getRemoteConfig()),
     provideFunctions(() => {
       const functions = getFunctions();
       if (environment.useEmulators) {

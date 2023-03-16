@@ -1,13 +1,11 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { ToastService } from './services/toast.service';
 import * as Sentry from '@sentry/angular';
-import { Auth } from '@angular/fire/auth';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(
     private toastService: ToastService,
-    private readonly auth: Auth
   ) {}
 
   handleError(error: any): void {
@@ -29,9 +27,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.showErrorToast(error);
     }
     console.error('Received an error', error);
-    Sentry.captureException(error, {
-      user: { id: this.auth.currentUser?.uid },
-    });
+    Sentry.captureException(error);
   }
 
   showErrorToast(error: any, message?: string) {

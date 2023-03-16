@@ -7,10 +7,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ToastService {
   constructor(private readonly snackbar: MatSnackBar) {}
 
-  showMessage(message: string) {
+  showMessage(
+    message: string,
+    duration: number = 3000,
+    category: 'info' | 'error' = 'info'
+  ) {
     this.snackbar.open(message, null, {
-      duration: 3000,
+      duration,
       horizontalPosition: 'right',
+      panelClass: 'snackbar-' + category,
     });
   }
 }

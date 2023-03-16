@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   addDoc,
-  arrayRemove,
   arrayUnion,
   collectionSnapshots,
   docData,
@@ -10,11 +9,7 @@ import {
   query,
   where,
 } from '@angular/fire/firestore';
-import {
-  Functions,
-  httpsCallable,
-  httpsCallableData,
-} from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import {
   uniqueNamesGenerator,
   Config,
@@ -24,15 +19,7 @@ import {
   starWars,
 } from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import {
-  catchError,
-  filter,
-  first,
-  map,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
+import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
   Room,
   Member,
@@ -190,6 +177,10 @@ export class EstimatorService {
     await this.signInAsMember(member);
 
     const existingRoom = await this.getRoom(roomId);
+    const isAlreadyMember = existingRoom.members.find(
+      (m) => m.id === member.id
+    );
+
     const updatedMembers = existingRoom.members.filter(
       (m) => m.id !== member.id
     );
@@ -197,7 +188,7 @@ export class EstimatorService {
     updatedMembers.push(member);
 
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
-      members: updatedMembers,
+      members: isAlreadyMember ? updatedMembers : arrayUnion(member),
       memberIds: arrayUnion(member.id),
     });
 

@@ -192,8 +192,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           from(this.joinRoom()).pipe(
             catchError((e) => {
               if (e.code !== 'permission-denied') {
-                this.showUnableToJoinRoom();
-                return of(false);
+                throw e;
               } else {
                 const dialogRef = this.dialog.open(
                   ...roomAuthenticationModalCreator({

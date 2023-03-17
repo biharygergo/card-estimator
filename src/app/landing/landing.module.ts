@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, provideCloudinaryLoader } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -22,7 +22,7 @@ import { ZoomComponent } from './zoom/zoom.component';
 import { OrganizationInvitationComponent } from './organization-invitation/organization-invitation.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PremiumComponent } from './premium/premium.component';
-import { PremiumLearnMoreComponent } from '../shared/premium-learn-more/premium-learn-more.component';
+import { NgOptimizedImage } from '@angular/common'
 
 const routes: Routes = [
   {
@@ -94,6 +94,10 @@ const routes: Routes = [
     MatTabsModule,
     MatDialogModule,
     ZoomAppBannerComponent,
+    NgOptimizedImage,
   ],
+  providers: [
+    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')
+  ]
 })
 export class LandingModule {}

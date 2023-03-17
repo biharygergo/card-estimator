@@ -5,10 +5,6 @@ import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import {
-  ConfigService,
-  HIDE_PERMANENT_ACCOUNT_BANNER_KEY,
-} from 'src/app/services/config.service';
-import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
@@ -34,7 +30,6 @@ export class AnonymousUserBannerComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly analyticsService: AnalyticsService,
     private readonly dialog: MatDialog,
-    private readonly configService: ConfigService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 

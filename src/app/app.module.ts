@@ -33,10 +33,6 @@ import {
   ReCaptchaV3Provider,
 } from '@angular/fire/app-check';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import {
-  provideRemoteConfig,
-  getRemoteConfig,
-} from '@angular/fire/remote-config';
 import type { app } from 'firebase-admin';
 export const FIREBASE_ADMIN = new InjectionToken<app.App>('firebase-admin');
 
@@ -59,6 +55,7 @@ import {
   provideStorage,
 } from '@angular/fire/storage';
 import { MatDialogModule } from '@angular/material/dialog';
+import { GlobalErrorHandler } from './error-handler';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -136,7 +133,6 @@ function loadAppConfig(): Promise<any> {
       }
       return storage;
     }),
-    provideRemoteConfig(() => getRemoteConfig()),
     provideFunctions(() => {
       const functions = getFunctions();
       if (environment.useEmulators) {
@@ -204,47 +200,12 @@ function loadAppConfig(): Promise<any> {
       },
       [new Optional(), FIREBASE_ADMIN]
     ),
-    /*  provideAppCheck(() => {
-      let provider: ReCaptchaV3Provider | CustomProvider;
-      if (isRunningInZoom()) {
-        provider = new CustomProvider({
-          getToken: () =>
-            new Promise((resolve) => {
-              window.setTimeout(() => {
-                // Workaround for not being able to refresh the AppCheck token here...
-                window.location.reload();
-              }, appCheckToken.expireTimeMillis - Date.now());
-              resolve(appCheckToken);
-            }),
-        });
-      } else {
-        provider = new ReCaptchaV3Provider(environment.recaptcha3SiteKey);
-      }
-
-      if (
-        !environment.production ||
-        (typeof window !== 'undefined' && window.origin.includes('localhost'))
-      ) {
-        if (typeof window !== 'undefined' && !window.origin.includes('4200')) {
-          (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
-            Cookies.get('APP_CHECK_CI_TOKEN');
-        } else {
-          (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-        }
-      }
-      return initializeAppCheck(undefined, {
-        provider,
-        isTokenAutoRefreshEnabled: true,
-      });
-    }), */
   ],
   providers: [
     ScreenTrackingService,
     {
       provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
-        showDialog: false,
-      }),
+      useClass: GlobalErrorHandler,
     },
     {
       provide: Sentry.TraceService,

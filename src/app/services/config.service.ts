@@ -1,10 +1,4 @@
 import { Injectable } from '@angular/core';
-import { RemoteConfig } from '@angular/fire/remote-config';
-import {
-  ensureInitialized,
-  fetchAndActivate,
-  getBoolean,
-} from 'firebase/remote-config';
 import Cookies from 'js-cookie';
 
 /** Cookie key for the "Give feedback" button */
@@ -16,14 +10,7 @@ export const HIDE_PERMANENT_ACCOUNT_BANNER_KEY = 'hidePermanentAccountBanner';
   providedIn: 'root',
 })
 export class ConfigService {
-  constructor(private remoteConfig: RemoteConfig) {
-    fetchAndActivate(remoteConfig);
-  }
-
-  async isEnabled(key: string) {
-    await ensureInitialized(this.remoteConfig);
-    return getBoolean(this.remoteConfig, key);
-  }
+  constructor() {}
 
   setCookie(key: string, value: string, expiresInDays: number = 365) {
     Cookies.set(key, value, { expires: expiresInDays });

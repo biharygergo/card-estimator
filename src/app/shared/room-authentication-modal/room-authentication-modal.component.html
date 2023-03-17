@@ -32,6 +32,12 @@
         Ask the room creator to add you as an organization member to continue.
       </p>
     </ng-container>
+    <ng-container *ngIf="authTypeRequired === 'unknown'">
+      <p>
+        There was an unknown error while joining this room. Please try again
+        later or report an issue and we'll try to fix it soon.
+      </p>
+    </ng-container>
   </div>
 </div>
 <div mat-dialog-actions>

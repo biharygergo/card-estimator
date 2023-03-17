@@ -111,11 +111,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   isAloneInRoomHidden = false;
   roundStatistics: RoundStatistics[] = [];
 
-  adHideClicks = 0;
-  adsEnabled = false;
-
-  showAds = false;
-
   room$: Observable<Room> = this.route.paramMap.pipe(
     map((params) => params.get('roomId')),
     switchMap((roomId) =>
@@ -307,11 +302,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
-
-    this.configService.isEnabled('adsEnabled').then((value) => {
-      this.adsEnabled = value;
-      this.updateShowAds();
-    });
 
     createTimer(2)
       .pipe(takeUntil(this.destroy))
@@ -679,14 +669,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(() => {});
     }
-  }
-
-  updateShowAds() {
-    this.showAds = this.adHideClicks < 5 && this.adsEnabled;
-  }
-
-  increaseHideAdsCounter() {
-    this.adHideClicks += 1;
   }
 
   openFeedbackForm() {

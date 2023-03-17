@@ -296,3 +296,10 @@ $my-theme: mat.define-light-theme(
 .full-screen-modal {
   border-radius: 0;
 }
+
+.snackbar-error {
+  .mdc-snackbar__surface {
+    background: #93000A !important;
+    color: #FFDAD6 !important;
+  }
+}

@@ -67,7 +67,7 @@
     display: flex;
     justify-content: flex-end;
 
-    picture {
+    .header-cards-wrapper {
       margin-bottom: -30%;
       margin-right: -20%;
     }
@@ -75,6 +75,7 @@
     img {
       transform: scale(1.05);
       width: 100%;
+      height: auto;
       min-width: 400px;
       object-fit: contain;
     }

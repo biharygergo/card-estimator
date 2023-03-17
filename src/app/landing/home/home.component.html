@@ -5,7 +5,9 @@
         Real-time online planning poker <wbr />
         for remote scrum teams
       </h1>
-      <h2 class="header-description">Better sprint planning <wbr /> and agile estimation for the whole team</h2>
+      <h2 class="header-description">
+        Better sprint planning <wbr /> and agile estimation for the whole team
+      </h2>
       <div>
         <button
           mat-flat-button
@@ -17,11 +19,16 @@
       </div>
     </div>
     <div class="header-cards">
-      <picture>
-        <source srcset="/assets/header_cards.webp" type="image/webp" />
-        <source srcset="/assets/header_cards.jpeg" type="image/jpeg" />
-        <img src="/assets/header_cards.jpeg" alt="Two cards with numbers" />
-      </picture>
+      <div class="header-cards-wrapper">
+        <img
+          ngSrc="header_cards"
+          alt="Two cards with numbers"
+          priority
+          width="917"
+          height="917"
+          sizes="(max-width: 800px) 100vw, 60vw"
+        />
+      </div>
     </div>
   </div>
 </section>
@@ -51,44 +58,46 @@
     <div class="features-grid">
       <div class="feature-card wide">
         <h3>Easy-to-use and accessible UI</h3>
-        <picture>
-          <source srcset="/assets/easy_accessible.webp" type="image/webp" />
-          <source srcset="/assets/easy_accessible.jpeg" type="image/jpeg" />
-          <img
-            src="/assets/easy_accessible.jpeg"
-            alt="UI components laid out visually"
-          />
-        </picture>
+        <img
+          ngSrc="easy_accessible"
+          alt="UI components laid out visually"
+          width="1480"
+          height="1200"
+          sizes="(max-width: 800px) 100vw, 40vw"
+        />
       </div>
       <div class="feature-card">
         <h3>Simple round management and exports</h3>
-        <picture>
-          <source srcset="/assets/topics.webp" type="image/webp" />
-          <source srcset="/assets/topics.jpeg" type="image/jpeg" />
-          <img src="/assets/topics.jpeg" alt="Two example JIRA topic cards" />
-        </picture>
+        <img
+          ngSrc="topics"
+          alt="Two example JIRA topic cards"
+          width="971"
+          height="1200"
+          sizes="(max-width: 800px) 100vw, 40vw"
+        />
       </div>
       <div class="feature-card">
         <h3>Customizable card sets</h3>
-        <picture>
-          <source srcset="/assets/card_set.webp" type="image/webp" />
-          <source srcset="/assets/card_set.jpeg" type="image/jpeg" />
-          <img
-            src="/assets/card_set.jpeg"
-            alt="An example planning poker card set"
-          />
-        </picture>
+        <img
+          ngSrc="card_set"
+          alt="An example planning poker card set"
+          width="971"
+          height="1200"
+          sizes="(max-width: 800px) 100vw, 40vw"
+        />
       </div>
       <div class="feature-card wide">
         <h3>
           Available on the web<br />
           and in Zoom
         </h3>
-        <picture>
-          <source srcset="/assets/zoom_app.webp" type="image/webp" />
-          <source srcset="/assets/zoom_app.jpeg" type="image/jpeg" />
-          <img src="/assets/zoom_app.jpeg" alt="The app running inside Zoom" />
-        </picture>
+        <img
+          ngSrc="zoom_app"
+          alt="The app running inside Zoom"
+          width="1480"
+          height="1200"
+          sizes="(max-width: 800px) 100vw, 40vw"
+        />
       </div>
     </div>
   </div>
@@ -280,15 +289,13 @@
       </div>
     </div>
     <div class="about-section-right">
-      <picture>
-        <source srcset="/assets/meeting_table.webp" type="image/webp" />
-        <source srcset="/assets/meeting_table.jpeg" type="image/jpeg" />
-        <img
-          src="/assets/meeting_table.jpeg"
-          alt="People having a meeting around a table"
-          loading="lazy"
-        />
-      </picture>
+      <img
+        ngSrc="meeting_table"
+        alt="People having a meeting around a table"
+        width="1590"
+        height="2205"
+        sizes="(max-width: 800px) 100vw, 50vw"
+      />
     </div>
   </div>
 </section>

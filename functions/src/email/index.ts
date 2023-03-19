@@ -1,4 +1,6 @@
 import * as sgMail from "@sendgrid/mail";
+import {Client as SendGridClient} from "@sendgrid/client";
+import RequestOptions from "@sendgrid/helpers/classes/request";
 
 export function sendEmail(params: {
   emailTitle: string;
@@ -10,7 +12,8 @@ export function sendEmail(params: {
   buttonLabel: string;
 }) {
   if (!process.env.SENDGRID_API_KEY) {
-    throw Error("No API key found!");
+    console.error("No API key found!");
+    return;
   }
 
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -24,4 +27,35 @@ export function sendEmail(params: {
   };
   console.log("<Sending email> To: ", params.to);
   return sgMail.send(msg);
+}
+
+export async function addContact(props: { email: string; name: string }) {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.error("No API key found!");
+    return;
+  }
+
+  if (process.env.FUNCTIONS_EMULATOR === "true" || process.env.GCLOUD_PROJECT !== "card-estimator") {
+    console.log("Not subscribing to list in dev environment");
+    return;
+  }
+
+  const sendGridClient = new SendGridClient();
+  sendGridClient.setApiKey(process.env.SENDGRID_API_KEY);
+
+  const request: RequestOptions = {
+    method: "PUT",
+    url: "/v3/marketing/contacts",
+    body: {
+      contacts: [
+        {
+          email: props.email,
+          first_name: props.name.split(" ")[0],
+          last_name: props.name.split(" ").slice(1).join(" "),
+        },
+      ],
+    },
+  };
+
+  await sendGridClient.request(request);
 }

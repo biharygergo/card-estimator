@@ -1,6 +1,7 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {Change, EventContext} from "firebase-functions/v1";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
+import {addContact} from "../email";
 
 const PROFILES_COLLECTION = "userProfiles";
 
@@ -30,11 +31,16 @@ export function createUserProfile(userDetails: UserDetails) {
       .set(userProfile);
 }
 
-export function onUserDetailsCreate(
+export async function onUserDetailsCreate(
     snap: DocumentSnapshot,
     context: EventContext
 ) {
   const userDetails = snap.data() as UserDetails;
+  try {
+    await addContact({email: userDetails.email, name: userDetails.displayName});
+  } catch (e) {
+    console.error("Error adding customer to mailing list", e);
+  }
   return createUserProfile(userDetails);
 }
 

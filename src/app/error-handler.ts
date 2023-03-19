@@ -14,6 +14,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any): void {
     const chunkFailedMessage = /Loading chunk [\d]+ failed/;
+    console.error('Received an error', error);
 
     if (chunkFailedMessage.test(error.message)) {
       this.showErrorToast(
@@ -23,14 +24,13 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.showErrorToast(
         `We couldn't verify your identity with AppCheck and therefore your access was automatically blocked. ${error.code}`
       );
-    } else if (error.code?.includes('network-request-failed')) {
+    } else if (typeof error.code === 'string' && error.code?.includes('network-request-failed')) {
       this.showErrorToast(
         'Network issue detected. Please check your connection and try again.'
       );
     } else {
       this.showErrorToast(error);
     }
-    console.error('Received an error', error);
     Sentry.captureException(error);
   }
 

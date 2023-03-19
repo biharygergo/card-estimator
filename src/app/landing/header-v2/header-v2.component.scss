@@ -99,6 +99,14 @@ nav {
     margin-left: auto;
   }
 
+  @media screen and (max-width: 1000px) {
+    ul {
+      gap: 8px;
+      padding: 24px 12px;
+      flex-shrink: 0;
+    }
+  }
+
   @media screen and (max-width: 800px) {
     .logo-container {
       img {
@@ -131,7 +139,7 @@ nav {
     ul {
       flex-direction: column;
       justify-content: center;
-      height: 350px;
+      height: 450px;
       width: 100%;
       position: absolute;
       top: -500px;

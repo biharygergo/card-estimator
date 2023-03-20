@@ -243,7 +243,7 @@ $my-theme: mat.define-light-theme(
   margin-bottom: 1rem;
 
   p {
-    color: #15448F;
+    color: #15448f;
   }
 
   .premium-banner-buttons {
@@ -251,7 +251,7 @@ $my-theme: mat.define-light-theme(
     gap: 0.5rem;
 
     .learn-more {
-      color: #575E71;
+      color: #575e71;
     }
   }
 
@@ -261,7 +261,7 @@ $my-theme: mat.define-light-theme(
     align-items: center;
     margin-bottom: 0.2rem;
     font-size: 1rem;
-    color: #001A43;
+    color: #001a43;
   }
 }
 
@@ -299,7 +299,22 @@ $my-theme: mat.define-light-theme(
 
 .snackbar-error {
   .mdc-snackbar__surface {
-    background: #93000A !important;
-    color: #FFDAD6 !important;
+    background: #93000a !important;
+    color: #ffdad6 !important;
+  }
+}
+
+.menu-item-with-badge {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+
+  .menu-item-badge {
+    display: inline-flex;
+    background: #725573;
+    color: white;
+    font-size: 12px;
+    padding: 0px 8px;
+    border-radius: 40px;
   }
 }

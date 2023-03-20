@@ -176,7 +176,10 @@
                 (click)="openRoomConfigurationModal()"
               >
                 <mat-icon>security</mat-icon>
-                Security and permissions
+                <span class="menu-item-with-badge"
+                  >Security and permissions
+                  <span class="menu-item-badge">New</span></span
+                >
               </button>
               <button mat-menu-item (click)="toggleMute()" id="sound-button">
                 <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>

@@ -24,7 +24,9 @@
       *ngIf="currentUser | async as user"
     >
       <mat-icon>groups</mat-icon>
-      <span>My organization</span>
+      <span class="menu-item-with-badge"
+        >My organization <span class="menu-item-badge">New</span></span
+      >
     </button>
     <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>

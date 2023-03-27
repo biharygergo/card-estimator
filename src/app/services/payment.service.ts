@@ -135,7 +135,7 @@ export class PaymentService {
         ) as CollectionReference<Subscription>;
         const q = query<Subscription>(
           collectionRef,
-          where('status', 'in', ['trialing', 'active'])
+          where('status', 'in', ['trialing', 'active', 'past_due'])
         );
         return collectionData<Subscription>(q).pipe(
           map((subscriptions) => {

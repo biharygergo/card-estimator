@@ -92,10 +92,17 @@
 }
 
 .topic-container {
+  transition: height 100ms ease-out;
+  overflow: hidden;
   h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
+
+    button {
+      flex-shrink: 0;
+    }
   }
 
   mat-card-subtitle {
@@ -154,7 +161,6 @@
   ::ng-deep .pass-option-checkbox svg.mdc-checkbox__checkmark {
     color: white !important;
   }
-
 
   .pass-option-label {
     padding-left: 4px;

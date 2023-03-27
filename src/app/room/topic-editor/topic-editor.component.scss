@@ -1,0 +1,54 @@
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  .topic-control {
+    flex: 1;
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important;
+    }
+  }
+
+  .buttons {
+    flex-shrink: 0;
+    flex-grow: auto;
+    display: flex;
+    gap: 0.5rem;
+
+    :last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.button-with-custom-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  img {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.jira-loading {
+  margin-right: 0.5rem;
+}
+
+.rich-topic {
+  padding: 1rem;
+  background: var(--light-blue);
+  margin: 1rem 0;
+  border-radius: 18px;
+
+  .rich-topic-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .rich-topic-body {
+    
+  }
+}

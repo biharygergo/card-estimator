@@ -6,11 +6,7 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import {
-  EstimatorService,
-  MemberNotFoundError,
-  RoomNotFoundError,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -24,7 +20,7 @@ import {
   first,
   map,
   Observable,
-  of,
+  of as observableOf,
   share,
   shareReplay,
   startWith,
@@ -85,7 +81,6 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
   styleUrls: ['./room.component.scss'],
 })
 export class RoomComponent implements OnInit, OnDestroy {
-  @ViewChild('topicInput') topicInput: ElementRef;
   @ViewChild(MatSidenavContainer, { read: ElementRef })
   sidenav: MatSidenavContainer;
 
@@ -102,8 +97,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.selectedEstimationCardSetValue
   );
 
-  roundTopic = new UntypedFormControl('');
-
   isEditingTopic = false;
   isObserver = false;
   isMuted = true;
@@ -118,10 +111,17 @@ export class RoomComponent implements OnInit, OnDestroy {
         .getRoomById(roomId)
         .pipe(startWith(this.route.snapshot.data.room))
     ),
-    filter(room => !!room),
+    filter((room) => !!room),
     catchError((e) => this.onRoomUpdateError(e)),
-    share(),
+    shareReplay(1),
     takeUntil(this.destroy)
+  );
+
+  roomTopic$: Observable<string> = this.room$.pipe(
+    map((room) => {
+      console.log('topic', room?.rounds[room.currentRound ?? 0].topic, room);
+      return room?.rounds[room.currentRound ?? 0].topic || '';
+    })
   );
 
   members$: Observable<Member[]> = this.room$.pipe(
@@ -253,6 +253,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   user$ = this.authService.user;
 
   readonly MemberType = MemberType;
+  readonly observableOf = observableOf;
 
   openedFeedbackForm: boolean = false;
 
@@ -484,12 +485,12 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  async topicBlur() {
+  async topicBlur(newTopic: string) {
     this.isEditingTopic = false;
     await this.estimatorService.setTopic(
       this.room,
       this.currentRound,
-      this.roundTopic.value
+      newTopic
     );
   }
 
@@ -501,8 +502,6 @@ export class RoomComponent implements OnInit, OnDestroy {
           if (hasPermission) {
             this.analytics.logClickedTopicName();
             this.isEditingTopic = true;
-            this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
-            setTimeout(() => this.topicInput.nativeElement.focus(), 100);
           }
         }),
         first()

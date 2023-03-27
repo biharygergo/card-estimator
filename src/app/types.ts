@@ -291,6 +291,33 @@ export enum SubscriptionResult {
   CANCEL = 'cancel',
 }
 
+export interface JiraIssue {
+  summary: string;
+  description: string | null;
+  id: string;
+  key: string;
+  url: string;
+}
+
+export type JiraResource = {
+  id: string;
+  url: string;
+  name: string;
+  scopes: string[];
+  avatarUrl: string;
+  active?: boolean;
+};
+
+export type JiraIntegration = {
+  provider: 'jira';
+  createdAt: FieldValue;
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: number;
+  id: string;
+  jiraResources: JiraResource[];
+};
+
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {
     values: { 0: '0', 0.5: '0.5', 1: '1', 2: '2', 3: '3', 5: '5' },
@@ -345,4 +372,3 @@ export function isNumericCardSet(cardSet: CardSetValue) {
   const values = Object.values(cardSet.values);
   return values.every((value) => isNumeric(value));
 }
-

@@ -33,6 +33,8 @@ import {
   onCustomerSubscriptionCreated,
   onCustomerSubscriptionUpdated,
 } from "./customers/subscription";
+import {startJiraAuthFlow, onJiraAuthorizationReceived} from "./jira/oauth";
+import {searchJira} from "./jira/search";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -139,3 +141,15 @@ exports.onUserSubscriptionCreated = functions.firestore
 exports.onUserSubscriptionUpdated = functions.firestore
     .document("customers/{customerId}/subscriptions/{subscriptionId}")
     .onUpdate(onCustomerSubscriptionUpdated);
+
+exports.startJiraAuth = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => startJiraAuthFlow(req, res));
+});
+
+exports.onJiraAuthResponse = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
+});
+
+exports.queryJiraIssues = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => searchJira(req, res));
+});

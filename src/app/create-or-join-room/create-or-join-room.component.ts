@@ -213,6 +213,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
             })
           )
         ),
+        catchError(error => {
+          this.showUnableToJoinRoom();
+          return of(false);
+        }),
         tap(() => this.isBusy.next(false)),
         takeUntil(this.destroy)
       )

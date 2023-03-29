@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EstimatorService } from '../services/estimator.service';
+import { EstimatorService, RoomNotFoundError } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus, Organization } from '../types';
@@ -213,6 +213,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
             })
           )
         ),
+        catchError(error => {
+          if (error instanceof RoomNotFoundError) {
+            this.showUnableToJoinRoom();
+            return of(false);
+          }
+          this.isBusy.next(false);
+          // Unknown error occured
+          throw error;
+        }),
         tap(() => this.isBusy.next(false)),
         takeUntil(this.destroy)
       )

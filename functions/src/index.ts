@@ -150,6 +150,4 @@ exports.onJiraAuthResponse = functions.https.onRequest(async (req, res) => {
   cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
 });
 
-exports.queryJiraIssues = functions.https.onRequest(async (req, res) => {
-  cookieParser()(req, res, () => searchJira(req, res));
-});
+exports.queryJiraIssues = functions.https.onCall(async (data: any, context: CallableContext) => searchJira(data, context));

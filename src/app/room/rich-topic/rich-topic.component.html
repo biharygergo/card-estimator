@@ -22,9 +22,9 @@
     </markdown>
   </div>
   <div class="rich-topic-buttons" *ngIf="enableEditing">
-    <button mat-stroked-button>
+    <button mat-stroked-button (click)="deleted.next(true)">
       <mat-icon>delete</mat-icon>
-      Remove
+      Clear selection
     </button>
   </div>
 </div>

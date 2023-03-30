@@ -9,10 +9,10 @@ export async function startJiraAuthFlow(
     req: functions.Request,
     res: functions.Response
 ) {
-  /*  const userId = await getUserId(req, res);
+   const userId = await getUserId(req, res);
   if (!userId) {
     res.status(401).send("Not signed in.");
-  } */
+  }
 
   const client = new JiraClient();
   await client.initializeClient();
@@ -27,10 +27,10 @@ export async function onJiraAuthorizationReceived(
 ) {
   const client = new JiraClient();
   await client.initializeClient();
-  /*  const userId = await getUserId(req, res);
+   const userId = await getUserId(req, res);
   if (!userId) {
     res.status(401).send("Not signed in.");
-  } */
+  }
 
   const tokenSet = await client.getToken(req, res);
 
@@ -57,7 +57,7 @@ export async function onJiraAuthorizationReceived(
 
   const firestore = getFirestore();
   const collection = firestore.collection(
-      `userDetails/${"lRiHFBldgwbftj8oyraTh6efLLBN"}/integrations`
+      `userDetails/${userId}/integrations`
   );
   const integration: JiraIntegration = {
     provider: "jira",

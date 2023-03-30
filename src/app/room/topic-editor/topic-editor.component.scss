@@ -38,10 +38,6 @@
   }
 }
 
-.jira-loading {
-  margin-right: 0.5rem;
-}
-
 .issue-autocomplete {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
   border-radius: 12px !important;
@@ -69,4 +65,11 @@
     gap: 0.5rem;
     color: #757780;
   }
+}
+
+.input-suffix {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-right: 0.25rem;
 }

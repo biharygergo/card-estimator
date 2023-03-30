@@ -1,23 +1,23 @@
-import {TokenSet} from "openid-client";
-import * as functions from "firebase-functions";
-import {getFirestore} from "firebase-admin/firestore";
-import axios from "axios";
-import {JiraClient} from "./client";
-import {JiraIntegration, JiraResource} from "./types";
+import { TokenSet } from 'openid-client';
+import { getFirestore } from 'firebase-admin/firestore';
+import axios from 'axios';
+import { JiraClient } from './client';
+import { JiraIntegration, JiraResource } from './types';
+import { CallableContext } from 'firebase-functions/v1/https';
 
-export async function searchJira(
-    req: functions.Request,
-    res: functions.Response
-) {
-  const query = req.query.search;
+export async function searchJira(data: any, context: CallableContext) {
+  const query = data.search;
+  const userId = context.auth?.uid;
+  if (!userId) {
+    throw new Error('Not signed in');
+  }
 
   const jiraIntegrationRef = await getFirestore()
-      .doc(`userDetails/${"lRiHFBldgwbftj8oyraTh6efLLBN"}/integrations/jira`)
-      .get();
+    .doc(`userDetails/${userId}/integrations/jira`)
+    .get();
 
   if (!jiraIntegrationRef.exists) {
-    res.status(404).json({error: "JIRA integration not found."});
-    return;
+    throw new Error('JIRA integration not found.');
   }
 
   const jiraIntegration = jiraIntegrationRef.data() as JiraIntegration;
@@ -40,32 +40,35 @@ export async function searchJira(
     });
   }
 
-  const activeIntegration: JiraResource = jiraIntegration.jiraResources.find((integration) => integration.active) || jiraIntegration.jiraResources[0]
+  const activeIntegration: JiraResource =
+    jiraIntegration.jiraResources.find((integration) => integration.active) ||
+    jiraIntegration.jiraResources[0];
   const cloudId = activeIntegration.id;
 
-  const searchFilter = query ?
-    `summary ~ "${query}"` :
-    "issue in issueHistory()";
+  const filteredQuery = (query as string)
+    ?.replace(/[-_]+/g, ' ')
+    ?.replace(/[^0-9a-zA-Z\s]+/g, '');
+  console.log('filtering with:', filteredQuery);
+  const searchFilter = filteredQuery
+    ? `text ~ "${filteredQuery}"`
+    : 'issue in issueHistory()';
   const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
 
   const results = await axios
-      .get(resourceEndpoint, {
-        headers: {
-          Authorization: "Bearer " + tokenSet.access_token,
-        },
-      })
-      .then((response) => response.data);
+    .get(resourceEndpoint, {
+      headers: {
+        Authorization: 'Bearer ' + tokenSet.access_token,
+      },
+    })
+    .then((response) => response.data);
 
-  res.set("Access-Control-Allow-Origin", "*");
-  return res.json(
-      results.issues.map((issue: any) => ({
-        summary: issue.fields.summary,
-        description: issue.fields.description,
-        status: issue.fields.status?.name,
-        assignee: issue.fields.assignee?.displayName,
-        id: issue.id,
-        key: issue.key,
-        url: `${activeIntegration.url}/browse/${issue.key}`,
-      }))
-  );
+  return results.issues.map((issue: any) => ({
+    summary: issue.fields.summary,
+    description: issue.fields.description,
+    status: issue.fields.status?.name,
+    assignee: issue.fields.assignee?.displayName,
+    id: issue.id,
+    key: issue.key,
+    url: `${activeIntegration.url}/browse/${issue.key}`,
+  }));
 }

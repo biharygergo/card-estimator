@@ -6,29 +6,72 @@ import {
   DocumentReference,
   Firestore,
 } from '@angular/fire/firestore';
-import { Functions } from '@angular/fire/functions';
-import { first, map, Observable, of, switchMap, tap } from 'rxjs';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  first,
+  firstValueFrom,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { JiraIntegration, JiraIssue } from '../types';
 import { AuthService } from './auth.service';
+import { ZoomApiService } from './zoom-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JiraService {
-  API_URL = 'http://localhost:5001/card-estimator/us-central1'; // ``${window.location.origin}/api`;
+  API_URL = `${window.location.origin}/api`;
 
   constructor(
-    private firestore: Firestore,
-    private authService: AuthService,
-    private functions: Functions,
-    private http: HttpClient,
+    private readonly firestore: Firestore,
+    private readonly authService: AuthService,
+    private readonly functions: Functions,
+    private readonly http: HttpClient,
+    private readonly zoomService: ZoomApiService,
+    private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
-  startJiraAuthFlow() {
+  async startJiraAuthFlow() {
     const apiUrl = `${this.API_URL}/startJiraAuth`;
-    window.location.assign(apiUrl);
+    let user = await this.authService.getUser();
+
+    if (!user || user?.isAnonymous) {
+      const dialogRef = this.dialog.open(
+        ...signUpOrLoginDialogCreator({
+          intent: user
+            ? SignUpOrLoginIntent.LINK_ACCOUNT
+            : SignUpOrLoginIntent.SIGN_IN,
+          titleOverride:
+            'Create a free Planning Poker account to integrate with Jira',
+        })
+      );
+
+      await firstValueFrom(dialogRef.afterClosed());
+      user = await this.authService.getUser();
+
+      if (user?.isAnonymous) {
+        return;
+      }
+    }
+
+    if (this.config.isRunningInZoom) {
+      await this.zoomService.openUrl(apiUrl, true);
+      return;
+    }
+
+    window.open(apiUrl);
   }
 
   getIntegration(): Observable<JiraIntegration> {
@@ -50,11 +93,11 @@ export class JiraService {
   }
 
   getIssues(query?: string): Observable<JiraIssue[]> {
-    const params = query
-      ? '?' + new URLSearchParams({ search: query }).toString()
-      : '';
-    return this.http
-      .get(`${this.API_URL}/queryJiraIssues${params}`)
-      .pipe(map((response) => response as JiraIssue[]));
+    return from(
+      httpsCallable(
+        this.functions,
+        'queryJiraIssues'
+      )({ search: query }).then((response) => response.data as JiraIssue[])
+    );
   }
 }

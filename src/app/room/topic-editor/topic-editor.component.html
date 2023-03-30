@@ -5,7 +5,7 @@
     subscriptSizing="dynamic"
   >
     <input
-      placeholder="Add a JIRA ticket or a short description of the current round"
+      placeholder="Write a short description of the topic or select a JIRA ticket"
       [formControl]="roundTopic"
       cdkFocusInitial
       matInput
@@ -14,12 +14,18 @@
       [matAutocomplete]="auto"
       #topicInput
     />
-    <mat-spinner
-      *ngIf="isSearching"
-      matSuffix
-      diameter="20"
-      class="jira-loading"
-    ></mat-spinner>
+    <span class="input-suffix" matSuffix>
+      <mat-spinner
+        *ngIf="isSearching"
+        diameter="20"
+        class="jira-loading"
+      ></mat-spinner>
+      <button mat-icon-button (click)="roundTopic.reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+      
+    </span>
+
     <mat-autocomplete
       #auto="matAutocomplete"
       [displayWith]="displayFn"
@@ -74,6 +80,7 @@
   <button
     matSuffix
     mat-stroked-button
+    color="primary"
     (click)="startJiraAuth.next()"
     *ngIf="(jiraIntegration$ | async) === undefined"
   >
@@ -84,7 +91,7 @@
   </button>
   <div class="nested-buttons">
     <button matSuffix mat-button (click)="canceled.next(true)">Cancel</button>
-    <button matSuffix mat-flat-button color="primary" (click)="topicBlur()">
+    <button matSuffix mat-flat-button color="primary" (click)="topicBlur()" [disabled]="!roundTopic.value">
       Save
     </button>
   </div>

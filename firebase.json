@@ -71,6 +71,16 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/startJiraAuth",
+          "function": "startJiraAuth",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onJiraAuthResponse",
+          "function": "onJiraAuthResponse",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },
@@ -183,6 +193,16 @@
         {
           "source": "/api/acceptOrganizationInvitation",
           "function": "acceptOrganizationInvitation",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/startJiraAuth",
+          "function": "startJiraAuth",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onJiraAuthResponse",
+          "function": "onJiraAuthResponse",
           "region": "us-central1"
         },
         {

@@ -99,7 +99,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-
+    margin-bottom: 0;
     button {
       flex-shrink: 0;
     }
@@ -166,4 +166,8 @@
     padding-left: 4px;
     font-size: 16px;
   }
+}
+
+.rounded-card {
+  border: none;
 }

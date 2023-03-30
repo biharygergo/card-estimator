@@ -87,6 +87,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
         return of([]);
       }
 
+      if(query.includes('Topic of Round ')) {
+        return of([]);
+      }
+
       this.isSearching = true;
       return this.jiraService.getIssues(query).pipe(
         catchError((error) => {

@@ -11,10 +11,10 @@ export class RichTopicComponent {
   @Input() enableEditing: boolean = false;
 
   @Output() deleted = new EventEmitter();
-  
+
   openRemoteTopic() {
     if (this.richTopic) {
-      window.location.assign(this.richTopic.url);
+      window.open(this.richTopic.url, '_blank');
     }
   }
 }

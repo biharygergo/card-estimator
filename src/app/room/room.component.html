@@ -55,7 +55,12 @@
                 *ngIf="isEditingTopic"
                 [roomTopic]="roomTopic$"
                 (topicUpdated)="topicBlur($event)"
+                (canceled)="isEditingTopic = false"
               ></app-topic-editor>
+              <app-rich-topic
+                [richTopic]="(roomTopic$ | async).richTopic"
+                *ngIf="!isEditingTopic"
+              ></app-rich-topic>
             </mat-card-content>
           </div>
         </mat-card>

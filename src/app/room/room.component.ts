@@ -38,6 +38,7 @@ import {
   Member,
   MemberStatus,
   MemberType,
+  RichTopic,
   Room,
   RoomPermissionId,
   Round,
@@ -117,12 +118,16 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  roomTopic$: Observable<string> = this.room$.pipe(
-    map((room) => {
-      console.log('topic', room?.rounds[room.currentRound ?? 0].topic, room);
-      return room?.rounds[room.currentRound ?? 0].topic || '';
-    })
-  );
+  roomTopic$: Observable<{ topic: string; richTopic?: RichTopic | null }> =
+    this.room$.pipe(
+      map((room) => {
+        console.log('topic', room?.rounds[room.currentRound ?? 0].topic, room);
+        return {
+          topic: room?.rounds[room.currentRound ?? 0]?.topic || '',
+          richTopic: room?.rounds[room.currentRound ?? 0]?.richTopic,
+        };
+      })
+    );
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => [room.members, room.memberIds]),
@@ -485,12 +490,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  async topicBlur(newTopic: string) {
+  async topicBlur(event: { topic: string; richTopic?: RichTopic | null }) {
     this.isEditingTopic = false;
     await this.estimatorService.setTopic(
       this.room,
       this.currentRound,
-      newTopic
+      event.topic,
+      event.richTopic
     );
   }
 

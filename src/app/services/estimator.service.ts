@@ -33,6 +33,7 @@ import {
   RoomConfiguration,
   AuthorizationMetadata,
   SubscriptionMetadata,
+  RichTopic,
 } from './../types';
 import {
   collection,
@@ -245,10 +246,24 @@ export class EstimatorService {
     });
   }
 
-  setTopic(room: Room, round: number, topic: string) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+  setTopic(
+    room: Room,
+    round: number,
+    topic: string,
+    richTopic?: RichTopic | null
+  ) {
+    const updates: any = {
       [`rounds.${round}.topic`]: topic,
-    });
+    };
+
+    if (richTopic !== undefined) {
+      updates[`rounds.${round}.richTopic`] = richTopic;
+    }
+
+    return updateDoc(
+      doc(this.firestore, this.ROOMS_COLLECTION, room.roomId),
+      updates
+    );
   }
 
   setShowResults(room: Room, round: number, showResults: boolean) {

@@ -8,16 +8,22 @@
       display: none !important;
     }
   }
+}
 
-  .buttons {
-    flex-shrink: 0;
-    flex-grow: auto;
+.buttons {
+  flex-shrink: 0;
+  flex-grow: auto;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 0;
+
+  .nested-buttons {
     display: flex;
     gap: 0.5rem;
+  }
 
-    :last-child {
-      margin-left: auto;
-    }
+  :last-child {
+    margin-left: auto;
   }
 }
 
@@ -36,19 +42,31 @@
   margin-right: 0.5rem;
 }
 
-.rich-topic {
-  padding: 1rem;
-  background: var(--light-blue);
-  margin: 1rem 0;
-  border-radius: 18px;
+.issue-autocomplete {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 12px !important;
 
-  .rich-topic-header {
+  .issue-autocomplete-label {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+    align-items: center;
+
+    .jira-icon {
+      height: 24px;
+      width: 24px;
+      margin-right: 0.5rem;
+    }
   }
 
-  .rich-topic-body {
-    
+  .issue-autocomplete-item,
+  .issue-autocomplete-item-text {
+    color: #757780;
+  }
+
+  .group-label {
+    display: flex;
+    padding: 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    color: #757780;
   }
 }

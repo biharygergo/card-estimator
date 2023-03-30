@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
@@ -23,38 +24,39 @@ import {
   tap,
 } from 'rxjs';
 import { JiraService } from 'src/app/services/jira.service';
-import { JiraIssue } from 'src/app/types';
-
-interface RichTopic {
-  provider: 'jira';
-  description: string;
-  key: string;
-  url: string;
-}
+import { JiraIssue, RichTopic } from 'src/app/types';
 
 @Component({
   selector: 'app-topic-editor',
   templateUrl: './topic-editor.component.html',
   styleUrls: ['./topic-editor.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TopicEditorComponent implements OnInit, OnDestroy {
-  @Input() roomTopic: Observable<string>;
-  @Output() topicUpdated = new EventEmitter<string>();
-  @Output() richTopicUpdated = new EventEmitter<RichTopic>();
+  @Input() roomTopic: Observable<{
+    topic: string;
+    richTopic?: RichTopic | null;
+  }>;
+
+  @Output() topicUpdated = new EventEmitter<{
+    topic: string;
+    richTopic?: RichTopic | null;
+  }>();
+  @Output() canceled = new EventEmitter();
 
   @ViewChild('topicInput') topicInput: ElementRef;
 
   roundTopic = new FormControl<string | JiraIssue>('', { nonNullable: true });
   isSearching: boolean = false;
 
-  selectedRichTopic: RichTopic | undefined;
+  selectedRichTopic: RichTopic | undefined | null;
 
   debouncedTopic$: Observable<string> = this.roundTopic.valueChanges.pipe(
     debounceTime(300),
     map((topic) => this.displayFn(topic))
   );
 
-  showRecents = new Subject<void>();
+  startJiraAuth = new Subject<void>();
 
   jiraIntegration$ = this.jiraService.getIntegration();
   jiraIssues$ = new BehaviorSubject<{
@@ -102,9 +104,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   constructor(private readonly jiraService: JiraService) {}
 
   ngOnInit(): void {
-    this.roomTopic.pipe(takeUntil(this.destroy)).subscribe((topic) => {
-      console.log('topic new', topic);
+    this.roomTopic.pipe(takeUntil(this.destroy)).subscribe(({topic, richTopic}) => {
       this.roundTopic.setValue(topic);
+      this.selectedRichTopic = richTopic;
+
     });
 
     this.jiraIssuesFromQuery$
@@ -125,8 +128,8 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
         });
       });
 
-    this.showRecents.pipe(takeUntil(this.destroy)).subscribe((issues) => {
-      this.topicInput.nativeElement.focus();
+    this.startJiraAuth.pipe(takeUntil(this.destroy)).subscribe((issues) => {
+      this.jiraService.startJiraAuthFlow();
     });
   }
 
@@ -136,7 +139,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   }
 
   topicBlur() {
-    this.topicUpdated.next(this.displayFn(this.roundTopic.value));
+    this.topicUpdated.next({
+      topic: this.displayFn(this.roundTopic.value),
+      richTopic: this.selectedRichTopic,
+    });
   }
 
   displayFn(issue: JiraIssue | string) {
@@ -150,6 +156,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
     console.log(issue);
     this.selectedRichTopic = {
       description: issue.description,
+      summary: issue.summary,
       key: issue.key,
       url: issue.url,
       provider: 'jira',

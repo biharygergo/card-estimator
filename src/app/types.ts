@@ -46,6 +46,7 @@ export interface Room {
 export interface Round {
   id: string;
   topic: string;
+  richTopic?: RichTopic | null;
   started_at: FieldValue;
   finished_at: FieldValue;
   estimates: { [memberId: string]: number | null };
@@ -294,7 +295,20 @@ export enum SubscriptionResult {
 export interface JiraIssue {
   summary: string;
   description: string | null;
+  status?: string;
+  assignee?: string;
   id: string;
+  key: string;
+  url: string;
+}
+
+
+export interface RichTopic {
+  provider: 'jira';
+  description: string;
+  summary: string;
+  status?: string;
+  assignee?: string;
   key: string;
   url: string;
 }

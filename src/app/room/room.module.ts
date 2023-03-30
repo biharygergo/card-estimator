@@ -19,6 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TopicEditorComponent } from './topic-editor/topic-editor.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MarkdownModule } from 'ngx-markdown';
+import { RichTopicComponent } from './rich-topic/rich-topic.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,7 @@ const routes: Routes = [
     VelocityComponent,
     RoomConfigurationModalComponent,
     TopicEditorComponent,
+    RichTopicComponent,
   ],
   imports: [
     CommonModule,

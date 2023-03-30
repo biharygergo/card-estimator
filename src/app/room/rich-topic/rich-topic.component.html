@@ -1,0 +1,30 @@
+<div class="rich-topic" *ngIf="richTopic">
+  <div class="rich-topic-header">
+    <h4 class="summary">
+      <img class="jira-icon-header" src="/assets/jira.png" />
+      {{ richTopic.key }}: {{ richTopic.summary }}
+    </h4>
+    <button (click)="openRemoteTopic()" mat-icon-button>
+      <mat-icon>launch</mat-icon>
+    </button>
+  </div>
+  <div class="rich-topic-body">
+    <div class="info-block">
+      <h5 class="info-block-title">Status</h5>
+      <span class="rectangular-badge">{{ richTopic.status ?? "N/A" }}</span>
+    </div>
+    <div class="info-block">
+      <h5 class="info-block-title">Assignee</h5>
+      <span class="rectangular-badge">{{ richTopic.assignee ?? "N/A" }}</span>
+    </div>
+    <h5 class="info-block-title standalone">Description</h5>
+    <markdown [data]="richTopic.description ?? 'No description available'">
+    </markdown>
+  </div>
+  <div class="rich-topic-buttons" *ngIf="enableEditing">
+    <button mat-stroked-button>
+      <mat-icon>delete</mat-icon>
+      Remove
+    </button>
+  </div>
+</div>

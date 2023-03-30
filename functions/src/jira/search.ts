@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import {getFirestore} from "firebase-admin/firestore";
 import axios from "axios";
 import {JiraClient} from "./client";
-import {JiraIntegration} from "./types";
+import {JiraIntegration, JiraResource} from "./types";
 
 export async function searchJira(
     req: functions.Request,
@@ -40,14 +40,13 @@ export async function searchJira(
     });
   }
 
-  const cloudId =
-    jiraIntegration.jiraResources.find((integration) => integration.active)
-        ?.id || jiraIntegration.jiraResources[0].id;
+  const activeIntegration: JiraResource = jiraIntegration.jiraResources.find((integration) => integration.active) || jiraIntegration.jiraResources[0]
+  const cloudId = activeIntegration.id;
 
   const searchFilter = query ?
     `summary ~ "${query}"` :
     "issue in issueHistory()";
-  const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,id,key`;
+  const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
 
   const results = await axios
       .get(resourceEndpoint, {
@@ -62,9 +61,11 @@ export async function searchJira(
       results.issues.map((issue: any) => ({
         summary: issue.fields.summary,
         description: issue.fields.description,
+        status: issue.fields.status?.name,
+        assignee: issue.fields.assignee?.displayName,
         id: issue.id,
         key: issue.key,
-        url: issue.self,
+        url: `${activeIntegration.url}/browse/${issue.key}`,
       }))
   );
 }

@@ -35,7 +35,7 @@
         <mat-card appearance="outlined" class="topic-container">
           <mat-card-content (click)="onTopicClicked()">
             <h2 *ngIf="!isEditingTopic">
-              {{ room?.rounds[currentRound].topic }}
+              {{ room?.rounds[currentRound]?.topic }}
               <button
                 mat-stroked-button
                 [disabled]="!(permissionsService.canEditTopic() | async)"

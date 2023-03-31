@@ -9,6 +9,7 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { integrationsModalCreator } from '../integrations/integrations.component';
 import { organizationModalCreator } from '../organization-modal/organization-modal.component';
 
 @Component({
@@ -71,6 +72,10 @@ export class ProfileDropdownComponent implements OnInit {
   openOrganizationModal() {
     this.dialog.open(...organizationModalCreator());
     this.analytics.logClickedOpenOrganizationModal('profile_icon');
+  }
+
+  openIntegrationsModal() {
+    this.dialog.open(...integrationsModalCreator());
   }
 
   reportAnIssue() {

@@ -87,7 +87,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
         return of([]);
       }
 
-      if(query.includes('Topic of Round ')) {
+      if (query.includes('Topic of Round ')) {
         return of([]);
       }
 
@@ -108,14 +108,18 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   constructor(private readonly jiraService: JiraService) {}
 
   ngOnInit(): void {
-    this.roomTopic.pipe(takeUntil(this.destroy)).subscribe(({topic, richTopic}) => {
-      this.roundTopic.setValue(topic);
-      this.selectedRichTopic = richTopic;
-
-    });
+    this.roomTopic
+      .pipe(takeUntil(this.destroy))
+      .subscribe(({ topic, richTopic }) => {
+        this.roundTopic.setValue(topic);
+        this.selectedRichTopic = richTopic;
+      });
 
     this.jiraIssuesFromQuery$
-      .pipe(takeUntil(this.destroy))
+      .pipe(
+        takeUntil(this.destroy),
+        tap((results) => console.log('search', results))
+      )
       .subscribe((issues) => {
         this.jiraIssues$.next({
           search: issues,
@@ -124,7 +128,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       });
 
     this.recentJiraIssues$
-      .pipe(takeUntil(this.destroy))
+      .pipe(
+        takeUntil(this.destroy),
+        tap((issues) => console.log('latest', issues))
+      )
       .subscribe((recents) => {
         this.jiraIssues$.next({
           recent: recents,
@@ -164,6 +171,8 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       key: issue.key,
       url: issue.url,
       provider: 'jira',
+      assignee: issue.assignee,
+      status: issue.status
     };
   }
 }

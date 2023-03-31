@@ -13,11 +13,14 @@ import {getFirestore} from "firebase-admin/firestore";
 
 export const getSessionVariable = (
     req: functions.Request,
-    res: functions.Response
+    res: functions.Response,
+    clearCookie = true
 ) => {
   const sessionCookie = req.cookies["__session"];
   const verifier = sessionCookie;
-  res.clearCookie("__session");
+  if (clearCookie) {
+    res.clearCookie("__session");
+  }
   return verifier;
 };
 

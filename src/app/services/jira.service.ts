@@ -32,7 +32,6 @@ import { ZoomApiService } from './zoom-api.service';
 })
 export class JiraService {
   API_URL = `${window.location.origin}/api`;
-
   constructor(
     private readonly firestore: Firestore,
     private readonly authService: AuthService,
@@ -66,12 +65,15 @@ export class JiraService {
       }
     }
 
+    const idToken = await this.authService.refreshIdToken();
+    this.authService.setSessionCookie(idToken);
+
     if (this.config.isRunningInZoom) {
       await this.zoomService.openUrl(apiUrl, true);
       return;
     }
 
-    window.open(apiUrl);
+    window.open(apiUrl, '_blank');
   }
 
   getIntegration(): Observable<JiraIntegration> {

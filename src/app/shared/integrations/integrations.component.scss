@@ -1,0 +1,50 @@
+.integrations-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.integration {
+  display: flex;
+  gap: 2rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #d9d9d9;
+    padding-bottom: 1rem;
+  }
+
+  &:not(:first-child) {
+    padding-top: 1rem;
+  }
+
+  .details {
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      .integration-logo {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+      }
+
+      h4 {
+        display: inline-block;
+        margin-bottom: 0;
+        color: #001a43;
+        font-weight: 500;
+      }
+    }
+
+    p {
+      color: #757780;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

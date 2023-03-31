@@ -1,0 +1,44 @@
+<h1 mat-dialog-title class="dialog-title">Integrations</h1>
+<div mat-dialog-content>
+  <p>
+    Connect Planning Poker with the tools you already know to improve your
+    estimation process.
+  </p>
+  <div class="tab-section">
+    <div class="integrations-list">
+      <div class="integration">
+        <div class="details">
+          <div class="title">
+            <img class="integration-logo" src="/assets/zoom-logo.png" />
+            <h4>Zoom</h4>
+          </div>
+          <p>Use Planning Poker directly in the Zoom Meetings app.</p>
+        </div>
+        <div class="actions">
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="config.isRunningInZoom"
+          >
+            {{ config.isRunningInZoom ? 'Installed' : 'Install' }}
+          </button>
+        </div>
+      </div>
+      <div class="integration">
+        <div class="details">
+          <div class="title">
+            <img class="integration-logo" src="/assets/jira.png" />
+            <h4>Jira</h4>
+          </div>
+          <p>
+            Select tickets from your recent history or search right from the
+            topic editor.
+          </p>
+        </div>
+        <div class="actions">
+          <button mat-flat-button color="primary">Connect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

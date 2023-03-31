@@ -40,6 +40,7 @@ import { FileUploadDragDropComponent } from './file-upload-drag-drop/file-upload
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { SubscriptionResultComponent } from './subscription-result/subscription-result.component';
 import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-more.component';
+import { IntegrationsComponent } from './integrations/integrations.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-mo
     DragDropDirective,
     SubscriptionResultComponent,
     PremiumLearnMoreComponent,
+    IntegrationsComponent,
   ],
   imports: [
     CommonModule,

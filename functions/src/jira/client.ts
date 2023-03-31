@@ -1,6 +1,5 @@
 import {Issuer, Client, generators, TokenSet} from "openid-client";
 import * as functions from "firebase-functions";
-import {setSessionVariable} from "../zoom/zoomApi";
 
 export class JiraClient {
   openIdHost = "https://auth.atlassian.com";
@@ -48,7 +47,7 @@ export class JiraClient {
     // store the codeVerifier in your framework's session mechanism, if it is a cookie based solution
     // it should be httpOnly (not readable by javascript) and encrypted.
 
-    setSessionVariable(response, codeVerifier);
+    // setSessionVariable(response, codeVerifier);
 
     const codeChallenge = generators.codeChallenge(codeVerifier);
 

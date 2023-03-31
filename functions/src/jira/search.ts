@@ -1,23 +1,23 @@
-import { TokenSet } from 'openid-client';
-import { getFirestore } from 'firebase-admin/firestore';
-import axios from 'axios';
-import { JiraClient } from './client';
-import { JiraIntegration, JiraResource } from './types';
-import { CallableContext } from 'firebase-functions/v1/https';
+import {TokenSet} from "openid-client";
+import {getFirestore} from "firebase-admin/firestore";
+import axios from "axios";
+import {JiraClient} from "./client";
+import {JiraIntegration, JiraResource} from "./types";
+import {CallableContext} from "firebase-functions/v1/https";
 
 export async function searchJira(data: any, context: CallableContext) {
   const query = data.search;
   const userId = context.auth?.uid;
   if (!userId) {
-    throw new Error('Not signed in');
+    throw new Error("Not signed in");
   }
 
   const jiraIntegrationRef = await getFirestore()
-    .doc(`userDetails/${userId}/integrations/jira`)
-    .get();
+      .doc(`userDetails/${userId}/integrations/jira`)
+      .get();
 
   if (!jiraIntegrationRef.exists) {
-    throw new Error('JIRA integration not found.');
+    throw new Error("JIRA integration not found.");
   }
 
   const jiraIntegration = jiraIntegrationRef.data() as JiraIntegration;
@@ -46,21 +46,23 @@ export async function searchJira(data: any, context: CallableContext) {
   const cloudId = activeIntegration.id;
 
   const filteredQuery = (query as string)
-    ?.replace(/[-_]+/g, ' ')
-    ?.replace(/[^0-9a-zA-Z\s]+/g, '');
-  console.log('filtering with:', filteredQuery);
-  const searchFilter = filteredQuery
-    ? `text ~ "${filteredQuery}"`
-    : 'issue in issueHistory()';
+      ?.replace(/[-_]+/g, " ")
+      ?.replace(/[^0-9a-zA-Z\s]+/g, "");
+  console.log("filtering with:", filteredQuery);
+  const searchFilter = filteredQuery ?
+    `text ~ "${filteredQuery}"` :
+    "issue in issueHistory()";
   const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
 
   const results = await axios
-    .get(resourceEndpoint, {
-      headers: {
-        Authorization: 'Bearer ' + tokenSet.access_token,
-      },
-    })
-    .then((response) => response.data);
+      .get(resourceEndpoint, {
+        headers: {
+          Authorization: "Bearer " + tokenSet.access_token,
+        },
+      })
+      .then((response) => response.data);
+
+  console.log("Got issues", results);
 
   return results.issues.map((issue: any) => ({
     summary: issue.fields.summary,

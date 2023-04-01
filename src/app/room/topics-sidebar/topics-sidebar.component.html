@@ -114,6 +114,7 @@
           #detailsPanel
         >
           <ng-template matExpansionPanelContent>
+            <app-rich-topic [richTopic]="round.richTopic"></app-rich-topic>
             <app-round-results
               [room]="room"
               [roundStatistics]="roundStatistics"

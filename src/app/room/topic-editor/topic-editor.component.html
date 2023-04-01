@@ -16,7 +16,7 @@
     />
     <span class="input-suffix" matSuffix>
       <mat-spinner
-        *ngIf="isSearching"
+        *ngIf="isSearching || isFetchingRecents"
         diameter="20"
         class="jira-loading"
       ></mat-spinner>
@@ -85,11 +85,11 @@
     mat-stroked-button
     color="primary"
     (click)="startJiraAuth.next()"
-    *ngIf="(jiraIntegration$ | async) === undefined"
+    [disabled]="(jiraIntegration$ | async) !== undefined"
   >
     <span class="button-with-custom-icon">
       <img class="jira-icon" src="/assets/jira.png" />
-      Connect to Jira
+      {{ (jiraIntegration$ | async) === undefined ? 'Connect to Jira' : 'Connected to Jira'}}
     </span>
   </button>
   <div class="nested-buttons">

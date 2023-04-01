@@ -27,7 +27,6 @@ export class AddOrUpdateTopicComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.topicInput);
     this.topicInput$.next(this.topicInput);
   }
 

@@ -49,6 +49,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
 
   roundTopic = new FormControl<string | JiraIssue>('', { nonNullable: true });
   isSearching: boolean = false;
+  isFetchingRecents: boolean = false;
 
   selectedRichTopic: RichTopic | undefined | null;
 
@@ -71,7 +72,11 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
         return of([]);
       }
 
+      this.isFetchingRecents = true;
       return this.jiraService.getIssues().pipe(
+        tap(() => {
+          this.isFetchingRecents = false;
+        }),
         catchError((e) => {
           this.showJiraError(e);
           return of([]);
@@ -167,7 +172,6 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   }
 
   issueSelected(issue: JiraIssue) {
-    console.log(issue);
     this.selectedRichTopic = {
       description: issue.description,
       summary: issue.summary,
@@ -181,7 +185,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
 
   showJiraError(e: any) {
     console.error(e);
-    Sentry.captureException(e)
+    Sentry.captureException(e);
     this.toastService.showMessage(
       `Could not fetch issues from Jira. Please try again or reconnect from the Integrations menu. ${e.message}`,
       10000,

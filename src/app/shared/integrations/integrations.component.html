@@ -10,7 +10,7 @@
         <div class="integration-main">
           <div class="details">
             <div class="title">
-              <img class="integration-logo" src="/assets/zoom-logo.png" />
+              <img class="integration-logo" src="/assets/zoom.png" />
               <h4>Zoom</h4>
             </div>
             <p>Use Planning Poker directly in the Zoom Meetings app.</p>
@@ -37,13 +37,13 @@
               <h4>Jira</h4>
             </div>
             <p>
-              Select tickets from your recent history or search right from the
+              Select tickets from your recent history and search right from the
               topic editor.
             </p>
           </div>
           <div class="actions">
             <button mat-flat-button color="primary" (click)="startJiraAuth()">
-              Connect
+              {{ (jiraIntegration$ | async) ? 'Connect another' : 'Connect'}}
             </button>
           </div>
         </div>
@@ -57,7 +57,7 @@
               [value]="project"
               *ngFor="let project of projectList"
               [checked]="project.active"
-              (click)="onJiraProjectSelected(project)"
+              (click)="projectList.length > 1 && onJiraProjectSelected(project)"
               ><span class="jira-list-label">
                 {{ project.url }}
                 <button

@@ -22,12 +22,6 @@ export class JiraClient {
 
   async initializeClient() {
     this.issuer = await Issuer.discover(this.openIdHost);
-    console.log(
-        "Discovered issuer %s %O",
-        this.issuer.issuer,
-        this.issuer.metadata
-    );
-
     this.client = new this.issuer.Client({
       client_id: this.config.clientId,
       client_secret: this.config.clientSecret,
@@ -44,10 +38,6 @@ export class JiraClient {
     }
 
     const codeVerifier = generators.codeVerifier();
-    // store the codeVerifier in your framework's session mechanism, if it is a cookie based solution
-    // it should be httpOnly (not readable by javascript) and encrypted.
-
-    // setSessionVariable(response, codeVerifier);
 
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
@@ -63,14 +53,10 @@ export class JiraClient {
 
   async getToken(req: functions.Request, res: functions.Response) {
     const params = this.client!.callbackParams(req);
-    // const codeVerifier = getSessionVariable(req, res);
 
-    console.log("params", params);
     const tokenSet = await this.client!.oauthCallback(this.config.redirectUri, {
       code: params.code,
     });
-    console.log("received and validated tokens %j", tokenSet);
-    // console.log("validated ID Token claims %j", tokenSet.claims());
 
     return tokenSet;
   }

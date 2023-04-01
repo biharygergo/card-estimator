@@ -18,8 +18,10 @@
       <span class="rectangular-badge">{{ richTopic.assignee ?? "N/A" }}</span>
     </div>
     <h5 class="info-block-title standalone">Description</h5>
-    <markdown [data]="richTopic.description ?? 'No description available'">
-    </markdown>
+    <div class="markdown-content">
+      <markdown [data]="cleanedMarkdown ?? 'No description available'">
+      </markdown>
+    </div>
   </div>
   <div class="rich-topic-buttons" *ngIf="enableEditing">
     <button mat-stroked-button (click)="deleted.next(true)">

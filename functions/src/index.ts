@@ -2,6 +2,8 @@ import * as functions from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
 import {appCheck} from "firebase-admin";
 import * as cookieParser from "cookie-parser";
+import * as Sentry from "@sentry/node";
+
 import {
   authorizeZoomApp,
   generateCodeChallenge,
@@ -35,9 +37,15 @@ import {
 } from "./customers/subscription";
 import {startJiraAuthFlow, onJiraAuthorizationReceived} from "./jira/oauth";
 import {searchJira} from "./jira/search";
+import {captureError} from "./shared/errors";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
+
+Sentry.init({
+  dsn: "https://cc711a2e5c854663a9feda8c1d4fcd3b@o200611.ingest.sentry.io/4504938995318784",
+  tracesSampleRate: 0.7,
+});
 
 exports.authorizeZoomApp = functions.https.onRequest(async (req, res) => {
   cookieParser()(req, res, async () => authorizeZoomApp(req, res));
@@ -63,6 +71,7 @@ exports.fetchAppCheckToken = functions.https.onCall(
         return {token: result.token, expiresAt};
       } catch (err) {
         console.error("Unable to create App Check token.", err);
+        captureError(err);
         return "An error occured, please check the logs.";
       }
     }

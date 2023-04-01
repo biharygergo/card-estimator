@@ -122,7 +122,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   roomTopic$: Observable<{ topic: string; richTopic?: RichTopic | null }> =
     this.room$.pipe(
       map((room) => {
-        console.log('topic', room?.rounds[room.currentRound ?? 0].topic, room);
         return {
           topic: room?.rounds[room.currentRound ?? 0]?.topic || '',
           richTopic: room?.rounds[room.currentRound ?? 0]?.richTopic,

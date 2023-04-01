@@ -17,6 +17,7 @@
   "dependencies": {
     "@sendgrid/client": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
+    "@sentry/node": "^7.46.0",
     "@types/node": "^18.11.18",
     "axios": "^1.2.2",
     "bcrypt": "^5.1.0",

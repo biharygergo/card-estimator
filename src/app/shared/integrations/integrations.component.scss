@@ -29,6 +29,7 @@
         width: 35px;
         height: 35px;
         object-fit: contain;
+        padding: 4px;
       }
 
       h4 {
@@ -49,12 +50,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
 }
 
 .jira-list {
   display: flex;
   flex-direction: column;
+  padding-top: 1rem;
 
   .mdc-form-field {
     width: 100%;

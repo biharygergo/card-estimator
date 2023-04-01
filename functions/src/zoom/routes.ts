@@ -10,6 +10,7 @@ import * as functions from "firebase-functions";
 import {getHost, isRunningInDevMode} from "../config";
 import {AUTH_SESSIONS} from "../shared/collections";
 import {getFirestore} from "firebase-admin/firestore";
+import {captureError} from "../shared/errors";
 
 export const getSessionVariable = (
     req: functions.Request,
@@ -67,7 +68,7 @@ export const zoomHome = async (
 
     return res.redirect(`${host}/installZoomApp`);
   } catch (e) {
-    console.error(e);
+    captureError(e);
     res.send(
         "An error occured. Please try again or visit https://planningpoker.live"
     );
@@ -93,6 +94,7 @@ export const authorizeZoomApp = async (
     try {
       verifier = getSessionVariable(req, res);
     } catch (err) {
+      captureError(err);
       console.error("Error while parsing session cookie: ", err);
     }
 
@@ -113,6 +115,7 @@ export const authorizeZoomApp = async (
     // redirect the user to the Zoom Client
     res.redirect(deeplink);
   } catch (e) {
+    captureError(e);
     console.error(e);
     res
         .status(500)

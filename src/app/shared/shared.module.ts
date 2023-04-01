@@ -41,6 +41,7 @@ import { DragDropDirective } from './directives/drag-drop.directive';
 import { SubscriptionResultComponent } from './subscription-result/subscription-result.component';
 import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-more.component';
 import { IntegrationsComponent } from './integrations/integrations.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { IntegrationsComponent } from './integrations/integrations.component';
     MatSidenavModule,
     MatBadgeModule,
     MatChipsModule,
+    MatRadioModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

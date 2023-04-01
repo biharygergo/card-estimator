@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import {
+  deleteDoc,
   doc,
   docData,
   DocumentReference,
   Firestore,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,7 +25,7 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { JiraIntegration, JiraIssue } from '../types';
+import { JiraIntegration, JiraIssue, JiraResource } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
@@ -90,6 +92,39 @@ export class JiraService {
           ) as DocumentReference<JiraIntegration>
         );
         return jiraDoc;
+      })
+    );
+  }
+
+  updateJiraResourceList(resourceList: JiraResource[]) {
+    return this.authService.user.pipe(
+      switchMap((user) => {
+        if (!user || user.isAnonymous) {
+          return of(undefined);
+        }
+
+        return from(
+          updateDoc(
+            doc(this.firestore, `userDetails/${user.uid}/integrations/jira`),
+            { jiraResources: resourceList }
+          )
+        );
+      })
+    );
+  }
+
+  removeJiraIntegration() {
+    return this.authService.user.pipe(
+      switchMap((user) => {
+        if (!user || user.isAnonymous) {
+          return of(undefined);
+        }
+
+        return from(
+          deleteDoc(
+            doc(this.firestore, `userDetails/${user.uid}/integrations/jira`)
+          )
+        );
       })
     );
   }

@@ -6,6 +6,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
@@ -15,6 +16,7 @@ import { RichTopic } from 'src/app/types';
   selector: 'app-rich-topic',
   templateUrl: './rich-topic.component.html',
   styleUrls: ['./rich-topic.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RichTopicComponent implements OnChanges {
   @Input() richTopic: RichTopic | null | undefined;

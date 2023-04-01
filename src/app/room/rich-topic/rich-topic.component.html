@@ -4,9 +4,18 @@
       <img class="jira-icon-header" src="/assets/jira.png" />
       {{ richTopic.key }}: {{ richTopic.summary }}
     </h4>
-    <button (click)="openRemoteTopic()" mat-icon-button>
-      <mat-icon>launch</mat-icon>
-    </button>
+    <div class="header-buttons">
+      <button
+        *ngIf="enableEditing"
+        (click)="deleted.next(true)"
+        mat-icon-button
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button (click)="openRemoteTopic()" mat-icon-button>
+        <mat-icon>launch</mat-icon>
+      </button>
+    </div>
   </div>
   <div class="rich-topic-body">
     <div class="info-block">
@@ -22,11 +31,5 @@
       <markdown [data]="cleanedMarkdown ?? 'No description available'">
       </markdown>
     </div>
-  </div>
-  <div class="rich-topic-buttons" *ngIf="enableEditing">
-    <button mat-stroked-button (click)="deleted.next(true)">
-      <mat-icon>delete</mat-icon>
-      Clear selection
-    </button>
   </div>
 </div>

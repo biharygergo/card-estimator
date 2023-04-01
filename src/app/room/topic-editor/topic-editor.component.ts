@@ -24,7 +24,14 @@ import {
   tap,
 } from 'rxjs';
 import { JiraService } from 'src/app/services/jira.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { JiraIssue, RichTopic } from 'src/app/types';
+import * as Sentry from '@sentry/angular';
+
+export interface TopicEditorInputOutput {
+  topic: string;
+  richTopic?: RichTopic | null;
+}
 
 @Component({
   selector: 'app-topic-editor',
@@ -33,15 +40,9 @@ import { JiraIssue, RichTopic } from 'src/app/types';
   encapsulation: ViewEncapsulation.None,
 })
 export class TopicEditorComponent implements OnInit, OnDestroy {
-  @Input() roomTopic: Observable<{
-    topic: string;
-    richTopic?: RichTopic | null;
-  }>;
+  @Input() roomTopic: Observable<TopicEditorInputOutput>;
 
-  @Output() topicUpdated = new EventEmitter<{
-    topic: string;
-    richTopic?: RichTopic | null;
-  }>();
+  @Output() topicUpdated = new EventEmitter<TopicEditorInputOutput>();
   @Output() canceled = new EventEmitter();
 
   @ViewChild('topicInput') topicInput: ElementRef;
@@ -70,7 +71,12 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
         return of([]);
       }
 
-      return this.jiraService.getIssues();
+      return this.jiraService.getIssues().pipe(
+        catchError((e) => {
+          this.showJiraError(e);
+          return of([]);
+        })
+      );
     })
   );
 
@@ -94,7 +100,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       this.isSearching = true;
       return this.jiraService.getIssues(query).pipe(
         catchError((error) => {
-          console.error(error);
+          this.showJiraError(error);
           return of([]);
         })
       );
@@ -105,7 +111,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   );
   destroy = new Subject<void>();
 
-  constructor(private readonly jiraService: JiraService) {}
+  constructor(
+    private readonly jiraService: JiraService,
+    private readonly toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.roomTopic
@@ -116,10 +125,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       });
 
     this.jiraIssuesFromQuery$
-      .pipe(
-        takeUntil(this.destroy),
-        tap((results) => console.log('search', results))
-      )
+      .pipe(takeUntil(this.destroy))
       .subscribe((issues) => {
         this.jiraIssues$.next({
           search: issues,
@@ -128,10 +134,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       });
 
     this.recentJiraIssues$
-      .pipe(
-        takeUntil(this.destroy),
-        tap((issues) => console.log('latest', issues))
-      )
+      .pipe(takeUntil(this.destroy))
       .subscribe((recents) => {
         this.jiraIssues$.next({
           recent: recents,
@@ -172,7 +175,17 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       url: issue.url,
       provider: 'jira',
       assignee: issue.assignee,
-      status: issue.status
+      status: issue.status,
     };
+  }
+
+  showJiraError(e: any) {
+    console.error(e);
+    Sentry.captureException(e)
+    this.toastService.showMessage(
+      `Could not fetch issues from Jira. Please try again or reconnect from the Integrations menu. ${e.message}`,
+      10000,
+      'error'
+    );
   }
 }

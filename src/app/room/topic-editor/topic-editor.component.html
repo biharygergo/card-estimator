@@ -20,10 +20,13 @@
         diameter="20"
         class="jira-loading"
       ></mat-spinner>
-      <button mat-icon-button (click)="roundTopic.reset()">
+      <button
+        mat-icon-button
+        (click)="roundTopic.reset()"
+        *ngIf="roundTopic.value"
+      >
         <mat-icon>close</mat-icon>
       </button>
-      
     </span>
 
     <mat-autocomplete
@@ -91,7 +94,13 @@
   </button>
   <div class="nested-buttons">
     <button matSuffix mat-button (click)="canceled.next(true)">Cancel</button>
-    <button matSuffix mat-flat-button color="primary" (click)="topicBlur()" [disabled]="!roundTopic.value">
+    <button
+      matSuffix
+      mat-flat-button
+      color="primary"
+      (click)="topicBlur()"
+      [disabled]="!roundTopic.value"
+    >
       Save
     </button>
   </div>

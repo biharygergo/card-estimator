@@ -23,10 +23,24 @@
   </div>
   <div class="logos">
     <img src="/assets/logo.png" class="logo" />
-    <div class="organization-logo-container" *ngIf="(organization | async) as org">
+    <div
+      class="organization-logo-container"
+      *ngIf="organization | async as org"
+    >
       <mat-icon @delayedFadeAnimation>add</mat-icon>
-      <img *ngIf="org.logoUrl" [src]="org.logoUrl" class="logo organization-logo" @slideInRightAnimation/>
-      <h5 *ngIf="!org.logoUrl" class="logo organization-logo text-only" @slideInRightAnimation> {{ org.name }} </h5>
+      <img
+        *ngIf="org.logoUrl"
+        [src]="org.logoUrl"
+        class="logo organization-logo"
+        @slideInRightAnimation
+      />
+      <div
+        *ngIf="!org.logoUrl"
+        class="logo organization-logo text-only"
+        @slideInRightAnimation
+      >
+        <p>{{ org.name }}</p>
+      </div>
     </div>
   </div>
   <ng-container *ngIf="(vm | async)?.user">

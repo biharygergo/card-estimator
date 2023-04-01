@@ -73,6 +73,7 @@ import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
+import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -490,7 +491,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  async topicBlur(event: { topic: string; richTopic?: RichTopic | null }) {
+  async topicBlur(event: TopicEditorInputOutput) {
     this.isEditingTopic = false;
     await this.estimatorService.setTopic(
       this.room,

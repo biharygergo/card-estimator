@@ -305,13 +305,14 @@ export class EstimatorService {
     });
   }
 
-  addRound(room: Room, topic: string) {
+  addRound(room: Room, topic: string, richTopic?: RichTopic) {
     const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
 
     room.rounds[nextRoundId] = this.createRound(
       room.members,
       nextRoundNumber,
-      topic
+      topic,
+      richTopic
     );
     return this.updateRoom(room.roomId, { rounds: room.rounds });
   }
@@ -351,8 +352,13 @@ export class EstimatorService {
     });
   }
 
-  createRound(members: Member[], roundNumber: number, topic?: string): Round {
-    return {
+  createRound(
+    members: Member[],
+    roundNumber: number,
+    topic?: string,
+    richTopic?: RichTopic
+  ): Round {
+    const round: Round = {
       id: this.createId(),
       topic: topic ?? `Topic of Round ${roundNumber}`,
       started_at: serverTimestamp(),
@@ -364,6 +370,12 @@ export class EstimatorService {
         editedBy: null,
       },
     };
+
+    if (richTopic) {
+      round.richTopic = richTopic;
+    }
+
+    return round;
   }
 
   revoteRound(round: Round): Round {

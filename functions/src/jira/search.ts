@@ -90,7 +90,7 @@ export async function searchJira(data: any, context: CallableContext) {
     console.error(error);
     throw new functions.https.HttpsError(
         "not-found",
-        "Jira integration not found"
+        "Unknown error occured while connecting to Jira"
     );
   }
 }

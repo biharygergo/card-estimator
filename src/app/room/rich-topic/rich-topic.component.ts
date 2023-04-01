@@ -38,9 +38,9 @@ export class RichTopicComponent implements OnChanges {
 
       if (newTopic) {
         this.cleanedMarkdown = newTopic.description
-          .replace(/\[([^[\]|]+?)\|([^[\]|]+?)\]/g, '[$2]($1)') // Named links
-          .replace(/\[([^|{}\\^~[\]\s"`]+\.[^|{}\\^~[\]\s"`]+)\]/g, '[$1]($1)') // Unnamed links
-          .replace(/\[([^[\]|]+?)\|([^[\]|]+?)\|(smart-link)\]/g, '[$2]($1)'); // Smart links
+          ?.replace(/\[([^[\]|]+?)\|([^[\]|]+?)\]/g, '[$2]($1)') // Named
+          ?.replace(/\[([^|{}\\^~[\]\s"`]+\.[^|{}\\^~[\]\s"`]+)\]/g, '[$1]($1)') // Unnamed
+          ?.replace(/\[([^[\]|]+?)\|([^[\]|]+?)\|(smart-link)\]/g, '[$2]($1)'); // Smart
       } else {
         this.cleanedMarkdown = '';
       }

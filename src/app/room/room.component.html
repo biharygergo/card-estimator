@@ -32,34 +32,41 @@
     </div>
     <div class="room-container">
       <div class="meta-container">
-        <mat-card appearance="outlined" class="topic-container">
-          <mat-card-content (click)="onTopicClicked()">
-            <h2 *ngIf="!isEditingTopic">
-              {{ room?.rounds[currentRound]?.topic }}
-              <button
-                mat-stroked-button
-                [disabled]="!(permissionsService.canEditTopic() | async)"
-              >
-                <mat-icon>edit</mat-icon>
-                Edit topic
-              </button>
-            </h2>
-            <input
-              placeholder="Add a JIRA ticket or a short description of the current round"
-              [formControl]="roundTopic"
-              (blur)="topicBlur()"
-              class="topic-input"
-              *ngIf="isEditingTopic"
-              #topicInput
-              autofocus
-              (keyup.enter)="topicBlur()"
-              id="topic-name"
-            />
-          </mat-card-content>
+        <mat-card
+          appearance="outlined"
+          class="topic-container rounded-card"
+          resizeMonitor
+          [verticalSpacing]="0"
+        >
+          <div>
+            <mat-card-content>
+              <h2 *ngIf="!isEditingTopic">
+                {{ room?.rounds[currentRound]?.topic }}
+                <button
+                  mat-stroked-button
+                  [disabled]="!(permissionsService.canEditTopic() | async)"
+                  (click)="onTopicClicked()"
+                >
+                  <mat-icon>edit</mat-icon>
+                  Edit topic
+                </button>
+              </h2>
+              <app-topic-editor
+                *ngIf="isEditingTopic"
+                [roomTopic]="roomTopic$"
+                (topicUpdated)="topicBlur($event)"
+                (canceled)="isEditingTopic = false"
+              ></app-topic-editor>
+              <app-rich-topic
+                [richTopic]="(roomTopic$ | async).richTopic"
+                *ngIf="!isEditingTopic"
+              ></app-rich-topic>
+            </mat-card-content>
+          </div>
         </mat-card>
         <mat-card
           appearance="outlined"
-          class="members-card"
+          class="members-card rounded-card"
           resizeMonitor
           [verticalSpacing]="0"
         >
@@ -91,7 +98,7 @@
         [currentEstimate]="currentEstimate"
       ></app-card-deck>
       <div class="estimate-container">
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="rounded-card">
           <div class="action-buttons-container">
             <button
               mat-flat-button

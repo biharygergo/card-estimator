@@ -1,0 +1,75 @@
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  .topic-control {
+    flex: 1;
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important;
+    }
+  }
+}
+
+.buttons {
+  flex-shrink: 0;
+  flex-grow: auto;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 0;
+
+  .nested-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  :last-child {
+    margin-left: auto;
+  }
+}
+
+.button-with-custom-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  img {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+.issue-autocomplete {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 12px !important;
+
+  .issue-autocomplete-label {
+    display: flex;
+    align-items: center;
+
+    .jira-icon {
+      height: 24px;
+      width: 24px;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .issue-autocomplete-item,
+  .issue-autocomplete-item-text {
+    color: #757780;
+  }
+
+  .group-label {
+    display: flex;
+    padding: 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    color: #757780;
+  }
+}
+
+.input-suffix {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-right: 0.5rem;
+}

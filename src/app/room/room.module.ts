@@ -16,6 +16,10 @@ import { VelocityComponent } from './velocity/velocity.component';
 import { SharedModule } from '../shared/shared.module';
 import { RoomConfigurationModalComponent } from './room-configuration-modal/room-configuration-modal.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TopicEditorComponent } from './topic-editor/topic-editor.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MarkdownModule } from 'ngx-markdown';
+import { RichTopicComponent } from './rich-topic/rich-topic.component';
 
 const routes: Routes = [
   {
@@ -41,11 +45,15 @@ const routes: Routes = [
     CountdownTimerComponent,
     VelocityComponent,
     RoomConfigurationModalComponent,
+    TopicEditorComponent,
+    RichTopicComponent,
   ],
   imports: [
     CommonModule,
     SharedModule,
     MatSlideToggleModule,
+    MatAutocompleteModule,
+    MarkdownModule.forRoot(),
     RouterModule.forChild(routes),
   ],
 })

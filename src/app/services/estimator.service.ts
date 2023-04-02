@@ -33,6 +33,7 @@ import {
   RoomConfiguration,
   AuthorizationMetadata,
   SubscriptionMetadata,
+  RichTopic,
 } from './../types';
 import {
   collection,
@@ -245,10 +246,24 @@ export class EstimatorService {
     });
   }
 
-  setTopic(room: Room, round: number, topic: string) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+  setTopic(
+    room: Room,
+    round: number,
+    topic: string,
+    richTopic?: RichTopic | null
+  ) {
+    const updates: any = {
       [`rounds.${round}.topic`]: topic,
-    });
+    };
+
+    if (richTopic !== undefined) {
+      updates[`rounds.${round}.richTopic`] = richTopic;
+    }
+
+    return updateDoc(
+      doc(this.firestore, this.ROOMS_COLLECTION, room.roomId),
+      updates
+    );
   }
 
   setShowResults(room: Room, round: number, showResults: boolean) {
@@ -290,13 +305,14 @@ export class EstimatorService {
     });
   }
 
-  addRound(room: Room, topic: string) {
+  addRound(room: Room, topic: string, richTopic?: RichTopic) {
     const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
 
     room.rounds[nextRoundId] = this.createRound(
       room.members,
       nextRoundNumber,
-      topic
+      topic,
+      richTopic
     );
     return this.updateRoom(room.roomId, { rounds: room.rounds });
   }
@@ -336,8 +352,13 @@ export class EstimatorService {
     });
   }
 
-  createRound(members: Member[], roundNumber: number, topic?: string): Round {
-    return {
+  createRound(
+    members: Member[],
+    roundNumber: number,
+    topic?: string,
+    richTopic?: RichTopic
+  ): Round {
+    const round: Round = {
       id: this.createId(),
       topic: topic ?? `Topic of Round ${roundNumber}`,
       started_at: serverTimestamp(),
@@ -349,6 +370,12 @@ export class EstimatorService {
         editedBy: null,
       },
     };
+
+    if (richTopic) {
+      round.richTopic = richTopic;
+    }
+
+    return round;
   }
 
   revoteRound(round: Round): Round {

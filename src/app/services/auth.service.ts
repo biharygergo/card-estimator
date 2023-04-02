@@ -256,6 +256,10 @@ export class AuthService {
     });
   }
 
+  setSessionCookie(value: string) {
+    Cookies.set('__session', value);
+  }
+
   getSessionCookie(): string | ParsedSessionCookie | undefined {
     const cookie = Cookies.get('__session');
     if (!cookie) return undefined;

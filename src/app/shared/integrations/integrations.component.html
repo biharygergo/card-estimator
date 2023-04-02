@@ -1,0 +1,80 @@
+<h1 mat-dialog-title class="dialog-title">Integrations</h1>
+<div mat-dialog-content>
+  <p>
+    Connect Planning Poker with the tools you already know to improve your
+    estimation process.
+  </p>
+  <div class="tab-section">
+    <div class="integrations-list">
+      <div class="integration">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/zoom.png" />
+              <h4>Zoom</h4>
+            </div>
+            <p>Use Planning Poker directly in the Zoom Meetings app.</p>
+          </div>
+          <div class="actions">
+            <a
+              mat-flat-button
+              color="primary"
+              [disabled]="config.isRunningInZoom"
+              href="https://planningpoker.live/api/installZoomApp"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {{ config.isRunningInZoom ? "Installed" : "Install" }}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="integration">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/jira.png" />
+              <h4>Jira</h4>
+            </div>
+            <p>
+              Select tickets from your recent history and search right from the
+              topic editor.
+            </p>
+          </div>
+          <div class="actions">
+            <button mat-flat-button color="primary" (click)="startJiraAuth()">
+              {{ (jiraIntegration$ | async) ? 'Connect another' : 'Connect'}}
+            </button>
+          </div>
+        </div>
+        <div class="integration-preferences">
+          <mat-radio-group
+            aria-label="Select the active Jira project"
+            class="jira-list"
+            *ngIf="(jiraIntegration$ | async)?.jiraResources as projectList"
+          >
+            <mat-radio-button
+              [value]="project"
+              color="primary"
+              *ngFor="let project of projectList"
+              [checked]="project.active"
+              (click)="projectList.length > 1 && onJiraProjectSelected(project)"
+              ><span class="jira-list-label">
+                {{ project.url }}
+                <button
+                  mat-button
+                  (click)="
+                    onJiraProjectRemoveClicked(project);
+                    $event.stopPropagation()
+                  "
+                >
+                  Remove
+                </button>
+              </span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

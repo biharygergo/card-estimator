@@ -1,0 +1,76 @@
+.integrations-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.integration {
+  &:not(:last-child) {
+    border-bottom: 1px solid #d9d9d9;
+    padding-bottom: 1rem;
+  }
+
+  &:not(:first-child) {
+    padding-top: 1rem;
+  }
+
+  .integration-main {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .details {
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      .integration-logo {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+        padding: 4px;
+      }
+
+      h4 {
+        display: inline-block;
+        margin-bottom: 0;
+        color: #001a43;
+        font-weight: 500;
+      }
+    }
+
+    p {
+      color: #757780;
+      margin-bottom: 0;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+}
+
+.jira-list {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+
+  .mdc-form-field {
+    width: 100%;
+
+    label {
+      width: 100%;
+    }
+
+    .jira-list-label {
+      width: 100%;
+      display: inline-flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}

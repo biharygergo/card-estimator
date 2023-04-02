@@ -114,6 +114,7 @@
           #detailsPanel
         >
           <ng-template matExpansionPanelContent>
+            <app-rich-topic [richTopic]="round.richTopic"></app-rich-topic>
             <app-round-results
               [room]="room"
               [roundStatistics]="roundStatistics"
@@ -138,7 +139,10 @@
       >
         <add-or-update-topic
           [roundNumber]="roundInfo.roundIndex + 1"
-          [topicName]="roundInfo.round.topic"
+          [topicInput]="{
+            topic: roundInfo.round.topic || '',
+            richTopic: roundInfo.round.richTopic
+          }"
           (onSaveOrUpdate)="updateRoundConfirmed($event)"
           (onCancel)="editedRound.next(undefined)"
         ></add-or-update-topic>
@@ -159,6 +163,7 @@
     </button>
     <add-or-update-topic
       *ngIf="isAddingRound"
+      [topicInput]="{ topic: '' }"
       [roundNumber]="rounds.length + 1"
       (onSaveOrUpdate)="addRoundConfirmed($event)"
       (onCancel)="cancelAddingRound()"

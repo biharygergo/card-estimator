@@ -56,6 +56,7 @@ import {
 } from '@angular/fire/storage';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GlobalErrorHandler } from './error-handler';
+import { HttpClientModule } from '@angular/common/http';
 
 let appCheckToken: AppCheckToken;
 type FetchAppCheckTokenData = { token: string; expiresAt: number };
@@ -100,6 +101,7 @@ function loadAppConfig(): Promise<any> {
     MatSnackBarModule,
     MatDialogModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {

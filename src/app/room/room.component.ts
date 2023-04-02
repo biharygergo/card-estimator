@@ -6,11 +6,7 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import {
-  EstimatorService,
-  MemberNotFoundError,
-  RoomNotFoundError,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -24,7 +20,7 @@ import {
   first,
   map,
   Observable,
-  of,
+  of as observableOf,
   share,
   shareReplay,
   startWith,
@@ -42,6 +38,7 @@ import {
   Member,
   MemberStatus,
   MemberType,
+  RichTopic,
   Room,
   RoomPermissionId,
   Round,
@@ -76,6 +73,7 @@ import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
+import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -85,7 +83,6 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
   styleUrls: ['./room.component.scss'],
 })
 export class RoomComponent implements OnInit, OnDestroy {
-  @ViewChild('topicInput') topicInput: ElementRef;
   @ViewChild(MatSidenavContainer, { read: ElementRef })
   sidenav: MatSidenavContainer;
 
@@ -102,8 +99,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.selectedEstimationCardSetValue
   );
 
-  roundTopic = new UntypedFormControl('');
-
   isEditingTopic = false;
   isObserver = false;
   isMuted = true;
@@ -118,11 +113,21 @@ export class RoomComponent implements OnInit, OnDestroy {
         .getRoomById(roomId)
         .pipe(startWith(this.route.snapshot.data.room))
     ),
-    filter(room => !!room),
+    filter((room) => !!room),
     catchError((e) => this.onRoomUpdateError(e)),
-    share(),
+    shareReplay(1),
     takeUntil(this.destroy)
   );
+
+  roomTopic$: Observable<{ topic: string; richTopic?: RichTopic | null }> =
+    this.room$.pipe(
+      map((room) => {
+        return {
+          topic: room?.rounds[room.currentRound ?? 0]?.topic || '',
+          richTopic: room?.rounds[room.currentRound ?? 0]?.richTopic,
+        };
+      })
+    );
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => [room.members, room.memberIds]),
@@ -253,6 +258,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   user$ = this.authService.user;
 
   readonly MemberType = MemberType;
+  readonly observableOf = observableOf;
 
   openedFeedbackForm: boolean = false;
 
@@ -484,12 +490,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  async topicBlur() {
+  async topicBlur(event: TopicEditorInputOutput) {
     this.isEditingTopic = false;
     await this.estimatorService.setTopic(
       this.room,
       this.currentRound,
-      this.roundTopic.value
+      event.topic,
+      event.richTopic
     );
   }
 
@@ -501,8 +508,6 @@ export class RoomComponent implements OnInit, OnDestroy {
           if (hasPermission) {
             this.analytics.logClickedTopicName();
             this.isEditingTopic = true;
-            this.roundTopic.setValue(this.room.rounds[this.currentRound].topic);
-            setTimeout(() => this.topicInput.nativeElement.focus(), 100);
           }
         }),
         first()

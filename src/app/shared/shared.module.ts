@@ -40,6 +40,8 @@ import { FileUploadDragDropComponent } from './file-upload-drag-drop/file-upload
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { SubscriptionResultComponent } from './subscription-result/subscription-result.component';
 import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-more.component';
+import { IntegrationsComponent } from './integrations/integrations.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,7 @@ import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-mo
     DragDropDirective,
     SubscriptionResultComponent,
     PremiumLearnMoreComponent,
+    IntegrationsComponent,
   ],
   imports: [
     CommonModule,
@@ -83,6 +86,7 @@ import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-mo
     MatSidenavModule,
     MatBadgeModule,
     MatChipsModule,
+    MatRadioModule,
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,

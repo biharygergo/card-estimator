@@ -63,7 +63,7 @@ export class PaymentService {
       await firstValueFrom(dialogRef.afterClosed());
       user = await this.authService.getUser();
 
-      if (user?.isAnonymous) {
+      if (!user || user?.isAnonymous) {
         return;
       }
     }

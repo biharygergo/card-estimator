@@ -1,0 +1,80 @@
+.rich-topic {
+  padding: 1rem;
+  background: #f4f5f6;
+  margin: 1rem 0;
+  border-radius: 18px;
+
+  .rich-topic-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+
+  .rich-topic-body {
+    color: #757780;
+  }
+
+  .jira-icon-header {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+  }
+
+  .summary {
+    display: flex;
+    align-items: center;
+    color: #757780;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  .info-block {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .info-block-title {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    font-weight: 500;
+
+    &.standalone {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .rectangular-badge {
+    background: #e1e2ec;
+    border-radius: 4px;
+    padding: 0rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .rich-topic-buttons {
+    margin-top: 1rem;
+    justify-content: flex-end;
+    display: flex;
+  }
+
+  .markdown-content {
+    word-break: break-word;
+    h1 {
+      font-size: 16px;
+    }
+    h2 {
+      font-size: 15px;
+    }
+    h3,
+    h4,
+    h5 {
+      font-size: 14px;
+    }
+  }
+}
+
+.header-buttons {
+  flex-shrink: 0;
+}

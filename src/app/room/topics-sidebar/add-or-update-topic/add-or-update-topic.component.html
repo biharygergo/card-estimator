@@ -3,31 +3,10 @@
     <div class="card-header">
       <span class="card-round-number">#{{ roundNumber }}</span>
     </div>
-    <mat-form-field appearance="outline" color="accent">
-      <mat-label>Topic</mat-label>
-      <textarea
-        matInput
-        cdkTextareaAutosize
-        placeholder="Describe the topic of this round"
-        [formControl]="topicNameFormControl"
-        autofocus
-      ></textarea>
-      <mat-hint
-        >Insert a short description of the topic.</mat-hint
-      >
-    </mat-form-field>
+    <app-topic-editor
+      [roomTopic]="topicInput$"
+      (topicUpdated)="onSaveOrUpdate.next($event)"
+      (canceled)="onCancel.next()"
+    ></app-topic-editor>
   </mat-card-content>
- 
-
-  <mat-card-footer class="card-footer-actions align-right">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="onSaveOrUpdate.next(topicNameFormControl.value)"
-      [disabled]="!topicNameFormControl.value"
-    >
-      {{ topicName ? 'Update' : 'Add'}}
-    </button>
-    <button mat-flat-button (click)="onCancel.next()">Cancel</button>
-  </mat-card-footer>
 </mat-card>

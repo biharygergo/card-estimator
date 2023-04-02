@@ -5,7 +5,14 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { SerializerService } from 'src/app/services/serializer.service';
-import { CardSetValue, MemberType, Room, Round, RoundStatistics } from 'src/app/types';
+import {
+  CardSetValue,
+  MemberType,
+  Room,
+  Round,
+  RoundStatistics,
+} from 'src/app/types';
+import { TopicEditorInputOutput } from '../topic-editor/topic-editor.component';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -57,19 +64,24 @@ export class TopicsSidebarComponent implements OnInit {
     this.isAddingRound = false;
   }
 
-  async updateRoundConfirmed(topicName: string) {
+  async updateRoundConfirmed(props: TopicEditorInputOutput) {
     if (this.editedRound.value) {
       await this.estimatorService.setTopic(
         this.room,
         this.editedRound.value.roundIndex,
-        topicName
+        props.topic,
+        props.richTopic
       );
       this.editedRound.next(undefined);
     }
   }
 
-  async addRoundConfirmed(topicName: string) {
-    await this.estimatorService.addRound(this.room, topicName);
+  async addRoundConfirmed(props: TopicEditorInputOutput) {
+    await this.estimatorService.addRound(
+      this.room,
+      props.topic,
+      props.richTopic
+    );
     this.analytics.logClickedAddRoundConfirmed();
     this.isAddingRound = false;
   }

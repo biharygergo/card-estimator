@@ -22,7 +22,7 @@ import { ZoomComponent } from './zoom/zoom.component';
 import { OrganizationInvitationComponent } from './organization-invitation/organization-invitation.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PremiumComponent } from './premium/premium.component';
-import { NgOptimizedImage } from '@angular/common'
+import { NgOptimizedImage } from '@angular/common';
 
 const routes: Routes = [
   {
@@ -63,6 +63,11 @@ const routes: Routes = [
     path: 'premium',
     loadComponent: () => import('./premium/premium.component').then(mod => mod.PremiumComponent),
     data: { title: 'Premium' },
+  },
+  {
+    path: 'integration/:result',
+    loadComponent: () => import('./integration-result/integration-result.component').then(mod => mod.IntegrationResultComponent),
+    data: { title: 'Integration finished' },
   },
 ];
 

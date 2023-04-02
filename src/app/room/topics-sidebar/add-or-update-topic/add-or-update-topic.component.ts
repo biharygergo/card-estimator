@@ -1,25 +1,40 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+
+import { BehaviorSubject, Subject } from 'rxjs';
+import { TopicEditorInputOutput } from '../../topic-editor/topic-editor.component';
 
 @Component({
   selector: 'add-or-update-topic',
   templateUrl: './add-or-update-topic.component.html',
-  styleUrls: ['./add-or-update-topic.component.scss']
+  styleUrls: ['./add-or-update-topic.component.scss'],
 })
-export class AddOrUpdateTopicComponent implements OnInit {
+export class AddOrUpdateTopicComponent implements OnInit, OnChanges {
   @Input() roundNumber!: number;
-  @Input() topicName?: string;
-  @Output() onSaveOrUpdate = new EventEmitter<string>();
+  @Input() topicInput: TopicEditorInputOutput;
+  @Output() onSaveOrUpdate = new EventEmitter<TopicEditorInputOutput>();
   @Output() onCancel = new EventEmitter<void>();
 
-  topicNameFormControl = new FormControl<string>('');
+  topicInput$ = new BehaviorSubject<TopicEditorInputOutput>({ topic: '' });
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
-    if (this.topicName) {
-      this.topicNameFormControl.setValue(this.topicName);
-    }
+    this.topicInput$.next(this.topicInput);
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['topicInput']) {
+      this.topicInput$.next(
+        changes['topicInput'].currentValue as TopicEditorInputOutput
+      );
+    }
+  }
 }

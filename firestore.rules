@@ -89,6 +89,10 @@ service cloud.firestore {
 
     match /userDetails/{userId} {
       allow read, write: if request.auth.uid == userId;
+
+      match /integrations/{integrationName} {
+        allow read, write: if request.auth.uid == userId;
+      }
     }
 
     match /userProfiles/{userId} {

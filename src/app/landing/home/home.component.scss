@@ -1,3 +1,13 @@
+.banner {
+  padding: 0.5rem;
+  color: white;
+  text-align: center;
+
+  @media screen and (max-width: 800px) {
+    padding-top: 0.8rem;
+  }
+}
+
 .hero-header-section {
   background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
   overflow: hidden;

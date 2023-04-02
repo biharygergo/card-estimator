@@ -86,7 +86,7 @@
     img {
       transform: scale(1.05);
       width: 100%;
-      height: auto;
+      height: 500px;
       min-width: 400px;
       object-fit: contain;
     }
@@ -122,6 +122,10 @@
 
       .header-cards-wrapper {
         margin-right: 0;
+      }
+
+      img {
+        height: 400px;
       }
     }
   }

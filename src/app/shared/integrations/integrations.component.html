@@ -55,6 +55,7 @@
           >
             <mat-radio-button
               [value]="project"
+              color="primary"
               *ngFor="let project of projectList"
               [checked]="project.active"
               (click)="projectList.length > 1 && onJiraProjectSelected(project)"

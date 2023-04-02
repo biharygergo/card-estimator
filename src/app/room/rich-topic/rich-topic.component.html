@@ -9,10 +9,15 @@
         *ngIf="enableEditing"
         (click)="deleted.next(true)"
         mat-icon-button
+        aria-label="Remove selection"
       >
         <mat-icon>delete</mat-icon>
       </button>
-      <button (click)="openRemoteTopic()" mat-icon-button>
+      <button
+        (click)="openRemoteTopic()"
+        mat-icon-button
+        aria-label="Open in Jira"
+      >
         <mat-icon>launch</mat-icon>
       </button>
     </div>

@@ -16,7 +16,7 @@ import { RichTopic } from 'src/app/types';
   selector: 'app-rich-topic',
   templateUrl: './rich-topic.component.html',
   styleUrls: ['./rich-topic.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class RichTopicComponent implements OnChanges {
   @Input() richTopic: RichTopic | null | undefined;
@@ -52,7 +52,11 @@ export class RichTopicComponent implements OnChanges {
   openRemoteTopic() {
     if (this.richTopic) {
       if (this.config.isRunningInZoom) {
-        this.zoomService.openUrl(this.richTopic.url);
+        this.zoomService.openUrl(
+          `${window.origin}/api/safeRedirect?redirectTo=${encodeURIComponent(
+            this.richTopic.url
+          )}`
+        );
       } else {
         window.open(this.richTopic.url, '_blank');
       }

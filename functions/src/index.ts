@@ -160,3 +160,11 @@ exports.onJiraAuthResponse = functions.https.onRequest(async (req, res) => {
 });
 
 exports.queryJiraIssues = functions.https.onCall(async (data: any, context: CallableContext) => searchJira(data, context));
+
+exports.safeRedirect = functions.https.onRequest(async (req, res) => {
+  const redirectTo = req.query.redirectTo;
+  if (typeof redirectTo === "string") {
+    res.redirect(redirectTo);
+  }
+  return;
+});

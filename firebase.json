@@ -81,6 +81,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/safeRedirect",
+          "function": "safeRedirect",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },
@@ -203,6 +208,11 @@
         {
           "source": "/api/onJiraAuthResponse",
           "function": "onJiraAuthResponse",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/safeRedirect",
+          "function": "safeRedirect",
           "region": "us-central1"
         },
         {

@@ -46,7 +46,7 @@ export async function onJiraAuthorizationReceived(
       .then((response) => response.data);
 
   const jiraResources: JiraResource[] = availableResources.filter((resource) =>
-    resource.scopes.includes("read:jira-work")
+    !!resource.scopes.filter((scope) => scope.includes("jira"))
   );
 
   if (!jiraResources.length) {

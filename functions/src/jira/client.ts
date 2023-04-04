@@ -42,7 +42,7 @@ export class JiraClient {
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
     return this.client.authorizationUrl({
-      scope: "read:jira-work write:jira-work offline_access",
+      scope: "read:jira-work write:issue:jira write:comment:jira write:issue.vote:jira offline_access",
       audience: "api.atlassian.com",
       state: codeChallenge,
       prompt: "consent",

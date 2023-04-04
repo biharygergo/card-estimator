@@ -27,6 +27,7 @@ import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { JiraIssue, RichTopic } from 'src/app/types';
 import * as Sentry from '@sentry/angular';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 export interface TopicEditorInputOutput {
   topic: string;
@@ -118,7 +119,8 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly jiraService: JiraService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   ngOnInit(): void {
@@ -148,6 +150,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       });
 
     this.startJiraAuth.pipe(takeUntil(this.destroy)).subscribe((issues) => {
+      this.analyticsService.logClickedStartJiraAuth();
       this.jiraService.startJiraAuthFlow();
     });
   }
@@ -181,6 +184,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       assignee: issue.assignee,
       status: issue.status,
     };
+    this.analyticsService.logSelectedJiraIssueFromDropdown();
   }
 
   showJiraError(e: any) {

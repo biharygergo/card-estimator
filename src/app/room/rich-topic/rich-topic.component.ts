@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { RichTopic } from 'src/app/types';
 
@@ -28,7 +29,8 @@ export class RichTopicComponent implements OnChanges {
 
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
-    private readonly zoomService: ZoomApiService
+    private readonly zoomService: ZoomApiService,
+    private readonly analyticsService: AnalyticsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,6 +52,7 @@ export class RichTopicComponent implements OnChanges {
   }
 
   openRemoteTopic() {
+    this.analyticsService.logClickedViewOnJiraButton();
     if (this.richTopic) {
       if (this.config.isRunningInZoom) {
         this.zoomService.openUrl(

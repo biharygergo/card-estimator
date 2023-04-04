@@ -279,4 +279,16 @@ export class AnalyticsService {
   logClickedSaveRoomPassword() {
     logEvent(this.analytics, 'clicked_save_room_password');
   }
+
+  logSelectedJiraIssueFromDropdown() {
+    logEvent(this.analytics, 'selected_jira_issue_from_dropdown');
+  }
+
+  logClickedStartJiraAuth() {
+    logEvent(this.analytics, 'clicked_start_jira_auth');
+  }
+
+  logClickedViewOnJiraButton() {
+    logEvent(this.analytics, 'clicked_view_on_jira');
+  }
 }

@@ -7,6 +7,7 @@ import {JiraIntegration, JiraResource} from "./types";
 import {getSessionVariable} from "../zoom/routes";
 import {getHost} from "../config";
 import {captureError} from "../shared/errors";
+import {setSessionVariable} from "../zoom/zoomApi";
 
 export async function startJiraAuthFlow(
     req: functions.Request,
@@ -85,6 +86,11 @@ export async function getUserId(
   if (!tokenId) {
     console.error("ID token not found");
     return false;
+  }
+
+  // TODO: Make this better?
+  if (!getSessionVariable(req, res, false)) {
+    setSessionVariable(res, tokenId);
   }
 
   return getAuth()

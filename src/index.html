@@ -13,6 +13,10 @@
       name="keywords"
       content="sprint,card,user story,estimation,agile,planning poker, scrum"
     />
+
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -41,8 +45,6 @@
       name="google-site-verification"
       content="att0q9h3A0ds9uE2TQmLdyZbZJMuKkttJBsB8rhnE7c"
     />
-    <link rel="preconnect" href="https://res.cloudinary.com" />
-
     <!-- Global site tag (gtag.js) - Google Ads: 970033218 -->
     <script
       async
@@ -50,7 +52,11 @@
       nonce="jafiansf83nasdfn38asdnf3"
     ></script>
     <script nonce="hsjdf73bfasdjfb33fbasjd">
-      if (window && !window.location.origin.includes("localhost")) {
+      if (
+        window &&
+        !window.location.origin.includes("localhost") &&
+        !window.location.origin.includes("test.planningpoker.live")
+      ) {
         window.dataLayer = window.dataLayer || [];
         function gtag() {
           dataLayer.push(arguments);

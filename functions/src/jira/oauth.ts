@@ -45,8 +45,8 @@ export async function onJiraAuthorizationReceived(
       })
       .then((response) => response.data);
 
-  const jiraResources: JiraResource[] = availableResources.filter((resource) =>
-    !!resource.scopes.filter((scope) => scope.includes("jira"))
+  const jiraResources: JiraResource[] = availableResources.filter(
+      (resource) => !!resource.scopes.filter((scope) => scope.includes("jira"))
   );
 
   if (!jiraResources.length) {
@@ -54,7 +54,7 @@ export async function onJiraAuthorizationReceived(
     return;
   }
 
-  jiraResources.forEach((jiraResource) => jiraResource.active = false);
+  jiraResources.forEach((jiraResource) => (jiraResource.active = false));
   jiraResources[0].active = true;
 
   const firestore = getFirestore();
@@ -80,7 +80,8 @@ export async function getUserId(
 ): Promise<string | false> {
   const tokenId =
     getSessionVariable(req, res, false) ??
-    req.get("Authorization")?.split("Bearer ")[1];
+    req.get("Authorization")?.split("Bearer ")[1] ??
+    (req.query.token as string | undefined);
   if (!tokenId) {
     console.error("ID token not found");
     return false;

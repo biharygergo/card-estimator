@@ -12,7 +12,7 @@
 
 .buttons {
   flex-shrink: 0;
-  flex-grow: auto;
+  flex-wrap: wrap;
   display: flex;
   gap: 0.5rem;
   padding: 1rem 0;

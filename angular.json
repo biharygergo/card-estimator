@@ -80,6 +80,7 @@
               ]
             },
             "test": {
+              "index": "src/index.test.html",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -89,6 +90,7 @@
               "outputHashing": "all"
             },
             "test-production": {
+              "index": "src/index.test.html",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

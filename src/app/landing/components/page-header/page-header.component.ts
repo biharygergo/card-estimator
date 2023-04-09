@@ -4,7 +4,9 @@ import { Component, Input, OnInit } from '@angular/core';
   selector: 'app-page-header',
   template: `
     <header>
-      <h1>{{ title }}</h1>
+      <div class="title">
+        <h1>{{ title }}</h1>
+      </div>
     </header>
   `,
   styleUrls: ['./page-header.component.scss'],

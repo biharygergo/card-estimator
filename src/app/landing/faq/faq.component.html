@@ -1,10 +1,38 @@
-<app-page-header title="FAQ"></app-page-header>
+<app-page-header title="Frequently Asked Questions"></app-page-header>
 <main>
   <div class="faq-rows">
-    <app-faq-row
-      *ngFor="let faq of faqs"
-      [question]="faq.question"
-      [answer]="faq.answer"
-    ></app-faq-row>
+    <div class="faq-category" *ngFor="let category of categories">
+      <div class="category-title">
+        <h2>{{ category.category }}</h2>
+      </div>
+      <mat-accordion multi class="category-answers">
+        <mat-expansion-panel *ngFor="let faq of category.faqs">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ faq.question }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p [innerHtml]="faq.answer"></p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="landing-cta">
+    <div class="cards-container">
+      <img
+        ngSrc="cta-cards_pxapvv"
+        alt="Two cards with numbers"
+        priority
+        width="917"
+        height="917"
+        sizes="(max-width: 800px) 100vw, 60vw"
+      />
+    </div>
+
+    <div class="cta-content">
+      <div class="cta-text">
+        <h2>Try Planning Poker today!</h2>
+        <p>Better sprint planning and estimation for the whole team</p>
+      </div>
+      <a mat-flat-button routerLink="/create">Start Planning</a>
+    </div>
   </div>
 </main>

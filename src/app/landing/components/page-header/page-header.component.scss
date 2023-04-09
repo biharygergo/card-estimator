@@ -1,15 +1,18 @@
 header {
-    padding: 150px 10px;
-    color: white;
-    background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
+  padding: 150px 10px;
+  color: white;
+  background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
 
+  .title {
+    max-width: 1200px;
+    margin: 0 auto;
     h1 {
       font-size: 3rem;
-      text-align: center;
-      font-weight: 300;
-    }
-
-    @media screen and (max-width: 800px) {
-      background: linear-gradient(180deg, #345ca8 30.32%, #80c2f2 100%);
+      font-weight: 500;
     }
   }
+
+  @media screen and (max-width: 800px) {
+    background: linear-gradient(180deg, #345ca8 30.32%, #80c2f2 100%);
+  }
+}

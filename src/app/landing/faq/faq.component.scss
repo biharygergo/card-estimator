@@ -1,9 +1,145 @@
 main {
-    padding: 50px 10%;
-    background: white;
+  padding: 50px 10%;
 
-    .faq-rows {
-        max-width: 1200px;
-        margin: 0 auto;
+  .faq-category {
+    display: flex;
+    margin-bottom: 3rem;
+
+    .category-title {
+      width: 300px;
+      padding-top: 0.5rem;
+      flex-shrink: 0;
+      color: #bfc6dc;
+      h2 {
+        font-size: 2rem;
+      }
     }
+
+    .category-answers {
+      flex: 4;
+    }
+
+    @media screen and (max-width: 800px) {
+      flex-direction: column;
+    }
+  }
+
+  .faq-rows {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .mat-expansion-panel-spacing {
+    margin: 0 0;
+  }
+
+  .mat-expansion-panel {
+    background: var(--background-color);
+    color: #d9e2ff;
+    box-shadow: none !important;
+    width: 100%;
+
+    &:first-of-type {
+      border-top-right-radius: 20px;
+      border-top-left-radius: 20px;
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }
+
+    &:not(.expanded) {
+      margin-bottom: 10px;
+    }
+
+    .mat-expansion-panel-header {
+      height: unset;
+      padding: 1rem 0.2rem;
+    }
+
+    .mat-expansion-panel-header-title {
+      color: #d9e2ff;
+      font-size: 1.5rem;
+      line-height: 1.6rem;
+      font-weight: bold;
+    }
+
+    .mat-expansion-indicator::after {
+      color: white;
+    }
+
+    p {
+      a {
+        color: white;
+      }
+    }
+  }
+}
+
+.landing-cta {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(263.51deg, #345ca8 10.21%, #80c2f2 127.28%);
+  border-radius: 20px;
+  color: white;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 0 2rem;
+
+  .cards-container {
+    height: 200px;
+    width: 300px;
+    position: relative;
+
+    img {
+      margin-bottom: -20px;
+      object-fit: contain;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .cta-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    padding-bottom: 2rem;
+    padding-right: 2rem;
+
+    .cta-text {
+      h2 {
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+    }
+
+    a {
+      font-size: 1rem;
+      background: #d9e2ff;
+      color: #345ca8;
+      padding: 0.7rem 1.5rem;
+      font-weight: 700;
+      height: unset;
+      flex-shrink: 0;
+    }
+
+    @media screen and (max-width: 800px) {
+      flex-direction: column;
+      padding-right: 0;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+
+    .cards-container {
+      order: 3;
+    }
+  }
 }

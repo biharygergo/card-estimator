@@ -126,7 +126,8 @@ export class RoomComponent implements OnInit, OnDestroy {
           topic: room?.rounds[room.currentRound ?? 0]?.topic || '',
           richTopic: room?.rounds[room.currentRound ?? 0]?.richTopic,
         };
-      })
+      }),
+      takeUntil(this.destroy)
     );
 
   members$: Observable<Member[]> = this.room$.pipe(
@@ -165,7 +166,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       } else if (member?.type === MemberType.OBSERVER) {
         this.joinAsObserver();
       }
-    })
+    }),
+    takeUntil(this.destroy),
   );
 
   onRoundNumberUpdated$: Observable<number> = this.room$.pipe(
@@ -190,7 +192,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.currentEstimate = estimates[this.estimatorService.activeMember.id];
         this.reCalculateStatistics();
       }
-    })
+    }),
+    takeUntil(this.destroy)
   );
 
   onCardSetUpdated$: Observable<CardSet | 'CUSTOM'> = this.room$.pipe(
@@ -223,13 +226,15 @@ export class RoomComponent implements OnInit, OnDestroy {
         room,
         this.estimatorService.activeMember.id
       );
-    })
+    }),
+    takeUntil(this.destroy)
   );
 
   sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
     first(),
     map((sessions) => sessions.length),
-    share()
+    share(),
+    takeUntil(this.destroy)
   );
 
   showFeedbackForm$ = combineLatest([
@@ -244,7 +249,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.configService.getCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY) ===
           undefined
       );
-    })
+    }),
+    takeUntil(this.destroy)
   );
 
   userProfiles$: Observable<UserProfileMap> = this.members$.pipe(
@@ -252,7 +258,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     switchMap((members) =>
       this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
     ),
-    shareReplay(1)
+    shareReplay(1),
+    takeUntil(this.destroy)
   );
 
   user$ = this.authService.user;
@@ -611,7 +618,6 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.estimatorService.activeMember
         );
       }
-
       this.router.navigate(['join']);
     }
   }

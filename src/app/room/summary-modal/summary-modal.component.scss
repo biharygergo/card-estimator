@@ -49,22 +49,12 @@
   }
 
   .loading-block {
-    height: 1rem;
+    height: 1.5rem;
     background: #757780;
     border-radius: 4px;
     margin-bottom: 0.5rem;
-    animation: pulse 800ms infinite alternate;
-    width: 100%;
-
-    &:first-child {
-      width: 30%;
-      margin-bottom: 1rem;
-    }
-
-    &:last-child {
-      width: 70%;
-      margin-top: 1rem;
-    }
+    animation: pulse 500ms infinite alternate;
+    width: 8px;
   }
 }
 

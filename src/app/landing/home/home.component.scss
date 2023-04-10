@@ -32,9 +32,10 @@
     color: white;
     flex: 1 0 50%;
     padding-top: 5rem;
+    z-index: 2;
 
     h1 {
-      font-size: 2rem;
+      font-size: 1.9rem;
       line-height: 2.8rem;
       font-weight: bold;
       margin-bottom: 0;
@@ -78,17 +79,13 @@
     justify-content: flex-end;
     min-height: 400px;
 
-    .header-cards-wrapper {
-      margin-bottom: -30%;
-      margin-right: -20%;
-    }
-
     img {
-      transform: scale(1.05);
-      width: 100%;
-      height: 500px;
-      min-width: 400px;
       object-fit: contain;
+      position: absolute;
+      bottom: 0;
+      height: auto;
+      left: 50%;
+      width: 65%;
     }
   }
 
@@ -120,12 +117,12 @@
       justify-content: center;
       min-height: 350px;
 
-      .header-cards-wrapper {
-        margin-right: 0;
-      }
-
       img {
-        height: 400px;
+        height: auto;
+        width: 100%;
+        bottom: 0;
+        left: 20px;
+        right: 0px;
       }
     }
   }

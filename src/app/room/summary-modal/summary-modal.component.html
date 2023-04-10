@@ -26,12 +26,27 @@
             summary.
           </p>
         </ng-container>
+        <ng-container
+          *ngIf="
+            failedPrecondition === 'credits' &&
+            (summaryResponse$ | async) === undefined
+          "
+        >
+          <h2>Oops!</h2>
+          <p>You are out of your monthly free credits.</p>
+          <p>
+            Upgrade to Premium to get unlimited room summaries and much more!
+          </p>
+        </ng-container>
       </div>
       <div class="response-text" id="response-text"></div>
 
       <div
         class="loading-blocks"
-        *ngIf="(summaryResponse$ | async) === undefined"
+        *ngIf="
+          (summaryResponse$ | async) === undefined &&
+          (failedPrecondition$ | async) === undefined
+        "
       >
         <div class="loading-block"></div>
         <div class="loading-block"></div>
@@ -41,18 +56,13 @@
         <div class="loading-block"></div>
         <div class="loading-block"></div>
       </div>
-      <div class="middle-text" *ngIf="showOutOfCredits$ | async">
-        <h2>Oops!</h2>
-        <p>You are out of your monthly free credits.</p>
-        <p>Upgrade to Premium to get unlimited room summaries and much more!</p>
-      </div>
     </div>
     <div class="summary-buttons">
       <button
         mat-button
         (click)="generateSummary()"
         *ngIf="!(showOutOfCredits$ | async); else getPremiumButton"
-        [disabled]="!(isRoomProper$ | async)"
+        [disabled]="!!(failedPrecondition$ | async)"
       >
         <mat-icon>refresh</mat-icon>
         Regenerate

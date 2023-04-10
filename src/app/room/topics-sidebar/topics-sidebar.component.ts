@@ -96,5 +96,6 @@ export class TopicsSidebarComponent implements OnInit {
 
   openSummaryModal() {
     this.dialog.open(...summaryModalCreator({ roomId: this.room.roomId }));
+    this.analytics.logClickedSummarize();
   }
 }

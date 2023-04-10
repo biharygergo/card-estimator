@@ -75,49 +75,6 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
       shareReplay(1)
     );
 
-  failedPrecondition$: Observable<'room-size' | 'user' | undefined> =
-    combineLatest([this.isRoomProper$, this.authService.user]).pipe(
-      map(([isRoomProper, user]) => {
-        if (user.isAnonymous) {
-          return 'user';
-        } else if (!isRoomProper) {
-          return 'room-size';
-        }
-
-        return undefined;
-      })
-    );
-
-  summaryResponseAsObs = combineLatest([
-    this.summaryResponse$.asObservable(),
-    this.failedPrecondition$,
-  ]).pipe(
-    tap(([response, failedPrecondition]) => {
-      this.typewriter?.destroy();
-      document.getElementById('response-text').innerHTML = '';
-
-      if (response && failedPrecondition === undefined) {
-        if (response.static) {
-          document.getElementById('response-text').innerHTML = response.text;
-        } else {
-          this.typewriter = new Typed('#response-text', {
-            strings: [response.text],
-            typeSpeed: 5,
-            showCursor: false
-          });
-        }
-      }
-    })
-  );
-
-  latestRoomSummary$: Observable<string | undefined> = this.estimatorService
-    .getRoomSummaries(this.dialogData.roomId)
-    .pipe(
-      map((summaries) => {
-        return summaries.length ? summaries[0].summary : undefined;
-      })
-    );
-
   remainingUsage$: Observable<number> = this.meteredUsageService
     .getMeteredUsage('chatgpt-query')
     .pipe(
@@ -138,6 +95,59 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   );
 
+  failedPrecondition$: Observable<
+    'room-size' | 'user' | 'credits' | undefined
+  > = combineLatest([
+    this.isRoomProper$,
+    this.authService.user,
+    this.showOutOfCredits$,
+  ]).pipe(
+    map(([isRoomProper, user, isOutOfCredits]) => {
+      if (user.isAnonymous) {
+        return 'user';
+      } else if (!isRoomProper) {
+        return 'room-size';
+      } else if (isOutOfCredits) {
+        return 'credits';
+      }
+
+      return undefined;
+    })
+  );
+
+  summaryResponseAsObs = combineLatest([
+    this.summaryResponse$.asObservable(),
+    this.failedPrecondition$,
+  ]).pipe(
+    tap(([response, failedPrecondition]) => {
+      this.typewriter?.destroy();
+      document.getElementById('response-text').innerHTML = '';
+
+      if (
+        response &&
+        (failedPrecondition === undefined || failedPrecondition === 'credits')
+      ) {
+        if (response.static) {
+          document.getElementById('response-text').innerHTML = response.text;
+        } else {
+          this.typewriter = new Typed('#response-text', {
+            strings: [response.text],
+            typeSpeed: 5,
+            showCursor: false,
+          });
+        }
+      }
+    })
+  );
+
+  latestRoomSummary$: Observable<string | undefined> = this.estimatorService
+    .getRoomSummaries(this.dialogData.roomId)
+    .pipe(
+      map((summaries) => {
+        return summaries.length ? summaries[0].summary : undefined;
+      })
+    );
+
   destroy = new Subject<void>();
   readonly USAGE_LIMIT = USAGE_LIMIT;
 
@@ -148,7 +158,6 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly toastService: ToastService,
     public readonly authService: AuthService,
     private readonly dialog: MatDialog,
-    private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
     private readonly serializer: SerializerService,
     private readonly clipboard: Clipboard,
@@ -190,11 +199,13 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
       serialized
     );
     this.summaryResponse$.next({ text: data as string, static: false });
+    this.analyticsService.logClickedGenerateSummary();
   }
 
   copyToClipboard() {
     this.clipboard.copy(this.summaryResponse$.value.text);
     this.toastService.showMessage('Summary copied to clipboard!');
+    this.analyticsService.logClickedCopySummaryToClipboard();
   }
 
   upgradeToPremium() {

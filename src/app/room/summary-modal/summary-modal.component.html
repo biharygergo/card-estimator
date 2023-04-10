@@ -10,46 +10,42 @@
     <div class="summary-response">
       <div
         class="middle-text"
-        *ngIf="!(isRoomProper$ | async); else responseText"
+        *ngIf="failedPrecondition$ | async as failedPrecondition"
       >
-        <h2>Not enough data</h2>
-        <p>
-          To generate a meaningful summary, you must have at least three rounds
-          and another member in this room.
-        </p>
+        <ng-container *ngIf="failedPrecondition === 'room-size'">
+          <h2>Not enough data</h2>
+          <p>
+            To generate a meaningful summary, you must have at least three
+            rounds and another member in this room.
+          </p>
+        </ng-container>
+        <ng-container *ngIf="failedPrecondition === 'user'">
+          <h2>No user account</h2>
+          <p>
+            You need a permanent Planning Poker account to view or generate a
+            summary.
+          </p>
+        </ng-container>
       </div>
-      <ng-template #responseText>
-        <div
-          class="response-text"
-          *ngIf="summaryResponse$ | async as response; else loading"
-        >
-          {{ response }}
-        </div>
-      </ng-template>
+      <div class="response-text" id="response-text"></div>
 
-      <ng-template #loading>
-        <div
-          class="loading-blocks"
-          *ngIf="!(showOutOfCredits$ | async); else showOops"
-        >
-          <div class="loading-block"></div>
-          <div class="loading-block"></div>
-          <div class="loading-block"></div>
-          <div class="loading-block"></div>
-          <div class="loading-block"></div>
-          <div class="loading-block"></div>
-          <div class="loading-block"></div>
-        </div>
-        <ng-template #showOops>
-          <div class="middle-text">
-            <h2>Oops!</h2>
-            <p>You are out of your monthly free credits.</p>
-            <p>
-              Upgrade to Premium to get unlimited room summaries and much more!
-            </p>
-          </div>
-        </ng-template>
-      </ng-template>
+      <div
+        class="loading-blocks"
+        *ngIf="(summaryResponse$ | async) === undefined"
+      >
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
+      </div>
+      <div class="middle-text" *ngIf="showOutOfCredits$ | async">
+        <h2>Oops!</h2>
+        <p>You are out of your monthly free credits.</p>
+        <p>Upgrade to Premium to get unlimited room summaries and much more!</p>
+      </div>
     </div>
     <div class="summary-buttons">
       <button

@@ -1,17 +1,24 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, Inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import {
   BehaviorSubject,
   Observable,
   Subject,
   combineLatest,
+  delay,
   distinctUntilChanged,
   first,
   map,
-  share,
   shareReplay,
   takeUntil,
+  tap,
 } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -23,6 +30,7 @@ import { SerializerService } from 'src/app/services/serializer.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
+import Typed from 'typed.js';
 
 export interface SummaryModalData {
   roomId: string;
@@ -50,8 +58,11 @@ export const summaryModalCreator = ({
   templateUrl: './summary-modal.component.html',
   styleUrls: ['./summary-modal.component.scss'],
 })
-export class SummaryModalComponent {
-  summaryResponse$ = new BehaviorSubject<string | undefined>(undefined);
+export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
+  typewriter: Typed;
+  summaryResponse$ = new BehaviorSubject<
+    { text: string; static: boolean } | undefined
+  >(undefined);
 
   isRoomProper$: Observable<boolean> = this.estimatorService
     .getRoomById(this.dialogData.roomId)
@@ -61,8 +72,43 @@ export class SummaryModalComponent {
         return rounds.length > 2 && room.members.length > 1;
       }),
       distinctUntilChanged(),
-      shareReplay(1),
+      shareReplay(1)
     );
+
+  failedPrecondition$: Observable<'room-size' | 'user' | undefined> =
+    combineLatest([this.isRoomProper$, this.authService.user]).pipe(
+      map(([isRoomProper, user]) => {
+        if (user.isAnonymous) {
+          return 'user';
+        } else if (!isRoomProper) {
+          return 'room-size';
+        }
+
+        return undefined;
+      })
+    );
+
+  summaryResponseAsObs = combineLatest([
+    this.summaryResponse$.asObservable(),
+    this.failedPrecondition$,
+  ]).pipe(
+    tap(([response, failedPrecondition]) => {
+      this.typewriter?.destroy();
+      document.getElementById('response-text').innerHTML = '';
+
+      if (response && failedPrecondition === undefined) {
+        if (response.static) {
+          document.getElementById('response-text').innerHTML = response.text;
+        } else {
+          this.typewriter = new Typed('#response-text', {
+            strings: [response.text],
+            typeSpeed: 5,
+            showCursor: false
+          });
+        }
+      }
+    })
+  );
 
   latestRoomSummary$: Observable<string | undefined> = this.estimatorService
     .getRoomSummaries(this.dialogData.roomId)
@@ -113,16 +159,20 @@ export class SummaryModalComponent {
     combineLatest([
       this.latestRoomSummary$,
       this.showOutOfCredits$,
-      this.isRoomProper$,
+      this.failedPrecondition$,
     ])
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe(([summary, outOfCredits, isRoomProper]) => {
+      .subscribe(([summary, outOfCredits, failedPrecondition]) => {
         if (summary) {
-          this.summaryResponse$.next(summary);
-        } else if (!outOfCredits && isRoomProper) {
+          this.summaryResponse$.next({ text: summary, static: true });
+        } else if (!outOfCredits && failedPrecondition === undefined) {
           this.generateSummary();
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.summaryResponseAsObs.pipe(takeUntil(this.destroy)).subscribe();
   }
 
   ngOnDestroy() {
@@ -139,11 +189,11 @@ export class SummaryModalComponent {
       room.roomId,
       serialized
     );
-    this.summaryResponse$.next(data as string);
+    this.summaryResponse$.next({ text: data as string, static: false });
   }
 
   copyToClipboard() {
-    this.clipboard.copy(this.summaryResponse$.value);
+    this.clipboard.copy(this.summaryResponse$.value.text);
     this.toastService.showMessage('Summary copied to clipboard!');
   }
 

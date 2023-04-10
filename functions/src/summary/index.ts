@@ -1,12 +1,12 @@
-import { getAuth } from 'firebase-admin/auth';
-import { Timestamp, getFirestore } from 'firebase-admin/firestore';
-import { CallableContext, HttpsError } from 'firebase-functions/v1/https';
-import { Configuration, OpenAIApi } from 'openai';
-import { isPremiumSubscriber } from '../shared/customClaims';
-import { getChatGptUsageThisMonth, saveMeteredUsage } from '../usage';
+import {getAuth} from "firebase-admin/auth";
+import {Timestamp, getFirestore} from "firebase-admin/firestore";
+import {CallableContext, HttpsError} from "firebase-functions/v1/https";
+import {Configuration, OpenAIApi} from "openai";
+import {isPremiumSubscriber} from "../shared/customClaims";
+import {getChatGptUsageThisMonth, saveMeteredUsage} from "../usage";
 
 const configuration = new Configuration({
-  organization: 'org-wBmr0xodAPTosU3YBSBxqufh',
+  organization: "org-wBmr0xodAPTosU3YBSBxqufh",
   apiKey: process.env.OPENAI_API_KEY,
 });
 
@@ -24,8 +24,8 @@ interface RoomSummary {
 export async function createSummary(data: any, context: CallableContext) {
   if (!context.auth?.uid) {
     throw new HttpsError(
-      'unauthenticated',
-      'A user account is required for summarization'
+        "unauthenticated",
+        "A user account is required for summarization"
     );
   }
 
@@ -34,15 +34,15 @@ export async function createSummary(data: any, context: CallableContext) {
 
   if (!user.providerData.length) {
     throw new HttpsError(
-      'unauthenticated',
-      'A permanent user account is required for summarization'
+        "unauthenticated",
+        "A permanent user account is required for summarization"
     );
   }
 
   const summariesCollection = await getFirestore()
-    .collection('rooms')
-    .doc(roomId)
-    .collection('summaries');
+      .collection("rooms")
+      .doc(roomId)
+      .collection("summaries");
 
   const isPremiumUser = await isPremiumSubscriber(user.uid);
   if (!isPremiumUser) {
@@ -50,8 +50,8 @@ export async function createSummary(data: any, context: CallableContext) {
 
     if (usageCountThisMonth >= USAGE_LIMIT) {
       throw new HttpsError(
-        'resource-exhausted',
-        'You have exceeded your summary limit for the month'
+          "resource-exhausted",
+          "You have exceeded your summary limit for the month"
       );
     }
   }
@@ -69,13 +69,13 @@ ${data.csvSummary}
 `;
 
   const response = await openai.createCompletion({
-    model: 'text-davinci-003',
+    model: "text-davinci-003",
     prompt,
     max_tokens: 576,
   });
 
-  let summaryText = response.data.choices?.[0].text ?? '';
-  while (summaryText.startsWith('\n')) {
+  let summaryText = response.data.choices?.[0].text ?? "";
+  while (summaryText.startsWith("\n")) {
     summaryText = summaryText.slice(1).trimStart();
   }
 
@@ -87,9 +87,9 @@ ${data.csvSummary}
   await summariesCollection.add(summaryData);
 
   await saveMeteredUsage(user.uid, {
-    type: 'chatgpt-query',
+    type: "chatgpt-query",
     createdAt: Timestamp.now(),
-    subscription: isPremiumUser ? 'premium' : 'basic',
+    subscription: isPremiumUser ? "premium" : "basic",
   });
 
   return summaryText;

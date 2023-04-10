@@ -38,6 +38,7 @@ import {
 import {startJiraAuthFlow, onJiraAuthorizationReceived} from "./jira/oauth";
 import {searchJira} from "./jira/search";
 import {captureError} from "./shared/errors";
+import {createSummary} from "./summary";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -159,7 +160,9 @@ exports.onJiraAuthResponse = functions.https.onRequest(async (req, res) => {
   cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
 });
 
-exports.queryJiraIssues = functions.https.onCall(async (data: any, context: CallableContext) => searchJira(data, context));
+exports.queryJiraIssues = functions.https.onCall(
+    async (data: any, context: CallableContext) => searchJira(data, context)
+);
 
 exports.safeRedirect = functions.https.onRequest(async (req, res) => {
   const redirectTo = req.query.redirectTo;
@@ -168,3 +171,7 @@ exports.safeRedirect = functions.https.onRequest(async (req, res) => {
   }
   return;
 });
+
+exports.createSummary = functions.https.onCall(
+    async (data: any, context: CallableContext) => createSummary(data, context)
+);

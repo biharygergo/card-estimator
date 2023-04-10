@@ -13,6 +13,8 @@ import {
   RoundStatistics,
 } from 'src/app/types';
 import { TopicEditorInputOutput } from '../topic-editor/topic-editor.component';
+import { MatDialog } from '@angular/material/dialog';
+import { summaryModalCreator } from '../summary-modal/summary-modal.component';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -36,6 +38,7 @@ export class TopicsSidebarComponent implements OnInit {
     private serializer: SerializerService,
     private analytics: AnalyticsService,
     private estimatorService: EstimatorService,
+    private readonly dialog: MatDialog,
     public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
@@ -89,5 +92,9 @@ export class TopicsSidebarComponent implements OnInit {
   setActiveRound(roundNumber: number) {
     this.analytics.logClickedSetActiveRound();
     this.estimatorService.setActiveRound(this.room, roundNumber, false);
+  }
+
+  openSummaryModal() {
+    this.dialog.open(...summaryModalCreator({ roomId: this.room.roomId }));
   }
 }

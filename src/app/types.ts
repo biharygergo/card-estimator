@@ -332,6 +332,19 @@ export type JiraIntegration = {
   jiraResources: JiraResource[];
 };
 
+export interface RoomSummary {
+  summary: string;
+  createdAt: FieldValue;
+  createdById: string;
+}
+
+export interface MeteredUsage {
+  createdAt: FieldValue;
+  type: "chatgpt-query";
+  subscription: "premium" | "basic";
+}
+
+
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {
     values: { 0: '0', 0.5: '0.5', 1: '1', 2: '2', 3: '3', 5: '5' },

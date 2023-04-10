@@ -7,7 +7,7 @@ import { Member, MemberStatus, MemberType, Room } from './../types';
 import { getHumanReadableElapsedTime } from './../utils';
 
 const CSV_HEADERS_BEFORE_NAMES = ['Round'];
-const CSV_HEADERS_AFTER_NAMES = ['Average', 'Duration', 'Notes'];
+const CSV_HEADERS_AFTER_NAMES = ['Average', 'Majority', 'Notes'];
 
 type ExportedDataRow = {
   estimates: {
@@ -103,29 +103,34 @@ export class ExportData {
 export class SerializerService {
   constructor() {}
 
+  getRoomAsCsv(room: Room): string {
+    const exportData = new ExportData(room);
+    const members = Object.values(exportData.members);
+    const headerRow = [...CSV_HEADERS_BEFORE_NAMES]
+      .concat(members.map((m) => m.name))
+      .concat(CSV_HEADERS_AFTER_NAMES);
+
+    let csvContent = '';
+    csvContent += headerRow.join(',') + '\n';
+
+    exportData.rows.forEach((row) => {
+      const content = [row.topic];
+
+      members.forEach((member) => {
+        content.push(row.estimates[member.id]);
+      });
+      content.push(row.average);
+      content.push(row.mostPopularVote);
+      content.push(row.notes);
+
+      csvContent += content.join(',') + '\n';
+    });
+    return csvContent;
+  }
+
   exportRoomAsCsv(room: Room) {
     try {
-      const exportData = new ExportData(room);
-      const members = Object.values(exportData.members);
-      const headerRow = [...CSV_HEADERS_BEFORE_NAMES]
-        .concat(members.map((m) => m.name))
-        .concat(CSV_HEADERS_AFTER_NAMES);
-
-      let csvContent = '';
-      csvContent += headerRow.join(',') + '\n';
-
-      exportData.rows.forEach((row) => {
-        const content = [row.topic];
-
-        members.forEach((member) => {
-          content.push(row.estimates[member.id]);
-        });
-        content.push(row.average);
-        content.push(row.duration);
-        content.push(row.notes);
-
-        csvContent += content.join(',') + '\n';
-      });
+      const csvContent = this.getRoomAsCsv(room);
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);

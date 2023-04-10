@@ -20,6 +20,7 @@ import { TopicEditorComponent } from './topic-editor/topic-editor.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MarkdownModule } from 'ngx-markdown';
 import { RichTopicComponent } from './rich-topic/rich-topic.component';
+import { SummaryModalComponent } from './summary-modal/summary-modal.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,7 @@ const routes: Routes = [
     RoomConfigurationModalComponent,
     TopicEditorComponent,
     RichTopicComponent,
+    SummaryModalComponent,
   ],
   imports: [
     CommonModule,

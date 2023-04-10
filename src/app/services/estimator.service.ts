@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   addDoc,
   arrayUnion,
+  collectionData,
   collectionSnapshots,
   docData,
   Firestore,
@@ -34,6 +35,7 @@ import {
   AuthorizationMetadata,
   SubscriptionMetadata,
   RichTopic,
+  RoomSummary,
 } from './../types';
 import {
   collection,
@@ -481,6 +483,26 @@ export class EstimatorService {
         });
       })
     );
+  }
+
+  getRoomSummaries(roomId: string): Observable<RoomSummary[]> {
+    const ref = collection(
+      this.firestore,
+      this.ROOMS_COLLECTION,
+      roomId,
+      'summaries'
+    ) as CollectionReference<RoomSummary>;
+
+    const q = query<RoomSummary>(
+      ref,
+      orderBy('createdAt', 'desc')
+    );
+
+    return collectionData(q)
+  }
+
+  generateRoomSummary(roomId: string, csvSummary: string) {
+    return httpsCallable(this.functions, 'createSummary')({ csvSummary, roomId });
   }
 
   async setRoomPassword(roomId: string, password: string) {

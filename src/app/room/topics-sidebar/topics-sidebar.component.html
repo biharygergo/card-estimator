@@ -6,6 +6,10 @@
 </div>
 <app-velocity [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
 <div class="sidenav-actions">
+  <button mat-button (click)="openSummaryModal()">
+    <mat-icon>auto_fix_normal</mat-icon>
+    Summarize
+  </button>
   <div
     [matTooltip]="
       config.isRunningInZoom

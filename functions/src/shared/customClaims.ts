@@ -17,3 +17,7 @@ export async function getCustomClaims(userId: string): Promise<CustomClaims> {
   const currentClaims: CustomClaims = user.customClaims || {};
   return currentClaims;
 }
+
+export async function isPremiumSubscriber(userId: string): Promise<boolean> {
+  return (await getCustomClaims(userId)).stripeRole === "premium";
+}

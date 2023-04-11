@@ -291,4 +291,16 @@ export class AnalyticsService {
   logClickedViewOnJiraButton() {
     logEvent(this.analytics, 'clicked_view_on_jira');
   }
+
+  logClickedCopySummaryToClipboard() {
+    logEvent(this.analytics, 'clicked_copy_summary_to_clipboard');
+  }
+
+  logClickedGenerateSummary() {
+    logEvent(this.analytics, 'clicked_generate_summary');
+  }
+
+  logClickedSummarize() {
+    logEvent(this.analytics, 'clicked_summarize');
+  }
 }

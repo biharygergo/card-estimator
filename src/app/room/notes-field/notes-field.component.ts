@@ -41,7 +41,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.noteValue.valueChanges
-      .pipe(debounceTime(500))
+      .pipe(debounceTime(500), takeUntil(this.destroy))
       .subscribe((value: string) => {
         this.estimatorService.setNote(
           value,

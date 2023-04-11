@@ -85,6 +85,11 @@ service cloud.firestore {
         allow write: if false;
         allow read: if isAccessAllowed(request);
       }
+
+      match /summaries/{summaryId} {
+        allow write: if false;
+        allow read: if isAccessAllowed(request);
+      }
     }
 
     match /userDetails/{userId} {
@@ -92,6 +97,11 @@ service cloud.firestore {
 
       match /integrations/{integrationName} {
         allow read, write: if request.auth.uid == userId;
+      }
+
+      match /meteredUsage/{usageId} {
+        allow read: if request.auth.uid == userId;
+        allow write: if false;
       }
     }
 

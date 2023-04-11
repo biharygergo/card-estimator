@@ -72,7 +72,7 @@ ${data.csvSummary}
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt,
-    max_tokens: 576,
+    max_tokens: 800,
   });
 
   let summaryText = response.data.choices?.[0].text ?? "";

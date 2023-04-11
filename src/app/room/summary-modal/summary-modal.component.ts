@@ -175,7 +175,9 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(first(), takeUntil(this.destroy))
       .subscribe(([summary, outOfCredits, failedPrecondition]) => {
         if (summary) {
-          this.summaryResponse$.next({ text: summary, static: true });
+          if (!this.summaryResponse$.value) {
+            this.summaryResponse$.next({ text: summary, static: true });
+          }
         } else if (!outOfCredits && failedPrecondition === undefined) {
           this.generateSummary();
         }

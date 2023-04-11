@@ -44,16 +44,16 @@
       opacity: 0.5;
     }
     100% {
-      opacity: 0.7;
+      opacity: 1;
     }
   }
 
   .loading-block {
     height: 1.5rem;
     background: #757780;
-    border-radius: 4px;
+    border-radius: 1px;
     margin-bottom: 0.5rem;
-    animation: pulse 500ms infinite alternate;
+    animation: pulse 400ms infinite alternate;
     width: 8px;
   }
 }

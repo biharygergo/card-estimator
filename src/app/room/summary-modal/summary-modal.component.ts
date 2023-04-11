@@ -69,7 +69,7 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
     .pipe(
       map((room) => {
         const rounds = Object.values(room.rounds);
-        return rounds.length > 2 && room.members.length > 1;
+        return rounds.length > 1 && room.members.length > 1;
       }),
       distinctUntilChanged(),
       shareReplay(1)
@@ -149,6 +149,8 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
   destroy = new Subject<void>();
+  isLoadingResults = false;
+
   readonly USAGE_LIMIT = USAGE_LIMIT;
 
   constructor(
@@ -190,16 +192,21 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async generateSummary() {
-    this.summaryResponse$.next(undefined);
-    const room = await this.estimatorService.getRoom(this.dialogData.roomId);
-    const serialized = this.serializer.getRoomAsCsv(room);
+    try {
+      this.isLoadingResults = true;
+      this.summaryResponse$.next(undefined);
+      const room = await this.estimatorService.getRoom(this.dialogData.roomId);
+      const serialized = this.serializer.getRoomAsCsv(room);
 
-    const { data } = await this.estimatorService.generateRoomSummary(
-      room.roomId,
-      serialized
-    );
-    this.summaryResponse$.next({ text: data as string, static: false });
-    this.analyticsService.logClickedGenerateSummary();
+      const { data } = await this.estimatorService.generateRoomSummary(
+        room.roomId,
+        serialized
+      );
+      this.summaryResponse$.next({ text: data as string, static: false });
+      this.analyticsService.logClickedGenerateSummary();
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 
   copyToClipboard() {

@@ -120,7 +120,9 @@ type FaqCategory = {
 export class FaqComponent implements OnInit {
   categories: FaqCategory[] = Object.values(
     faqs.reduce((acc: { [category: string]: FaqCategory }, curr: FaqRow) => {
-      acc[curr.category] ??= { faqs: [], category: curr.category };
+      if (!acc[curr.category]) {
+        acc[curr.category] = { faqs: [], category: curr.category };
+      }
       acc[curr.category].faqs.push(curr);
       return acc;
     }, {})

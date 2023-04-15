@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EstimatorService, RoomNotFoundError } from '../services/estimator.service';
+import {
+  EstimatorService,
+  RoomNotFoundError,
+} from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Member, MemberType, MemberStatus, Organization } from '../types';
@@ -11,8 +14,6 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
-  EMPTY,
-  firstValueFrom,
   from,
   Observable,
   of,
@@ -143,7 +144,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   organization: Observable<Organization | undefined> = this.user.pipe(
     switchMap((user) => {
       if (!user?.isAnonymous) {
-        return this.organizationService.getMyOrganization();
+        return this.organizationService.getMyOrganization().pipe(first());
       } else {
         return of(undefined);
       }
@@ -213,7 +214,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
             })
           )
         ),
-        catchError(error => {
+        catchError((error) => {
           if (error instanceof RoomNotFoundError) {
             this.showUnableToJoinRoom();
             return of(false);

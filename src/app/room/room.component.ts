@@ -14,11 +14,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   catchError,
   combineLatest,
+  debounceTime,
   distinctUntilChanged,
   EMPTY,
   filter,
   first,
   map,
+  mapTo,
+  merge,
   Observable,
   of as observableOf,
   share,
@@ -28,6 +31,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  throttleTime,
   withLatestFrom,
 } from 'rxjs';
 import {
@@ -77,6 +81,10 @@ import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
+
+// Log out after two hours of inactivity
+const INACTIVITY_TIME = 1000 * 60 * 120;
+
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -167,7 +175,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.joinAsObserver();
       }
     }),
-    takeUntil(this.destroy),
+    takeUntil(this.destroy)
   );
 
   onRoundNumberUpdated$: Observable<number> = this.room$.pipe(
@@ -262,12 +270,21 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  roomActive$ = this.room$.pipe(throttleTime(1000), mapTo(false));
+  roomInactive$ = this.room$.pipe(debounceTime(1000), mapTo(true));
+
+  isUserInactive$: Observable<boolean> = merge(
+    this.roomActive$,
+    this.roomInactive$
+  );
+
   user$ = this.authService.user;
 
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;
 
   openedFeedbackForm: boolean = false;
+  inactiveTimeoutHandle: number;
 
   constructor(
     private estimatorService: EstimatorService,
@@ -321,9 +338,27 @@ export class RoomComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.showAvatarPrompt();
       });
+
+    this.isUserInactive$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((isInactive) => {
+        if (!isInactive) {
+          window.clearTimeout(this.inactiveTimeoutHandle);
+          return;
+        }
+
+        this.inactiveTimeoutHandle = window.setTimeout(() => {
+          this.errorGoBackToJoinPage({
+            message:
+              'You have been logged out of the room due to inactivity. Please refresh the page once you are back.',
+            duration: null,
+          });
+        }, INACTIVITY_TIME);
+      });
   }
 
   ngOnDestroy(): void {
+    clearTimeout(this.inactiveTimeoutHandle);
     this.destroy.next();
     this.destroy.complete();
   }
@@ -360,13 +395,13 @@ export class RoomComponent implements OnInit, OnDestroy {
             if (result && result?.joined) {
               return this.estimatorService.getRoomById(this.room.roomId);
             } else {
-              this.errorGoBackToJoinPage();
+              this.errorGoBackToJoinPage({});
               return EMPTY;
             }
           })
         );
     } else {
-      this.errorGoBackToJoinPage();
+      this.errorGoBackToJoinPage({});
       return EMPTY;
     }
   }
@@ -462,9 +497,15 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  private errorGoBackToJoinPage() {
-    this.snackBar.open('Something went wrong. Please try again later.', null, {
-      duration: 5000,
+  private errorGoBackToJoinPage({
+    message = 'Something went wrong. Please try again later.',
+    duration = 5000,
+  }: {
+    message?: string;
+    duration?: number | null;
+  }) {
+    this.snackBar.open(message, null, {
+      duration: duration === null ? undefined : duration,
     });
     this.router.navigate(['join']);
   }

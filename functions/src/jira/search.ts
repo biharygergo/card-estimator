@@ -28,7 +28,7 @@ export async function searchJira(data: any, context: CallableContext) {
   try {
     const jiraIntegration = jiraIntegrationRef.data() as JiraIntegration;
 
-    const tokenSet = new TokenSet({
+    let tokenSet = new TokenSet({
       access_token: jiraIntegration.accessToken,
       refresh_token: jiraIntegration.refreshToken,
       expires_at: jiraIntegration.expiresAt,
@@ -44,6 +44,7 @@ export async function searchJira(data: any, context: CallableContext) {
         refreshToken: updatedToken.refresh_token,
         expiresAt: updatedToken.expires_at,
       });
+      tokenSet = updatedToken;
     }
 
     const activeIntegration: JiraResource =

@@ -39,7 +39,7 @@ export async function searchJira(data: any, context: CallableContext) {
       await client.initializeClient();
 
       const updatedToken = await client.refreshToken(tokenSet.refresh_token!);
-      jiraIntegrationRef.ref.update({
+      await jiraIntegrationRef.ref.update({
         accessToken: updatedToken.access_token,
         refreshToken: updatedToken.refresh_token,
         expiresAt: updatedToken.expires_at,

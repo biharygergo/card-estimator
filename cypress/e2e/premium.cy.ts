@@ -46,7 +46,7 @@ describe('Authentication', () => {
     cy.contains('Create password').type('SomeRoomPassword');
     cy.contains('Save password').click();
 
-    cy.wait(5000);
+    cy.wait(10000);
     cy.get('#password-protection-toggle').click();
     cy.contains('Password protection enabled').should('be.visible');
 

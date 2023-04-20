@@ -17,7 +17,7 @@ jobs:
         with:
           browser: chrome
           start: npm run start:test
-          wait-on: 'http://localhost:4200/'
+          wait-on: 'http://[::1]:4200'
       # after the test run completes
       # store videos and any screenshots
       # NOTE: screenshots will be generated only if E2E test failed

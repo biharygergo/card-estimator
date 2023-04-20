@@ -12,4 +12,5 @@ export const environment = {
   },
   recaptcha3SiteKey: '6Lf5e-weAAAAAIkZ1MWmXR9xxHkv2jPQda325CRm',
   useEmulators: false,
+  premiumPriceId: 'price_1MkYV6CG1hllVHncXLgIFXLK'
 };

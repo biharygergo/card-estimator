@@ -48,6 +48,8 @@ import {
   Round,
   RoundStatistics,
   UserProfileMap,
+  SavedCardSetValue,
+  CustomCardSet,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
@@ -78,6 +80,7 @@ import { isEqual } from 'lodash';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
+import { CardDeckService } from '../services/card-deck.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -204,9 +207,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  onCardSetUpdated$: Observable<CardSet | 'CUSTOM'> = this.room$.pipe(
-    map((room) => room.cardSet),
-    distinctUntilChanged(),
+  onCardSetUpdated$: Observable<
+    [CardSet | 'CUSTOM', CardSetValue | undefined]
+  > = this.room$.pipe(
+    map((room) => [room.cardSet, room.customCardSetValue]),
+    distinctUntilChanged(isEqual),
     tap(() => this.updateSelectedCardSets()),
     takeUntil(this.destroy)
   );
@@ -278,6 +283,12 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.roomInactive$
   );
 
+  savedCardSets$: Observable<SavedCardSetValue[]> = this.cardDeckService
+    .getMyCardDecks()
+    .pipe(takeUntil(this.destroy));
+  
+  savedCardSets: SavedCardSetValue[] = [];
+
   user$ = this.authService.user;
 
   readonly MemberType = MemberType;
@@ -288,6 +299,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   constructor(
     private estimatorService: EstimatorService,
+    private readonly cardDeckService: CardDeckService,
     private route: ActivatedRoute,
     private router: Router,
     private clipboard: Clipboard,
@@ -319,6 +331,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
     this.onPermissionsUpdated$.subscribe();
+    this.savedCardSets$.subscribe(cardSets => {
+      this.savedCardSets = cardSets;
+    })
 
     this.authService.avatarUpdated
       .pipe(
@@ -674,9 +689,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.analytics.logClickedUnits();
   }
 
-  setEstimationCardSet(key: CardSet) {
-    this.analytics.logSelectedCardSet(key);
-    this.estimatorService.setRoomCardSet(this.room.roomId, key);
+  setEstimationCardSet(cardSet: CardSetValue) {
+    this.analytics.logSelectedCardSet(cardSet.key);
+    if (cardSet.key === CustomCardSet) {
+      this.estimatorService.setRoomCustomCardSetValue(this.room.roomId, cardSet);
+    } else {
+      this.estimatorService.setRoomCardSet(this.room.roomId, cardSet.key);
+    }
   }
 
   toggleShowPassOption() {

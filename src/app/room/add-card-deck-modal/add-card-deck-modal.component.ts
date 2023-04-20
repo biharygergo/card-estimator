@@ -1,7 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { debounceTime } from 'rxjs';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
+import {
+  catchError,
+  debounceTime,
+  from,
+  of,
+  switchMap,
+  throwError,
+} from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { CardSetValue, isNumeric } from 'src/app/types';
@@ -11,6 +22,12 @@ import {
   CARD_DECK_IDEAL_SIZE,
   MAX_CARD_DECK_SIZE,
 } from './validator';
+import {
+  CardDeckService,
+  UnauthorizedError,
+} from 'src/app/services/card-deck.service';
+import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 export type AddCardDeckModalData = {
   roomId: string;
@@ -39,6 +56,9 @@ export class AddCardDeckModalComponent implements OnInit {
     public dialogRef: MatDialogRef<AddCardDeckModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddCardDeckModalData,
     private estimatorService: EstimatorService,
+    private readonly cardDeckService: CardDeckService,
+    private readonly dialog: MatDialog,
+    public readonly permissionService: PermissionsService,
     private analytics: AnalyticsService
   ) {}
 
@@ -76,10 +96,31 @@ export class AddCardDeckModalComponent implements OnInit {
     };
 
     this.analytics.logClickedSaveCustomCards();
-    this.estimatorService
-      .setRoomCustomCardSetValue(this.data.roomId, customDeck)
-      .then(() => {
-        this.dialogRef.close();
-      });
+    return from(
+      this.estimatorService.setRoomCustomCardSetValue(
+        this.data.roomId,
+        customDeck
+      )
+    )
+      .pipe(
+        switchMap(() => {
+          return this.cardDeckService.saveCardDeck(customDeck).pipe(
+            catchError((error) => {
+              if (error instanceof UnauthorizedError) {
+                // Nothing to do
+                return of({});
+              } else {
+                return throwError(() => error);
+              }
+            })
+          );
+        })
+      )
+      .subscribe(() => this.dialogRef.close());
+  }
+
+  clickedLearnMorePremium() {
+    this.analytics.logClickedLearnMorePremium('card_deck_editor');
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

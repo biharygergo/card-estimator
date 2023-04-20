@@ -1,51 +1,53 @@
-import { clearFirebaseLocalStorage, createNewRoom, setAppCheckCookie } from "../support/utils";
+import {
+  clearFirebaseLocalStorage,
+  createNewRoom,
+  setAppCheckCookie,
+} from '../support/utils';
 
-describe('Creating a room as a new user', () => {
-    const testEmail = `test+${Date.now()}@company.com`;
-    const testPassword = 'SuperSecure123';
+describe('Authentication', () => {
+  const testEmail = `test+${Date.now()}@company.com`;
+  const testPassword = 'SuperSecure123';
 
-    beforeEach(() => {
-      clearFirebaseLocalStorage();
-      setAppCheckCookie();
-      cy.visit('/create');
-      cy.contains('Got it').click();
-    });
+  beforeEach(() => {
+    clearFirebaseLocalStorage();
+    setAppCheckCookie();
+    cy.visit('/create');
+    cy.contains('Got it').click();
+  });
 
-    it('can link an account with email', () => {
-        createNewRoom('Test Bela');
-        cy.get('#menu-button').click();
-        cy.get('#account-menu-item').click();
+  it('can link an account with email', () => {
+    createNewRoom('Test Bela');
+    cy.get('#menu-button').click();
+    cy.get('#account-menu-item').click();
 
-        cy.get('#create-account-button-banner').click();
-    
-        // Account modal appears
-        cy.get('#email-input').click().type(testEmail);
-        cy.get('#password-input').click().type(testPassword);
-        cy.get('#create-account-button').click();
-        cy.wait(1000);
+    cy.get('#create-account-button-banner').click();
 
-        cy.get('#email-input').should('not.exist');
-        // Modal disappears
-        cy.get('#sign-up-modal').should('not.exist');
+    // Account modal appears
+    cy.get('#email-input').click().type(testEmail);
+    cy.get('#password-input').click().type(testPassword);
+    cy.get('#create-account-button').click();
+    cy.wait(1000);
 
-        cy.get('#account-type-input').should('have.value', 'Permanent');
-    });
+    // Modal disappears
+    cy.get('#sign-up-modal').should('not.exist');
 
-    it('can sign back in', () => {
-        cy.get('#sign-in-button').click();
+    cy.get('#account-type-input').should('have.value', 'Permanent');
+  });
 
-        // Account modal appears
-        cy.get('#email-input').click().type(testEmail);
-        cy.get('#password-input').click().type(testPassword);
-        cy.get('#create-account-button').click();
-        cy.wait(1000);
+  it('can sign back in', () => {
+    cy.get('#sign-in-button').click();
 
-        cy.get('#email-input').should('not.exist');
-        // Modal disappears
-        cy.get('#sign-up-modal').should('not.exist');
+    // Account modal appears
+    cy.get('#email-input').click().type(testEmail);
+    cy.get('#password-input').click().type(testPassword);
+    cy.get('#create-account-button').click();
+    cy.wait(1000);
 
-        cy.get('#welcome-back').should('contain.text', 'Welcome back, Test Bela!');
+    cy.get('#email-input').should('not.exist');
+    // Modal disappears
+    cy.get('#sign-up-modal').should('not.exist');
 
-    });
+    cy.get('#welcome-back').should('contain.text', 'Welcome back, Test Bela!');
+  });
 
 });

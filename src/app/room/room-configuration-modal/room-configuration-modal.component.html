@@ -64,6 +64,7 @@
                   [disabled]="
                     !(isPasswordSet$ | async) || !hasConfigurationAccess
                   "
+                  id="password-protection-toggle"
                 ></mat-slide-toggle
               ></span>
             </div>
@@ -118,6 +119,7 @@
                     (authorizationMetadata$ | async)?.organizationProtection
                   "
                   [disabled]="!(hasConfigurationAccess && organization)"
+                  id="organization-protection-toggle"
                 >
                 </mat-slide-toggle>
               </span>
@@ -126,7 +128,7 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Permissions">
+    <mat-tab label="Permissions" id="permissions-tab">
       <div class="tab-content">
         <div class="tab-section">
           <div class="permissions-container">
@@ -146,11 +148,12 @@
                 [disabled]="!hasConfigurationAccess"
               >
                 <mat-chip-option
-                  *ngFor="let option of configuration.options"
+                  *ngFor="let option of configuration.options; let i=index"
                   [selected]="configuration.isSelected(option.value)"
                   (click)="configuration.toggleOption(option.value)"
                   class="role-option"
                   [disabled]="!hasConfigurationAccess"
+                  [id]="configuration.permission + '-' + i"
                   >{{ option.label }}</mat-chip-option
                 >
               </mat-chip-listbox>

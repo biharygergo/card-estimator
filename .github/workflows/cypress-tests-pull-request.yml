@@ -3,34 +3,22 @@ name: Run Cypress E2E Tests
 on: [push]
 env:
   CYPRESS_APP_CHECK_TOKEN: ${{secrets.APP_CHECK_TOKEN}}
-  FIREBASE_TOKEN: ${{secrets.FIREBASE_CI_TOKEN}}
-  FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
+  CYPRESS_PREMIUM_USER_PASSWORD: ${{secrets.PREMIUM_USER_PASSWORD}}
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
-      # Cache emulator
-      - name: Cache firebase emulators
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.FIREBASE_EMULATORS_PATH }}
-          key:
-            ${{ runner.os }}-firebase-emulators-${{
-            hashFiles('emulator-cache/**') }}
-        continue-on-error: true
       # Checkout repo
       - name: Checkout
         uses: actions/checkout@v3
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - run: cd functions && npm ci && npm run build
+      # Start app and tests
       - name: Cypress run
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
         with:
           browser: chrome
-          build: npm run build
-          start: npm run start:emulator
-          wait-on: 'http://localhost:6001'
+          build: npm run build:test
+          start: npm run start:test
+          wait-on: 'http://localhost:4200'
       # after the test run completes
       # store videos and any screenshots
       # NOTE: screenshots will be generated only if E2E test failed

@@ -10,6 +10,7 @@
             placeholder="Team deck #1"
             formControlName="cardDeckName"
             autocomplete="off"
+            id="deck-name-input"
           />
           <mat-hint
             >Name your card deck so you can find it among other decks</mat-hint
@@ -22,6 +23,7 @@
             placeholder="1,5,10,15,20"
             formControlName="cardDeckValues"
             autocomplete="off"
+            id="deck-values-input"
           />
           <mat-hint
             >Card values as a comma separated list in ascending order. You can
@@ -77,6 +79,7 @@
       color="primary"
       [disabled]="!cardDeckForm.valid"
       (click)="onSaveClick()"
+      id="set-card-deck-button"
     >
       <mat-icon>done</mat-icon>
       Set

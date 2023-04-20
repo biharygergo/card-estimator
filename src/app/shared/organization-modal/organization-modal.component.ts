@@ -89,6 +89,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.permissionsService.initializePremiumAccess();
     this.organization$.pipe(takeUntil(this.destroy)).subscribe();
     this.organization$
       .pipe(

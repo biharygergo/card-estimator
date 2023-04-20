@@ -82,7 +82,8 @@ class ChipOption<T> {
     public icon: string,
     public options: SelectOption<T>[],
     initialSelection: T[],
-    private onSelectionUpdated: () => {}
+    private onSelectionUpdated: () => {},
+    public permission: RoomPermissionId
   ) {
     this.setSelection(initialSelection);
   }
@@ -141,7 +142,8 @@ function createChipOptionForPermission(
     icon,
     defaultOptions,
     [...DEFAULT_PERMISSIONS[permission].value],
-    onSelectionUpdated
+    onSelectionUpdated,
+    permission
   );
 }
 

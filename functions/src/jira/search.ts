@@ -65,7 +65,7 @@ export async function searchJira(data: any, context: CallableContext) {
         ?.replace(/[^0-9a-zA-Z\s]+/g, "");
 
     const searchFilter = filteredQuery ?
-      `text ~ "${filteredQuery}*"` :
+      `text ~ "${filteredQuery.trimEnd()}*"` :
       "issue in issueHistory()";
     const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
 

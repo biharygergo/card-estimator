@@ -186,7 +186,7 @@ function loadAppConfig(): Promise<any> {
           ) {
             if (
               typeof window !== 'undefined' &&
-              !window.origin.includes('4200')
+              window.origin.includes('4200')
             ) {
               (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
                 Cookies.get('APP_CHECK_CI_TOKEN');

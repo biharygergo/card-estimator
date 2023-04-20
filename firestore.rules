@@ -99,6 +99,10 @@ service cloud.firestore {
         allow read, write: if request.auth.uid == userId;
       }
 
+      match /cardSets/{cardSetId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+
       match /meteredUsage/{usageId} {
         allow read: if request.auth.uid == userId;
         allow write: if false;

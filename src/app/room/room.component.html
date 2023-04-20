@@ -207,7 +207,7 @@
               <button
                 mat-menu-item
                 *ngFor="let cardSet of estimationCardSets"
-                (click)="setEstimationCardSet(cardSet.key)"
+                (click)="setEstimationCardSet(cardSet)"
                 [ngClass]="
                   selectedEstimationCardSetValue.key === cardSet.key &&
                   'selected'
@@ -232,6 +232,30 @@
                 >
               </div>
               <mat-divider></mat-divider>
+              <button
+                mat-menu-item
+                [matMenuTriggerFor]="savedCardsMenu"
+                aria-label="Saved card sets"
+                id="card-saved-sets-button"
+                [disabled]="savedCardSets.length === 0 || !(permissionsService.hasPremiumAccess() | async)"
+              >
+                <mat-icon>cloud</mat-icon>
+                Saved card sets ({{ savedCardSets.length }})
+              </button>
+              <mat-menu #savedCardsMenu="matMenu">
+                <button
+                  mat-menu-item
+                  *ngFor="let cardSet of savedCardSets"
+                  (click)="setEstimationCardSet(cardSet)"
+                >
+                  <mat-icon>cloud_download</mat-icon>
+                  <span class="card-set-title"
+                    >{{ cardSet.title }} ({{
+                      getCardSetDisplayValues(cardSet)
+                    }})</span
+                  >
+                </button>
+              </mat-menu>
               <button mat-menu-item (click)="openAddCardDeckModal()">
                 <mat-icon>add</mat-icon>
                 <span>Set a custom card deck</span>

@@ -23,6 +23,7 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
+import { environment } from 'src/environments/environment';
 
 export type StripeSubscription = Subscription;
 
@@ -79,7 +80,7 @@ export class PaymentService {
     }
 
     const session = await createCheckoutSession(this.payments, {
-      price: 'price_1MkYV6CG1hllVHncXLgIFXLK', // Premium plan
+      price: environment.premiumPriceId, // Premium plan
       automatic_tax: true,
       allow_promotion_codes: true,
       tax_id_collection: true,

@@ -53,6 +53,10 @@ export class PermissionsService {
 
     this.userPermissions.next(newPermissions);
 
+    this.initializePremiumAccess();
+  }
+
+  initializePremiumAccess() {
     this.paymentsService
       .isPremiumSubscriber()
       .then((isPremium) => this.isPremiumSubscriber.next(isPremium));

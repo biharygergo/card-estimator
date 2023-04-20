@@ -34,45 +34,53 @@ export async function onJiraAuthorizationReceived(
   const userId = await getUserId(req, res);
   if (!userId) {
     res.status(401).send("Not signed in.");
+    return;
   }
 
   const tokenSet = await client.getToken(req, res);
 
-  const availableResources: JiraResource[] = await axios
-      .get("https://api.atlassian.com/oauth/token/accessible-resources", {
-        headers: {
-          Authorization: "Bearer " + tokenSet.access_token,
-        },
-      })
-      .then((response) => response.data);
+  try {
+    const availableResources: JiraResource[] = await axios
+        .get("https://api.atlassian.com/oauth/token/accessible-resources", {
+          headers: {
+            Authorization: "Bearer " + tokenSet.access_token,
+          },
+        })
+        .then((response) => response.data);
 
-  const jiraResources: JiraResource[] = availableResources.filter(
-      (resource) => !!resource.scopes.filter((scope) => scope.includes("jira"))
-  );
+    const jiraResources: JiraResource[] = availableResources.filter(
+        (resource) => !!resource.scopes.filter((scope) => scope.includes("jira"))
+    );
 
-  if (!jiraResources.length) {
-    res.status(404).json({message: "No JIRA resources found."});
-    return;
+    if (!jiraResources.length) {
+      res.status(404).json({message: "No JIRA resources found."});
+      return;
+    }
+
+    jiraResources.forEach((jiraResource) => (jiraResource.active = false));
+    jiraResources[0].active = true;
+
+    const firestore = getFirestore();
+    const collection = firestore.collection(
+        `userDetails/${userId}/integrations`
+    );
+    const integration: JiraIntegration = {
+      provider: "jira",
+      createdAt: Timestamp.now(),
+      accessToken: tokenSet.access_token!,
+      refreshToken: tokenSet.refresh_token!,
+      expiresAt: tokenSet.expires_at!,
+      id: collection.doc().id,
+      jiraResources,
+    };
+
+    await collection.doc("jira").set(integration);
+
+    res.status(200).redirect(getHost(req) + "/integration/success");
+  } catch (e: any) {
+    res.status(500).json({message: "Oh-oh, an error occured during Jira setup. " + e?.message});
+    captureError(e);
   }
-
-  jiraResources.forEach((jiraResource) => (jiraResource.active = false));
-  jiraResources[0].active = true;
-
-  const firestore = getFirestore();
-  const collection = firestore.collection(`userDetails/${userId}/integrations`);
-  const integration: JiraIntegration = {
-    provider: "jira",
-    createdAt: Timestamp.now(),
-    accessToken: tokenSet.access_token!,
-    refreshToken: tokenSet.refresh_token!,
-    expiresAt: tokenSet.expires_at!,
-    id: collection.doc().id,
-    jiraResources,
-  };
-
-  await collection.doc("jira").set(integration);
-
-  res.status(200).redirect(getHost(req) + "/integration/success");
 }
 
 export async function getUserId(

@@ -105,6 +105,12 @@ export type CardSetValue = {
   key: CardSetOrCustom;
 };
 
+export type SavedCardSetValue = CardSetValue & {
+  id: string;
+  createdAt: FieldValue;
+  organizationId: string|null;
+}
+
 export type UserProfileMap = { [userId: string]: UserProfile };
 
 export type UserProfile = {

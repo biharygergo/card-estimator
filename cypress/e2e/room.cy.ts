@@ -28,7 +28,9 @@ describe('Inside the room', () => {
 
   it('can update the topic name', () => {
     cy.contains('Edit topic').click();
-    cy.get('#topic-name').click().clear().type('Custom name').blur();
+    cy.get('#topic-name').click().clear().type('Custom name');
+
+    cy.contains('Save').click();
 
     cy.contains('Manage rounds').click();
     cy.get('.round-title').first().should('contain.text', 'Custom name');

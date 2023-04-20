@@ -16,9 +16,8 @@ jobs:
         uses: cypress-io/github-action@v5.0.5 # use the explicit version number
         with:
           browser: chrome
-          build: npm run build:test
           start: npm run start:test
-          wait-on: 'http://localhost:4200'
+          wait-on: 'http://localhost:4200/'
       # after the test run completes
       # store videos and any screenshots
       # NOTE: screenshots will be generated only if E2E test failed

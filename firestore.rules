@@ -127,6 +127,11 @@ service cloud.firestore {
         allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;
       }
     }
+
+    match /recurringMeetingLinks/{linkId} {
+      allow read: if true;
+      allow write: if true;
+    }
     
     match /invitations/{invitationId} {
       allow write: if request.auth.uid == request.resource.data.invitedBy;

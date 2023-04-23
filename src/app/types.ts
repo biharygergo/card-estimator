@@ -41,6 +41,7 @@ export interface Room {
   timer?: Timer;
   configuration?: RoomConfiguration;
   subscriptionMetadata?: SubscriptionMetadata;
+  relatedRecurringMeetingLinkId?: string;
 }
 
 export interface Round {
@@ -383,6 +384,15 @@ export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
     key: CardSet.TSHIRT,
   },
 };
+
+export type RecurringMeetingLink = {
+  id: string;
+  createdById: string;
+  organizationId: string;
+  createdAt: FieldValue;
+  isEnabled: boolean;
+  frequencyDays: number;
+}
 
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   if (isNumericCardSet(cardSet)) {

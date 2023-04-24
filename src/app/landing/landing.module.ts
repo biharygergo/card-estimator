@@ -23,6 +23,7 @@ import { OrganizationInvitationComponent } from './organization-invitation/organ
 import { MatDialogModule } from '@angular/material/dialog';
 import { PremiumComponent } from './premium/premium.component';
 import { NgOptimizedImage } from '@angular/common';
+import { StartPlanningCtaComponent } from './components/start-planning-cta/start-planning-cta.component';
 
 const routes: Routes = [
   {
@@ -84,6 +85,7 @@ const routes: Routes = [
     WrapperComponent,
     HeaderV2Component,
     OrganizationInvitationComponent,
+    StartPlanningCtaComponent,
   ],
   imports: [
     CommonModule,

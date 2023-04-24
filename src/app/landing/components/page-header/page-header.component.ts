@@ -6,6 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
     <header>
       <div class="title">
         <h1>{{ title }}</h1>
+        <h3 *ngIf="subtitle">{{ subtitle }}</h3>
       </div>
     </header>
   `,
@@ -13,6 +14,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class PageHeaderComponent implements OnInit {
   @Input() title: string;
+  @Input() subtitle: string = '';
   constructor() {}
 
   ngOnInit(): void {}

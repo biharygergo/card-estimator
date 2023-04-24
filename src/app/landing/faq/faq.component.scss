@@ -77,70 +77,9 @@ main {
   }
 }
 
-.landing-cta {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: linear-gradient(263.51deg, #345ca8 10.21%, #80c2f2 127.28%);
-  border-radius: 20px;
-  color: white;
-
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 2rem 0 2rem;
-
-  .cards-container {
-    height: 200px;
-    width: 300px;
-    position: relative;
-
-    img {
-      margin-bottom: -20px;
-      object-fit: contain;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .cta-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex: 1;
-    padding-bottom: 2rem;
-    padding-right: 2rem;
-    gap: 0.5rem;
-
-    .cta-text {
-      h2 {
-        font-weight: 700;
-        font-size: 1.5rem;
-      }
-    }
-
-    a {
-      font-size: 1rem;
-      background: #d9e2ff;
-      color: #345ca8;
-      padding: 0.7rem 1.5rem;
-      font-weight: 700;
-      height: unset;
-      flex-shrink: 0;
-    }
-
-    @media screen and (max-width: 800px) {
-      flex-direction: column;
-      padding-right: 0;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-  }
-
-  @media screen and (max-width: 800px) {
-    flex-direction: column;
-
-    .cards-container {
-      order: 3;
-    }
-  }
+.cta-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
 }

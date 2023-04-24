@@ -44,7 +44,7 @@ export class CardDeckService {
     ]).pipe(
       first(),
       switchMap(async ([user, organization, isPremium]) => {
-        if (!user || user.isAnonymous) {
+        if (!user || user.isAnonymous || !isPremium) {
           return throwError(() => new UnauthorizedError());
         }
         const savedCardSet: SavedCardSetValue = {

@@ -13,7 +13,10 @@ import {
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Observable, switchMap, of, map } from 'rxjs';
-import { MeteredUsage, RecurringMeetingLink, Room } from '../types';
+import {
+  RecurringMeetingLink,
+  RecurringMeetingLinkCreatedRoom,
+} from '../types';
 import { docData } from 'rxfire/firestore';
 
 @Injectable({
@@ -40,18 +43,20 @@ export class RecurringMeetingLinkService {
         const date = new Date();
         date.setDate(date.getDate() - recurringMeetingLink.frequencyDays);
 
+        console.log(recurringMeetingLinkId, date);
         const ref = collection(
           this.firestore,
-          'rooms'
-        ) as CollectionReference<Room>;
-        const q = query<Room>(
+          'recurringMeetingLinks',
+          recurringMeetingLinkId,
+          'createdRooms'
+        ) as CollectionReference<RecurringMeetingLinkCreatedRoom>;
+        const q = query<RecurringMeetingLinkCreatedRoom>(
           ref,
-          where('relatedRecurringMeetingLinkId', '==', recurringMeetingLinkId),
           where('createdAt', '>=', Timestamp.fromDate(date)),
           orderBy('createdAt', 'desc')
         );
 
-        return collectionData<Room>(q);
+        return collectionData<RecurringMeetingLinkCreatedRoom>(q);
       }),
       map((rooms) => {
         return rooms.length ? rooms[0].roomId : undefined;

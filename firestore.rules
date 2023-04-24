@@ -122,7 +122,7 @@ service cloud.firestore {
       function getOrganization(organizationId) {
         return get(/databases/$(database)/documents/organizations/$(organizationId));
       }
-      
+                                                                                     
       match /memberInvitations/{invitationId} {
         allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;
       }
@@ -131,6 +131,11 @@ service cloud.firestore {
     match /recurringMeetingLinks/{linkId} {
       allow read: if true;
       allow write: if true;
+
+      match /createdRooms/{roomId} {
+        allow read: if true;
+        allow write: if true;
+      }
     }
     
     match /invitations/{invitationId} {

@@ -46,7 +46,8 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
             this.displayErrorMessage();
             return of(undefined);
           }
-          return this.router.navigate(['room', roomId]);
+          console.log('Would redirect to', roomId);
+          return of(undefined) //this.router.navigate(['room', roomId]);
         }),
         takeUntil(this.destroy)
       )

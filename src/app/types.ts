@@ -394,6 +394,11 @@ export type RecurringMeetingLink = {
   frequencyDays: number;
 }
 
+export type RecurringMeetingLinkCreatedRoom = {
+  createdAt: FieldValue;
+  roomId: string;
+}
+
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   if (isNumericCardSet(cardSet)) {
     return value;

@@ -33,6 +33,11 @@ const routes: Routes = [
     data: { title: 'Loading room' },
     loadChildren: () => import('./room/room.module').then(m => m.RoomModule)
   },
+  {
+    path: 'recurringMeeting/:linkId',
+    loadComponent: () => import('./recurring-meeting/recurring-meeting.component').then(m => m.RecurringMeetingComponent),
+    data: { title: 'Recurring Meeting' },
+  },
 ];
 
 @NgModule({

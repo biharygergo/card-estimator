@@ -57,8 +57,9 @@ main {
   border-radius: 20px;
   padding: 2rem;
   height: 410px;
+  min-height: 410px;
 
-  &.image-only {
+  &.image-only, &.video-only {
     padding: 0;
     position: relative;
 
@@ -77,8 +78,13 @@ main {
 
   @media screen and (max-width: 800px) {
     order: 0;
-    &.image-only {
+    &.image-only, &.video-only {
       order: 1;
+    }
+
+    &.video-only {
+      min-height: unset;
+      height: unset;
     }
   }
 }
@@ -91,10 +97,10 @@ main {
 }
 
 .title {
-  color: #bfc6dc;
+  color: #d9e2ff;
   font-weight: 700;
-  font-size: 1.7rem;
-  line-height: 2.8rem;
+  font-size: 1.5rem;
+  line-height: 2.3rem;
 
   &.small {
     max-width: 500px;

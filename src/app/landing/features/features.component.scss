@@ -8,7 +8,7 @@ main {
 
   .feature-grid-row {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     display: flex;
     gap: 3rem;
@@ -58,18 +58,22 @@ main {
 .feature-card {
   background: #243C65;
   border-radius: 20px;
-  padding: 3rem;
-  min-height: 500px;
+  padding: 2rem;
+  height: 410px;
 
   &.image-only {
     padding: 0;
     position: relative;
 
-    img {
+    img, video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 20px;
+    }
+
+    video {
+      margin-bottom: -5px;
     }
   }
 }
@@ -84,7 +88,7 @@ main {
 .title {
   color: #BFC6DC;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.7rem;
   line-height: 2.8rem;
 
   &.small {

@@ -1,10 +1,13 @@
-<app-page-header title="Features"></app-page-header>
+<app-page-header
+  title="Planning Poker Features"
+  subtitle="Everything you need to know about the app"
+></app-page-header>
 <main>
   <section class="features">
     <div class="feature-grid-row">
       <div class="feature-grid-item feature-card fat image-only">
         <img
-          ngSrc="easy_accessible"
+          ngSrc="Simple_UI_zpjgli"
           alt="UI components laid out visually"
           fill
           sizes="(max-width: 800px) 100vw, 40vw"
@@ -32,22 +35,38 @@
         </p>
       </div>
       <div class="feature-grid-item feature-card fat image-only">
-        <img
-          ngSrc="easy_accessible"
-          alt="UI components laid out visually"
-          fill
-          sizes="(max-width: 800px) 100vw, 40vw"
-        />
+        <video
+          #video1
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="video1.play()"
+          (loadedmetadata)="video1.muted = true"
+        >
+          <source
+            src="https://res.cloudinary.com/dtvhnllmc/video/upload/CardSet_Optimized_imkd0l.mp4"
+            type="video/mp4"
+          />
+        </video>
       </div>
     </div>
     <div class="feature-grid-row">
       <div class="feature-grid-item feature-card fat image-only">
-        <img
-          ngSrc="easy_accessible"
-          alt="UI components laid out visually"
-          fill
-          sizes="(max-width: 800px) 100vw, 40vw"
-        />
+        <video
+          #video2
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="video2.play()"
+          (loadedmetadata)="video2.muted = true"
+        >
+          <source
+            src="https://res.cloudinary.com/dtvhnllmc/video/upload/Consensus_Optimized_b86ag7.mp4"
+            type="video/mp4"
+          />
+        </video>
       </div>
       <div class="feature-grid-item feature-card">
         <h5 class="header">Useful statistics</h5>
@@ -62,12 +81,20 @@
     <div class="highlight">
       <div class="feature-grid-row">
         <div class="feature-grid-item feature-card image-only half">
-          <img
-            ngSrc="easy_accessible"
-            alt="UI components laid out visually"
-            fill
-            sizes="(max-width: 800px) 100vw, 40vw"
-          />
+          <video
+            #video3
+            autoplay
+            loop
+            muted
+            playsinline
+            (canplay)="video3.play()"
+            (loadedmetadata)="video3.muted = true"
+          >
+            <source
+              src="https://res.cloudinary.com/dtvhnllmc/video/upload/Zoom_Optimized_hlyfex.mp4"
+              type="video/mp4"
+            />
+          </video>
         </div>
         <div class="feature-grid-item half center">
           <h5 class="header">Install the Zoom App</h5>
@@ -97,12 +124,20 @@
           </p>
         </div>
         <div class="feature-grid-item feature-card full image-only">
-          <img
-            ngSrc="easy_accessible"
-            alt="UI components laid out visually"
-            fill
-            sizes="(max-width: 800px) 100vw, 40vw"
-          />
+          <video
+            #video4
+            autoplay
+            loop
+            muted
+            playsinline
+            (canplay)="video4.play()"
+            (loadedmetadata)="video4.muted = true"
+          >
+            <source
+              src="https://res.cloudinary.com/dtvhnllmc/video/upload/Jira_Optimized_2_tugns9.mp4"
+              type="video/mp4"
+            />
+          </video>
         </div>
       </div>
       <div class="feature-grid-row">
@@ -119,22 +154,38 @@
           >
         </div>
         <div class="feature-grid-item feature-card image-only half">
-          <img
-            ngSrc="easy_accessible"
-            alt="UI components laid out visually"
-            fill
-            sizes="(max-width: 800px) 100vw, 40vw"
-          />
+          <video
+            #premiumVideo
+            autoplay
+            loop
+            muted
+            playsinline
+            (canplay)="premiumVideo.play()"
+            (loadedmetadata)="premiumVideo.muted = true"
+          >
+            <source
+              src="https://res.cloudinary.com/dtvhnllmc/video/upload/Room_Settings_Optimized_car8sa.mp4"
+              type="video/mp4"
+            />
+          </video>
         </div>
       </div>
       <div class="feature-grid-row">
         <div class="feature-grid-item feature-card image-only half">
-          <img
-            ngSrc="easy_accessible"
-            alt="UI components laid out visually"
-            fill
-            sizes="(max-width: 800px) 100vw, 40vw"
-          />
+          <video
+            #pokerbotVideo
+            autoplay
+            loop
+            muted
+            playsinline
+            (canplay)="pokerbotVideo.play()"
+            (loadedmetadata)="pokerbotVideo.muted = true"
+          >
+            <source
+              src="https://res.cloudinary.com/dtvhnllmc/video/upload/PokerBot_Optimized_2_ibodub.mp4"
+              type="video/mp4"
+            />
+          </video>
         </div>
         <div class="feature-grid-item half center">
           <h5 class="header">Experimental features</h5>

@@ -18,6 +18,7 @@ import {
   from,
   switchMap,
   throwError,
+  of,
 } from 'rxjs';
 import { PermissionsService } from './permissions.service';
 
@@ -70,6 +71,9 @@ export class CardDeckService {
   getMyCardDecks(): Observable<SavedCardSetValue[]> {
     return this.authService.user.pipe(
       switchMap((user) => {
+        if (!user) {
+          return of([]);
+        }
         const cardSetsCollection = collection(
           this.firestore,
           `userDetails/${user.uid}/cardSets`

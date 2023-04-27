@@ -37,6 +37,15 @@
         >Integrations <span class="menu-item-badge">New</span></span
       >
     </button>
+    <button
+      mat-menu-item
+      (click)="openRecurringMeetingsModal()"
+    >
+      <mat-icon>event</mat-icon>
+      <span class="menu-item-with-badge"
+        >Recurring meetings <span class="menu-item-badge">New</span></span
+      >
+    </button>
     <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>
       <span>Previous sessions</span>

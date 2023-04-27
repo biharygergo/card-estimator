@@ -11,6 +11,7 @@ import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { integrationsModalCreator } from '../integrations/integrations.component';
 import { organizationModalCreator } from '../organization-modal/organization-modal.component';
+import { recurringMeetingModalCreator } from '../recurring-meetings-modal/recurring-meetings-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -76,6 +77,10 @@ export class ProfileDropdownComponent implements OnInit {
 
   openIntegrationsModal() {
     this.dialog.open(...integrationsModalCreator());
+  }
+
+  openRecurringMeetingsModal() {
+    this.dialog.open(...recurringMeetingModalCreator({}));
   }
 
   reportAnIssue() {

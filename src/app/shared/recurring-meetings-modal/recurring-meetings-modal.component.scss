@@ -1,0 +1,30 @@
+.days-input {
+    text-align: right;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    mat-form-field {
+        width: 100%;
+    }
+}
+
+.meeting-link-wrapper {
+    margin: 0.5rem;
+    border: 1px solid gray;
+    border-radius: 16px;
+    padding: 1rem;
+
+    a {
+        word-wrap: break-word;
+    }
+
+    .buttons {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+}

@@ -6,6 +6,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import { Observable, Subject, map, of, switchMap, takeUntil } from 'rxjs';
+import { EstimatorService } from '../services/estimator.service';
 
 @Component({
   selector: 'app-recurring-meeting',
@@ -47,6 +48,7 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
             return of(undefined);
           }
           console.log('Would redirect to', roomId);
+
           return of(undefined) //this.router.navigate(['room', roomId]);
         }),
         takeUntil(this.destroy)

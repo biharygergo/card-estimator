@@ -9,10 +9,11 @@ import {
   doc,
   orderBy,
   query,
+  setDoc,
   where,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { Observable, switchMap, of, map } from 'rxjs';
+import { Observable, switchMap, of, map, first, from } from 'rxjs';
 import {
   RecurringMeetingLink,
   RecurringMeetingLinkCreatedRoom,
@@ -43,7 +44,6 @@ export class RecurringMeetingLinkService {
         const date = new Date();
         date.setDate(date.getDate() - recurringMeetingLink.frequencyDays);
 
-        console.log(recurringMeetingLinkId, date);
         const ref = collection(
           this.firestore,
           'recurringMeetingLinks',
@@ -62,5 +62,57 @@ export class RecurringMeetingLinkService {
         return rooms.length ? rooms[0].roomId : undefined;
       })
     );
+  }
+
+  addRecurringMeeting(
+    data: Omit<RecurringMeetingLink, 'id' | 'createdById' | 'createdAt'>
+  ) {
+    return this.authService.user.pipe(
+      first(),
+      switchMap((user) => {
+        if (!user) {
+          return of(undefined);
+        }
+
+        const recurringMeeting: RecurringMeetingLink = {
+          ...data,
+          createdById: user.uid,
+          createdAt: Timestamp.now(),
+          id: this.createId(),
+        };
+
+        return from(
+          setDoc(
+            doc(this.firestore, `recurringMeetingLinks/${recurringMeeting.id}`),
+            recurringMeeting
+          )
+        );
+      })
+    );
+  }
+
+  getMyRecurringMeetingLinks(): Observable<RecurringMeetingLink[]> {
+    return this.authService.user.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of([]);
+        }
+
+        const collectionReference = collection(
+          this.firestore,
+          'recurringMeetingLinks'
+        ) as CollectionReference<RecurringMeetingLink>;
+        const q = query<RecurringMeetingLink>(
+          collectionReference,
+          where('createdById', '==', user.uid)
+        );
+
+        return collectionData<RecurringMeetingLink>(q);
+      })
+    );
+  }
+
+  createId() {
+    return doc(collection(this.firestore, '_')).id;
   }
 }

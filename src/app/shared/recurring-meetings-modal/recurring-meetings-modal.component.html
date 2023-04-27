@@ -1,0 +1,68 @@
+<h1 mat-dialog-title class="dialog-title">Recurring meetings</h1>
+<div mat-dialog-content>
+  <p>
+    Set up recurring meetings for your Organization to have a single link that
+    always redirects to the current meeting room. No more hassle with sharing
+    room IDs as everything is automatic.
+    <a routerLink="/">Learn more</a>
+  </p>
+  <div class="tab-section">
+    <ng-container *ngIf="isInEditMode | async; else listLinks">
+      <form [formGroup]="newMeetingForm">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input
+            formControlName="name"
+            matInput
+            placeholder="Monday's Planning meeting - Blue Team"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Frequency</mat-label>
+          <input
+            formControlName="frequencyDays"
+            matInput
+            type="number"
+            min="1"
+            class="days-input"
+          />
+          <span matTextPrefix>Repeats every</span>
+          <span matTextSuffix>days</span>
+        </mat-form-field>
+      </form>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="isSavingMeeting | async"
+        (click)="createRecurringMeeting()"
+      >
+        Save meeting
+      </button>
+      <button mat-button (click)="isInEditMode.next(false)">Cancel</button>
+    </ng-container>
+    <ng-template #listLinks>
+      <div
+        class="meeting-link-wrapper"
+        *ngFor="let recurringMeetingLink of myRecurringMeetingLinks$ | async"
+      >
+        <h4>{{ recurringMeetingLink.name }}</h4>
+        <a
+          [href]="
+            'https://planningpoker.live/recurringMeeting/' +
+            recurringMeetingLink.id
+          "
+          >https://planningpoker.live/recurringMeeting/{{
+            recurringMeetingLink.id
+          }}</a
+        >
+        <div class="buttons">
+          <button mat-button>Add to Calendar</button>
+          <button mat-button>Edit</button>
+        </div>
+      </div>
+      <button mat-flat-button color="primary" (click)="isInEditMode.next(true)">
+        Add recurring meeting
+      </button>
+    </ng-template>
+  </div>
+</div>

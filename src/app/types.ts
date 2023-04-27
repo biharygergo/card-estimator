@@ -112,7 +112,7 @@ export type SavedCardSetValue = CardSetValue & {
   organizationId: string|null;
 }
 
-export type UserProfileMap = { [userId: string]: UserProfile };
+export type UserProfileMap = { [userId: string]: UserProfile|undefined };
 
 export type UserProfile = {
   id: string;
@@ -392,6 +392,7 @@ export type RecurringMeetingLink = {
   createdAt: FieldValue;
   isEnabled: boolean;
   frequencyDays: number;
+  name: string;
 }
 
 export type RecurringMeetingLinkCreatedRoom = {

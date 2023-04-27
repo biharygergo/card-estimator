@@ -7,3 +7,8 @@
     gap: 1rem;
     color: white;
 }
+
+.spinner {
+    --mdc-circular-progress-active-indicator-color: white;
+    margin-bottom: 1rem;
+}

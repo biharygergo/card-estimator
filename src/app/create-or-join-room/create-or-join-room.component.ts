@@ -116,6 +116,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     map((paramMap) => paramMap.get('flow'))
   );
 
+  recurringMeetingId$: Observable<string | null> =
+    this.activatedRoute.queryParamMap.pipe(
+      map((paramMap) => paramMap.get('recurringMeetingId'))
+    );
+
   currentPath: Observable<string> = this.activatedRoute.url.pipe(
     map((segments) => [...segments]?.pop()?.path)
   );
@@ -237,7 +242,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         tap(() => {
           this.isBusy.next(true);
         }),
-        switchMap(() => from(this.createRoom())),
+        switchMap(() => this.recurringMeetingId$),
+        switchMap((recurringMeetingId) => from(this.createRoom(recurringMeetingId))),
         takeUntil(this.destroy),
         finalize(() => this.isBusy.next(false))
       )
@@ -322,7 +328,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     return this.authService.signOut();
   }
 
-  async createRoom() {
+  async createRoom(recurringMeetingId: string|null) {
     const newMember: Member = {
       id: null,
       name: this.name.value,
@@ -330,7 +336,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       status: MemberStatus.ACTIVE,
     };
 
-    const { room } = await this.estimatorService.createRoom(newMember);
+    const { room } = await this.estimatorService.createRoom(newMember, recurringMeetingId);
 
     this.analytics.logClickedCreateNewRoom();
     return this.router.navigate(['room', room.roomId]);

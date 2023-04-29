@@ -41,16 +41,22 @@ export class RecurringMeetingLinkService {
     private readonly organizationService: OrganizationService
   ) {}
 
-  getCreatedRoomsForMeetingLinkId(
+  getRecurringMeeting(
     recurringMeetingLinkId: string
-  ): Observable<RecurringMeetingLinkCreatedRoom[]> {
+  ): Observable<RecurringMeetingLink> {
     return docData<RecurringMeetingLink>(
       doc(
         this.firestore,
         'recurringMeetingLinks',
         recurringMeetingLinkId
       ) as DocumentReference<RecurringMeetingLink>
-    ).pipe(
+    );
+  }
+
+  getCreatedRoomsForMeetingLinkId(
+    recurringMeetingLinkId: string
+  ): Observable<RecurringMeetingLinkCreatedRoom[]> {
+    return this.getRecurringMeeting(recurringMeetingLinkId).pipe(
       switchMap((recurringMeetingLink) => {
         if (!recurringMeetingLink || !recurringMeetingLink.isEnabled) {
           return of(undefined);

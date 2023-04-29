@@ -119,7 +119,10 @@ export class EstimatorService {
     );
   }
 
-  async createRoom(member: Member): Promise<{ room: Room; member: Member }> {
+  async createRoom(
+    member: Member,
+    recurringMeetingId: string | null
+  ): Promise<{ room: Room; member: Member }> {
     await this.signInAsMember(member);
 
     const customConfig: Config = {
@@ -149,6 +152,10 @@ export class EstimatorService {
       memberIds: [member.id],
       subscriptionMetadata,
     };
+
+    if (recurringMeetingId) {
+      room.relatedRecurringMeetingLinkId = recurringMeetingId;
+    }
 
     await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
 
@@ -493,16 +500,16 @@ export class EstimatorService {
       'summaries'
     ) as CollectionReference<RoomSummary>;
 
-    const q = query<RoomSummary>(
-      ref,
-      orderBy('createdAt', 'desc')
-    );
+    const q = query<RoomSummary>(ref, orderBy('createdAt', 'desc'));
 
-    return collectionData(q)
+    return collectionData(q);
   }
 
   generateRoomSummary(roomId: string, csvSummary: string) {
-    return httpsCallable(this.functions, 'createSummary')({ csvSummary, roomId });
+    return httpsCallable(
+      this.functions,
+      'createSummary'
+    )({ csvSummary, roomId });
   }
 
   async setRoomPassword(roomId: string, password: string) {

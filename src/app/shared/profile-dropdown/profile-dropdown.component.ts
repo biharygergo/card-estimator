@@ -4,14 +4,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
-import { roomConfigurationModalCreator } from 'src/app/room/room-configuration-modal/room-configuration-modal.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { avatarModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { integrationsModalCreator } from '../integrations/integrations.component';
 import { organizationModalCreator } from '../organization-modal/organization-modal.component';
-import { recurringMeetingModalCreator } from '../recurring-meetings-modal/recurring-meetings-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -77,10 +75,6 @@ export class ProfileDropdownComponent implements OnInit {
 
   openIntegrationsModal() {
     this.dialog.open(...integrationsModalCreator());
-  }
-
-  openRecurringMeetingsModal() {
-    this.dialog.open(...recurringMeetingModalCreator({}));
   }
 
   reportAnIssue() {

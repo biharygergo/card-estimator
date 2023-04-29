@@ -10,25 +10,40 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
   where,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { Observable, switchMap, of, map, first, from } from 'rxjs';
+import {
+  Observable,
+  switchMap,
+  of,
+  map,
+  first,
+  from,
+  combineLatest,
+} from 'rxjs';
 import {
   RecurringMeetingLink,
   RecurringMeetingLinkCreatedRoom,
+  Room,
 } from '../types';
 import { docData } from 'rxfire/firestore';
+import { OrganizationService } from './organization.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecurringMeetingLinkService {
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService,
+    private readonly organizationService: OrganizationService
+  ) {}
 
-  exchangeRoomIdForMeetingId(
+  getCreatedRoomsForMeetingLinkId(
     recurringMeetingLinkId: string
-  ): Observable<string | undefined> {
+  ): Observable<RecurringMeetingLinkCreatedRoom[]> {
     return docData<RecurringMeetingLink>(
       doc(
         this.firestore,
@@ -57,7 +72,14 @@ export class RecurringMeetingLinkService {
         );
 
         return collectionData<RecurringMeetingLinkCreatedRoom>(q);
-      }),
+      })
+    );
+  }
+
+  exchangeRoomIdForMeetingId(
+    recurringMeetingLinkId: string
+  ): Observable<string | undefined> {
+    return this.getCreatedRoomsForMeetingLinkId(recurringMeetingLinkId).pipe(
       map((rooms) => {
         return rooms.length ? rooms[0].roomId : undefined;
       })
@@ -67,15 +89,19 @@ export class RecurringMeetingLinkService {
   addRecurringMeeting(
     data: Omit<RecurringMeetingLink, 'id' | 'createdById' | 'createdAt'>
   ) {
-    return this.authService.user.pipe(
+    return combineLatest([
+      this.authService.user,
+      this.organizationService.getMyOrganization(),
+    ]).pipe(
       first(),
-      switchMap((user) => {
-        if (!user) {
+      switchMap(([user, organization]) => {
+        if (!user || !organization) {
           return of(undefined);
         }
 
         const recurringMeeting: RecurringMeetingLink = {
           ...data,
+          organizationId: organization.id,
           createdById: user.uid,
           createdAt: Timestamp.now(),
           id: this.createId(),
@@ -88,6 +114,12 @@ export class RecurringMeetingLinkService {
           )
         );
       })
+    );
+  }
+
+  updateRecurringMeeting(linkId: string, data: Partial<RecurringMeetingLink>) {
+    return from(
+      updateDoc(doc(this.firestore, `recurringMeetingLinks/${linkId}`), data)
     );
   }
 
@@ -105,6 +137,29 @@ export class RecurringMeetingLinkService {
         const q = query<RecurringMeetingLink>(
           collectionReference,
           where('createdById', '==', user.uid)
+        );
+
+        return collectionData<RecurringMeetingLink>(q);
+      })
+    );
+  }
+
+  getMyOrganizationsRecurringMeetingLinks(): Observable<
+    RecurringMeetingLink[]
+  > {
+    return this.organizationService.getMyOrganization().pipe(
+      switchMap((organization) => {
+        if (!organization) {
+          return of([]);
+        }
+
+        const collectionReference = collection(
+          this.firestore,
+          'recurringMeetingLinks'
+        ) as CollectionReference<RecurringMeetingLink>;
+        const q = query<RecurringMeetingLink>(
+          collectionReference,
+          where('organizationId', '==', organization.id)
         );
 
         return collectionData<RecurringMeetingLink>(q);

@@ -7,6 +7,14 @@ service cloud.firestore {
       return 'stripeRole' in request.auth.token ? request.auth.token.stripeRole == 'premium' : false;
     }
 
+    function getOrganization(organizationId) {
+        return exists(/databases/$(database)/documents/organizations/$(organizationId)) ? get(/databases/$(database)/documents/organizations/$(organizationId)) : null;
+    }
+
+    function getRecurringMeeting(recurringMeetingId) {
+        return get(/databases/$(database)/documents/recurringMeetingLinks/$(recurringMeetingId));
+    }
+
     match /rooms/{roomId} {
       allow get: if isAccessAllowed(request);
       allow list: if request.auth.uid in resource.data.memberIds;
@@ -72,10 +80,6 @@ service cloud.firestore {
         return get(/databases/$(database)/documents/rooms/$(roomId)/metadata/passwordProtection/accessList/$(request.auth.uid)).data;
       }
 
-      function getOrganization(organizationId) {
-        return get(/databases/$(database)/documents/organizations/$(organizationId));
-      }
-
       match /metadata/authorization {
         allow write: if request.auth.uid == getRoom().data.createdById && isPremiumSubscriber(request);
         allow read: if true;
@@ -118,10 +122,6 @@ service cloud.firestore {
       allow read: if request.auth.uid in resource.data.memberIds;
       allow write: if request.auth.uid == request.resource.data.createdById;
       allow update: if request.auth.uid == resource.data.createdById;
-
-      function getOrganization(organizationId) {
-        return get(/databases/$(database)/documents/organizations/$(organizationId));
-      }
                                                                                      
       match /memberInvitations/{invitationId} {
         allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;
@@ -129,12 +129,13 @@ service cloud.firestore {
     }
 
     match /recurringMeetingLinks/{linkId} {
-      allow read: if true;
-      allow write: if true;
+      allow read: if request.auth.uid in getOrganization(resource.data.organizationId).data.memberIds;
+      allow write: if request.auth.uid == request.resource.data.createdById;
+      allow update: if request.auth.uid == resource.data.createdById;
 
       match /createdRooms/{roomId} {
-        allow read: if true;
-        allow write: if true;
+        allow read: if request.auth.uid in getOrganization(getRecurringMeeting(linkId).data.organizationId).data.memberIds;
+        allow write: if false;
       }
     }
     

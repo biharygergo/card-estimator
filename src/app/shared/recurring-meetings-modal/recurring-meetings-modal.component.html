@@ -1,68 +1,119 @@
-<h1 mat-dialog-title class="dialog-title">Recurring meetings</h1>
-<div mat-dialog-content>
-  <p>
-    Set up recurring meetings for your Organization to have a single link that
-    always redirects to the current meeting room. No more hassle with sharing
-    room IDs as everything is automatic.
-    <a routerLink="/">Learn more</a>
-  </p>
-  <div class="tab-section">
-    <ng-container *ngIf="isInEditMode | async; else listLinks">
-      <form [formGroup]="newMeetingForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input
-            formControlName="name"
-            matInput
-            placeholder="Monday's Planning meeting - Blue Team"
-          />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Frequency</mat-label>
-          <input
-            formControlName="frequencyDays"
-            matInput
-            type="number"
-            min="1"
-            class="days-input"
-          />
-          <span matTextPrefix>Repeats every</span>
-          <span matTextSuffix>days</span>
-        </mat-form-field>
-      </form>
+<p class="description">
+  Set up recurring meetings for your Organization to have a single link that
+  always redirects to the current meeting room. Add the link to your calendar
+  and start planning with a click.
+</p>
+<div>
+  <ng-container *ngIf="isInEditMode | async; else listLinks">
+    <form [formGroup]="newMeetingForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input
+          formControlName="name"
+          matInput
+          placeholder="Monday's Planning meeting - Blue Team"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Frequency</mat-label>
+        <input
+          formControlName="frequencyDays"
+          matInput
+          type="number"
+          min="1"
+          class="days-input"
+        />
+        <span matTextPrefix>Repeats every</span>
+        <span matTextSuffix>days</span>
+      </mat-form-field>
+    </form>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="isSavingMeeting | async"
+      (click)="createRecurringMeeting()"
+      *ngIf="(editedMeetingLink | async) === undefined; else updateButton"
+    >
+      Save meeting
+    </button>
+    <ng-template #updateButton>
       <button
         mat-flat-button
         color="primary"
         [disabled]="isSavingMeeting | async"
-        (click)="createRecurringMeeting()"
+        (click)="updateRecurringMeeting()"
       >
-        Save meeting
-      </button>
-      <button mat-button (click)="isInEditMode.next(false)">Cancel</button>
-    </ng-container>
-    <ng-template #listLinks>
-      <div
-        class="meeting-link-wrapper"
-        *ngFor="let recurringMeetingLink of myRecurringMeetingLinks$ | async"
-      >
-        <h4>{{ recurringMeetingLink.name }}</h4>
-        <a
-          [href]="
-            'https://planningpoker.live/recurringMeeting/' +
-            recurringMeetingLink.id
-          "
-          >https://planningpoker.live/recurringMeeting/{{
-            recurringMeetingLink.id
-          }}</a
-        >
-        <div class="buttons">
-          <button mat-button>Add to Calendar</button>
-          <button mat-button>Edit</button>
-        </div>
-      </div>
-      <button mat-flat-button color="primary" (click)="isInEditMode.next(true)">
-        Add recurring meeting
+        Update meeting
       </button>
     </ng-template>
-  </div>
+    <button mat-button (click)="isInEditMode.next(false)">Cancel</button>
+  </ng-container>
+  <ng-template #listLinks>
+    <div
+      class="tab-section meeting-link-wrapper"
+      *ngFor="let recurringMeeting of myRecurringMeetingLinks$ | async"
+    >
+      <h3 class="meeting-name">
+        {{ recurringMeeting.link.name }}
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            mat-menu-item
+            (click)="editMeetingLink(recurringMeeting.link)"
+          >
+            <mat-icon>edit</mat-icon>Edit
+          </button>
+          <!-- <button mat-menu-item>
+              <mat-icon>event_upcoming</mat-icon>Add to calendar
+            </button> -->
+          <button
+            mat-menu-item
+            (click)="redirectToHistory(recurringMeeting.link)"
+          >
+            <mat-icon>history</mat-icon>Session history
+          </button>
+        </mat-menu>
+      </h3>
+      <div class="metadata">
+        <p>
+          <span>Repeats: </span
+          ><span class="metadata-value"
+            >Every {{ recurringMeeting.link.frequencyDays }} days</span
+          >
+        </p>
+        <p>
+          <span>Last room created: </span
+          ><span class="metadata-value">{{
+            (recurringMeeting.lastRoom?.toMillis() | date : "medium") ??
+              "No room created yet"
+          }}</span>
+        </p>
+        <p>
+          <span>Status: </span>
+          <span class="metadata-value">{{
+            recurringMeeting.link.isEnabled ? "Enabled" : "Disabled"
+          }}</span>
+        </p>
+      </div>
+      <div class="buttons">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="copyMeetingLinkToClipboard(recurringMeeting.link)"
+        >
+          <mat-icon>content_copy</mat-icon>Copy meeting link
+        </button>
+      </div>
+    </div>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="isInEditMode.next(true)"
+      [disabled]="!(myOrganization$ | async)"
+    >
+      Add recurring meeting
+    </button>
+  </ng-template>
 </div>

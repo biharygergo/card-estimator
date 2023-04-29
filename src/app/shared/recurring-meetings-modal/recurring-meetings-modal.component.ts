@@ -1,30 +1,28 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { RecurringMeetingLinkService } from 'src/app/services/recurring-meeting-link.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationService } from 'src/app/services/organization.service';
 import {
   BehaviorSubject,
   Observable,
-  Subject,
   catchError,
+  combineLatest,
   first,
+  map,
+  switchMap,
+  tap,
   throwError,
 } from 'rxjs';
-import { RecurringMeetingLink } from 'src/app/types';
-
-export const recurringMeetingModalCreator =
-  (data: {}): ModalCreator<RecurringMeetingsModalComponent> => [
-    RecurringMeetingsModalComponent,
-    {
-      id: 'recurringMeetingsModal',
-      width: '90%',
-      maxWidth: '600px',
-      maxHeight: '90vh',
-      data,
-    },
-  ];
+import {
+  Organization,
+  RecurringMeetingLink,
+  RecurringMeetingLinkCreatedRoom,
+} from 'src/app/types';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { ToastService } from 'src/app/services/toast.service';
+import { Router } from '@angular/router';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-recurring-meetings-modal',
@@ -43,16 +41,51 @@ export class RecurringMeetingsModalComponent {
     }),
   });
 
-  myRecurringMeetingLinks$: Observable<RecurringMeetingLink[]> =
-    this.recurringMeetingsService.getMyRecurringMeetingLinks();
+  myRecurringMeetingLinks$: Observable<
+    {
+      link: RecurringMeetingLink;
+      createdRooms: RecurringMeetingLinkCreatedRoom[];
+      lastRoom: RecurringMeetingLinkCreatedRoom['createdAt'] | undefined;
+    }[]
+  > = this.recurringMeetingsService.getMyOrganizationsRecurringMeetingLinks().pipe(
+    switchMap((meetingLinks) => {
+      return combineLatest(
+        meetingLinks.map((link) =>
+          this.recurringMeetingsService
+            .getCreatedRoomsForMeetingLinkId(link.id)
+            .pipe(
+              tap(console.log),
+              map((createdRooms) => ({
+                link,
+                createdRooms,
+                lastRoom: createdRooms.length
+                  ? createdRooms[0].createdAt
+                  : undefined,
+              })),
+              tap(console.log)
+            )
+        )
+      );
+    })
+  );
+
+  myOrganization$: Observable<Organization | undefined> =
+    this.organizationService.getMyOrganization();
 
   isSavingMeeting = new BehaviorSubject<boolean>(false);
   isInEditMode = new BehaviorSubject<boolean>(false);
+  editedMeetingLink = new BehaviorSubject<RecurringMeetingLink | undefined>(
+    undefined
+  );
 
   constructor(
     private readonly authService: AuthService,
     private readonly organizationService: OrganizationService,
-    private readonly recurringMeetingsService: RecurringMeetingLinkService
+    private readonly recurringMeetingsService: RecurringMeetingLinkService,
+    private readonly clipboard: Clipboard,
+    private readonly toastService: ToastService,
+    private readonly router: Router,
+    private readonly dialogRef: DialogRef
   ) {}
 
   createRecurringMeeting() {
@@ -73,7 +106,48 @@ export class RecurringMeetingsModalComponent {
       )
       .subscribe(() => {
         this.isSavingMeeting.next(false);
+        this.isInEditMode.next(false);
         this.newMeetingForm.reset();
       });
+  }
+
+  updateRecurringMeeting() {
+    this.isSavingMeeting.next(true);
+    return this.recurringMeetingsService
+      .updateRecurringMeeting(this.editedMeetingLink.value.id, {
+        name: this.newMeetingForm.value.name,
+        frequencyDays: this.newMeetingForm.value.frequencyDays,
+      })
+      .pipe(
+        first(),
+        catchError((e) => {
+          this.isSavingMeeting.next(false);
+          return throwError(() => e);
+        })
+      )
+      .subscribe(() => {
+        this.isSavingMeeting.next(false);
+        this.isInEditMode.next(false);
+        this.newMeetingForm.reset();
+      });
+  }
+
+  editMeetingLink(link: RecurringMeetingLink) {
+    this.newMeetingForm.setValue({
+      name: link.name,
+      frequencyDays: link.frequencyDays,
+    });
+    this.editedMeetingLink.next(link);
+    this.isInEditMode.next(true);
+  }
+
+  copyMeetingLinkToClipboard(link: RecurringMeetingLink) {
+    this.clipboard.copy(`${window.origin}/recurringMeeting/${link.id}`);
+    this.toastService.showMessage('Copied to clipboard');
+  }
+
+  redirectToHistory(link: RecurringMeetingLink) {
+    this.router.navigate(['recurringMeeting', link.id]);
+    this.dialogRef.close();
   }
 }

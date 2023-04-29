@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: 'recurringMeeting/:linkId',
     loadComponent: () => import('./recurring-meeting/recurring-meeting.component').then(m => m.RecurringMeetingComponent),
-    data: { title: 'Recurring Meeting' },
+    data: { title: 'Recurring meeting lobby' },
   },
 ];
 

@@ -42,6 +42,7 @@ import { SubscriptionResultComponent } from './subscription-result/subscription-
 import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-more.component';
 import { IntegrationsComponent } from './integrations/integrations.component';
 import {MatRadioModule} from '@angular/material/radio';
+import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recurring-meetings-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {MatRadioModule} from '@angular/material/radio';
     SubscriptionResultComponent,
     PremiumLearnMoreComponent,
     IntegrationsComponent,
+    RecurringMeetingsModalComponent,
   ],
   imports: [
     CommonModule,

@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:test:emulator": "ng serve --configuration test-emulator",
     "start:test": "ng serve --configuration test",
     "simulator": "firebase emulators:start",
     "build": "npm run prerender",

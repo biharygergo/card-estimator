@@ -39,6 +39,7 @@ import {startJiraAuthFlow, onJiraAuthorizationReceived} from "./jira/oauth";
 import {searchJira} from "./jira/search";
 import {captureError} from "./shared/errors";
 import {createSummary} from "./summary";
+import {onRoomCreated} from "./room/created";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -175,3 +176,7 @@ exports.safeRedirect = functions.https.onRequest(async (req, res) => {
 exports.createSummary = functions.https.onCall(
     async (data: any, context: CallableContext) => createSummary(data, context)
 );
+
+exports.onRoomCreated = functions.firestore
+    .document("rooms/{roomId}")
+    .onCreate(onRoomCreated);

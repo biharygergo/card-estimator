@@ -12,12 +12,23 @@
     <button
       mat-menu-item
       (click)="openAvatarSelector()"
-      *ngIf="currentUser | async as user"
+      *ngIf="currentUser | async as user; else signInButton"
       id="account-menu-item"
     >
       <mat-icon>account_circle</mat-icon>
       <span>My account</span>
     </button>
+    <ng-template #signInButton>
+      <button
+        mat-menu-item
+        (click)="openCreateAccountModal()"
+        id="sign-in-menu-item"
+      >
+        <mat-icon>account_circle</mat-icon>
+        <span>Sign in</span>
+      </button>
+    </ng-template>
+
     <button
       mat-menu-item
       (click)="openOrganizationModal()"
@@ -28,10 +39,7 @@
         >My organization <span class="menu-item-badge">New</span></span
       >
     </button>
-    <button
-      mat-menu-item
-      (click)="openIntegrationsModal()"
-    >
+    <button mat-menu-item (click)="openIntegrationsModal()">
       <mat-icon>extension</mat-icon>
       <span class="menu-item-with-badge"
         >Integrations <span class="menu-item-badge">New</span></span

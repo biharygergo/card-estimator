@@ -1,0 +1,52 @@
+.days-input {
+  text-align: right;
+}
+
+.description {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.meeting-link-wrapper {
+  .meeting-name {
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  a {
+    word-wrap: break-word;
+  }
+
+  .buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.metadata {
+    p {
+        margin-bottom: 0.3rem;
+        font-size: 0.9rem;
+    }
+}
+
+.metadata-value {
+    font-weight: 500;
+}
+
+.days-suffix {
+    padding-left: 8px;
+}

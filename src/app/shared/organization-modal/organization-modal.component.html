@@ -6,11 +6,15 @@
     class="premium-banner"
     *ngIf="
       !(permissionsService.hasPremiumAccess() | async) &&
+      organization &&
       organization?.activePlan !== 'premium'
     "
   >
     <h2 class="title">Preview this Premium Feature</h2>
-    <p>Create an organization for <strong>up to 5 members for free</strong>.</p>
+    <p>
+      Create an organization for <strong>up to 5 members for free</strong>. Set
+      up your brand, invite members and schedule recurring meetings.
+    </p>
     <div class="premium-banner-buttons">
       <button
         mat-flat-button
@@ -18,11 +22,7 @@
         (click)="subscribeToPremium()"
         [disabled]="isLoadingStripe"
       >
-        {{
-          isLoadingStripe
-            ? "Redirecting you to Stripe..."
-            : "Get Premium for unlimited members"
-        }}
+        {{ isLoadingStripe ? "Redirecting you to Stripe..." : "Get Premium" }}
       </button>
       <button mat-button (click)="openLearnMore()" class="learn-more">
         Learn more
@@ -35,7 +35,8 @@
         <h5 class="section-title">Why create an organization?</h5>
         <p>
           With an organization, you can create rooms just for your teammates,
-          personalize the app with your logo and much more!
+          personalize the app with your logo, schedule recurring meetings and
+          much more!
         </p>
         <button
           mat-flat-button
@@ -198,6 +199,11 @@
                 </button>
               </mat-form-field>
             </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Recurring meetings">
+          <div class="tab-content">
+            <app-recurring-meetings-modal></app-recurring-meetings-modal>
           </div>
         </mat-tab>
       </mat-tab-group>

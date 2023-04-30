@@ -17,12 +17,17 @@ export function sendEmail(params: {
   }
 
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  const msg = {
+  const msg: sgMail.MailDataRequired = {
     to: params.to,
     from: "PlanningPoker.live <robots-noreply@planningpoker.live>",
     templateId: "d-0f5c7ae9340544be94467ce9c3a50ea8",
     dynamicTemplateData: {
       ...params,
+    },
+    mailSettings: {
+      bypassUnsubscribeManagement: {
+        enable: true,
+      },
     },
   };
   console.log("<Sending email> To: ", params.to);
@@ -35,7 +40,10 @@ export async function addContact(props: { email: string; name: string }) {
     return;
   }
 
-  if (process.env.FUNCTIONS_EMULATOR === "true" || process.env.GCLOUD_PROJECT !== "card-estimator") {
+  if (
+    process.env.FUNCTIONS_EMULATOR === "true" ||
+    process.env.GCLOUD_PROJECT !== "card-estimator"
+  ) {
     console.log("Not subscribing to list in dev environment");
     return;
   }

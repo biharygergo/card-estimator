@@ -201,6 +201,7 @@ $my-theme: mat.define-light-theme(
   .mat-mdc-tab-header {
     border-radius: 46px;
     background-color: #edf0ff !important;
+    --mat-mdc-tab-header-with-background-foreground-color: #44474f;
   }
 
   .mat-mdc-tab {

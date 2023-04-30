@@ -1,7 +1,7 @@
 <p class="tab-section description">
   Set up recurring meetings for your Organization to have a single link that
-  always redirects members to the current meeting room. Add the link to your calendar
-  and start planning with a click.
+  always redirects members to the latest meeting room. Add the link to your
+  calendar and start planning with a single click.
 </p>
 <div>
   <ng-container *ngIf="isInEditMode | async; else listLinks">
@@ -12,6 +12,7 @@
           formControlName="name"
           matInput
           placeholder="Monday's Planning meeting - Blue Team"
+          id="recurring-meeting-name-input"
         />
       </mat-form-field>
       <mat-form-field appearance="outline">
@@ -22,9 +23,10 @@
           type="number"
           min="1"
           class="days-input"
+          id="recurring-meeting-frequency-input"
         />
         <span matTextPrefix>Repeats every</span>
-        <span matTextSuffix>days</span>
+        <span matTextSuffix class="days-suffix">days</span>
       </mat-form-field>
     </form>
     <button
@@ -33,6 +35,7 @@
       [disabled]="isSavingMeeting | async"
       (click)="createRecurringMeeting()"
       *ngIf="(editedMeetingLink | async) === undefined; else updateButton"
+      id="recurring-meeting-create-button"
     >
       Save meeting
     </button>
@@ -42,6 +45,7 @@
         color="primary"
         [disabled]="isSavingMeeting | async"
         (click)="updateRecurringMeeting()"
+        id="recurring-meeting-update-button"
       >
         Update meeting
       </button>
@@ -62,6 +66,7 @@
           <button
             mat-menu-item
             (click)="editMeetingLink(recurringMeeting.link)"
+            [disabled]="recurringMeeting.link.createdById !== user?.uid"
           >
             <mat-icon>edit</mat-icon>Edit
           </button>
@@ -112,6 +117,7 @@
       color="primary"
       (click)="isInEditMode.next(true)"
       [disabled]="!(myOrganization$ | async)"
+      id="create-new-recurring-meeting-button"
     >
       Add recurring meeting
     </button>

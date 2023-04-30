@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Route, Router, RouterModule } from '@angular/router';
 import { AppConfigModule } from '../app-config.module';
@@ -8,6 +14,7 @@ import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.
 import {
   BehaviorSubject,
   Observable,
+  ReplaySubject,
   Subject,
   catchError,
   combineLatest,
@@ -21,6 +28,13 @@ import { EstimatorService } from '../services/estimator.service';
 import { AuthService } from '../services/auth.service';
 import { RecurringMeetingLink } from '../types';
 
+type State = {
+  roomId?: string;
+  userState?: string;
+  meetingLink?: RecurringMeetingLink;
+  error: boolean;
+};
+
 @Component({
   selector: 'app-recurring-meeting',
   standalone: true,
@@ -33,6 +47,7 @@ import { RecurringMeetingLink } from '../types';
   ],
   templateUrl: './recurring-meeting.component.html',
   styleUrls: ['./recurring-meeting.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecurringMeetingComponent implements OnInit, OnDestroy {
   recurringMeetingLinkId: Observable<string> = this.route.paramMap.pipe(
@@ -46,7 +61,6 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
       if (!linkId) {
         return of(undefined);
       }
-
       return this.recurringMeetingLinkService.exchangeRoomIdForMeetingId(
         linkId
       );
@@ -60,7 +74,7 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
       })
     );
 
-  readonly state$ = combineLatest([
+  readonly state$: Observable<State> = combineLatest([
     this.roomId$,
     this.meetingLink$,
     this.authService.user,
@@ -68,33 +82,34 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
     map(([roomId, meetingLink, user]) => {
       const userState =
         meetingLink.createdById === user.uid ? 'creator' : 'member';
-      return { roomId, userState, meetingLink };
+      return { roomId, userState, meetingLink, error: false };
     }),
-    tap(console.log),
     catchError((e) => {
-      console.error( e);
-      this.hasError.next(true);
-      return of(undefined);
-    })
+      console.error(e);
+      return of({ error: true });
+    }),
+    takeUntil(this.destroy)
   );
 
-  hasError = new BehaviorSubject(false);
+  state: State | undefined = undefined;
 
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly recurringMeetingLinkService: RecurringMeetingLinkService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly changeDetectorRef: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.state$.subscribe((state) => {
+      this.state = state;
+      this.changeDetectorRef.detectChanges();
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
-  }
-
-  displayErrorMessage() {
-    console.error('Something is not right...');
   }
 }

@@ -86,8 +86,16 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.test.ts"
                 }
-              ],
-              "outputHashing": "all"
+              ]
+            },
+            "test-emulator": {
+              "index": "src/index.test.html",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test-emulator.ts"
+                }
+              ]
             },
             "test-production": {
               "index": "src/index.test.html",
@@ -138,6 +146,9 @@
             },
             "test": {
               "browserTarget": "estimator:build:test"
+            },
+            "test-emulator": {
+              "browserTarget": "estimator:build:test-emulator"
             }
           }
         },

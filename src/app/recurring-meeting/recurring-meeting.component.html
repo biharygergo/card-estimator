@@ -1,6 +1,27 @@
+<div class="navbar">
+  <div class="navbar-left">
+    <app-profile-dropdown></app-profile-dropdown>
+  </div>
+</div>
 <div class="lobby-container">
-  <ng-container *ngIf="state$ | async as state; else loading">
-    <mat-card appearance="outline" class="card">
+  <ng-container *ngIf="state; else loading">
+    <mat-card class="error-container" *ngIf="state.error">
+      <mat-card-content>
+        <p>
+          Oh-oh, something does not seem to work. To join a recurring meeting,
+          you need to:
+        </p>
+        <ul>
+          <li>have a valid recurring meeting link,</li>
+          <li>be signed in to your permanent PlanningPoker.live account,</li>
+          <li>and be a member of the host's organization.</li>
+        </ul>
+        <p>
+          If you think something is still wrong, report an issue from the Menu above.
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outline" class="card" *ngIf="!state.error">
       <mat-card-content>
         <h2>
           {{ state.meetingLink.name }}
@@ -19,9 +40,11 @@
             <p>
               There is already a room created for this recurring meeting with ID
               <strong>{{ state.roomId }}</strong> within your frequency of
-              {{ state.meetingLink.frequencyDays }} days. You can either join
-              this room or create a new one. Members will be redirected to the
-              latest room when they visit this link.
+              {{ state.meetingLink.frequencyDays }} days.
+            </p>
+            <p>
+              You can either join this room or create a new one. Members will be
+              redirected to the latest room when they visit this link.
             </p>
           </div>
           <div class="buttons">
@@ -66,26 +89,9 @@
     </mat-card>
   </ng-container>
   <ng-template #loading>
-    <div class="loading-spinner-container" *ngIf="!(hasError | async)">
+    <div class="loading-spinner-container">
       <mat-spinner [diameter]="40" class="spinner"></mat-spinner>
       <p>Fetching the latest room for this recurring meeting</p>
     </div>
-    <mat-card class="error-container" *ngIf="hasError | async">
-      <mat-card-content>
-        <p>
-          Oh-oh, something does not seem to work. To join a recurring meeting,
-          you need to:
-        </p>
-        <ul>
-          <li>have a valid recurring meeting link,</li>
-          <li>be signed in to your permanent PlanningPoker.live account,</li>
-          <li>and be a member of the host's organization.</li>
-        </ul>
-        <p>
-          If you think something is still wrong, reach out to us at
-          info@planningpoker.live.
-        </p>
-      </mat-card-content>
-    </mat-card>
   </ng-template>
 </div>

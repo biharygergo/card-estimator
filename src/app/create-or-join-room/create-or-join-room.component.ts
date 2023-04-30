@@ -6,7 +6,13 @@ import {
 } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Member, MemberType, MemberStatus, Organization } from '../types';
+import {
+  Member,
+  MemberType,
+  MemberStatus,
+  Organization,
+  RecurringMeetingLink,
+} from '../types';
 import { AnalyticsService } from '../services/analytics.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
@@ -53,6 +59,7 @@ import { roomAuthenticationModalCreator } from '../shared/room-authentication-mo
 import { OrganizationService } from '../services/organization.service';
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
+import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -121,6 +128,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       map((paramMap) => paramMap.get('recurringMeetingId'))
     );
 
+  recurringMeeting$: Observable<RecurringMeetingLink | undefined> =
+    this.recurringMeetingId$.pipe(
+      switchMap((id) => {
+        return id
+          ? this.recurringMeetingService.getRecurringMeeting(id)
+          : of(undefined);
+      })
+    );
+
   currentPath: Observable<string> = this.activatedRoute.url.pipe(
     map((segments) => [...segments]?.pop()?.path)
   );
@@ -169,6 +185,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly cookieService: CookieService,
     private readonly dialog: MatDialog,
     private readonly organizationService: OrganizationService,
+    private readonly recurringMeetingService: RecurringMeetingLinkService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -243,7 +260,9 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           this.isBusy.next(true);
         }),
         switchMap(() => this.recurringMeetingId$),
-        switchMap((recurringMeetingId) => from(this.createRoom(recurringMeetingId))),
+        switchMap((recurringMeetingId) =>
+          from(this.createRoom(recurringMeetingId))
+        ),
         takeUntil(this.destroy),
         finalize(() => this.isBusy.next(false))
       )
@@ -328,7 +347,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     return this.authService.signOut();
   }
 
-  async createRoom(recurringMeetingId: string|null) {
+  async createRoom(recurringMeetingId: string | null) {
     const newMember: Member = {
       id: null,
       name: this.name.value,
@@ -336,7 +355,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       status: MemberStatus.ACTIVE,
     };
 
-    const { room } = await this.estimatorService.createRoom(newMember, recurringMeetingId);
+    const { room } = await this.estimatorService.createRoom(
+      newMember,
+      recurringMeetingId
+    );
 
     this.analytics.logClickedCreateNewRoom();
     return this.router.navigate(['room', room.roomId]);

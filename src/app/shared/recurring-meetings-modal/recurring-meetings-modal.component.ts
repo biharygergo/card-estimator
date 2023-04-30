@@ -54,7 +54,6 @@ export class RecurringMeetingsModalComponent {
           this.recurringMeetingsService
             .getCreatedRoomsForMeetingLinkId(link.id)
             .pipe(
-              tap(console.log),
               map((createdRooms) => ({
                 link,
                 createdRooms,
@@ -62,7 +61,6 @@ export class RecurringMeetingsModalComponent {
                   ? createdRooms[0].createdAt
                   : undefined,
               })),
-              tap(console.log)
             )
         )
       );

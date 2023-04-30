@@ -234,7 +234,10 @@
               "/room",
               "/zoom",
               "/history",
-              "/premium"
+              "/premium",
+              "/recurringMeeting",
+              "/organizationInvitation",
+              "/integration"
             ],
             "guessRoutes": false
           },

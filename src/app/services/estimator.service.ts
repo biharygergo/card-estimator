@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   addDoc,
   arrayUnion,
@@ -50,6 +50,7 @@ import { AuthService } from './auth.service';
 import { createHash } from '../utils';
 import { OrganizationService } from './organization.service';
 import { PaymentService } from './payment.service';
+import { APP_CONFIG, AppConfig } from '../app-config.module';
 
 export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
@@ -70,7 +71,8 @@ export class EstimatorService {
     private authService: AuthService,
     private functions: Functions,
     private readonly paymentService: PaymentService,
-    private readonly organizationService: OrganizationService
+    private readonly organizationService: OrganizationService,
+    @Inject(APP_CONFIG) public readonly config: AppConfig,
   ) {}
 
   createId() {
@@ -95,6 +97,8 @@ export class EstimatorService {
     }
 
     member.id = userId;
+    member.platform = this.config.isRunningInZoom ? 'zoom' : 'web';
+
     if (user?.photoURL) {
       member.avatarUrl = user.photoURL;
     }

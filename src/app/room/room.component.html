@@ -14,20 +14,6 @@
           <mat-icon>account_circle</mat-icon>
           Create an account
         </button>
-        <button
-          mat-flat-button
-          color="primary"
-          aria-label="Toggle topics sidebar"
-          (click)="sidenav.toggle()"
-          class="topics-toggle"
-          [matBadge]="rounds.length"
-          matBadgePosition="after"
-          matBadgeColor="accent"
-          size="small"
-        >
-          <mat-icon>format_list_numbered</mat-icon>
-          Manage rounds
-        </button>
       </div>
     </div>
     <div class="room-container">
@@ -162,7 +148,16 @@
               <mat-icon>settings</mat-icon>
               Room settings
             </button>
-
+            <button
+              mat-stroked-button
+              aria-label="Toggle topics sidebar"
+              (click)="sidenav.toggle()"
+              class="topics-toggle"
+              matTooltip="Manage rounds, view team velocity, download results or generate a summary."
+            >
+              <mat-icon>format_list_numbered</mat-icon>
+              Rounds ({{ rounds.length }})
+            </button>
             <mat-menu #roomSettingsMenu="matMenu">
               <button
                 mat-menu-item
@@ -190,7 +185,7 @@
               </button>
               <button mat-menu-item (click)="toggleMute()" id="sound-button">
                 <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
-                {{ isMuted ? "Sound off" : "Sound on" }}
+                {{ isMuted ? "Sound is off" : "Sound is on" }}
               </button>
               <mat-divider></mat-divider>
               <button
@@ -237,7 +232,10 @@
                 [matMenuTriggerFor]="savedCardsMenu"
                 aria-label="Saved card sets"
                 id="card-saved-sets-button"
-                [disabled]="savedCardSets.length === 0 || !(permissionsService.hasPremiumAccess() | async)"
+                [disabled]="
+                  savedCardSets.length === 0 ||
+                  !(permissionsService.hasPremiumAccess() | async)
+                "
               >
                 <mat-icon>cloud</mat-icon>
                 Saved card sets ({{ savedCardSets.length }})

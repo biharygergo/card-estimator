@@ -59,26 +59,6 @@
                 <mat-icon>history</mat-icon>
                 Rejoin
               </a>
-              <!-- <div
-                [matTooltip]="
-                  config.isRunningInZoom
-                    ? 'Downloading results is only available on the web version of the app.'
-                    : ''
-                "
-              >
-                <button
-                  mat-stroked-button
-                  color="secondary"
-                  (click)="downloadResults(session)"
-                  [disabled]="
-                    config.isRunningInZoom ||
-                    !(permissionsService.canDownloadResults() | async)
-                  "
-                >
-                  <mat-icon>download_for_offline</mat-icon>
-                  Download
-                </button>
-              </div> -->
             </div>
           </mat-expansion-panel>
         </mat-accordion>

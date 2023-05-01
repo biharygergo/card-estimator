@@ -117,10 +117,12 @@
                   Remove logo
                 </button>
               </div>
-              <file-upload-drag-drop
-                (onFileDropped)="onLogoDropped($event)"
-                *ngIf="!organization?.logoUrl"
-              ></file-upload-drag-drop>
+              <div class="file-upload">
+                <file-upload-drag-drop
+                  (onFileDropped)="onLogoDropped($event)"
+                  *ngIf="!organization?.logoUrl"
+                ></file-upload-drag-drop>
+              </div>
             </div>
           </div>
         </mat-tab>
@@ -130,7 +132,13 @@
               <div class="members-section" *ngIf="organization?.memberIds">
                 <h5 class="section-title">
                   <mat-icon>people</mat-icon> Manage members
-                  <mat-chip *ngIf="organization?.activePlan === 'basic'"
+                  <mat-chip
+                    *ngIf="organization?.activePlan === 'basic'"
+                    [matTooltip]="
+                      organization?.memberIds.length > 5
+                        ? 'You are over the free organization members limit. Please subscribe to Premium to keep your extra members.'
+                        : ''
+                    "
                     >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
                   >
                 </h5>

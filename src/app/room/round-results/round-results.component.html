@@ -1,7 +1,7 @@
 <mat-list>
   <ng-container *ngIf="(room?.rounds)[currentRound].show_results">
     <ng-container *ngIf="roundStatistics[currentRound] as statistics">
-      <h3 matSubheader>Statistics</h3>
+      <h3 matSubheader class="subheader">Statistics</h3>
       <mat-list-item>
         <h3 matLine class="statistic">
           <div>Majority</div>
@@ -10,12 +10,11 @@
               <mat-chip
                 class="consensus"
                 *ngIf="statistics.consensus.isConsensus"
-                matTooltip="Easier done than said! Everyone voted the same way in this round."
               >
                 <span matChipAvatar>🎉</span>
                 <strong>Consensus</strong>
               </mat-chip>
-              <mat-chip matTooltip="This option got the most votes.">
+              <mat-chip>
                 {{
                   statistics.consensus.value
                     | estimateConverter
@@ -78,7 +77,7 @@
     </ng-container>
   </ng-container>
 
-  <h3 matSubheader>Votes</h3>
+  <h3 matSubheader class="subheader">Votes</h3>
   <mat-list-item *ngFor="let member of members">
     <span matListItemAvatar class="avatar">
       <img

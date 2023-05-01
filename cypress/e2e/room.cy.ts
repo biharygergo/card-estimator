@@ -32,7 +32,7 @@ describe('Inside the room', () => {
 
     cy.contains('Save').click();
 
-    cy.contains('Manage rounds').click();
+    cy.contains('Rounds (1)').click();
     cy.get('.round-title').first().should('contain.text', 'Custom name');
   });
 

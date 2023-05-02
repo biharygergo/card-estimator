@@ -482,7 +482,7 @@ export class EstimatorService {
     );
   }
 
-  submitFeedback(rating: number) {
+  submitFeedback(rating: number, additionalFeedback: string) {
     return from(this.authService.getUser()).pipe(
       take(1),
       switchMap((user) => {
@@ -490,6 +490,7 @@ export class EstimatorService {
         return addDoc(collection(this.firestore, this.FEEDBACK_COLLECTION), {
           userId,
           rating,
+          details: additionalFeedback,
           createdAt: serverTimestamp(),
         });
       })

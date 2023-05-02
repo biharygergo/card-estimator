@@ -11,6 +11,15 @@
         {{ starValue ? "star" : "star_outline" }}
       </mat-icon>
     </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Anything else?</mat-label>
+      <input 
+        matInput 
+        placeholder="I love the blue UI! 😻" 
+        [formControl]="additionalFeedback"
+        [disabled]="rating === 0"
+      >
+    </mat-form-field>
     <div class="actions">
       <button mat-flat-button (click)="submit()">
         <mat-icon>done</mat-icon>

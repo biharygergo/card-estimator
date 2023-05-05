@@ -2,6 +2,21 @@ mat-chip-set {
     display: inline-flex;
     margin-left: auto;
   
+    @keyframes popIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      50%{
+        opacity: 1;
+        transform: scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     mat-chip {
       &.consensus {
         background: var(--accent-color);
@@ -14,6 +29,12 @@ mat-chip-set {
       &.voter {
         background: #d9e2ff;
       }
+
+      &.vote {
+        animation: popIn 200ms ease-in;
+        animation-fill-mode: forwards;
+      }
+      
     }
   }
 
@@ -24,6 +45,7 @@ mat-chip-set {
     align-items: center;
     margin-bottom: 0 !important;
     flex-wrap: wrap;
+    padding: 4px;
   }
 
   .member-name {
@@ -41,4 +63,8 @@ mat-chip-set {
 
   .subheader {
     font-weight: 500;
+  }
+
+  .statistic {
+    padding: 4px;
   }

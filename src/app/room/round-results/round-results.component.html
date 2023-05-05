@@ -107,6 +107,7 @@
       <mat-chip-set>
         <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
           <mat-chip
+            class="vote"
             *ngIf="
               (room?.rounds)[currentRound].estimates[member.id] === null &&
               (room?.rounds)[currentRound].show_results
@@ -114,6 +115,7 @@
             >Pass</mat-chip
           >
           <mat-chip
+            class="vote"
             *ngIf="
               (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
               (room?.rounds)[currentRound].estimates[member.id] !== null &&
@@ -125,6 +127,7 @@
             }}</mat-chip
           >
           <mat-chip
+            class="vote"
             *ngIf="
               (room?.rounds)[currentRound].estimates[member.id] === undefined &&
               (room?.rounds)[currentRound].show_results
@@ -133,6 +136,7 @@
             Not voted
           </mat-chip>
           <mat-chip
+            class="vote"
             *ngIf="
               (room?.rounds)[currentRound].estimates[member.id] === undefined &&
               !(room?.rounds)[currentRound].show_results
@@ -141,6 +145,7 @@
             Waiting to vote
           </mat-chip>
           <mat-chip
+            class="vote"
             *ngIf="
               (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
               !(room?.rounds)[currentRound].show_results

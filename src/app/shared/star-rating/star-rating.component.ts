@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { first } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -13,6 +14,8 @@ export class StarRatingComponent {
   stars = [0, 0, 0, 0, 0];
 
   submitted = false;
+  additionalFeedback = new FormControl('', { nonNullable: true });
+  feedbackId: string;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -31,8 +34,18 @@ export class StarRatingComponent {
     this.estimatorService
       .submitFeedback(this.rating)
       .pipe(first())
-      .subscribe(() => {
+      .subscribe((ref) => {
+        this.feedbackId = ref.id;
         this.submitted = true;
+      });
+  }
+
+  clickedSubmitWithFeedback() {
+    this.estimatorService
+      .updateFeedback(this.feedbackId, this.additionalFeedback.value)
+      .pipe(first())
+      .subscribe(() => {
+        this.snackbarRef.dismiss();
       });
   }
 

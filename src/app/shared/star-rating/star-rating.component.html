@@ -14,7 +14,7 @@
     <div class="actions">
       <button mat-flat-button (click)="submit()">
         <mat-icon>done</mat-icon>
-        Submit feedback</button>
+        Submit rating</button>
       <button mat-stroked-button color="secondary" (click)="closeSnackbar()">
         <mat-icon>close</mat-icon>
         Close
@@ -23,13 +23,20 @@
   </ng-container>
   <ng-container *ngIf="submitted">
     <p>
-      Thank you for providing your feedback! Would you be willing to share more
-      details with us to improve this app?
+      Thank you for providing your rating! Would you be willing to share more
+      details with us to improve this app? We read every feedback - it helps us immensely.
     </p>
+    <mat-form-field appearance="outline">
+      <input 
+        matInput 
+        [formControl]="additionalFeedback"
+        [placeholder]="rating <= 3 ? 'What can we improve about the app?' : 'What do you like about the app?'"
+      >
+    </mat-form-field>
     <div class="actions">
-      <button mat-flat-button (click)="clickedOpenDetailedFeedback()">
-        <mat-icon>open_in_new</mat-icon>
-        Open feedback form
+      <button mat-flat-button (click)="clickedSubmitWithFeedback()">
+        <mat-icon>send</mat-icon>
+        Submit feedback
       </button>
       <button mat-stroked-button color="secondary" (click)="closeSnackbar()">
         <mat-icon>close</mat-icon>

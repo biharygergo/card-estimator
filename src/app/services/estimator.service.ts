@@ -72,7 +72,7 @@ export class EstimatorService {
     private functions: Functions,
     private readonly paymentService: PaymentService,
     private readonly organizationService: OrganizationService,
-    @Inject(APP_CONFIG) public readonly config: AppConfig,
+    @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
   createId() {
@@ -482,16 +482,29 @@ export class EstimatorService {
     );
   }
 
-  submitFeedback(rating: number) {
+  submitFeedback(rating: number): Observable<DocumentReference<any>> {
     return from(this.authService.getUser()).pipe(
       take(1),
       switchMap((user) => {
         const userId = user.uid;
-        return addDoc(collection(this.firestore, this.FEEDBACK_COLLECTION), {
-          userId,
-          rating,
-          createdAt: serverTimestamp(),
-        });
+        return from(
+          addDoc(collection(this.firestore, this.FEEDBACK_COLLECTION), {
+            userId,
+            rating,
+            createdAt: serverTimestamp(),
+          })
+        );
+      })
+    );
+  }
+
+  updateFeedback(
+    feedbackId: string,
+    additionalFeedback: string
+  ): Observable<void> {
+    return from(
+      updateDoc(doc(this.firestore, this.FEEDBACK_COLLECTION, feedbackId), {
+        details: additionalFeedback,
       })
     );
   }

@@ -14,7 +14,8 @@ export class StarRatingComponent {
   stars = [0, 0, 0, 0, 0];
 
   submitted = false;
-  additionalFeedback = new FormControl('', {nonNullable: true});
+  additionalFeedback = new FormControl('', { nonNullable: true });
+  feedbackId: string;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -31,10 +32,20 @@ export class StarRatingComponent {
   submit() {
     if (this.rating === 0) return;
     this.estimatorService
-      .submitFeedback(this.rating, this.additionalFeedback.value)
+      .submitFeedback(this.rating)
+      .pipe(first())
+      .subscribe((ref) => {
+        this.feedbackId = ref.id;
+        this.submitted = true;
+      });
+  }
+
+  clickedSubmitWithFeedback() {
+    this.estimatorService
+      .updateFeedback(this.feedbackId, this.additionalFeedback.value)
       .pipe(first())
       .subscribe(() => {
-        this.submitted = true;
+        this.snackbarRef.dismiss();
       });
   }
 

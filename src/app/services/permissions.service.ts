@@ -25,30 +25,27 @@ export class PermissionsService {
       ...(room.configuration?.permissions || {}),
     };
 
-    let userRole: UserRole | undefined;
+    let userRoles: UserRole[] = [];
     if (room.createdById === userId) {
-      userRole = UserRole.ROOM_CREATOR;
-    } else if (
+      userRoles.push(UserRole.ROOM_CREATOR);
+    }
+
+    if (
       room.members
         .filter((m) => m.type === MemberType.ESTIMATOR)
         .map((m) => m.id)
         .includes(userId)
     ) {
-      userRole = UserRole.ROOM_MEMBER_ESTIMATOR;
-    } else if (
-      room.members
-        .filter((m) => m.type === MemberType.OBSERVER)
-        .map((m) => m.id)
-        .includes(userId)
-    ) {
-      userRole = UserRole.ROOM_MEMBER_OBSERVER;
+      userRoles.push(UserRole.ROOM_MEMBER_ESTIMATOR);
     } else {
-      userRole = UserRole.ROOM_MEMBER_OBSERVER;
+      userRoles.push(UserRole.ROOM_MEMBER_OBSERVER);
     }
 
     const newPermissions = { ...this.userPermissions.value };
     Object.entries(permissions).forEach(([permissionId, permissionValue]) => {
-      newPermissions[permissionId] = permissionValue.value.includes(userRole);
+      newPermissions[permissionId] = !!permissionValue.value.filter((role) =>
+        userRoles.includes(role)
+      ).length;
     });
 
     this.userPermissions.next(newPermissions);

@@ -155,7 +155,7 @@
               class="topics-toggle"
               matTooltip="Manage rounds, view team velocity, download results or generate a summary."
             >
-              <mat-icon>format_list_numbered</mat-icon>
+              <mat-icon>manage_history</mat-icon>
               Rounds ({{ rounds.length }})
             </button>
             <mat-menu #roomSettingsMenu="matMenu">
@@ -170,6 +170,15 @@
               >
                 <mat-icon>style</mat-icon>
                 Set cards
+              </button>
+              <button
+                mat-menu-item
+                [matMenuTriggerFor]="changeRoleMenu"
+                aria-label="Switch current role"
+                id="switch-role-button"
+              >
+                <mat-icon>switch_account</mat-icon>
+                Change role
               </button>
               <button
                 mat-menu-item
@@ -257,6 +266,28 @@
               <button mat-menu-item (click)="openAddCardDeckModal()">
                 <mat-icon>add</mat-icon>
                 <span>Set a custom card deck</span>
+              </button>
+            </mat-menu>
+            <mat-menu #changeRoleMenu="matMenu">
+              <button
+                mat-menu-item
+                [class.selected]="
+                  (activeMember$ | async)?.type === MemberType.ESTIMATOR
+                "
+                (click)="updateMemberType(MemberType.ESTIMATOR)"
+              >
+                <mat-icon>how_to_vote</mat-icon>
+                Estimator
+              </button>
+              <button
+                mat-menu-item
+                [class.selected]="
+                  (activeMember$ | async)?.type === MemberType.OBSERVER
+                "
+                (click)="updateMemberType(MemberType.OBSERVER)"
+              >
+                <mat-icon>visibility</mat-icon>
+                Observer
               </button>
             </mat-menu>
           </mat-card-footer>

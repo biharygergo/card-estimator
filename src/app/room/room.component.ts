@@ -164,20 +164,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  onActiveMemberUpdated$ = combineLatest([
+  activeMember$: Observable<Member> = combineLatest([
     this.room$,
     this.authService.user,
   ]).pipe(
     filter(([_room, user]) => !!user),
     map(([room, user]) => room.members.find((m) => m.id === user.uid)),
     distinctUntilChanged(isEqual),
-    tap((member) => {
-      if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
-        this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
-      } else if (member?.type === MemberType.OBSERVER) {
-        this.joinAsObserver();
-      }
-    }),
     takeUntil(this.destroy)
   );
 
@@ -286,7 +279,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   savedCardSets$: Observable<SavedCardSetValue[]> = this.cardDeckService
     .getMyCardDecks()
     .pipe(takeUntil(this.destroy));
-  
+
   savedCardSets: SavedCardSetValue[] = [];
 
   user$ = this.authService.user;
@@ -320,7 +313,15 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.room$.subscribe();
     this.onRoomUpdated$.subscribe();
-    this.onActiveMemberUpdated$.subscribe();
+
+    this.activeMember$.subscribe((member) => {
+      if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
+        this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
+      } else if (member?.type === MemberType.OBSERVER) {
+        this.joinAsObserver();
+      }
+    });
+
     this.onRoundNumberUpdated$.subscribe();
     this.onEstimatesUpdated$.subscribe();
     this.onCardSetUpdated$.subscribe();
@@ -331,9 +332,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
     this.onPermissionsUpdated$.subscribe();
-    this.savedCardSets$.subscribe(cardSets => {
+    this.savedCardSets$.subscribe((cardSets) => {
       this.savedCardSets = cardSets;
-    })
+    });
 
     this.authService.avatarUpdated
       .pipe(
@@ -671,7 +672,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       if (this.estimatorService.activeMember) {
         await this.estimatorService.updateMemberStatus(
           this.room.roomId,
-          this.estimatorService.activeMember
+          this.estimatorService.activeMember,
+          MemberStatus.LEFT_ROOM
         );
       }
       this.router.navigate(['join']);
@@ -692,7 +694,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   setEstimationCardSet(cardSet: CardSetValue) {
     this.analytics.logSelectedCardSet(cardSet.key);
     if (cardSet.key === CustomCardSet) {
-      this.estimatorService.setRoomCustomCardSetValue(this.room.roomId, cardSet);
+      this.estimatorService.setRoomCustomCardSetValue(
+        this.room.roomId,
+        cardSet
+      );
     } else {
       this.estimatorService.setRoomCardSet(this.room.roomId, cardSet.key);
     }
@@ -764,5 +769,15 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.dialog.open(
       ...roomConfigurationModalCreator({ roomId: this.room.roomId })
     );
+  }
+
+  async updateMemberType(newType: MemberType) {
+    await this.estimatorService.updateMemberType(
+      this.room.roomId,
+      this.estimatorService.activeMember,
+      newType
+    );
+
+    this.permissionsService.initializePermissions(this.room, this.estimatorService.activeMember.id);
   }
 }

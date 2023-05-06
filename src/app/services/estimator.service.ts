@@ -36,6 +36,7 @@ import {
   SubscriptionMetadata,
   RichTopic,
   RoomSummary,
+  MemberType,
 } from './../types';
 import {
   collection,
@@ -214,7 +215,7 @@ export class EstimatorService {
   async updateMemberStatus(
     roomId: string,
     member: Member,
-    status = MemberStatus.LEFT_ROOM
+    status: MemberStatus
   ) {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
@@ -225,6 +226,26 @@ export class EstimatorService {
     await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       members: updatedMembers,
     });
+
+    this.activeMember = updatedMember;
+  }
+
+  async updateMemberType(
+    roomId: string,
+    member: Member,
+    memberType: MemberType
+  ) {
+    const room = await this.getRoom(roomId);
+    const updatedMembers = [...room.members];
+    const updatedMember = room.members.find((m) => m.id === member.id);
+
+    updatedMember.type = memberType;
+
+    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      members: updatedMembers,
+    });
+
+    this.activeMember = updatedMember;
   }
 
   getRoomById(roomId: string): Observable<Room> {

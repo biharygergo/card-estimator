@@ -216,7 +216,7 @@ const ALL_ROLES_ALLOWED = [
 export const DEFAULT_PERMISSIONS: PermissionsMap = {
   [RoomPermissionId.CAN_VOTE]: {
     permissionId: RoomPermissionId.CAN_VOTE,
-    value: [UserRole.ROOM_CREATOR, UserRole.ROOM_MEMBER_ESTIMATOR],
+    value: [UserRole.ROOM_MEMBER_ESTIMATOR],
   },
   [RoomPermissionId.CAN_EDIT_TOPIC]: {
     permissionId: RoomPermissionId.CAN_EDIT_TOPIC,

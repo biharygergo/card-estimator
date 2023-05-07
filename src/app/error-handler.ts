@@ -1,6 +1,6 @@
 import { ErrorHandler, Inject, Injectable } from '@angular/core';
 import { ToastService } from './services/toast.service';
-import * as Sentry from '@sentry/angular';
+import * as Sentry from '@sentry/angular-ivy';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 import { ZoomApiService } from './services/zoom-api.service';
 

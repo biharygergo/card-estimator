@@ -75,7 +75,9 @@
               (isPasswordSet$ | async) ? "Update password" : "Create password"
             }}</mat-label>
             <input matInput type="password" [formControl]="roomPassword" />
-            <mat-error *ngIf="roomPassword.errors?.minlength">Password must be at least 8 characters long</mat-error>
+            <mat-error *ngIf="roomPassword.errors?.minlength"
+              >Password must be at least 8 characters long</mat-error
+            >
           </mat-form-field>
           <div>
             <button
@@ -90,7 +92,7 @@
                 isSavingPassword
               "
             >
-              {{ isSavingPassword ? 'Setting password...' : 'Save password' }}
+              {{ isSavingPassword ? "Setting password..." : "Save password" }}
             </button>
           </div>
         </div>
@@ -148,7 +150,7 @@
                 [disabled]="!hasConfigurationAccess"
               >
                 <mat-chip-option
-                  *ngFor="let option of configuration.options; let i=index"
+                  *ngFor="let option of configuration.options; let i = index"
                   [selected]="configuration.isSelected(option.value)"
                   (click)="configuration.toggleOption(option.value)"
                   class="role-option"
@@ -205,7 +207,7 @@
                 </span>
               </h3>
               <small matLine>
-                {{ member.type | titlecase }}
+                {{ member.isCreator ? "Creator" : (member.type | titlecase) }}
               </small>
               <button
                 mat-icon-button

@@ -9,6 +9,10 @@ import {
   AnalyticsService,
   ZoomAppCtaLocation,
 } from 'src/app/services/analytics.service';
+import { ConfigService } from 'src/app/services/config.service';
+import {
+  COOKIE_BEEN_HERE_BEFORE_KEY,
+} from 'src/app/services/cookie.service';
 
 const ZOOM_APP_PROMO_SEEN_KEY = 'zoomAppPromoSeen';
 
@@ -34,11 +38,15 @@ export class ZoomAppBannerComponent implements OnInit, OnDestroy {
   onLearnMoreClicked = new Subject<void>();
 
   destroy = new Subject<void>();
-  constructor(private readonly analytics: AnalyticsService) {
+  constructor(
+    private readonly analytics: AnalyticsService,
+    private readonly configService: ConfigService
+  ) {
     if (
       typeof window !== 'undefined' &&
       window?.localStorage &&
-      !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY)
+      !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY) &&
+      !!this.configService.getCookie(COOKIE_BEEN_HERE_BEFORE_KEY)
     ) {
       this.isZoomBannerHidden = false;
     }

@@ -26,7 +26,7 @@ import {
 import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { JiraIssue, RichTopic } from 'src/app/types';
-import * as Sentry from '@sentry/angular';
+import * as Sentry from '@sentry/angular-ivy';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 
 export interface TopicEditorInputOutput {

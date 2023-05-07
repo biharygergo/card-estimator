@@ -188,7 +188,8 @@
             "tsConfig": "tsconfig.server.json",
             "optimization": false,
             "sourceMap": true,
-            "extractLicenses": false
+            "extractLicenses": false,
+            "buildOptimizer": false
           },
           "configurations": {
             "production": {
@@ -201,7 +202,8 @@
               ],
               "optimization": true,
               "sourceMap": false,
-              "extractLicenses": true
+              "extractLicenses": true,
+              "buildOptimizer": true
             }
           },
           "defaultConfiguration": "production"

@@ -12,7 +12,6 @@ describe('Authentication', () => {
     clearFirebaseLocalStorage();
     setAppCheckCookie();
     cy.visit('/create');
-    cy.contains('Got it').click();
   });
 
   it('can link an account with email', () => {

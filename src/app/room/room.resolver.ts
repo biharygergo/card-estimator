@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  Router,
-  Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot,
-} from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import {
   catchError,
   delay,
@@ -30,7 +25,7 @@ import { MemberStatus, Room } from '../types';
 @Injectable({
   providedIn: 'root',
 })
-export class RoomResolver implements Resolve<Room> {
+export class RoomResolver  {
   constructor(
     private estimatorService: EstimatorService,
     private authService: AuthService,

@@ -76,7 +76,7 @@ import {
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
@@ -143,7 +143,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   members$: Observable<Member[]> = this.room$.pipe(
     map((room) => [room.members, room.memberIds]),
-    distinctUntilChanged(isEqual),
+    distinctUntilChanged<[Member[], string[]]>(isEqual),
     map(([members, memberIds]) =>
       members
         .filter(
@@ -204,7 +204,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     [CardSet | 'CUSTOM', CardSetValue | undefined]
   > = this.room$.pipe(
     map((room) => [room.cardSet, room.customCardSetValue]),
-    distinctUntilChanged(isEqual),
+    distinctUntilChanged<[CardSet, CardSetValue]>(isEqual),
     tap(() => this.updateSelectedCardSets()),
     takeUntil(this.destroy)
   );

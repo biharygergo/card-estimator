@@ -53,7 +53,7 @@ describe('Authentication', () => {
     cy.get('#mat-tab-label-0-1').click();
     cy.get('#CAN_VOTE-0').click();
 
-    cy.get('#CAN_VOTE-0').should('not.have.class', 'mat-mdc-chip-selected');
+    cy.get('#CAN_VOTE-0').should('have.class', 'mat-mdc-chip-selected');
   });
 
   it('saves card decks to the cloud', () => {

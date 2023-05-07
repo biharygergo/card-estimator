@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-const COOKIE_ACCEPTED_KEY = 'cookiesAccepted';
+export const COOKIE_ACCEPTED_KEY = 'cookiesAccepted';
 
 @Injectable({
   providedIn: 'root',

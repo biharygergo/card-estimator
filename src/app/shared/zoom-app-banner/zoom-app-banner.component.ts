@@ -9,6 +9,7 @@ import {
   AnalyticsService,
   ZoomAppCtaLocation,
 } from 'src/app/services/analytics.service';
+import { COOKIE_ACCEPTED_KEY } from 'src/app/services/cookie.service';
 
 const ZOOM_APP_PROMO_SEEN_KEY = 'zoomAppPromoSeen';
 
@@ -38,7 +39,8 @@ export class ZoomAppBannerComponent implements OnInit, OnDestroy {
     if (
       typeof window !== 'undefined' &&
       window?.localStorage &&
-      !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY)
+      !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY) &&
+      window.localStorage.getItem(COOKIE_ACCEPTED_KEY)
     ) {
       this.isZoomBannerHidden = false;
     }

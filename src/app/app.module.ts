@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import {
   NgModule,
   APP_INITIALIZER,
@@ -6,7 +6,7 @@ import {
   InjectionToken,
   Optional,
 } from '@angular/core';
-import * as Sentry from '@sentry/angular';
+import * as Sentry from '@sentry/angular-ivy';
 import Cookies from 'js-cookie';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -224,6 +224,8 @@ function loadAppConfig(): Promise<any> {
       useFactory: () => loadAppConfig,
       multi: true,
     },
+    provideClientHydration(),
+
   ],
   bootstrap: [AppComponent],
 })

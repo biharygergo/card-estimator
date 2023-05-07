@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import {
   distinctUntilChanged,
   map,

@@ -34,8 +34,7 @@ import {
   RoomPermissionId,
   UserRole,
 } from 'src/app/types';
-import { isEqual } from 'lodash';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { isEqual } from 'lodash-es';
 import { organizationModalCreator } from 'src/app/shared/organization-modal/organization-modal.component';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -221,38 +220,37 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  members$: Observable<Array<Member & { isPermanent: boolean }>> =
-    this.room$.pipe(
-      map((room) => [room.members, room.memberIds, room.createdById]),
-      distinctUntilChanged(isEqual),
-      map(([members, memberIds, createdById]) =>
+  members$: Observable<
+    Array<Member & { isPermanent: boolean; isCreator: boolean }>
+  > = this.room$.pipe(
+    map((room) => [room.members, room.memberIds, room.createdById]),
+    distinctUntilChanged<[Member[], string[], string]>(isEqual),
+    map<[Member[], string[], string], [Member[], string]>(
+      ([members, memberIds, createdById]) => [
         members
           .filter(
             (m) =>
               (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
               memberIds.includes(m.id)
           )
-          .sort((a, b) => a.type?.localeCompare(b.type))
-          .map((member) => {
-            if (member.id === createdById) {
-              return { ...member, type: 'CREATOR' };
-            }
-            return member;
-          })
-      ),
-      switchMap((members) => {
-        return this.authService.getUserProfiles(members.map((m) => m.id)).pipe(
-          map((membersMap) =>
-            members.map((member) => ({
-              ...member,
-              isPermanent: !!membersMap[member.id],
-            }))
-          )
-        );
-      }),
-      share(),
-      takeUntil(this.destroy)
-    );
+          .sort((a, b) => a.type?.localeCompare(b.type)),
+        createdById,
+      ]
+    ),
+    switchMap(([members, createdById]) => {
+      return this.authService.getUserProfiles(members.map((m) => m.id)).pipe(
+        map((membersMap) =>
+          members.map((member) => ({
+            ...member,
+            isPermanent: !!membersMap[member.id],
+            isCreator: member.id === createdById,
+          }))
+        )
+      );
+    }),
+    share(),
+    takeUntil(this.destroy)
+  );
   authorizationMetadata$: Observable<AuthorizationMetadata> =
     this.estimatorService
       .getAuthorizationMetadata(this.dialogData.roomId)
@@ -469,7 +467,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   async addToOrganization(memberId: string) {
     await this.organizationService.addMember(this.organization.id, memberId);
-    this.showMessage('Added to organization!')
+    this.showMessage('Added to organization!');
   }
 
   async subscribeToPremium() {

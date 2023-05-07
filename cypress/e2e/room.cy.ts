@@ -4,7 +4,6 @@ describe('Inside the room', () => {
   beforeEach(() => {
     setAppCheckCookie();
     createNewRoom('Test User');
-    cy.contains('Got it').click();
   });
 
   it('can cast votes', () => {

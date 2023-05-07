@@ -15,7 +15,8 @@ export class CookieService {
     if (
       typeof window !== 'undefined' &&
       window?.localStorage &&
-      !window.localStorage.getItem(COOKIE_ACCEPTED_KEY)
+      !window.localStorage.getItem(COOKIE_ACCEPTED_KEY) &&
+      Intl.DateTimeFormat().resolvedOptions().timeZone.includes('Europe')
     ) {
       const snackbarRef = this.snackBar.open(
         'This site uses cookies to analyze traffic and improve your experience. Read more about how cookies are used in our Privacy Policy.',

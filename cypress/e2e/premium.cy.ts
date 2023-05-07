@@ -12,7 +12,6 @@ describe('Authentication', () => {
     clearFirebaseLocalStorage();
     setAppCheckCookie();
     cy.visit('/create');
-    cy.contains('Got it').click();
 
     cy.get('#sign-in-button').click();
 
@@ -38,8 +37,6 @@ describe('Authentication', () => {
     cy.location('pathname').should('include', '/room');
     cy.wait(1000);
 
-    cy.contains('Got it').click();
-
     cy.get('#room-options-button').click();
     cy.contains('Security and permissions').click();
 
@@ -62,8 +59,6 @@ describe('Authentication', () => {
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
     cy.wait(1000);
-
-    cy.contains('Got it').click();
 
     cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();

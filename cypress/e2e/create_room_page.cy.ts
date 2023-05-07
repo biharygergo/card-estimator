@@ -8,7 +8,6 @@ describe('Creating a room as a new user', () => {
     clearFirebaseLocalStorage();
     setAppCheckCookie();
     cy.visit('/create');
-    cy.contains('Got it').click();
   });
 
   it('opens the Create room page', () => {
@@ -27,7 +26,6 @@ describe('Creating a room as a returning user', () => {
   beforeEach(() => {
     setAppCheckCookie();
     cy.visit('/create');
-    cy.contains('Got it').click();
   });
 
   it('opens the Create room page', () => {

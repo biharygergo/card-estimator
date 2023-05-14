@@ -153,7 +153,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         )
         .sort((a, b) => a.type?.localeCompare(b.type))
     ),
-    share(),
+    shareReplay(1),
     takeUntil(this.destroy)
   );
 

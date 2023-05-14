@@ -8,10 +8,10 @@ describe('Inside the room', () => {
 
   it('can cast votes', () => {
     cy.contains('Test User').should('be.visible');
-    cy.contains('Waiting to vote').should('be.visible');
+    cy.get('.vote-waiting').should('be.visible');
 
     cy.contains('0.5').click();
-    cy.contains('Waiting to vote').should('not.exist');
+    cy.get('.vote-waiting').should('not.exist');
     cy.contains('Votes').should('be.visible');
 
     cy.contains('Reveal Votes').click();
@@ -22,7 +22,7 @@ describe('Inside the room', () => {
     // Banner appears
     cy.contains('Continue alone').click();
 
-    cy.contains('Waiting to vote').should('be.visible');
+    cy.get('.vote-waiting').should('be.visible');
   });
 
   it('can update the topic name', () => {

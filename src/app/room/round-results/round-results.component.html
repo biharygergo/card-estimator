@@ -1,10 +1,12 @@
-<mat-list>
-  <ng-container *ngIf="(room?.rounds)[currentRound].show_results">
+<mat-list *ngIf="(room?.rounds)[currentRound].show_results && roundStatistics[currentRound]">
+  <ng-container>
     <ng-container *ngIf="roundStatistics[currentRound] as statistics">
       <h3 matSubheader class="subheader">Statistics</h3>
       <mat-list-item>
         <h3 matLine class="statistic">
-          <div>Majority</div>
+          <div class="statistic-title">
+            Majority
+          </div>
           <div>
             <mat-chip-set>
               <mat-chip
@@ -28,7 +30,9 @@
       </mat-list-item>
       <mat-list-item>
         <h3 matLine class="statistic">
-          Average
+          <div class="statistic-title">
+            Average
+          </div>
           <mat-chip-set>
             <mat-chip>
               {{
@@ -44,7 +48,9 @@
       </mat-list-item>
       <mat-list-item>
         <h3 matLine class="statistic">
-          Highest
+          <div class="statistic-title">
+            Highest
+          </div>
           <mat-chip-set>
             <mat-chip class="voter">
               {{ statistics.highestVote.voter }}
@@ -60,7 +66,9 @@
       </mat-list-item>
       <mat-list-item>
         <h3 matLine class="statistic">
-          Lowest
+          <div class="statistic-title">
+            Lowest
+          </div>
           <mat-chip-set>
             <mat-chip class="voter">
               {{ statistics.lowestVote.voter }}
@@ -76,88 +84,89 @@
       </mat-list-item>
     </ng-container>
   </ng-container>
-
-  <h3 matSubheader class="subheader">Votes</h3>
-  <mat-list-item *ngFor="let member of members">
-    <span matListItemAvatar class="avatar">
+</mat-list>
+<h3 matSubheader class="subheader">Votes</h3>
+<div class="votes" >
+  <div class="vote-container" *ngFor="let member of members">
+    <div class="vote-avatar">
       <img
         *ngIf="member.avatarUrl"
         [src]="member.avatarUrl"
-        class="avatar-image"
+        class="vote-avatar-image"
         alt="A user's avatar"
       />
-      <div class="avatar-text" *ngIf="!member.avatarUrl">
+      <div class="vote-avatar-text" *ngIf="!member.avatarUrl">
         {{ member.name?.charAt(0) }}
       </div>
-    </span>
-    <h3 matLine class="member">
-      <span class="member-name">
-        {{ member.name }}
-        <mat-icon
-          class="verified-icon"
-          *ngIf="userProfiles[member.id]"
-          [matTooltip]="
-            member.name +
-            ' is verified. Get your blue checkmark by signing up for a permanent account.'
-          "
-          >verified</mat-icon
-        >
-      </span>
-
-      <mat-chip-set>
         <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
-          <mat-chip
-            class="vote"
+          <div
+            class="vote vote-pass"
             *ngIf="
               (room?.rounds)[currentRound].estimates[member.id] === null &&
               (room?.rounds)[currentRound].show_results
             "
-            >Pass</mat-chip
+            matTooltip="Passed"
+            ><mat-icon>question_mark</mat-icon></div
           >
-          <mat-chip
-            class="vote"
+          <div
+            class="vote vote-value"
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
+              (room?.rounds)[currentRound].estimates[member.id] !==
+                undefined &&
               (room?.rounds)[currentRound].estimates[member.id] !== null &&
               (room?.rounds)[currentRound].show_results
             "
             >{{
               (room?.rounds)[currentRound].estimates[member.id]
                 | estimateConverter : selectedEstimationCardSetValue : "exact"
-            }}</mat-chip
+            }}</div
           >
-          <mat-chip
-            class="vote"
+          <div
+            class="vote vote-none"
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] === undefined &&
-              (room?.rounds)[currentRound].show_results
+              (room?.rounds)[currentRound].estimates[member.id] ===
+                undefined && (room?.rounds)[currentRound].show_results
             "
+            matTooltip="No vote cast - maybe next time?"
           >
-            Not voted
-          </mat-chip>
-          <mat-chip
-            class="vote"
+            <mat-icon>bedtime</mat-icon>
+          </div>
+          <div
+            class="vote vote-waiting"
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] === undefined &&
-              !(room?.rounds)[currentRound].show_results
+              (room?.rounds)[currentRound].estimates[member.id] ===
+                undefined && !(room?.rounds)[currentRound].show_results
             "
+            matTooltip="Waiting to vote"
           >
-            Waiting to vote
-          </mat-chip>
-          <mat-chip
-            class="vote"
+            <mat-spinner diameter="15" />
+          </div>
+          <div
+            class="vote vote-voted"
             *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
-              !(room?.rounds)[currentRound].show_results
+              (room?.rounds)[currentRound].estimates[member.id] !==
+                undefined && !(room?.rounds)[currentRound].show_results
             "
+            matTooltip="Voted"
           >
-            Voted
-          </mat-chip>
+            <mat-icon>checked</mat-icon>
+          </div>
         </ng-container>
-        <mat-chip *ngIf="member.type === MemberType.OBSERVER">
-          Observing
-        </mat-chip>
-      </mat-chip-set>
-    </h3>
-  </mat-list-item>
-</mat-list>
+        <div class="vote vote-observer" *ngIf="member.type === MemberType.OBSERVER" matTooltip="Observing this estimation">
+          <mat-icon>visibility</mat-icon>
+        </div>
+    </div>
+    <span class="member-name">
+      {{ member.name }}
+      <mat-icon
+        class="verified-icon"
+        *ngIf="userProfiles[member.id]"
+        [matTooltip]="
+          member.name +
+          ' is verified. Get your blue checkmark by signing up for a permanent account.'
+        "
+        >verified</mat-icon
+      >
+    </span>
+  </div>
+</div>

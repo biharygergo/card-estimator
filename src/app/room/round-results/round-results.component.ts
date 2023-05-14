@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { EMPTY, Observable, of, Subject, takeUntil } from 'rxjs';
 import {
   CardSetValue,
   Member,
@@ -20,7 +20,7 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   @Input() members: Member[];
   @Input() currentRound: number;
   @Input() selectedEstimationCardSetValue: CardSetValue;
-  @Input() userProfiles$: Observable<UserProfileMap> = of({});
+  @Input() userProfiles$: Observable<UserProfileMap> = EMPTY;
 
   destroyed = new Subject<void>();
 

@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import { timer } from 'rxjs';
 import { Round } from './types';
+import Cookies from 'js-cookie';
 
 export const getHumanReadableElapsedTime = (round: Round) => {
   let elapsed = 'Not finished';
@@ -23,6 +24,13 @@ export const isRunningInZoom = () => {
   return (
     typeof window !== 'undefined' &&
     window.navigator.userAgent.includes('ZoomWebKit')
+  );
+};
+
+export const isRunningInWebex = () => {
+  return (
+    typeof window !== 'undefined' &&
+    (window.location.search.includes('s=webex') || Cookies.get('runningInWebex'))
   );
 };
 

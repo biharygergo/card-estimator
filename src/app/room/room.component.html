@@ -298,7 +298,9 @@
         ></anonymous-user-banner>
       </div>
 
-      <app-github-badge *ngIf="!config.isRunningInZoom"></app-github-badge>
+      <app-github-badge
+        *ngIf="!config.isRunningInZoom && !config.isRunningInWebex"
+      ></app-github-badge>
     </div>
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">

@@ -235,6 +235,7 @@
               "/create",
               "/room",
               "/zoom",
+              "/webex",
               "/history",
               "/premium",
               "/recurringMeeting",

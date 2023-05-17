@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { PremiumComponent } from './premium/premium.component';
 import { NgOptimizedImage } from '@angular/common';
 import { StartPlanningCtaComponent } from './components/start-planning-cta/start-planning-cta.component';
+import { WebexComponent } from './webex/webex.component';
 
 const routes: Routes = [
   {
@@ -56,6 +57,11 @@ const routes: Routes = [
     data: { title: 'Zoom Integration' },
   },
   {
+    path: 'webex',
+    component: WebexComponent,
+    data: { title: 'Webex Integration' },
+  },
+  {
     path: 'organizationInvitation',
     component: OrganizationInvitationComponent,
     data: { title: 'Organization invitation' },
@@ -86,6 +92,7 @@ const routes: Routes = [
     HeaderV2Component,
     OrganizationInvitationComponent,
     StartPlanningCtaComponent,
+    WebexComponent,
   ],
   imports: [
     CommonModule,

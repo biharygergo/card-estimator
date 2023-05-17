@@ -1,0 +1,98 @@
+main {
+    background: white;
+    padding: 50px 10%;
+  }
+  
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .install-btn {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    background: #3b79f6;
+  }
+  
+  section {
+    display: flex;
+    max-width: 1500px;
+    margin: 0 auto;
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+    }
+  }
+  
+  .hero-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  
+    .cta {
+      width: 100%;
+    }
+  }
+  
+  .hero-video {
+    flex: 2;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  
+    video {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: contain;
+      max-width: 600px;
+      box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+      rgba(5, 18, 37, 0.24) 0px 0px 8px;
+    }
+  }
+  
+  .section-title {
+    text-align: center;
+    width: 100%;
+    font-size: 2rem;
+    margin: 5rem 0;
+  }
+  
+  .instructions {
+      flex-direction: column;
+      gap: 5rem;
+  }
+  
+  .instruction {
+    width: 100%;
+    display: flex;
+    gap: 3rem;
+  
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
+  
+  .instruction-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .instruction-image {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+        rgba(5, 18, 37, 0.24) 0px 0px 8px;
+    }
+  }
+  

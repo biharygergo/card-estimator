@@ -1,0 +1,139 @@
+<app-page-header title="Webex Integration" subtitle="Use Planning Poker straight from your favorite meeting app"></app-page-header>
+<main>
+  <div class="main-content">
+    <section class="hero-section">
+      <div class="hero-text">
+        <h1>Use Planning Poker in Webex Meetings!</h1>
+        <p>
+          Use the Webex integration to easily share planning poker sessions with
+          your team. You don't even need to leave your Webex meeting to have the
+          same great planning experience as before.
+        </p>
+        <div class="cta">
+          <a
+            mat-raised-button
+            color="primary"
+            href="https://apphub.webex.com/"
+            class="install-btn"
+            >View in Webex App Hub</a
+          >
+        </div>
+      </div>
+      <div class="hero-video">
+        <video
+          #video
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="video.play()"
+          (loadedmetadata)="video.muted = true"
+        >
+          <source
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation_Webex.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+    </section>
+    <h2 class="section-title">How does it work?</h2>
+    <section class="instructions">
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3 id="howto">1. Add the application Webex Meetings</h3>
+          <p>
+            To add the app to your Webex account, open App Hub and click the
+            install button.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_1.png"
+            alt="AppHub landing page for Planning Poker"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3>2. Open the app inside Webex</h3>
+          <p>
+            Once the app is installed, you can open it from the "Apps" menu in
+            Webex. The app will appear in the side-panel of your meeting.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_2.png"
+            alt="Apps screen inside Webex"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3>3. Invite your colleagues in the meeting</h3>
+          <p>
+            After you've created a planning poker session, just click "Invite"
+            and an "Open for all" button will appear below the app. Click the
+            button and the app will open for everybody in the meeting with the
+            correct room ID already shareed.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_3.png"
+            alt="The app is running inside Webex"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h3>4. Estimate projects together, in real-time</h3>
+          <p>
+            Once you are all in the same meeting and the app is open for
+            everyone, you can start planning your project. Set a topic by
+            clicking "Edit topic" next to "Topic of Round #1" and decide which card
+            set you want to use.
+          </p>
+          <p>
+            Each member votes on their own, and once all votes are cast the
+            leader presses "Reveal Votes" to reveal all votes. To start the next
+            round, click "New Round" (or "Next Round", if you've set the topics
+            beforehand from the sidebar) The team continues this process until
+            all topics have been voted on.
+          </p>
+        </div>
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_4.png"
+            alt="An ongoing planning session with participants in Webex"
+          />
+        </div>
+      </div>
+      <div class="instruction">
+        <div class="instruction-text">
+          <h4 id="support">Getting Support and Reporting Bugs</h4>
+          <p>
+            Are you stuck on a question or issue with the app? Check out the
+            <a routerLink="/faq">Frequently Asked Questions</a>, maybe your
+            query already has an answer.
+          </p>
+          <p>
+            If you need additional support or have found a bug, please open a
+            ticket here
+            <a
+              href="https://github.com/biharygergo/card-estimator/issues"
+              rel="noopener"
+              >on GitHub</a
+            >
+            and our developers will try to help as fast as possible. We try
+            respond to tickets within 24 hours. If you need immediate
+            assistance, please contact us at
+            <a href="mailto:hello@planningpoker.live"
+              >hello@planningpoker.live</a
+            >.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

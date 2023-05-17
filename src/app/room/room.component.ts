@@ -81,6 +81,7 @@ import { roomAuthenticationModalCreator } from '../shared/room-authentication-mo
 import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { CardDeckService } from '../services/card-deck.service';
+import { WebexApiService } from '../services/webex-api.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -302,6 +303,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private configService: ConfigService,
     private authService: AuthService,
     private zoomService: ZoomApiService,
+    private readonly webexService: WebexApiService,
     public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
@@ -309,6 +311,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.config.isRunningInZoom) {
       this.zoomService.configureApp();
+    }
+    if (this.config.isRunningInWebex) {
+      this.webexService.configureApp();
     }
 
     this.room$.subscribe();
@@ -595,6 +600,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       } catch {
         message = 'Please start a meeting first to invite others to join.';
       }
+    } else if (this.config.isRunningInWebex) {
+      await this.webexService.inviteAllParticipants(this.room.roomId);
+      message = 'All ready, click the "Open for all" button below!'
     } else {
       const host = window.origin || 'https://card-estimator.web.app';
       this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
@@ -666,7 +674,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   async leaveRoom() {
     this.analytics.logClickedLeaveRoom();
     if (
-      isRunningInZoom() ||
+      this.config.isRunningInZoom ||
       confirm('Do you really want to leave this estimation?')
     ) {
       if (this.estimatorService.activeMember) {
@@ -778,6 +786,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       newType
     );
 
-    this.permissionsService.initializePermissions(this.room, this.estimatorService.activeMember.id);
+    this.permissionsService.initializePermissions(
+      this.room,
+      this.estimatorService.activeMember.id
+    );
   }
 }

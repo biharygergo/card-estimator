@@ -77,7 +77,7 @@ export interface Member {
   avatarUrl?: string;
   type: MemberType;
   status: MemberStatus;
-  platform?: 'zoom' | 'web';
+  platform?: 'zoom' | 'webex' | 'web';
 }
 
 export interface RoomData {

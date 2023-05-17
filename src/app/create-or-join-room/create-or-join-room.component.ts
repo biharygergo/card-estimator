@@ -60,6 +60,7 @@ import { OrganizationService } from '../services/organization.service';
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
+import { ConfigService } from '../services/config.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -186,6 +187,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
     private readonly organizationService: OrganizationService,
     private readonly recurringMeetingService: RecurringMeetingLinkService,
+    private readonly configService: ConfigService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -204,6 +206,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           startAccountSetupOnOpen: true,
         })
       );
+    }
+
+    if (this.config.isRunningInWebex) {
+      this.configService.setSessionCookie('runningInWebex', '1');
     }
 
     this.onJoinRoomClicked

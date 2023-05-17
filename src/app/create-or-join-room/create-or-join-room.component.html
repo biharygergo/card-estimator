@@ -130,7 +130,7 @@
     </ng-container>
   </ng-container>
   <zoom-app-banner
-    *ngIf="!config.isRunningInZoom"
+    *ngIf="!config.isRunningInZoom && !config.isRunningInWebex"
     bannerLocation="banner_join"
   ></zoom-app-banner>
 </ng-template>

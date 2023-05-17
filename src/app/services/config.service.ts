@@ -16,6 +16,10 @@ export class ConfigService {
     Cookies.set(key, value, { expires: expiresInDays });
   }
 
+  setSessionCookie(key: string, value: string) {
+    Cookies.set(key, value);
+  }
+
   getCookie(key): string | undefined {
     return Cookies.get(key);
   }

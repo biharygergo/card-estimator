@@ -98,7 +98,7 @@ export class EstimatorService {
     }
 
     member.id = userId;
-    member.platform = this.config.isRunningInZoom ? 'zoom' : 'web';
+    member.platform = this.config.isRunningInZoom ? 'zoom' : this.config.isRunningInWebex ? 'webex' : 'web';
 
     if (user?.photoURL) {
       member.avatarUrl = user.photoURL;

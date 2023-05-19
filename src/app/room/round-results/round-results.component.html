@@ -1,12 +1,14 @@
-<mat-list *ngIf="(room?.rounds)[currentRound].show_results && roundStatistics[currentRound]">
+<mat-list
+  *ngIf="
+    (room?.rounds)[currentRound].show_results && roundStatistics[currentRound]
+  "
+>
   <ng-container>
     <ng-container *ngIf="roundStatistics[currentRound] as statistics">
       <h3 matSubheader class="subheader">Statistics</h3>
       <mat-list-item>
         <h3 matLine class="statistic">
-          <div class="statistic-title">
-            Majority
-          </div>
+          <div class="statistic-title">Majority</div>
           <div>
             <mat-chip-set>
               <mat-chip
@@ -30,9 +32,7 @@
       </mat-list-item>
       <mat-list-item>
         <h3 matLine class="statistic">
-          <div class="statistic-title">
-            Average
-          </div>
+          <div class="statistic-title">Average</div>
           <mat-chip-set>
             <mat-chip>
               {{
@@ -48,9 +48,7 @@
       </mat-list-item>
       <mat-list-item>
         <h3 matLine class="statistic">
-          <div class="statistic-title">
-            Highest
-          </div>
+          <div class="statistic-title">Highest</div>
           <mat-chip-set>
             <mat-chip class="voter">
               {{ statistics.highestVote.voter }}
@@ -66,9 +64,7 @@
       </mat-list-item>
       <mat-list-item>
         <h3 matLine class="statistic">
-          <div class="statistic-title">
-            Lowest
-          </div>
+          <div class="statistic-title">Lowest</div>
           <mat-chip-set>
             <mat-chip class="voter">
               {{ statistics.lowestVote.voter }}
@@ -86,7 +82,7 @@
   </ng-container>
 </mat-list>
 <h3 matSubheader class="subheader">Votes</h3>
-<div class="votes" >
+<div class="votes">
   <div class="vote-container" *ngFor="let member of members">
     <div class="vote-avatar">
       <img
@@ -98,63 +94,6 @@
       <div class="vote-avatar-text" *ngIf="!member.avatarUrl">
         {{ member.name?.charAt(0) }}
       </div>
-        <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
-          <div
-            class="vote vote-pass"
-            *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] === null &&
-              (room?.rounds)[currentRound].show_results
-            "
-            matTooltip="Passed"
-            ><mat-icon>question_mark</mat-icon></div
-          >
-          <div
-            class="vote vote-value"
-            *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] !==
-                undefined &&
-              (room?.rounds)[currentRound].estimates[member.id] !== null &&
-              (room?.rounds)[currentRound].show_results
-            "
-            >{{
-              (room?.rounds)[currentRound].estimates[member.id]
-                | estimateConverter : selectedEstimationCardSetValue : "exact"
-            }}</div
-          >
-          <div
-            class="vote vote-none"
-            *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] ===
-                undefined && (room?.rounds)[currentRound].show_results
-            "
-            matTooltip="No vote cast - maybe next time?"
-          >
-            <mat-icon>bedtime</mat-icon>
-          </div>
-          <div
-            class="vote vote-waiting"
-            *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] ===
-                undefined && !(room?.rounds)[currentRound].show_results
-            "
-            matTooltip="Waiting to vote"
-          >
-            <mat-spinner diameter="15" />
-          </div>
-          <div
-            class="vote vote-voted"
-            *ngIf="
-              (room?.rounds)[currentRound].estimates[member.id] !==
-                undefined && !(room?.rounds)[currentRound].show_results
-            "
-            matTooltip="Voted"
-          >
-            <mat-icon>checked</mat-icon>
-          </div>
-        </ng-container>
-        <div class="vote vote-observer" *ngIf="member.type === MemberType.OBSERVER" matTooltip="Observing this estimation">
-          <mat-icon>visibility</mat-icon>
-        </div>
     </div>
     <span class="member-name">
       {{ member.name }}
@@ -168,5 +107,67 @@
         >verified</mat-icon
       >
     </span>
+    <ng-container *ngIf="member.type === MemberType.ESTIMATOR">
+      <div
+        class="vote vote-pass"
+        *ngIf="
+          (room?.rounds)[currentRound].estimates[member.id] === null &&
+          (room?.rounds)[currentRound].show_results
+        "
+        matTooltip="Passed"
+      >
+        <mat-icon>question_mark</mat-icon>
+      </div>
+      <div
+        class="vote vote-value"
+        *ngIf="
+          (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
+          (room?.rounds)[currentRound].estimates[member.id] !== null &&
+          (room?.rounds)[currentRound].show_results
+        "
+      >
+        {{
+          (room?.rounds)[currentRound].estimates[member.id]
+            | estimateConverter : selectedEstimationCardSetValue : "exact"
+        }}
+      </div>
+      <div
+        class="vote vote-none"
+        *ngIf="
+          (room?.rounds)[currentRound].estimates[member.id] === undefined &&
+          (room?.rounds)[currentRound].show_results
+        "
+        matTooltip="No vote cast - maybe next time?"
+      >
+        <mat-icon>bedtime</mat-icon>
+      </div>
+      <div
+        class="vote vote-waiting"
+        *ngIf="
+          (room?.rounds)[currentRound].estimates[member.id] === undefined &&
+          !(room?.rounds)[currentRound].show_results
+        "
+        matTooltip="Waiting to vote"
+      >
+        <mat-spinner diameter="15"></mat-spinner>
+      </div>
+      <div
+        class="vote vote-voted"
+        *ngIf="
+          (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
+          !(room?.rounds)[currentRound].show_results
+        "
+        matTooltip="Voted"
+      >
+        <mat-icon>checked</mat-icon>
+      </div>
+    </ng-container>
+    <div
+      class="vote vote-observer"
+      *ngIf="member.type === MemberType.OBSERVER"
+      matTooltip="Observing this estimation"
+    >
+      <mat-icon>visibility</mat-icon>
+    </div>
   </div>
 </div>

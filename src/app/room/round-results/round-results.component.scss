@@ -52,13 +52,14 @@ mat-chip-set {
 }
 
 .votes {
-  margin-bottom: 1rem;
-
+  max-height: 500px;
+  overflow: auto;
   .vote-container {
     display: inline-flex;
     width: 100%;
     align-items: center;
     padding: 0 20px;
+    margin-bottom: 1rem;
   }
 
   .vote-avatar {
@@ -84,7 +85,7 @@ mat-chip-set {
   .vote {
     background: var(--main-dark-color);
     border-radius: 32px;
-    padding: 0px 8px;
+    padding: 0px 12px;
     font-size: 14px;
     line-height: 24px;
     height: 32px;

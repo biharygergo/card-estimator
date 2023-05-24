@@ -16,6 +16,7 @@
   .integration-main {
     display: flex;
     gap: 2rem;
+    justify-content: space-between;
 
     @media screen and (max-width: 600px){
       flex-wrap: wrap;

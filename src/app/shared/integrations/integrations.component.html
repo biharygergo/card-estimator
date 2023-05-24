@@ -29,6 +29,29 @@
           </div>
         </div>
       </div>
+      <div class="integration" *ngIf="!config.isRunningInZoom">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/webex_logo.png" />
+              <h4>Webex</h4>
+            </div>
+            <p>Use Planning Poker directly in the Webex Meetings app.</p>
+          </div>
+          <div class="actions">
+            <a
+              mat-flat-button
+              color="primary"
+              [disabled]="config.isRunningInWebex"
+              href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {{ config.isRunningInWebex ? "Installed" : "Install" }}
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="integration">
         <div class="integration-main">
           <div class="details">

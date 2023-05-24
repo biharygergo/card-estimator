@@ -587,6 +587,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   async copyRoomId() {
     this.analytics.logClickedShareRoom('main');
     let message = '';
+    const host = window.origin || 'https://card-estimator.web.app';
+    const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
     if (this.config.isRunningInZoom) {
       try {
         const { invitationUUID } = await this.zoomService.inviteAllParticipants(
@@ -601,11 +603,17 @@ export class RoomComponent implements OnInit, OnDestroy {
         message = 'Please start a meeting first to invite others to join.';
       }
     } else if (this.config.isRunningInWebex) {
-      await this.webexService.inviteAllParticipants(this.room.roomId);
-      message = 'All ready, click the "Open for all" button below!'
+      const shareSessionStarted = await this.webexService.inviteAllParticipants(
+        this.room.roomId
+      );
+      message = shareSessionStarted
+        ? 'All ready, click the "Open for all" button below!'
+        : 'Join link copied to clipboard for non-Webex participants.';
+      if (!shareSessionStarted) {
+        this.clipboard.copy(roomUrl);
+      }
     } else {
-      const host = window.origin || 'https://card-estimator.web.app';
-      this.clipboard.copy(`${host}/join?roomId=${this.room.roomId}`);
+      this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';
     }
 

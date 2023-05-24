@@ -18,7 +18,11 @@ export class WebexApiService {
 
   async inviteAllParticipants(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=webex&roomId=${roomId}`;
-    await this.app.setShareUrl(joinUrl, "", "Planning Poker")
+    if (this.app.isShared) {
+      return false;
+    }
+    await this.app.setShareUrl(joinUrl, "", "Planning Poker");
+    return true;
   }
 
 

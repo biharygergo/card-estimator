@@ -14,6 +14,7 @@ import {
   SignUpOrLoginIntent,
   signUpOrLoginDialogCreator,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -85,6 +86,10 @@ export class ProfileDropdownComponent implements OnInit {
     this.dialog.open(
       ...signUpOrLoginDialogCreator({ intent: SignUpOrLoginIntent.SIGN_IN })
     );
+  }
+
+  openPremiumLearnMoreModal() {
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 
   reportAnIssue() {

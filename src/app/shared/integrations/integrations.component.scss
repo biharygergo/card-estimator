@@ -16,6 +16,10 @@
   .integration-main {
     display: flex;
     gap: 2rem;
+
+    @media screen and (max-width: 600px){
+      flex-wrap: wrap;
+    }
   }
 
   .details {
@@ -71,6 +75,9 @@
       display: inline-flex;
       justify-content: space-between;
       align-items: center;
+      @media screen and (max-width: 600px){
+        flex-wrap: wrap;
+      }
     }
   }
 }

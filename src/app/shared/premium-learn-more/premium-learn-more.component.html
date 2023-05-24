@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" [class.modal]="pageMode === 'modal'">
   <div class="close-button" *ngIf="pageMode === 'modal'">
     <button mat-button mat-dialog-close>
       <mat-icon>arrow_back</mat-icon>Back
@@ -7,11 +7,11 @@
 
   <div class="details">
     <div class="details-inner">
-      <h1 class="title">Why you should upgrade to Planning Poker Premium</h1>
+      <h1 class="title">Why you should upgrade your team to Planning Poker Premium</h1>
       <p class="description">
         By subscribing now, you'll have access to all of these premium features
         and support the ongoing maintenance and improvement of our open-source
-        project.
+        project. Teams only need a single license for their SCRUM master.
       </p>
       <ul class="premium-features-list">
         <li>
@@ -39,6 +39,24 @@
           <div class="feature-details">
             <h5>Custom permissions</h5>
             Adjust room member permissions to your preferences
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>style</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Saved card sets</h5>
+            Reuse custom card sets across meetings
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>auto_fix_normal</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Unlimited AI - PokerBot</h5>
+            Use the AI Scrum Master with no limits
           </div>
         </li>
         <li class="spacer-below">
@@ -77,9 +95,9 @@
         <h2>Subscribe to Premium today</h2>
         <p class="premium-description">
           Start with a 14 day free-trial, so you can explore all premium
-          features. Teams only need a single license for their SCRUM master.
+          features. Teams only need a single license for their facilitator.
         </p>
-        <h3 class="plan-title">Premium Plan</h3>
+        <h3 class="plan-title">Premium Plan for a facilitator</h3>
         <div class="plan">
           <div class="monthly">
             <div class="logo-container">

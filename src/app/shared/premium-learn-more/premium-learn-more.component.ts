@@ -10,7 +10,6 @@ export const premiumLearnMoreModalCreator =
       id: 'premiumLearnMoreModal',
       maxWidth: '100vw',
       maxHeight: '100vh',
-      height: '100%',
       width: '100%',
       panelClass: 'full-screen-modal',
     },

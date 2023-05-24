@@ -15,6 +15,7 @@ import {
   signUpOrLoginDialogCreator,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -35,7 +36,8 @@ export class ProfileDropdownComponent implements OnInit {
     private analytics: AnalyticsService,
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly zoomService: ZoomApiService,
-    private readonly activeRoute: ActivatedRoute
+    private readonly activeRoute: ActivatedRoute,
+    public readonly permissionsService: PermissionsService,
   ) {}
 
   ngOnInit(): void {}

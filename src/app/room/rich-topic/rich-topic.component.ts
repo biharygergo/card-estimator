@@ -10,9 +10,18 @@ import {
 } from '@angular/core';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { JiraService } from 'src/app/services/jira.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
-import { RichTopic } from 'src/app/types';
-
+import {
+  CardSetValue,
+  RichTopic,
+  RoundStatistics,
+  isNumericCardSet,
+} from 'src/app/types';
+import { finalize } from 'rxjs/operators';
+import { EstimateConverterPipe } from 'src/app/pipes/estimate-converter.pipe';
+import { PermissionsService } from 'src/app/services/permissions.service';
 @Component({
   selector: 'app-rich-topic',
   templateUrl: './rich-topic.component.html',
@@ -22,15 +31,23 @@ import { RichTopic } from 'src/app/types';
 export class RichTopicComponent implements OnChanges {
   @Input() richTopic: RichTopic | null | undefined;
   @Input() enableEditing: boolean = false;
+  @Input() roundStatistics?: RoundStatistics;
+  @Input() selectedEstimationCardSetValue?: CardSetValue;
 
   @Output() deleted = new EventEmitter();
 
   cleanedMarkdown = '';
+  isSavingToJira = false;
+
+  isPremium$ = this.permissionService.hasPremiumAccess();
 
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly zoomService: ZoomApiService,
-    private readonly analyticsService: AnalyticsService
+    private readonly analyticsService: AnalyticsService,
+    private readonly jiraService: JiraService,
+    private readonly toastService: ToastService,
+    private readonly permissionService: PermissionsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,5 +81,55 @@ export class RichTopicComponent implements OnChanges {
         window.open(this.richTopic.url, '_blank');
       }
     }
+  }
+
+  saveEstimateToJira() {
+    if (
+      !this.selectedEstimationCardSetValue ||
+      !this.roundStatistics?.consensus
+    ) {
+      this.toastService.showMessage(
+        'No votes cast yet. Vote before uploading results to Jira.'
+      );
+      return;
+    }
+
+    if (!isNumericCardSet(this.selectedEstimationCardSetValue)) {
+      this.toastService.showMessage(
+        'Jira only supports numeric story points. Please choose a different card set.'
+      );
+      return;
+    }
+
+    this.toastService.showMessage('Saving to Jira, hold tight...');
+
+    this.isSavingToJira = true;
+    const convertedMajority = +new EstimateConverterPipe().transform(
+      this.roundStatistics.consensus.value,
+      this.selectedEstimationCardSetValue,
+      'exact'
+    );
+
+    this.jiraService
+      .updateIssue({
+        issueId: this.richTopic.key,
+        storyPoints: convertedMajority,
+      })
+      .pipe(
+        finalize(() => {
+          this.isSavingToJira = false;
+        })
+      )
+      .subscribe((result) => {
+        if (result.success) {
+          this.toastService.showMessage(
+            'Awesome! Majority vote is saved to Jira.'
+          );
+        } else {
+          this.toastService.showMessage(
+            'Oh-oh, something went wrong while uploading to Jira.'
+          );
+        }
+      });
   }
 }

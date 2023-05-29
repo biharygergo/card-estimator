@@ -140,4 +140,16 @@ export class JiraService {
       )({ search: query }).then((response) => response.data as JiraIssue[])
     );
   }
+
+  updateIssue(updateRequest?: {
+    issueId: string;
+    storyPoints: number;
+  }): Observable<{ success: boolean }> {
+    return from(
+      httpsCallable(
+        this.functions,
+        'updateIssue'
+      )({updateRequest}).then((response) => response.data as { success: boolean })
+    );
+  }
 }

@@ -1,5 +1,7 @@
 import {Issuer, Client, generators, TokenSet} from "openid-client";
 import * as functions from "firebase-functions";
+import {getFirestore} from "firebase-admin/firestore";
+import {JiraIntegration, JiraResource} from "./types";
 
 export class JiraClient {
   openIdHost = "https://auth.atlassian.com";
@@ -42,7 +44,8 @@ export class JiraClient {
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
     return this.client.authorizationUrl({
-      scope: "read:jira-work write:issue:jira write:comment:jira write:issue.vote:jira offline_access",
+      scope:
+        "read:jira-work write:issue:jira write:comment:jira write:issue.vote:jira offline_access",
       audience: "api.atlassian.com",
       state: codeChallenge,
       prompt: "consent",
@@ -64,4 +67,51 @@ export class JiraClient {
   refreshToken(refreshToken: string): Promise<TokenSet> {
     return this.client!.refresh(refreshToken);
   }
+}
+
+export async function getActiveJiraIntegration(userId: string): Promise<{jiraIntegration: JiraIntegration, activeResource: JiraResource, tokenSet: TokenSet}> {
+  const jiraIntegrationRef = await getFirestore()
+      .doc(`userDetails/${userId}/integrations/jira`)
+      .get();
+
+  if (!jiraIntegrationRef.exists) {
+    throw new functions.https.HttpsError(
+        "not-found",
+        "Jira integration not found"
+    );
+  }
+
+  const jiraIntegration = jiraIntegrationRef.data() as JiraIntegration;
+
+  let tokenSet = new TokenSet({
+    access_token: jiraIntegration.accessToken,
+    refresh_token: jiraIntegration.refreshToken,
+    expires_at: jiraIntegration.expiresAt,
+  });
+
+  if (tokenSet.expired()) {
+    const client = new JiraClient();
+    await client.initializeClient();
+
+    const updatedToken = await client.refreshToken(tokenSet.refresh_token!);
+    await jiraIntegrationRef.ref.update({
+      accessToken: updatedToken.access_token,
+      refreshToken: updatedToken.refresh_token,
+      expiresAt: updatedToken.expires_at,
+    });
+    tokenSet = updatedToken;
+  }
+
+  const activeResource: JiraResource =
+    jiraIntegration.jiraResources.find((integration) => integration.active) ||
+    jiraIntegration.jiraResources?.[0];
+
+  if (!activeResource) {
+    throw new functions.https.HttpsError(
+        "not-found",
+        "No active Jira integration found"
+    );
+  }
+
+  return {jiraIntegration, activeResource, tokenSet};
 }

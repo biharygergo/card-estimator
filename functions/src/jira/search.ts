@@ -1,8 +1,5 @@
-import {TokenSet} from "openid-client";
-import {getFirestore} from "firebase-admin/firestore";
 import axios from "axios";
-import {JiraClient} from "./client";
-import {JiraIntegration, JiraResource} from "./types";
+import {getActiveJiraIntegration} from "./client";
 import {CallableContext} from "firebase-functions/v1/https";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
@@ -14,51 +11,10 @@ export async function searchJira(data: any, context: CallableContext) {
     throw new Error("Not signed in");
   }
 
-  const jiraIntegrationRef = await getFirestore()
-      .doc(`userDetails/${userId}/integrations/jira`)
-      .get();
-
-  if (!jiraIntegrationRef.exists) {
-    throw new functions.https.HttpsError(
-        "not-found",
-        "Jira integration not found"
-    );
-  }
-
   try {
-    const jiraIntegration = jiraIntegrationRef.data() as JiraIntegration;
+    const {activeResource, tokenSet} = await getActiveJiraIntegration(userId);
 
-    let tokenSet = new TokenSet({
-      access_token: jiraIntegration.accessToken,
-      refresh_token: jiraIntegration.refreshToken,
-      expires_at: jiraIntegration.expiresAt,
-    });
-
-    if (tokenSet.expired()) {
-      const client = new JiraClient();
-      await client.initializeClient();
-
-      const updatedToken = await client.refreshToken(tokenSet.refresh_token!);
-      await jiraIntegrationRef.ref.update({
-        accessToken: updatedToken.access_token,
-        refreshToken: updatedToken.refresh_token,
-        expiresAt: updatedToken.expires_at,
-      });
-      tokenSet = updatedToken;
-    }
-
-    const activeIntegration: JiraResource =
-      jiraIntegration.jiraResources.find((integration) => integration.active) ||
-      jiraIntegration.jiraResources?.[0];
-
-    if (!activeIntegration) {
-      throw new functions.https.HttpsError(
-          "not-found",
-          "No active Jira integration found"
-      );
-    }
-
-    const cloudId = activeIntegration.id;
+    const cloudId = activeResource.id;
 
     const filteredQuery = (query as string)
         ?.replace(/[-_]+/g, " ")
@@ -84,7 +40,7 @@ export async function searchJira(data: any, context: CallableContext) {
       assignee: issue.fields.assignee?.displayName,
       id: issue.id,
       key: issue.key,
-      url: `${activeIntegration.url}/browse/${issue.key}`,
+      url: `${activeResource.url}/browse/${issue.key}`,
     }));
   } catch (error) {
     captureError(error);

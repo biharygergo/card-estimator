@@ -77,4 +77,8 @@
 
 .header-buttons {
   flex-shrink: 0;
+
+  > div {
+    display: inline-block;
+  }
 }

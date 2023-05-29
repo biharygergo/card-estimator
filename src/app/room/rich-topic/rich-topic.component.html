@@ -13,10 +13,28 @@
       >
         <mat-icon>delete</mat-icon>
       </button>
+      <div
+        [matTooltip]="
+          (isPremium$ | async)
+            ? 'Save story points to Jira'
+            : 'You need a Premium subscription to save story points to Jira.'
+        "
+      >
+        <button
+          (click)="saveEstimateToJira()"
+          mat-icon-button
+          aria-label="Save story points to Jira"
+          *ngIf="!enableEditing"
+          [disabled]="isSavingToJira || !(isPremium$ | async)"
+        >
+          <mat-icon>publish</mat-icon>
+        </button>
+      </div>
       <button
         (click)="openRemoteTopic()"
         mat-icon-button
         aria-label="Open in Jira"
+        matTooltip="Open in Jira"
       >
         <mat-icon>launch</mat-icon>
       </button>

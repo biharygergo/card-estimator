@@ -45,6 +45,10 @@
               ></app-topic-editor>
               <app-rich-topic
                 [richTopic]="(roomTopic$ | async).richTopic"
+                [roundStatistics]="roundStatistics?.[currentRound]"
+                [selectedEstimationCardSetValue]="
+                  selectedEstimationCardSetValue
+                "
                 *ngIf="!isEditingTopic"
               ></app-rich-topic>
             </mat-card-content>
@@ -155,8 +159,8 @@
               class="topics-toggle"
               matTooltip="Manage rounds, view team velocity, download results or generate a summary."
             >
-              <mat-icon>manage_history</mat-icon>
-              Rounds ({{ rounds.length }})
+              <mat-icon>list</mat-icon>
+              Manage rounds ({{ rounds.length }})
             </button>
             <mat-menu #roomSettingsMenu="matMenu">
               <button

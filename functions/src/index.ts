@@ -40,6 +40,7 @@ import {searchJira} from "./jira/search";
 import {captureError} from "./shared/errors";
 import {createSummary} from "./summary";
 import {onRoomCreated} from "./room/created";
+import {updateIssue} from "./jira/updateIssue";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -164,6 +165,11 @@ exports.onJiraAuthResponse = functions.https.onRequest(async (req, res) => {
 exports.queryJiraIssues = functions.https.onCall(
     async (data: any, context: CallableContext) => searchJira(data, context)
 );
+
+exports.updateIssue = functions.https.onCall(
+    async (data: any, context: CallableContext) => updateIssue(data, context)
+);
+
 
 exports.safeRedirect = functions.https.onRequest(async (req, res) => {
   const redirectTo = req.query.redirectTo;

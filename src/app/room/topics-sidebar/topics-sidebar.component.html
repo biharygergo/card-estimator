@@ -82,6 +82,15 @@
             </button>
             <button
               mat-menu-item
+              aria-label="Edit topic name of round"
+              (click)="editedRound.next({round, roundIndex: roundNumber})"
+              [disabled]="!(permissionsService.canEditTopic() | async)"
+            >
+              <mat-icon>edit</mat-icon>
+              Edit topic
+            </button>
+            <button
+              mat-menu-item
               aria-label="Revote selected round"
               (click)="revoteRound(roundNumber)"
               [disabled]="!(permissionsService.canCreateRounds() | async)"
@@ -89,14 +98,19 @@
               <mat-icon>clear_all</mat-icon>
               Clear votes
             </button>
+
+            <mat-divider></mat-divider>
             <button
               mat-menu-item
-              aria-label="Edit topic name of round"
-              (click)="editedRound.next({round, roundIndex: roundNumber})"
-              [disabled]="!(permissionsService.canEditTopic() | async)"
+              aria-label="Delete round"
+              (click)="deleteRound(roundNumber)"
+              [disabled]="
+                !(permissionsService.canEditTopic() | async) ||
+                (roundNumber === 0 && rounds.length === 1)
+              "
             >
-              <mat-icon>edit</mat-icon>
-              Edit topic
+              <mat-icon>delete</mat-icon>
+              Delete round
             </button>
           </mat-menu>
         </div>

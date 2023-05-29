@@ -98,7 +98,11 @@ export class EstimatorService {
     }
 
     member.id = userId;
-    member.platform = this.config.isRunningInZoom ? 'zoom' : this.config.isRunningInWebex ? 'webex' : 'web';
+    member.platform = this.config.isRunningInZoom
+      ? 'zoom'
+      : this.config.isRunningInWebex
+      ? 'webex'
+      : 'web';
 
     if (user?.photoURL) {
       member.avatarUrl = user.photoURL;
@@ -360,6 +364,23 @@ export class EstimatorService {
     return this.updateRoom(room.roomId, {
       currentRound: roundId,
       rounds: room.rounds,
+    });
+  }
+
+  removeRound(room: Room, roundNumberToDelete: number) {
+    const updatedRounds: { [roundNumber: number]: Round } = {};
+    Object.entries(room.rounds)
+      .filter(([roundNumber]) => +roundNumber !== roundNumberToDelete)
+      .forEach(([_roundNumber, round], index) => {
+        updatedRounds[index] = round;
+      });
+
+    return this.updateRoom(room.roomId, {
+      rounds: updatedRounds,
+      currentRound:
+        room.currentRound === roundNumberToDelete
+          ? Math.max(0, roundNumberToDelete - 1)
+          : Math.min(room.currentRound, Object.keys(updatedRounds).length - 1),
     });
   }
 

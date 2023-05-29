@@ -63,6 +63,10 @@ export class TopicsSidebarComponent implements OnInit {
     }, 100);
   }
 
+  deleteRound(roundNumber: number) {
+    this.estimatorService.removeRound(this.room, roundNumber);
+  }
+
   cancelAddingRound() {
     this.isAddingRound = false;
   }

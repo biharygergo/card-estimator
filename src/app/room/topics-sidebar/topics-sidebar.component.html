@@ -112,23 +112,29 @@
           #detailsPanel
         >
           <ng-template matExpansionPanelContent>
-            <app-rich-topic
-              [richTopic]="round.richTopic"
-              [roundStatistics]="roundStatistics?.[roundNumber]"
-              [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
-            ></app-rich-topic>
-            <app-round-results
-              [room]="room"
-              [roundStatistics]="roundStatistics"
-              [members]="room.members"
-              [currentRound]="roundNumber"
-              [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
-            >
-            </app-round-results>
+            <div class="panel-content">
+              <app-rich-topic
+                [richTopic]="round.richTopic"
+                [roundStatistics]="roundStatistics?.[roundNumber]"
+                [selectedEstimationCardSetValue]="
+                  selectedEstimationCardSetValue
+                "
+              ></app-rich-topic>
+              <app-round-results
+                [room]="room"
+                [roundStatistics]="roundStatistics"
+                [members]="room.members"
+                [currentRound]="roundNumber"
+                [selectedEstimationCardSetValue]="
+                  selectedEstimationCardSetValue
+                "
+              >
+              </app-round-results>
 
-            <h3 matSubheader>Notes</h3>
-            <div class="note-wrapper">
-              <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
+              <h3 matSubheader>Notes</h3>
+              <div class="note-wrapper">
+                <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
+              </div>
             </div>
           </ng-template>
         </mat-expansion-panel>

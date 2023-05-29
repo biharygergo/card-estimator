@@ -27,7 +27,7 @@
           <div>
             <mat-card-content>
               <h2 *ngIf="!isEditingTopic">
-                {{ room?.rounds[currentRound]?.topic }}
+                <span [@bounceAnimation]="currentRound">{{ room?.rounds[currentRound]?.topic }}</span>
                 <button
                   mat-stroked-button
                   [disabled]="!(permissionsService.canEditTopic() | async)"
@@ -93,13 +93,29 @@
             <button
               mat-flat-button
               color="primary"
-              (click)="newRound()"
+              (click)="newRoundClicked.next()"
               *ngIf="currentRound === rounds.length - 1"
-              [disabled]="!(permissionsService.canCreateRounds() | async)"
+              [disabled]="
+                !(permissionsService.canCreateRounds() | async) ||
+                (newRoundButtonCooldownState$ | async).includes('cooldown')
+              "
+              class="new-round-button"
             >
-              <div class="center-icon-button">
+              <div
+                class="center-icon-button"
+                *ngIf="(newRoundButtonCooldownState$ | async) === 'cooldown'"
+                @fadeAnimation
+              >
+                <mat-icon>checkmark</mat-icon>
+                Round #{{ currentRound + 1 }} created
+              </div>
+              <div
+                class="center-icon-button"
+                *ngIf="(newRoundButtonCooldownState$ | async) === 'initial'"
+                @fadeAnimation
+              >
                 <mat-icon>add</mat-icon>
-                New Round
+                New round
               </div>
             </button>
             <button
@@ -111,7 +127,7 @@
             >
               <div class="center-icon-button">
                 <mat-icon>navigate_next</mat-icon>
-                Next Round
+                Next round
               </div>
             </button>
             <button
@@ -125,7 +141,11 @@
             >
               <div class="center-icon-button">
                 <mat-icon>visibility</mat-icon>
-                Reveal Votes
+                {{
+                  (room?.rounds)[currentRound]?.show_results
+                    ? "Votes revealed"
+                    : "Reveal votes"
+                }}
               </div>
             </button>
           </div>
@@ -134,9 +154,33 @@
               <span
                 >Room ID: <strong>{{ room?.roomId }}</strong></span
               >
-              <button mat-stroked-button (click)="copyRoomId()">
-                <mat-icon>link</mat-icon>
-                Invite
+              <button
+                mat-stroked-button
+                (click)="inviteButtonClicked.next()"
+                [disabled]="
+                  (inviteButtonCooldownState$ | async).includes('cooldown')
+                "
+              >
+                <div
+                  class="center-icon-button"
+                  *ngIf="(inviteButtonCooldownState$ | async) === 'initial'"
+                  @fadeAnimation
+                >
+                  <mat-icon>link</mat-icon>
+                  Invite
+                </div>
+                <div
+                  class="center-icon-button"
+                  *ngIf="(inviteButtonCooldownState$ | async) === 'cooldown'"
+                  @fadeAnimation
+                >
+                  <mat-icon>checkmark</mat-icon>
+                  {{
+                    !config.isRunningInZoom && !config.isRunningInWebex
+                      ? "Copied"
+                      : "Invited"
+                  }}
+                </div>
               </button>
             </h4>
           </mat-card-footer>

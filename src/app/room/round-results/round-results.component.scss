@@ -41,8 +41,14 @@ mat-chip-set {
   font-weight: 500;
 }
 
+mat-list-item.statistic-line {
+  height: unset;
+}
+
 .statistic {
   padding: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
 
   .statistic-title {
     display: flex;

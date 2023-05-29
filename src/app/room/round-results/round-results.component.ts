@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, of, Subject, takeUntil } from 'rxjs';
+import { EstimatorService } from 'src/app/services/estimator.service';
 import {
   CardSetValue,
   Member,
@@ -23,13 +24,20 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   @Input() userProfiles$: Observable<UserProfileMap> = EMPTY;
 
   destroyed = new Subject<void>();
+  onRevoteClicked = new Subject<void>();
 
   userProfiles: UserProfileMap = {};
   readonly MemberType = MemberType;
 
+  constructor(private readonly estimatorService: EstimatorService) {}
+
   ngOnInit() {
     this.userProfiles$.pipe(takeUntil(this.destroyed)).subscribe((profiles) => {
       this.userProfiles = profiles;
+    });
+
+    this.onRevoteClicked.pipe(takeUntil(this.destroyed)).subscribe(() => {
+      this.estimatorService.setActiveRound(this.room, this.currentRound, true);
     });
   }
 

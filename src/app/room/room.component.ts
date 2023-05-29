@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntypedFormControl } from '@angular/forms';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -32,7 +31,6 @@ import {
   takeUntil,
   tap,
   throttleTime,
-  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
@@ -55,9 +53,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../services/analytics.service';
 import {
+  cooldownPipe,
+  createCooldownState,
   createTimer,
   getHumanReadableElapsedTime,
-  isRunningInZoom,
 } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
@@ -82,6 +81,7 @@ import { roomConfigurationModalCreator } from './room-configuration-modal/room-c
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { CardDeckService } from '../services/card-deck.service';
 import { WebexApiService } from '../services/webex-api.service';
+import { delayedFadeAnimation, fadeAnimation, bounceAnimation } from '../shared/animations';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -93,6 +93,7 @@ const INACTIVITY_TIME = 1000 * 60 * 120;
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss'],
+  animations: [fadeAnimation, delayedFadeAnimation, bounceAnimation],
 })
 export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenavContainer, { read: ElementRef })
@@ -291,6 +292,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   openedFeedbackForm: boolean = false;
   inactiveTimeoutHandle: number;
 
+  newRoundClicked = new Subject<void>();
+  inviteButtonClicked = new Subject<void>();
+  newRoundButtonCooldownState$ = createCooldownState();
+  inviteButtonCooldownState$ = createCooldownState();
+
   constructor(
     private estimatorService: EstimatorService,
     private readonly cardDeckService: CardDeckService,
@@ -340,6 +346,22 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.savedCardSets$.subscribe((cardSets) => {
       this.savedCardSets = cardSets;
     });
+
+    this.newRoundClicked
+      .pipe(
+        tap(() => this.newRound()),
+        cooldownPipe(this.newRoundButtonCooldownState$),
+        takeUntil(this.destroy)
+      )
+      .subscribe();
+
+    this.inviteButtonClicked
+      .pipe(
+        tap(() => this.copyRoomId()),
+        cooldownPipe(this.inviteButtonCooldownState$),
+        takeUntil(this.destroy)
+      )
+      .subscribe();
 
     this.authService.avatarUpdated
       .pipe(

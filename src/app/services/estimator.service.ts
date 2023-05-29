@@ -412,7 +412,7 @@ export class EstimatorService {
     return round;
   }
 
-  revoteRound(round: Round): Round {
+  private revoteRound(round: Round): Round {
     return {
       ...round,
       started_at: serverTimestamp(),

@@ -6,18 +6,26 @@
   <ng-container>
     <ng-container *ngIf="roundStatistics[currentRound] as statistics">
       <h3 matSubheader class="subheader">Statistics</h3>
-      <mat-list-item>
+      <mat-list-item class="statistic-line">
         <h3 matLine class="statistic">
           <div class="statistic-title">Majority</div>
           <div>
             <mat-chip-set>
               <mat-chip
                 class="consensus"
-                *ngIf="statistics.consensus.isConsensus"
+                *ngIf="statistics.consensus.isConsensus; else noConsensus"
               >
                 <span matChipAvatar>🎉</span>
                 <strong>Consensus</strong>
               </mat-chip>
+              <ng-template #noConsensus>
+                <mat-chip
+                  (click)="onRevoteClicked.next()"
+                  matTooltip="Click here to clear results on this round and restart voting."
+                >
+                  No consensus. Revote?
+                </mat-chip>
+              </ng-template>
               <mat-chip>
                 {{
                   statistics.consensus.value

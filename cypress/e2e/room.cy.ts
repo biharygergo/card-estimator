@@ -14,10 +14,10 @@ describe('Inside the room', () => {
     cy.get('.vote-waiting').should('not.exist');
     cy.contains('Votes').should('be.visible');
 
-    cy.contains('Reveal Votes').click();
-    cy.contains('Reveal Votes').should('be.disabled');
+    cy.contains('Reveal votes').click();
+    cy.contains('Votes revealed').should('be.disabled');
 
-    cy.contains('New Round').click();
+    cy.contains('New round').click();
 
     // Banner appears
     cy.contains('Continue alone').click();
@@ -31,7 +31,7 @@ describe('Inside the room', () => {
 
     cy.contains('Save').click();
 
-    cy.contains('Rounds (1)').click();
+    cy.contains('Manage rounds (1)').click();
     cy.get('.round-title').first().should('contain.text', 'Custom name');
   });
 

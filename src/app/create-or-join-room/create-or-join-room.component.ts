@@ -73,6 +73,40 @@ interface ViewModel {
   mode: PageMode;
 }
 
+const LATE_NIGHT_GREETING = 'Burning the midnight oil, {name}?';
+const EARLY_MORNING_GREETING = 'Rise and shine, {name}.';
+const MORNING_GREETING = 'Good morning, {name}. Ready for some planning?';
+const LUNCHTIME_GREETING = 'Planning before lunch, {name}?';
+const AFTERNOON_GREETING = 'Good afternoon, {name}. Time for some planning?';
+const EVENING_GREETING = 'Time for some evening planning, {name}.';
+
+const GREETINGS: {[hour: number]: string} = {
+  0: LATE_NIGHT_GREETING,
+  1: LATE_NIGHT_GREETING,
+  2: LATE_NIGHT_GREETING,
+  3: LATE_NIGHT_GREETING,
+  4: LATE_NIGHT_GREETING,
+  5: EARLY_MORNING_GREETING,
+  6: EARLY_MORNING_GREETING,
+  7: EARLY_MORNING_GREETING,
+  8: MORNING_GREETING,
+  9: MORNING_GREETING,
+  10: MORNING_GREETING,
+  11: MORNING_GREETING,
+  12: LUNCHTIME_GREETING,
+  13: LUNCHTIME_GREETING,
+  14: AFTERNOON_GREETING,
+  15: AFTERNOON_GREETING,
+  16: AFTERNOON_GREETING,
+  17: AFTERNOON_GREETING,
+  18: EVENING_GREETING,
+  19: EVENING_GREETING,
+  20: EVENING_GREETING,
+  21: EVENING_GREETING,
+  22: EVENING_GREETING,
+  23: EVENING_GREETING,
+}
+
 @Component({
   standalone: true,
   imports: [
@@ -98,6 +132,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   onCreateRoomClicked = new Subject<void>();
   onSignInClicked = new Subject<void>();
 
+  greeting = 'Welcome back!';
+
   destroy = new Subject<void>();
 
   user = combineLatest([this.authService.user, this.isBusy]).pipe(
@@ -105,6 +141,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     tap(([user]) => {
       if (user && user.displayName) {
         this.name.setValue(user.displayName);
+        this.greeting = GREETINGS[new Date().getHours()].replace('{name}', user.displayName);
       }
     }),
     map(([user]) => user)

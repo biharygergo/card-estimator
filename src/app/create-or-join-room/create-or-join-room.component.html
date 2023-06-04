@@ -157,7 +157,7 @@
 <ng-template #welcomeBack>
   <div class="welcome-name-container">
     <h1 id="welcome-back">
-      Welcome back, {{ (user | async)?.displayName }}!
+      {{ greeting }}
     </h1>
     <p *ngIf="recurringMeeting$ | async as meeting">
       You are creating a room for "{{ meeting.name }}"

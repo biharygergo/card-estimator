@@ -27,8 +27,20 @@ describe('Landing page', () => {
     cy.location('pathname').should('eq', '/faq');
   })
 
+  it('can go to the Premium page', () => {
+    cy.contains('Premium').click();
+    cy.location('pathname').should('eq', '/premium');
+  })
+
   it('can go to the Zoom page', () => {
-    cy.contains('Zoom').click();
+    cy.contains('Integrations').click();
+    cy.contains('Zoom Meetings').click();
     cy.location('pathname').should('eq', '/zoom');
+  })
+
+  it('can go to the Webex page', () => {
+    cy.contains('Integrations').click();
+    cy.contains('Webex Meetings').click();
+    cy.location('pathname').should('eq', '/webex');
   })
 });

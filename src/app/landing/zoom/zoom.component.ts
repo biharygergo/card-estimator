@@ -12,6 +12,7 @@ export class ZoomComponent implements OnInit, OnDestroy {
 
   destroy = new Subject<void>();
 
+  selectedIndex = 0;
   constructor(private readonly analytics: AnalyticsService) {}
 
   ngOnInit(): void {

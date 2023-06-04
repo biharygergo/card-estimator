@@ -58,7 +58,8 @@ nav {
     li {
       // margin-right: 32px;
 
-      a {
+      a,
+      button {
         text-decoration: none;
         color: var(--text-on-gray);
         font-size: 0.9rem;
@@ -67,6 +68,7 @@ nav {
         background: #e1e2ec;
         border-radius: 40px;
         padding: 8px 24px;
+        letter-spacing: initial;
 
         transition: background 100ms linear, outline 50ms linear;
         &:hover {
@@ -154,5 +156,27 @@ nav {
         margin-bottom: 32px;
       }
     }
+  }
+}
+
+.integration-logo {
+  height: 1.3rem;
+  width: 1.3rem;
+  object-fit: contain;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.centered-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.rotating-icon {
+  transition: transform 150ms ease-in-out;
+
+  &.rotated {
+    transition: transform 300ms ease-in-out;
+    transform: rotate(180deg);
   }
 }

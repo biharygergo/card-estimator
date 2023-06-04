@@ -4,6 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -20,7 +22,6 @@ import { TermsComponent } from './terms/terms.component';
 import { WrapperComponent } from './wrapper/wrapper.component';
 import { ZoomComponent } from './zoom/zoom.component';
 import { OrganizationInvitationComponent } from './organization-invitation/organization-invitation.component';
-import { MatDialogModule } from '@angular/material/dialog';
 import { PremiumComponent } from './premium/premium.component';
 import { NgOptimizedImage } from '@angular/common';
 import { StartPlanningCtaComponent } from './components/start-planning-cta/start-planning-cta.component';
@@ -107,6 +108,7 @@ const routes: Routes = [
     MatIconModule,
     MatTabsModule,
     MatDialogModule,
+    MatMenuModule,
     ZoomAppBannerComponent,
     NgOptimizedImage,
   ],

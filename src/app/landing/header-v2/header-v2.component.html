@@ -34,9 +34,37 @@
         >
       </li>
       <li>
-        <a routerLink="/zoom" routerLinkActive="active" (click)="closeMenu()"
-          >Zoom</a
+        <button
+          mat-button
+          [matMenuTriggerFor]="menu"
+          (menuOpened)="menuOpen = true"
+          (menuClosed)="menuOpen = false"
         >
+          Integrations
+          <mat-icon class="rotating-icon" [class.rotated]="menuOpen"
+            >expand_more</mat-icon
+          >
+        </button>
+        <mat-menu #menu="matMenu" [class]="'rounded-nav-menu'">
+          <a routerLink="/zoom" mat-menu-item>
+            <div class="centered-menu-item">
+              <img class="integration-logo" src="/assets/zoom-logo.png" />
+              Zoom Meetings
+            </div>
+          </a>
+          <a routerLink="/webex" mat-menu-item>
+            <div class="centered-menu-item">
+              <img class="integration-logo" src="/assets/webex_logo.png" />
+              Webex Meetings
+            </div>
+          </a>
+          <a routerLink="/features" fragment="jira" mat-menu-item>
+            <div class="centered-menu-item">
+              <img class="integration-logo" src="/assets/jira.png" />
+              Jira tickets
+            </div>
+          </a>
+        </mat-menu>
       </li>
       <li>
         <a routerLink="/premium" routerLinkActive="active" (click)="closeMenu()"

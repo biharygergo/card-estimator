@@ -8,6 +8,8 @@ import { CookieService } from 'src/app/services/cookie.service';
 })
 export class HeaderV2Component implements OnInit {
   isOpen = false;
+  menuOpen = false;
+
   constructor(private readonly cookieService: CookieService) {}
 
   ngOnInit(): void {

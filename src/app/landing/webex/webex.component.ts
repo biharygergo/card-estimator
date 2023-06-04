@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./webex.component.scss']
 })
 export class WebexComponent {
+  selectedIndex = 0;
 
 }

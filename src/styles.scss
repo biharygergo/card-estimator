@@ -320,3 +320,8 @@ $my-theme: mat.define-light-theme(
     border-radius: 40px;
   }
 }
+
+.rounded-nav-menu {
+  border-radius: 20px !important;
+  min-width: 150px !important;
+}

@@ -41,6 +41,7 @@ import {
   provideStorage,
 } from '@angular/fire/storage';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { GlobalErrorHandler } from './error-handler';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -50,6 +51,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     AppConfigModule,
     MatSnackBarModule,
+    MatMenuModule,
     MatDialogModule,
     BrowserAnimationsModule,
     HttpClientModule,

@@ -58,7 +58,8 @@ nav {
     li {
       // margin-right: 32px;
 
-      a {
+      a,
+      button {
         text-decoration: none;
         color: var(--text-on-gray);
         font-size: 0.9rem;
@@ -154,5 +155,27 @@ nav {
         margin-bottom: 32px;
       }
     }
+  }
+}
+
+.integration-logo {
+  height: 1.3rem;
+  width: 1.3rem;
+  object-fit: contain;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.centered-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.rotating-icon {
+  transition: transform 150ms ease-in-out;
+
+  &.rotated {
+    transition: transform 300ms ease-in-out;
+    transform: rotate(180deg);
   }
 }

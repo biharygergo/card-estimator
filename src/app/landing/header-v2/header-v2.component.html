@@ -40,26 +40,31 @@
           (menuOpened)="menuOpen = true"
           (menuClosed)="menuOpen = false"
         >
-          Integrations
-          <mat-icon class="rotating-icon" [class.rotated]="menuOpen"
-            >expand_more</mat-icon
+          <span class="centered-menu-item"
+            >Integrations
+            <mat-icon
+              class="rotating-icon"
+              [class.rotated]="menuOpen"
+              [inline]="true"
+              >expand_more</mat-icon
+            ></span
           >
         </button>
         <mat-menu #menu="matMenu" [class]="'rounded-nav-menu'">
           <a routerLink="/zoom" mat-menu-item>
-            <div class="centered-menu-item">
+            <div class="centered-menu-item" routerLinkActive="active">
               <img class="integration-logo" src="/assets/zoom-logo.png" />
               Zoom Meetings
             </div>
           </a>
           <a routerLink="/webex" mat-menu-item>
-            <div class="centered-menu-item">
+            <div class="centered-menu-item" routerLinkActive="active">
               <img class="integration-logo" src="/assets/webex_logo.png" />
               Webex Meetings
             </div>
           </a>
           <a routerLink="/features" fragment="jira" mat-menu-item>
-            <div class="centered-menu-item">
+            <div class="centered-menu-item" routerLinkActive="active">
               <img class="integration-logo" src="/assets/jira.png" />
               Jira tickets
             </div>

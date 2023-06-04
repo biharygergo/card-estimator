@@ -170,10 +170,15 @@ nav {
 .centered-menu-item {
   display: flex;
   align-items: center;
+
+  &.active {
+    font-weight: 500;
+  }
 }
 
 .rotating-icon {
   transition: transform 150ms ease-in-out;
+  margin-left: 0.2rem;
 
   &.rotated {
     transition: transform 300ms ease-in-out;

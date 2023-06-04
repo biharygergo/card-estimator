@@ -118,8 +118,19 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   async createEmptyOrganization() {
     const user = await this.authService.getUser();
+    let domain = '';
+
+    try {
+      const emailDomain = user.email.split('@')[1].split('.')[0];
+      if (!['gmail', 'icloud', 'hotmail'].includes(emailDomain)) {
+        domain = emailDomain.charAt(0).toUpperCase() + emailDomain.slice(1);
+      }
+    } catch {
+      // No-op
+    }
+
     this.organizationService.createOrganization({
-      name: `${user.displayName}'s Organization`,
+      name: domain ?? `${user.displayName}'s Organization`,
       logoUrl: null,
     });
     this.analytics.logClickedGetStartedOrganization();

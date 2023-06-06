@@ -182,7 +182,7 @@ $my-theme: mat.define-light-theme(
   justify-content: flex-end;
   gap: 0.5rem;
 
-  .create-account-button {
+  .create-account-button, .unlock-features-button {
     @media screen and (max-width: 500px) {
       .mdc-button__label {
         display: none;

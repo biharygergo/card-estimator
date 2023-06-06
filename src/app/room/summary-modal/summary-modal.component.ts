@@ -218,6 +218,7 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   upgradeToPremium() {
+    this.analyticsService.logClickedLearnMorePremium('summary_modal');
     this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

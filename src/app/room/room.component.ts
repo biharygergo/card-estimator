@@ -82,6 +82,7 @@ import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { CardDeckService } from '../services/card-deck.service';
 import { WebexApiService } from '../services/webex-api.service';
 import { delayedFadeAnimation, fadeAnimation, bounceAnimation } from '../shared/animations';
+import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -820,5 +821,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.room,
       this.estimatorService.activeMember.id
     );
+  }
+
+  openPremiumLearnMoreModal() {
+    this.analytics.logClickedLearnMorePremium('room_navbar');
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

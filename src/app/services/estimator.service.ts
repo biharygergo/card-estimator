@@ -6,6 +6,7 @@ import {
   collectionSnapshots,
   docData,
   Firestore,
+  limit,
   orderBy,
   query,
   where,
@@ -500,7 +501,7 @@ export class EstimatorService {
     );
   }
 
-  getPreviousSessions(): Observable<Room[]> {
+  getPreviousSessions(historyLimit?: number): Observable<Room[]> {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user) {
@@ -513,7 +514,8 @@ export class EstimatorService {
         const q = query<Room>(
           ref,
           where('memberIds', 'array-contains', user.uid),
-          orderBy('createdAt', 'desc')
+          orderBy('createdAt', 'desc'),
+          ...(historyLimit ? [limit(historyLimit)] : [])
         );
 
         return collectionSnapshots<Room>(q).pipe(

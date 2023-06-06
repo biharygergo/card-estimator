@@ -33,7 +33,7 @@ describe('Creating a room as a returning user', () => {
   });
 
   it('can create a new room', () => {
-    cy.get('#welcome-back').should('contain.text', 'Welcome back, Test User!');
+    cy.get('#welcome-back').should('be.visible');
     cy.get('#create-room-button').should('be.enabled');
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');

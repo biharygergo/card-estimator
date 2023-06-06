@@ -3,9 +3,11 @@ import { FormControl } from '@angular/forms';
 import {
   BehaviorSubject,
   debounceTime,
+  from,
   map,
   Observable,
   startWith,
+  switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs';
@@ -17,7 +19,15 @@ import {
   SerializerService,
 } from 'src/app/services/serializer.service';
 import { Room } from 'src/app/types';
-import { delayedFadeAnimation, fadeAnimation, staggerFadeAnimation } from '../animations';
+import {
+  delayedFadeAnimation,
+  fadeAnimation,
+  staggerFadeAnimation,
+} from '../animations';
+import { PaymentService } from 'src/app/services/payment.service';
+import { MatDialog } from '@angular/material/dialog';
+import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'session-history',
@@ -29,9 +39,16 @@ export class SessionHistoryComponent implements OnInit {
   filter = new FormControl<string>('');
 
   isLoading = new BehaviorSubject(false);
-  previousSessions: Observable<Room[]> = this.estimatorService
-    .getPreviousSessions()
-    .pipe(tap(() => this.isLoading.next(false)));
+
+  isPremium$ = from(this.paymentsService.isPremiumSubscriber());
+
+  previousSessions: Observable<Room[]> = this.isPremium$.pipe(
+    switchMap((isPremium) => {
+      return this.estimatorService
+        .getPreviousSessions(isPremium ? undefined : 3)
+        .pipe(tap(() => this.isLoading.next(false)));
+    })
+  );
 
   exportData: Observable<{ [roomId: string]: ExportData }> =
     this.previousSessions.pipe(
@@ -62,6 +79,9 @@ export class SessionHistoryComponent implements OnInit {
     private estimatorService: EstimatorService,
     private readonly serializerService: SerializerService,
     public readonly permissionsService: PermissionsService,
+    private readonly paymentsService: PaymentService,
+    private readonly analytics: AnalyticsService,
+    private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -71,5 +91,10 @@ export class SessionHistoryComponent implements OnInit {
 
   downloadResults(room: Room) {
     this.serializerService.exportRoomAsCsv(room);
+  }
+
+  clickedLearnMorePremium() {
+    this.analytics.logClickedLearnMorePremium('history');
+    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

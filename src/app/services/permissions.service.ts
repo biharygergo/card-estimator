@@ -15,7 +15,7 @@ import { PaymentService } from './payment.service';
 })
 export class PermissionsService {
   userPermissions = new BehaviorSubject<Partial<UserPermissions>>({});
-  isPremiumSubscriber = new BehaviorSubject<boolean>(false);
+  isPremiumSubscriber = new BehaviorSubject<boolean | null>(null);
 
   constructor(private readonly paymentsService: PaymentService) {}
 

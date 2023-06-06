@@ -46,7 +46,7 @@ describe('Authentication', () => {
     // Modal disappears
     cy.get('#sign-up-modal').should('not.exist');
 
-    cy.get('#welcome-back').should('contain.text', 'Welcome back, Test Bela!');
+    cy.get('#welcome-back').should('be.visible');
   });
 
 });

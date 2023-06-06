@@ -6,10 +6,23 @@
       </div>
       <div class="navbar-right">
         <button
+          mat-stroked-button
+          class="unlock-features-button"
+          matTooltip="Get the most out of your planning with Premium"
+          *ngIf="(permissionsService.hasPremiumAccess() | async) === false"
+          (click)="openPremiumLearnMoreModal()"
+          @fadeAnimation
+        >
+          <mat-icon>lock_open</mat-icon>
+          Unlock features
+        </button>
+        <button
           mat-flat-button
           *ngIf="(user$ | async)?.isAnonymous"
           class="create-account-button"
+          matTooltip="Create an account to save your progress"
           (click)="onCreateAccountClicked()"
+          @fadeAnimation
         >
           <mat-icon>account_circle</mat-icon>
           Create an account
@@ -27,7 +40,9 @@
           <div>
             <mat-card-content>
               <h2 *ngIf="!isEditingTopic">
-                <span [@bounceAnimation]="currentRound">{{ room?.rounds[currentRound]?.topic }}</span>
+                <span [@bounceAnimation]="currentRound">{{
+                  room?.rounds[currentRound]?.topic
+                }}</span>
                 <button
                   mat-stroked-button
                   [disabled]="!(permissionsService.canEditTopic() | async)"
@@ -194,7 +209,7 @@
               id="room-options-button"
             >
               <mat-icon>settings</mat-icon>
-              Room settings
+              Settings
             </button>
             <button
               mat-stroked-button
@@ -343,6 +358,7 @@
         <anonymous-user-banner
           [hideable]="true"
           *ngIf="(sessionCount$ | async) > 1"
+          @fadeAnimation
         ></anonymous-user-banner>
       </div>
 

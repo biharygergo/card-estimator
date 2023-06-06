@@ -91,6 +91,7 @@ export class ProfileDropdownComponent implements OnInit {
   }
 
   openPremiumLearnMoreModal() {
+    this.analytics.logClickedLearnMorePremium('profile_dropdown');
     this.dialog.open(...premiumLearnMoreModalCreator());
   }
 

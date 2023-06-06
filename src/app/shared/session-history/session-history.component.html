@@ -12,6 +12,16 @@
         >Find topics like "JIRA-1234" from your previous sessions</mat-hint
       >
     </mat-form-field>
+    <div class="premium-banner" *ngIf="(isPremium$ | async) === false">
+      <h2 class="title">Unlock your full history</h2>
+      <p>
+        Subscribe to Planning Poker Premium to unlock your full planning history.
+        Free accounts can view their last 3 sessions only.
+      </p>
+      <button mat-flat-button color="primary" (click)="clickedLearnMorePremium()">
+        Learn more
+      </button>
+    </div>
   </mat-card-content>
 </mat-card>
 

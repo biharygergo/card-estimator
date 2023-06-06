@@ -130,7 +130,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     }
 
     this.organizationService.createOrganization({
-      name: domain ?? `${user.displayName}'s Organization`,
+      name: domain || `${user.displayName}'s Organization`,
       logoUrl: null,
     });
     this.analytics.logClickedGetStartedOrganization();

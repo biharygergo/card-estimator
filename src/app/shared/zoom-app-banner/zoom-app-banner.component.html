@@ -8,35 +8,45 @@
     <mat-icon>close</mat-icon>
   </button>
   <mat-card-content>
-    <img src="assets/zoom_integration.png" />
+    <img
+      src="assets/zoom_webex_announcement.png"
+      alt="The logo of Planning Poker with Zoom & Webex"
+    />
     <div class="banner-text">
-      <h4>Use Planning Poker in your <span class="zoom">Zoom</span> meeting</h4>
+      <h4>
+        Use Planning Poker embedded in your <span class="zoom">Zoom</span> or
+        <span class="webex">Webex</span> meeting
+      </h4>
       <p>
-        Tired of switching between Zoom and your planning app? Vote right in
-        your sidebar, see your colleagues and find consensus easily.
+        Streamline your workflow with our app! Say goodbye to switching between
+        video meetings and planning apps. Easily cast your vote in the sidebar,
+        collaborate with colleagues, and reach consensus effortlessly.
       </p>
     </div>
   </mat-card-content>
   <mat-card-actions>
     <a
-      mat-raised-button
+      mat-flat-button
       color="primary"
       href="https://planningpoker.live/api/installZoomApp"
       target="_blank"
       rel="noreferrer"
       (click)="onInstallClicked.next()"
-      >
-      <mat-icon>install_desktop</mat-icon>
-      Install</a
+      class="zoom-button"
+    >
+      <mat-icon>open_in_new</mat-icon>
+      Install in Zoom</a
     >
     <a
-      mat-stroked-button
-      routerLink="/zoom"
+      mat-flat-button
+      href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
+      target="_blank"
       color="primary"
       (click)="onLearnMoreClicked.next()"
-      >
-      <mat-icon>info</mat-icon>
-      Learn more</a
+      class="webex-button"
+    >
+      <mat-icon>open_in_new</mat-icon>
+      Install in Webex</a
     >
   </mat-card-actions>
 </mat-card>

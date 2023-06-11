@@ -13,14 +13,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   catchError,
   combineLatest,
-  debounceTime,
   distinctUntilChanged,
   EMPTY,
   filter,
   first,
   map,
-  mapTo,
-  merge,
   Observable,
   of as observableOf,
   share,
@@ -30,7 +27,6 @@ import {
   switchMap,
   takeUntil,
   tap,
-  throttleTime,
 } from 'rxjs';
 import {
   CardSet,
@@ -86,9 +82,6 @@ import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premi
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
-
-// Log out after two hours of inactivity
-const INACTIVITY_TIME = 1000 * 60 * 120;
 
 @Component({
   selector: 'app-room',
@@ -271,14 +264,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  roomActive$ = this.room$.pipe(throttleTime(1000), mapTo(false));
-  roomInactive$ = this.room$.pipe(debounceTime(1000), mapTo(true));
-
-  isUserInactive$: Observable<boolean> = merge(
-    this.roomActive$,
-    this.roomInactive$
-  );
-
   savedCardSets$: Observable<SavedCardSetValue[]> = this.cardDeckService
     .getMyCardDecks()
     .pipe(takeUntil(this.destroy));
@@ -381,23 +366,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         this.showAvatarPrompt();
-      });
-
-    this.isUserInactive$
-      .pipe(takeUntil(this.destroy))
-      .subscribe((isInactive) => {
-        if (!isInactive) {
-          window.clearTimeout(this.inactiveTimeoutHandle);
-          return;
-        }
-
-        this.inactiveTimeoutHandle = window.setTimeout(() => {
-          this.errorGoBackToJoinPage({
-            message:
-              'You have been logged out of the room due to inactivity. Please refresh the page once you are back.',
-            duration: null,
-          });
-        }, INACTIVITY_TIME);
       });
   }
 

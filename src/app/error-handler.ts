@@ -13,7 +13,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   ) {}
 
   handleError(error: any): void {
-    const chunkFailedMessage = /Loading chunk [\d]+ failed/;
+    const chunkFailedMessage = /Loading chunk/;
     console.error('Received an error', error);
 
     if (chunkFailedMessage.test(error.message)) {

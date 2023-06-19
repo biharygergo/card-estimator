@@ -115,6 +115,14 @@ exports.reportAnIssue = functions.https.onRequest(async (req, res) => {
   );
 });
 
+exports.sendEmail = functions.https.onRequest(async (req, res) => {
+  const subject = encodeURIComponent(req.query.subject as string|undefined || "");
+  res.redirect(
+      // eslint-disable-next-line max-len
+      `mailto:info@planningpoker.live?subject=${subject}`
+  );
+});
+
 exports.onUserDetailsCreate = functions.firestore
     .document("userDetails/{userId}")
     .onCreate(onUserDetailsCreate);

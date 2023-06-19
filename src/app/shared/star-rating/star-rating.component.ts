@@ -49,10 +49,6 @@ export class StarRatingComponent {
       });
   }
 
-  clickedOpenDetailedFeedback() {
-    this.snackbarRef.dismissWithAction();
-  }
-
   closeSnackbar() {
     this.snackbarRef.dismiss();
   }

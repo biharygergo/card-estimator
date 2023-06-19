@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { LinkService } from 'src/app/services/link.service';
 
 export const premiumLearnMoreModalCreator =
   (): ModalCreator<PremiumLearnMoreComponent> => [
@@ -28,12 +29,18 @@ export class PremiumLearnMoreComponent {
 
   constructor(
     private readonly paymentService: PaymentService,
-    private readonly analyticsService: AnalyticsService
+    private readonly analyticsService: AnalyticsService,
+    private readonly linkService: LinkService,
   ) {}
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
     await this.paymentService.startSubscriptionToPremium();
+  }
+
+  getQuote() {
+    const apiUrl = window.origin + `/api/sendEmail?subject=${encodeURIComponent('Custom quote for Premium subscription')}`;
+    this.linkService.openUrl(apiUrl);
   }
 }

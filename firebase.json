@@ -66,6 +66,11 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/sendEmail",
+          "function": "sendEmail",
+          "region": "us-central1"
+        },
+        {
           "source": "/api/acceptOrganizationInvitation",
           "function": "acceptOrganizationInvitation",
           "region": "us-central1"

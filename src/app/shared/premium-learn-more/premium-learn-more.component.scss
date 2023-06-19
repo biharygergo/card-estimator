@@ -176,6 +176,11 @@
     .monthly-price {
       margin-bottom: 0;
       font-weight: 600;
+
+      .light {
+        font-weight: 500;
+        font-size: smaller;
+      }
     }
 
     .free-trial {
@@ -209,4 +214,8 @@
     border-radius: 8px;
     flex: auto 0 36px;
   }
+}
+
+.stripe-button {
+  margin-bottom: 0.5rem;
 }

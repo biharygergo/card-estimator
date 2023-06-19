@@ -11,7 +11,7 @@
       <p class="description">
         By subscribing now, you'll have access to all of these premium features
         and support the ongoing maintenance and improvement of our open-source
-        project. Teams only need a single license for their SCRUM master.
+        project.
       </p>
       <ul class="premium-features-list">
         <li>
@@ -21,6 +21,33 @@
           <div class="feature-details">
             <h5>Private rooms</h5>
             Create private rooms protected by a password
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>manage_history</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Previous sessions</h5>
+            Unlock your full planning history
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>style</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Saved card sets</h5>
+            Reuse custom card sets across meetings
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>upload</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Export to Jira</h5>
+            Save votes back to Jira with a single click
           </div>
         </li>
         <li>
@@ -41,40 +68,13 @@
             Adjust room member permissions to your preferences
           </div>
         </li>
-        <li>
-          <div class="icon">
-            <mat-icon>style</mat-icon>
-          </div>
-          <div class="feature-details">
-            <h5>Saved card sets</h5>
-            Reuse custom card sets across meetings
-          </div>
-        </li>
-        <li>
+        <li class="spacer-below">
           <div class="icon">
             <mat-icon>auto_fix_normal</mat-icon>
           </div>
           <div class="feature-details">
             <h5>Unlimited AI - PokerBot</h5>
             Use the AI Scrum Master with no limits
-          </div>
-        </li>
-        <li>
-          <div class="icon">
-            <mat-icon>manage_history</mat-icon>
-          </div>
-          <div class="feature-details">
-            <h5>Full history</h5>
-            Unlock your full planning history
-          </div>
-        </li>
-        <li class="spacer-below">
-          <div class="icon">
-            <mat-icon>upload</mat-icon>
-          </div>
-          <div class="feature-details">
-            <h5>Export to Jira</h5>
-            Save votes back to Jira with a single click
           </div>
         </li>
         <li>
@@ -107,7 +107,7 @@
               class="monthly-price"
               matTooltip="The subscription allows the facilitator to create rooms with Premium benefits. One license is enough for small/medium sized organizations."
             >
-              €15 /month
+              €15 <span class="light">/team/month</span>
             </h2>
             <span class="free-trial">14 days free</span>
           </div>
@@ -128,9 +128,11 @@
           color="primary"
           (click)="subscribeToPremium()"
           [disabled]="isPremium$ | async"
+          class="stripe-button"
         >
           {{ isLoadingStripe ? "Redirecting to Stripe..." : "Get Premium now" }}
         </button>
+        <button mat-button (click)="getQuote()">Need a custom quote? Get in touch</button>
       </mat-card-content>
     </mat-card>
   </div>

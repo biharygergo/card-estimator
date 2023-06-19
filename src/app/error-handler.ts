@@ -1,15 +1,13 @@
-import { ErrorHandler, Inject, Injectable } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
 import { ToastService } from './services/toast.service';
 import * as Sentry from '@sentry/angular-ivy';
-import { APP_CONFIG, AppConfig } from './app-config.module';
-import { ZoomApiService } from './services/zoom-api.service';
+import { LinkService } from './services/link.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(
     private toastService: ToastService,
-    @Inject(APP_CONFIG) public config: AppConfig,
-    private readonly zoomService: ZoomApiService
+    private readonly linkService: LinkService,
   ) {}
 
   handleError(error: any): void {
@@ -49,11 +47,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     );
     snackbarRef.onAction().subscribe(() => {
       const apiUrl = window.origin + '/api/reportAnIssue';
-      if (this.config.isRunningInZoom) {
-        this.zoomService.openUrl(apiUrl, true);
-      } else {
-        window.open(apiUrl);
-      }
+      this.linkService.openUrl(apiUrl);
     });
   }
 }

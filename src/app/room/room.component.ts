@@ -77,7 +77,11 @@ import { roomConfigurationModalCreator } from './room-configuration-modal/room-c
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { CardDeckService } from '../services/card-deck.service';
 import { WebexApiService } from '../services/webex-api.service';
-import { delayedFadeAnimation, fadeAnimation, bounceAnimation } from '../shared/animations';
+import {
+  delayedFadeAnimation,
+  fadeAnimation,
+  bounceAnimation,
+} from '../shared/animations';
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
@@ -456,12 +460,10 @@ export class RoomComponent implements OnInit, OnDestroy {
         })
         .onAction()
         .pipe(takeUntil(this.destroy))
-        .subscribe(() => {
-          this.openFeedbackForm();
-        });
+        .subscribe();
 
       this.openedFeedbackForm = true;
-      this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true');
+      this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true', 60);
     }
   }
 
@@ -751,14 +753,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       });
 
       dialogRef.afterClosed().subscribe(() => {});
-    }
-  }
-
-  openFeedbackForm() {
-    if (this.config.isRunningInZoom) {
-      this.zoomService.openUrl(window.origin + '/api/giveFeedback');
-    } else {
-      window.open('https://forms.gle/Rhd8mAQqCmewhfCR7');
     }
   }
 

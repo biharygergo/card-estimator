@@ -16,6 +16,7 @@ import {
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { LinkService } from 'src/app/services/link.service';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -37,6 +38,7 @@ export class ProfileDropdownComponent implements OnInit {
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly zoomService: ZoomApiService,
     private readonly activeRoute: ActivatedRoute,
+    private readonly linkService: LinkService,
     public readonly permissionsService: PermissionsService,
   ) {}
 
@@ -97,11 +99,7 @@ export class ProfileDropdownComponent implements OnInit {
 
   reportAnIssue() {
     const apiUrl = window.origin + '/api/reportAnIssue';
-    if (this.config.isRunningInZoom) {
-      this.zoomService.openUrl(apiUrl, true);
-    } else {
-      window.open(apiUrl);
-    }
+    this.linkService.openUrl(apiUrl);
     this.analytics.logClickedReportAnIssue('profile_icon');
   }
 }

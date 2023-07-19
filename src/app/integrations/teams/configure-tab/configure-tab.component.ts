@@ -13,7 +13,7 @@ export class ConfigureTabComponent implements OnInit {
   ngOnInit(): void {
     // Initialize the Microsoft Teams SDK
     app.initialize().then(async () => {
-      const context = await app.getContext();
+      // const context = await app.getContext();
 
       /**
        * When the user clicks "Save", save the url for your configured tab.
@@ -25,11 +25,8 @@ export class ConfigureTabComponent implements OnInit {
         pages.config
           .setConfig({
             suggestedDisplayName: 'Planning Poker',
-            entityId: 'Test',
-            contentUrl:
-              baseUrl + context.page.subPageId
-                ? `/join?s=teams&roomId=${context.page.subPageId}`
-                : '/create?s=teams',
+            entityId: 'create_a_room',
+            contentUrl: baseUrl + '/create?s=teams',
             websiteUrl: baseUrl + '/',
           })
           .then(() => {

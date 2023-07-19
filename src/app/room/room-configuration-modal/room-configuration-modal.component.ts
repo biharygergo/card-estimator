@@ -61,6 +61,7 @@ export const roomConfigurationModalCreator = ({
     width: '90%',
     maxWidth: '600px',
     maxHeight: '90vh',
+    panelClass: 'custom-dialog',
     data: {
       roomId,
     },

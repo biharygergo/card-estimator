@@ -78,6 +78,11 @@ export class JiraService {
       return;
     }
 
+    if(this.config.runningIn === 'teams') {
+      window.open(apiUrl + `?token=${encodeURIComponent(idToken)}`, '_blank');
+      return;
+    }
+
     window.open(apiUrl, '_blank');
   }
 

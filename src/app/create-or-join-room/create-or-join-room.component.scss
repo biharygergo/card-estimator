@@ -30,8 +30,9 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   text-align: center;
 
   @include extraSmallScreen {
-    .welcome-back {
+    #welcome-back {
       font-size: 1.2rem;
+      padding: 0 0.5rem;
     }
   }
 }

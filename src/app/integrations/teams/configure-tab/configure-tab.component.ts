@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { app, pages } from "@microsoft/teams-js";
+import { app, pages } from '@microsoft/teams-js';
 
 @Component({
   selector: 'app-configure-tab',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './configure-tab.component.html',
-  styleUrls: ['./configure-tab.component.scss']
+  styleUrls: ['./configure-tab.component.scss'],
 })
 export class ConfigureTabComponent implements OnInit {
-
   ngOnInit(): void {
-     // Initialize the Microsoft Teams SDK
-     app.initialize().then(() => {
+    // Initialize the Microsoft Teams SDK
+    app.initialize().then(async () => {
+      const context = await app.getContext();
+
       /**
        * When the user clicks "Save", save the url for your configured tab.
        * This allows for the addition of query string parameters based on
@@ -23,10 +24,13 @@ export class ConfigureTabComponent implements OnInit {
         const baseUrl = `https://${window.location.hostname}:${window.location.port}`;
         pages.config
           .setConfig({
-            suggestedDisplayName: "Planning Poker",
-            entityId: "Test",
-            contentUrl: baseUrl + "/create?s=teams",
-            websiteUrl: baseUrl + "/",
+            suggestedDisplayName: 'Planning Poker',
+            entityId: 'Test',
+            contentUrl:
+              baseUrl + context.page.subPageId
+                ? `/join?s=teams&roomId=${context.page.subPageId}`
+                : '/create?s=teams',
+            websiteUrl: baseUrl + '/',
           })
           .then(() => {
             saveEvent.notifySuccess();
@@ -42,5 +46,4 @@ export class ConfigureTabComponent implements OnInit {
       pages.config.setValidityState(true);
     });
   }
-
 }

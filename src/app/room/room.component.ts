@@ -83,6 +83,7 @@ import {
   bounceAnimation,
 } from '../shared/animations';
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
+import { TeamsService } from '../services/teams.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -300,6 +301,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private zoomService: ZoomApiService,
     private readonly webexService: WebexApiService,
+    private readonly teamsService: TeamsService,
     public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
@@ -310,6 +312,9 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
     if (this.config.runningIn === 'webex') {
       this.webexService.configureApp();
+    }
+    if (this.config.runningIn === 'teams') {
+      this.teamsService.configureApp();
     }
 
     this.room$.subscribe();
@@ -605,6 +610,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       if (!shareSessionStarted) {
         this.clipboard.copy(roomUrl);
       }
+    } else if (this.config.runningIn === 'teams') {
+      await this.teamsService.inviteAllParticipants(this.room.roomId);
+      message =
+        'Meeting link shared. Try opening the app in Stage mode';
+
+      this.clipboard.copy(roomUrl);
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';
@@ -747,6 +758,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         width: '90%',
         maxWidth: '600px',
         disableClose: false,
+        panelClass: 'custom-dialog',
         data: {
           roomId: this.room.roomId,
         },

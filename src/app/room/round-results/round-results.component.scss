@@ -45,6 +45,11 @@ mat-chip-set {
 
 mat-list-item.statistic-line {
   height: unset;
+
+  @include extraSmallScreen {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .statistic {
@@ -56,6 +61,14 @@ mat-list-item.statistic-line {
     display: flex;
     align-items: center;
     gap: 0.3rem;
+  }
+
+  .multiple-chips {
+    margin-left: auto;
+  }
+
+  ::ng-deep .mdc-evolution-chip-set__chips {
+    justify-content: flex-end;
   }
 }
 

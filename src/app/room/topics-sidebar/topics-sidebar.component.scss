@@ -1,6 +1,12 @@
+@import '../../common.scss';
+
 .round-history-container {
   mat-card {
     margin: 1rem;
+
+    @include extraSmallScreen {
+      margin: 0.5rem;
+    }
   }
 
   .card-header {
@@ -105,6 +111,12 @@
 
   &.mat-expanded {
     background: #efefef;
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    @include extraSmallScreen {
+      padding: 0.5rem;
+    }
   }
 }
 

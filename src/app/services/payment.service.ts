@@ -75,7 +75,15 @@ export class PaymentService {
           'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
         )
       ) */
-      await this.zoomService.openUrl(`${window.location.origin}/join?flow=premium`, true);
+      await this.zoomService.openUrl(
+        `${window.location.origin}/join?flow=premium`,
+        true
+      );
+      return;
+    }
+
+    if (this.config.runningIn === 'teams') {
+      window.open(`${window.location.origin}/join?flow=premium`, '_blank');
       return;
     }
 
@@ -112,10 +120,25 @@ export class PaymentService {
         )
       ) { */
       await this.zoomService.openUrl(
-        `${window.location.origin}/join?flow=manageSubscription`, true
+        `${window.location.origin}/join?flow=manageSubscription`,
+        true
       );
       return;
     }
+
+    if (this.config.runningIn === 'teams') {
+      /* if (
+        confirm(
+          'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.'
+        )
+      ) { */
+      window.open(
+        `${window.location.origin}/join?flow=manageSubscription`,
+        '_blank'
+      );
+      return;
+    }
+
     const result = await httpsCallable(
       this.functions,
       'ext-firestore-stripe-payments-createPortalLink'

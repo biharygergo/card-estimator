@@ -56,6 +56,10 @@
   @media screen and (min-width: 800px) {
     flex: 2;
   }
+
+  @include extraSmallScreen {
+    margin: 0;
+  }
 }
 
 .estimate-container {
@@ -67,6 +71,10 @@
 
   @media screen and (min-width: 800px) {
     flex: 1;
+  }
+
+  @include extraSmallScreen {
+    margin: 0.5rem 0 0 0;
   }
 }
 

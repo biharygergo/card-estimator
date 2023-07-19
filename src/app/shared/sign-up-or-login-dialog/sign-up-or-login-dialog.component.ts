@@ -48,6 +48,7 @@ export const signUpOrLoginDialogCreator = (
     id: SIGN_UP_OR_LOGIN_MODAL,
     width: '90%',
     maxWidth: '800px',
+    panelClass: 'custom-dialog',
     data,
   },
 ];

@@ -71,7 +71,7 @@ export class RichTopicComponent implements OnChanges {
   openRemoteTopic() {
     this.analyticsService.logClickedViewOnJiraButton();
     if (this.richTopic) {
-      if (this.config.isRunningInZoom) {
+      if (this.config.runningIn === 'zoom') {
         this.zoomService.openUrl(
           `${window.origin}/api/safeRedirect?redirectTo=${encodeURIComponent(
             this.richTopic.url

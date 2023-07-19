@@ -69,7 +69,7 @@ export class PaymentService {
       }
     }
 
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       /* if (
         confirm(
           'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
@@ -105,7 +105,7 @@ export class PaymentService {
   }
 
   async createPortalLink() {
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       /* if (
         confirm(
           'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.'

@@ -6,7 +6,7 @@
   </button>
   <div
     [matTooltip]="
-      config.isRunningInZoom
+      config.runningIn === 'zoom'
         ? 'Downloading results is only available on the web version of the app.'
         : ''
     "
@@ -17,7 +17,7 @@
       (click)="downloadAsCsv()"
       [disabled]="
         rounds.length <= 1 ||
-        config.isRunningInZoom ||
+        config.runningIn === 'zoom' ||
         !(permissionsService.canDownloadResults() | async)
       "
     >

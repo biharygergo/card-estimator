@@ -190,11 +190,7 @@
                   @fadeAnimation
                 >
                   <mat-icon>checkmark</mat-icon>
-                  {{
-                    !config.isRunningInZoom && !config.isRunningInWebex
-                      ? "Copied"
-                      : "Invited"
-                  }}
+                  {{ config.runningIn === "web" ? "Copied" : "Invited" }}
                 </div>
               </button>
             </h4>
@@ -362,9 +358,7 @@
         ></anonymous-user-banner>
       </div>
 
-      <app-github-badge
-        *ngIf="!config.isRunningInZoom && !config.isRunningInWebex"
-      ></app-github-badge>
+      <app-github-badge *ngIf="config.runningIn === 'web'"></app-github-badge>
     </div>
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">

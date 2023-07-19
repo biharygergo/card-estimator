@@ -25,7 +25,7 @@ export class ConfigureTabComponent implements OnInit {
           .setConfig({
             suggestedDisplayName: "Planning Poker",
             entityId: "Test",
-            contentUrl: baseUrl + "/join",
+            contentUrl: baseUrl + "/create?s=teams",
             websiteUrl: baseUrl + "/",
           })
           .then(() => {

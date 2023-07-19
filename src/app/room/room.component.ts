@@ -305,10 +305,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       this.zoomService.configureApp();
     }
-    if (this.config.isRunningInWebex) {
+    if (this.config.runningIn === 'webex') {
       this.webexService.configureApp();
     }
 
@@ -582,7 +582,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     let message = '';
     const host = window.origin || 'https://card-estimator.web.app';
     const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       try {
         const { invitationUUID } = await this.zoomService.inviteAllParticipants(
           this.room.roomId
@@ -595,7 +595,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       } catch {
         message = 'Please start a meeting first to invite others to join.';
       }
-    } else if (this.config.isRunningInWebex) {
+    } else if (this.config.runningIn === 'webex') {
       const shareSessionStarted = await this.webexService.inviteAllParticipants(
         this.room.roomId
       );
@@ -675,7 +675,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   async leaveRoom() {
     this.analytics.logClickedLeaveRoom();
     if (
-      this.config.isRunningInZoom ||
+      this.config.runningIn === 'zoom' ||
       confirm('Do you really want to leave this estimation?')
     ) {
       if (this.estimatorService.activeMember) {

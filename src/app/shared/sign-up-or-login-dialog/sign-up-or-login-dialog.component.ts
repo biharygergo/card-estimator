@@ -152,7 +152,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
   private linkAccountWithGoogle(): Observable<void | {}> {
     let signInPromise: Promise<void>;
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       signInPromise = this.linkAccountWithGoogleInZoom();
     } else {
       signInPromise = this.linkAccountWithGoogleWeb();
@@ -211,7 +211,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
   private signInWithGoogle() {
     let signInPromise: Promise<any>;
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       signInPromise = this.signInWithGoogleInZoom();
     } else {
       signInPromise = this.signInWithGoogleWeb();

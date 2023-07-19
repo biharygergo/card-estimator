@@ -22,7 +22,7 @@ export class ZoomApiService {
   isInGuestMode = new BehaviorSubject<boolean>(true);
 
   async configureApp() {
-    if (!this.config.isRunningInZoom) {
+    if (this.config.runningIn !== 'zoom') {
       throw Error('Not running inside Zoom.');
     }
     const configResponse = await zoomSdk.config({

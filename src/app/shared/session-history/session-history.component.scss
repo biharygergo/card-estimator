@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .mat-expansion-panel-header-description {
   justify-content: flex-end;
 }
@@ -73,4 +75,9 @@ mat-panel-title {
 
 .premium-banner {
   margin-top: 1rem;
+
+
+  @include extraSmallScreen {
+    margin-top: 2rem;
+  }
 }

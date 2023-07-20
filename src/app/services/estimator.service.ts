@@ -138,10 +138,10 @@ export class EstimatorService {
       style: 'lowerCase',
     };
 
-    let roomId = uniqueNamesGenerator(customConfig);
+    let roomId = uniqueNamesGenerator(customConfig).replace(' ', '-');
 
     while (await this.doesRoomAlreadyExist(roomId)) {
-      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 });
+      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(' ', '-');
     }
 
     const subscriptionMetadata = await this.getSubscriptionMetadata();

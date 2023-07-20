@@ -18,7 +18,7 @@ import {
   adjectives,
   colors,
   animals,
-  starWars,
+  languages,
 } from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
@@ -132,15 +132,16 @@ export class EstimatorService {
     await this.signInAsMember(member);
 
     const customConfig: Config = {
-      dictionaries: [adjectives, colors, animals, starWars],
+      dictionaries: [adjectives, colors, animals, languages],
       separator: '-',
       length: 3,
+      style: 'lowerCase',
     };
 
-    let roomId = uniqueNamesGenerator(customConfig);
+    let roomId = uniqueNamesGenerator(customConfig).replace(' ', '-');
 
-    if (await this.doesRoomAlreadyExist(roomId)) {
-      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 });
+    while (await this.doesRoomAlreadyExist(roomId)) {
+      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(' ', '-');
     }
 
     const subscriptionMetadata = await this.getSubscriptionMetadata();

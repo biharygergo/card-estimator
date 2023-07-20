@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 :host {
   width: 100%;
   @media screen and (min-width: 800px) {
@@ -17,6 +19,10 @@
     transform: translateX(-50%);
     z-index: 2;
   }
+
+  @include extraSmallScreen {
+    margin: 0.5rem 0 0 0;
+  }
 }
 
 .estimator-buttons {
@@ -27,6 +33,10 @@
   padding: 1rem;
   background: var(--main-dark-color);
   border-radius: 8px;
+
+  @include extraSmallScreen {
+    padding: 0.5rem;
+  }
 
   @media screen and (min-width: 800px) {
     flex-wrap: nowrap;

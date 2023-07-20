@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 @keyframes popIn {
   0% {
     opacity: 0;
@@ -43,6 +45,11 @@ mat-chip-set {
 
 mat-list-item.statistic-line {
   height: unset;
+
+  @include extraSmallScreen {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .statistic {
@@ -55,17 +62,30 @@ mat-list-item.statistic-line {
     align-items: center;
     gap: 0.3rem;
   }
+
+  .multiple-chips {
+    margin-left: auto;
+  }
+
+  ::ng-deep .mdc-evolution-chip-set__chips {
+    justify-content: flex-end;
+  }
 }
 
 .votes {
   max-height: 500px;
   overflow: auto;
+
   .vote-container {
     display: inline-flex;
     width: 100%;
     align-items: center;
     padding: 0 20px;
     margin-bottom: 1rem;
+
+    @include extraSmallScreen {
+      padding: 0 8px;
+    }
   }
 
   .vote-avatar {
@@ -85,6 +105,15 @@ mat-list-item.statistic-line {
       font-size: 26px;
       border-radius: 50%;
       color: var(--background-dark);
+    }
+
+    @include extraSmallScreen {
+        width: 40px;
+        height: 40px;
+
+        .vote-avatar-text {
+          font-size: 18px;
+        }
     }
   }
 

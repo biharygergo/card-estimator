@@ -6,7 +6,7 @@
   </p>
   <div class="tab-section">
     <div class="integrations-list">
-      <div class="integration" *ngIf="!config.isRunningInWebex">
+      <div class="integration" *ngIf="config.runningIn !== 'webex'">
         <div class="integration-main">
           <div class="details">
             <div class="title">
@@ -19,17 +19,17 @@
             <a
               mat-flat-button
               color="primary"
-              [disabled]="config.isRunningInZoom"
+              [disabled]="config.runningIn === 'zoom'"
               href="https://planningpoker.live/api/installZoomApp"
               target="_blank"
               rel="noreferrer"
             >
-              {{ config.isRunningInZoom ? "Installed" : "Install" }}
+              {{ config.runningIn === 'zoom' ? "Installed" : "Install" }}
             </a>
           </div>
         </div>
       </div>
-      <div class="integration" *ngIf="!config.isRunningInZoom">
+      <div class="integration" *ngIf="config.runningIn !== 'zoom'">
         <div class="integration-main">
           <div class="details">
             <div class="title">
@@ -42,12 +42,12 @@
             <a
               mat-flat-button
               color="primary"
-              [disabled]="config.isRunningInWebex"
+              [disabled]="config.runningIn === 'webex'"
               href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
               target="_blank"
               rel="noreferrer"
             >
-              {{ config.isRunningInWebex ? "Installed" : "Install" }}
+              {{ config.runningIn === 'webex' ? "Installed" : "Install" }}
             </a>
           </div>
         </div>

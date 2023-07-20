@@ -272,7 +272,7 @@
       *ngIf="selectedTabIndex === 0 && user"
     >
       <mat-icon>logout</mat-icon>
-      Sign out {{ user?.isAnonymous ? '(Deletes this anonymous account)' : ''}}
+      Sign out {{ user?.isAnonymous ? '& delete account' : ''}}
     </button>
     <button
       mat-button

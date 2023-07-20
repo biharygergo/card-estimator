@@ -83,6 +83,7 @@ import {
   bounceAnimation,
 } from '../shared/animations';
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
+import { TeamsService } from '../services/teams.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -300,16 +301,20 @@ export class RoomComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private zoomService: ZoomApiService,
     private readonly webexService: WebexApiService,
+    private readonly teamsService: TeamsService,
     public readonly permissionsService: PermissionsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       this.zoomService.configureApp();
     }
-    if (this.config.isRunningInWebex) {
+    if (this.config.runningIn === 'webex') {
       this.webexService.configureApp();
+    }
+    if (this.config.runningIn === 'teams') {
+      this.teamsService.configureApp();
     }
 
     this.room$.subscribe();
@@ -582,7 +587,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     let message = '';
     const host = window.origin || 'https://card-estimator.web.app';
     const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       try {
         const { invitationUUID } = await this.zoomService.inviteAllParticipants(
           this.room.roomId
@@ -595,7 +600,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       } catch {
         message = 'Please start a meeting first to invite others to join.';
       }
-    } else if (this.config.isRunningInWebex) {
+    } else if (this.config.runningIn === 'webex') {
       const shareSessionStarted = await this.webexService.inviteAllParticipants(
         this.room.roomId
       );
@@ -605,6 +610,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       if (!shareSessionStarted) {
         this.clipboard.copy(roomUrl);
       }
+    } else if (this.config.runningIn === 'teams') {
+      await this.teamsService.inviteAllParticipants(this.room.roomId);
+      message =
+        'Meeting link shared. Try opening the app in Stage mode';
+
+      this.clipboard.copy(roomUrl);
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';
@@ -675,7 +686,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   async leaveRoom() {
     this.analytics.logClickedLeaveRoom();
     if (
-      this.config.isRunningInZoom ||
+      this.config.runningIn === 'zoom' ||
       confirm('Do you really want to leave this estimation?')
     ) {
       if (this.estimatorService.activeMember) {
@@ -747,6 +758,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         width: '90%',
         maxWidth: '600px',
         disableClose: false,
+        panelClass: 'custom-dialog',
         data: {
           roomId: this.room.roomId,
         },

@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
+@import './app/common.scss';
 
 :root {
   --main-color: #1c4182;
@@ -175,21 +176,25 @@ $my-theme: mat.define-light-theme(
   @media screen and (min-width: 800px) {
     padding: 1rem 2.5rem;
   }
+
+  @include extraSmallScreen {
+    padding: 0.5rem;
+  }
 }
 
 .navbar-right {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+}
 
-  .create-account-button, .unlock-features-button {
-    @media screen and (max-width: 500px) {
-      .mdc-button__label {
-        display: none;
-      }
-      mat-icon {
-        margin-right: 0;
-      }
+.responsive-label-button {
+  @media screen and (max-width: 500px) {
+    .mdc-button__label {
+      display: none;
+    }
+    mat-icon {
+      margin-right: 0 !important;
     }
   }
 }
@@ -236,7 +241,6 @@ $my-theme: mat.define-light-theme(
 
 .premium-banner {
   background: #edf0ff;
-  border: 1px solid #345ca8;
   border-radius: 18px;
   padding: 1rem;
   color: white;
@@ -254,6 +258,10 @@ $my-theme: mat.define-light-theme(
 
     .learn-more {
       color: #575e71;
+    }
+
+    @include extraSmallScreen {
+      flex-direction: column;
     }
   }
 
@@ -324,4 +332,18 @@ $my-theme: mat.define-light-theme(
 .rounded-nav-menu {
   border-radius: 20px !important;
   min-width: 150px !important;
+}
+
+@include extraSmallScreen {
+   .cdk-overlay-pane.custom-dialog {
+    width: 95% !important;
+
+    .mdc-dialog .mdc-dialog__content {
+      padding: 0.5rem;
+    }
+
+    .mat-mdc-dialog-title {
+      padding: 0.5rem;
+    }
+  } 
 }

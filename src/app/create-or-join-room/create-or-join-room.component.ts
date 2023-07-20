@@ -233,7 +233,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     const sessionCookie = this.authService.getSessionCookie();
     if (
-      this.config.isRunningInZoom &&
+      this.config.runningIn === 'zoom' &&
       sessionCookie &&
       typeof sessionCookie !== 'string'
     ) {
@@ -245,8 +245,12 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       );
     }
 
-    if (this.config.isRunningInWebex) {
+    if (this.config.runningIn === 'webex') {
       this.configService.setSessionCookie('runningInWebex', '1');
+    }
+
+    if (this.config.runningIn === 'teams') {
+      this.configService.setSessionCookie('runningInTeams', '1');
     }
 
     this.onJoinRoomClicked

@@ -1,32 +1,40 @@
-.banner {
-    border-radius: 4px;
-    padding: 16px;
+@import "../../common.scss";
 
+.banner {
+  border-radius: 4px;
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &.banner-info {
+    background: #fefefe;
+  }
+
+  &.banner-gray {
+    background: #efefef;
+  }
+
+  .banner-icon {
+    flex-shrink: 0;
+  }
+
+  .banner-main {
     display: flex;
-    flex-direction: column;
     gap: 1rem;
 
-    &.banner-info {
-        background: #fefefe;
+    @include extraSmallScreen {
+      flex-direction: column;
     }
+  }
 
-    &.banner-gray {
-        background: #efefef;
+  .banner-action {
+    display: flex;
+    gap: 0.5rem;
+
+    @include extraSmallScreen {
+      flex-direction: column;
     }
-
-    .banner-icon {
-        flex-shrink: 0;
-    }
-
-
-
-    .banner-main {
-        display: flex;
-        gap: 1rem;
-    }
-
-    .banner-action {
-        display: flex;
-        gap: 0.5rem;
-    }
+  }
 }

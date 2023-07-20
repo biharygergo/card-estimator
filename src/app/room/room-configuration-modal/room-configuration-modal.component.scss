@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .permission {
   margin-bottom: 1rem;
   .permission-title {
@@ -24,6 +26,7 @@
   &.mat-mdc-chip-selected {
     --mdc-chip-label-text-color: black;
     --mdc-chip-with-icon-selected-icon-color: black;
+    --mdc-chip-elevated-disabled-container-color: #d4e3c4;
     background: #d4e3c4;
     border: none;
   }
@@ -103,5 +106,9 @@
 
   mat-slide-toggle {
     transform: scale(1.3);
+  }
+
+  @include extraSmallScreen {
+    gap: 0.5rem;
   }
 }

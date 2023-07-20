@@ -13,7 +13,7 @@ export class LinkService {
   ) { }
 
   openUrl(url: string) {
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       this.zoomService.openUrl(url, true);
     } else {
       window.open(url, '_blank');

@@ -1,3 +1,5 @@
+@import "../../common.scss";
+
 .velocity-container {
   background: #d9e2ff;
   padding: 3rem calc(1rem + 16px);
@@ -5,6 +7,11 @@
   align-items: center;
   gap: 1rem;
   position: relative;
+
+  @include extraSmallScreen {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
   .info {
     position: absolute;
@@ -51,7 +58,7 @@
     gap: 0.1rem;
 
     &.expandable {
-        cursor: pointer;
+      cursor: pointer;
     }
 
     &.expanded {

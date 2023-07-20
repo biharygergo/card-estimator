@@ -48,6 +48,7 @@ export const signUpOrLoginDialogCreator = (
     id: SIGN_UP_OR_LOGIN_MODAL,
     width: '90%',
     maxWidth: '800px',
+    panelClass: 'custom-dialog',
     data,
   },
 ];
@@ -152,7 +153,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
   private linkAccountWithGoogle(): Observable<void | {}> {
     let signInPromise: Promise<void>;
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       signInPromise = this.linkAccountWithGoogleInZoom();
     } else {
       signInPromise = this.linkAccountWithGoogleWeb();
@@ -211,7 +212,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
   private signInWithGoogle() {
     let signInPromise: Promise<any>;
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       signInPromise = this.signInWithGoogleInZoom();
     } else {
       signInPromise = this.signInWithGoogleWeb();

@@ -1,5 +1,12 @@
+@import '../../common.scss';
+
 .timer-container {
     display: flex;
+
+    @include extraSmallScreen {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }
 
 .progress {
@@ -17,6 +24,10 @@
 
     .time-left {
         font-size: 0.7rem;
+    }
+
+    @include extraSmallScreen {
+        padding-right: 0;
     }
 }
 

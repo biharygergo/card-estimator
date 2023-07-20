@@ -70,11 +70,16 @@ export class JiraService {
     const idToken = await this.authService.refreshIdToken();
     this.authService.setSessionCookie(idToken);
 
-    if (this.config.isRunningInZoom) {
+    if (this.config.runningIn === 'zoom') {
       await this.zoomService.openUrl(
         apiUrl + `?token=${encodeURIComponent(idToken)}`,
         true
       );
+      return;
+    }
+
+    if(this.config.runningIn === 'teams') {
+      window.open(apiUrl + `?token=${encodeURIComponent(idToken)}`, '_blank');
       return;
     }
 

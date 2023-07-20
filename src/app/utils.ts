@@ -35,6 +35,14 @@ export const isRunningInWebex = () => {
   );
 };
 
+export const isRunningInTeams = () => {
+  return (
+    typeof window !== 'undefined' &&
+    (window.location.search.includes('s=teams') ||
+      Cookies.get('runningInTeams'))
+  );
+};
+
 export const createHash = (str: string, seed = 0): string => {
   let h1 = 0xdeadbeef ^ seed,
     h2 = 0x41c6ce57 ^ seed;

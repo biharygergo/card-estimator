@@ -71,13 +71,15 @@ export enum MemberStatus {
   REMOVED_FROM_ROOM = 'REMOVED_FROM_ROOM',
 }
 
+export type Platform = 'zoom' | 'webex' | 'teams' | 'web';
+
 export interface Member {
   id: string;
   name: string;
   avatarUrl?: string;
   type: MemberType;
   status: MemberStatus;
-  platform?: 'zoom' | 'webex' | 'web';
+  platform?: Platform;
 }
 
 export interface RoomData {

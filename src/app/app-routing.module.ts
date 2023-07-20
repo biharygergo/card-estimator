@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CreateOrJoinRoomComponent } from './create-or-join-room/create-or-join-room.component';
 import { WrapperComponent } from './landing/wrapper/wrapper.component';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
-import { SessionHistoryPageComponent } from './session-history-page/session-history-page.component';
 
 const routes: Routes = [
   {
@@ -37,6 +35,11 @@ const routes: Routes = [
     path: 'recurringMeeting/:linkId',
     loadComponent: () => import('./recurring-meeting/recurring-meeting.component').then(m => m.RecurringMeetingComponent),
     data: { title: 'Recurring meeting lobby' },
+  },
+  {
+    path: 'integrations/teams/configure',
+    loadComponent: () => import('./integrations/teams/configure-tab/configure-tab.component').then(mod => mod.ConfigureTabComponent),
+    data: { title: 'Configure Teams' },
   },
 ];
 

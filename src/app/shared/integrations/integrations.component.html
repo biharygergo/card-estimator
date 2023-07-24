@@ -6,7 +6,7 @@
   </p>
   <div class="tab-section">
     <div class="integrations-list">
-      <div class="integration" *ngIf="config.runningIn !== 'webex'">
+      <div class="integration" *ngIf="['zoom', 'web'].includes(config.runningIn)">
         <div class="integration-main">
           <div class="details">
             <div class="title">
@@ -29,7 +29,7 @@
           </div>
         </div>
       </div>
-      <div class="integration" *ngIf="config.runningIn !== 'zoom'">
+      <div class="integration" *ngIf="['webex', 'web'].includes(config.runningIn)">
         <div class="integration-main">
           <div class="details">
             <div class="title">
@@ -48,6 +48,29 @@
               rel="noreferrer"
             >
               {{ config.runningIn === 'webex' ? "Installed" : "Install" }}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="integration" *ngIf="['teams', 'web'].includes(config.runningIn)">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/teams_logo.png" />
+              <h4>Teams</h4>
+            </div>
+            <p>Use Planning Poker directly in the Teams app.</p>
+          </div>
+          <div class="actions">
+            <a
+              mat-flat-button
+              color="primary"
+              [disabled]="true || config.runningIn === 'teams'"
+              href=""
+              target="_blank"
+              rel="noreferrer"
+            >
+              {{ config.runningIn === 'teams' ? "Installed" : "Coming soon" }}
             </a>
           </div>
         </div>

@@ -26,13 +26,13 @@ export type AuthSession = {
   createdAt: firestore.Timestamp;
 };
 
-function getAuthIntent(req: functions.Request): AuthIntent {
+export function getAuthIntent(req: functions.Request): AuthIntent {
   return req.query.intent === AuthIntent.LINK_ACCOUNT ?
     AuthIntent.LINK_ACCOUNT :
     AuthIntent.SIGN_IN;
 }
 
-function getReturnToPath(req: functions.Request): string | undefined {
+export function getReturnToPath(req: functions.Request): string | undefined {
   return req.query.returnPath as string | undefined;
 }
 
@@ -118,6 +118,7 @@ export async function zoomAuthSuccess(
 
   res.redirect(redirectUrl);
 }
+
 export async function googleAuthSuccess(
     req: functions.Request,
     res: functions.Response

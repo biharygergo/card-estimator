@@ -1,0 +1,62 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.16",
+    "version": "1.0.5",
+    "id": "609fe794-87f9-4045-9ca7-0f79cc734930",
+    "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Gergely Bihary",
+        "websiteUrl": "https://test.planningpoker.live",
+        "privacyUrl": "https://test.planningpoker.live/privacy",
+        "termsOfUseUrl": "https://test.planningpoker.live/terms"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "planning-poker-production",
+        "full": "Planning Poker"
+    },
+    "description": {
+        "short": "Run SCRUM planning meetings with ease inside Teams!",
+        "full": "Planning projects is difficult, especially when you are working remotely. During a planning meeting, teams estimate projects/cards while sitting around a table and showing hands-on the count of three. This worked well before the pandemic, but it's not so efficient in the remote world. This app moves the planning meeting into your Teams window, allowing you to vote and find consensus easily."
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [],
+    "composeExtensions": [],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://test.planningpoker.live/integrations/teams/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team",
+                "groupchat"
+            ],
+            "context": [
+                "meetingChatTab",
+                "meetingDetailsTab",
+                "meetingSidePanel",
+                "meetingStage"
+            ]
+        }
+    ],
+    "authorization": {
+        "permissions": {
+            "resourceSpecific": [
+                {
+                    "name": "MeetingStage.Write.Chat",
+                    "type": "Delegated"
+                }
+            ]
+        }
+    },
+    "staticTabs": [],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "test.planningpoker.live"
+    ]
+}

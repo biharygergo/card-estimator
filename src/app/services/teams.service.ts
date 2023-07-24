@@ -19,4 +19,21 @@ export class TeamsService {
       subPageWebUrl: joinUrl,
     });
   }
+
+  async getGoogleOauthToken(returnTo: string): Promise<string> {
+    await microsoftTeams.app.initialize();
+
+    const apiUrl = `${
+      window.location.origin
+    }/api/startTeamsGoogleAuth?oauthRedirectMethod={oauthRedirectMethod}&authId={authId}&redirectTo=${encodeURIComponent(
+      returnTo
+    )}`;
+    microsoftTeams.authentication;
+    const token = await microsoftTeams.authentication.authenticate({
+      url: apiUrl,
+      isExternal: true,
+    });
+
+    return token;
+  }
 }

@@ -5,7 +5,6 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   BehaviorSubject,
   catchError,
@@ -27,6 +26,8 @@ import {
   AuthProgressState,
 } from '../auth-progress-dialog/auth-progress-dialog.component';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { TeamsService } from 'src/app/services/teams.service';
+import { ActivatedRoute } from '@angular/router';
 
 export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 
@@ -82,14 +83,15 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   readonly SignUpOrLoginIntent = SignUpOrLoginIntent;
   constructor(
     private readonly authService: AuthService,
-    private readonly snackBar: MatSnackBar,
     private readonly analyticsService: AnalyticsService,
     private readonly zoomApiService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
     public readonly dialogData: SignUpOrLoginDialogData,
     public dialogRef: MatDialogRef<SignUpOrLoginDialogComponent>,
-    @Inject(APP_CONFIG) public config: AppConfig
+    @Inject(APP_CONFIG) public config: AppConfig,
+    private readonly teamsService: TeamsService,
+    private readonly route: ActivatedRoute
   ) {
     this.intent = dialogData.intent;
   }
@@ -155,6 +157,13 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     let signInPromise: Promise<void>;
     if (this.config.runningIn === 'zoom') {
       signInPromise = this.linkAccountWithGoogleInZoom();
+    } else if (this.config.runningIn === 'teams') {
+      const returnTo = this.route.snapshot.url.join('/');
+      signInPromise = this.teamsService
+        .getGoogleOauthToken(returnTo)
+        .then((token) => {
+          return this.authService.linkAccountWithGoogle(token);
+        });
     } else {
       signInPromise = this.linkAccountWithGoogleWeb();
     }
@@ -210,10 +219,17 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return new Promise(() => {});
   }
 
-  private signInWithGoogle() {
+  private async signInWithGoogle() {
     let signInPromise: Promise<any>;
     if (this.config.runningIn === 'zoom') {
       signInPromise = this.signInWithGoogleInZoom();
+    } else if (this.config.runningIn === 'teams') {
+      const returnTo = this.route.snapshot.url.join('/');
+      signInPromise = this.teamsService
+        .getGoogleOauthToken(returnTo)
+        .then((token) => {
+          return this.authService.signInWithGoogle(token);
+        });
     } else {
       signInPromise = this.signInWithGoogleWeb();
     }

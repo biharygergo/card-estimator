@@ -41,6 +41,7 @@ import {captureError} from "./shared/errors";
 import {createSummary} from "./summary";
 import {onRoomCreated} from "./room/created";
 import {updateIssue} from "./jira/updateIssue";
+import {onTeamsGoogleAuthResult, startTeamsGoogleAuth} from "./ms-teams";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -116,7 +117,9 @@ exports.reportAnIssue = functions.https.onRequest(async (req, res) => {
 });
 
 exports.sendEmail = functions.https.onRequest(async (req, res) => {
-  const subject = encodeURIComponent(req.query.subject as string|undefined || "");
+  const subject = encodeURIComponent(
+      (req.query.subject as string | undefined) || ""
+  );
   res.redirect(
       // eslint-disable-next-line max-len
       `mailto:info@planningpoker.live?subject=${subject}`
@@ -178,7 +181,6 @@ exports.updateIssue = functions.https.onCall(
     async (data: any, context: CallableContext) => updateIssue(data, context)
 );
 
-
 exports.safeRedirect = functions.https.onRequest(async (req, res) => {
   const redirectTo = req.query.redirectTo;
   if (typeof redirectTo === "string") {
@@ -194,3 +196,13 @@ exports.createSummary = functions.https.onCall(
 exports.onRoomCreated = functions.firestore
     .document("rooms/{roomId}")
     .onCreate(onRoomCreated);
+
+exports.startTeamsGoogleAuth = functions.https.onRequest(async (req, res) => {
+  cookieParser()(req, res, () => startTeamsGoogleAuth(req, res));
+});
+
+exports.onTeamsGoogleAuthResult = functions.https.onRequest(
+    async (req, res) => {
+      cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
+    }
+);

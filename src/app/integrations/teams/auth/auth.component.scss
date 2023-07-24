@@ -1,0 +1,21 @@
+.wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: white;
+    padding: 2rem;
+
+    .logo {
+        width: 70px;
+        height: 70px;
+        border-radius: 16px;
+    }
+
+    p {
+        text-align: center;
+    }
+}

@@ -7,6 +7,7 @@ import {
   authProgressDialogCreator,
 } from 'src/app/shared/auth-progress-dialog/auth-progress-dialog.component';
 import { AuthIntent } from 'src/app/services/auth.service';
+import { TeamsService } from 'src/app/services/teams.service';
 
 @Component({
   selector: 'app-auth',
@@ -18,7 +19,8 @@ import { AuthIntent } from 'src/app/services/auth.service';
 export class AuthComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly teamsService: TeamsService,
   ) {}
 
   ngOnInit(): void {
@@ -28,7 +30,11 @@ export class AuthComponent implements OnInit {
       'authIntent'
     ) as AuthIntent;
 
-    this.dialog.open(
+    this.teamsService.configureApp().then(() => {
+      this.teamsService.notifySuccess(token);
+    })
+
+   /*  this.dialog.open(
       ...authProgressDialogCreator({
         initialState: AuthProgressState.IN_PROGRESS,
         startAccountSetupOnOpen: true,
@@ -39,6 +45,6 @@ export class AuthComponent implements OnInit {
           createdAt: undefined,
         },
       })
-    );
+    ); */
   }
 }

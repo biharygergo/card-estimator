@@ -94,7 +94,7 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     public dialogRef: MatDialogRef<AuthProgressDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData
+    @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData,
   ) {
     this.state.next(dialogData.initialState);
   }

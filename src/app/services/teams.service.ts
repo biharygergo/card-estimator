@@ -36,4 +36,8 @@ export class TeamsService {
 
     return token;
   }
+
+  notifySuccess(token: string) {
+    microsoftTeams.authentication.notifySuccess(token)
+  }
 }

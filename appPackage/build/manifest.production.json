@@ -6,9 +6,9 @@
     "packageName": "com.microsoft.teams.extension",
     "developer": {
         "name": "Gergely Bihary",
-        "websiteUrl": "https://test.planningpoker.live",
-        "privacyUrl": "https://test.planningpoker.live/privacy",
-        "termsOfUseUrl": "https://test.planningpoker.live/terms"
+        "websiteUrl": "https://planningpoker.live",
+        "privacyUrl": "https://planningpoker.live/privacy",
+        "termsOfUseUrl": "https://planningpoker.live/terms"
     },
     "icons": {
         "color": "color.png",
@@ -27,7 +27,7 @@
     "composeExtensions": [],
     "configurableTabs": [
         {
-            "configurationUrl": "https://test.planningpoker.live/integrations/teams/configure",
+            "configurationUrl": "https://planningpoker.live/integrations/teams/configure",
             "canUpdateConfiguration": true,
             "scopes": [
                 "team",
@@ -57,6 +57,6 @@
         "messageTeamMembers"
     ],
     "validDomains": [
-        "test.planningpoker.live"
+        "planningpoker.live"
     ]
 }

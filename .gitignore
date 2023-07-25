@@ -53,3 +53,4 @@ sonar-project.properties
 cypress.env.json
 /cypress/videos
 /cypress/screenshots
+appPackage/build/*

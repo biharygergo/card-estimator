@@ -26,6 +26,7 @@ import { PremiumComponent } from './premium/premium.component';
 import { NgOptimizedImage } from '@angular/common';
 import { StartPlanningCtaComponent } from './components/start-planning-cta/start-planning-cta.component';
 import { WebexComponent } from './webex/webex.component';
+import { TeamsComponent } from './teams/teams.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,11 @@ const routes: Routes = [
     data: { title: 'Webex Integration' },
   },
   {
+    path: 'teams',
+    component: TeamsComponent,
+    data: { title: 'Teams Integration' },
+  },
+  {
     path: 'organizationInvitation',
     component: OrganizationInvitationComponent,
     data: { title: 'Organization invitation' },
@@ -94,6 +100,7 @@ const routes: Routes = [
     OrganizationInvitationComponent,
     StartPlanningCtaComponent,
     WebexComponent,
+    TeamsComponent,
   ],
   imports: [
     CommonModule,

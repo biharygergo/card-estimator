@@ -91,6 +91,16 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/startTeamsGoogleAuth",
+          "function": "startTeamsGoogleAuth",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onTeamsGoogleAuthResult",
+          "function": "onTeamsGoogleAuthResult",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },

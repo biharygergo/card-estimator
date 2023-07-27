@@ -1,0 +1,158 @@
+<app-page-header
+  title="Microsoft Teams Integration"
+  subtitle="Install our embedded app in your favorite video conferencing tool"
+></app-page-header>
+<main>
+  <div>
+    <section class="integration-hero">
+      <div class="hero-header">
+        <h1 class="title">Planning Poker is now available within Teams!</h1>
+        <p class="details">
+          Use the Microsoft Teams integration to easily share planning poker
+          sessions with your team. <br />
+          You don't even need to leave your Teams meeting to have the same great
+          planning experience as before.
+        </p>
+        <div class="cta">
+          <a
+            mat-stroked-button
+            color="primary"
+            href=""
+            class="white-button"
+            disabled
+          >
+            <mat-icon>open_in_new</mat-icon>
+            View in Store (coming soon)
+          </a>
+        </div>
+      </div>
+      <div class="hero-video">
+        <video
+          #video
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="video.play()"
+          (loadedmetadata)="video.muted = true"
+        >
+          <source
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation_Teams.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+    </section>
+    <section class="integration-hero">
+      <h2 class="title">How does it work?</h2>
+      <div class="steps-container">
+        <div class="instruction-image">
+          <!-- <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_1.png"
+            alt="Store landing page for Planning Poker"
+            [class.visible]="selectedIndex === 0"
+          /> -->
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_4.jpg"
+            alt="Apps screen inside Teams"
+            [class.visible]="selectedIndex === 0"
+          />
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_2.jpg"
+            alt="The app is running inside Teams"
+            [class.visible]="selectedIndex === 1"
+          />
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_3.jpg"
+            alt="An ongoing planning session with participants in Teams"
+            [class.visible]="selectedIndex === 2"
+          />
+        </div>
+        <mat-tab-group
+          dynamicHeight
+          (selectedIndexChange)="selectedIndex = $event"
+        >
+          <!-- <mat-tab label="1. Open AppHub and install"
+            ><div class="step-content">
+              <p>
+                To add the app to your Teams account, open
+            <a
+              href="https://apphub.Teams.com/applications/planning-poker-planningpoker-live"
+              target="_blank"
+              >App Hub</a
+            >
+            and click the install button. You might need to ask your Workspace
+            administrator to whitelist the app for use.
+              </p>
+            </div>
+          </mat-tab> -->
+          <mat-tab label="2. Open the app inside Teams"
+            ><div class="step-content">
+              <p>
+                Once the app is installed, you need to add it to a meeting. This
+                should be the meeting for your regular planning session. The app
+                will be installed as a "Tab" in your meeting window.
+              </p>
+            </div>
+          </mat-tab>
+          <mat-tab label="3. Invite your colleagues in the meeting"
+            ><div class="step-content">
+              <p>
+                After you've created a planning poker session, just click
+                "Invite" and the link to join the current session will be
+                shared. You can also share the app to the meeting stage via the
+                "Share to Stage" button on the top of the app sidebar.
+              </p>
+            </div>
+          </mat-tab>
+          <mat-tab label="4. Estimate projects together, in real-time"
+            ><div class="step-content">
+              <p>
+                Once you are all in the same meeting and the app is open for
+                everyone, you can start planning your project. Set a topic by
+                clicking "Edit topic" next to "Topic of Round #1" and decide
+                which card set you want to use.
+              </p>
+              <p>
+                Each member votes on their own, and once all votes are cast the
+                leader presses "Reveal Votes" to reveal all votes. To start the
+                next round, click "New Round" (or "Next Round", if you've set
+                the topics beforehand from the sidebar) The team continues this
+                process until all topics have been voted on.
+              </p>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="integration-hero">
+        <div class="hero-header">
+          <h4 id="support" class="title">Getting Support and Reporting Bugs</h4>
+          <p class="details">
+            Are you stuck on a question or issue with the app? Check out the
+            <a routerLink="/faq">Frequently Asked Questions</a>, maybe your
+            query already has an answer.
+          </p>
+          <p class="details">
+            If you need additional support or have found a bug, please open a
+            ticket here
+            <a
+              href="https://github.com/biharygergo/card-estimator/issues"
+              rel="noopener"
+              >on GitHub</a
+            >
+            and our developers will try to help as fast as possible. We try
+            respond to tickets within 24 hours. If you need immediate
+            assistance, please contact us at
+            <a href="mailto:hello@planningpoker.live"
+              >hello@planningpoker.live</a
+            >.
+          </p>
+        </div>
+      </div>
+    </section>
+    <div class="banner-wrapper">
+      <start-planning-cta></start-planning-cta>
+    </div>
+  </div>
+</main>

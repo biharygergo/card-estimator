@@ -61,6 +61,7 @@ import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premi
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import { ConfigService } from '../services/config.service';
+import { TeamsService } from '../services/teams.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -225,6 +226,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly organizationService: OrganizationService,
     private readonly recurringMeetingService: RecurringMeetingLinkService,
     private readonly configService: ConfigService,
+    private readonly teamsService: TeamsService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -251,6 +253,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     if (this.config.runningIn === 'teams') {
       this.configService.setSessionCookie('runningInTeams', '1');
+      this.teamsService.configureApp();
     }
 
     this.onJoinRoomClicked

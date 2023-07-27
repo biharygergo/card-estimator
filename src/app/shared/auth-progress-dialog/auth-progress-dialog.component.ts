@@ -32,7 +32,10 @@ export enum AuthProgressState {
 export interface AuthProgressDialogData {
   initialState: AuthProgressState;
   startAccountSetupOnOpen: boolean;
+  authData?: ParsedSessionCookie;
+  idToken?: string;
 }
+
 export const authProgressDialogCreator = (
   data: AuthProgressDialogData
 ): ModalCreator<AuthProgressDialogComponent> => [
@@ -91,7 +94,7 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     public dialogRef: MatDialogRef<AuthProgressDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData
+    @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData,
   ) {
     this.state.next(dialogData.initialState);
   }
@@ -107,9 +110,13 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
         this.handleAuthAction(authAction)
       );
       try {
-        this.sessionCookie =
-          this.authService.getSessionCookie() as ParsedSessionCookie;
-        this.authService.clearSessionCookie();
+        if (!this.dialogData.authData) {
+          this.sessionCookie =
+            this.authService.getSessionCookie() as ParsedSessionCookie;
+          this.authService.clearSessionCookie();
+        } else {
+          this.sessionCookie = this.dialogData.authData;
+        }
         this.returnPath = this.sessionCookie.returnToPath;
         this.authIntent.next(this.sessionCookie.authIntent);
       } catch (e) {

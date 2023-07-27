@@ -13,20 +13,27 @@ export class TeamsService {
   async configureApp() {
     if (!this.isInitialized) {
       await microsoftTeams.app.initialize();
-      microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
-
-        if (data.contentUrl) {
-          const url = new URL(data.contentUrl);
-          this.router.navigateByUrl(url.pathname);
-        }
-
-        microsoftTeams.app.notifySuccess();
-      });
-
-      microsoftTeams.teamsCore.registerBeforeUnloadHandler((readyToUnload) => {
-        readyToUnload();
-        return true;
-      });
+      try {
+        microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
+          try {
+            microsoftTeams.app.notifySuccess();
+          } catch {
+            console.error('Could not notify success');
+          }
+        });
+  
+        microsoftTeams.teamsCore.registerBeforeUnloadHandler((readyToUnload) => {
+          try {
+            readyToUnload();
+          } catch {
+            console.error('Could not notify unload');
+          }
+          return true;
+        });
+      } catch {
+        console.error('Could not register for cache');
+      }
+      
 
       this.isInitialized = true;
     }

@@ -1,14 +1,35 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import * as microsoftTeams from '@microsoft/teams-js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeamsService {
-  constructor() {}
+  isInitialized = false;
+
+  constructor(private readonly router: Router) {}
 
   async configureApp() {
-    return microsoftTeams.app.initialize();
+    if (!this.isInitialized) {
+      await microsoftTeams.app.initialize();
+      microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
+
+        if (data.contentUrl) {
+          const url = new URL(data.contentUrl);
+          this.router.navigateByUrl(url.pathname);
+        }
+
+        microsoftTeams.app.notifySuccess();
+      });
+
+      microsoftTeams.teamsCore.registerBeforeUnloadHandler((readyToUnload) => {
+        readyToUnload();
+        return true;
+      });
+
+      this.isInitialized = true;
+    }
   }
 
   async inviteAllParticipants(roomId: string) {
@@ -21,7 +42,7 @@ export class TeamsService {
   }
 
   async getGoogleOauthToken(returnTo: string): Promise<string> {
-    await microsoftTeams.app.initialize();
+    await this.configureApp();
 
     const apiUrl = `${
       window.location.origin
@@ -38,6 +59,6 @@ export class TeamsService {
   }
 
   notifySuccess(token: string) {
-    microsoftTeams.authentication.notifySuccess(token)
+    microsoftTeams.authentication.notifySuccess(token);
   }
 }

@@ -17,6 +17,7 @@ import {
 import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { LinkService } from 'src/app/services/link.service';
+import { Theme, ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -40,6 +41,7 @@ export class ProfileDropdownComponent implements OnInit {
     private readonly activeRoute: ActivatedRoute,
     private readonly linkService: LinkService,
     public readonly permissionsService: PermissionsService,
+    public readonly themeService: ThemeService
   ) {}
 
   ngOnInit(): void {}
@@ -101,5 +103,11 @@ export class ProfileDropdownComponent implements OnInit {
     const apiUrl = window.origin + '/api/reportAnIssue';
     this.linkService.openUrl(apiUrl);
     this.analytics.logClickedReportAnIssue('profile_icon');
+  }
+
+  toggleDarkMode() {
+    this.themeService.setTheme(
+      this.themeService.currentTheme === Theme.DARK ? Theme.DEFAULT : Theme.DARK
+    );
   }
 }

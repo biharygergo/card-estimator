@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as microsoftTeams from '@microsoft/teams-js';
+import { Theme, ThemeService } from './theme.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +9,20 @@ import * as microsoftTeams from '@microsoft/teams-js';
 export class TeamsService {
   isInitialized = false;
 
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly themeService: ThemeService
+  ) {}
 
   async configureApp() {
     if (!this.isInitialized) {
       await microsoftTeams.app.initialize();
+      const context = microsoftTeams.app.getFrameContext();
+
+      if (context === 'sidePanel' || context === 'meetingStage') {
+        this.themeService.setTheme(Theme.DARK);
+      }
+
       try {
         microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
           try {
@@ -21,19 +31,20 @@ export class TeamsService {
             console.error('Could not notify success');
           }
         });
-  
-        microsoftTeams.teamsCore.registerBeforeUnloadHandler((readyToUnload) => {
-          try {
-            readyToUnload();
-          } catch {
-            console.error('Could not notify unload');
+
+        microsoftTeams.teamsCore.registerBeforeUnloadHandler(
+          (readyToUnload) => {
+            try {
+              readyToUnload();
+            } catch {
+              console.error('Could not notify unload');
+            }
+            return true;
           }
-          return true;
-        });
+        );
       } catch {
         console.error('Could not register for cache');
       }
-      
 
       this.isInitialized = true;
     }

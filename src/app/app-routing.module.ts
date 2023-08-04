@@ -16,7 +16,7 @@ const routes: Routes = [
       import('./create-or-join-room/create-or-join-room.component').then(
         (m) => m.CreateOrJoinRoomComponent
       ),
-    data: { title: 'Join' },
+    data: { title: 'Join', supportsTheme: true },
   },
   {
     path: 'create',
@@ -24,7 +24,7 @@ const routes: Routes = [
       import('./create-or-join-room/create-or-join-room.component').then(
         (m) => m.CreateOrJoinRoomComponent
       ),
-    data: { title: 'Create Room' },
+    data: { title: 'Create Room', supportsTheme: true },
   },
   {
     path: 'history',
@@ -32,12 +32,12 @@ const routes: Routes = [
       import('./session-history-page/session-history-page.component').then(
         (m) => m.SessionHistoryPageComponent
       ),
-    data: { title: 'Session history' },
+    data: { title: 'Session history', supportsTheme: true },
   },
   {
     path: 'room',
     component: RoomLoadingComponent,
-    data: { title: 'Loading room' },
+    data: { title: 'Loading room', supportsTheme: true },
     loadChildren: () => import('./room/room.module').then((m) => m.RoomModule),
   },
   {
@@ -46,7 +46,7 @@ const routes: Routes = [
       import('./recurring-meeting/recurring-meeting.component').then(
         (m) => m.RecurringMeetingComponent
       ),
-    data: { title: 'Recurring meeting lobby' },
+    data: { title: 'Recurring meeting lobby', supportsTheme: true },
   },
   {
     path: 'integrations/teams/configure',
@@ -54,7 +54,7 @@ const routes: Routes = [
       import('./integrations/teams/configure-tab/configure-tab.component').then(
         (mod) => mod.ConfigureTabComponent
       ),
-    data: { title: 'Configure Teams' },
+    data: { title: 'Configure Teams', supportsTheme: true },
   },
   {
     path: 'integrations/teams/auth',
@@ -62,7 +62,7 @@ const routes: Routes = [
       import('./integrations/teams/auth/auth.component').then(
         (mod) => mod.AuthComponent
       ),
-    data: { title: 'Authenticate' },
+    data: { title: 'Authenticate', supportsTheme: true },
   },
 ];
 

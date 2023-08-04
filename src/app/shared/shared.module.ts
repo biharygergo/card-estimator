@@ -43,6 +43,7 @@ import { PremiumLearnMoreComponent } from './premium-learn-more/premium-learn-mo
 import { IntegrationsComponent } from './integrations/integrations.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recurring-meetings-modal.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recu
     MatMenuModule,
     MatDialogModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatTabsModule,
@@ -119,6 +121,7 @@ import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recu
     MatMenuModule,
     MatDialogModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatTabsModule,

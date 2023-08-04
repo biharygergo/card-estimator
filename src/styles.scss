@@ -8,33 +8,26 @@
   --main-light-color: #2a479b;
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
-
+  --on-light-background-color: #efefef;
+  --on-light-background-color-2: #edf0ff;
+  --on-light-background-color-3: #efefef;
+  --on-light-background-color-4: #eef1fe;
+  --blue-background-color: #d9e2ff;
+  --title-on-dark: #001a43;
+  --paragraph-on-premium: #15448f;
+  
   --light-blue: #d9e2ff;
   --text-on-white: #3f4759;
   --text-on-gray: #44474f;
   --background-dark: #001a43;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-body {
-  margin: 0;
-  background: var(--background-dark);
-}
-
-.mat-mdc-menu-panel {
-  max-width: 300px !important;
+  --light-background: white;
 }
 
 $my-primary: mat.define-palette(mat.$indigo-palette, 500);
+$my-primary-dark: mat.define-palette(mat.$indigo-palette, 400);
+
 $my-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
+$my-accent-dark: mat.define-palette(mat.$orange-palette, A200, A100, A400);
 
 $my-theme: mat.define-light-theme(
   (
@@ -45,8 +38,54 @@ $my-theme: mat.define-light-theme(
   )
 );
 
+$my-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $my-primary-dark,
+      accent: $my-accent-dark,
+    ),
+  )
+);
+
 @include mat.core();
 @include mat.all-component-themes($my-theme);
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--background-dark);
+  transition: background 200ms linear;
+
+  &.dark {
+    @include mat.all-component-themes($my-dark-theme);
+    --background-dark: black;
+    --main-dark-color: black;
+    --main-color: #1f1f1f;
+    --light-background: #1f1f1f;
+    --light-background-color: #1f1f1f;
+    --on-light-background-color: #3d3d3d;
+    --on-light-background-color-2: #1f1f1f;
+    --on-light-background-color-3: #1f1f1f;
+    --blue-background-color: #1f1f1f;
+    --on-light-background-color-4: black;
+    --text-on-white: #efefef;
+    --title-on-dark: #efefef;
+    --paragraph-on-premium: white;
+  }
+}
+
+.mat-mdc-menu-panel {
+  max-width: 300px !important;
+}
 
 .room-id-container {
   padding: 1rem !important;
@@ -205,7 +244,7 @@ $my-theme: mat.define-light-theme(
   }
   .mat-mdc-tab-header {
     border-radius: 46px;
-    background-color: #edf0ff !important;
+    background-color: var(--on-light-background-color-2) !important;
     --mat-mdc-tab-header-with-background-foreground-color: #44474f;
   }
 
@@ -240,7 +279,7 @@ $my-theme: mat.define-light-theme(
 }
 
 .premium-banner {
-  background: #edf0ff;
+  background:  var(--on-light-background-color-2);
   border-radius: 18px;
   padding: 1rem;
   color: white;
@@ -248,7 +287,7 @@ $my-theme: mat.define-light-theme(
   margin-bottom: 1rem;
 
   p {
-    color: #15448f;
+    color: var(--paragraph-on-premium);
   }
 
   .premium-banner-buttons {
@@ -271,7 +310,7 @@ $my-theme: mat.define-light-theme(
     align-items: center;
     margin-bottom: 0.2rem;
     font-size: 1rem;
-    color: #001a43;
+    color: var(--title-on-dark);
   }
 }
 

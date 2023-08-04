@@ -1,5 +1,5 @@
 .summary {
-  background: #f4f5f6;
+  background: var(--light-background-color);
   border-radius: 12px;
   margin-bottom: 2rem;
 
@@ -31,7 +31,6 @@
 }
 
 .disclaimer {
-  color: #808ca1;
   font-size: 0.9rem;
 }
 

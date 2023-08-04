@@ -1,19 +1,16 @@
 @import "../../common.scss";
 
 .banner {
-  border-radius: 4px;
-  padding: 16px;
-
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 
   &.banner-info {
-    background: #fefefe;
+    // background: var(--on-light-background-color);
+    color: var(--text-on-white);
   }
 
   &.banner-gray {
-    background: #efefef;
+    // background: var(--on-light-background-color);
   }
 
   .banner-icon {

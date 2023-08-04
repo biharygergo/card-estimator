@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background: white;
+  background: var(--light-background);
   color: #808ca1;
 
   .details-inner {
@@ -14,7 +14,7 @@
 
   .title {
     font-weight: bold;
-    color: #001a43;
+    color: var(--title-on-dark);
 
     .modal & {
       margin-top: 2rem;
@@ -70,7 +70,7 @@
 
     .feature-details {
       h5 {
-        color: #001a43;
+        color: var(--title-on-dark);
         font-weight: bold;
         font-size: 1rem;
         margin-bottom: 6px;
@@ -84,7 +84,7 @@
   flex: 1 0 50%;
   padding: 1rem;
   flex-direction: column;
-  background-color: #eef1fe;
+  background-color: var(--on-light-background-color-4);
   align-items: center;
   justify-content: center;
 

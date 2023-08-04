@@ -76,7 +76,7 @@
       }
 
       &:disabled {
-        background-color: white;
+        opacity: 0.8;
 
         &.mat-accent{
           background-color: var(--accent-color);
@@ -91,5 +91,5 @@
 }
 
 .pass-option-button:not(.mat-accent) {
-  background-color: #d9e2ff;
+  background-color: var(--blue-background-color);
 }

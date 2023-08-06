@@ -16,6 +16,7 @@ import {
   startWith,
   Subject,
   takeUntil,
+  timer,
 } from 'rxjs';
 import { NavigationService } from './services/navigation.service';
 import { subscriptionResultModalCreator } from './shared/subscription-result/subscription-result.component';
@@ -118,10 +119,14 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.renderer.addClass(
-      this.document.body,
-      `running-in-${this.config.runningIn}`
-    );
+    timer(1000)
+      .pipe(takeUntil(this.destroyed))
+      .subscribe(() => {
+        this.renderer.addClass(
+          this.document.body,
+          `running-in-${this.config.runningIn}`
+        );
+      });
   }
 
   ngOnDestroy(): void {

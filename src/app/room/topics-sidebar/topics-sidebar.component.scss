@@ -110,7 +110,7 @@
   border-radius: 4px !important;
 
   &.mat-expanded {
-    background: #efefef;
+    background: var(--on-light-background-color);
   }
 
   ::ng-deep .mat-expansion-panel-body {
@@ -128,12 +128,11 @@
   border: none;
 
   button {
-    background: white;
+    background: var(--background-light);
   }
 }
 
 .card-round-number {
-  color: #001A43;
   font-weight: bold;
   font-size: 0.8rem;
   display: flex;
@@ -141,7 +140,6 @@
   gap: 0.5rem;
 
   mat-icon {
-    color: #001A43;
     font-size: 0.8rem;
     height: 0.8rem;
     width: 0.8rem;

@@ -19,7 +19,7 @@
         "full": "PlanningPoker.live"
     },
     "description": {
-        "short": "Run SCRUM planning meetings with ease inside Teams!",
+        "short": "Run SCRUM planning meetings with ease inside Microsoft Teams!",
         "full": "<p>Run SCRUM planning meetings with ease inside Microsoft Teams!</p> <p>To get started, install this app in Teams and create a new planning session. A free PlanningPoker.live account will automatically be created for you. You can also use your Google account or e-mail address to sign in to an existing account with us.</p> <p>This app is free to use, with additional paid features available for Premium users, learn more at <a href=\"https://planningpoker.live/premium\">https://planningpoker.live/premium</a>.</p> <p>Main features: </p> <ul> <li>Create voting rooms and collaborate with colleagues</li> <li>Find consensus and discuss edge cases</li> <li>Customize card sets, save results</li> </ul> <p>Planning projects is difficult, especially when you are working remotely. During a planning meeting, teams estimate projects/cards while sitting around a table and showing hands-on the count of three. This worked well before the pandemic, but it's not so efficient in the remote world. This app moves the planning meeting into your Teams window, allowing you to vote and find consensus easily.</p>"
     },
     "accentColor": "#FFFFFF",

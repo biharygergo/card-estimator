@@ -1,3 +1,5 @@
+@import "../../common.scss";
+
 .loading {
   display: flex;
   align-items: center;
@@ -74,7 +76,39 @@
   border-radius: 16px;
 }
 
-
 .alert-card {
   margin: 1rem 0;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+
+  @include extraSmallScreen {
+    display: none;
+  }
+}
+
+.members-list {
+  list-style: none;
+  padding-inline-start: 0;
+
+  .member {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem !important;
+
+    .member-meta {
+      display: flex;
+      gap: 1rem;
+
+      h3 {
+        margin-bottom: 0;
+      }
+    }
+
+    .member-menu-button {
+      margin-left: auto;
+    }
+  }
 }

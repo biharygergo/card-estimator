@@ -58,6 +58,22 @@
       <span>Previous sessions</span>
     </a>
     <mat-divider></mat-divider>
+    <button
+      mat-menu-item
+      (click)="toggleDarkMode()"
+      *ngIf="themeService.currentTheme === 'dark'"
+    >
+      <mat-icon>light_mode</mat-icon>
+      <span>Light mode</span>
+    </button>
+    <button
+      mat-menu-item
+      (click)="toggleDarkMode()"
+      *ngIf="themeService.currentTheme === 'default'"
+    >
+      <mat-icon>dark_mode</mat-icon>
+      <span>Dark mode</span>
+    </button>
     <button mat-menu-item (click)="reportAnIssue()">
       <mat-icon>bug_report</mat-icon>
       <span>Report an issue</span>

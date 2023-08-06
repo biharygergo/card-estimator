@@ -29,7 +29,7 @@ const routes: Routes = [
     resolve: {
       room: RoomResolver,
     },
-    data: { title: 'Active room' },
+    data: { title: 'Active room', supportsTheme: true },
   },
 ];
 

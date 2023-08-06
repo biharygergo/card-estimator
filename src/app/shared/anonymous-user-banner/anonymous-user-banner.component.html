@@ -1,9 +1,9 @@
-<div
+<mat-card
   class="banner banner-info"
   *ngIf="(user | async)?.isAnonymous && (!hideable || (hideable && !isHidden))"
   [class.banner-gray]="bannerStyle === 'gray'"
 >
-  <div class="banner-main">
+  <mat-card-content class="banner-main">
     <mat-icon class="banner-icon" color="primary"> info </mat-icon>
     <div class="banner-content">
       <p>
@@ -19,9 +19,9 @@
         <li>And more: import/export tickets from JIRA, create an organization or generate a summary with PokerBot!</li>
       </ul>
     </div>
-  </div>
+  </mat-card-content>
 
-  <div class="banner-action">
+  <mat-card-actions class="banner-action">
     <button
       mat-flat-button
       color="primary"
@@ -41,5 +41,5 @@
       <mat-icon>schedule</mat-icon>
       Maybe later
     </button>
-  </div>
-</div>
+  </mat-card-actions>
+</mat-card>

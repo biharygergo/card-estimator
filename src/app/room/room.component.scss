@@ -9,8 +9,8 @@
 }
 
 .unlock-features-button {
-  --mdc-outlined-button-outline-color: white;
-  --mdc-outlined-button-label-text-color: white;
+  --mdc-outlined-button-outline-color: white !important;
+  --mdc-outlined-button-label-text-color: white !important;
 }
 
 @keyframes backgroundTransition {

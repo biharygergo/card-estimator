@@ -1,7 +1,7 @@
 @import "../../common.scss";
 
 .velocity-container {
-  background: #d9e2ff;
+  background: var(--blue-background-color);
   padding: 3rem calc(1rem + 16px);
   display: flex;
   align-items: center;

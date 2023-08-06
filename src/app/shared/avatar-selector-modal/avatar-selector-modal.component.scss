@@ -37,8 +37,8 @@
 }
 
 .mat-mdc-icon-button {
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
 
     &.selected {
         border: 1px solid lightgray;
@@ -96,8 +96,8 @@
 }
 
 .customizer-panel {
-    box-shadow: none;
-    border: 1px solid var(--main-color)
+    box-shadow: none !important;
+    border: 1px solid var(--main-color);
 }
 .configuration-row {
     padding: 0.5rem 0rem;

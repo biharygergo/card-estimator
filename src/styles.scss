@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
-@import './app/common.scss';
+@import "./app/common.scss";
 
 :root {
   --main-color: #1c4182;
@@ -15,7 +15,7 @@
   --blue-background-color: #d9e2ff;
   --title-on-dark: #001a43;
   --paragraph-on-premium: #15448f;
-  
+
   --light-blue: #d9e2ff;
   --text-on-white: #3f4759;
   --text-on-gray: #44474f;
@@ -83,6 +83,10 @@ body {
 
     &.running-in-teams {
       --background-dark: #1f1f1f;
+    }
+
+    &.running-in-zoom {
+      --background-dark: #232323;
     }
   }
 }
@@ -283,7 +287,7 @@ body {
 }
 
 .premium-banner {
-  background:  var(--on-light-background-color-2);
+  background: var(--on-light-background-color-2);
   border-radius: 18px;
   padding: 1rem;
   color: white;
@@ -378,7 +382,7 @@ body {
 }
 
 @include extraSmallScreen {
-   .cdk-overlay-pane.custom-dialog {
+  .cdk-overlay-pane.custom-dialog {
     width: 95% !important;
 
     .mdc-dialog .mdc-dialog__content {
@@ -388,5 +392,5 @@ body {
     .mat-mdc-dialog-title {
       padding: 0.5rem;
     }
-  } 
+  }
 }

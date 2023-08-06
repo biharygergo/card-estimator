@@ -90,6 +90,9 @@
 }
 
 .members-list {
+  list-style: none;
+  padding-inline-start: 0;
+
   .member {
     display: flex;
     gap: 1rem;

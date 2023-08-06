@@ -140,8 +140,8 @@
                     >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
                   >
                 </h5>
-                <div class="members-list">
-                  <div *ngFor="let member of members$ | async">
+                <ul class="members-list">
+                  <li *ngFor="let member of members$ | async">
                     <div class="member">
                       <div class="member-meta">
                         <span class="avatar">
@@ -182,8 +182,8 @@
                         </button>
                       </mat-menu>
                     </div>
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </div>
               <h5 class="section-title">
                 <mat-icon>mail</mat-icon> Invite by email

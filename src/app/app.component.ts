@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  Renderer2,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
@@ -22,7 +29,7 @@ import { NavigationService } from './services/navigation.service';
 import { subscriptionResultModalCreator } from './shared/subscription-result/subscription-result.component';
 import { SubscriptionResult } from './types';
 import { Theme, ThemeService } from './services/theme.service';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 
 @Component({
@@ -79,7 +86,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly themeService: ThemeService,
     @Inject(DOCUMENT) private document: Document,
     @Inject(APP_CONFIG) public readonly config: AppConfig,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    @Inject(PLATFORM_ID) private readonly platformId: Object
   ) {}
 
   ngOnInit() {
@@ -119,14 +127,12 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
 
-    timer(1000)
-      .pipe(takeUntil(this.destroyed))
-      .subscribe(() => {
-        this.renderer.addClass(
-          this.document.body,
-          `running-in-${this.config.runningIn}`
-        );
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      this.renderer.addClass(
+        this.document.body,
+        `running-in-${this.config.runningIn}`
+      );
+    }
   }
 
   ngOnDestroy(): void {

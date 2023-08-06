@@ -240,7 +240,8 @@
               "/premium",
               "/recurringMeeting",
               "/organizationInvitation",
-              "/integration"
+              "/integration",
+              "/integrations/teams/configure"
             ],
             "guessRoutes": false
           },

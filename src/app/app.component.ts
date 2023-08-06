@@ -5,8 +5,6 @@ import {
   NavigationEnd,
   ActivatedRoute,
   Router,
-  RoutesRecognized,
-  ActivationStart,
   ActivationEnd,
 } from '@angular/router';
 import {
@@ -18,13 +16,13 @@ import {
   startWith,
   Subject,
   takeUntil,
-  tap,
 } from 'rxjs';
 import { NavigationService } from './services/navigation.service';
 import { subscriptionResultModalCreator } from './shared/subscription-result/subscription-result.component';
 import { SubscriptionResult } from './types';
 import { Theme, ThemeService } from './services/theme.service';
 import { DOCUMENT } from '@angular/common';
+import { APP_CONFIG, AppConfig } from './app-config.module';
 
 @Component({
   selector: 'app-root',
@@ -79,6 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
     private readonly themeService: ThemeService,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(APP_CONFIG) public readonly config: AppConfig,
     private renderer: Renderer2
   ) {}
 
@@ -102,12 +101,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.onThemeShouldChange$
       .pipe(takeUntil(this.destroyed))
       .subscribe(([supportsTheme]) => {
-        console.log('supports theme', supportsTheme);
         if (supportsTheme) {
           Object.values(Theme).forEach((theme) => {
             this.renderer.removeClass(this.document.body, theme);
           });
-          
+
           this.renderer.addClass(
             this.document.body,
             this.themeService.currentTheme
@@ -119,6 +117,11 @@ export class AppComponent implements OnInit, OnDestroy {
           );
         }
       });
+
+    this.renderer.addClass(
+      this.document.body,
+      `running-in-${this.config.runningIn}`
+    );
   }
 
   ngOnDestroy(): void {

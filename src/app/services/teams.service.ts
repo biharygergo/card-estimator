@@ -11,7 +11,7 @@ export class TeamsService {
 
   constructor(
     private readonly router: Router,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
   ) {}
 
   async configureApp() {

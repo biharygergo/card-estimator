@@ -80,6 +80,10 @@ body {
     --text-on-white: #efefef;
     --title-on-dark: #efefef;
     --paragraph-on-premium: white;
+
+    &.running-in-teams {
+      --background-dark: #1f1f1f;
+    }
   }
 }
 

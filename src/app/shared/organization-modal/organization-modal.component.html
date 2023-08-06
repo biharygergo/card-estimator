@@ -1,6 +1,4 @@
-<h1 mat-dialog-title class="dialog-title">
-  My organization
-</h1>
+<h1 mat-dialog-title class="dialog-title">My organization</h1>
 <div mat-dialog-content>
   <div
     class="premium-banner"
@@ -142,48 +140,50 @@
                     >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
                   >
                 </h5>
-                <mat-list class="members-list">
-                  <mat-list-item *ngFor="let member of members$ | async">
-                    <span matListItemAvatar class="avatar">
-                      <img
-                        *ngIf="member?.avatarUrl"
-                        [src]="member.avatarUrl"
-                        class="avatar-image"
-                        alt="A user's avatar"
-                      />
-                      <div class="avatar-text" *ngIf="!member?.avatarUrl">
-                        {{ member.displayName?.charAt(0) }}
+                <div class="members-list">
+                  <div *ngFor="let member of members$ | async">
+                    <div class="member">
+                      <div class="member-meta">
+                        <span class="avatar">
+                          <img
+                            *ngIf="member?.avatarUrl"
+                            [src]="member.avatarUrl"
+                            class="avatar-image"
+                            alt="A user's avatar"
+                          />
+                          <div class="avatar-text" *ngIf="!member?.avatarUrl">
+                            {{ member.displayName?.charAt(0) }}
+                          </div>
+                        </span>
+                        <div>
+                          <h3>
+                            {{ member.displayName }}
+                          </h3>
+                          <small *ngIf="member.id === organization?.createdById"
+                            >Admin</small
+                          >
+                        </div>
                       </div>
-                    </span>
-                    <h3 matLine class="member">
-                      <span class="member-name">
-                        {{ member.displayName }}
-                      </span>
-                    </h3>
-                    <small
-                      matLine
-                      *ngIf="member.id === organization?.createdById"
-                      >Admin</small
-                    >
-                    <button
-                      mat-icon-button
-                      [matMenuTriggerFor]="menu"
-                      matListItemMeta
-                    >
-                      <mat-icon>more_horiz</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
                       <button
-                        mat-menu-item
-                        [disabled]="member.id === organization?.createdById"
-                        (click)="removeFromOrganization(member.id)"
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        class="member-menu-button"
                       >
-                        <mat-icon>group_remove</mat-icon> Remove from
-                        organization
+                        <mat-icon>more_horiz</mat-icon>
                       </button>
-                    </mat-menu>
-                  </mat-list-item>
-                </mat-list>
+                      <mat-menu #menu="matMenu">
+                        <button
+                          mat-menu-item
+                          [disabled]="member.id === organization?.createdById"
+                          (click)="removeFromOrganization(member.id)"
+                        >
+                          <mat-icon>group_remove</mat-icon> Remove from
+                          organization
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </div>
+                </div>
               </div>
               <h5 class="section-title">
                 <mat-icon>mail</mat-icon> Invite by email

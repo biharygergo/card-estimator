@@ -27,5 +27,6 @@ export class AloneInRoomModalComponent {
   onCopyLink() {
     this.analytics.logClickedShareRoom('alone_modal');
     this.data.onCopyLink();
+    this.dialogRef.close();
   }
 }

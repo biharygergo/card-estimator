@@ -88,6 +88,10 @@
   align-items: center;
   justify-content: center;
 
+  h2 {
+    color: var(--title-on-dark);
+  }
+
   .get-premium-card {
     max-width: 450px;
     border-radius: 28px;
@@ -137,10 +141,11 @@
 
 .plan-title {
   font-weight: 600;
+  color: var(--text-on-white);
 }
 
 .premium-description {
-  color: #808ca1;
+  color: var(--text-on-white);
   margin-bottom: 2rem;
 }
 
@@ -176,6 +181,7 @@
     .monthly-price {
       margin-bottom: 0;
       font-weight: 600;
+      color: var(--text-on-gray);
 
       .light {
         font-weight: 500;

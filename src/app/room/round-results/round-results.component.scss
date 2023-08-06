@@ -30,6 +30,7 @@ mat-chip-set {
 
     &.voter {
       background: #d9e2ff;
+      --mdc-chip-label-text-color: black;
     }
 
     &.vote {

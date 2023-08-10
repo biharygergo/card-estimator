@@ -1,6 +1,4 @@
-<h1 mat-dialog-title class="dialog-title">
-  Room security & permissions
-</h1>
+<h1 mat-dialog-title class="dialog-title">Room security & permissions</h1>
 <div mat-dialog-content>
   <div class="premium-banner" *ngIf="!(isPremiumSubscriber$ | async)">
     <h2 class="title">Premium Feature</h2>
@@ -185,35 +183,36 @@
               }}
             </button>
           </span>
-          <mat-list class="participants-list">
-            <mat-list-item *ngFor="let member of members$ | async">
-              <span matListItemAvatar class="avatar">
-                <img
-                  *ngIf="member.avatarUrl"
-                  [src]="member.avatarUrl"
-                  class="avatar-image"
-                  alt="A user's avatar"
-                />
-                <div class="avatar-text" *ngIf="!member.avatarUrl">
-                  {{ member.name?.charAt(0) }}
-                </div>
-              </span>
-              <h3 matLine class="member">
-                <span class="member-name">
-                  {{ member.name }}
-                  <mat-icon class="verified-icon" *ngIf="member.isPermanent"
-                    >verified</mat-icon
-                  >
+          <ul class="participants-list">
+            <li class="participant" *ngFor="let member of members$ | async">
+              <div class="participant-meta">
+                <span class="avatar">
+                  <img
+                    *ngIf="member.avatarUrl"
+                    [src]="member.avatarUrl"
+                    class="avatar-image"
+                    alt="A user's avatar"
+                  />
+                  <div class="avatar-text" *ngIf="!member.avatarUrl">
+                    {{ member.name?.charAt(0) }}
+                  </div>
                 </span>
-              </h3>
-              <small matLine>
-                {{ member.isCreator ? "Creator" : (member.type | titlecase) }}
-              </small>
-              <button
-                mat-icon-button
-                [matMenuTriggerFor]="menu"
-                matListItemMeta
-              >
+              </div>
+              <div>
+                <h3 class="member">
+                  <span class="member-name">
+                    {{ member.name }}
+                    <mat-icon class="verified-icon" *ngIf="member.isPermanent"
+                      >verified</mat-icon
+                    >
+                  </span>
+                </h3>
+                <small>
+                  {{ member.isCreator ? "Creator" : (member.type | titlecase) }}
+                </small>
+              </div>
+
+              <button mat-icon-button [matMenuTriggerFor]="menu" class="participant-menu-button">
                 <mat-icon>more_horiz</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
@@ -238,8 +237,8 @@
                   <mat-icon>person_remove</mat-icon> Remove from room
                 </button>
               </mat-menu>
-            </mat-list-item>
-          </mat-list>
+            </li>
+          </ul>
         </div>
       </div>
     </mat-tab>

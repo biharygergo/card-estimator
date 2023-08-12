@@ -8,6 +8,7 @@ import {
 import {
   BehaviorSubject,
   catchError,
+  EMPTY,
   from,
   map,
   Observable,
@@ -140,7 +141,10 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
           }
           return from(signInPromise).pipe(
             map(() => true),
-            catchError((error) => this.handleUnknownAuthError(error))
+            catchError((error) => {
+              this.isBusy.next(false);
+              return this.handleAccountError(error);
+            })
           );
         }),
         tap(() => this.analyticsService.logClickedSignIn('create')),
@@ -172,25 +176,29 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         this.isBusy.next(false);
       }),
       map(() => true),
-      catchError((error) => {
-        return this.handleUnknownAuthError(error);
-      })
+      catchError((error) => this.handleAccountError(error))
     );
   }
 
   private async linkAccountWithGoogleWeb(): Promise<void> {
-    return this.authService.linkAccountWithGoogle().catch((error) => {
-      if (error.code === 'auth/credential-already-in-use') {
-        this.dialog.open(
-          ...authProgressDialogCreator({
-            initialState: AuthProgressState.ACCOUNT_EXISTS,
-            startAccountSetupOnOpen: false,
-          })
-        );
-      } else {
-        throw error;
-      }
-    });
+    return this.authService.linkAccountWithGoogle();
+  }
+
+  private handleAccountError(error: any): Observable<boolean> {
+    if (
+      error.code === 'auth/credential-already-in-use' ||
+      error.code === 'auth/email-already-in-use'
+    ) {
+      this.dialog.open(
+        ...authProgressDialogCreator({
+          initialState: AuthProgressState.ACCOUNT_EXISTS,
+          startAccountSetupOnOpen: false,
+        })
+      );
+      return of(false);
+    } else {
+      return this.handleUnknownAuthError(error);
+    }
   }
 
   private handleUnknownAuthError(error: Error): Observable<boolean> {
@@ -239,7 +247,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
       }),
       map(() => true),
       catchError((error) => {
-        return this.handleUnknownAuthError(error);
+        return this.handleAccountError(error);
       })
     );
   }

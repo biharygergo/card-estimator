@@ -78,7 +78,6 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     Validators.email,
   ]);
 
-  isLoadingStripe = false;
   isOrganizationCreator = false;
 
   constructor(
@@ -86,7 +85,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     public readonly authService: AuthService,
     private readonly toastService: ToastService,
     private readonly dialog: MatDialog,
-    private readonly paymentsService: PaymentService,
+    public readonly paymentsService: PaymentService,
     public readonly permissionsService: PermissionsService,
     private readonly analytics: AnalyticsService
   ) {}
@@ -195,12 +194,6 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
-  }
-
-  async subscribeToPremium() {
-    this.isLoadingStripe = true;
-    this.analytics.logClickedSubscribeToPremium('organization_modal');
-    await this.paymentsService.startSubscriptionToPremium();
   }
 
   openLearnMore() {

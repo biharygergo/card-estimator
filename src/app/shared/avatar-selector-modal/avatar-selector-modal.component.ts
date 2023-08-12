@@ -34,7 +34,6 @@ export const avatarModalCreator = ({
     width: '90%',
     maxWidth: '600px',
     maxHeight: '90vh',
-    panelClass: 'custom-dialog',
     data: {
       openAtTab,
     },
@@ -183,7 +182,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private analytics: AnalyticsService,
     private snackBar: MatSnackBar,
-    private readonly paymentsService: PaymentService,
+    public readonly paymentsService: PaymentService,
     public dialogRef: MatDialogRef<AvatarSelectorModalComponent>,
     private readonly dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) private dialogData: AvatarDialogData
@@ -266,12 +265,6 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   signOut() {
     this.auth.signOut();
     this.dialogRef.close();
-  }
-
-  async subscribeToPremium() {
-    this.isLoadingStripe = true;
-    this.analytics.logClickedSubscribeToPremium('profile');
-    await this.paymentsService.startSubscriptionToPremium();
   }
 
   async redirectToCustomerPortal() {

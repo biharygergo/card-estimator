@@ -289,8 +289,6 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   hasConfigurationAccess: boolean = false;
 
-  isLoadingStripe = false;
-
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly permissionsService: PermissionsService,
@@ -298,7 +296,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     public readonly authService: AuthService,
     private readonly organizationService: OrganizationService,
-    private readonly paymentService: PaymentService,
+    public readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData
   ) {}
@@ -469,12 +467,6 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   async addToOrganization(memberId: string) {
     await this.organizationService.addMember(this.organization.id, memberId);
     this.showMessage('Added to organization!');
-  }
-
-  async subscribeToPremium() {
-    this.analyticsService.logClickedSubscribeToPremium('room_configuration');
-    this.isLoadingStripe = true;
-    await this.paymentService.startSubscriptionToPremium();
   }
 
   openLearnMore() {

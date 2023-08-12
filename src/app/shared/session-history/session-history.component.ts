@@ -79,7 +79,7 @@ export class SessionHistoryComponent implements OnInit {
     private estimatorService: EstimatorService,
     private readonly serializerService: SerializerService,
     public readonly permissionsService: PermissionsService,
-    private readonly paymentsService: PaymentService,
+    public readonly paymentsService: PaymentService,
     private readonly analytics: AnalyticsService,
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public config: AppConfig

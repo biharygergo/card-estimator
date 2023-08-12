@@ -15,15 +15,16 @@
     </p>
     <div class="premium-banner-buttons">
       <button
-        mat-flat-button
-        color="primary"
-        (click)="subscribeToPremium()"
-        [disabled]="isLoadingStripe"
+        mat-button
+        (click)="openLearnMore()"
+        class="learn-more"
+        [disabled]="paymentsService.isSubscriptionDisabled"
       >
-        {{ isLoadingStripe ? "Redirecting you to Stripe..." : "Get Premium" }}
-      </button>
-      <button mat-button (click)="openLearnMore()" class="learn-more">
-        Learn more
+        {{
+          paymentsService.isSubscriptionDisabled
+            ? "Not available on Teams mobile"
+            : "Learn more"
+        }}
       </button>
     </div>
   </div>

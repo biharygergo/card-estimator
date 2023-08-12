@@ -84,6 +84,7 @@ import {
 } from '../shared/animations';
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { TeamsService } from '../services/teams.service';
+import { PaymentService } from '../services/payment.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -303,6 +304,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly webexService: WebexApiService,
     private readonly teamsService: TeamsService,
     public readonly permissionsService: PermissionsService,
+    public readonly paymentService: PaymentService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 

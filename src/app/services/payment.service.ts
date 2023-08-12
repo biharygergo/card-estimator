@@ -32,6 +32,8 @@ export type StripeSubscription = Subscription;
 })
 export class PaymentService {
   payments: StripePayments;
+  isSubscriptionDisabled = false;
+
   constructor(
     readonly app: FirebaseApp,
     private readonly zoomService: ZoomApiService,

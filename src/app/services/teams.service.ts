@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { Theme, ThemeService } from './theme.service';
+import { PaymentService } from './payment.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,14 +13,20 @@ export class TeamsService {
   constructor(
     private readonly router: Router,
     private readonly themeService: ThemeService,
+    private readonly paymentService: PaymentService
   ) {}
 
   async configureApp() {
     if (!this.isInitialized) {
       await microsoftTeams.app.initialize();
-      const context = microsoftTeams.app.getFrameContext();
+      const frameContext = microsoftTeams.app.getFrameContext();
+      const appContext = await microsoftTeams.app.getContext();
 
-      if (context === 'sidePanel' || context === 'meetingStage') {
+      if (['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)) {
+        this.paymentService.isSubscriptionDisabled = true;
+      }
+
+      if (frameContext === 'sidePanel' || frameContext === 'meetingStage') {
         this.themeService.setTheme(Theme.DARK);
       }
 

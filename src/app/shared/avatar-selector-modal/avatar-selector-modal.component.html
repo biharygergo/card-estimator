@@ -134,23 +134,12 @@
                 organizations, invitations and more.
               </p>
               <button
-                mat-flat-button
-                color="primary"
-                (click)="subscribeToPremium()"
-                [disabled]="isLoadingStripe"
-              >
-                {{
-                  isLoadingStripe
-                    ? "Redirecting you to Stripe..."
-                    : "Subscribe to Premium"
-                }}
-              </button>
-              <button
                 mat-button
                 class="learn-more-button"
                 (click)="openLearnMore()"
+                [disabled]="paymentsService.isSubscriptionDisabled"
               >
-                Learn more
+                {{ paymentsService.isSubscriptionDisabled ? 'Not available on Teams mobile' : 'Learn more'}}
               </button>
             </ng-template>
           </div>

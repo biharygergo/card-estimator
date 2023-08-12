@@ -9,19 +9,12 @@
     </p>
     <div class="premium-banner-buttons">
       <button
-        mat-flat-button
-        color="primary"
-        (click)="subscribeToPremium()"
-        [disabled]="isLoadingStripe"
+        mat-button
+        (click)="openLearnMore()"
+        class="learn-more"
+        [disabled]="paymentService.isSubscriptionDisabled"
       >
-        {{
-          isLoadingStripe
-            ? "Redirecting you to Stripe..."
-            : "Subscribe to Premium"
-        }}
-      </button>
-      <button mat-button (click)="openLearnMore()" class="learn-more">
-        Learn more
+        {{ paymentService.isSubscriptionDisabled ? 'Not available on Teams mobile' : 'Learn more'}}
       </button>
     </div>
   </div>
@@ -212,7 +205,11 @@
                 </small>
               </div>
 
-              <button mat-icon-button [matMenuTriggerFor]="menu" class="participant-menu-button">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                class="participant-menu-button"
+              >
                 <mat-icon>more_horiz</mat-icon>
               </button>
               <mat-menu #menu="matMenu">

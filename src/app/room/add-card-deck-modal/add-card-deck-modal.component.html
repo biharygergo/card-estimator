@@ -66,8 +66,13 @@
         mat-flat-button
         color="primary"
         (click)="clickedLearnMorePremium()"
-      >
-        Learn more
+        [disabled]="paymentsService.isSubscriptionDisabled"
+        >
+          {{
+            paymentsService.isSubscriptionDisabled
+              ? "Not available on Teams mobile"
+              : "Learn more"
+          }}
       </button>
     </div>
   </div>

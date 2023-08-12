@@ -28,6 +28,7 @@ import {
 } from 'src/app/services/card-deck.service';
 import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { PaymentService } from 'src/app/services/payment.service';
 
 export type AddCardDeckModalData = {
   roomId: string;
@@ -59,6 +60,7 @@ export class AddCardDeckModalComponent implements OnInit {
     private readonly cardDeckService: CardDeckService,
     private readonly dialog: MatDialog,
     public readonly permissionService: PermissionsService,
+    public readonly paymentsService: PaymentService,
     private analytics: AnalyticsService
   ) {}
 

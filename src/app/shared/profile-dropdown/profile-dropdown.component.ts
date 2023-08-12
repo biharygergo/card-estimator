@@ -18,6 +18,7 @@ import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-lear
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { LinkService } from 'src/app/services/link.service';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
+import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -41,7 +42,8 @@ export class ProfileDropdownComponent implements OnInit {
     private readonly activeRoute: ActivatedRoute,
     private readonly linkService: LinkService,
     public readonly permissionsService: PermissionsService,
-    public readonly themeService: ThemeService
+    public readonly themeService: ThemeService,
+    public readonly paymentService: PaymentService,
   ) {}
 
   ngOnInit(): void {}

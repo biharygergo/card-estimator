@@ -9,7 +9,7 @@
           mat-stroked-button
           class="unlock-features-button responsive-label-button"
           matTooltip="Get the most out of your planning with Premium"
-          *ngIf="(permissionsService.hasPremiumAccess() | async) === false"
+          *ngIf="(permissionsService.hasPremiumAccess() | async) === false && !paymentService.isSubscriptionDisabled"
           (click)="openPremiumLearnMoreModal()"
           @fadeAnimation
         >

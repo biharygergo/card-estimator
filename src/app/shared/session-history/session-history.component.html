@@ -15,11 +15,20 @@
     <div class="premium-banner" *ngIf="(isPremium$ | async) === false">
       <h2 class="title">Unlock your full history</h2>
       <p>
-        Subscribe to Planning Poker Premium to unlock your full planning history.
-        Free accounts can view their last 3 sessions only.
+        Subscribe to Planning Poker Premium to unlock your full planning
+        history. Free accounts can view their last 3 sessions only.
       </p>
-      <button mat-flat-button color="primary" (click)="clickedLearnMorePremium()">
-        Learn more
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="clickedLearnMorePremium()"
+        [disabled]="paymentsService.isSubscriptionDisabled"
+      >
+        {{
+          paymentsService.isSubscriptionDisabled
+            ? "Not available on Teams mobile"
+            : "Learn more"
+        }}
       </button>
     </div>
   </mat-card-content>

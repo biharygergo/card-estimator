@@ -262,6 +262,10 @@ export class EstimatorService {
       ),
     ]).pipe(
       tap(([user, room]) => {
+        if (!user) {
+          throw new NotLoggedInError();
+        }
+
         if (!room) {
           throw new RoomNotFoundError();
         }

@@ -6,7 +6,10 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import { EstimatorService } from '../services/estimator.service';
+import {
+  EstimatorService,
+  NotLoggedInError,
+} from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -424,7 +427,11 @@ export class RoomComponent implements OnInit, OnDestroy {
           })
         );
     } else {
-      this.errorGoBackToJoinPage({});
+      const message =
+        error instanceof NotLoggedInError
+          ? "You've been signed out"
+          : undefined;
+      this.errorGoBackToJoinPage({ message });
       return EMPTY;
     }
   }
@@ -527,6 +534,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }) {
     this.snackBar.open(message, null, {
       duration: duration === null ? undefined : duration,
+      horizontalPosition: 'right',
     });
     this.router.navigate(['join']);
   }
@@ -614,8 +622,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     } else if (this.config.runningIn === 'teams') {
       await this.teamsService.inviteAllParticipants(this.room.roomId);
-      message =
-        'Meeting link shared. Try opening the app in Stage mode';
+      message = 'Meeting link shared. Try opening the app in Stage mode';
 
       this.clipboard.copy(roomUrl);
     } else {

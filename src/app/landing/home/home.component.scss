@@ -31,7 +31,7 @@
     gap: 20px;
     color: white;
     flex: 1 0 50%;
-    padding-top: 5rem;
+    padding: 3rem 0;
     z-index: 2;
 
     h1 {
@@ -53,6 +53,45 @@
       font-size: 1rem;
       color: #345ca8;
       margin-bottom: 16px;
+    }
+
+    .integrations {
+      ul {
+        list-style-type: none;
+        padding-inline-start: 0;
+        display: flex;
+        align-items: center;
+
+        li {
+          &:not(:first-child) {
+            margin-left: 0.7rem;
+          }
+
+          &:first-child {
+            margin-right: 1rem;
+          }
+
+          img:not(.browsers) {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+          }
+
+          .browsers {
+            height: 35px;
+          }
+
+          .browsers-button {
+            height: unset;
+            padding: 0.5rem 1rem;
+            border-color: #4d7dc0;
+            .mdc-button__label {
+              display: flex;
+              align-items: center;
+            }
+          }
+        }
+      }
     }
 
     .used-by {
@@ -110,6 +149,12 @@
 
       .logo-list {
         justify-content: center;
+      }
+
+      .integrations {
+        ul {
+          justify-content: center;
+        }
       }
     }
 

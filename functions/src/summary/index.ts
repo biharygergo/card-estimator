@@ -56,26 +56,26 @@ export async function createSummary(data: any, context: CallableContext) {
     }
   }
 
-  const prompt = `
-  I want you to act like a scrum master of a team. Given the below csv summary of a planning meeting, write a summary to send to the team via chat. 
-  The csv contains votes for each discussed topic for each team member as well as the Average and Majority columns.
-  The summary should only contain full sentences and not include bullet points or tabular data. 
-  Try to mention something about each round, but keep a natural tone, no need to include too many numbers. 
-  The summary should be in a friendly, but formal work tone, and it should be around 150 words long. It should be structured in at least two paragraphs.
-  Finish with a motivating sentence for the upcoming sprint to keep the team energized. You can even quote someone famous.
-  The votes are numbers, a low number means a more straightforward task and a higher number means a more difficult task. Members know of this scale, you don't need to explain this to them. 
-  The data is below:
+  const systemPrompt = `
+  You are the helpful SCRUM Master of an agile development team. Given the below csv export of a planning meeting, write a summary to send to the team via chat. 
+ 
+The csv contains votes for each discussed topic for each team member as well as the Average and Majority columns. The topic names are either "Topic of Round #X" where X is the round (1, 2, etc.) or they can be custom topic names for what was discussed in the meeting.   The votes are numbers, a low number means a more straightforward task and a higher number means a more difficult task. Members know of this scale, you don't need to explain this to them. 
 
-${data.csvSummary}
+Try to mention something about each round, but keep a natural tone, no need to include too many numbers. The summary should be in a friendly, but formal work tone, and it should be around 150 words long. It should be structured in at least two paragraphs.
+
+Finish with a motivating sentence for the upcoming sprint to keep the team energized. You can even quote someone famous.
 `;
 
-  const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt,
+  const response = await openai.createChatCompletion({
+    model: "gpt-4",
+    messages: [
+      {role: "system", content: systemPrompt},
+      {role: "user", content: data.csvSummary},
+    ],
     max_tokens: 800,
   });
 
-  let summaryText = response.data.choices?.[0].text ?? "";
+  let summaryText = response.data.choices?.[0].message?.content ?? "";
   while (summaryText.startsWith("\n")) {
     summaryText = summaryText.slice(1).trimStart();
   }

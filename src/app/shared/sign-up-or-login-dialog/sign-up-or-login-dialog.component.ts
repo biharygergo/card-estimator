@@ -153,7 +153,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
               password
             );
           } else {
-            this.authService.signInWithEmailAndPassword(email, password);
+            signInPromise = this.authService.signInWithEmailAndPassword(email, password);
           }
           return from(signInPromise).pipe(
             map(() => true),

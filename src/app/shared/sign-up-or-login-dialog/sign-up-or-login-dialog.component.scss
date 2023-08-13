@@ -72,6 +72,12 @@
   @media only screen and (max-width: 600px) {
     order: 1;
   }
+
+  .forgot-password-button {
+    font-size: smaller;
+    height: 30px;
+    color: var(--mdc-dialog-supporting-text-color);
+  }
 }
 
 .side-panel {

@@ -25,8 +25,8 @@
           <small
             >{{
               intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                ? "Sign up"
-                : "Sign up or login"
+                ? "Register"
+                : "Register or login"
             }}
             with your work account in a single click.</small
           >
@@ -67,70 +67,120 @@
             </mat-icon>
             {{
               intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                ? "Sign up with Google"
+                ? "Register with Google"
                 : "Sign in with Google"
             }}
           </button>
         </div>
         <mat-divider></mat-divider>
-        <div class="traditional">
-          <small>{{
-            intent === SignUpOrLoginIntent.LINK_ACCOUNT
-              ? "Or, register with your work e-mail address:"
-              : "Or, login or register with your work e-mail address:"
-          }}</small>
-          <form [formGroup]="form">
-            <mat-form-field appearance="outline">
-              <mat-label>E-mail</mat-label>
-              <input
-                matInput
-                type="email"
-                placeholder="you@company.com"
-                formControlName="email"
-                id="email-input"
-              />
-              <mat-icon matSuffix>alternate_email</mat-icon>
-              <mat-error *ngIf="form.controls.email.errors?.['email']"
-                >This does not look like a valid e-mail.</mat-error
+        <mat-tab-group
+          [dynamicHeight]="true"
+          [selectedIndex]="screen === 'signUp' ? 1 : 0"
+        >
+          <mat-tab label="Sign in">
+            <div class="traditional">
+              <small>Sign in with your work e-mail address:</small>
+              <form [formGroup]="form">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>E-mail</mat-label>
+                  <input
+                    matInput
+                    type="email"
+                    placeholder="you@company.com"
+                    formControlName="email"
+                    id="email-input"
+                  />
+                  <mat-icon matSuffix>alternate_email</mat-icon>
+                  <mat-error *ngIf="form.controls.email.errors?.['email']"
+                    >This does not look like a valid e-mail.</mat-error
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    formControlName="password"
+                    id="password-input"
+                  />
+                  <mat-icon matSuffix>lock</mat-icon>
+                  <mat-error
+                    *ngIf="form.controls.password.errors?.['minlength']"
+                    >Password must be at least 8 characters long.</mat-error
+                  >
+                </mat-form-field>
+              </form>
+              <button
+                mat-stroked-button
+                [disabled]="!form.valid"
+                (click)="onSignInClicked.next()"
+                id="create-account-button"
               >
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Password</mat-label>
-              <input
-                matInput
-                type="password"
-                formControlName="password"
-                id="password-input"
-              />
-              <mat-icon matSuffix>lock</mat-icon>
-              <mat-error *ngIf="form.controls.password.errors?.['minlength']"
-                >Password must be at least 8 characters long.</mat-error
+                Sign in
+              </button>
+              <button
+                class="forgot-password-button"
+                mat-button
+                (click)="forgotPassword()"
               >
-            </mat-form-field>
-          </form>
-          <button
-            mat-stroked-button
-            [disabled]="!form.valid"
-            (click)="onCreateAccountClicked.next('sign-in')"
-            id="create-account-button"
+                Forgot your password?
+              </button>
+            </div>
+          </mat-tab>
+          <mat-tab label="Register">
+            <div class="traditional">
+              <small>Register with your work e-mail address:</small>
+              <form [formGroup]="form">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>Name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Best Engineer"
+                    formControlName="name"
+                    id="name-input"
+                  />
+                  <mat-icon matSuffix>person</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>E-mail</mat-label>
+                  <input
+                    matInput
+                    type="email"
+                    placeholder="you@company.com"
+                    formControlName="email"
+                    id="email-input"
+                  />
+                  <mat-icon matSuffix>alternate_email</mat-icon>
+                  <mat-error *ngIf="form.controls.email.errors?.['email']"
+                    >This does not look like a valid e-mail.</mat-error
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    formControlName="password"
+                    id="password-input"
+                  />
+                  <mat-icon matSuffix>lock</mat-icon>
+                  <mat-error
+                    *ngIf="form.controls.password.errors?.['minlength']"
+                    >Password must be at least 8 characters long.</mat-error
+                  >
+                </mat-form-field>
+              </form>
+              <button
+                mat-stroked-button
+                [disabled]="!form.valid"
+                (click)="onCreateAccountClicked.next()"
+                id="create-account-button"
+              >
+                Create account
+              </button>
+            </div></mat-tab
           >
-            {{
-              intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                ? "Create account"
-                : "Sign in"
-            }}
-          </button>
-          <ng-container *ngIf="intent === SignUpOrLoginIntent.SIGN_IN">
-            <h5 align="center">or</h5>
-            <button
-              mat-stroked-button
-              [disabled]="!form.valid"
-              (click)="onCreateAccountClicked.next('sign-up')"
-            >
-              Create a new account
-            </button>
-          </ng-container>
-        </div>
+        </mat-tab-group>
       </ng-template>
     </div>
     <div class="side-panel">

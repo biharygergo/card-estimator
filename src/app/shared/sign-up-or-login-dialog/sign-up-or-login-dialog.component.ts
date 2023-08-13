@@ -15,6 +15,7 @@ import {
   of,
   Subject,
   switchMap,
+  take,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -29,6 +30,7 @@ import {
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { TeamsService } from 'src/app/services/teams.service';
 import { ActivatedRoute } from '@angular/router';
+import { ToastService } from 'src/app/services/toast.service';
 
 export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 
@@ -62,9 +64,16 @@ export const signUpOrLoginDialogCreator = (
 })
 export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();
-  onCreateAccountClicked = new Subject<'sign-in' | 'sign-up'>();
+  onCreateAccountClicked = new Subject<void>();
+  onSignInClicked = new Subject<void>();
+
+  screen: 'signIn' | 'signUp' = 'signUp';
 
   form = new FormGroup({
+    name: new FormControl<string>('', {
+      validators: [],
+      nonNullable: true,
+    }),
     email: new FormControl<string>('', {
       validators: [Validators.email, Validators.required],
       nonNullable: true,
@@ -92,12 +101,21 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<SignUpOrLoginDialogComponent>,
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly teamsService: TeamsService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly toastService: ToastService
   ) {
     this.intent = dialogData.intent;
+    this.screen =
+      dialogData.intent === SignUpOrLoginIntent.SIGN_IN ? 'signIn' : 'signUp';
   }
 
   ngOnInit() {
+    this.authService.user.pipe(take(1)).subscribe((user) => {
+      if (user?.displayName) {
+        this.form.patchValue({ name: user.displayName });
+      }
+    });
+
     this.onSignUpWithGoogleClicked
       .pipe(
         switchMap(() => {
@@ -120,13 +138,14 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.onCreateAccountClicked
+    this.onSignInClicked
       .pipe(
-        switchMap((signupType) => {
+        switchMap(() => {
           this.isBusy.next(true);
           this.errorMessage$.next('');
           const email = this.form.value.email;
           const password = this.form.value.password;
+
           let signInPromise: Promise<any>;
           if (this.dialogData.intent === SignUpOrLoginIntent.LINK_ACCOUNT) {
             signInPromise = this.authService.linkAccountWithEmailAndPassword(
@@ -134,10 +153,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
               password
             );
           } else {
-            signInPromise =
-              signupType === 'sign-in'
-                ? this.authService.signInWithEmailAndPassword(email, password)
-                : this.authService.signUpWithEmailAndPassword(email, password);
+            this.authService.signInWithEmailAndPassword(email, password);
           }
           return from(signInPromise).pipe(
             map(() => true),
@@ -155,6 +171,59 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
           this.dialogRef.close();
         }
       });
+
+    this.onCreateAccountClicked
+      .pipe(
+        switchMap(() => {
+          this.isBusy.next(true);
+          this.errorMessage$.next('');
+          const email = this.form.value.email;
+          const password = this.form.value.password;
+          let signInPromise: Promise<any>;
+          if (this.dialogData.intent === SignUpOrLoginIntent.LINK_ACCOUNT) {
+            signInPromise = this.authService.linkAccountWithEmailAndPassword(
+              email,
+              password
+            );
+          } else {
+            signInPromise = this.authService.signUpWithEmailAndPassword(
+              email,
+              password,
+              this.form.value.name
+            );
+          }
+          return from(signInPromise).pipe(
+            map(() => true),
+            catchError((error) => {
+              this.isBusy.next(false);
+              return this.handleAccountError(error);
+            })
+          );
+        }),
+        tap(() => this.analyticsService.logClickedSignIn('create')),
+        takeUntil(this.destroy)
+      )
+      .subscribe((success) => {
+        if (success) {
+          this.dialogRef.close();
+        }
+      });
+  }
+
+  async forgotPassword() {
+    if (!this.form.controls.email.valid) {
+      this.toastService.showMessage(
+        'Please set your registered email in the form above to receive a password reset notification',
+        undefined,
+        'error'
+      );
+      return;
+    }
+
+    await this.authService.sendForgotPasswordEmail(this.form.value.email);
+    this.toastService.showMessage(
+      'Please check your emails for a password reset notification from us.'
+    );
   }
 
   private linkAccountWithGoogle(): Observable<void | {}> {

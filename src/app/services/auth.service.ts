@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
+  sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
   user,
@@ -170,14 +171,18 @@ export class AuthService {
     });
   }
 
-  async signUpWithEmailAndPassword(email: string, password: string) {
+  async signUpWithEmailAndPassword(
+    email: string,
+    password: string,
+    displayName: string
+  ) {
     const userCredential = await createUserWithEmailAndPassword(
       this.auth,
       email,
       password
     );
 
-    await this.handleSignInResult({ isNewUser: true });
+    await this.handleSignInResult({ isNewUser: true, displayName });
     this.snackbar.open(`Your account is now set up, awesome!`, null, {
       duration: 3000,
       horizontalPosition: 'right',
@@ -199,7 +204,10 @@ export class AuthService {
     });
   }
 
-  private async handleSignInResult(options: { isNewUser: boolean }) {
+  private async handleSignInResult(options: {
+    isNewUser: boolean;
+    displayName?: string;
+  }) {
     if (
       new SupportedPhotoUrlPipe().isSupported(
         this.auth.currentUser.photoURL
@@ -208,7 +216,10 @@ export class AuthService {
       await updateProfile(this.auth.currentUser, { photoURL: '' });
     }
     if (options.isNewUser) {
-      await this.createPermanentUser(this.auth.currentUser);
+      await this.createPermanentUser(
+        this.auth.currentUser,
+        options.displayName
+      );
     }
   }
 
@@ -232,14 +243,19 @@ export class AuthService {
     this.avatarUpdated.next(avatarUrl);
   }
 
-  async createPermanentUser(user: User) {
+  async createPermanentUser(user: User, displayName?: string) {
     const userDetails: UserDetails = {
       id: user.uid,
       email: user.email,
-      displayName: user.displayName ?? user.email?.split('@')[0],
+      displayName: displayName ?? user.displayName ?? user.email?.split('@')[0],
       avatarUrl: new SupportedPhotoUrlPipe().transform(user.photoURL),
       createdAt: serverTimestamp(),
     };
+
+    if (user.displayName !== userDetails.displayName) {
+      await updateProfile(user, { displayName: userDetails.displayName });
+      await this.auth.currentUser.reload();
+    }
 
     await setDoc(
       doc(this.firestore, USER_DETAILS_COLLECTION, user.uid),
@@ -301,5 +317,11 @@ export class AuthService {
         }, {});
       })
     );
+  }
+
+  sendForgotPasswordEmail(email: string) {
+    return sendPasswordResetEmail(this.auth, email, {
+      url: `${window.location.origin}/join`,
+    });
   }
 }

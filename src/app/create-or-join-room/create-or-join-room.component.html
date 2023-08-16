@@ -63,6 +63,7 @@
       </div>
     </mat-card>
   </ng-container>
+  <ng-container *ngTemplateOutlet="recent" />
   <ng-container *ngTemplateOutlet="links"></ng-container>
 </div>
 
@@ -170,6 +171,29 @@
     You've been invited to join room: <br />
     <strong>{{ (vm | async)?.roomId }}</strong>
   </h4>
+</ng-template>
+
+<ng-template #recent>
+  <mat-card
+    class="recent-card action-card"
+    *ngIf="recentlyLeftRoom$ | async as recentlyLeftRoom"
+    @delayedFadeAnimation
+  >
+    <mat-card-content>
+      Do you want to rejoin your recent room
+      {{ recentlyLeftRoom.roomId }}?
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="rejoinRoom(recentlyLeftRoom.roomId)"
+      >
+        <mat-icon>replay</mat-icon>
+        Rejoin
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </ng-template>
 
 <ng-template #terms>

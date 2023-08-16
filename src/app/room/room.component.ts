@@ -622,8 +622,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     } else if (this.config.runningIn === 'teams') {
       this.teamsService.inviteAllParticipants(this.room.roomId);
-      message = 'Meeting link shared. Try opening the app in Stage mode';
-      // this.clipboard.copy(roomUrl);
+      message = 'Meeting link copied. Try opening the app in Stage mode';
+      this.clipboard.copy(roomUrl);
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';

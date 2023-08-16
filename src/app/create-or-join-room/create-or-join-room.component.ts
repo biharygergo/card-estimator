@@ -32,6 +32,7 @@ import {
   first,
   map,
   switchMap,
+  take,
   takeUntil,
   tap,
   withLatestFrom,
@@ -62,6 +63,7 @@ import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selec
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import { ConfigService } from '../services/config.service';
 import { TeamsService } from '../services/teams.service';
+import { Timestamp } from 'firebase/firestore';
 
 enum PageMode {
   CREATE = 'create',
@@ -81,7 +83,7 @@ const LUNCHTIME_GREETING = 'Planning before lunch, {name}?';
 const AFTERNOON_GREETING = 'Good afternoon, {name}. Time for some planning?';
 const EVENING_GREETING = 'Time for some evening planning, {name}.';
 
-const GREETINGS: {[hour: number]: string} = {
+const GREETINGS: { [hour: number]: string } = {
   0: LATE_NIGHT_GREETING,
   1: LATE_NIGHT_GREETING,
   2: LATE_NIGHT_GREETING,
@@ -106,7 +108,7 @@ const GREETINGS: {[hour: number]: string} = {
   21: EVENING_GREETING,
   22: EVENING_GREETING,
   23: EVENING_GREETING,
-}
+};
 
 @Component({
   standalone: true,
@@ -142,7 +144,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     tap(([user]) => {
       if (user && user.displayName) {
         this.name.setValue(user.displayName);
-        this.greeting = GREETINGS[new Date().getHours()].replace('{name}', user.displayName);
+        this.greeting = GREETINGS[new Date().getHours()].replace(
+          '{name}',
+          user.displayName
+        );
       }
     }),
     map(([user]) => user)
@@ -185,6 +190,18 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       return path === 'create' ? PageMode.CREATE : PageMode.JOIN;
     })
   );
+
+  recentlyLeftRoom$ = this.estimatorService
+    .getPreviousSessions(1)
+    .pipe(
+      take(1),
+      filter(
+        ([room]) =>
+          (room.createdAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 5
+      ),
+      map(([room]) => room),
+      tap(console.log)
+    );
 
   vm: Observable<ViewModel> = combineLatest([
     this.roomIdFromParams,
@@ -383,6 +400,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     }
 
     return true;
+  }
+
+  rejoinRoom(roomId: string) {
+    this.router.navigate(['room', roomId]);
   }
 
   showUnableToJoinRoom() {

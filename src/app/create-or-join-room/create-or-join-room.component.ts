@@ -197,7 +197,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       take(1),
       filter(
         ([room]) =>
-          (room.createdAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 5
+          (room?.createdAt as any)?.seconds * 1000 > Date.now() - 1000 * 60 * 5
       ),
       map(([room]) => room),
       tap(console.log)

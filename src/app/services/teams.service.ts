@@ -57,7 +57,7 @@ export class TeamsService {
     }
   }
 
-  async inviteAllParticipants(roomId: string) {
+  inviteAllParticipants(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
     microsoftTeams.pages.shareDeepLink({
       subPageId: roomId,

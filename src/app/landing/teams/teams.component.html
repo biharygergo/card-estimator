@@ -17,12 +17,11 @@
           <a
             mat-stroked-button
             color="primary"
-            href=""
+            href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
             class="white-button"
-            disabled
           >
             <mat-icon>open_in_new</mat-icon>
-            View in Store (coming soon)
+            View in Store
           </a>
         </div>
       </div>
@@ -47,51 +46,56 @@
       <h2 class="title">How does it work?</h2>
       <div class="steps-container">
         <div class="instruction-image">
-          <!-- <img
+          <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_1.png"
             alt="Store landing page for Planning Poker"
             [class.visible]="selectedIndex === 0"
-          /> -->
+          />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_4.jpg"
             alt="Apps screen inside Teams"
-            [class.visible]="selectedIndex === 0"
+            [class.visible]="selectedIndex === 1"
           />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_2.jpg"
             alt="The app is running inside Teams"
-            [class.visible]="selectedIndex === 1"
+            [class.visible]="selectedIndex === 2"
           />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Teams_3.jpg"
             alt="An ongoing planning session with participants in Teams"
-            [class.visible]="selectedIndex === 2"
+            [class.visible]="selectedIndex === 3"
           />
         </div>
         <mat-tab-group
           dynamicHeight
           (selectedIndexChange)="selectedIndex = $event"
         >
-          <!-- <mat-tab label="1. Open AppHub and install"
+          <mat-tab label="1. Open AppSource and install"
             ><div class="step-content">
               <p>
                 To add the app to your Teams account, open
-            <a
-              href="https://apphub.Teams.com/applications/planning-poker-planningpoker-live"
-              target="_blank"
-              >App Hub</a
-            >
-            and click the install button. You might need to ask your Workspace
-            administrator to whitelist the app for use.
+                <a
+                  href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
+                  target="_blank"
+                  >AppSource</a
+                >
+                and click the "Get it now" button. You might need to ask your
+                Workspace administrator to whitelist the app for use.
               </p>
             </div>
-          </mat-tab> -->
+          </mat-tab>
           <mat-tab label="2. Open the app inside Teams"
             ><div class="step-content">
               <p>
                 Once the app is installed, you need to add it to a meeting. This
                 should be the meeting for your regular planning session. The app
                 will be installed as a "Tab" in your meeting window.
+              </p>
+
+              <p>
+                You can also add the app to a channel or a chat. It will appear
+                as a permanent tab in this scenario.
               </p>
             </div>
           </mat-tab>

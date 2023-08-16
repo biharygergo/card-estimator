@@ -65,12 +65,12 @@
             <a
               mat-flat-button
               color="primary"
-              [disabled]="true || config.runningIn === 'teams'"
-              href=""
+              [disabled]="config.runningIn === 'teams'"
+              href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
               target="_blank"
               rel="noreferrer"
             >
-              {{ config.runningIn === 'teams' ? "Installed" : "Coming soon" }}
+              {{ config.runningIn === 'teams' ? "Installed" : "Install" }}
             </a>
           </div>
         </div>

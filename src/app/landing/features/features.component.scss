@@ -49,6 +49,11 @@ main {
       flex-direction: column;
       padding: 1rem;
     }
+
+    .feature-grid-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
   }
 }
 

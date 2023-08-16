@@ -1,7 +1,6 @@
 <div class="banner-heading">
   <span
-    ><strong>NEW:</strong> You can now connect your Jira account for the best
-    planning experience! 🎉</span
+    ><strong>NEW:</strong> Our Microsoft Teams integration has arrived. Install it now!</span
   >
 </div>
 <section class="hero-header-section">
@@ -43,20 +42,20 @@
             </a>
           </li>
           <li>
+            <a routerLink="/teams">
+              <img
+                src="/assets/teams_logo.png"
+                alt="Teams logo"
+                matTooltip="Install the Microsoft Teams integration"
+              />
+            </a>
+          </li>
+          <li>
             <a routerLink="/webex">
               <img
                 src="/assets/webex_logo.png"
                 alt="Webex logo"
                 matTooltip="Install the Cisco Webex integration"
-              />
-            </a>
-          </li>
-          <li>
-            <a href="#" disabled="true">
-              <img
-                src="/assets/teams_logo.png"
-                alt="Teams logo"
-                matTooltip="Coming Soon: Microsoft Teams integration"
               />
             </a>
           </li>
@@ -128,8 +127,8 @@
       </div>
       <div class="feature-card wide">
         <h3>
-          Available on the web and in <a routerLink="/zoom">Zoom</a> &
-          <a routerLink="/webex">Webex</a>
+          Available on the web and in <a routerLink="/zoom">Zoom</a>,
+          <a routerLink="/teams">Teams</a> & <a routerLink="/webex">Webex</a>
         </h3>
         <img
           ngSrc="zoom_app"

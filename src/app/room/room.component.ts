@@ -639,7 +639,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       const link = await this.teamsService.inviteAllParticipants(
         this.room.roomId
       );
-      message = 'Meeting link copied. Try opening the app in Stage mode';
+      message = 'Meeting link copied, share it in the chat or open the app in Stage Mode.';
       this.clipboard.copy(link);
     } else {
       this.clipboard.copy(roomUrl);

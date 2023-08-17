@@ -22,7 +22,9 @@ export class TeamsService {
       const frameContext = microsoftTeams.app.getFrameContext();
       const appContext = await microsoftTeams.app.getContext();
 
-      if (['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)) {
+      if (
+        ['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)
+      ) {
         this.paymentService.isSubscriptionDisabled = true;
       }
 
@@ -57,13 +59,14 @@ export class TeamsService {
     }
   }
 
-  inviteAllParticipants(roomId: string) {
+  async inviteAllParticipants(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
-    microsoftTeams.pages.shareDeepLink({
-      subPageId: roomId,
-      subPageLabel: `Share this link to join room: ${roomId}`,
-      subPageWebUrl: joinUrl,
-    });
+    const context = await microsoftTeams.app.getContext();
+
+    const linkContext = `{"chatId": "${context.chat?.id}","contextType":"chat"}`;
+    const deepLink = `https://teams.microsoft.com/l/entity/609fe794-87f9-4045-9ca7-0f79cc734930/create_a_room?tenantId=${context.channel?.ownerTenantId}&webUrl=${joinUrl}&context=${linkContext}&openInMeeting=false`;
+
+    return deepLink;
   }
 
   async getGoogleOauthToken(returnTo: string): Promise<string> {

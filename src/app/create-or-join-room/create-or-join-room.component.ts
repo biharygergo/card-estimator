@@ -191,17 +191,16 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     })
   );
 
-  recentlyLeftRoom$ = this.estimatorService
-    .getPreviousSessions(1)
-    .pipe(
-      take(1),
-      filter(
-        ([room]) =>
-          (room?.createdAt as any)?.seconds * 1000 > Date.now() - 1000 * 60 * 5
-      ),
-      map(([room]) => room),
-      tap(console.log)
-    );
+  recentlyLeftRoom$ = of(this.configService.getCookie('lastJoinedRoom')).pipe(
+    take(1),
+    filter((roomString) => !!roomString),
+    map(
+      (roomString) =>
+        JSON.parse(roomString) as { roomId: string; updatedAt: number }
+    ),
+    filter((room) => room.updatedAt > Date.now() - 1000 * 60 * 5),
+    tap(console.log)
+  );
 
   vm: Observable<ViewModel> = combineLatest([
     this.roomIdFromParams,

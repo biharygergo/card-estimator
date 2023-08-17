@@ -63,8 +63,8 @@ export class TeamsService {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
     const context = await microsoftTeams.app.getContext();
 
-    const linkContext = `{"chatId": "${context.chat?.id}","contextType":"chat"}`;
-    const deepLink = `https://teams.microsoft.com/l/entity/609fe794-87f9-4045-9ca7-0f79cc734930/create_a_room?tenantId=${context.channel?.ownerTenantId}&webUrl=${joinUrl}&context=${linkContext}&openInMeeting=false`;
+    const linkContext = `{"chatId":"${context.chat?.id}","contextType":"chat"}`;
+    const deepLink = `https://teams.microsoft.com/l/entity/609fe794-87f9-4045-9ca7-0f79cc734930/create_a_room?tenantId=${context.channel?.ownerTenantId}&webUrl=${joinUrl}&context=${linkContext}&openInMeeting=true`;
 
     return deepLink;
   }

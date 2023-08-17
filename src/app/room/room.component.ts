@@ -20,6 +20,7 @@ import {
   EMPTY,
   filter,
   first,
+  interval,
   map,
   Observable,
   of as observableOf,
@@ -281,6 +282,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   user$ = this.authService.user;
 
+  heartbeat$: Observable<number> = interval(5000).pipe(startWith(-1));
+
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;
 
@@ -381,12 +384,24 @@ export class RoomComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.showAvatarPrompt();
       });
+
+    this.heartbeat$.pipe(takeUntil(this.destroy)).subscribe(() => {
+      this.saveJoinedRoom();
+    });
   }
 
   ngOnDestroy(): void {
     clearTimeout(this.inactiveTimeoutHandle);
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  private saveJoinedRoom() {
+    this.configService.setCookie(
+      'lastJoinedRoom',
+      JSON.stringify({ roomId: this.room.roomId, updatedAt: Date.now() }),
+      1
+    );
   }
 
   private onRoomUpdated(room: Room) {

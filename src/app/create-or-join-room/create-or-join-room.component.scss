@@ -1,4 +1,4 @@
-@import '../common.scss';
+@import "../common.scss";
 
 $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
@@ -23,7 +23,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
 .terms {
   padding-top: 16px;
-  
+
   a {
     color: var(--title-on-dark);
   }
@@ -160,6 +160,10 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   mat-card-content {
     font-weight: 500;
     margin-bottom: 0.5rem;
+
+    p {
+      color: var(--text-on-white);
+    }
   }
 
   button {

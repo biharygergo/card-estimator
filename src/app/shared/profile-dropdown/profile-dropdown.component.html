@@ -48,7 +48,10 @@
     <button
       mat-menu-item
       (click)="openPremiumLearnMoreModal()"
-      *ngIf="!(permissionsService.hasPremiumAccess() | async) && !paymentService.isSubscriptionDisabled"
+      *ngIf="
+        !(permissionsService.hasPremiumAccess() | async) &&
+        !paymentService.isSubscriptionDisabled
+      "
     >
       <mat-icon>lock_open</mat-icon>
       <span class="menu-item-with-badge">Unlock features</span>
@@ -78,5 +81,9 @@
       <mat-icon>bug_report</mat-icon>
       <span>Report an issue</span>
     </button>
+    <mat-divider />
+    <div class="version">
+      <small>v1.5.0</small>
+    </div>
   </mat-menu>
 </ng-container>

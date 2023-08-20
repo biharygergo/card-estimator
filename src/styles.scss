@@ -259,7 +259,7 @@ body {
 
   .mat-mdc-tab {
     .mdc-tab__text-label {
-      color: #44474f !important;
+      color: var(--text-on-white) !important;
       font-weight: bold;
     }
     &.mdc-tab--active {
@@ -394,4 +394,8 @@ body {
       padding: 0.5rem;
     }
   }
+}
+
+.mat-mdc-form-field-hint {
+  color: var(--text-on-white);
 }

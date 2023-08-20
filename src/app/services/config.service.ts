@@ -23,4 +23,17 @@ export class ConfigService {
   getCookie(key): string | undefined {
     return Cookies.get(key);
   }
+
+  setLocalStorage(key: string, value: string) {
+    if (window.localStorage) {
+      window.localStorage.setItem(key, value);
+    }
+  }
+
+  getLocalStorage(key: string): string|undefined {
+    if (window.localStorage) {
+      return window.localStorage.getItem(key);
+    }
+    return undefined;
+  }
 }

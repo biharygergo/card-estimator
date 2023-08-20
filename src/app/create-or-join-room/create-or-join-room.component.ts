@@ -191,7 +191,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     })
   );
 
-  recentlyLeftRoom$ = of(this.configService.getCookie('lastJoinedRoom')).pipe(
+  recentlyLeftRoom$ = of(this.configService.getLocalStorage('lastJoinedRoom')).pipe(
     take(1),
     filter((roomString) => !!roomString),
     map(

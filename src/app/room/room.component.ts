@@ -397,10 +397,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private saveJoinedRoom() {
-    this.configService.setCookie(
+    this.configService.setLocalStorage(
       'lastJoinedRoom',
-      JSON.stringify({ roomId: this.room.roomId, updatedAt: Date.now() }),
-      1
+      JSON.stringify({ roomId: this.room.roomId, updatedAt: Date.now() })
     );
   }
 
@@ -639,7 +638,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       const link = await this.teamsService.inviteAllParticipants(
         this.room.roomId
       );
-      message = 'Meeting link copied, share it in the chat or open the app in Stage Mode.';
+      message =
+        'Meeting link copied, share it in the chat or open the app in Stage Mode.';
       this.clipboard.copy(link);
     } else {
       this.clipboard.copy(roomUrl);

@@ -136,24 +136,6 @@
             {
               "key": "Strict-Transport-Security",
               "value": "max-age=31536000; includeSubDomains; preload"
-            },
-            {
-              "source": "/**",
-              "headers": [
-                {
-                  "key": "Cache-Control",
-                  "value": "no-cache, no-store, must-revalidate"
-                }
-              ]
-            },
-            {
-              "source": "**/*.@(js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
-              "headers": [
-                {
-                  "key": "Cache-Control",
-                  "value": "no-cache, no-store, must-revalidate"
-                }
-              ]
             }
           ]
         }

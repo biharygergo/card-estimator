@@ -3,11 +3,7 @@
     {
       "target": "estimator",
       "public": "dist/estimator/browser",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "trailingSlash": false,
       "rewrites": [
         {
@@ -149,12 +145,20 @@
                   "value": "no-cache, no-store, must-revalidate"
                 }
               ]
+            },
+            {
+              "source": "**/*.@(js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
+              "headers": [
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store, must-revalidate"
+                }
+              ]
             }
           ]
         }
       ]
     }
-    
   ],
   "functions": {
     "predeploy": [

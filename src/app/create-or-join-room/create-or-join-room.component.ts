@@ -191,14 +191,14 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     })
   );
 
-  recentlyLeftRoom$ = of(this.configService.getLocalStorage('lastJoinedRoom')).pipe(
+  recentlyLeftRoom$ = this.authService.getUserPreference().pipe(
     take(1),
-    filter((roomString) => !!roomString),
-    map(
-      (roomString) =>
-        JSON.parse(roomString) as { roomId: string; updatedAt: number }
+    filter((preference) => !!preference),
+    map((preference) => preference.lastJoinedRoom),
+    filter(
+      (room) =>
+        (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 5
     ),
-    filter((room) => room.updatedAt > Date.now() - 1000 * 60 * 5),
     tap(console.log)
   );
 

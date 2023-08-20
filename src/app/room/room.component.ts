@@ -89,6 +89,7 @@ import {
 import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { TeamsService } from '../services/teams.service';
 import { PaymentService } from '../services/payment.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -282,7 +283,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   user$ = this.authService.user;
 
-  heartbeat$: Observable<number> = interval(5000).pipe(startWith(-1));
+  heartbeat$: Observable<number> = interval(30000).pipe(startWith(-1));
 
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;
@@ -385,9 +386,12 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.showAvatarPrompt();
       });
 
-    this.heartbeat$.pipe(takeUntil(this.destroy)).subscribe(() => {
-      this.saveJoinedRoom();
-    });
+    this.heartbeat$
+      .pipe(
+        switchMap(() => this.saveJoinedRoom()),
+        takeUntil(this.destroy)
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -396,11 +400,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  private saveJoinedRoom() {
-    this.configService.setLocalStorage(
-      'lastJoinedRoom',
-      JSON.stringify({ roomId: this.room.roomId, updatedAt: Date.now() })
-    );
+  private saveJoinedRoom(): Observable<any> {
+    return this.authService.updateUserPreference({
+      lastJoinedRoom: {
+        roomId: this.room.roomId,
+        heartbeatAt: Timestamp.now(),
+      },
+    });
   }
 
   private onRoomUpdated(room: Room) {

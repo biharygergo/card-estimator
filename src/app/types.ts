@@ -424,3 +424,11 @@ export function isNumericCardSet(cardSet: CardSetValue) {
   const values = Object.values(cardSet.values);
   return values.every((value) => isNumeric(value));
 }
+
+
+export interface UserPreference {
+  lastJoinedRoom: {
+    roomId: string;
+    heartbeatAt: FieldValue;
+  };
+}

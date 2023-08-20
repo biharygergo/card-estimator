@@ -30,16 +30,24 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import {
+  catchError,
   combineLatest,
   EMPTY,
   firstValueFrom,
   map,
   Observable,
+  of,
   Subject,
-  tap,
+  switchMap,
+  take,
 } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
-import { UserDetails, UserProfile, UserProfileMap } from '../types';
+import {
+  UserDetails,
+  UserPreference,
+  UserProfile,
+  UserProfileMap,
+} from '../types';
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
@@ -294,6 +302,43 @@ export class AuthService {
 
   clearSessionCookie() {
     Cookies.remove('__session');
+  }
+
+  updateUserPreference(preference: Partial<UserPreference>) {
+    return this.user.pipe(
+      take(1),
+      switchMap((user) => {
+        if (!user) {
+          return EMPTY;
+        }
+
+        return setDoc(
+          doc(this.firestore, `userPreferences/${user.uid}`),
+          preference,
+          { merge: true }
+        );
+      })
+    );
+  }
+
+  getUserPreference(): Observable<UserPreference | undefined> {
+    return this.user.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(undefined);
+        }
+
+        return docData(
+          doc(
+            this.firestore,
+            `userPreferences/${user.uid}`
+          ) as DocumentReference<UserPreference>
+        );
+      }),
+      catchError(() => {
+        return of(undefined);
+      })
+    );
   }
 
   getUserProfile(userId: string): Observable<UserProfile | undefined> {

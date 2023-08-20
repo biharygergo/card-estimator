@@ -113,6 +113,10 @@ service cloud.firestore {
       }
     }
 
+    match /userPreferences/{userId} {
+      allow read, write: if request.auth.uid == userId; 
+    }
+
     match /userProfiles/{userId} {
       allow get: if true;
       allow list, update, create, delete: if false;

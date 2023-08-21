@@ -176,12 +176,15 @@
 <ng-template #recent>
   <mat-card
     class="recent-card action-card"
-    *ngIf="recentlyLeftRoom$ | async as recentlyLeftRoom"
+    *ngIf="
+      !hideRecentlyLeftRoom && recentlyLeftRoom$ | async as recentlyLeftRoom
+    "
     @delayedFadeAnimation
   >
     <mat-card-content>
       <p>
-        Continue where you left off? <br/> You have just left the room: {{ recentlyLeftRoom.roomId }}
+        Continue where you left off? <br />
+        Your last room was {{ recentlyLeftRoom.roomId }}
       </p>
     </mat-card-content>
     <mat-card-actions>
@@ -190,8 +193,11 @@
         color="primary"
         (click)="rejoinRoom(recentlyLeftRoom.roomId)"
       >
-        <mat-icon>replay</mat-icon>
-        Rejoin
+        <mat-icon>play_arrow</mat-icon>
+        Continue
+      </button>
+      <button mat-button (click)="hideRecentlyLeftRoom = true">
+        Start fresh
       </button>
     </mat-card-actions>
   </mat-card>

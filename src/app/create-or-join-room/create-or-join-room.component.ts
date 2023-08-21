@@ -64,6 +64,7 @@ import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.
 import { ConfigService } from '../services/config.service';
 import { TeamsService } from '../services/teams.service';
 import { Timestamp } from 'firebase/firestore';
+import { NavigationService } from '../services/navigation.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -199,8 +200,9 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       (room) =>
         (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 5
     ),
-    tap(console.log)
   );
+
+  hideRecentlyLeftRoom = this.navigationService.hasHistory();
 
   vm: Observable<ViewModel> = combineLatest([
     this.roomIdFromParams,
@@ -243,6 +245,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly recurringMeetingService: RecurringMeetingLinkService,
     private readonly configService: ConfigService,
     private readonly teamsService: TeamsService,
+    private readonly navigationService: NavigationService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 

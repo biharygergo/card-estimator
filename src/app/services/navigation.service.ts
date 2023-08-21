@@ -22,4 +22,8 @@ export class NavigationService {
       this.router.navigateByUrl('/join');
     }
   }
+
+  hasHistory(): boolean {
+    return !!this.history.length;
+  }
 }

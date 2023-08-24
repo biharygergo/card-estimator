@@ -194,12 +194,13 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   recentlyLeftRoom$ = this.authService.getUserPreference().pipe(
     take(1),
-    filter((preference) => !!preference),
+    filter((preference) => !!preference?.lastJoinedRoom),
     map((preference) => preference.lastJoinedRoom),
     filter(
-      (room) =>
-        (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 5
-    ),
+      (lastJoinedRoom) =>
+        (lastJoinedRoom.heartbeatAt as any).seconds * 1000 >
+        Date.now() - 1000 * 60 * 5
+    )
   );
 
   hideRecentlyLeftRoom = this.navigationService.hasHistory();

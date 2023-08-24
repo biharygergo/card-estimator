@@ -427,8 +427,9 @@ export function isNumericCardSet(cardSet: CardSetValue) {
 
 
 export interface UserPreference {
-  lastJoinedRoom: {
+  lastJoinedRoom?: {
     roomId: string;
     heartbeatAt: FieldValue;
   };
+  feedbackFormLastShown?: FieldValue;
 }

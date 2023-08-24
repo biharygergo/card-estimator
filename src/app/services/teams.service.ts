@@ -34,7 +34,6 @@ export class TeamsService {
 
       try {
         microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
-          console.log(data.contentUrl);
           try {
             microsoftTeams.app.notifySuccess();
           } catch {

@@ -14,7 +14,8 @@
     />
     <div class="banner-text">
       <h4>
-        Use Planning Poker embedded in your <span class="zoom">Zoom</span> or
+        Use Planning Poker embedded in your <span class="zoom">Zoom</span>,
+        <span class="teams">Teams</span> or
         <span class="webex">Webex</span> meeting
       </h4>
       <p>
@@ -31,7 +32,6 @@
       href="https://planningpoker.live/api/installZoomApp"
       target="_blank"
       rel="noreferrer"
-      (click)="onInstallClicked.next()"
       class="zoom-button"
     >
       <mat-icon>open_in_new</mat-icon>
@@ -39,10 +39,20 @@
     >
     <a
       mat-flat-button
+      color="primary"
+      href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
+      target="_blank"
+      rel="noreferrer"
+      class="teams-button"
+    >
+      <mat-icon>open_in_new</mat-icon>
+      Install in Teams</a
+    >
+    <a
+      mat-flat-button
       href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
       target="_blank"
       color="primary"
-      (click)="onLearnMoreClicked.next()"
       class="webex-button"
     >
       <mat-icon>open_in_new</mat-icon>

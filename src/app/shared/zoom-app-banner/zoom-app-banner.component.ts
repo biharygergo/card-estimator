@@ -35,7 +35,6 @@ export class ZoomAppBannerComponent implements OnInit, OnDestroy {
 
   onCloseClicked = new Subject<void>();
   onInstallClicked = new Subject<void>();
-  onLearnMoreClicked = new Subject<void>();
 
   destroy = new Subject<void>();
   constructor(
@@ -59,15 +58,6 @@ export class ZoomAppBannerComponent implements OnInit, OnDestroy {
           this.isZoomBannerHidden = true;
           window.localStorage.setItem(ZOOM_APP_PROMO_SEEN_KEY, '1');
           this.analytics.logClickedCloseZoomAppBanner(this.bannerLocation);
-        }),
-        takeUntil(this.destroy)
-      )
-      .subscribe();
-
-    this.onLearnMoreClicked
-      .pipe(
-        tap(() => {
-          this.analytics.logClickedLearnMoreZoomApp(this.bannerLocation);
         }),
         takeUntil(this.destroy)
       )

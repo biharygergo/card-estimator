@@ -31,6 +31,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  take,
 } from 'rxjs';
 import {
   CardSet,
@@ -60,10 +61,6 @@ import {
 } from '../utils';
 import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
-import {
-  ConfigService,
-  FEEDBACK_FORM_FILLED_COOKIE_KEY,
-} from '../services/config.service';
 import { MatSidenavContainer } from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
@@ -250,17 +247,21 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
+  userPreferences$ = this.authService.getUserPreference().pipe(share());
+
   showFeedbackForm$ = combineLatest([
     this.onRoundNumberUpdated$,
     this.sessionCount$,
+    this.userPreferences$,
   ]).pipe(
     distinctUntilChanged(isEqual),
-    map(([roundNumber, sessionCount]) => {
+    map(([roundNumber, sessionCount, userPreferences]) => {
       return (
         sessionCount > 1 &&
         roundNumber > 1 &&
-        this.configService.getCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY) ===
-          undefined
+        (!userPreferences?.feedbackFormLastShown ||
+          (userPreferences.feedbackFormLastShown as any).seconds * 1000 <
+            Date.now() - 1000 * 60 * 60 * 24 * 30)
       );
     }),
     takeUntil(this.destroy)
@@ -305,7 +306,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
-    private configService: ConfigService,
     private authService: AuthService,
     private zoomService: ZoomApiService,
     private readonly webexService: WebexApiService,
@@ -497,7 +497,11 @@ export class RoomComponent implements OnInit, OnDestroy {
         .subscribe();
 
       this.openedFeedbackForm = true;
-      this.configService.setCookie(FEEDBACK_FORM_FILLED_COOKIE_KEY, 'true', 60);
+      this.authService
+        .updateUserPreference({
+          feedbackFormLastShown: Timestamp.now(),
+        })
+        .subscribe();
     }
   }
 

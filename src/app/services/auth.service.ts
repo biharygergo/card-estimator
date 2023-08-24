@@ -22,6 +22,7 @@ import {
 import {
   doc,
   docData,
+  docSnapshots,
   DocumentReference,
   FieldValue,
   Firestore,
@@ -33,6 +34,7 @@ import {
   catchError,
   combineLatest,
   EMPTY,
+  filter,
   firstValueFrom,
   map,
   Observable,
@@ -40,6 +42,7 @@ import {
   Subject,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import {
@@ -328,11 +331,18 @@ export class AuthService {
           return of(undefined);
         }
 
-        return docData(
+        return docSnapshots(
           doc(
             this.firestore,
             `userPreferences/${user.uid}`
           ) as DocumentReference<UserPreference>
+        ).pipe(
+          filter(
+            (snapshot) =>
+              !snapshot.metadata.fromCache &&
+              !snapshot.metadata.hasPendingWrites
+          ),
+          map((snapshot) => snapshot.data())
         );
       }),
       catchError(() => {

@@ -124,6 +124,8 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    setTimeout(() => this.topicInput.nativeElement.focus());
+
     this.roomTopic
       .pipe(takeUntil(this.destroy))
       .subscribe(({ topic, richTopic }) => {

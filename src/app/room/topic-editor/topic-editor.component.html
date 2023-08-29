@@ -8,10 +8,13 @@
       placeholder="Write a short description of the topic or select a JIRA ticket"
       [formControl]="roundTopic"
       cdkFocusInitial
+      autofocus
       matInput
       id="topic-name"
       type="text"
       [matAutocomplete]="auto"
+      (keyup.enter)="topicBlur()"
+      (keyup.escape)="canceled.next(true)"
       #topicInput
     />
     <span class="input-suffix" matSuffix>

@@ -15,6 +15,7 @@ import {
 import { TopicEditorInputOutput } from '../topic-editor/topic-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import { summaryModalCreator } from '../summary-modal/summary-modal.component';
+import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -101,5 +102,9 @@ export class TopicsSidebarComponent implements OnInit {
   openSummaryModal() {
     this.dialog.open(...summaryModalCreator({ roomId: this.room.roomId }));
     this.analytics.logClickedSummarize();
+  }
+
+  openBatchAddModal() {
+    this.dialog.open(...batchAddModalCreator({room: this.room}));
   }
 }

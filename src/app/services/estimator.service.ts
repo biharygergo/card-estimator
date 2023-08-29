@@ -141,7 +141,10 @@ export class EstimatorService {
     let roomId = uniqueNamesGenerator(customConfig).replace(' ', '-');
 
     while (await this.doesRoomAlreadyExist(roomId)) {
-      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(' ', '-');
+      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(
+        ' ',
+        '-'
+      );
     }
 
     const subscriptionMetadata = await this.getSubscriptionMetadata();
@@ -354,6 +357,20 @@ export class EstimatorService {
       topic,
       richTopic
     );
+    return this.updateRoom(room.roomId, { rounds: room.rounds });
+  }
+
+  batchAddRounds(room: Room, topics: string[]) {
+    topics.forEach((topic) => {
+      const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
+
+      room.rounds[nextRoundId] = this.createRound(
+        room.members,
+        nextRoundNumber,
+        topic
+      );
+    });
+
     return this.updateRoom(room.roomId, { rounds: room.rounds });
   }
 

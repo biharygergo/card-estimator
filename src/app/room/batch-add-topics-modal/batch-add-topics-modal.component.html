@@ -1,0 +1,43 @@
+<h1 mat-dialog-title class="dialog-title">Batch add</h1>
+<div mat-dialog-content>
+  <p class="disclaimer">
+    Add up to 20 rounds at once by inserting your topics below. A new round will
+    be generated for each line.
+  </p>
+  <div class="tab-content">
+    <div class="tab-section">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Topics</mat-label>
+        <textarea
+          matInput
+          placeholder="PP-123: Design batch import dialog
+PP-124: Fix bugs in dialog after release
+PP-125: Add helpful placeholder to textarea"
+          rows="4"
+          autofocus
+          cdkFocusInitial
+          [formControl]="topics"
+        ></textarea>
+        <mat-error
+          *ngIf="(topics.dirty || topics.touched) && topics.errors?.['maxTopics']"
+          >You can add at most 20 topics</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit.next()"
+      [disabled]="!topics.valid"
+    >
+      <mat-icon>library_add</mat-icon>
+      Add rounds
+      <span *ngIf="parsedTopics$ | async as parsedTopics"
+        >({{ parsedTopics.length }})</span
+      >
+    </button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</div>

@@ -284,7 +284,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   user$ = this.authService.user;
 
-  heartbeat$: Observable<number> = interval(30000).pipe(startWith(-1));
+  heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
 
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;

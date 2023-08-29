@@ -1,8 +1,12 @@
 <app-velocity [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
 <div class="sidenav-actions">
-  <button mat-button (click)="openSummaryModal()">
+  <button mat-stroked-button (click)="openSummaryModal()">
     <mat-icon>auto_fix_normal</mat-icon>
     AI Summary
+  </button>
+  <button mat-stroked-button (click)="openBatchAddModal()">
+    <mat-icon>library_add</mat-icon>
+    Batch add
   </button>
   <div
     [matTooltip]="
@@ -12,7 +16,7 @@
     "
   >
     <button
-      mat-button
+      mat-stroked-button
       aria-label="Download results as .csv"
       (click)="downloadAsCsv()"
       [disabled]="

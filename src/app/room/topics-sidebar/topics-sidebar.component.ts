@@ -16,6 +16,7 @@ import { TopicEditorInputOutput } from '../topic-editor/topic-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import { summaryModalCreator } from '../summary-modal/summary-modal.component';
 import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -33,6 +34,7 @@ export class TopicsSidebarComponent implements OnInit {
   editedRound = new BehaviorSubject<
     { round: Round; roundIndex: number } | undefined
   >(undefined);
+  showActiveRound = true;
 
   readonly MemberType = MemberType;
   constructor(
@@ -97,6 +99,14 @@ export class TopicsSidebarComponent implements OnInit {
   setActiveRound(roundNumber: number) {
     this.analytics.logClickedSetActiveRound();
     this.estimatorService.setActiveRound(this.room, roundNumber, false);
+  }
+
+  async drop(event: CdkDragDrop<string[]>) {
+    this.showActiveRound = this.currentRound !== event.previousIndex;
+    const activeRoundId = this.room.rounds[this.room.currentRound].id;
+    moveItemInArray(this.rounds, event.previousIndex, event.currentIndex);
+    await this.estimatorService.setRounds(this.room, this.rounds, activeRoundId);
+    this.showActiveRound = true;
   }
 
   openSummaryModal() {

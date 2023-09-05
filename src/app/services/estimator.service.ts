@@ -386,6 +386,20 @@ export class EstimatorService {
     });
   }
 
+  setRounds(room: Room, rounds: Round[], activeRoundId: string) {
+    const newRounds = rounds.reduce(
+      (acc, curr, index) => ({ ...acc, [index]: curr }),
+      {}
+    );
+    const newCurrentRound = rounds.findIndex(
+      (round) => round.id === activeRoundId
+    );
+    return this.updateRoom(room.roomId, {
+      rounds: newRounds,
+      currentRound: newCurrentRound > -1 ? newCurrentRound : 0,
+    });
+  }
+
   removeRound(room: Room, roundNumberToDelete: number) {
     const updatedRounds: { [roundNumber: number]: Round } = {};
     Object.entries(room.rounds)

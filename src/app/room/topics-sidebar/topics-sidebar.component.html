@@ -30,7 +30,11 @@
     </button>
   </div>
 </div>
-<div class="round-history-container">
+<div
+  class="round-history-container"
+  cdkDropList
+  (cdkDropListDropped)="drop($event)"
+>
   <ng-container *ngFor="let round of rounds; let roundNumber = index">
     <mat-card
       appearance="outlined"
@@ -39,6 +43,7 @@
       (click)="detailsPanel.toggle()"
       (keyup.enter)="detailsPanel.toggle()"
       tabindex="0"
+      cdkDrag
     >
       <mat-card-content>
         <div class="card-header">
@@ -120,7 +125,7 @@
         </div>
 
         <h3 class="round-title" [class.active]="roundNumber === currentRound">
-          <div class="blob green" *ngIf="roundNumber === currentRound"></div>
+          <div class="blob green" *ngIf="roundNumber === currentRound && showActiveRound"></div>
           {{ round.topic }}
         </h3>
 

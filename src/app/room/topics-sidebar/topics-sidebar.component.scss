@@ -1,26 +1,17 @@
 @import '../../common.scss';
 
-.round-history-container {
-  mat-card {
-    margin: 1rem;
 
-    @include extraSmallScreen {
-      margin: 0.5rem;
-    }
-  }
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
 
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .round-title {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+.round-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .sidenav-header {
@@ -149,9 +140,32 @@
 
 .topic-card {
   cursor: pointer;
-  transition: border-color 100ms linear;
+  transition: border 100ms linear;
+  margin: 1rem;
+
+  @include extraSmallScreen {
+    margin: 0.5rem;
+  }
 
   &:hover {
     border-color: var(--main-color);
   }
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.round-history-container.cdk-drop-list-dragging .topic-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

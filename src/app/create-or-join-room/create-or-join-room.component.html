@@ -220,6 +220,7 @@
       placeholder="random-room-name"
       [formControl]="roomId"
       (blur)="onRoomIdBlur()"
+      (keyup.enter)="onJoinRoomClicked.next()"
       autocomplete="off"
       spellcheck="false"
       required

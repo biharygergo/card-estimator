@@ -59,6 +59,12 @@
                 round.show_results ? "visibility" : "visibility_off"
               }}</mat-icon
             >
+            <mat-icon
+              class="active-round"
+              *ngIf="roundNumber === currentRound && showActiveRound"
+              matTooltip="Active round"
+              >play_arrow</mat-icon
+            >
           </span>
 
           <button
@@ -69,14 +75,6 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button
-              mat-menu-item
-              aria-label="View the results of the given round"
-              (click)="detailsPanel.toggle(); $event.stopPropagation()"
-            >
-              <mat-icon>unfold_more</mat-icon>
-              {{ detailsPanel.expanded ? "Collapse" : "Expand" }}
-            </button>
             <button
               mat-menu-item
               aria-label="Set selected round as active"
@@ -125,7 +123,6 @@
         </div>
 
         <h3 class="round-title" [class.active]="roundNumber === currentRound">
-          <div class="blob green" *ngIf="roundNumber === currentRound && showActiveRound"></div>
           {{ round.topic }}
         </h3>
 

@@ -185,6 +185,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.currentRound = roundNumber;
       this.playNotificationSound();
       this.showOrHideAloneInRoomModal();
+      this.reCalculateStatistics();
     }),
     takeUntil(this.destroy)
   );

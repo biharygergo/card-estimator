@@ -7,12 +7,12 @@
       [formControl]="noteValue"
       (blur)="onNoteBlur()"
       (focus)="onNoteFocus()"
-      rows="1"
       cdkTextareaAutosize
       id="notes-field"
     ></textarea>
     <mat-hint *ngIf="isNoteDisabled && editedBy"
       >{{ editedBy?.name || "Nobody" }} is taking notes</mat-hint
     >
+    <mat-hint *ngIf="isCurrentUserEditing">Your notes are shared with everyone in the room</mat-hint>
   </mat-form-field>
 </form>

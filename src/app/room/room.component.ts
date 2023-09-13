@@ -142,6 +142,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           richTopic: room?.rounds[room.currentRound ?? 0]?.richTopic,
         };
       }),
+      distinctUntilChanged(isEqual),
       takeUntil(this.destroy)
     );
 

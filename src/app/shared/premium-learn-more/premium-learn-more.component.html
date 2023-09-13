@@ -121,7 +121,7 @@
           [disabled]="isPremium$ | async"
           class="stripe-button"
         >
-          {{ isLoadingStripe ? "Redirecting to Stripe..." : "Get Premium now" }}
+          {{ isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial" }}
         </button>
         <button mat-button (click)="getQuote()">Need a custom quote? Get in touch</button>
       </mat-card-content>

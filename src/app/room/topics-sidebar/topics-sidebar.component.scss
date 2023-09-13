@@ -20,14 +20,13 @@
 }
 
 .sidenav-actions {
-  margin-top: -5px;
   background: var(--light-background-color);
-  padding: 1rem;
+  padding: 0.5rem;
+  padding-bottom: 0;
   display: flex;
   gap: 8px;
   align-items: center;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .add-round-container {

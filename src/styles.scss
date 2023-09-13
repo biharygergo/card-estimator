@@ -304,10 +304,6 @@ body {
     flex-wrap: w;
     gap: 0.5rem;
 
-    .learn-more {
-      color: #575e71;
-    }
-
     @include extraSmallScreen {
       flex-direction: column;
     }

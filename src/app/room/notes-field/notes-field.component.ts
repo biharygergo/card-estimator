@@ -27,6 +27,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   isNoteDisabled: boolean;
   hasPermission: boolean = true;
 
+  isCurrentUserEditing = false;
   editedBy: Member | null;
 
   blurTimeout: number | undefined;
@@ -67,6 +68,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   }
 
   onNoteFocus() {
+    this.isCurrentUserEditing = true;
     this.estimatorService.setNoteEditor(
       this.room,
       this.estimatorService.activeMember
@@ -76,7 +78,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
 
   onNoteBlur() {
     clearTimeout(this.blurTimeout);
-
+    this.isCurrentUserEditing = false;
     this.blurTimeout = window.setTimeout(() => {
       this.estimatorService.setNoteEditor(this.room, null);
     }, 500);

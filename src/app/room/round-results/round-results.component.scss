@@ -1,4 +1,4 @@
-@import '../../common.scss';
+@import "../../common.scss";
 
 @keyframes popIn {
   0% {
@@ -109,12 +109,33 @@ mat-list-item.statistic-line {
     }
 
     @include extraSmallScreen {
-        width: 40px;
-        height: 40px;
+      width: 40px;
+      height: 40px;
 
-        .vote-avatar-text {
-          font-size: 18px;
-        }
+      .vote-avatar-text {
+        font-size: 18px;
+      }
+    }
+  }
+
+  @keyframes pulse {
+    from {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 
@@ -137,10 +158,10 @@ mat-list-item.statistic-line {
     animation: popIn 200ms ease-in;
     animation-fill-mode: forwards;
 
-    mat-spinner {
-      --mdc-circular-progress-active-indicator-color: white !important;
+    .hourglass {
+      animation: pulse 1.5s infinite, spin 1.5s infinite;
+      animation-delay: 500ms;
     }
-
     mat-icon {
       height: 15px;
       width: 15px;

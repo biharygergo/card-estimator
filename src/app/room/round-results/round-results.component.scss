@@ -118,24 +118,14 @@ mat-list-item.statistic-line {
     }
   }
 
-  @keyframes pulse {
-    from {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.3;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   @keyframes spin {
     from {
       transform: rotate(0deg);
+      opacity: 1;
     }
     to {
       transform: rotate(360deg);
+      opacity: 1;
     }
   }
 
@@ -159,7 +149,7 @@ mat-list-item.statistic-line {
     animation-fill-mode: forwards;
 
     .hourglass {
-      animation: pulse 1.5s infinite, spin 1.5s infinite;
+      animation: spin 2s infinite;
       animation-delay: 500ms;
     }
     mat-icon {

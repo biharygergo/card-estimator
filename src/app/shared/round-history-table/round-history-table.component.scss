@@ -1,0 +1,89 @@
+@import "../../common.scss";
+
+a {
+  color: var(--title-on-dark);
+  text-decoration: none;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.filter-field {
+  width: 100%;
+  background: white;
+}
+
+::ng-deep .rounds-table {
+  .mobile-header {
+    display: none;
+  }
+
+  @include extraSmallScreen {
+    .mobile-header {
+      display: inline-block;
+    }
+
+    mat-header-row {
+      display: none !important;
+    }
+    mat-row {
+      flex-wrap: wrap;
+      padding: 16px 8px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+      height: unset !important;
+    }
+
+    mat-cell {
+      flex: 1 0 100%;
+      border-bottom-color: transparent !important;
+      padding: 4px 8px !important;
+      min-height: unset;
+
+      &.average-cell,
+      &.majority-cell {
+        flex: 1 0 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  @include extraSmallScreen {
+    mat-paginator {
+      padding: 0.5rem 0;
+
+      .mat-mdc-paginator-container {
+        flex-wrap: wrap;
+      }
+      .mat-mdc-paginator-range-label {
+        flex: 1 1 100%;
+        text-align: end;
+        margin: 0;
+        margin-right: 14px;
+      }
+      .mat-mdc-paginator-range-actions {
+        flex-wrap: wrap;
+        padding-top: 1rem;
+
+        .mat-mdc-paginator-navigation-first {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.notes-header {
+    margin-right: 4px;
+}

@@ -44,6 +44,7 @@ import { IntegrationsComponent } from './integrations/integrations.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recurring-meetings-modal.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RoundHistoryTableComponent } from './round-history-table/round-history-table.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     FormsModule,
     ReactiveFormsModule,
     AppConfigModule,
+    RoundHistoryTableComponent,
   ],
   exports: [
     CommonModule,

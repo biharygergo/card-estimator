@@ -5,17 +5,20 @@ import {
 } from './../pipes/estimate-converter.pipe';
 import { Member, MemberStatus, MemberType, Room } from './../types';
 import { getHumanReadableElapsedTime } from './../utils';
+import { FieldValue } from 'firebase/firestore';
 
 const CSV_HEADERS_BEFORE_NAMES = ['Round'];
 const CSV_HEADERS_AFTER_NAMES = ['Average', 'Majority', 'Notes'];
 
 type ExportedDataRow = {
+  roundId: string;
   estimates: {
     [id: string]: string;
   };
   mostPopularVote: string;
   average: string;
   duration: string;
+  startedAt: FieldValue;
   topic: string;
   notes: string;
 };
@@ -79,6 +82,7 @@ export class ExportData {
           : undefined;
 
         const result: ExportedDataRow = {
+          roundId: round.id,
           estimates,
           average:
             average === undefined
@@ -88,6 +92,7 @@ export class ExportData {
                   .toString(),
           mostPopularVote: mostPopularVoteCard,
           duration: getHumanReadableElapsedTime(round),
+          startedAt: round.started_at,
           topic: round.topic,
           notes: `"${round.notes?.note}"` || '',
         };

@@ -1,83 +1,20 @@
-@import '../../common.scss';
+@import "../../common.scss";
 
-.mat-expansion-panel-header-description {
-  justify-content: flex-end;
-}
-
-.room-list-item {
-  margin-bottom: 0.5rem;
-}
-
-.round-list-item {
-  border: 1px solid lightgray;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-
-  .round-average {
-    background: var(--main-color);
-    color: white;
-    padding: 4px 6px;
-    border-radius: 6px;
-    margin-left: auto;
-  }
+.table-card {
+  transition: height 200ms ease-out;
 }
 
 mat-card {
   margin-bottom: 2rem;
-  mat-card-content {
-    .filter-field {
-      width: 100%;
-    }
-    margin-bottom: 0;
+  &.table-card {
+    overflow: hidden;
   }
 }
 
-mat-list {
-  margin-bottom: 2rem;
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-::ng-deep
-  .ng-animating
-  mat-accordion
-  mat-expansion-panel
-  div.mat-expansion-panel-content {
-  height: 0px;
-  visibility: hidden;
-}
-
-.empty-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.spinner-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-}
-
-::ng-deep .mat-mdc-progress-spinner circle,
-.mat-mdc-progress-spinner circle {
-  stroke: white !important;
-}
-
-mat-panel-title {
-  flex-grow: 3;
-}
-
 .premium-banner {
-  margin-top: 1rem;
-
+  margin: 1rem;
 
   @include extraSmallScreen {
-    margin-top: 2rem;
+    margin: 0.5rem;
   }
 }

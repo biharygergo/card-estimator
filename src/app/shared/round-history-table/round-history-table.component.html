@@ -1,0 +1,67 @@
+<mat-form-field class="filter-field" subscriptSizing="dynamic">
+  <mat-label>Search</mat-label>
+  <input
+    matInput
+    placeholder="Search for a topic name or room"
+    [formControl]="filter"
+    autocomplete="off"
+  />
+</mat-form-field>
+<mat-table [dataSource]="dataSource" class="rounds-table">
+  <ng-container matColumnDef="topicName">
+    <mat-header-cell *matHeaderCellDef>Topic</mat-header-cell>
+    <mat-cell *matCellDef="let round" class="topic-name-cell">{{
+      round.topicName
+    }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="roomId">
+    <mat-header-cell *matHeaderCellDef>Room</mat-header-cell>
+    <mat-cell *matCellDef="let round" class="round-id-cell"
+      ><a [routerLink]="['/room', round.roomId]">{{
+        round.roomId
+      }}</a></mat-cell
+    >
+  </ng-container>
+  <ng-container matColumnDef="startedAt">
+    <mat-header-cell *matHeaderCellDef>Started at</mat-header-cell>
+    <mat-cell *matCellDef="let round" class="started-at-cell">{{
+      round.startedAt?.toMillis() | date : "medium"
+    }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="notes">
+    <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>
+    <mat-cell *matCellDef="let round" class="notes-cell">
+      <span class="mobile-header notes-header">Notes:</span>{{ round.notes }}</mat-cell
+    >
+  </ng-container>
+  <ng-container matColumnDef="majority">
+    <mat-header-cell *matHeaderCellDef>Majority vote</mat-header-cell>
+    <mat-cell *matCellDef="let round" class="majority-cell">
+      <span>{{ round.majority }}</span>
+      <span class="mobile-header">Majority</span></mat-cell
+    >
+  </ng-container>
+  <ng-container matColumnDef="average">
+    <mat-header-cell *matHeaderCellDef>Average vote</mat-header-cell>
+    <mat-cell *matCellDef="let round" class="average-cell">
+      <span>{{ round.average }}</span>
+      <span class="mobile-header">Average</span>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <div *matNoDataRow class="empty-state">
+    <mat-spinner
+      color="primary"
+      [diameter]="30"
+      *ngIf="isLoading | async; else noMatch"
+    />
+    <ng-template #noMatch><p>No rounds matching the filter.</p></ng-template>
+  </div>
+</mat-table>
+<mat-paginator
+  [pageSizeOptions]="[10, 20, 50]"
+  showFirstLastButtons
+  aria-label="Select page of rounds"
+>
+</mat-paginator>

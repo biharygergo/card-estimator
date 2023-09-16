@@ -1,0 +1,45 @@
+.action-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+
+  button {
+    height: 50px;
+    flex: 1 0 100%;
+    &:disabled {
+      background-color: lightgray;
+    }
+  }
+}
+
+.new-round-button {
+  transition: background 300ms linear;
+}
+
+.pass-option {
+  padding-left: 8px;
+
+  ::ng-deep .pass-option-checkbox svg.mdc-checkbox__checkmark {
+    color: white !important;
+  }
+
+  .pass-option-label {
+    padding-left: 4px;
+    font-size: 16px;
+  }
+}
+
+.card-set-title {
+  font-size: 0.8rem;
+}
+
+.mat-mdc-menu-item.selected {
+  .mat-icon {
+    color: #f5a115;
+  }
+}
+
+.rounded-card {
+    border: none;
+  }

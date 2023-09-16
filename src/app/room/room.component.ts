@@ -11,7 +11,6 @@ import {
   NotLoggedInError,
 } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   catchError,
@@ -31,7 +30,6 @@ import {
   switchMap,
   takeUntil,
   tap,
-  take,
 } from 'rxjs';
 import {
   CardSet,
@@ -47,19 +45,15 @@ import {
   Round,
   RoundStatistics,
   UserProfileMap,
-  SavedCardSetValue,
-  CustomCardSet,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
 import { AnalyticsService } from '../services/analytics.service';
 import {
-  cooldownPipe,
-  createCooldownState,
   createTimer,
   getHumanReadableElapsedTime,
+  getSortedCardSetValues,
 } from '../utils';
-import { AddCardDeckModalComponent } from './add-card-deck-modal/add-card-deck-modal.component';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
 import { MatSidenavContainer } from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
@@ -74,9 +68,7 @@ import {
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash-es';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
-import { roomConfigurationModalCreator } from './room-configuration-modal/room-configuration-modal.component';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
-import { CardDeckService } from '../services/card-deck.service';
 import { WebexApiService } from '../services/webex-api.service';
 import {
   delayedFadeAnimation,
@@ -87,9 +79,10 @@ import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premi
 import { TeamsService } from '../services/teams.service';
 import { PaymentService } from '../services/payment.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { ToastService } from '../services/toast.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
-const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
 @Component({
   selector: 'app-room',
@@ -110,7 +103,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   estimationCardSets = Object.values(CARD_SETS);
   selectedEstimationCardSetValue = CARD_SETS[CardSet.DEFAULT];
-  estimationValues = this.getSortedCardSetValues(
+  estimationValues = getSortedCardSetValues(
     this.selectedEstimationCardSetValue
   );
 
@@ -278,12 +271,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  savedCardSets$: Observable<SavedCardSetValue[]> = this.cardDeckService
-    .getMyCardDecks()
-    .pipe(takeUntil(this.destroy));
-
-  savedCardSets: SavedCardSetValue[] = [];
-
   user$ = this.authService.user;
 
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
@@ -294,17 +281,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   openedFeedbackForm: boolean = false;
   inactiveTimeoutHandle: number;
 
-  newRoundClicked = new Subject<void>();
-  inviteButtonClicked = new Subject<void>();
-  newRoundButtonCooldownState$ = createCooldownState();
-  inviteButtonCooldownState$ = createCooldownState();
-
   constructor(
     private estimatorService: EstimatorService,
-    private readonly cardDeckService: CardDeckService,
     private route: ActivatedRoute,
     private router: Router,
-    private clipboard: Clipboard,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private analytics: AnalyticsService,
@@ -314,7 +294,9 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly teamsService: TeamsService,
     public readonly permissionsService: PermissionsService,
     public readonly paymentService: PaymentService,
-    @Inject(APP_CONFIG) public config: AppConfig
+    @Inject(APP_CONFIG) public config: AppConfig,
+    private readonly clipboard: Clipboard,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -349,25 +331,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
     this.onPermissionsUpdated$.subscribe();
-    this.savedCardSets$.subscribe((cardSets) => {
-      this.savedCardSets = cardSets;
-    });
-
-    this.newRoundClicked
-      .pipe(
-        tap(() => this.newRound()),
-        cooldownPipe(this.newRoundButtonCooldownState$),
-        takeUntil(this.destroy)
-      )
-      .subscribe();
-
-    this.inviteButtonClicked
-      .pipe(
-        tap(() => this.copyRoomId()),
-        cooldownPipe(this.inviteButtonCooldownState$),
-        takeUntil(this.destroy)
-      )
-      .subscribe();
 
     this.authService.avatarUpdated
       .pipe(
@@ -418,7 +381,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   private updateSelectedCardSets() {
     this.selectedEstimationCardSetValue = getRoomCardSetValue(this.room);
-    this.estimationValues = this.getSortedCardSetValues(
+    this.estimationValues = getSortedCardSetValues(
       this.selectedEstimationCardSetValue
     );
 
@@ -565,25 +528,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.router.navigate(['join']);
   }
 
-  showResults() {
-    this.analytics.logClickedShowResults();
-    this.estimatorService.setShowResults(this.room, this.currentRound, true);
-  }
-
-  newRound() {
-    this.analytics.logClickedNewRound();
-    this.estimatorService.newRound(this.room);
-  }
-
-  nextRound() {
-    this.analytics.logClickedNextRound();
-    this.estimatorService.setActiveRound(
-      this.room,
-      this.currentRound + 1,
-      false
-    );
-  }
-
   playNotificationSound() {
     if (!this.isMuted) {
       const audio = new Audio();
@@ -616,52 +560,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         first()
       )
       .subscribe();
-  }
-
-  async copyRoomId() {
-    this.analytics.logClickedShareRoom('main');
-    let message = '';
-    const host = window.origin || 'https://card-estimator.web.app';
-    const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
-    if (this.config.runningIn === 'zoom') {
-      try {
-        const { invitationUUID } = await this.zoomService.inviteAllParticipants(
-          this.room.roomId
-        );
-        await this.estimatorService.saveInvitation(
-          invitationUUID,
-          this.room.roomId
-        );
-        message = 'Invitation sent to all participants!';
-      } catch {
-        message = 'Please start a meeting first to invite others to join.';
-      }
-    } else if (this.config.runningIn === 'webex') {
-      const shareSessionStarted = await this.webexService.inviteAllParticipants(
-        this.room.roomId
-      );
-      message = shareSessionStarted
-        ? 'All ready, click the "Open for all" button below!'
-        : 'Join link copied to clipboard for non-Webex participants.';
-      if (!shareSessionStarted) {
-        this.clipboard.copy(roomUrl);
-      }
-    } else if (this.config.runningIn === 'teams') {
-      const link = await this.teamsService.inviteAllParticipants(
-        this.room.roomId
-      );
-      message =
-        'Meeting link copied, share it in the chat or open the app in Stage Mode.';
-      this.clipboard.copy(link);
-    } else {
-      this.clipboard.copy(roomUrl);
-      message = 'Join link copied to clipboard.';
-    }
-
-    this.snackBar.open(message, null, {
-      duration: 2000,
-      horizontalPosition: 'right',
-    });
   }
 
   reCalculateStatistics() {
@@ -720,89 +618,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  async leaveRoom() {
-    this.analytics.logClickedLeaveRoom();
-    if (
-      this.config.runningIn === 'zoom' ||
-      confirm('Do you really want to leave this estimation?')
-    ) {
-      if (this.estimatorService.activeMember) {
-        await this.estimatorService.updateMemberStatus(
-          this.room.roomId,
-          this.estimatorService.activeMember,
-          MemberStatus.LEFT_ROOM
-        );
-      }
-      this.router.navigate(['join']);
-    }
-  }
-
   toggleMute() {
     this.isMuted
       ? this.analytics.logClickedEnableSound()
       : this.analytics.logClickedDisableSound();
     this.isMuted = !this.isMuted;
-  }
-
-  clickedUnitsButton() {
-    this.analytics.logClickedUnits();
-  }
-
-  setEstimationCardSet(cardSet: CardSetValue) {
-    this.analytics.logSelectedCardSet(cardSet.key);
-    if (cardSet.key === CustomCardSet) {
-      this.estimatorService.setRoomCustomCardSetValue(
-        this.room.roomId,
-        cardSet
-      );
-    } else {
-      this.estimatorService.setRoomCardSet(this.room.roomId, cardSet.key);
-    }
-  }
-
-  toggleShowPassOption() {
-    this.analytics.logTogglePassOption(!this.room.showPassOption);
-    this.estimatorService.toggleShowPassOption(
-      this.room.roomId,
-      !this.room.showPassOption
-    );
-  }
-
-  getCardSetDisplayValues(cardSet: CardSetValue | undefined) {
-    if (!cardSet) {
-      return '';
-    }
-    return this.getSortedCardSetValues(cardSet)
-      .map((item) => item.value)
-      .join(', ');
-  }
-
-  getSortedCardSetValues(
-    cardSet: CardSetValue
-  ): { key: string; value: string }[] {
-    return Object.keys(cardSet.values)
-      .sort((a, b) => +a - +b)
-      .map((key) => {
-        return { key, value: cardSet.values[key] };
-      });
-  }
-
-  openAddCardDeckModal() {
-    if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
-      this.analytics.logClickedSetCustomCards();
-      const dialogRef = this.dialog.open(AddCardDeckModalComponent, {
-        id: ADD_CARD_DECK_MODAL,
-        width: '90%',
-        maxWidth: '600px',
-        disableClose: false,
-        panelClass: 'custom-dialog',
-        data: {
-          roomId: this.room.roomId,
-        },
-      });
-
-      dialogRef.afterClosed().subscribe(() => {});
-    }
   }
 
   onCreateAccountClicked() {
@@ -814,28 +634,51 @@ export class RoomComponent implements OnInit, OnDestroy {
     );
   }
 
-  openRoomConfigurationModal() {
-    this.analytics.logClickedOpenRoomConfigurationModal();
-    this.dialog.open(
-      ...roomConfigurationModalCreator({ roomId: this.room.roomId })
-    );
-  }
-
-  async updateMemberType(newType: MemberType) {
-    await this.estimatorService.updateMemberType(
-      this.room.roomId,
-      this.estimatorService.activeMember,
-      newType
-    );
-
-    this.permissionsService.initializePermissions(
-      this.room,
-      this.estimatorService.activeMember.id
-    );
-  }
-
   openPremiumLearnMoreModal() {
     this.analytics.logClickedLearnMorePremium('room_navbar');
     this.dialog.open(...premiumLearnMoreModalCreator());
+  }
+
+  async copyRoomId() {
+    this.analytics.logClickedShareRoom('main');
+    let message = '';
+    const host = window.origin || 'https://card-estimator.web.app';
+    const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
+    if (this.config.runningIn === 'zoom') {
+      try {
+        const { invitationUUID } = await this.zoomService.inviteAllParticipants(
+          this.room.roomId
+        );
+        await this.estimatorService.saveInvitation(
+          invitationUUID,
+          this.room.roomId
+        );
+        message = 'Invitation sent to all participants!';
+      } catch {
+        message = 'Please start a meeting first to invite others to join.';
+      }
+    } else if (this.config.runningIn === 'webex') {
+      const shareSessionStarted = await this.webexService.inviteAllParticipants(
+        this.room.roomId
+      );
+      message = shareSessionStarted
+        ? 'All ready, click the "Open for all" button below!'
+        : 'Join link copied to clipboard for non-Webex participants.';
+      if (!shareSessionStarted) {
+        this.clipboard.copy(roomUrl);
+      }
+    } else if (this.config.runningIn === 'teams') {
+      const link = await this.teamsService.inviteAllParticipants(
+        this.room.roomId
+      );
+      message =
+        'Meeting link copied, share it in the chat or open the app in Stage Mode.';
+      this.clipboard.copy(link);
+    } else {
+      this.clipboard.copy(roomUrl);
+      message = 'Join link copied to clipboard.';
+    }
+
+    this.toastService.showMessage(message);
   }
 }

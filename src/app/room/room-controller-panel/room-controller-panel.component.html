@@ -1,0 +1,242 @@
+<mat-card appearance="outlined" class="rounded-card">
+  <div class="action-buttons-container">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="newRoundClicked.next()"
+      *ngIf="currentRound === rounds.length - 1"
+      [disabled]="
+        !(permissionsService.canCreateRounds() | async) ||
+        (newRoundButtonCooldownState$ | async).includes('cooldown') ||
+        isEditingTopic
+      "
+      class="new-round-button"
+    >
+      <div
+        class="center-icon-button"
+        *ngIf="(newRoundButtonCooldownState$ | async) === 'cooldown'"
+        @fadeAnimation
+      >
+        <mat-icon>checkmark</mat-icon>
+        Round #{{ currentRound + 1 }} created
+      </div>
+      <div
+        class="center-icon-button"
+        *ngIf="(newRoundButtonCooldownState$ | async) === 'initial'"
+        @fadeAnimation
+      >
+        <mat-icon>add</mat-icon>
+        New round
+      </div>
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="nextRound()"
+      [disabled]="
+        !(permissionsService.canCreateRounds() | async) || isEditingTopic
+      "
+      *ngIf="currentRound < rounds.length - 1"
+    >
+      <div class="center-icon-button">
+        <mat-icon>navigate_next</mat-icon>
+        Next round
+      </div>
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="showResults()"
+      [disabled]="
+        (room?.rounds)[currentRound]?.show_results ||
+        !(permissionsService.canRevealResults() | async)
+      "
+    >
+      <div class="center-icon-button">
+        <mat-icon>visibility</mat-icon>
+        {{
+          (room?.rounds)[currentRound]?.show_results
+            ? "Votes revealed"
+            : "Reveal votes"
+        }}
+      </div>
+    </button>
+  </div>
+  <mat-card-footer class="room-id-container">
+    <h4>
+      <span
+        >Room ID: <strong>{{ room?.roomId }}</strong></span
+      >
+      <button
+        mat-stroked-button
+        (click)="inviteButtonClicked.next()"
+        [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+      >
+        <div
+          class="center-icon-button"
+          *ngIf="(inviteButtonCooldownState$ | async) === 'initial'"
+          @fadeAnimation
+        >
+          <mat-icon>link</mat-icon>
+          Invite
+        </div>
+        <div
+          class="center-icon-button"
+          *ngIf="(inviteButtonCooldownState$ | async) === 'cooldown'"
+          @fadeAnimation
+        >
+          <mat-icon>checkmark</mat-icon>
+          {{ config.runningIn === "web" ? "Copied" : "Invited" }}
+        </div>
+      </button>
+    </h4>
+  </mat-card-footer>
+  <mat-card-footer class="card-footer-actions">
+    <countdown-timer [room]="room$"></countdown-timer>
+  </mat-card-footer>
+  <mat-card-footer class="card-footer-actions align-right">
+    <button
+      mat-stroked-button
+      [matMenuTriggerFor]="roomSettingsMenu"
+      id="room-options-button"
+    >
+      <mat-icon>settings</mat-icon>
+      Settings
+    </button>
+    <button
+      mat-stroked-button
+      aria-label="Toggle topics sidebar"
+      (click)="sidebarTriggered.emit()"
+      class="topics-toggle responsive-label-button"
+      matTooltip="Manage rounds, view team velocity, download results or generate a summary."
+    >
+      <mat-icon>list</mat-icon>
+      Manage rounds ({{ rounds.length }})
+    </button>
+    <mat-menu #roomSettingsMenu="matMenu">
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="menu"
+        aria-label="Estimator settings"
+        class="estimator-settings-button"
+        (click)="clickedUnitsButton()"
+        id="card-sets-button"
+        [disabled]="!(permissionsService.canChangeCardSet() | async)"
+      >
+        <mat-icon>style</mat-icon>
+        Set cards
+      </button>
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="changeRoleMenu"
+        aria-label="Switch current role"
+        id="switch-role-button"
+      >
+        <mat-icon>switch_account</mat-icon>
+        Change role
+      </button>
+      <button
+        mat-menu-item
+        aria-label="Permissions and security"
+        class="estimator-settings-button"
+        (click)="openRoomConfigurationModal()"
+      >
+        <mat-icon>security</mat-icon>
+        <span class="menu-item-with-badge"
+          >Security and permissions
+          <span class="menu-item-badge">New</span></span
+        >
+      </button>
+      <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
+        <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
+        {{ isMuted ? "Sound is off" : "Sound is on" }}
+      </button>
+      <mat-divider></mat-divider>
+      <button
+        mat-menu-item
+        color="warn"
+        (click)="leaveRoom()"
+        id="leave-room-button"
+      >
+        <mat-icon>exit_to_app</mat-icon>
+        Leave room
+      </button>
+    </mat-menu>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        *ngFor="let cardSet of estimationCardSets"
+        (click)="setEstimationCardSet(cardSet)"
+        [ngClass]="
+          selectedEstimationCardSetValue.key === cardSet.key && 'selected'
+        "
+      >
+        <mat-icon>{{ cardSet.icon }}</mat-icon>
+        <span class="card-set-title"
+          >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
+        >
+      </button>
+      <mat-divider></mat-divider>
+      <div mat-menu-item role="menuitemcheckbox" class="pass-option">
+        <mat-checkbox
+          (click)="toggleShowPassOption(); $event.stopPropagation()"
+          [checked]="room?.showPassOption"
+          class="pass-option-checkbox"
+          ><span class="pass-option-label"
+            >Include "Pass" (?) card</span
+          ></mat-checkbox
+        >
+      </div>
+      <mat-divider></mat-divider>
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="savedCardsMenu"
+        aria-label="Saved card sets"
+        id="card-saved-sets-button"
+        [disabled]="
+          savedCardSets.length === 0 ||
+          !(permissionsService.hasPremiumAccess() | async)
+        "
+      >
+        <mat-icon>cloud</mat-icon>
+        Saved card sets ({{ savedCardSets.length }})
+      </button>
+      <mat-menu #savedCardsMenu="matMenu">
+        <button
+          mat-menu-item
+          *ngFor="let cardSet of savedCardSets"
+          (click)="setEstimationCardSet(cardSet)"
+        >
+          <mat-icon>cloud_download</mat-icon>
+          <span class="card-set-title"
+            >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
+          >
+        </button>
+      </mat-menu>
+      <button mat-menu-item (click)="openAddCardDeckModal()">
+        <mat-icon>add</mat-icon>
+        <span>Set a custom card deck</span>
+      </button>
+    </mat-menu>
+    <mat-menu #changeRoleMenu="matMenu">
+      <button
+        mat-menu-item
+        [class.selected]="
+          (activeMember$ | async)?.type === MemberType.ESTIMATOR
+        "
+        (click)="updateMemberType(MemberType.ESTIMATOR)"
+      >
+        <mat-icon>how_to_vote</mat-icon>
+        Estimator
+      </button>
+      <button
+        mat-menu-item
+        [class.selected]="(activeMember$ | async)?.type === MemberType.OBSERVER"
+        (click)="updateMemberType(MemberType.OBSERVER)"
+      >
+        <mat-icon>visibility</mat-icon>
+        Observer
+      </button>
+    </mat-menu>
+  </mat-card-footer>
+</mat-card>

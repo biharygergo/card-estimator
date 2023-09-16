@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 import { BehaviorSubject, map, pipe, switchMap, timer } from 'rxjs';
-import { Round } from './types';
+import { CardSetValue, Round } from './types';
 import Cookies from 'js-cookie';
 
 export const getHumanReadableElapsedTime = (round: Round) => {
@@ -88,4 +88,14 @@ export function cooldownPipe(stateSubject: BehaviorSubject<CooldownState>) {
       stateSubject.next('initial');
     })
   );
+}
+
+export function getSortedCardSetValues(
+  cardSet: CardSetValue
+): { key: string; value: string }[] {
+  return Object.keys(cardSet.values)
+    .sort((a, b) => +a - +b)
+    .map((key) => {
+      return { key, value: cardSet.values[key] };
+    });
 }

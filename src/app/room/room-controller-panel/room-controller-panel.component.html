@@ -110,7 +110,6 @@
         aria-label="Toggle topics sidebar"
         (click)="sidebarTriggered.emit()"
         class="topics-toggle responsive-label-button"
-        matTooltip="Manage rounds, view team velocity, download results or generate a summary."
       >
         <mat-icon>list</mat-icon>
         Manage rounds ({{ rounds.length }})
@@ -209,14 +208,16 @@
     >
       <mat-icon>list</mat-icon>
     </button>
-    <mat-divider />
-    <button
-      mat-icon-button
-      (click)="expandClicked.emit()"
-      matTooltip="Expand control panel"
-    >
-      <mat-icon>chevron_left</mat-icon>
-    </button>
+    <div>
+      <mat-divider class="expand-divider" />
+      <button
+        mat-icon-button
+        (click)="expandClicked.emit()"
+        matTooltip="Expand control panel"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+    </div>
   </mat-card-content>
 </mat-card>
 <mat-menu #roomSettingsMenu="matMenu">

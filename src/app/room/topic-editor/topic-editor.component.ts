@@ -15,6 +15,8 @@ import {
   catchError,
   combineLatest,
   debounceTime,
+  filter,
+  fromEvent,
   map,
   Observable,
   of,
@@ -120,7 +122,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
   constructor(
     private readonly jiraService: JiraService,
     private readonly toastService: ToastService,
-    private readonly analyticsService: AnalyticsService,
+    private readonly analyticsService: AnalyticsService
   ) {}
 
   ngOnInit(): void {
@@ -155,6 +157,17 @@ export class TopicEditorComponent implements OnInit, OnDestroy {
       this.analyticsService.logClickedStartJiraAuth();
       this.jiraService.startJiraAuthFlow();
     });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      fromEvent(this.topicInput.nativeElement, 'keyup')
+        .pipe(
+          filter((e: KeyboardEvent) => e.key === 'Enter'),
+          takeUntil(this.destroy)
+        )
+        .subscribe(() => this.topicBlur());
+    }, 100);
   }
 
   ngOnDestroy(): void {

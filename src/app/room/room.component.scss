@@ -35,15 +35,14 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0.5rem;
   flex-wrap: wrap;
   max-width: 1400px;
   margin: 0 auto;
 
-  @media screen and (min-width: 800px) {
-    padding: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 150px;
+  padding: 1rem 2rem 150px 2rem;
+
+  @media screen and (max-width: 800px) {
+    padding: 0.5rem;
   }
 }
 
@@ -51,9 +50,10 @@
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
-  flex-basis: 100%;
-  @media screen and (min-width: 800px) {
-    flex: 2 1 60%;
+  flex: 2 1 60%;
+
+  @media screen and (max-width: 800px) {
+    flex: 1 1 100%;
   }
 
   @include extraSmallScreen {
@@ -63,16 +63,21 @@
 
 .estimate-container {
   margin: 0.5rem;
-  flex-basis: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  flex: 1 1 33%;
 
-  @media screen and (min-width: 800px) {
-    flex: 1 1 33%;
+  &.minimized {
+    flex: 0 0 50px;
+    transition: flex 200ms ease-out;
+  }
+
+  @media screen and (max-width: 800px) {
+    flex: 1 1 100%;
 
     &.minimized {
-      flex: 0 0 50px;
+      flex: 1 1 100%;
       transition: flex 200ms ease-out;
     }
   }

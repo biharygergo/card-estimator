@@ -60,7 +60,7 @@
   @media screen and (max-width: 800px) {
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-evenly;
     padding: 0.5rem 0;
     gap: 0.2rem;
   }

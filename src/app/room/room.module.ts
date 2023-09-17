@@ -23,6 +23,7 @@ import { RichTopicComponent } from './rich-topic/rich-topic.component';
 import { SummaryModalComponent } from './summary-modal/summary-modal.component';
 import { BatchAddTopicsModalComponent } from './batch-add-topics-modal/batch-add-topics-modal.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,7 @@ const routes: Routes = [
     RichTopicComponent,
     SummaryModalComponent,
     BatchAddTopicsModalComponent,
+    RoomControllerPanelComponent,
   ],
   imports: [
     CommonModule,

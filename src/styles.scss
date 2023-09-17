@@ -219,10 +219,11 @@ body {
 
 .navbar-right,
 .navbar-left {
-  padding: 1rem;
+  padding: 1rem 2.5rem;
 
-  @media screen and (min-width: 800px) {
-    padding: 1rem 2.5rem;
+  @media screen and (max-width: 800px) {
+    padding: 1rem;
+
   }
 
   @include extraSmallScreen {
@@ -238,6 +239,15 @@ body {
 
 .responsive-label-button {
   @media screen and (max-width: 500px) {
+    .mdc-button__label {
+      display: none;
+    }
+    mat-icon {
+      margin-right: 0 !important;
+    }
+  }
+
+  &.forced {
     .mdc-button__label {
       display: none;
     }

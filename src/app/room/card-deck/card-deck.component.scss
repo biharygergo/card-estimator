@@ -1,23 +1,28 @@
-@import '../../common.scss';
+@import "../../common.scss";
 
 :host {
-  width: 100%;
-  @media screen and (min-width: 800px) {
-    width: unset;
+  @media screen and (max-width: 800px) {
+    width: 100%;
   }
 }
 
 .card-deck {
-  margin: 0.5rem;
-  flex: 1;
+  margin: 0;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
 
-  @media screen and (min-width: 800px) {
-    margin: 0;
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
+  @media screen and (max-width: 800px) {
+    margin: 0.5rem;
+    flex: 1;
+
+    position: initial;
+    transform: none;
+    left: unset;
+    bottom: unset;
+    z-index: initial;
   }
 
   @include extraSmallScreen {
@@ -28,29 +33,33 @@
 .estimator-buttons {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
   padding: 1rem;
   background: var(--main-dark-color);
   border-radius: 8px;
+  flex-wrap: nowrap;
+
+  transform: scale(0.8);
+  transition: transform 0.2s ease-in-out;
+  transition-property: transform, border-radius;
+  border-radius: 8px;
+
+  &:hover {
+    border-radius: 8px 8px 0 0;
+    transform: scale(1);
+  }
 
   @include extraSmallScreen {
     padding: 0.5rem;
   }
 
-  @media screen and (min-width: 800px) {
-    flex-wrap: nowrap;
-  }
-
-  @media (min-width: 800px) {
-    transform: scale(0.8);
-    transition: transform 0.2s ease-in-out;
-    transition-property: transform, border-radius;
-    border-radius: 8px;
+  @media (max-width: 800px) {
+    transform: none;
+    flex-wrap: wrap;
 
     &:hover {
-      border-radius: 8px 8px 0 0;
-      transform: scale(1);
+      border-radius: inherit;
+      transform: none;
     }
   }
 
@@ -70,16 +79,16 @@
       font-weight: 400;
       will-change: transform;
       transition: transform 0.2s 50ms ease-in-out;
-
-      @media screen and (min-width: 800px) {
-        margin: 0 0.3rem;
+      margin: 0 0.3rem;
+      @media screen and (max-width: 800px) {
+        margin: initial;
       }
 
       &:disabled {
         opacity: 0.8;
         color: #efefef;
 
-        &.mat-accent{
+        &.mat-accent {
           background-color: var(--accent-color);
         }
       }

@@ -12,6 +12,7 @@
           isEditingTopic
         "
         class="new-round-button"
+        id="new-round-button"
       >
         <div
           class="center-icon-button"
@@ -38,6 +39,7 @@
           !(permissionsService.canCreateRounds() | async) || isEditingTopic
         "
         *ngIf="currentRound < rounds.length - 1"
+        id="next-round-button"
       >
         <div class="center-icon-button">
           <mat-icon>navigate_next</mat-icon>
@@ -52,6 +54,7 @@
           (room?.rounds)[currentRound]?.show_results ||
           !(permissionsService.canRevealResults() | async)
         "
+        id="reveal-results-button"
       >
         <div class="center-icon-button">
           <mat-icon>visibility</mat-icon>
@@ -72,6 +75,7 @@
           mat-stroked-button
           (click)="inviteButtonClicked.next()"
           [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+          id="invite-button"
         >
           <div
             class="center-icon-button"
@@ -111,6 +115,7 @@
         (click)="sidebarTriggered.emit()"
         class="topics-toggle responsive-label-button forced"
         matTooltip="Manage rounds ({{ rounds.length }})"
+        id="topics-toggle"
       >
         <mat-icon>list</mat-icon>
       </button>
@@ -119,6 +124,7 @@
         matTooltip="Minimize control panel"
         (click)="expandClicked.emit()"
         class="responsive-label-button forced"
+        id="minimize-panel-button"
       >
         <mat-icon *ngIf="!isSmallScreen; else upIcon"
           >chevron_right</mat-icon
@@ -140,6 +146,7 @@
         isEditingTopic
       "
       class="new-round-button"
+      id="new-round-button"
       matTooltip="Add a new round"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
@@ -164,6 +171,7 @@
       *ngIf="currentRound < rounds.length - 1"
       matTooltip="Go to next round"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+      id="next-round-button"
     >
       <mat-icon>navigate_next</mat-icon>
     </button>
@@ -176,6 +184,7 @@
       "
       matTooltip="Reveal results"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+      id="reveal-results-button"
     >
       <mat-icon>visibility</mat-icon>
     </button>
@@ -185,6 +194,7 @@
       [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
       matTooltip="Invite others"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+      id="invite-button"
     >
       <mat-icon
         *ngIf="(inviteButtonCooldownState$ | async) === 'initial'"
@@ -211,9 +221,9 @@
       mat-icon-button
       aria-label="Toggle topics sidebar"
       (click)="sidebarTriggered.emit()"
-      class="topics-toggle"
       matTooltip="Manage rounds"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+      id="topics-toggle"
     >
       <mat-icon>list</mat-icon>
     </button>
@@ -223,6 +233,7 @@
         (click)="expandClicked.emit()"
         matTooltip="Expand control panel"
         [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+        id="expand-button"
       >
         <mat-icon *ngIf="!isSmallScreen; else downIcon"
           >chevron_left</mat-icon

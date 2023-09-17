@@ -52,9 +52,31 @@ describe('Inside the room', () => {
     cy.get('.pass-option-checkbox').click();
     cy.contains('Fibonacci').click();
 
-    cy.contains('13')
-      .should('be.visible');
+    cy.contains('13').should('be.visible');
 
     cy.get('#pass-option-card').should('be.visible');
+  });
+
+  it('can use minimized panel', () => {
+    cy.get('#minimize-panel-button').click();
+
+    cy.get('#new-round-button').click();
+    // Banner appears
+    cy.contains('Continue alone').click();
+    cy.contains('Topic of Round 2').should('be.visible');
+
+    cy.get('#reveal-results-button').click();
+    cy.get('#reveal-results-button').should('be.disabled');
+
+    cy.get('#invite-button').click();
+    cy.contains('Join link copied to clipboard').should('be.visible');
+
+    cy.get('#topics-toggle').click();
+    cy.get('.round-title').should('exist');
+
+    cy.get('body').click(10, 10);
+
+    cy.get('#expand-button').click();
+    cy.contains('New round').should('be.visible');
   });
 });

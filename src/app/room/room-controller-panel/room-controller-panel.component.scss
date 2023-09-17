@@ -53,8 +53,8 @@
 .mini-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.9rem 0.2rem;
+  gap: 0.3rem;
+  padding: 0.7rem 0.2rem;
   align-items: center;
 
   @media screen and (max-width: 800px) {
@@ -66,16 +66,16 @@
   }
 
   @include extraSmallScreen {
-    gap: 0px;
+    gap: 4px;
     ::ng-deep {
         .mat-mdc-icon-button {
-            --mdc-icon-button-state-layer-size: 36px !important;
-            padding: 6px;
+            --mdc-icon-button-state-layer-size: 30px !important;
+            padding: 3px;
         }
 
       .mat-mdc-button-touch-target {
-        width: 36px;
-        height: 36px;
+        width: 30px;
+        height: 30px;
       }
     }
 

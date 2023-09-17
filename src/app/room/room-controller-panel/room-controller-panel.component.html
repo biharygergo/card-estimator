@@ -100,19 +100,19 @@
         mat-stroked-button
         [matMenuTriggerFor]="roomSettingsMenu"
         id="room-options-button"
-        class="responsive-label-button"
+        class="responsive-label-button forced"
+        matTooltip="Room settings"
       >
         <mat-icon>settings</mat-icon>
-        Settings
       </button>
       <button
         mat-stroked-button
         aria-label="Toggle topics sidebar"
         (click)="sidebarTriggered.emit()"
-        class="topics-toggle responsive-label-button"
+        class="topics-toggle responsive-label-button forced"
+        matTooltip="Manage rounds ({{ rounds.length }})"
       >
         <mat-icon>list</mat-icon>
-        Manage rounds ({{ rounds.length }})
       </button>
       <button
         mat-stroked-button
@@ -120,7 +120,10 @@
         (click)="expandClicked.emit()"
         class="responsive-label-button forced"
       >
-        <mat-icon>chevron_right</mat-icon>
+        <mat-icon *ngIf="!isSmallScreen; else upIcon"
+          >chevron_right</mat-icon
+        >
+        <ng-template #upIcon><mat-icon>expand_less</mat-icon></ng-template>
       </button>
     </div>
   </mat-card-content>
@@ -138,6 +141,7 @@
       "
       class="new-round-button"
       matTooltip="Add a new round"
+      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
       <mat-icon
         *ngIf="(newRoundButtonCooldownState$ | async) === 'cooldown'"
@@ -159,6 +163,7 @@
       "
       *ngIf="currentRound < rounds.length - 1"
       matTooltip="Go to next round"
+      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
       <mat-icon>navigate_next</mat-icon>
     </button>
@@ -170,6 +175,7 @@
         !(permissionsService.canRevealResults() | async)
       "
       matTooltip="Reveal results"
+      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
       <mat-icon>visibility</mat-icon>
     </button>
@@ -178,6 +184,7 @@
       (click)="inviteButtonClicked.next()"
       [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
       matTooltip="Invite others"
+      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
       <mat-icon
         *ngIf="(inviteButtonCooldownState$ | async) === 'initial'"
@@ -196,6 +203,7 @@
       [matMenuTriggerFor]="roomSettingsMenu"
       id="room-options-button"
       matTooltip="Room settings"
+      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
       <mat-icon>settings</mat-icon>
     </button>
@@ -205,17 +213,21 @@
       (click)="sidebarTriggered.emit()"
       class="topics-toggle"
       matTooltip="Manage rounds"
+      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
     >
       <mat-icon>list</mat-icon>
     </button>
     <div>
-      <mat-divider class="expand-divider" />
       <button
         mat-icon-button
         (click)="expandClicked.emit()"
         matTooltip="Expand control panel"
+        [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
       >
-        <mat-icon>chevron_left</mat-icon>
+        <mat-icon *ngIf="!isSmallScreen; else downIcon"
+          >chevron_left</mat-icon
+        >
+        <ng-template #downIcon><mat-icon>expand_more</mat-icon></ng-template>
       </button>
     </div>
   </mat-card-content>

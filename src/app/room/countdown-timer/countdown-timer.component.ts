@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   Component,
   Input,
@@ -47,12 +48,19 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
 
   intervalHandle: number | undefined;
 
+  isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
+    map((result) => result.matches),
+    tap((isSmallScreen) => (this.isSmallScreen = isSmallScreen))
+  );
+  isSmallScreen: boolean = false;
+
   private readonly destroy = new Subject<void>();
   readonly TimerState = TimerState;
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly analyitics: AnalyticsService,
-    public readonly permissionsService: PermissionsService
+    public readonly permissionsService: PermissionsService,
+    private readonly breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit(): void {
@@ -82,6 +90,8 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
 
         this.calculateProgress();
       });
+
+    this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
   }
 
   ngOnDestroy(): void {

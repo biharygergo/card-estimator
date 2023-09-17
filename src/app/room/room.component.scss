@@ -53,7 +53,7 @@
   flex: 2 1 60%;
 
   @media screen and (max-width: 800px) {
-    flex: 1 1 100%;
+    flex: 1 1;
   }
 
   @include extraSmallScreen {
@@ -63,6 +63,7 @@
 
 .estimate-container {
   margin: 0.5rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -74,16 +75,17 @@
   }
 
   @media screen and (max-width: 800px) {
-    flex: 1 1 100%;
+    flex: 1 1;
+    margin: 0;
+    margin-bottom: 1rem;
 
     &.minimized {
-      flex: 1 1 100%;
+      flex: 1 1;
       transition: flex 200ms ease-out;
     }
   }
 
   @include extraSmallScreen {
-    margin: 0.5rem 0 0 0;
   }
 }
 
@@ -103,6 +105,8 @@
 .topic-container {
   transition: height 100ms ease-out;
   overflow: hidden;
+  margin-bottom: 1rem;
+
   h2 {
     display: flex;
     justify-content: space-between;
@@ -131,14 +135,24 @@
 }
 
 .members-card {
-  margin-top: 1rem;
+  margin-bottom: 1rem;
   flex-shrink: 0;
   transition: height 200ms ease-out;
   overflow: hidden;
+
+  @media screen and (max-width: 800px) {
+    margin-bottom: 0;
+  }
 }
 
 .anonymous-user-banner {
-  margin-top: 1rem;
+  @media screen and (max-width: 800px) {
+    margin: 0.5rem;
+  }
+
+  @include extraSmallScreen {
+    margin: 0;
+  }
 }
 
 .ad-explainer {

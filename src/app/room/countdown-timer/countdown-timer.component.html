@@ -77,6 +77,7 @@
     *ngIf="timer.state === TimerState.STOPPED && durationLeft === 0"
     id="reset-button"
     matTooltip="Reset timer"
+    [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
   >
     <mat-icon>restart_alt</mat-icon>
   </button>
@@ -92,6 +93,7 @@
     "
     id="start-button"
     matTooltip="Start timer"
+    [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
   >
     <mat-icon>play_arrow</mat-icon>
   </button>
@@ -102,6 +104,7 @@
     *ngIf="timer.state === TimerState.ACTIVE"
     class="mini-pause-button"
     matTooltip="Pause timer"
+    [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
   >
     <span class="duration-left" *ngIf="durationLeft > -1">{{
       durationLeft

@@ -72,6 +72,9 @@
             </mat-card-content>
           </div>
         </mat-card>
+        <ng-container *ngIf="(isSmallScreen$ | async)?.matches === true">
+          <ng-container *ngTemplateOutlet="controlPanel" />
+        </ng-container>
         <mat-card
           appearance="outlined"
           class="members-card rounded-card"
@@ -97,12 +100,9 @@
             </div>
           </div>
         </mat-card>
-        <anonymous-user-banner
-          [hideable]="true"
-          *ngIf="(sessionCount$ | async) > 1"
-          class="anonymous-user-banner"
-          @fadeAnimation
-        ></anonymous-user-banner>
+        <ng-container *ngIf="(isSmallScreen$ | async)?.matches === false">
+          <ng-container *ngTemplateOutlet="anonymousBanner" />
+        </ng-container>
       </div>
       <app-card-deck
         [room]="room"
@@ -111,28 +111,12 @@
         [estimationValues]="estimationValues"
         [currentEstimate]="currentEstimate"
       ></app-card-deck>
-      <div
-        class="estimate-container"
-        [class.minimized]="!isControlPaneExpanded"
-      >
-        <planning-poker-room-controller-panel
-          [room]="room"
-          [room$]="room$"
-          [activeMember$]="activeMember$"
-          [rounds]="rounds"
-          [currentRound]="currentRound"
-          [isEditingTopic]="isEditingTopic"
-          [isMuted]="isMuted"
-          [estimationCardSets]="estimationCardSets"
-          [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
-          [isExpanded]="isControlPaneExpanded"
-          (sidebarTriggered)="sidenav.open()"
-          (muteClicked)="toggleMute()"
-          (inviteClicked)="copyRoomId()"
-          (expandClicked)="toggleControlPane()"
-        />
-      </div>
-
+      <ng-container *ngIf="(isSmallScreen$ | async)?.matches === false">
+        <ng-container *ngTemplateOutlet="controlPanel" />
+      </ng-container>
+      <ng-container *ngIf="(isSmallScreen$ | async)?.matches === true">
+        <ng-container *ngTemplateOutlet="anonymousBanner" />
+      </ng-container>
       <app-github-badge *ngIf="config.runningIn === 'web'"></app-github-badge>
     </div>
   </mat-sidenav-content>
@@ -146,3 +130,31 @@
     ></app-topics-sidebar>
   </mat-sidenav>
 </mat-sidenav-container>
+<ng-template #anonymousBanner>
+  <anonymous-user-banner
+    [hideable]="true"
+    *ngIf="(sessionCount$ | async) > 1"
+    class="anonymous-user-banner"
+    @fadeAnimation
+  ></anonymous-user-banner>
+</ng-template>
+<ng-template #controlPanel>
+  <div class="estimate-container" [class.minimized]="!isControlPaneExpanded">
+    <planning-poker-room-controller-panel
+      [room]="room"
+      [room$]="room$"
+      [activeMember$]="activeMember$"
+      [rounds]="rounds"
+      [currentRound]="currentRound"
+      [isEditingTopic]="isEditingTopic"
+      [isMuted]="isMuted"
+      [estimationCardSets]="estimationCardSets"
+      [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
+      [isExpanded]="isControlPaneExpanded"
+      (sidebarTriggered)="sidenav.open()"
+      (muteClicked)="toggleMute()"
+      (inviteClicked)="copyRoomId()"
+      (expandClicked)="toggleControlPane()"
+    />
+  </div>
+</ng-template>

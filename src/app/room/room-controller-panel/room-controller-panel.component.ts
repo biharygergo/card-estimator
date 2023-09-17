@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, map, shareReplay, takeUntil, tap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -37,6 +37,7 @@ import {
   delayedFadeAnimation,
   fadeAnimation,
 } from 'src/app/shared/animations';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
@@ -71,6 +72,12 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   savedCardSets: SavedCardSetValue[] = [];
 
+  isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
+    map((result) => result.matches),
+    tap((isSmallScreen) => (this.isSmallScreen = isSmallScreen))
+  );
+  isSmallScreen: boolean = false;
+
   readonly newRoundClicked = new Subject<void>();
   readonly newRoundButtonCooldownState$ = createCooldownState();
 
@@ -86,7 +93,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly dialog: MatDialog,
     private readonly router: Router,
-    private readonly cardDeckService: CardDeckService
+    private readonly cardDeckService: CardDeckService,
+    private readonly breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit() {
@@ -105,6 +113,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
+
+    this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
   }
 
   ngOnDestroy(): void {}

@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -42,7 +43,7 @@ export interface TopicEditorInputOutput {
   styleUrls: ['./topic-editor.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TopicEditorComponent implements OnInit, OnDestroy {
+export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() roomTopic: Observable<TopicEditorInputOutput>;
 
   @Output() topicUpdated = new EventEmitter<TopicEditorInputOutput>();

@@ -23,7 +23,6 @@ import {
   startWith,
   Subject,
   takeUntil,
-  timer,
 } from 'rxjs';
 import { NavigationService } from './services/navigation.service';
 import { subscriptionResultModalCreator } from './shared/subscription-result/subscription-result.component';

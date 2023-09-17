@@ -82,6 +82,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { ToastService } from '../services/toast.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { ThemeService } from '../services/theme.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -94,6 +95,8 @@ const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenavContainer, { read: ElementRef })
   sidenav: MatSidenavContainer;
+  @ViewChild('sidenavContent', { read: ElementRef, static: true })
+  sidenavContent: ElementRef;
 
   destroy = new Subject<void>();
 
@@ -301,7 +304,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly clipboard: Clipboard,
     private readonly toastService: ToastService,
-    private readonly breakpointObserver: BreakpointObserver
+    private readonly breakpointObserver: BreakpointObserver,
+    private readonly themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -368,6 +372,18 @@ export class RoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
+  }
+
+  ngAfterViewInit() {
+    this.themeService.themeChanged
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        console.log(this.sidenavContent.nativeElement);
+        const element = this.sidenavContent.nativeElement;
+        element.style.animation = 'none';
+        element.offsetHeight; /* trigger reflow */
+        element.style.animation = null;
+      });
   }
 
   ngOnDestroy(): void {

@@ -1,4 +1,4 @@
-<div class="timer-container">
+<div class="timer-container" *ngIf="!minimized && timer">
   <div class="progress">
     <mat-progress-bar
       mode="determinate"
@@ -49,7 +49,9 @@
       *ngIf="
         timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
       "
-      [disabled]="durationLeft === 0 || !(permissionsService.canSetTimer() | async)"
+      [disabled]="
+        durationLeft === 0 || !(permissionsService.canSetTimer() | async)
+      "
       id="start-button"
     >
       <mat-icon>play_arrow</mat-icon>
@@ -66,4 +68,47 @@
       Pause
     </button>
   </div>
+</div>
+<ng-container *ngIf="minimized && timer">
+  <button
+    mat-icon-button
+    [disabled]="!(permissionsService.canSetTimer() | async)"
+    (click)="resetTimer(true)"
+    *ngIf="timer.state === TimerState.STOPPED && durationLeft === 0"
+    id="reset-button"
+    matTooltip="Reset timer"
+  >
+    <mat-icon>restart_alt</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    (click)="startTimer(true)"
+    *ngIf="
+      timer.state === TimerState.INIT ||
+      (timer.state === TimerState.STOPPED && durationLeft !== 0)
+    "
+    [disabled]="
+      durationLeft === 0 || !(permissionsService.canSetTimer() | async)
+    "
+    id="start-button"
+    matTooltip="Start timer"
+  >
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [disabled]="!(permissionsService.canSetTimer() | async)"
+    (click)="stopTimer(true)"
+    *ngIf="timer.state === TimerState.ACTIVE"
+    class="mini-pause-button"
+    matTooltip="Pause timer"
+  >
+    <span class="duration-left" *ngIf="durationLeft > -1">{{
+      durationLeft
+    }}</span>
+    <mat-icon class="pause-icon">pause</mat-icon>
+  </button>
+</ng-container>
+<div class="loading" *ngIf="!timer">
+  <mat-spinner diameter="20" />
 </div>

@@ -1,4 +1,4 @@
-@import '../common.scss';
+@import "../common.scss";
 
 .sidenav-container {
   position: absolute;
@@ -52,9 +52,8 @@
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-
   @media screen and (min-width: 800px) {
-    flex: 2;
+    flex: 2 1 60%;
   }
 
   @include extraSmallScreen {
@@ -70,15 +69,18 @@
   gap: 1rem;
 
   @media screen and (min-width: 800px) {
-    flex: 1;
+    flex: 1 1 33%;
+
+    &.minimized {
+      flex: 0 0 50px;
+      transition: flex 200ms ease-out;
+    }
   }
 
   @include extraSmallScreen {
     margin: 0.5rem 0 0 0;
   }
 }
-
-
 
 .topic-input {
   width: 100%;
@@ -130,6 +132,10 @@
   overflow: hidden;
 }
 
+.anonymous-user-banner {
+  margin-top: 1rem;
+}
+
 .ad-explainer {
   margin: 1rem 0.3rem;
   margin-bottom: 0;
@@ -153,7 +159,6 @@
     padding: 0;
   }
 }
-
 
 .rounded-card {
   border: none;

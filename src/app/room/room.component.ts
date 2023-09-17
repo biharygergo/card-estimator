@@ -81,6 +81,7 @@ import { PaymentService } from '../services/payment.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { ToastService } from '../services/toast.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -113,6 +114,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   shouldShowAloneInRoom = false;
   isAloneInRoomHidden = false;
   roundStatistics: RoundStatistics[] = [];
+  isControlPaneExpanded = true;
+  isControlPaneExpansionSetByUser = false;
+  isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
 
   room$: Observable<Room> = this.route.paramMap.pipe(
     map((params) => params.get('roomId')),
@@ -297,6 +301,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly clipboard: Clipboard,
     private readonly toastService: ToastService,
+    private readonly breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit(): void {
@@ -331,6 +336,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
     this.onPermissionsUpdated$.subscribe();
+    this.isSmallScreen$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(({ matches }) => {
+        if (this.isControlPaneExpansionSetByUser) return;
+        this.isControlPaneExpanded = !matches;
+      });
 
     this.authService.avatarUpdated
       .pipe(
@@ -363,6 +374,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     clearTimeout(this.inactiveTimeoutHandle);
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  toggleControlPane() {
+    this.isControlPaneExpanded = !this.isControlPaneExpanded;
+    this.isControlPaneExpansionSetByUser = true;
   }
 
   private saveJoinedRoom(): Observable<any> {

@@ -56,10 +56,12 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   @Input({ required: true }) isMuted: boolean;
   @Input({ required: true }) estimationCardSets: CardSetValue[];
   @Input({ required: true }) selectedEstimationCardSetValue: CardSetValue;
+  @Input({ required: true }) isExpanded: boolean;
 
   @Output() sidebarTriggered = new EventEmitter<void>();
   @Output() muteClicked = new EventEmitter<void>();
   @Output() inviteClicked = new EventEmitter<void>();
+  @Output() expandClicked = new EventEmitter<void>();
 
   readonly destroy = new Subject<void>();
 

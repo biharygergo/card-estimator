@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { serverTimestamp } from '@angular/fire/firestore';
 import { Timestamp } from 'firebase/firestore';
+import { isEqual } from 'lodash';
 import {
   distinctUntilChanged,
   map,
@@ -35,12 +36,13 @@ const INITIAL_TIMER_STATE = {
   encapsulation: ViewEncapsulation.None,
 })
 export class CountdownTimerComponent implements OnInit, OnDestroy {
-  @Input() room: Observable<Room>;
+  @Input({ required: true }) room: Observable<Room>;
+  @Input() minimized: boolean;
 
   _room: Room;
 
-  timer: Timer = INITIAL_TIMER_STATE;
-  durationLeft: number = INITIAL_TIMER_STATE.countdownLength;
+  timer: Timer | undefined;
+  durationLeft: number | undefined;
   progressValue = 100;
 
   intervalHandle: number | undefined;
@@ -50,7 +52,7 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly analyitics: AnalyticsService,
-    public readonly permissionsService: PermissionsService,
+    public readonly permissionsService: PermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -60,23 +62,22 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
           this._room = room;
         }),
         map((room) => room.timer),
-        distinctUntilChanged((prevTimer, currTimer) => {
-          return JSON.stringify(prevTimer) === JSON.stringify(currTimer);
-        }),
+        distinctUntilChanged(isEqual),
         takeUntil(this.destroy)
       )
       .subscribe((timer: Timer | undefined) => {
         this.timer = timer ?? INITIAL_TIMER_STATE;
-        if (timer) {
-          this.durationLeft = this.calculateRemaininingSeconds();
+        this.durationLeft = Math.max(0, this.calculateRemaininingSeconds());
+        if (this.durationLeft === 0) {
+          this.stopTimer(false);
+        }
 
-          if (this.timer.state === TimerState.ACTIVE && this.timer.startedAt) {
-            this.startTimer(false);
-          } else if (this.timer.state === TimerState.STOPPED) {
-            this.stopTimer(false);
-          } else if (this.timer.state === TimerState.INIT) {
-            this.resetTimer(false);
-          }
+        if (this.timer.state === TimerState.ACTIVE && this.timer.startedAt) {
+          this.startTimer(false);
+        } else if (this.timer.state === TimerState.STOPPED) {
+          this.stopTimer(false);
+        } else if (this.timer.state === TimerState.INIT) {
+          this.resetTimer(false);
         }
 
         this.calculateProgress();

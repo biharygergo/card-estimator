@@ -97,6 +97,12 @@
             </div>
           </div>
         </mat-card>
+        <anonymous-user-banner
+          [hideable]="true"
+          *ngIf="(sessionCount$ | async) > 1"
+          class="anonymous-user-banner"
+          @fadeAnimation
+        ></anonymous-user-banner>
       </div>
       <app-card-deck
         [room]="room"
@@ -105,7 +111,10 @@
         [estimationValues]="estimationValues"
         [currentEstimate]="currentEstimate"
       ></app-card-deck>
-      <div class="estimate-container">
+      <div
+        class="estimate-container"
+        [class.minimized]="!isControlPaneExpanded"
+      >
         <planning-poker-room-controller-panel
           [room]="room"
           [room$]="room$"
@@ -116,15 +125,12 @@
           [isMuted]="isMuted"
           [estimationCardSets]="estimationCardSets"
           [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
+          [isExpanded]="isControlPaneExpanded"
           (sidebarTriggered)="sidenav.open()"
           (muteClicked)="toggleMute()"
           (inviteClicked)="copyRoomId()"
+          (expandClicked)="toggleControlPane()"
         />
-        <anonymous-user-banner
-          [hideable]="true"
-          *ngIf="(sessionCount$ | async) > 1"
-          @fadeAnimation
-        ></anonymous-user-banner>
       </div>
 
       <app-github-badge *ngIf="config.runningIn === 'web'"></app-github-badge>

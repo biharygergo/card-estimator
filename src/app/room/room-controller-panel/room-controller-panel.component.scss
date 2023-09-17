@@ -1,3 +1,5 @@
+@import "../../common.scss";
+
 .action-buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -41,5 +43,51 @@
 }
 
 .rounded-card {
-    border: none;
+  border: none;
+}
+
+.big-panel {
+  padding: 0;
+}
+
+.mini-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 0.2rem;
+  align-items: center;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem 0;
+    gap: 0.2rem;
   }
+
+  @include extraSmallScreen {
+    gap: 0px;
+    ::ng-deep {
+        .mat-mdc-icon-button {
+            --mdc-icon-button-state-layer-size: 36px !important;
+            padding: 6px;
+        }
+
+      .mat-mdc-button-touch-target {
+        width: 36px;
+        height: 36px;
+      }
+    }
+
+    /* ::ng-deep {
+      .mat-mdc-icon-button.mat-mdc-button-base {
+        --mdc-icon-button-state-layer-size: 30px !important;
+      }
+
+      .mat-mdc-button-touch-target {
+        width: 30px;
+        height: 30px;
+      }
+    } */
+  }
+}

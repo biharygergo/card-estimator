@@ -245,6 +245,15 @@ body {
       margin-right: 0 !important;
     }
   }
+
+  &.forced {
+    .mdc-button__label {
+      display: none;
+    }
+    mat-icon {
+      margin-right: 0 !important;
+    }
+  }
 }
 
 .custom-tab-group {

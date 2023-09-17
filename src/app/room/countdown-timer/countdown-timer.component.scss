@@ -1,40 +1,70 @@
-@import '../../common.scss';
+@import "../../common.scss";
 
 .timer-container {
-    display: flex;
+  display: flex;
 
-    @include extraSmallScreen {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+  @include extraSmallScreen {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 
 .progress {
-    flex: 1 1 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 0.8rem;
-    padding-right: 1rem;
+  flex: 1 1 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0.8rem;
+  padding-right: 1rem;
 
-    .mat-mdc-progress-bar {
-        border-radius: 4px;
-    }
+  .mat-mdc-progress-bar {
+    border-radius: 4px;
+  }
 
-    .time-left {
-        font-size: 0.7rem;
-    }
+  .time-left {
+    font-size: 0.7rem;
+  }
 
-    @include extraSmallScreen {
-        padding-right: 0;
-    }
+  @include extraSmallScreen {
+    padding-right: 0;
+  }
 }
 
 .controls {
-    flex: 1 0 40%;
-    min-width: 200px;
+  flex: 1 0 40%;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.mini-pause-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .duration-left {
+    font-size: 18px;
+  }
+
+  .pause-icon {
+    display: none;
+  }
+
+  &:hover {
+    .pause-icon {
+      display: inline-block;
+    }
+    .duration-left {
+      display: none;
+    }
+  }
+}
+
+.loading {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+    padding: 8px 4px;
 }

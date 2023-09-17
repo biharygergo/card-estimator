@@ -115,6 +115,9 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
+    this.savedCardSets$.subscribe(
+      (cardSets) => (this.savedCardSets = cardSets)
+    );
   }
 
   ngOnDestroy(): void {}

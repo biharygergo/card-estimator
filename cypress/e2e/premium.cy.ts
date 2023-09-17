@@ -40,7 +40,7 @@ describe('Authentication', () => {
     cy.get('#room-options-button').click();
     cy.contains('Security and permissions').click();
 
-    cy.contains('Create password').type('SomeRoomPassword');
+    cy.contains('Create password').click().type('SomeRoomPassword');
     cy.contains('Save password').click();
 
     cy.wait(10000);

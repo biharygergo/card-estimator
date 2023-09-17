@@ -378,11 +378,12 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.themeService.themeChanged
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
-        console.log(this.sidenavContent.nativeElement);
         const element = this.sidenavContent.nativeElement;
         element.style.animation = 'none';
         element.offsetHeight; /* trigger reflow */
-        element.style.animation = null;
+        setTimeout(() => {
+          element.style.animation = null;
+        }, 10)
       });
   }
 

@@ -13,7 +13,7 @@ describe('Landing page', () => {
   });
 
   it('can navigate to the /create page', () => {
-    cy.contains('Start Planning').click();
+    cy.contains('Start planning').click();
     cy.location('pathname').should('eq', '/create');
   });
 

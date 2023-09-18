@@ -1,5 +1,24 @@
 <mat-card class="table-card" resizeMonitor [verticalSpacing]="0">
   <div>
     <planning-poker-round-history-table />
+    <div class="premium-banner" *ngIf="(isPremium$ | async) === false">
+      <h2 class="title">Unlock your full history</h2>
+      <p>
+        Subscribe to Planning Poker Premium to see all of your previous rounds.
+        Free accounts can view rounds from their last 3 sessions only.
+      </p>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="clickedLearnMorePremium()"
+        [disabled]="paymentsService.isSubscriptionDisabled"
+      >
+        {{
+          paymentsService.isSubscriptionDisabled
+            ? "Not available on Teams mobile"
+            : "Learn more"
+        }}
+      </button>
+    </div>
   </div>
 </mat-card>

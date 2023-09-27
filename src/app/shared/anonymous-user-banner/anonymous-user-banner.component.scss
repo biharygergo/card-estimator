@@ -35,3 +35,19 @@
     }
   }
 }
+
+ul {
+  padding-inline-start: 0px;
+}
+
+li {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+}

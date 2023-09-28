@@ -1,34 +1,78 @@
 <h1 mat-dialog-title class="dialog-title">My organization</h1>
 <div mat-dialog-content>
-  <div
-    class="premium-banner"
-    *ngIf="
-      !(permissionsService.hasPremiumAccess() | async) &&
-      organization &&
-      organization?.activePlan !== 'premium'
-    "
-  >
-    <h2 class="title">Preview this Premium Feature</h2>
-    <p>
-      Create an organization for <strong>up to 5 members for free</strong>. Set
-      up your brand, invite members and schedule recurring meetings.
-    </p>
-    <div class="premium-banner-buttons">
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="openLearnMore()"
-        class="learn-more"
-        [disabled]="paymentsService.isSubscriptionDisabled"
-      >
-        {{
-          paymentsService.isSubscriptionDisabled
-            ? "Not available on Teams mobile"
-            : "Learn more"
-        }}
-      </button>
+  <ng-template #premiumBanner>
+    <div
+      class="premium-banner"
+      *ngIf="
+        !(permissionsService.hasPremiumAccess() | async) &&
+        organization &&
+        organization?.activePlan !== 'premium'
+      "
+      @fadeAnimation
+    >
+      <h2 class="title">Preview this Premium Feature</h2>
+      <p>
+        Create an organization for <strong>up to 5 members for free</strong>.
+        Set up your brand, invite members and schedule recurring meetings.
+      </p>
+      <div class="premium-banner-buttons">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="openLearnMore()"
+          class="learn-more"
+          [disabled]="paymentsService.isSubscriptionDisabled"
+        >
+          {{
+            paymentsService.isSubscriptionDisabled
+              ? "Not available on Teams mobile"
+              : "Learn more"
+          }}
+        </button>
+      </div>
     </div>
-  </div>
+  </ng-template>
+
+  <ng-container *ngIf="checklist$ | async as checklist">
+    <mat-card
+      class="checklist-banner"
+      appearance="outline"
+      *ngIf="organization && !checklist.allCompleted; else premiumBanner"
+      @fadeAnimation
+    >
+      <mat-card-content class="checklist">
+        <h3>Just a few more steps to get the most out of your organization:</h3>
+        <ul>
+          <li>
+            <mat-icon>check</mat-icon>
+            <span>Create your organization</span>
+          </li>
+          <li>
+            <mat-icon *ngIf="!checklist.items.logoUploaded; else check"
+              >pending_actions</mat-icon
+            >
+            <ng-template #check><mat-icon>check</mat-icon></ng-template>
+            <span>Upload your logo to customize the app</span>
+          </li>
+          <li>
+            <mat-icon *ngIf="!checklist.items.colleaguesInvited; else check"
+              >pending_actions</mat-icon
+            >
+            <ng-template #check><mat-icon>check</mat-icon></ng-template>
+            <span>Expand your organization with colleagues</span>
+          </li>
+          <li>
+            <mat-icon
+              *ngIf="!checklist.items.recurringMeetingCreated; else check"
+              >pending_actions</mat-icon
+            >
+            <ng-template #check><mat-icon>check</mat-icon></ng-template>
+            <span>Set up a recurring meeting</span>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
   <ng-container *ngIf="organization !== null; else loading">
     <ng-container *ngIf="!organization && showIntro">
       <div class="empty-state">
@@ -190,7 +234,11 @@
               <h5 class="section-title">
                 <mat-icon>mail</mat-icon> Invite by email
               </h5>
-              <mat-form-field class="form-input" appearance="outline">
+              <mat-form-field
+                class="form-input invite-email"
+                appearance="outline"
+                subscriptSizing="dynamic"
+              >
                 <input
                   matInput
                   [formControl]="invitationEmail"
@@ -208,6 +256,37 @@
                   <mat-icon>send</mat-icon>
                 </button>
               </mat-form-field>
+              <ng-container *ngIf="invitations$ | async as invitations">
+                <ng-container *ngIf="invitations.length">
+                  <h5 class="section-title">
+                    <mat-icon>send</mat-icon> Pending members
+                  </h5>
+                  <mat-chip-listbox aria-label="Sent invitations">
+                    <ng-container *ngFor="let invite of invitations">
+                      <mat-chip>
+                        <div class="invite-chip">
+                          <mat-icon
+                            matTooltip="Invitation email sent"
+                            *ngIf="invite.emailStatus === 'success'"
+                            >check</mat-icon
+                          >
+                          <mat-icon
+                            matTooltip="Waiting for delivery"
+                            *ngIf="invite.emailStatus === 'pending'"
+                            >hourglass_empty</mat-icon
+                          >
+                          <mat-icon
+                            matTooltip="Mail could not be delivered"
+                            *ngIf="invite.emailStatus === 'error'"
+                            >warning</mat-icon
+                          >
+                          {{ invite.invitationEmail }}
+                        </div>
+                      </mat-chip>
+                    </ng-container>
+                  </mat-chip-listbox>
+                </ng-container>
+              </ng-container>
             </div>
           </div>
         </mat-tab>

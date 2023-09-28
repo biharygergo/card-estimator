@@ -17,6 +17,22 @@
   width: 100%;
 }
 
+.invite-email {
+  margin-bottom: 1rem;
+}
+
+.invite-chip {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
 .save-button {
   margin: 1rem 0;
 }
@@ -111,4 +127,32 @@
       margin-left: auto;
     }
   }
+}
+
+.checklist {
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0px;
+    font-size: 0.9rem;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    mat-icon {
+      font-size: 0.9rem;
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+  }
+}
+
+.checklist-banner {
+  margin-bottom: 0.5rem;
+  background: var(--on-light-background-color-2);
+  border-radius: 18px;
+  box-shadow: none;
 }

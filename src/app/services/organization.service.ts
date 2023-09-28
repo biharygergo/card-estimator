@@ -90,6 +90,18 @@ export class OrganizationService {
     );
   }
 
+  getInvitations(organizationId): Observable<InvitationData[]> {
+    const collectionReference = collection(
+      this.firestore,
+      ORGANIZATION_COLLECTION,
+      organizationId,
+      'memberInvitations'
+    ) as CollectionReference<InvitationData>;
+    const q = query<InvitationData>(collectionReference);
+
+    return collectionData<InvitationData>(q);
+  }
+
   async inviteMemberByEmail(organizationId: string, email: string) {
     const user = await this.authService.getUser();
 
@@ -99,7 +111,7 @@ export class OrganizationService {
       organizationId,
       emailStatus: 'pending',
       invitedById: user.uid,
-      status: 'pending'
+      status: 'pending',
     };
 
     await addDoc(

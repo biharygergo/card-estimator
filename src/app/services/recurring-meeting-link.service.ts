@@ -22,6 +22,7 @@ import {
   first,
   from,
   combineLatest,
+  catchError,
 } from 'rxjs';
 import {
   RecurringMeetingLink,
@@ -169,7 +170,11 @@ export class RecurringMeetingLinkService {
         );
 
         return collectionData<RecurringMeetingLink>(q);
-      })
+      }),
+      catchError(e => {
+        console.log('got error loading links', e);
+        return of([]);
+      }),
     );
   }
 

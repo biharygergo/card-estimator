@@ -3,8 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { isEqual } from 'lodash-es';
 import {
+  combineLatest,
   distinctUntilChanged,
   map,
+  Observable,
+  of,
+  shareReplay,
   Subject,
   switchMap,
   takeUntil,
@@ -23,6 +27,8 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { RecurringMeetingLinkService } from 'src/app/services/recurring-meeting-link.service';
+import { fadeAnimation } from '../animations';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -36,10 +42,21 @@ export const organizationModalCreator =
     },
   ];
 
+interface OrganizationChecklist {
+  items: {
+    organizationCreated: boolean;
+    logoUploaded: boolean;
+    colleaguesInvited: boolean;
+    recurringMeetingCreated: boolean;
+  };
+  allCompleted: boolean;
+}
+
 @Component({
   selector: 'app-organization-modal',
   templateUrl: './organization-modal.component.html',
   styleUrls: ['./organization-modal.component.scss'],
+  animations: [fadeAnimation],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
   organization$ = this.organizationService.getMyOrganization().pipe(
@@ -51,7 +68,8 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
           logoUrl: org.logoUrl,
         });
       }
-    })
+    }),
+    shareReplay(1)
   );
 
   members$ = this.organization$.pipe(
@@ -61,6 +79,36 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     map((userProfilesMap) =>
       Object.values(userProfilesMap).filter((profile) => !!profile)
     )
+  );
+
+  invitations$ = this.organization$.pipe(
+    switchMap((organization) => {
+      if (!organization) {
+        return of([]);
+      }
+       return this.organizationService.getInvitations(organization.id);
+    }),
+    map((invitations) =>
+      invitations.filter((invite) => invite.status !== 'accepted')
+    ),
+  );
+
+  checklist$: Observable<OrganizationChecklist> = combineLatest([
+    this.organization$,
+    this.recurringMeetingsService.getMyOrganizationsRecurringMeetingLinks(),
+  ]).pipe(
+    map(([organization, meetings]) => {
+      const checklistItems = {
+        organizationCreated: true,
+        logoUploaded: !!organization?.logoUrl,
+        colleaguesInvited: organization?.memberIds.length > 1,
+        recurringMeetingCreated: meetings.length > 0,
+      };
+      return {
+        items: checklistItems,
+        allCompleted: Object.values(checklistItems).every((item) => !!item),
+      };
+    })
   );
 
   organization: Organization | null | undefined = null;
@@ -87,7 +135,8 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
     public readonly paymentsService: PaymentService,
     public readonly permissionsService: PermissionsService,
-    private readonly analytics: AnalyticsService
+    private readonly analytics: AnalyticsService,
+    private readonly recurringMeetingsService: RecurringMeetingLinkService
   ) {}
 
   ngOnInit(): void {

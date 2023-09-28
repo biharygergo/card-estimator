@@ -7,7 +7,7 @@ import { LinkService } from './services/link.service';
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(
     private toastService: ToastService,
-    private readonly linkService: LinkService,
+    private readonly linkService: LinkService
   ) {}
 
   handleError(error: any): void {
@@ -22,7 +22,11 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.showErrorToast(
         `We couldn't verify your identity with AppCheck and therefore your access was automatically blocked. ${error.code}`
       );
-    } else if (typeof error.code === 'string' && error.code?.includes('network-request-failed')) {
+    } else if (
+      (typeof error.code === 'string' &&
+        error.code?.includes('network-request-failed')) ||
+      error.message?.includes('network-request-failed')
+    ) {
       this.showErrorToast(
         'Network issue detected. Please check your connection and try again.'
       );
@@ -36,7 +40,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const toastMessage =
       message ??
       `An error occured, please try again or report this issue. ${
-        error.message ? `The error message is: ${error.message}` : ''
+        error.message ? `The error message is: ${error.message.slice(0, 150)}` : ''
       }`;
 
     const snackbarRef = this.toastService.showMessage(

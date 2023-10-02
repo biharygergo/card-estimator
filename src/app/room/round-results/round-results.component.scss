@@ -95,6 +95,13 @@ mat-list-item.statistic-line {
     position: relative;
     flex-shrink: 0;
 
+    .vote-avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
     .vote-avatar-text {
       height: 100%;
       width: 100%;
@@ -136,7 +143,6 @@ mat-list-item.statistic-line {
         height: 14px;
         color: white;
       }
-
     }
   }
 

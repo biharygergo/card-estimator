@@ -66,9 +66,9 @@ const createAvatars = (
   for (let i = 0; i < count; i++) {
     avatars.push({
       name: `Avatar ${i + 1}`,
-      url: `https://avatars.dicebear.com/api/avataaars/${
+      url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${
         seed ?? ''
-      }${i}.svg?style=circle&backgroundColor=%23ffffff&mouth=default,smile&eyebrow=default,defaultNatural,flat,flatNatural,raised,raisedExcited,raisedExcitedNatural&eyes=default,roll,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}`,
+      }${i}&style=circle&backgroundColor=ffffff&mouth=default,smile&eyebrow=default,defaultNatural,flat,flatNatural,raised,raisedExcited,raisedExcitedNatural&eyes=default,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}`,
     });
   }
   return avatars;
@@ -80,7 +80,6 @@ const hairOptions: SelectOption[] = [
   'curly',
   'curvy',
   'dreads',
-  'eyepatch',
   'frizzle',
   'fro',
   'hat',
@@ -125,7 +124,7 @@ interface SelectOption {
 }
 
 export const AVATAR_SELECTOR_MODAL = 'avatar-selector-modal';
-const AVATAR_COUNT = 59;
+const AVATAR_COUNT = 39;
 @Component({
   selector: 'app-avatar-selector-modal',
   templateUrl: './avatar-selector-modal.component.html',

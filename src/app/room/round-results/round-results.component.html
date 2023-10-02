@@ -92,7 +92,7 @@
 <h3 matSubheader class="subheader">Votes</h3>
 <div class="votes">
   <div class="vote-container" *ngFor="let member of members">
-    <div class="vote-avatar">
+    <div class="vote-avatar" (click)="openAvatarSelectorModal(member.id)">
       <img
         *ngIf="member.avatarUrl"
         [src]="member.avatarUrl"
@@ -101,6 +101,16 @@
       />
       <div class="vote-avatar-text" *ngIf="!member.avatarUrl">
         {{ member.name?.charAt(0) }}
+      </div>
+      <div
+        class="avatar-warning"
+        matTooltip="Please select a new avatar, previous selections no longer work due to an unforeseen API change. Sorry! 😞"
+        *ngIf="
+          member.id === currentUserId &&
+          member.avatarUrl?.includes('avatars.dicebear.com')
+        "
+      >
+        <mat-icon>warning</mat-icon>
       </div>
     </div>
     <span class="member-name">

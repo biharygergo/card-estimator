@@ -68,7 +68,7 @@ const createAvatars = (
       name: `Avatar ${i + 1}`,
       url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${
         seed ?? ''
-      }${i}&style=circle&backgroundColor=ffffff&mouth=default,smile&eyebrow=default,defaultNatural,flat,flatNatural,raised,raisedExcited,raisedExcitedNatural&eyes=default,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}`,
+      }${i}&style=circle&backgroundColor=ffffff&mouth=default,smile&eyebrows=default,defaultNatural,flatNatural,raisedExcited,raisedExcitedNatural&eyes=default,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}`,
     });
   }
   return avatars;

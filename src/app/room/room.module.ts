@@ -25,6 +25,7 @@ import { BatchAddTopicsModalComponent } from './batch-add-topics-modal/batch-add
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,7 @@ const routes: Routes = [
     SummaryModalComponent,
     BatchAddTopicsModalComponent,
     RoomControllerPanelComponent,
+    ReactionsRendererComponent,
   ],
   imports: [
     CommonModule,

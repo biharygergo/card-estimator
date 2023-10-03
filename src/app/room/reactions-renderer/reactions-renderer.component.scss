@@ -1,0 +1,36 @@
+@keyframes slideUpDisappear {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-400px);
+  }
+}
+
+.reaction-wrapper {
+  pointer-events: none;
+  animation: slideUpDisappear 2000ms ease-in;
+  animation-fill-mode: forwards;
+  z-index: 10;
+  position: fixed;
+  bottom: 20px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.reaction-emoji {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin-bottom: 0.25rem;
+}
+
+.name-tag {
+  background: var(--light-blue);
+  border-radius: 24px;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+}

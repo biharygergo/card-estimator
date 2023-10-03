@@ -94,6 +94,10 @@ service cloud.firestore {
         allow write: if false;
         allow read: if isAccessAllowed(request);
       }
+
+      match /reactions/{reactionId} {
+        allow read, write: if isAccessAllowed(request);
+      }
     }
 
     match /userDetails/{userId} {

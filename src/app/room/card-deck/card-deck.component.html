@@ -1,8 +1,8 @@
 <div class="card-deck">
   <div class="wrapper">
-    <div class="reactions" *ngIf="showReactions">
+    <div class="reactions" *ngIf="showReactions" @fadeAnimation>
       <div class="reaction-buttons">
-        <button mat-icon-button *ngFor="let reaction of reactions">
+        <button mat-icon-button *ngFor="let reaction of reactions" (click)="sendReaction(reaction.id)">
           <img [src]="reaction.svg" [alt]="reaction.alt" />
         </button>
       </div>

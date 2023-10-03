@@ -1,30 +1,56 @@
 <div class="card-deck">
-  <div class="estimator-buttons">
-    <div
-      class="estimator-button-container"
-      *ngFor="let item of estimationValues"
-    >
-      <button
-        mat-raised-button
-        class="estimator-button"
-        (click)="setEstimate(item.key)"
-        [color]="+item.key === currentEstimate && 'accent'"
-        [disabled]="!(permissionsService.canVote() | async) || (room?.rounds)[currentRound]?.show_results"
-      >
-        {{ item.value }}
-      </button>
+  <div class="wrapper">
+    <div class="reactions" *ngIf="showReactions">
+      <div class="reaction-buttons">
+        <button mat-icon-button *ngFor="let reaction of reactions">
+          <img [src]="reaction.svg" [alt]="reaction.alt" />
+        </button>
+      </div>
     </div>
-    <div class="estimator-button-container" *ngIf="room?.showPassOption">
-      <button
-        mat-raised-button
-        class="estimator-button pass-option-button"
-        (click)="setWildcard()"
-        [color]="currentEstimate === null && 'accent'"
-        [disabled]="!(permissionsService.canVote() | async) || (room?.rounds)[currentRound]?.show_results"
-        id="pass-option-card"
-      >
-        ?
-      </button>
+    <div class="main-row">
+      <div class="estimator-buttons">
+        <div
+          class="estimator-button-container"
+          *ngFor="let item of estimationValues"
+        >
+          <button
+            mat-raised-button
+            class="estimator-button"
+            (click)="setEstimate(item.key)"
+            [color]="+item.key === currentEstimate && 'accent'"
+            [disabled]="
+              !(permissionsService.canVote() | async) ||
+              (room?.rounds)[currentRound]?.show_results
+            "
+          >
+            {{ item.value }}
+          </button>
+        </div>
+        <div class="estimator-button-container" *ngIf="room?.showPassOption">
+          <button
+            mat-raised-button
+            class="estimator-button pass-option-button"
+            (click)="setWildcard()"
+            [color]="currentEstimate === null && 'accent'"
+            [disabled]="
+              !(permissionsService.canVote() | async) ||
+              (room?.rounds)[currentRound]?.show_results
+            "
+            id="pass-option-card"
+          >
+            ?
+          </button>
+        </div>
+      </div>
+      <div class="control-buttons">
+        <mat-button-toggle
+          class="emoji-button"
+          (change)="toggleReactions()"
+          [checked]="showReactions"
+        >
+          <mat-icon>mood</mat-icon>
+        </mat-button-toggle>
+      </div>
     </div>
   </div>
 </div>

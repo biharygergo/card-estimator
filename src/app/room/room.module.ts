@@ -24,6 +24,7 @@ import { SummaryModalComponent } from './summary-modal/summary-modal.component';
 import { BatchAddTopicsModalComponent } from './batch-add-topics-modal/batch-add-topics-modal.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 const routes: Routes = [
   {
@@ -60,6 +61,7 @@ const routes: Routes = [
     SharedModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
+    MatButtonToggleModule,
     DragDropModule,
     MarkdownModule.forRoot(),
     RouterModule.forChild(routes),

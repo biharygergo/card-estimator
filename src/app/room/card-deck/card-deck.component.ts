@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
@@ -15,7 +16,7 @@ import { Room } from 'src/app/types';
   styleUrls: ['./card-deck.component.scss'],
   animations: [fadeAnimation],
 })
-export class CardDeckComponent implements OnInit {
+export class CardDeckComponent implements OnInit, OnDestroy {
   @Input() room: Room;
   @Input() currentRound: number;
   @Input() isObserver: boolean;
@@ -24,7 +25,10 @@ export class CardDeckComponent implements OnInit {
 
   readonly reactions: ReactionOption[] = this.reactionsService.reactionsList;
 
+  onReaction = new Subject<string>();
+
   showReactions = true;
+  onDestroy = new Subject<void>();
 
   constructor(
     private analytics: AnalyticsService,
@@ -33,7 +37,16 @@ export class CardDeckComponent implements OnInit {
     private readonly reactionsService: ReactionsService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.onReaction
+      .pipe(debounceTime(100), takeUntil(this.onDestroy))
+      .subscribe((reactionId) => this.sendReaction(reactionId));
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+    this.onDestroy.complete();
+  }
 
   setEstimate(amount: number) {
     this.analytics.logClickedVoteOption();
@@ -58,7 +71,7 @@ export class CardDeckComponent implements OnInit {
     this.showReactions = !this.showReactions;
   }
 
-  sendReaction(reactionId: string) {
+  private sendReaction(reactionId: string) {
     return this.reactionsService.sendReaction(reactionId, this.room.roomId);
   }
 }

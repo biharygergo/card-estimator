@@ -17,6 +17,7 @@ export interface ReactionOption {
   svg: string;
   lottie: string;
   alt: string;
+  tooltip: string;
 }
 
 export interface Reaction {
@@ -31,34 +32,41 @@ const createSvgUrl = (id: string) =>
 const createLottieUrl = (id: string) =>
   `https://fonts.gstatic.com/s/e/notoemoji/latest/${id}/lottie.json`;
 
-const REACTIONS: Pick<ReactionOption, 'id' | 'alt'>[] = [
+const REACTIONS: Pick<ReactionOption, 'id' | 'alt' | 'tooltip'>[] = [
+  {
+    id: '1f496',
+    alt: '💖',
+    tooltip: 'Love it',
+  },
   {
     id: '1f604',
     alt: '😄',
+    tooltip: 'Happy'
   },
   {
     id: '1f389',
     alt: '🎉',
-  },
-  {
-    id: '1f4b8',
-    alt: '💸',
+    tooltip: 'Celebrate'
   },
   {
     id: '1f914',
     alt: '🤔',
+    tooltip: 'Thinking'
   },
   {
     id: '1f625',
     alt: '😥',
+    tooltip: 'Sad'
   },
   {
     id: '1f44d',
     alt: '👍',
+    tooltip: 'Thumbs up'
   },
   {
     id: '1f44e',
     alt: '👎',
+    tooltip: 'Thumbs down'
   },
 ];
 
@@ -111,7 +119,7 @@ export class ReactionsService {
     ) as CollectionReference<Reaction>;
     const q = query<Reaction>(ref, where('createdAt', '>=', Timestamp.now()));
     return sortedChanges(q, { events: ['added'] }).pipe(
-      filter(changes => !!changes.length),
+      filter((changes) => !!changes.length),
       map((documentChange) => documentChange.pop().doc.data())
     );
   }

@@ -2,7 +2,12 @@
   <div class="wrapper">
     <div class="reactions" *ngIf="showReactions" @fadeAnimation>
       <div class="reaction-buttons">
-        <button mat-icon-button *ngFor="let reaction of reactions" (click)="sendReaction(reaction.id)">
+        <button
+          mat-icon-button
+          *ngFor="let reaction of reactions"
+          (click)="onReaction.next(reaction.id)"
+          [matTooltip]="reaction.tooltip"
+        >
           <img [src]="reaction.svg" [alt]="reaction.alt" />
         </button>
       </div>
@@ -47,6 +52,7 @@
           class="emoji-button"
           (change)="toggleReactions()"
           [checked]="showReactions"
+          matTooltip="Toggle reactions bar"
         >
           <mat-icon>mood</mat-icon>
         </mat-button-toggle>

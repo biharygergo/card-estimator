@@ -44,11 +44,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { GlobalErrorHandler } from './error-handler';
 import { HttpClientModule } from '@angular/common/http';
-import { LottieModule, LottieCacheModule } from 'ngx-lottie';
-
-export function playerFactory() {
-  return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web');
-}
 
 @NgModule({
   declarations: [AppComponent, RoomLoadingComponent],
@@ -100,8 +95,6 @@ export function playerFactory() {
       }
       return functions;
     }),
-    LottieModule.forRoot({ player: playerFactory }),
-    LottieCacheModule.forRoot(),
   ],
   providers: [
     ScreenTrackingService,

@@ -26,7 +26,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
-import { LottieModule } from 'ngx-lottie';
+import { AnimationLoader, LottieCacheModule, LottieModule } from 'ngx-lottie';
+
+export function playerFactory() {
+  return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web/build/player/lottie_svg');
+}
 
 const routes: Routes = [
   {
@@ -66,9 +70,13 @@ const routes: Routes = [
     MatAutocompleteModule,
     MatButtonToggleModule,
     DragDropModule,
-    LottieModule,
+    LottieModule.forRoot({ player: playerFactory }),
+    LottieCacheModule.forRoot(),
     MarkdownModule.forRoot(),
     RouterModule.forChild(routes),
   ],
+  providers: [
+    AnimationLoader,
+  ]
 })
 export class RoomModule {}

@@ -1,24 +1,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AnimationOptions, LottieOptions } from 'ngx-lottie/lib/symbols';
+import { AnimationOptions } from 'ngx-lottie/lib/symbols';
 import {
   Observable,
   Subject,
   delay,
   mergeMap,
   of,
-  switchMap,
   takeUntil,
 } from 'rxjs';
 import {
-  Reaction,
-  ReactionOption,
   ReactionsService,
 } from 'src/app/services/reactions.service';
 import { Member } from 'src/app/types';
 
 interface VisibleReaction {
   id: string;
-  reactionOption: ReactionOption;
   lottieOptions: AnimationOptions;
   userName: string;
   leftPosition: string;
@@ -52,18 +48,15 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
       .getReactionsStream(this.roomId)
       .pipe(
         mergeMap((reaction) => {
-          console.log('got reaction', reaction);
           const visibleReaction: VisibleReaction = {
             id: reaction.id,
-            reactionOption:
-              this.reactionsService.reactionsMap[reaction.reactionId],
             lottieOptions: {
               path: this.reactionsService.reactionsMap[reaction.reactionId]
                 .lottie,
             },
             userName:
               this.membersMap[reaction.userId]?.name || 'Unknown member',
-            leftPosition: `${this.randomInteger(0, 100)}%`,
+            leftPosition: `${this.randomInteger(5, 95)}%`,
           };
           this.visibleReactions.push(visibleReaction);
 
@@ -72,7 +65,6 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe((reactionToRemove) => {
-        console.log('finish?');
         this.visibleReactions = this.visibleReactions.filter(
           (reaction) => reaction.id !== reactionToRemove.id
         );

@@ -4,9 +4,10 @@
       <div class="reaction-buttons">
         <button
           mat-icon-button
-          *ngFor="let reaction of reactions"
+          *ngFor="let reaction of reactions; let i = index"
           (click)="onReaction.next(reaction.id)"
           [matTooltip]="reaction.tooltip"
+          [id]="'reaction-button-' + i"
         >
           <img [src]="reaction.svg" [alt]="reaction.alt" />
         </button>
@@ -50,6 +51,7 @@
       <div class="control-buttons">
         <mat-button-toggle
           class="emoji-button"
+          id="reactions-toggle"
           (change)="toggleReactions()"
           [checked]="showReactions"
           matTooltip="Toggle reactions bar"

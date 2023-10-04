@@ -101,7 +101,8 @@ export class AuthService {
     if (!user.isAnonymous) {
       await this.updateUserDetails(user.uid, { displayName: name });
     }
-    return updateProfile(user, { displayName: name });
+    await updateProfile(user, { displayName: name });
+    await this.refreshIdToken();
   }
 
   getUser(): Promise<User | null> {

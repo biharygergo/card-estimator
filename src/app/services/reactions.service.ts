@@ -39,34 +39,34 @@ const REACTIONS: Pick<ReactionOption, 'id' | 'alt' | 'tooltip'>[] = [
     tooltip: 'Love it',
   },
   {
-    id: '1f604',
-    alt: '😄',
-    tooltip: 'Happy'
-  },
-  {
     id: '1f389',
     alt: '🎉',
-    tooltip: 'Celebrate'
+    tooltip: 'Celebrate',
+  },
+  {
+    id: '1f604',
+    alt: '😄',
+    tooltip: 'Happy',
   },
   {
     id: '1f914',
     alt: '🤔',
-    tooltip: 'Thinking'
+    tooltip: 'Thinking',
   },
   {
     id: '1f625',
     alt: '😥',
-    tooltip: 'Sad'
+    tooltip: 'Sad',
   },
   {
     id: '1f44d',
     alt: '👍',
-    tooltip: 'Thumbs up'
+    tooltip: 'Thumbs up',
   },
   {
     id: '1f44e',
     alt: '👎',
-    tooltip: 'Thumbs down'
+    tooltip: 'Thumbs down',
   },
 ];
 

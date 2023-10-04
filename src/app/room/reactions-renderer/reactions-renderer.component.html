@@ -3,13 +3,11 @@
   *ngFor="let reaction of visibleReactions; trackBy: identify"
   [style.left]="reaction.leftPosition"
 >
-  <picture>
-    <source [srcset]="reaction.reactionOption.webp" type="image/webp" />
-    <img
-      [src]="reaction.reactionOption.gif"
-      [alt]="reaction.reactionOption.alt"
-      class="reaction-emoji"
-    />
-  </picture>
+  <ng-lottie
+    width="70px"
+    height="70px"
+    containerClass="reaction-emoji"
+    [options]="reaction.lottieOptions"
+  ></ng-lottie>
   <span class="name-tag">{{ reaction.userName }}</span>
 </div>

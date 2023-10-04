@@ -26,6 +26,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
+import { LottieModule } from 'ngx-lottie';
 
 const routes: Routes = [
   {
@@ -65,6 +66,7 @@ const routes: Routes = [
     MatAutocompleteModule,
     MatButtonToggleModule,
     DragDropModule,
+    LottieModule,
     MarkdownModule.forRoot(),
     RouterModule.forChild(routes),
   ],

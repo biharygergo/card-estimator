@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AnimationOptions, LottieOptions } from 'ngx-lottie/lib/symbols';
 import {
   Observable,
   Subject,
@@ -18,6 +19,7 @@ import { Member } from 'src/app/types';
 interface VisibleReaction {
   id: string;
   reactionOption: ReactionOption;
+  lottieOptions: AnimationOptions;
   userName: string;
   leftPosition: string;
 }
@@ -55,6 +57,10 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
             id: reaction.id,
             reactionOption:
               this.reactionsService.reactionsMap[reaction.reactionId],
+            lottieOptions: {
+              path: this.reactionsService.reactionsMap[reaction.reactionId]
+                .lottie,
+            },
             userName:
               this.membersMap[reaction.userId]?.name || 'Unknown member',
             leftPosition: `${this.randomInteger(0, 100)}%`,

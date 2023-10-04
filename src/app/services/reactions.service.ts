@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, FieldValue, Timestamp } from 'firebase/firestore';
-import { Observable, Subject, map, skip, tap } from 'rxjs';
+import { CollectionReference, Timestamp } from 'firebase/firestore';
+import { Observable, Subject, filter, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import {
   Firestore,
   collection,
-  collectionChanges,
   doc,
-  limit,
   query,
   setDoc,
+  where,
 } from '@angular/fire/firestore';
 import { sortedChanges } from 'rxfire/firestore';
 
 export interface ReactionOption {
   id: string;
-  webp: string;
-  gif: string;
   svg: string;
+  lottie: string;
   alt: string;
 }
 
@@ -28,12 +26,10 @@ export interface Reaction {
   createdAt: Timestamp;
 }
 
-const createWebpUrl = (id: string) =>
-  `https://fonts.gstatic.com/s/e/notoemoji/latest/${id}/512.webp`;
-const createGifUrl = (id: string) =>
-  `https://fonts.gstatic.com/s/e/notoemoji/latest/${id}/512.gif`;
 const createSvgUrl = (id: string) =>
   `https://fonts.gstatic.com/s/e/notoemoji/latest/${id}/emoji.svg`;
+const createLottieUrl = (id: string) =>
+  `https://fonts.gstatic.com/s/e/notoemoji/latest/${id}/lottie.json`;
 
 const REACTIONS: Pick<ReactionOption, 'id' | 'alt'>[] = [
   {
@@ -68,9 +64,8 @@ const REACTIONS: Pick<ReactionOption, 'id' | 'alt'>[] = [
 
 const REACTIONS_LIST: ReactionOption[] = REACTIONS.map((reaction) => ({
   ...reaction,
-  webp: createWebpUrl(reaction.id),
-  gif: createGifUrl(reaction.id),
   svg: createSvgUrl(reaction.id),
+  lottie: createLottieUrl(reaction.id),
 }));
 
 const REACTIONS_MAP: { [id: string]: ReactionOption } = REACTIONS_LIST.reduce(
@@ -114,9 +109,9 @@ export class ReactionsService {
       roomId,
       'reactions'
     ) as CollectionReference<Reaction>;
-    const q = query<Reaction>(ref);
-    return collectionChanges(q, { events: ['added'] }).pipe(
-      skip(1),
+    const q = query<Reaction>(ref, where('createdAt', '>=', Timestamp.now()));
+    return sortedChanges(q, { events: ['added'] }).pipe(
+      filter(changes => !!changes.length),
       map((documentChange) => documentChange.pop().doc.data())
     );
   }

@@ -79,4 +79,17 @@ describe('Inside the room', () => {
     cy.get('#expand-button').click();
     cy.contains('New round').should('be.visible');
   });
+
+  it('can send reactions', () => {
+    cy.get('#reactions-toggle').should('be.visible');
+    cy.get('.reaction-buttons').should('be.visible');
+
+    cy.get('#reactions-toggle').click();
+    cy.get('.reaction-buttons').should('not.exist');
+    cy.get('#reactions-toggle').click();
+
+
+    cy.get('#reaction-button-1').click();
+    cy.get('.reaction-wrapper').should('exist');
+  })
 });

@@ -46,6 +46,7 @@
     "firebase-admin": "^10.3.0",
     "js-cookie": "^3.0.1",
     "lodash-es": "^4.17.21",
+    "ngx-lottie": "^10.0.0",
     "ngx-markdown": "^15.1.2",
     "rxfire": "^6.0.0",
     "rxjs": "~7.4.0",

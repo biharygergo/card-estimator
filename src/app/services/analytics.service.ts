@@ -303,4 +303,12 @@ export class AnalyticsService {
   logClickedSummarize() {
     logEvent(this.analytics, 'clicked_summarize');
   }
+
+  logToggledReactions() {
+    logEvent(this.analytics, 'toggled_reactions');
+  }
+
+  logClickedReaction(reactionId: string) {
+    logEvent(this.analytics, 'clicked_reaction', { reactionId });
+  }
 }

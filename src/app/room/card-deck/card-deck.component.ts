@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, debounceTime, from, mergeMap, takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
@@ -39,8 +39,12 @@ export class CardDeckComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onReaction
-      .pipe(debounceTime(100), takeUntil(this.onDestroy))
-      .subscribe((reactionId) => this.sendReaction(reactionId));
+      .pipe(
+        debounceTime(100),
+        mergeMap((reactionId) => from(this.sendReaction(reactionId))),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -69,9 +73,11 @@ export class CardDeckComponent implements OnInit, OnDestroy {
 
   toggleReactions() {
     this.showReactions = !this.showReactions;
+    this.analytics.logToggledReactions();
   }
 
-  private sendReaction(reactionId: string) {
-    return this.reactionsService.sendReaction(reactionId, this.room.roomId);
+  private async sendReaction(reactionId: string) {
+    await this.reactionsService.sendReaction(reactionId, this.room.roomId);
+    this.analytics.logClickedReaction(reactionId);
   }
 }

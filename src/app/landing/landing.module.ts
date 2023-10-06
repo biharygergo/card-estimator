@@ -28,6 +28,7 @@ import { StartPlanningCtaComponent } from './components/start-planning-cta/start
 import { WebexComponent } from './webex/webex.component';
 import { TeamsComponent } from './teams/teams.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 
 const routes: Routes = [
   {
@@ -108,6 +109,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ZoomAppBannerComponent,
     PremiumComponent,
+    CarbonAdComponent,
     MatCardModule,
     MatButtonModule,
     MatSnackBarModule,

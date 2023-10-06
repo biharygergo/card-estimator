@@ -27,6 +27,7 @@ import { RoomControllerPanelComponent } from './room-controller-panel/room-contr
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
 import { AnimationLoader, LottieCacheModule, LottieModule } from 'ngx-lottie';
+import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 
 export function playerFactory() {
   return import(/* webpackChunkName: 'lottie-web' */ 'lottie-web/build/player/lottie_svg');
@@ -70,6 +71,7 @@ const routes: Routes = [
     MatAutocompleteModule,
     MatButtonToggleModule,
     DragDropModule,
+    CarbonAdComponent,
     LottieModule.forRoot({ player: playerFactory }),
     LottieCacheModule.forRoot(),
     MarkdownModule.forRoot(),

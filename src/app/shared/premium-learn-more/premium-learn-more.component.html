@@ -7,7 +7,9 @@
 
   <div class="details">
     <div class="details-inner">
-      <h1 class="title">Why you should upgrade your team to Planning Poker Premium</h1>
+      <h1 class="title">
+        Upgrade to Planning Poker Premium for the best experience
+      </h1>
       <p class="description">
         By subscribing now, you'll have access to all of these premium features
         and support the ongoing maintenance and improvement of our open-source
@@ -52,11 +54,11 @@
         </li>
         <li>
           <div class="icon">
-            <mat-icon>apartment</mat-icon>
+            <mat-icon>image</mat-icon>
           </div>
           <div class="feature-details">
-            <h5>Organizations & branding</h5>
-            Create an organization with branding support
+            <h5>Remove ads</h5>
+            Ads will not display for you and rooms you create
           </div>
         </li>
         <li>
@@ -88,7 +90,9 @@
           Start with a 14 day free-trial, so you can explore all premium
           features. Teams only need a single license for their facilitator.
         </p>
-        <h3 class="plan-title">Premium Plan for a SCRUM Master and their team</h3>
+        <h3 class="plan-title">
+          Premium Plan for a SCRUM Master and their team
+        </h3>
         <div class="plan">
           <div class="monthly">
             <div class="logo-container">
@@ -121,9 +125,13 @@
           [disabled]="isPremium$ | async"
           class="stripe-button"
         >
-          {{ isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial" }}
+          {{
+            isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial"
+          }}
         </button>
-        <button mat-button (click)="getQuote()">Need a custom quote? Get in touch</button>
+        <button mat-button (click)="getQuote()">
+          Need a custom quote? Get in touch
+        </button>
       </mat-card-content>
     </mat-card>
   </div>

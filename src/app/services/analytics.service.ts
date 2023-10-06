@@ -311,4 +311,8 @@ export class AnalyticsService {
   logClickedReaction(reactionId: string) {
     logEvent(this.analytics, 'clicked_reaction', { reactionId });
   }
+
+  logClickedHideAd() {
+    logEvent(this.analytics, 'clicked_hide_ad');
+  }
 }

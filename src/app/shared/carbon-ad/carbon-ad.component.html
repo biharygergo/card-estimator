@@ -1,0 +1,17 @@
+<ng-container *ngIf="vm | async as viewModel">
+  <div
+    class="ad-container"
+    id="ads-container"
+    *ngIf="viewModel.showAds && !isHidden"
+  >
+    <button
+      mat-icon-button
+      class="ads-close-button"
+      matTooltip="Show some support - ads keep this app awesome. 😎"
+      matTooltipPosition="left"
+      (click)="hideAd()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</ng-container>

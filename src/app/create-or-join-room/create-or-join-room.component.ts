@@ -65,6 +65,7 @@ import { ConfigService } from '../services/config.service';
 import { TeamsService } from '../services/teams.service';
 import { Timestamp } from 'firebase/firestore';
 import { NavigationService } from '../services/navigation.service';
+import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -119,6 +120,7 @@ const GREETINGS: { [hour: number]: string } = {
     SharedModule,
     ZoomAppBannerComponent,
     AppConfigModule,
+    CarbonAdComponent,
   ],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',

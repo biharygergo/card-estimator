@@ -120,6 +120,11 @@
       <app-github-badge *ngIf="config.runningIn === 'web'"></app-github-badge>
     </div>
     <app-reactions-renderer [members]="members$" [roomId]="room.roomId" />
+    <app-carbon-ad
+      *ngIf="room"
+      placement="app"
+      [isPremiumRoom]="room.subscriptionMetadata?.createdWithPlan === 'premium'"
+    />
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
     <app-topics-sidebar

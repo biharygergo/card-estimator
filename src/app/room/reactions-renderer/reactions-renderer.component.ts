@@ -60,7 +60,7 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
           };
           this.visibleReactions.push(visibleReaction);
 
-          return of(visibleReaction).pipe(delay(2000));
+          return of(visibleReaction).pipe(delay(3000));
         }),
         takeUntil(this.destroy)
       )

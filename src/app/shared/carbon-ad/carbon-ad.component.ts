@@ -24,10 +24,17 @@ interface ViewModel {
   carbonSrc: string;
 }
 
-const createCarbonSrc = (placement: 'landing' | 'app') =>
-  `//cdn.carbonads.com/carbon.js?serve=${
+const createCarbonSrc = (placement: 'landing' | 'app') => {
+  const isRunningInCypress = (window as any).Cypress !== undefined;
+  const isDevelopment = window.location.origin.includes('localhost');
+
+  const shouldIgnore = isRunningInCypress || isDevelopment;
+  const ignoreParam = shouldIgnore ? '&ignore=yes' : '';
+
+  return `//cdn.carbonads.com/carbon.js?serve=${
     placement === 'landing' ? 'CWYI4KJI' : 'CWYI4KJW'
-  }&placement=planningpokerlive`;
+  }&placement=planningpokerlive${ignoreParam}`;
+};
 
 @Component({
   selector: 'app-carbon-ad',
@@ -72,7 +79,11 @@ export class CarbonAdComponent implements OnInit, OnDestroy {
         delay(100),
         takeUntil(this.destroy)
       )
-      .subscribe((vm) => this.loadScript(vm.carbonSrc));
+      .subscribe((vm) =>
+        this.loadScript(vm.carbonSrc).catch((e) =>
+          console.error('Failed to load carbon ads script', e)
+        )
+      );
   }
 
   ngOnDestroy(): void {

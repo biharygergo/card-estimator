@@ -19,7 +19,10 @@
     "prerender:test": "ng run estimator:prerender:test-production",
     "sonar": "sonar-scanner",
     "analyze": "webpack-bundle-analyzer dist/estimator/browser/stats.json",
-    "start:emulator": "firebase use default && firebase emulators:start"
+    "start:emulator": "firebase use default && firebase emulators:start",
+    "generate-articles": "ts-node ./src/cli/generate_metadata.ts",
+    "generate-routes": "ts-node src/cli/generate_routes.ts",
+    "upload-articles": "gsutil copy -r src/assets/articles gs://planning-poker-public-assets/articles"
   },
   "private": true,
   "dependencies": {

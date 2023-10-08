@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Article } from '../types';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { ArticlesService } from 'src/app/services/articles.service';
 
 @Component({
   selector: 'app-article',
@@ -10,10 +11,11 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./article.component.scss'],
 })
 export class ArticleComponent implements OnInit {
-  article: Article = inject(ActivatedRoute).snapshot.data.article as Article;
+  article: Article = inject(ActivatedRoute).snapshot.data.article;
   titleService = inject(Title);
+  readonly destroy = new Subject<void>();
 
   ngOnInit() {
-    this.titleService.setTitle(`${this.article.title} - PlanningPoker.live`)
+    this.titleService.setTitle(`${this.article.title} - PlanningPoker.live`);
   }
 }

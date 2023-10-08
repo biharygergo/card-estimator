@@ -3,8 +3,8 @@
     <div class="header">
       <h1>Knowledge base</h1>
       <h2>
-        Take a look at our knowledge base to learn best-practices
-        about Planning Poker, agile estimation and related topics.
+        Take a look at our knowledge base to learn best-practices about Planning
+        Poker, agile estimation and related topics.
       </h2>
     </div>
 
@@ -26,9 +26,12 @@
         <div class="article-preview">
           <h3>{{ article.title }}</h3>
           <p>{{ article.description }}</p>
-          <a class="read-more" [routerLink]="article.slug" mat-button>Read more</a>
+          <a class="read-more" [routerLink]="article.slug" mat-button
+            >Read more</a
+          >
         </div>
       </a>
     </div>
   </div>
 </main>
+<app-carbon-ad placement="landing" />

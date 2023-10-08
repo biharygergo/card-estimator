@@ -3,7 +3,7 @@ import { Article } from '../app/landing/blog/types';
 import * as path from 'path';
 
 
-function getArticles(): Article[] {
+export function getArticles(): Article[] {
   return readdirSync(path.join(__dirname, 'data'))
     .map((fileName) => {
       const FRONT_MATTER_REGEX = /---\n([\S\s]*)\n---\n([\S\s]*)/gm;

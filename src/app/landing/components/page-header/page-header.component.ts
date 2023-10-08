@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
@@ -11,6 +12,8 @@ import { Component, Input, OnInit } from '@angular/core';
     </header>
   `,
   styleUrls: ['./page-header.component.scss'],
+  imports: [CommonModule],
+  standalone: true,
 })
 export class PageHeaderComponent implements OnInit {
   @Input() title: string;

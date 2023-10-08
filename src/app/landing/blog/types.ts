@@ -1,0 +1,10 @@
+export interface Article {
+    slug: string;
+    title: string;
+    description: string;
+    lastUpdated: string;
+    author: string;
+    content: string;
+    coverImageId: string;
+    coverImageAlt: string;
+}

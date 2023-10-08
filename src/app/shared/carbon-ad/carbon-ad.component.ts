@@ -24,7 +24,9 @@ interface ViewModel {
   carbonSrc: string;
 }
 
-const createCarbonSrc = (placement: 'landing' | 'app') => {
+function createCarbonSrc(placement: 'landing' | 'app') {
+  if (typeof window === 'undefined') return '';
+
   const isRunningInCypress = (window as any).Cypress !== undefined;
   const isDevelopment = window.location.origin.includes('localhost');
 
@@ -34,7 +36,7 @@ const createCarbonSrc = (placement: 'landing' | 'app') => {
   return `//cdn.carbonads.com/carbon.js?serve=${
     placement === 'landing' ? 'CWYI4KJI' : 'CWYI4KJW'
   }&placement=planningpokerlive${ignoreParam}`;
-};
+}
 
 @Component({
   selector: 'app-carbon-ad',
@@ -66,7 +68,12 @@ export class CarbonAdComponent implements OnInit, OnDestroy {
       of(this.isPremiumRoom),
     ]).pipe(
       map(([isPremium, runningIn, isPremiumRoom]) => {
-        return !isPremium && !isPremiumRoom && runningIn === 'web';
+        return (
+          !isPremium &&
+          !isPremiumRoom &&
+          runningIn === 'web' &&
+          typeof window !== 'undefined'
+        );
       }),
       map((showAds) => {
         return { showAds, carbonSrc: createCarbonSrc(this.placement) };

@@ -77,13 +77,21 @@ const routes: Routes = [
   },
   {
     path: 'premium',
-    loadComponent: () => import('./premium/premium.component').then(mod => mod.PremiumComponent),
+    loadComponent: () =>
+      import('./premium/premium.component').then((mod) => mod.PremiumComponent),
     data: { title: 'Premium' },
   },
   {
     path: 'integration/:result',
-    loadComponent: () => import('./integration-result/integration-result.component').then(mod => mod.IntegrationResultComponent),
+    loadComponent: () =>
+      import('./integration-result/integration-result.component').then(
+        (mod) => mod.IntegrationResultComponent
+      ),
     data: { title: 'Integration finished' },
+  },
+  {
+    path: 'knowledge-base',
+    loadChildren: () => import('./blog/blog.module').then((m) => m.BlogModule),
   },
 ];
 
@@ -91,7 +99,6 @@ const routes: Routes = [
   declarations: [
     FeaturesComponent,
     FaqComponent,
-    PageHeaderComponent,
     FaqRowComponent,
     PrivacyComponent,
     TermsComponent,
@@ -100,7 +107,6 @@ const routes: Routes = [
     WrapperComponent,
     HeaderV2Component,
     OrganizationInvitationComponent,
-    StartPlanningCtaComponent,
     WebexComponent,
     TeamsComponent,
   ],
@@ -122,9 +128,9 @@ const routes: Routes = [
     MatTooltipModule,
     ZoomAppBannerComponent,
     NgOptimizedImage,
+    PageHeaderComponent,
+    StartPlanningCtaComponent
   ],
-  providers: [
-    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')
-  ]
+  providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })
 export class LandingModule {}

@@ -1,0 +1,31 @@
+<main>
+  <article>
+    <div class="content">
+      <div class="card-header">
+        <h1>{{ article.title }}</h1>
+        <h3>{{ article.description }}</h3>
+        <div class="meta">
+          <h4 class="author">{{ article.author }}</h4>
+          <small>Last updated: {{ article.lastUpdated | date : "mediumDate" }}</small>
+        </div>
+      </div>
+      <div class="cover-image">
+        <img
+          [ngSrc]="article.coverImageId"
+          [alt]="article.coverImageAlt"
+          fill
+          sizes="90wv"
+          priority
+        />
+      </div>
+
+      <div>
+        <markdown [data]="article.content" />
+      </div>
+      <div class="banner-wrapper">
+        <start-planning-cta></start-planning-cta>
+      </div>
+    </div>
+  </article>
+</main>
+<app-carbon-ad placement="landing" />

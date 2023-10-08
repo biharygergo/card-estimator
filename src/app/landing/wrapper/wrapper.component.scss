@@ -1,23 +1,24 @@
 .content {
-    // TODO: fix this!
-    padding-top: 89px;
+  // TODO: fix this!
+  padding-top: 89px;
 
-    @media screen and (max-width: 800px) {
-        padding-top: 48px;
-    }
+  @media screen and (max-width: 800px) {
+    padding-top: 48px;
+  }
 }
 
 .footer {
-    padding: 2rem 1rem;
+  padding: 2rem 1rem;
 
-    .links {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
+  .links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
 
-        a {
-            color: #d9e2ff;
-            text-decoration: none;
-        }
+    a {
+      color: #d9e2ff;
+      text-decoration: none;
     }
+  }
 }

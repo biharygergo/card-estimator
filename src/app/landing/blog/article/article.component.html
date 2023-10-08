@@ -6,7 +6,7 @@
         <h3>{{ article.description }}</h3>
         <div class="meta">
           <h4 class="author">{{ article.author }}</h4>
-          <small>{{ article.lastUpdated | date : "mediumDate" }}</small>
+          <small>Last updated: {{ article.lastUpdated | date : "mediumDate" }}</small>
         </div>
       </div>
       <div class="cover-image">

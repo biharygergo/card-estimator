@@ -2,16 +2,17 @@ import { openSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { Article } from '../types';
 import * as path from 'path';
 
-const FRONT_MATTER_REGEX = /---\n([\S\s]*)\n---\n([\S\s]*)/gm;
 
 function getArticles(): Article[] {
   return readdirSync(path.join(__dirname, 'data'))
     .map((fileName) => {
+      const FRONT_MATTER_REGEX = /---\n([\S\s]*)\n---\n([\S\s]*)/gm;
       try {
         const fileContent = readFileSync(
           path.join(__dirname, 'data', fileName),
           'utf-8'
         ).toString();
+
         const matches = FRONT_MATTER_REGEX.exec(fileContent);
         const meta = matches[1];
         const content = matches[2];

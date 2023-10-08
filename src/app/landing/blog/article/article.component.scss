@@ -45,3 +45,22 @@ main {
   overflow: hidden;
   margin: 2rem 0;
 }
+
+::ng-deep markdown {
+  table {
+    background: var(--light-blue);
+    border-radius: 20px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: scroll;
+
+
+    td {
+      padding: 0.5rem;
+    }
+
+    tr {
+      border-bottom: 1px solid var(--main-dark);
+    }
+  }
+}

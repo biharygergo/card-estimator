@@ -90,7 +90,7 @@ const routes: Routes = [
     data: { title: 'Integration finished' },
   },
   {
-    path: 'articles',
+    path: 'knowledge-base',
     loadChildren: () => import('./blog/blog.module').then((m) => m.BlogModule),
   },
 ];

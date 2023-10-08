@@ -1,22 +1,21 @@
 ---
-title: How to use Planning Poker to improve your Sprint Planning meetings
-description: Learn how to use Planning Poker to improve your Sprint Planning meetings and deliver more value to your customers.
+title: How to use Planning Poker to improve your sprint planning meetings
+description: Learn how to use Planning Poker to improve your sprint planning meetings and deliver more value to your customers.
 slug: how-to-use-planning-poker-to-improve-sprint-planning
 lastUpdated: 2023/10/07
 author: Gergely Bihary
 coverImageId: pexels-fauxels-3184306_vv2kvt
 coverImageAlt: A group of people during a meeting
 ---
-
 ## What is Planning Poker?
 
-Planning Poker is a consensus-based technique for estimating effort in agile software development. It is a fun and engaging way for teams to apply relative estimates to planned work. Planning Poker can be used to improve Sprint Planning meetings in a number of ways:
+Planning Poker is a consensus-based technique for estimating effort in agile software development. It is a fun and engaging way for teams to apply relative estimates to planned work. Planning Poker can be used to improve sprint planning meetings in a number of ways:
 
 - **It helps to reduce bias and groupthink.** In traditional estimation techniques, the loudest or most influential team members may tend to dominate the discussion and influence the estimates. Planning Poker helps to level the playing field by giving everyone an equal voice.
 - **It encourages collaboration and communication.** Planning Poker is a team exercise that requires everyone to participate and share their thoughts. This helps to foster collaboration and communication within the team.
 - **It leads to more realistic estimates.** Planning Poker estimates are based on the collective knowledge and experience of the team. This makes them more likely to be realistic and achievable than estimates that are made by individuals.
 
-## How to use Planning Poker in your Sprint Planning meeting
+## How to use Planning Poker in your sprint planning meeting
 
 1. **Prepare.** Make sure that everyone on the team has a deck of Planning Poker cards. You can use physical cards or an online tool such as [PlanningPoker.live](https://planningpoker.live). Using an online tool is a good idea, since it automatically tracks estimates, history and calculates statistics.
 2. **Read the user story.** The Product Owner reads the user story aloud to the team and sets the topic in the app.
@@ -39,4 +38,4 @@ Planning Poker is a consensus-based technique for estimating effort in agile sof
 - **Keep a human connection.** Use Planning Poker in real-life or during a video conference. You can [install an extension](https://planningpoker.live/features) of PlanningPoker.live in your favorite video conferencing tool to see each other during the session.
 - **Have fun!** Planning Poker should be a fun and collaborative experience. Don't take it too seriously.
 
-Planning Poker is a powerful tool that can help you to improve your Sprint Planning meetings and deliver more value to your customers. By following the tips above, you can use Planning Poker effectively to estimate the effort required for your Sprint Backlog items.
+Planning Poker is a powerful tool that can help you to improve your sprint planning meetings and deliver more value to your customers. By following the tips above, you can use Planning Poker effectively to estimate the effort required for your Sprint Backlog items.

@@ -1,5 +1,5 @@
 import { openSync, readFileSync, readdirSync, writeFileSync } from 'fs';
-import { Article } from '../types';
+import { Article } from '../app/landing/blog/types';
 import * as path from 'path';
 
 
@@ -42,9 +42,6 @@ function generateArticlesToAssets() {
   const articles = getArticles();
   const assetsArticlesPath = path.join(
     __dirname,
-    '..',
-    '..',
-    '..',
     '..',
     'assets',
     'articles'

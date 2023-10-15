@@ -9,7 +9,7 @@ describe('Landing page', () => {
 
   it('opens the landing page', () => {
     cy.get('h1')
-      .should('contain.text', 'Real-time online planning poker app for remote scrum teams');
+      .should('contain.text', 'Real-Time Agile Estimation for Remote Scrum Teams');
   });
 
   it('can navigate to the /create page', () => {

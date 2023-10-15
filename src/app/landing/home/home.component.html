@@ -1,9 +1,9 @@
-<div class="banner-heading">
+<!-- <div class="banner-heading">
   <span
     ><strong>NEW:</strong> Our Microsoft Teams integration has arrived. Install
     it now!</span
   >
-</div>
+</div> -->
 <section class="hero-header-section">
   <div class="hero-header">
     <div class="header-intro">
@@ -12,49 +12,15 @@
         Better sprint planning <wbr /> and agile estimation for the whole team.
       </h2>
       <div>
-        <button
-          mat-flat-button
-          [routerLink]="'/create'"
-          class="start-planning-btn"
-        >
+        <a mat-flat-button [routerLink]="'/create'" class="start-planning-btn">
           <mat-icon>play_arrow</mat-icon>
           Start planning
-        </button>
+        </a>
         <p>
           No sign-up required, open-source and used by thousands every week.
+          Works in your browser & inside <a routerLink="/zoom">Zoom</a>,
+          <a routerLink="/teams">Teams</a> and <a routerLink="/webex">Webex</a>.
         </p>
-      </div>
-      <div class="integrations">
-        <h3>Integrated with:</h3>
-        <ul>
-          <li>
-            <a routerLink="/zoom">
-              <img
-                src="/assets/zoom-logo.png"
-                alt="Zoom logo"
-                matTooltip="Install the Zoom integration"
-              />
-            </a>
-          </li>
-          <li>
-            <a routerLink="/teams">
-              <img
-                src="/assets/teams_logo.png"
-                alt="Teams logo"
-                matTooltip="Install the Microsoft Teams integration"
-              />
-            </a>
-          </li>
-          <li>
-            <a routerLink="/webex">
-              <img
-                src="/assets/webex_logo.png"
-                alt="Webex logo"
-                matTooltip="Install the Cisco Webex integration"
-              />
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
     <div class="header-cards">

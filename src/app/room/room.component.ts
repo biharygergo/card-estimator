@@ -254,7 +254,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   showFeedbackForm$ = combineLatest([
     this.onRoundNumberUpdated$,
     this.sessionCount$,
-    this.userPreferences$,
+    this.userPreferences$.pipe(first()),
   ]).pipe(
     distinctUntilChanged(isEqual),
     map(([roundNumber, sessionCount, userPreferences]) => {

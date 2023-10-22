@@ -1,4 +1,4 @@
-<app-velocity [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
+<app-velocity [room]="room$" [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
 <div class="sidenav-actions">
   <button
     mat-icon-button

@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -25,6 +25,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class TopicsSidebarComponent implements OnInit {
   @Input() room: Room;
+  @Input({required: true}) room$: Observable<Room>;
   @Input() rounds: Round[];
   @Input() currentRound: number;
   @Input() roundStatistics: RoundStatistics[];

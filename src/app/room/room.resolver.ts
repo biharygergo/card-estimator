@@ -4,6 +4,7 @@ import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import {
   catchError,
   delay,
+  first,
   map,
   mergeMap,
   Observable,
@@ -43,7 +44,7 @@ export class RoomResolver  {
           throw new NotLoggedInError('User is not signed in');
         }
         return this.estimatorService.getRoomById(roomId).pipe(
-          take(1),
+          first(),
           map((room) => ({ room, user }))
         );
       }),

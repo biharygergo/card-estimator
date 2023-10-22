@@ -129,6 +129,7 @@
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
     <app-topics-sidebar
       [room]="room"
+      [room$]="room$"
       [rounds]="rounds"
       [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
       [currentRound]="currentRound"

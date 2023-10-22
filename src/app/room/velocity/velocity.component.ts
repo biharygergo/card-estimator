@@ -1,16 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  BehaviorSubject,
   combineLatest,
   first,
   map,
   Observable,
-  share,
   Subject,
-  take,
   takeUntil,
-  tap,
-  withLatestFrom,
 } from 'rxjs';
 import { getRoomCardSetValue } from 'src/app/pipes/estimate-converter.pipe';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -28,6 +23,7 @@ interface Velocity {
   styleUrls: ['./velocity.component.scss'],
 })
 export class VelocityComponent implements OnInit, OnDestroy {
+  @Input({ required: true }) room: Observable<Room>;
   @Input() roomId!: string;
 
   isCardsExpanded = false;
@@ -44,9 +40,7 @@ export class VelocityComponent implements OnInit, OnDestroy {
   constructor(private readonly estimatorService: EstimatorService) {}
 
   ngOnInit() {
-    this.velocity$ = this.estimatorService
-      .getRoomById(this.roomId)
-      .pipe(map(this.calculateVelocity));
+    this.velocity$ = this.room.pipe(map(this.calculateVelocity));
 
     this.previousSessions$ = this.estimatorService
       .getPreviousSessions()

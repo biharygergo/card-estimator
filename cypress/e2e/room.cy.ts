@@ -31,6 +31,7 @@ describe('Inside the room', () => {
 
     cy.contains('Save').click();
 
+    cy.get('#room-options-button').click();
     cy.get('.topics-toggle').click();
     cy.get('.round-title').first().should('contain.text', 'Custom name');
   });
@@ -71,6 +72,7 @@ describe('Inside the room', () => {
     cy.get('#invite-button').click();
     cy.contains('Join link copied to clipboard').should('be.visible');
 
+    cy.get('#room-options-button').click();
     cy.get('#topics-toggle').click();
     cy.get('.round-title').should('exist');
 

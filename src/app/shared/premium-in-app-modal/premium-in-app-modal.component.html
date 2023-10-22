@@ -1,0 +1,36 @@
+<div class="content" mat-dialog-content>
+  <h1>Get the most out of Planning Poker</h1>
+  <p>
+    We have a special deal for power-users like you - unlock all features for
+    your team and support open-source development.
+  </p>
+  <h2>What you get:</h2>
+  <ul>
+    <li>
+      <mat-icon>check</mat-icon>
+      <span>Unlimited rooms and unlocked history</span>
+    </li>
+    <li>
+      <mat-icon>check</mat-icon>
+      <span>Private, password protected sessions</span>
+    </li>
+    <li>
+      <mat-icon>check</mat-icon>
+      <span>Saved card sets, custom permissions, PokerBot AI and much more...</span>
+    </li>
+  </ul>
+</div>
+<div class="footer" mat-dialog-actions>
+  <div class="price">
+    <span><span class="amount">9€</span>/mo </span
+    ><span class="coupon">40% off</span>
+  </div>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onUpgradeClick()"
+    [disabled]="isRedirecting"
+  >
+    {{ isRedirecting ? "Opening Stripe..." : "Upgrade to Premium" }}
+  </button>
+</div>

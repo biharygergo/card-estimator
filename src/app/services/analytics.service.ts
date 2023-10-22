@@ -315,4 +315,8 @@ export class AnalyticsService {
   logClickedHideAd() {
     logEvent(this.analytics, 'clicked_hide_ad');
   }
+
+  logClickedPremiumDeal() {
+    logEvent(this.analytics, 'clicked_premium_deal');
+  }
 }

@@ -113,6 +113,7 @@
             <span class="yearly-price">€150 /year</span>
           </div>
         </div>
+
         <div class="stripe">
           <p class="description">Secure global payment and invoicing with</p>
           <img src="/assets/stripe.png" class="stripe-logo" />
@@ -129,6 +130,9 @@
             isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial"
           }}
         </button>
+        <p class="promotion discount" *ngIf="promotionCodeFromParams">
+          Your promotion code will be automatically applied at checkout.
+        </p>
         <button mat-button (click)="getQuote()">
           Need a custom quote? Get in touch
         </button>

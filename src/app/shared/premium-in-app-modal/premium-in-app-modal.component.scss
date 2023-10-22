@@ -1,0 +1,59 @@
+.content {
+  margin-top: 1rem;
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+
+    mat-icon {
+      flex-shrink: 0;
+      background: var(--light-blue);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: black;
+    }
+  }
+}
+
+.footer {
+  border-top: 1px solid var(--light-blue);
+  display: flex;
+  padding: 2rem;
+  justify-content: space-between;
+
+  .price {
+    margin: 0.5rem 0;
+    color: var(--title-on-dark);
+    .amount {
+      font-size: 2rem;
+      margin-right: 2px;
+    }
+
+    .coupon {
+        margin-left: 0.5rem;
+    }
+  }
+
+  .coupon {
+    background: var(--light-blue);
+    color: black;
+    border-radius: 4px;
+    padding: 0.2rem;
+  }
+
+  .description {
+    margin-bottom: 0;
+  }
+}

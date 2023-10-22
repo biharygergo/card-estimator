@@ -49,7 +49,7 @@ export class PaymentService {
     });
   }
 
-  async startSubscriptionToPremium() {
+  async startSubscriptionToPremium(promotionCode?: string) {
     let user = await this.authService.getUser();
 
     if (!user || user?.isAnonymous) {
@@ -78,14 +78,21 @@ export class PaymentService {
         )
       ) */
       await this.zoomService.openUrl(
-        `${window.location.origin}/join?flow=premium`,
+        `${window.location.origin}/join?flow=premium${
+          promotionCode ? `&promotionCode=${promotionCode}` : ''
+        }`,
         true
       );
       return;
     }
 
     if (this.config.runningIn === 'teams') {
-      window.open(`${window.location.origin}/join?flow=premium`, '_blank');
+      window.open(
+        `${window.location.origin}/join?flow=premium${
+          promotionCode ? `&promotionCode=${promotionCode}` : ''
+        }`,
+        '_blank'
+      );
       return;
     }
 
@@ -98,7 +105,7 @@ export class PaymentService {
       mode: 'subscription',
       success_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=success`,
       trial_from_plan: true,
-      // promotion_code: 'promo_1MjPfYCG1hllVHncKWqjTLxd'
+      promotion_code: promotionCode,
     });
     window.location.assign(session.url);
   }

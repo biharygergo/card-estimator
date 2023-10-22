@@ -11,5 +11,6 @@ export const environment = {
   },
   recaptcha3SiteKey: '6LdiDNIkAAAAALpZO5d0gm2tHRrjH0bG8VsOLJkT',
   useEmulators: false,
-  premiumPriceId: 'price_1MhxFgCG1hllVHnccUeyTdNX'
+  premiumPriceId: 'price_1MhxFgCG1hllVHnccUeyTdNX',
+  powerUserPromoCode: 'promo_1O44WwCG1hllVHncTTEcBsWM'
 };

@@ -394,6 +394,10 @@ body {
   min-width: 150px !important;
 }
 
+.cdk-overlay-pane.rounded-dialog .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  border-radius: 20px;
+}
+
 @include extraSmallScreen {
   .cdk-overlay-pane.custom-dialog {
     width: 99% !important;

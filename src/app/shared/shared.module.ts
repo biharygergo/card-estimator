@@ -45,6 +45,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recurring-meetings-modal.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RoundHistoryTableComponent } from './round-history-table/round-history-table.component';
+import { PremiumInAppModalComponent } from './premium-in-app-modal/premium-in-app-modal.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { RoundHistoryTableComponent } from './round-history-table/round-history-
     PremiumLearnMoreComponent,
     IntegrationsComponent,
     RecurringMeetingsModalComponent,
+    PremiumInAppModalComponent,
   ],
   imports: [
     CommonModule,

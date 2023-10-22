@@ -11,6 +11,7 @@
           matTooltip="Get the most out of your planning with Premium"
           *ngIf="
             (permissionsService.hasPremiumAccess() | async) === false &&
+            room?.subscriptionMetadata?.createdWithPlan !== 'premium' &&
             !paymentService.isSubscriptionDisabled
           "
           (click)="openPremiumLearnMoreModal()"

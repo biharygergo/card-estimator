@@ -19,6 +19,7 @@ import {
   EMPTY,
   filter,
   first,
+  from,
   interval,
   map,
   Observable,
@@ -30,6 +31,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
@@ -83,6 +85,7 @@ import { ToastService } from '../services/toast.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
+import { premiumInAppModalCreator } from '../shared/premium-in-app-modal/premium-in-app-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -185,7 +188,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     tap((roundNumber) => {
       this.currentRound = roundNumber;
       this.playNotificationSound();
-      this.showOrHideAloneInRoomModal();
       this.reCalculateStatistics();
     }),
     takeUntil(this.destroy)
@@ -229,11 +231,11 @@ export class RoomComponent implements OnInit, OnDestroy {
         permissions:
           room.configuration?.permissions ||
           DEFAULT_ROOM_CONFIGURATION.permissions,
-        room,
       };
     }),
     distinctUntilChanged(isEqual),
-    tap(({ room }) => {
+    withLatestFrom(this.room$),
+    tap(([_permissions, room]) => {
       this.permissionsService.initializePermissions(
         room,
         this.estimatorService.activeMember.id
@@ -279,14 +281,43 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   user$ = this.authService.user;
+
   controlPanelExpandedDefaultState$: Observable<boolean> = combineLatest([
     this.isSmallScreen$,
     this.room$,
     this.user$,
-  ]).pipe(map(([isSmallScreen, room, user]) => {
-    const isCreator = room.createdById === user.uid;
-    return !isSmallScreen || (isSmallScreen && isCreator);
-  }));
+  ]).pipe(
+    first(),
+    map(([isSmallScreen, room, user]) => {
+      const isCreator = room.createdById === user.uid;
+      return !isSmallScreen.matches || (isSmallScreen.matches && isCreator);
+    })
+  );
+
+  shouldOpenAloneInRoomModal$: Observable<boolean> = combineLatest([
+    this.room$.pipe(map((room) => room.currentRound)),
+    this.sessionCount$,
+  ]).pipe(
+    map(([roundNumber, sessionCount]) => {
+      return roundNumber > 0 && sessionCount < 2;
+    }),
+    filter((shouldOpen) => !!shouldOpen)
+  );
+
+  isPremium$ = from(this.paymentService.isPremiumSubscriber());
+
+  shouldOpenPremiumDealBanner$: Observable<boolean> = combineLatest([
+    this.room$,
+    this.user$,
+    this.sessionCount$,
+    this.isPremium$,
+  ]).pipe(
+    map(([room, user, sessionCount, isPremium]) => {
+      return !isPremium && sessionCount > 5 && room.createdById === user.uid;
+    }),
+    filter((shouldOpen) => !!shouldOpen),
+    first()
+  );
 
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
 
@@ -354,6 +385,18 @@ export class RoomComponent implements OnInit, OnDestroy {
       .subscribe((shouldExapnd) => {
         if (this.isControlPaneExpansionSetByUser) return;
         this.isControlPaneExpanded = shouldExapnd;
+      });
+
+    this.shouldOpenAloneInRoomModal$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.showOrHideAloneInRoomModal();
+      });
+
+    this.shouldOpenPremiumDealBanner$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.dialog.open(...premiumInAppModalCreator());
       });
 
     this.authService.avatarUpdated
@@ -540,7 +583,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.snackBar.dismiss();
       this.snackBar
         .open(
-          'Stand out from the crowd by adding your avatar! 🤩 The avatar helps others recognize your votes.',
+          'Stand out from the crowd by adding your avatar 😎',
           'Set my avatar',
           { duration: 10000, horizontalPosition: 'right' }
         )

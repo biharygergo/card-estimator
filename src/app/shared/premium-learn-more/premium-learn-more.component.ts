@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { LinkService } from 'src/app/services/link.service';
+import { ActivatedRoute } from '@angular/router';
 
 export const premiumLearnMoreModalCreator =
   (): ModalCreator<PremiumLearnMoreComponent> => [
@@ -23,6 +24,8 @@ export const premiumLearnMoreModalCreator =
 })
 export class PremiumLearnMoreComponent {
   @Input() pageMode: 'modal' | 'page' = 'modal';
+  promotionCodeFromParams: string | undefined =
+    inject(ActivatedRoute).snapshot.queryParamMap.get('promotionCode');
 
   isLoadingStripe = false;
   isPremium$ = this.paymentService.isPremiumSubscriber();
@@ -30,17 +33,21 @@ export class PremiumLearnMoreComponent {
   constructor(
     private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
-    private readonly linkService: LinkService,
+    private readonly linkService: LinkService
   ) {}
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
-    await this.paymentService.startSubscriptionToPremium();
+    await this.paymentService.startSubscriptionToPremium(this.promotionCodeFromParams);
   }
 
   getQuote() {
-    const apiUrl = window.origin + `/api/sendEmail?subject=${encodeURIComponent('Custom quote for Premium subscription')}`;
+    const apiUrl =
+      window.origin +
+      `/api/sendEmail?subject=${encodeURIComponent(
+        'Custom quote for Premium subscription'
+      )}`;
     this.linkService.openUrl(apiUrl);
   }
 }

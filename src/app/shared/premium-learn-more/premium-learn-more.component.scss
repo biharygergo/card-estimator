@@ -53,8 +53,6 @@
       }
     }
 
-    
-
     .icon {
       flex-shrink: 0;
       height: 40px;
@@ -132,7 +130,7 @@
 }
 
 .discount {
-  background: white;
+  background: var(--light-blue);
   padding: 0.5rem;
   border-radius: 6px;
   font-weight: 500;

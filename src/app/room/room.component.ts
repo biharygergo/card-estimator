@@ -285,7 +285,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.user$,
   ]).pipe(map(([isSmallScreen, room, user]) => {
     const isCreator = room.createdById === user.uid;
-    return !(isSmallScreen && !isCreator);
+    return !isSmallScreen || (isSmallScreen && isCreator);
   }));
 
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));

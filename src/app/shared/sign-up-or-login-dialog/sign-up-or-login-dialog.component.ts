@@ -296,7 +296,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return new Promise(() => {});
   }
 
-  private async signInWithGoogle() {
+  private signInWithGoogle(): Observable<boolean> {
     let signInPromise: Promise<any>;
     if (this.config.runningIn === 'zoom') {
       signInPromise = this.signInWithGoogleInZoom();

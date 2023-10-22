@@ -104,20 +104,11 @@
         mat-stroked-button
         [matMenuTriggerFor]="roomSettingsMenu"
         id="room-options-button"
-        class="responsive-label-button forced"
-        matTooltip="Room settings"
+        class="responsive-label-button"
+        matTooltip="Room options"
       >
         <mat-icon>settings</mat-icon>
-      </button>
-      <button
-        mat-stroked-button
-        aria-label="Toggle topics sidebar"
-        (click)="sidebarTriggered.emit()"
-        class="topics-toggle responsive-label-button forced"
-        matTooltip="Manage rounds ({{ rounds.length }})"
-        id="topics-toggle"
-      >
-        <mat-icon>list</mat-icon>
+        Options
       </button>
       <button
         mat-stroked-button
@@ -126,9 +117,7 @@
         class="responsive-label-button forced"
         id="minimize-panel-button"
       >
-        <mat-icon *ngIf="!isSmallScreen; else upIcon"
-          >chevron_right</mat-icon
-        >
+        <mat-icon *ngIf="!isSmallScreen; else upIcon">chevron_right</mat-icon>
         <ng-template #upIcon><mat-icon>expand_less</mat-icon></ng-template>
       </button>
     </div>
@@ -217,16 +206,6 @@
     >
       <mat-icon>settings</mat-icon>
     </button>
-    <button
-      mat-icon-button
-      aria-label="Toggle topics sidebar"
-      (click)="sidebarTriggered.emit()"
-      matTooltip="Manage rounds"
-      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-      id="topics-toggle"
-    >
-      <mat-icon>list</mat-icon>
-    </button>
     <div>
       <button
         mat-icon-button
@@ -235,15 +214,23 @@
         [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
         id="expand-button"
       >
-        <mat-icon *ngIf="!isSmallScreen; else downIcon"
-          >chevron_left</mat-icon
-        >
+        <mat-icon *ngIf="!isSmallScreen; else downIcon">chevron_left</mat-icon>
         <ng-template #downIcon><mat-icon>expand_more</mat-icon></ng-template>
       </button>
     </div>
   </mat-card-content>
 </mat-card>
 <mat-menu #roomSettingsMenu="matMenu">
+  <button
+    mat-menu-item
+    aria-label="Toggle topics sidebar"
+    (click)="sidebarTriggered.emit()"
+    class="topics-toggle"
+    id="topics-toggle"
+  >
+    <mat-icon>list</mat-icon>
+    Manage rounds
+  </button>
   <button
     mat-menu-item
     [matMenuTriggerFor]="menu"

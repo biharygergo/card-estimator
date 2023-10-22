@@ -33,10 +33,11 @@ export const avatarModalCreator = ({
     id: AVATAR_SELECTOR_MODAL,
     width: '90%',
     maxWidth: '600px',
-    maxHeight: '90vh',
+    maxHeight: '98vh',
     data: {
       openAtTab,
     },
+    panelClass: 'custom-dialog'
   },
 ];
 

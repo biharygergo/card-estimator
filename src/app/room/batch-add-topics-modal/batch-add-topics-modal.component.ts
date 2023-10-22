@@ -28,7 +28,7 @@ export const batchAddModalCreator = (
     id: 'batch-add-topics-modal',
     width: '90%',
     maxWidth: '600px',
-    maxHeight: '90vh',
+    maxHeight: '98vh',
     panelClass: 'custom-dialog',
     data,
   },

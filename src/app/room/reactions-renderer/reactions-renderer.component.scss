@@ -3,6 +3,9 @@
     opacity: 1;
     transform: translateY(0);
   }
+  80% {
+    opacity: 1;
+  }
   100% {
     opacity: 0;
     transform: translateY(-400px);
@@ -11,7 +14,7 @@
 
 .reaction-wrapper {
   pointer-events: none;
-  animation: slideUpDisappear 2000ms ease-in;
+  animation: slideUpDisappear 3000ms ease-in;
   animation-fill-mode: forwards;
   z-index: 11;
   position: fixed;

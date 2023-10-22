@@ -279,6 +279,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   user$ = this.authService.user;
+  controlPanelExpandedDefaultState$: Observable<boolean> = combineLatest([
+    this.isSmallScreen$,
+    this.room$,
+    this.user$,
+  ]).pipe(map(([isSmallScreen, room, user]) => {
+    const isCreator = room.createdById === user.uid;
+    return !(isSmallScreen && !isCreator);
+  }));
 
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
 
@@ -340,11 +348,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
     this.onPermissionsUpdated$.subscribe();
-    this.isSmallScreen$
+
+    this.controlPanelExpandedDefaultState$
       .pipe(takeUntil(this.destroy))
-      .subscribe(({ matches }) => {
+      .subscribe((shouldExapnd) => {
         if (this.isControlPaneExpansionSetByUser) return;
-        this.isControlPaneExpanded = !matches;
+        this.isControlPaneExpanded = shouldExapnd;
       });
 
     this.authService.avatarUpdated
@@ -383,7 +392,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         element.offsetHeight; /* trigger reflow */
         setTimeout(() => {
           element.style.animation = null;
-        }, 10)
+        }, 10);
       });
   }
 

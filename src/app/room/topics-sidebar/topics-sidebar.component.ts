@@ -16,7 +16,7 @@ import { TopicEditorInputOutput } from '../topic-editor/topic-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import { summaryModalCreator } from '../summary-modal/summary-modal.component';
 import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -105,7 +105,11 @@ export class TopicsSidebarComponent implements OnInit {
     this.showActiveRound = this.currentRound !== event.previousIndex;
     const activeRoundId = this.room.rounds[this.room.currentRound].id;
     moveItemInArray(this.rounds, event.previousIndex, event.currentIndex);
-    await this.estimatorService.setRounds(this.room, this.rounds, activeRoundId);
+    await this.estimatorService.setRounds(
+      this.room,
+      this.rounds,
+      activeRoundId
+    );
     this.showActiveRound = true;
   }
 
@@ -115,6 +119,10 @@ export class TopicsSidebarComponent implements OnInit {
   }
 
   openBatchAddModal() {
-    this.dialog.open(...batchAddModalCreator({room: this.room}));
+    this.dialog.open(...batchAddModalCreator({ room: this.room }));
+  }
+
+  roundIdentity(index: number, item: Round) {
+    return item.id;
   }
 }

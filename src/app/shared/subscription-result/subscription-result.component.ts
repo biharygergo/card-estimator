@@ -16,7 +16,7 @@ export const subscriptionResultModalCreator = (
     id: 'subscriptionResult',
     width: '90%',
     maxWidth: '600px',
-    maxHeight: '90vh',
+    maxHeight: '98vh',
     data,
   },
 ];

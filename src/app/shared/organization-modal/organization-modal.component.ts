@@ -37,7 +37,7 @@ export const organizationModalCreator =
       id: 'organizationModal',
       width: '90%',
       maxWidth: '600px',
-      maxHeight: '90vh',
+      maxHeight: '98vh',
       panelClass: 'custom-dialog',
     },
   ];

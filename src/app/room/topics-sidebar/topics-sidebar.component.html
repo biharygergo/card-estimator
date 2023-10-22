@@ -1,9 +1,17 @@
 <app-velocity [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
 <div class="sidenav-actions">
-  <button mat-icon-button (click)="openSummaryModal()" matTooltip="Generate an AI summary">
+  <button
+    mat-icon-button
+    (click)="openSummaryModal()"
+    matTooltip="Generate an AI summary"
+  >
     <mat-icon>auto_fix_normal</mat-icon>
   </button>
-  <button mat-icon-button (click)="openBatchAddModal()" matTooltip="Batch add multiple topics">
+  <button
+    mat-icon-button
+    (click)="openBatchAddModal()"
+    matTooltip="Batch add multiple topics"
+  >
     <mat-icon>library_add</mat-icon>
   </button>
   <div
@@ -32,7 +40,13 @@
   cdkDropList
   (cdkDropListDropped)="drop($event)"
 >
-  <ng-container *ngFor="let round of rounds; let roundNumber = index">
+  <ng-container
+    *ngFor="
+      let round of rounds;
+      let roundNumber = index;
+      trackBy: roundIdentity
+    "
+  >
     <mat-card
       appearance="outlined"
       class="topic-card"

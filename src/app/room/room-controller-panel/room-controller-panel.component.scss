@@ -67,27 +67,17 @@
 
   @include extraSmallScreen {
     gap: 4px;
+
     ::ng-deep {
-        .mat-mdc-icon-button {
-            --mdc-icon-button-state-layer-size: 30px !important;
-            padding: 3px !important;
-        }
+      .mat-mdc-icon-button {
+        --mdc-icon-button-state-layer-size: 30px !important;
+        padding: 3px !important;
+      }
 
       .mat-mdc-button-touch-target {
         width: 30px;
         height: 30px;
       }
     }
-
-    /* ::ng-deep {
-      .mat-mdc-icon-button.mat-mdc-button-base {
-        --mdc-icon-button-state-layer-size: 30px !important;
-      }
-
-      .mat-mdc-button-touch-target {
-        width: 30px;
-        height: 30px;
-      }
-    } */
   }
 }

@@ -293,6 +293,10 @@ body {
   border-radius: 16px;
   padding: 1rem;
   margin-bottom: 1rem;
+
+  @include extraSmallScreen {
+    padding: 0.5rem;
+  }
 }
 
 .premium-lock {
@@ -392,7 +396,7 @@ body {
 
 @include extraSmallScreen {
   .cdk-overlay-pane.custom-dialog {
-    width: 95% !important;
+    width: 99% !important;
 
     .mdc-dialog .mdc-dialog__content {
       padding: 0.5rem;

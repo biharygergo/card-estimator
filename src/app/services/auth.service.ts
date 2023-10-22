@@ -33,7 +33,6 @@ import {
 import {
   catchError,
   combineLatest,
-  distinctUntilChanged,
   EMPTY,
   filter,
   firstValueFrom,
@@ -55,7 +54,6 @@ import {
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
-import { isEqual } from 'lodash';
 
 export const PROFILES_COLLECTION = 'userProfiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
@@ -88,7 +86,7 @@ export class AuthService {
     private firestore: Firestore,
     private snackbar: MatSnackBar
   ) {
-    this.user = user(this.auth).pipe(distinctUntilChanged(isEqual));
+    this.user = user(this.auth).pipe();
   }
 
   async loginAnonymously(displayName?: string) {

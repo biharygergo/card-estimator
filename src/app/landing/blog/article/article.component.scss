@@ -48,13 +48,28 @@ main {
 }
 
 ::ng-deep markdown {
+
+  h1 {
+    font-size: 1.4rem !important;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 1.3rem !important;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 1.2rem !important;
+    font-weight: 700;
+  }
+
   table {
     background: var(--light-blue);
     border-radius: 20px;
     padding: 1rem;
     margin: 1rem 0;
     overflow-x: scroll;
-
 
     td {
       padding: 0.5rem;
@@ -63,5 +78,26 @@ main {
     tr {
       border-bottom: 1px solid var(--main-dark);
     }
+  }
+
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    img {
+      max-width: 80%;
+      border-radius: 20px;
+      margin-bottom: 0.2rem;
+      object-fit: cover;
+
+      @media only screen and (max-width: 800px) {
+        max-width: 100%;
+      }
+    }
+
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 }

@@ -19,3 +19,4 @@
 /knowledge-base/planning-poker-and-the-scrum-roles
 /knowledge-base/comparing-agile-estimation-techniques
 /knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning
+/knowledge-base/how-to-estimate-jira-issues-with-planning-poker

@@ -25,6 +25,7 @@
         </div>
         <div class="article-preview">
           <h3>{{ article.title }}</h3>
+          <h5>{{ article.lastUpdated | date:'mediumDate' }}, {{ article.author }}</h5>
           <p>{{ article.description }}</p>
         </div>
       </a>

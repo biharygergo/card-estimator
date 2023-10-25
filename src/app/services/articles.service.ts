@@ -15,13 +15,13 @@ export class ArticlesService {
 
   getArticle(slug: string) {
     const serverUrl = `https://storage.googleapis.com/planning-poker-public-assets`;
-    return this.httpClient.get<Article>(serverUrl + `/articles/${slug}.json`);
+    return this.httpClient.get<Article>(serverUrl + `/articles/${slug}.json?cacheBust=${Date.now()}`);
   }
 
   getArticles() {
     const serverUrl = 'https://storage.googleapis.com/planning-poker-public-assets';
     return this.httpClient
-      .get<Article[]>(serverUrl + '/articles/index.json')
+      .get<Article[]>(serverUrl + '/articles/index.json?cacheBust=' + Date.now())
       .pipe(
         map((articles) =>
           articles.sort(

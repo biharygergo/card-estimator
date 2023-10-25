@@ -91,8 +91,11 @@
 </mat-list>
 <h3 matSubheader class="subheader">Votes</h3>
 <div class="votes">
-  <div class="vote-container" *ngFor="let member of members">
-    <div class="vote-avatar" (click)="openAvatarSelectorModal(member.id)">
+  <div
+    class="vote-container"
+    *ngFor="let member of members; trackBy: memberIdentity"
+  >
+    <div class="vote-avatar">
       <img
         *ngIf="member.avatarUrl"
         [src]="member.avatarUrl"
@@ -112,6 +115,29 @@
       >
         <mat-icon>warning</mat-icon>
       </div>
+      <ng-container *ngIf="showMemberControls">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="memberMenu"
+          [matMenuTriggerData]="{ member }"
+          class="member-options-button"
+          *ngIf="
+            member.id !== currentUserId && room.createdById === currentUserId
+          "
+          matTooltip="Member options"
+        >
+          <mat-icon>settings</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="member-options-button"
+          (click)="openAvatarSelectorModal(member.id)"
+          matTooltip="Change my avatar"
+          *ngIf="member.id === currentUserId"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
     </div>
     <span class="member-name">
       {{ member.name }}
@@ -189,3 +215,40 @@
     </div>
   </div>
 </div>
+<mat-menu #memberMenu="matMenu">
+  <ng-template matMenuContent let-member="member">
+    <button
+      mat-menu-item
+      (click)="removeMember(member)"
+      matTooltip="Removes the member from the room, but keeps their historical votes. They can rejoin anytime."
+      matTooltipPosition="above"
+    >
+      <mat-icon>person_remove</mat-icon> Remove from room
+    </button>
+    <mat-divider />
+    <span
+      [matTooltip]="
+        !organization
+          ? 'You have no organization'
+          : !userProfiles[member.id]
+          ? 'Anonymous users can not be added to an organization'
+          : organization.memberIds.includes(member.id)
+          ? 'Already a member'
+          : ''
+      "
+    >
+      <button
+        mat-menu-item
+        [disabled]="
+          !organization ||
+          organization.memberIds.includes(member.id) ||
+          organization.createdById !== currentUserId ||
+          !userProfiles[member.id]
+        "
+        (click)="addToOrganization(member.id)"
+      >
+        <mat-icon>group_add</mat-icon> Add to my organization
+      </button>
+    </span>
+  </ng-template>
+</mat-menu>

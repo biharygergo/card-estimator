@@ -115,12 +115,52 @@ mat-list-item.statistic-line {
       color: var(--background-dark);
     }
 
+    .member-options-button {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      opacity: 0;
+      transition: opacity 200ms ease-out;
+
+      &:hover, &:focus-visible {
+        opacity: 1;
+      }
+
+      mat-icon {
+        color: white;
+      }
+    }
+
     @include extraSmallScreen {
       width: 40px;
       height: 40px;
 
       .vote-avatar-text {
         font-size: 18px;
+      }
+
+      .member-options-button {
+        padding: 5px;
+
+        ::ng-deep {
+          mat-icon {
+            height: 20px;
+            width: 20px;
+            font-size: 20px;
+          }
+          .mat-mdc-icon-button {
+            --mdc-icon-button-state-layer-size: 30px !important;
+            padding: 3px !important;
+          }
+
+          .mat-mdc-button-touch-target {
+            width: 30px !important;
+            height: 30px !important;
+          }
+        }
       }
     }
 
@@ -136,6 +176,7 @@ mat-list-item.statistic-line {
       align-items: center;
       justify-content: center;
       box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+      z-index: 2;
 
       mat-icon {
         font-size: 14px;

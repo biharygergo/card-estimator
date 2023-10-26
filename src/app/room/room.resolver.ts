@@ -3,10 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import {
   catchError,
-  delay,
   first,
+  from,
   map,
-  mergeMap,
   Observable,
   of,
   switchMap,
@@ -26,7 +25,7 @@ import { MemberStatus, Room } from '../types';
 @Injectable({
   providedIn: 'root',
 })
-export class RoomResolver  {
+export class RoomResolver {
   constructor(
     private estimatorService: EstimatorService,
     private authService: AuthService,
@@ -59,14 +58,16 @@ export class RoomResolver  {
           activeMember.status !== MemberStatus.ACTIVE ||
           !room.memberIds.includes(user.uid)
         ) {
-          return of(
+          return from(
             this.estimatorService.joinRoom(room.roomId, {
               ...activeMember,
               status: MemberStatus.ACTIVE,
             })
           ).pipe(
-            delay(1000),
-            map(() => ({ room, user }))
+            switchMap(() =>
+              this.estimatorService.getRoomById(room.roomId).pipe(first())
+            ),
+            map((updatedRoom) => ({ room: updatedRoom, user }))
           );
         }
 

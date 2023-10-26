@@ -15,5 +15,5 @@ export function createNewRoom(userName: string) {
   cy.get('#create-room-button').click();
   cy.location('pathname').should('include', '/room');
   cy.wait(1000);
-  return cy.url();
+  cy.url().as('roomUrl');
 }

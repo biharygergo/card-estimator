@@ -72,7 +72,8 @@ export class CarbonAdComponent implements OnInit, OnDestroy {
           !isPremium &&
           !isPremiumRoom &&
           runningIn === 'web' &&
-          typeof window !== 'undefined'
+          typeof window !== 'undefined' &&
+          (window as any).Cypress === undefined
         );
       }),
       map((showAds) => {

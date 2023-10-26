@@ -1,9 +1,18 @@
 import { createNewRoom, setAppCheckCookie } from '../support/utils';
 
 describe('Inside the room', () => {
-  beforeEach(() => {
+  let roomUrl;
+  before(() => {
     setAppCheckCookie();
     createNewRoom('Test User');
+    cy.url().as('roomUrl');
+    cy.get('@roomUrl').then((url) => {
+      roomUrl = url;
+    });
+  });
+
+  beforeEach(() => {
+    cy.visit(roomUrl);
   });
 
   it('can cast votes', () => {
@@ -26,6 +35,9 @@ describe('Inside the room', () => {
   });
 
   it('can update the topic name', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
     cy.contains('Edit topic').click();
     cy.get('#topic-name').click().clear().type('Custom name');
 
@@ -33,14 +45,19 @@ describe('Inside the room', () => {
 
     cy.get('#room-options-button').click();
     cy.get('.topics-toggle').click();
-    cy.get('.round-title').first().should('contain.text', 'Custom name');
+    cy.get('.round-title').eq(1).should('contain.text', 'Custom name');
   });
 
   it('can set notes', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
     cy.get('#notes-field').click().type('This is my note!').blur();
   });
 
   it('can use the timer', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
     cy.get('.time-left').should('contain.text', '30 second timer');
     cy.get('#start-button').click();
     cy.wait(1000);
@@ -48,6 +65,9 @@ describe('Inside the room', () => {
   });
 
   it('can set custom card sets', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
     cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();
     cy.get('.pass-option-checkbox').click();
@@ -59,12 +79,14 @@ describe('Inside the room', () => {
   });
 
   it('can use minimized panel', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
+    cy.get('.mat-sidenav-content').scrollTo('bottom');
     cy.get('#minimize-panel-button').click();
 
     cy.get('#new-round-button').click();
-    // Banner appears
-    cy.contains('Continue alone').click();
-    cy.contains('Topic of Round 2').should('be.visible');
+    cy.contains('Topic of Round 3').should('be.visible');
 
     cy.get('#reveal-results-button').click();
     cy.get('#reveal-results-button').should('be.disabled');
@@ -83,6 +105,9 @@ describe('Inside the room', () => {
   });
 
   it('can send reactions', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
     cy.get('#reactions-toggle').should('be.visible');
     cy.get('.reaction-buttons').should('be.visible');
 
@@ -90,8 +115,15 @@ describe('Inside the room', () => {
     cy.get('.reaction-buttons').should('not.exist');
     cy.get('#reactions-toggle').click();
 
-
     cy.get('#reaction-button-1').click();
     cy.get('.reaction-wrapper').should('exist');
+  });
+
+  it('can open avatar editor', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
+    cy.get('.member-options-button').click();
+    cy.contains('My account').should('be.visible');
   })
 });

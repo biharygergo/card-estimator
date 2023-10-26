@@ -173,11 +173,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   activeMember$: Observable<Member> = combineLatest([
-    this.room$,
+    this.room$.pipe(map(room => room.members)),
     this.authService.user,
   ]).pipe(
-    filter(([_room, user]) => !!user),
-    map(([room, user]) => room.members.find((m) => m.id === user.uid)),
+    filter(([_members, user]) => !!user),
+    map(([members, user]) => members.find((m) => m.id === user.uid)),
     distinctUntilChanged(isEqual),
     takeUntil(this.destroy)
   );

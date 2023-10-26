@@ -15,7 +15,11 @@
         class="learn-more"
         [disabled]="paymentService.isSubscriptionDisabled"
       >
-        {{ paymentService.isSubscriptionDisabled ? 'Not available on Teams mobile' : 'Learn more'}}
+        {{
+          paymentService.isSubscriptionDisabled
+            ? "Not available on Teams mobile"
+            : "Learn more"
+        }}
       </button>
     </div>
   </div>
@@ -227,11 +231,7 @@
                   <mat-icon>group_add</mat-icon> Add to organization
                 </button>
                 <mat-divider></mat-divider>
-                <button
-                  mat-menu-item
-                  (click)="removeMember(member)"
-                  [disabled]="!hasConfigurationAccess"
-                >
+                <button mat-menu-item (click)="removeMember(member)">
                   <mat-icon>person_remove</mat-icon> Remove from room
                 </button>
               </mat-menu>

@@ -118,4 +118,12 @@ describe('Inside the room', () => {
     cy.get('#reaction-button-1').click();
     cy.get('.reaction-wrapper').should('exist');
   });
+
+  it('can open avatar editor', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
+    cy.get('.member-options-button').click();
+    cy.contains('My account').should('be.visible');
+  })
 });

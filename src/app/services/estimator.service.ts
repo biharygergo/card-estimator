@@ -476,19 +476,19 @@ export class EstimatorService {
     };
   }
 
-  setNote(note: string, room: Room, member: Member) {
+  setNote(note: string, room: Room, currentRound: number, member: Member) {
     const newNote: Notes = {
       note,
       editedBy: member || null,
     };
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      [`rounds.${room.currentRound}.notes`]: newNote,
+      [`rounds.${currentRound}.notes`]: newNote,
     });
   }
 
-  setNoteEditor(room: Room, member: Member | null) {
+  setNoteEditor(room: Room, currentRound: number, member: Member | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      [`rounds.${room.currentRound}.notes.editedBy`]: member || null,
+      [`rounds.${currentRound}.notes.editedBy`]: member || null,
     });
   }
 

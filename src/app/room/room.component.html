@@ -1,5 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav-content class="sidenav-content" #sidenavContent>
+  <mat-sidenav-content class="sidenav-content" #sidenavContent *ngIf="room">
     <div class="navbar">
       <div class="navbar-left">
         <app-profile-dropdown class="profile-dropdown"></app-profile-dropdown>
@@ -97,7 +97,7 @@
               />
             </mat-card-content>
             <div class="card-footer-actions extra-padding">
-              <app-notes-field [room]="room"/>
+              <app-notes-field />
             </div>
           </div>
         </mat-card>

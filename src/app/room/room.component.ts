@@ -24,20 +24,17 @@ import {
   map,
   Observable,
   of as observableOf,
+  of,
   share,
-  shareReplay,
   startWith,
   Subject,
   switchMap,
   takeUntil,
   tap,
-  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
-  CardSetValue,
   CARD_SETS,
-  DEFAULT_ROOM_CONFIGURATION,
   Member,
   MemberStatus,
   MemberType,
@@ -86,6 +83,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
 import { premiumInAppModalCreator } from '../shared/premium-in-app-modal/premium-in-app-modal.component';
+import { RoomDataService } from './room-data.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -124,125 +122,25 @@ export class RoomComponent implements OnInit, OnDestroy {
   isControlPaneExpansionSetByUser = false;
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
 
-  room$: Observable<Room> = this.route.paramMap.pipe(
-    map((params) => params.get('roomId')),
-    switchMap((roomId) =>
-      this.estimatorService
-        .getRoomById(roomId)
-        .pipe(startWith(this.route.snapshot.data.room))
-    ),
-    filter((room) => !!room),
+  room$: Observable<Room> = this.roomDataService.room$.pipe(
+    startWith(this.route.snapshot.data.room),
     catchError((e) => this.onRoomUpdateError(e)),
-    shareReplay(1),
     takeUntil(this.destroy)
   );
 
   roomTopic$: Observable<{ topic: string; richTopic?: RichTopic | null }> =
-    this.room$.pipe(
-      map((room) => {
-        return {
-          topic: room?.rounds[room.currentRound ?? 0]?.topic || '',
-          richTopic: room?.rounds[room.currentRound ?? 0]?.richTopic,
-        };
-      }),
-      distinctUntilChanged(isEqual),
-      takeUntil(this.destroy)
-    );
+    this.roomDataService.roomTopic$.pipe(takeUntil(this.destroy));
 
-  members$: Observable<Member[]> = this.room$.pipe(
-    map((room) => [room.members, room.memberIds]),
-    distinctUntilChanged<[Member[], string[]]>(isEqual),
-    map(([members, memberIds]) =>
-      members
-        .filter(
-          (m) =>
-            (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
-            memberIds.includes(m.id)
-        )
-        .sort((a, b) => a.type?.localeCompare(b.type))
-    ),
-    shareReplay(1),
+  members$: Observable<Member[]> = this.roomDataService.activeMembers$.pipe(
     takeUntil(this.destroy)
   );
 
-  onRoomUpdated$ = this.room$.pipe(
-    tap((room) => {
-      this.onRoomUpdated(room);
-    }),
+  activeMember$: Observable<Member> = this.roomDataService.activeMember$.pipe(
     takeUntil(this.destroy)
   );
 
-  activeMember$: Observable<Member> = combineLatest([
-    this.room$.pipe(map(room => room.members)),
-    this.authService.user,
-  ]).pipe(
-    filter(([_members, user]) => !!user),
-    map(([members, user]) => members.find((m) => m.id === user.uid)),
-    distinctUntilChanged(isEqual),
-    takeUntil(this.destroy)
-  );
-
-  onRoundNumberUpdated$: Observable<number> = this.room$.pipe(
-    map((room) => room.currentRound),
-    distinctUntilChanged(),
-    tap((roundNumber) => {
-      this.currentRound = roundNumber;
-      this.playNotificationSound();
-      this.reCalculateStatistics();
-    }),
-    takeUntil(this.destroy)
-  );
-
-  onEstimatesUpdated$ = this.room$.pipe(
-    map((room) => {
-      const currentRound = room.rounds[room.currentRound ?? 0];
-      return currentRound.estimates;
-    }),
-    distinctUntilChanged(isEqual),
-    tap((estimates) => {
-      if (this.estimatorService.activeMember) {
-        this.currentEstimate = estimates[this.estimatorService.activeMember.id];
-        this.reCalculateStatistics();
-      }
-    }),
-    takeUntil(this.destroy)
-  );
-
-  onCardSetUpdated$: Observable<
-    [CardSet | 'CUSTOM', CardSetValue | undefined]
-  > = this.room$.pipe(
-    map((room) => [room.cardSet, room.customCardSetValue]),
-    distinctUntilChanged<[CardSet, CardSetValue]>(isEqual),
-    tap(() => this.updateSelectedCardSets()),
-    takeUntil(this.destroy)
-  );
-
-  onNameUpdated$: Observable<string> = this.authService.nameUpdated.pipe(
-    distinctUntilChanged(),
-    tap((photoURL: string) => {
-      this.estimatorService.updateCurrentUserMemberName(this.room, photoURL);
-    }),
-    takeUntil(this.destroy)
-  );
-
-  onPermissionsUpdated$ = this.room$.pipe(
-    map((room) => {
-      return {
-        permissions:
-          room.configuration?.permissions ||
-          DEFAULT_ROOM_CONFIGURATION.permissions,
-      };
-    }),
-    distinctUntilChanged(isEqual),
-    withLatestFrom(this.room$),
-    tap(([_permissions, room]) => {
-      this.permissionsService.initializePermissions(
-        room,
-        this.estimatorService.activeMember.id
-      );
-    }),
-    takeUntil(this.destroy)
-  );
+  roundNumber$: Observable<number> =
+    this.roomDataService.currentRoundNumber$.pipe(takeUntil(this.destroy));
 
   sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
     first(),
@@ -252,9 +150,13 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   userPreferences$ = this.authService.getUserPreference().pipe(share());
+  userProfiles$: Observable<UserProfileMap> =
+    this.roomDataService.userProfiles$.pipe(takeUntil(this.destroy));
+
+  user$ = this.authService.user;
 
   showFeedbackForm$ = combineLatest([
-    this.onRoundNumberUpdated$,
+    this.roundNumber$,
     this.sessionCount$,
     this.userPreferences$.pipe(first()),
   ]).pipe(
@@ -271,17 +173,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  userProfiles$: Observable<UserProfileMap> = this.members$.pipe(
-    distinctUntilChanged(isEqual),
-    switchMap((members) =>
-      this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
-    ),
-    shareReplay(1),
-    takeUntil(this.destroy)
-  );
-
-  user$ = this.authService.user;
-
   controlPanelExpandedDefaultState$: Observable<boolean> = combineLatest([
     this.isSmallScreen$,
     this.room$,
@@ -295,7 +186,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   );
 
   shouldOpenAloneInRoomModal$: Observable<boolean> = combineLatest([
-    this.room$.pipe(map((room) => room.currentRound)),
+    this.roundNumber$,
     this.sessionCount$,
   ]).pipe(
     map(([roundNumber, sessionCount]) => {
@@ -344,10 +235,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly clipboard: Clipboard,
     private readonly toastService: ToastService,
     private readonly breakpointObserver: BreakpointObserver,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly roomDataService: RoomDataService
   ) {}
 
   ngOnInit(): void {
+    this.roomDataService.loadRoom(this.route.snapshot.paramMap.get('roomId'));
+
     if (this.config.runningIn === 'zoom') {
       this.zoomService.configureApp();
     }
@@ -358,8 +252,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.teamsService.configureApp();
     }
 
-    this.room$.subscribe();
-    this.onRoomUpdated$.subscribe();
+    this.roomDataService.room$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((room) => {
+        this.room = room;
+        this.rounds = Object.values(room.rounds);
+      });
 
     this.activeMember$.subscribe((member) => {
       if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
@@ -369,16 +267,48 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.onRoundNumberUpdated$.subscribe();
-    this.onEstimatesUpdated$.subscribe();
-    this.onCardSetUpdated$.subscribe();
-    this.onNameUpdated$.subscribe();
+    this.roundNumber$.pipe(takeUntil(this.destroy)).subscribe((roundNumber) => {
+      this.currentRound = roundNumber;
+      this.playNotificationSound();
+      this.reCalculateStatistics();
+    });
+
+    this.roomDataService.onEstimatesUpdated$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((estimates) => {
+        if (this.estimatorService.activeMember) {
+          this.currentEstimate =
+            estimates[this.estimatorService.activeMember.id];
+          this.reCalculateStatistics();
+        }
+      });
+
+    this.roomDataService.onCardSetUpdated$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.updateSelectedCardSets();
+      });
+
+    this.roomDataService.onNameUpdated$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((name) =>
+        this.estimatorService.updateCurrentUserMemberName(this.room, name)
+      );
+
     this.showFeedbackForm$.subscribe((shouldShow) => {
       if (shouldShow) {
         this.openFeedbackSnackbar();
       }
     });
-    this.onPermissionsUpdated$.subscribe();
+
+    this.roomDataService.onPermissionsUpdated$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(([_permissions, room]) => {
+        this.permissionsService.initializePermissions(
+          room,
+          this.estimatorService.activeMember.id
+        );
+      });
 
     this.controlPanelExpandedDefaultState$
       .pipe(takeUntil(this.destroy))
@@ -420,7 +350,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.heartbeat$
       .pipe(
-        switchMap(() => this.saveJoinedRoom()),
+        switchMap(() => (this.room ? this.saveJoinedRoom() : of(undefined))),
         takeUntil(this.destroy)
       )
       .subscribe();
@@ -457,11 +387,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         heartbeatAt: Timestamp.now(),
       },
     });
-  }
-
-  private onRoomUpdated(room: Room) {
-    this.room = room;
-    this.rounds = Object.values(room.rounds);
   }
 
   private updateSelectedCardSets() {

@@ -81,3 +81,21 @@
     }
   }
 }
+
+.alert {
+  padding: 0.5rem;
+  background: var(--light-blue);
+  text-align: center;
+  width: 100%;
+  border-radius: 20px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  button {
+    flex: unset
+  }
+}

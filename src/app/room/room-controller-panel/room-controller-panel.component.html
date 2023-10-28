@@ -1,11 +1,30 @@
 <mat-card appearance="outlined" class="rounded-card">
   <mat-card-content class="big-panel" *ngIf="isExpanded">
     <div class="action-buttons-container">
+      <div class="alert" *ngIf="room?.isAsyncVotingEnabled">
+        <button
+          mat-icon-button
+          matTooltip="View previous round"
+          (click)="changeLocalRound(-1)"
+          [disabled]="localActiveRound.value === 0"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span>Voting asynchrously</span>
+        <button
+          mat-icon-button
+          matTooltip="View next round"
+          (click)="changeLocalRound(1)"
+          [disabled]="localActiveRound.value === rounds.length - 1"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
       <button
         mat-flat-button
         color="primary"
         (click)="newRoundClicked.next()"
-        *ngIf="currentRound === rounds.length - 1"
+        *ngIf="currentRound === rounds.length - 1 && !room.isAsyncVotingEnabled"
         [disabled]="
           !(permissionsService.canCreateRounds() | async) ||
           (newRoundButtonCooldownState$ | async).includes('cooldown') ||
@@ -38,7 +57,7 @@
         [disabled]="
           !(permissionsService.canCreateRounds() | async) || isEditingTopic
         "
-        *ngIf="currentRound < rounds.length - 1"
+        *ngIf="currentRound < rounds.length - 1 && !room?.isAsyncVotingEnabled"
         id="next-round-button"
       >
         <div class="center-icon-button">
@@ -55,6 +74,7 @@
           !(permissionsService.canRevealResults() | async)
         "
         id="reveal-results-button"
+        *ngIf="!room?.isAsyncVotingEnabled"
       >
         <div class="center-icon-button">
           <mat-icon>visibility</mat-icon>
@@ -260,10 +280,23 @@
     (click)="openRoomConfigurationModal()"
   >
     <mat-icon>security</mat-icon>
-    <span class="menu-item-with-badge"
-      >Security and permissions <span class="menu-item-badge">New</span></span
-    >
+    <span>Security and permissions</span>
   </button>
+  <mat-divider />
+  <div
+    mat-menu-item
+    role="menuitemcheckbox"
+    class="pass-option"
+    matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
+    matTooltipPosition="left"
+  >
+    <mat-checkbox
+      (click)="toggleAsyncVoting(); $event.stopPropagation()"
+      [checked]="room?.isAsyncVotingEnabled"
+      class="pass-option-checkbox"
+      ><span class="pass-option-label">Enable async voting</span></mat-checkbox
+    >
+  </div>
   <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
     <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
     {{ isMuted ? "Sound is off" : "Sound is on" }}

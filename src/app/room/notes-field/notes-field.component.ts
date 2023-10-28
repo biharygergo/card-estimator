@@ -119,26 +119,28 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   }
 
   onRoomUpdated(currentRound: Round, activeRoundNumber: number) {
-    this.editedBy = currentRound.notes?.editedBy;
-    this.isNoteDisabled =
-      (this.editedBy && this.editedBy.id !== this.auth.getUid()) ||
-      !this.hasPermission;
+    if (currentRound) {
+      this.editedBy = currentRound.notes?.editedBy;
+      this.isNoteDisabled =
+        (this.editedBy && this.editedBy.id !== this.auth.getUid()) ||
+        !this.hasPermission;
 
-    this.isNoteDisabled
-      ? this.noteValue.disable({ emitEvent: false })
-      : this.noteValue.enable({ emitEvent: false });
+      this.isNoteDisabled
+        ? this.noteValue.disable({ emitEvent: false })
+        : this.noteValue.enable({ emitEvent: false });
 
-    if (
-      this.isNoteDisabled ||
-      this.noteValue.value === null ||
-      this.cachedRound !== activeRoundNumber
-    ) {
-      this.noteValue.setValue(currentRound.notes?.note || '', {
-        emitEvent: false,
-      });
+      if (
+        this.isNoteDisabled ||
+        this.noteValue.value === null ||
+        this.cachedRound !== activeRoundNumber
+      ) {
+        this.noteValue.setValue(currentRound.notes?.note || '', {
+          emitEvent: false,
+        });
 
-      if (this.cachedRound !== activeRoundNumber) {
-        this.cachedRound = activeRoundNumber;
+        if (this.cachedRound !== activeRoundNumber) {
+          this.cachedRound = activeRoundNumber;
+        }
       }
     }
   }

@@ -42,6 +42,7 @@ export interface Room {
   configuration?: RoomConfiguration;
   subscriptionMetadata?: SubscriptionMetadata;
   relatedRecurringMeetingLinkId?: string;
+  isAsyncVotingEnabled?: boolean;
 }
 
 export interface Round {

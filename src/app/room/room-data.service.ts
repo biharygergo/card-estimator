@@ -38,8 +38,31 @@ export class RoomDataService {
     shareReplay(1)
   );
 
-  activeRound$: Observable<Round> = this.room$.pipe(
-    map((room) => room.rounds[room.currentRound || 0]),
+  localActiveRound = new BehaviorSubject<number | undefined>(undefined);
+
+  roomRoundNumber$ = this.room$.pipe(
+    map((room) => room.currentRound ?? 0),
+    distinctUntilChanged(),
+  );
+
+  currentRoundNumber$: Observable<number> = combineLatest([
+    this.room$,
+    this.roomRoundNumber$,
+    this.localActiveRound,
+  ]).pipe(
+    map(
+      ([room, roomActiveRound, localActiveRound]) =>
+        (room.isAsyncVotingEnabled ? localActiveRound : undefined) ??
+        roomActiveRound
+    ),
+    distinctUntilChanged()
+  );
+
+  activeRound$: Observable<Round> = combineLatest([
+    this.room$,
+    this.currentRoundNumber$,
+  ]).pipe(
+    map(([room, roundNumber]) => room.rounds[roundNumber]),
     distinctUntilChanged(isEqual)
   );
 
@@ -87,11 +110,6 @@ export class RoomDataService {
   );
 
   /* Events */
-  currentRoundNumber$: Observable<number> = this.room$.pipe(
-    map((room) => room.currentRound),
-    distinctUntilChanged()
-  );
-
   onEstimatesUpdated$ = this.activeRound$.pipe(
     map((round) => {
       return round.estimates;

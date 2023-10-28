@@ -440,6 +440,12 @@ export class EstimatorService {
     });
   }
 
+  toggleAsyncVoting(roomId: string, isAsyncVotingEnabled: boolean) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      isAsyncVotingEnabled,
+    });
+  }
+
   createRound(
     members: Member[],
     roundNumber: number,

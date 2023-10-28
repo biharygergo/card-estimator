@@ -1,5 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav-content class="sidenav-content" #sidenavContent *ngIf="room">
+  <mat-sidenav-content class="sidenav-content" #sidenavContent>
     <div class="navbar">
       <div class="navbar-left">
         <app-profile-dropdown class="profile-dropdown"></app-profile-dropdown>
@@ -63,7 +63,7 @@
                 (canceled)="isEditingTopic = false"
               ></app-topic-editor>
               <app-rich-topic
-                [richTopic]="(roomTopic$ | async).richTopic"
+                [richTopic]="(roomTopic$ | async)?.richTopic"
                 [roundStatistics]="roundStatistics?.[currentRound]"
                 [selectedEstimationCardSetValue]="
                   selectedEstimationCardSetValue
@@ -120,11 +120,17 @@
       </ng-container>
       <app-github-badge *ngIf="config.runningIn === 'web'"></app-github-badge>
     </div>
-    <app-reactions-renderer [members]="members$" [roomId]="room.roomId" />
+    <app-reactions-renderer
+      [members]="members$"
+      [roomId]="room?.roomId"
+      *ngIf="room"
+    />
     <app-carbon-ad
       *ngIf="room"
       placement="app"
-      [isPremiumRoom]="room.subscriptionMetadata?.createdWithPlan === 'premium'"
+      [isPremiumRoom]="
+        room?.subscriptionMetadata?.createdWithPlan === 'premium'
+      "
     />
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">

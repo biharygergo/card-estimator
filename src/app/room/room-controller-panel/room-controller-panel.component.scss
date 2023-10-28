@@ -96,6 +96,10 @@
   gap: 0.5rem;
 
   button {
-    flex: unset
+    flex: unset;
+
+    &:disabled {
+      background-color: unset;
+    }
   }
 }

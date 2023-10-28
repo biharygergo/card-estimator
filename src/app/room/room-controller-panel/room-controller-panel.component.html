@@ -10,7 +10,7 @@
         >
           <mat-icon>chevron_left</mat-icon>
         </button>
-        <span>Voting asynchrously</span>
+        <span>Async voting enabled</span>
         <button
           mat-icon-button
           matTooltip="View next round"
@@ -148,7 +148,7 @@
       aria-label="New round"
       color="primary"
       (click)="newRoundClicked.next()"
-      *ngIf="currentRound === rounds.length - 1"
+      *ngIf="currentRound === rounds.length - 1 && !room.isAsyncVotingEnabled"
       [disabled]="
         !(permissionsService.canCreateRounds() | async) ||
         (newRoundButtonCooldownState$ | async).includes('cooldown') ||
@@ -177,7 +177,7 @@
       [disabled]="
         !(permissionsService.canCreateRounds() | async) || isEditingTopic
       "
-      *ngIf="currentRound < rounds.length - 1"
+      *ngIf="currentRound < rounds.length - 1 && !room.isAsyncVotingEnabled"
       matTooltip="Go to next round"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
       id="next-round-button"
@@ -194,8 +194,29 @@
       matTooltip="Reveal results"
       [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
       id="reveal-results-button"
+      *ngIf="!room.isAsyncVotingEnabled"
     >
       <mat-icon>visibility</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="View previous round"
+      (click)="changeLocalRound(-1)"
+      [disabled]="localActiveRound.value === 0"
+      color="primary"
+      *ngIf="room.isAsyncVotingEnabled"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="View next round"
+      (click)="changeLocalRound(1)"
+      [disabled]="localActiveRound.value === rounds.length - 1"
+      color="primary"
+      *ngIf="room.isAsyncVotingEnabled"
+    >
+      <mat-icon>chevron_right</mat-icon>
     </button>
     <button
       mat-icon-button

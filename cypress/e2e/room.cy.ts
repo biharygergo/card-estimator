@@ -156,4 +156,16 @@ describe('Inside the room', () => {
     cy.get('body').click(10, 10);
     cy.contains('Topic of Round 3').should('be.visible');
   });
+
+  it('can leave the room', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+    cy.get('#room-options-button').click();
+
+    cy.contains('Leave room').click();
+
+    cy.contains('Leave room').click();
+
+    cy.contains('Create a new room').should('be.visible');
+  })
 });

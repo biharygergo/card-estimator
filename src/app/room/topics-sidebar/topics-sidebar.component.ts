@@ -104,7 +104,7 @@ export class TopicsSidebarComponent implements OnInit {
 
   async drop(event: CdkDragDrop<string[]>) {
     this.showActiveRound = this.currentRound !== event.previousIndex;
-    const activeRoundId = this.room.rounds[this.room.currentRound].id;
+    const activeRoundId = this.room.rounds[this.currentRound].id;
     moveItemInArray(this.rounds, event.previousIndex, event.currentIndex);
     await this.estimatorService.setRounds(
       this.room,

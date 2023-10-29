@@ -63,7 +63,7 @@
                 (canceled)="isEditingTopic = false"
               ></app-topic-editor>
               <app-rich-topic
-                [richTopic]="(roomTopic$ | async).richTopic"
+                [richTopic]="(roomTopic$ | async)?.richTopic"
                 [roundStatistics]="roundStatistics?.[currentRound]"
                 [selectedEstimationCardSetValue]="
                   selectedEstimationCardSetValue
@@ -97,7 +97,7 @@
               />
             </mat-card-content>
             <div class="card-footer-actions extra-padding">
-              <app-notes-field [room]="room"/>
+              <app-notes-field />
             </div>
           </div>
         </mat-card>
@@ -120,11 +120,17 @@
       </ng-container>
       <app-github-badge *ngIf="config.runningIn === 'web'"></app-github-badge>
     </div>
-    <app-reactions-renderer [members]="members$" [roomId]="room.roomId" />
+    <app-reactions-renderer
+      [members]="members$"
+      [roomId]="room?.roomId"
+      *ngIf="room"
+    />
     <app-carbon-ad
       *ngIf="room"
       placement="app"
-      [isPremiumRoom]="room.subscriptionMetadata?.createdWithPlan === 'premium'"
+      [isPremiumRoom]="
+        room?.subscriptionMetadata?.createdWithPlan === 'premium'
+      "
     />
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">

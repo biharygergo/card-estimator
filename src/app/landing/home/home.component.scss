@@ -264,6 +264,19 @@
       font-size: 1.7rem;
     }
 
+    .see-more {
+      padding: 1rem;
+      padding-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      a {
+        color: white;
+        border-color: var(--light-blue);
+      }
+    }
+
     .features-grid {
       display: flex;
       flex-direction: row;

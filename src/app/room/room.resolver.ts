@@ -31,7 +31,7 @@ export class RoomResolver {
     private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private readonly permissionsService: PermissionsService
+    private readonly permissionsService: PermissionsService,
   ) {}
   resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(

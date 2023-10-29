@@ -125,5 +125,47 @@ describe('Inside the room', () => {
 
     cy.get('.member-options-button').click();
     cy.contains('My account').should('be.visible');
+
+    cy.contains('Close').click();
+  });
+
+  it('can use async voting', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+
+    cy.get('#room-options-button').click();
+    cy.get('.async-vote-checkbox').click();
+
+    cy.get('body').click(10, 10);
+
+    cy.contains('Async voting enabled').should('be.visible');
+
+    cy.get('#async-next-round').should('be.disabled');
+
+    cy.get('#async-previous-round').click();
+    cy.contains('Custom name').should('be.visible');
+    cy.get('#async-previous-round').click();
+    cy.get('#async-previous-round').should('be.disabled');
+
+    cy.get('#async-next-round').click();
+    cy.contains('Custom name').should('be.visible');
+
+    cy.get('#room-options-button').click();
+    cy.get('.async-vote-checkbox').click();
+
+    cy.get('body').click(10, 10);
+    cy.contains('Topic of Round 3').should('be.visible');
+  });
+
+  it('can leave the room', () => {
+    // Banner appears
+    cy.contains('Continue alone').click();
+    cy.get('#room-options-button').click();
+
+    cy.contains('Leave room').click();
+
+    cy.contains('Leave room').click();
+
+    cy.contains('Create a new room').should('be.visible');
   })
 });

@@ -1,11 +1,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime, map, Subject, takeUntil } from 'rxjs';
+import {
+  debounceTime,
+  map,
+  Subject,
+  takeUntil,
+  combineLatest,
+  withLatestFrom,
+  first,
+} from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { Member, Room } from 'src/app/types';
+import { Member, Room, Round } from 'src/app/types';
+import { RoomDataService } from '../room-data.service';
 
 @Component({
   selector: 'app-notes-field',
@@ -13,14 +22,7 @@ import { Member, Room } from 'src/app/types';
   styleUrls: ['./notes-field.component.scss'],
 })
 export class NotesFieldComponent implements OnInit, OnDestroy {
-  _room: Room;
-  get room(): Room {
-    return this._room;
-  }
-  @Input() set room(room: Room) {
-    this._room = room;
-    this.onRoomUpdated(room);
-  }
+  room: Room;
 
   cachedRound: number;
   noteValue = new FormControl<string>('');
@@ -37,16 +39,22 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     private estimatorService: EstimatorService,
     private readonly permissionsService: PermissionsService,
     private analytics: AnalyticsService,
-    private auth: AuthService
+    private auth: AuthService,
+    private readonly roomDataService: RoomDataService
   ) {}
 
   ngOnInit(): void {
     this.noteValue.valueChanges
-      .pipe(debounceTime(500), takeUntil(this.destroy))
-      .subscribe((value: string) => {
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.destroy),
+        withLatestFrom(this.roomDataService.currentRoundNumber$)
+      )
+      .subscribe(([value, currentRound]) => {
         this.estimatorService.setNote(
           value,
           this.room,
+          currentRound,
           this.estimatorService.activeMember
         );
       });
@@ -60,6 +68,21 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
           ? this.noteValue.disable({ emitEvent: false })
           : this.noteValue.enable({ emitEvent: false });
       });
+
+    this.roomDataService.room$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((room) => {
+        this.room = room;
+      });
+
+    combineLatest([
+      this.roomDataService.activeRound$,
+      this.roomDataService.currentRoundNumber$,
+    ])
+      .pipe(takeUntil(this.destroy))
+      .subscribe(([activeRound, currentRound]) => {
+        this.onRoomUpdated(activeRound, currentRound);
+      });
   }
 
   ngOnDestroy(): void {
@@ -69,25 +92,34 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
 
   onNoteFocus() {
     this.isCurrentUserEditing = true;
-    this.estimatorService.setNoteEditor(
-      this.room,
-      this.estimatorService.activeMember
-    );
-    this.analytics.logFocusedNotesField();
+
+    return this.roomDataService.currentRoundNumber$
+      .pipe(first())
+      .subscribe((currentRound) => {
+        this.estimatorService.setNoteEditor(
+          this.room,
+          currentRound,
+          this.estimatorService.activeMember
+        );
+        this.analytics.logFocusedNotesField();
+      });
   }
 
   onNoteBlur() {
     clearTimeout(this.blurTimeout);
     this.isCurrentUserEditing = false;
-    this.blurTimeout = window.setTimeout(() => {
-      this.estimatorService.setNoteEditor(this.room, null);
-    }, 500);
+
+    return this.roomDataService.currentRoundNumber$
+      .pipe(first())
+      .subscribe((currentRound) => {
+        this.blurTimeout = window.setTimeout(() => {
+          this.estimatorService.setNoteEditor(this.room, currentRound, null);
+        }, 500);
+      });
   }
 
-  onRoomUpdated(room: Room) {
-    if (room !== undefined) {
-      const currentRound = room.rounds[room.currentRound];
-
+  onRoomUpdated(currentRound: Round, activeRoundNumber: number) {
+    if (currentRound) {
       this.editedBy = currentRound.notes?.editedBy;
       this.isNoteDisabled =
         (this.editedBy && this.editedBy.id !== this.auth.getUid()) ||
@@ -100,14 +132,14 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
       if (
         this.isNoteDisabled ||
         this.noteValue.value === null ||
-        this.cachedRound !== room.currentRound
+        this.cachedRound !== activeRoundNumber
       ) {
         this.noteValue.setValue(currentRound.notes?.note || '', {
           emitEvent: false,
         });
 
-        if (this.cachedRound !== room.currentRound) {
-          this.cachedRound = room.currentRound;
+        if (this.cachedRound !== activeRoundNumber) {
+          this.cachedRound = activeRoundNumber;
         }
       }
     }

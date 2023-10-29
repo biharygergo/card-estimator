@@ -1,4 +1,8 @@
-<app-velocity [room]="room$" [roomId]="room?.roomId" *ngIf="!!room?.roomId"></app-velocity>
+<app-velocity
+  [room]="room$"
+  [roomId]="room?.roomId"
+  *ngIf="!!room?.roomId"
+></app-velocity>
 <div class="sidenav-actions">
   <button
     mat-icon-button
@@ -92,7 +96,8 @@
               (click)="setActiveRound(roundNumber)"
               [disabled]="
                 roundNumber === currentRound ||
-                !(permissionsService.canCreateRounds() | async)
+                !(permissionsService.canCreateRounds() | async) ||
+                room.isAsyncVotingEnabled
               "
             >
               <mat-icon>play_arrow</mat-icon>
@@ -124,7 +129,8 @@
               (click)="deleteRound(roundNumber)"
               [disabled]="
                 !(permissionsService.canEditTopic() | async) ||
-                (roundNumber === 0 && rounds.length === 1)
+                (roundNumber === 0 && rounds.length === 1) ||
+                room.isAsyncVotingEnabled
               "
             >
               <mat-icon>delete</mat-icon>

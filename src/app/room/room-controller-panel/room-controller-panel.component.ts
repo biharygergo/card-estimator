@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Observable, Subject, map, shareReplay, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -38,6 +38,8 @@ import {
   fadeAnimation,
 } from 'src/app/shared/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { RoomDataService } from '../room-data.service';
+import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
@@ -78,6 +80,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   );
   isSmallScreen: boolean = false;
 
+  readonly localActiveRound = this.roomDataService.localActiveRound;
+
   readonly newRoundClicked = new Subject<void>();
   readonly newRoundButtonCooldownState$ = createCooldownState();
 
@@ -94,7 +98,9 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
     private readonly router: Router,
     private readonly cardDeckService: CardDeckService,
-    private readonly breakpointObserver: BreakpointObserver
+    private readonly breakpointObserver: BreakpointObserver,
+    private readonly roomDataService: RoomDataService,
+    private readonly confirmService: ConfirmDialogService
   ) {}
 
   ngOnInit() {
@@ -129,11 +135,27 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   nextRound() {
     this.analytics.logClickedNextRound();
+
     this.estimatorService.setActiveRound(
       this.room,
       this.currentRound + 1,
       false
     );
+  }
+
+  changeLocalRound(diff: number) {
+    const nextRound = Math.min(
+      Math.max(
+        0,
+        (this.roomDataService.localActiveRound.value ??
+          this.room.currentRound ??
+          0) + diff
+      ),
+      Object.keys(this.room.rounds).length - 1
+    );
+
+    this.roomDataService.localActiveRound.next(nextRound);
+    this.analytics.logClickedChangeLocalRound();
   }
 
   showResults() {
@@ -156,7 +178,13 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     this.analytics.logClickedLeaveRoom();
     if (
       this.config.runningIn === 'zoom' ||
-      confirm('Do you really want to leave this estimation?')
+      (await this.confirmService.openConfirmationDialog({
+        title: 'Are you sure you want to leave early?',
+        content:
+          'Your votes will be saved and you can always rejoin from the "Previous sessions" page. See you soon!',
+        positiveText: 'Leave room',
+        negativeText: 'Cancel',
+      }))
     ) {
       if (this.estimatorService.activeMember) {
         await this.estimatorService.updateMemberStatus(
@@ -195,6 +223,14 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     this.estimatorService.toggleShowPassOption(
       this.room.roomId,
       !this.room.showPassOption
+    );
+  }
+
+  toggleAsyncVoting() {
+    this.analytics.logToggleAsyncVote(!this.room.isAsyncVotingEnabled);
+    this.estimatorService.toggleAsyncVoting(
+      this.room.roomId,
+      !this.room.isAsyncVotingEnabled
     );
   }
 

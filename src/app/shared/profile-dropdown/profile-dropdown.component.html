@@ -35,15 +35,11 @@
       *ngIf="currentUser | async as user"
     >
       <mat-icon>groups</mat-icon>
-      <span class="menu-item-with-badge"
-        >My organization <span class="menu-item-badge">New</span></span
-      >
+      <span>My organization</span>
     </button>
     <button mat-menu-item (click)="openIntegrationsModal()">
       <mat-icon>extension</mat-icon>
-      <span class="menu-item-with-badge"
-        >Integrations <span class="menu-item-badge">New</span></span
-      >
+      <span>Integrations</span>
     </button>
     <button
       mat-menu-item
@@ -54,7 +50,7 @@
       "
     >
       <mat-icon>lock_open</mat-icon>
-      <span class="menu-item-with-badge">Unlock features</span>
+      <span>Unlock features</span>
     </button>
     <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>

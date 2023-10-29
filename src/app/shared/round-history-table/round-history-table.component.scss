@@ -19,7 +19,7 @@ a {
     display: none;
   }
 
-  @include extraSmallScreen {
+  @media screen and (max-width: 800px) {
     .mobile-header {
       display: inline-block;
     }

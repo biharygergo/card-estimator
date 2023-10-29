@@ -320,11 +320,11 @@
       ><span class="pass-option-label">Enable async voting</span></mat-checkbox
     >
   </div>
+  <mat-divider></mat-divider>
   <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
     <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
     {{ isMuted ? "Sound is off" : "Sound is on" }}
   </button>
-  <mat-divider></mat-divider>
   <button
     mat-menu-item
     color="warn"

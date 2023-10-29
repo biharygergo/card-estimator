@@ -4,11 +4,11 @@ import {
   map,
   switchMap,
   filter,
-  shareReplay,
   BehaviorSubject,
   distinctUntilChanged,
   combineLatest,
   withLatestFrom,
+  Subscription,
 } from 'rxjs';
 import {
   CardSet,
@@ -29,20 +29,14 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class RoomDataService {
-  private roomId = new BehaviorSubject<string | undefined>(undefined);
-
-  room$: Observable<Room> = this.roomId.pipe(
-    filter((roomId) => !!roomId),
-    switchMap((roomId) => this.estimatorService.getRoomById(roomId)),
-    filter((room) => !!room),
-    shareReplay(1)
-  );
+  roomSubject = new BehaviorSubject<Room | undefined>(undefined);
+  room$: Observable<Room> = this.roomSubject.pipe(filter((room) => !!room));
 
   localActiveRound = new BehaviorSubject<number | undefined>(undefined);
 
   roomRoundNumber$ = this.room$.pipe(
     map((room) => room.currentRound ?? 0),
-    distinctUntilChanged(),
+    distinctUntilChanged()
   );
 
   currentRoundNumber$: Observable<number> = combineLatest([
@@ -88,8 +82,7 @@ export class RoomDataService {
             memberIds.includes(m.id)
         )
         .sort((a, b) => a.type?.localeCompare(b.type))
-    ),
-    shareReplay(1)
+    )
   );
 
   activeMember$: Observable<Member> = combineLatest([
@@ -105,8 +98,7 @@ export class RoomDataService {
     distinctUntilChanged(isEqual),
     switchMap((members) =>
       this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
-    ),
-    shareReplay(1)
+    )
   );
 
   /* Events */
@@ -140,12 +132,30 @@ export class RoomDataService {
     withLatestFrom(this.room$)
   );
 
+  roomSubscription: Subscription;
+
   constructor(
     private readonly estimatorService: EstimatorService,
     private readonly authService: AuthService
   ) {}
 
-  loadRoom(roomId: string) {
-    this.roomId.next(roomId);
+  loadRoom(roomId: string, startWithRoom?: Room) {
+    if (startWithRoom) {
+      this.roomSubject.next(startWithRoom);
+    }
+
+    this.roomSubscription = this.estimatorService
+      .getRoomById(roomId)
+      .subscribe((room) => {
+        if (this.localActiveRound.value === undefined) {
+          this.localActiveRound.next(room.currentRound ?? 0);
+        }
+        this.roomSubject.next(room);
+      });
+  }
+
+  leaveRoom() {
+    this.roomSubject.next(undefined);
+    this.roomSubscription.unsubscribe();
   }
 }

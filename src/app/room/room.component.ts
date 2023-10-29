@@ -123,7 +123,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
 
   room$: Observable<Room> = this.roomDataService.room$.pipe(
-    startWith(this.route.snapshot.data.room),
     catchError((e) => this.onRoomUpdateError(e)),
     takeUntil(this.destroy)
   );
@@ -240,7 +239,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.roomDataService.loadRoom(this.route.snapshot.paramMap.get('roomId'));
+    this.roomDataService.loadRoom(
+      this.route.snapshot.paramMap.get('roomId'),
+      this.route.snapshot.data.room
+    );
 
     if (this.config.runningIn === 'zoom') {
       this.zoomService.configureApp();
@@ -370,6 +372,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.roomDataService.leaveRoom();
     clearTimeout(this.inactiveTimeoutHandle);
     this.destroy.next();
     this.destroy.complete();

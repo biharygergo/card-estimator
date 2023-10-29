@@ -46,6 +46,7 @@ import { RecurringMeetingsModalComponent } from './recurring-meetings-modal/recu
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RoundHistoryTableComponent } from './round-history-table/round-history-table.component';
 import { PremiumInAppModalComponent } from './premium-in-app-modal/premium-in-app-modal.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { PremiumInAppModalComponent } from './premium-in-app-modal/premium-in-ap
     IntegrationsComponent,
     RecurringMeetingsModalComponent,
     PremiumInAppModalComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,

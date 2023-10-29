@@ -39,6 +39,7 @@ import {
 } from 'src/app/shared/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RoomDataService } from '../room-data.service';
+import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
@@ -98,7 +99,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly cardDeckService: CardDeckService,
     private readonly breakpointObserver: BreakpointObserver,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
+    private readonly confirmService: ConfirmDialogService
   ) {}
 
   ngOnInit() {
@@ -175,7 +177,13 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     this.analytics.logClickedLeaveRoom();
     if (
       this.config.runningIn === 'zoom' ||
-      confirm('Do you really want to leave this estimation?')
+      (await this.confirmService.openConfirmationDialog({
+        title: 'Are you sure you want to leave early?',
+        content:
+          'Your votes will be saved and you can always rejoin from the "Previous sessions" page. See you soon!',
+        positiveText: 'Leave room',
+        negativeText: 'Cancel',
+      }))
     ) {
       if (this.estimatorService.activeMember) {
         await this.estimatorService.updateMemberStatus(

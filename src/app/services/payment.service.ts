@@ -24,6 +24,7 @@ import {
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
+import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 
 export type StripeSubscription = Subscription;
 
@@ -41,7 +42,8 @@ export class PaymentService {
     private readonly firestore: Firestore,
     private readonly functions: Functions,
     private readonly dialog: MatDialog,
-    @Inject(APP_CONFIG) public readonly config: AppConfig
+    @Inject(APP_CONFIG) public readonly config: AppConfig,
+    private readonly confirmService: ConfirmDialogService
   ) {
     this.payments = getStripePayments(app, {
       productsCollection: 'products',
@@ -72,27 +74,43 @@ export class PaymentService {
     }
 
     if (this.config.runningIn === 'zoom') {
-      /* if (
-        confirm(
-          'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
-        )
-      ) */
-      await this.zoomService.openUrl(
-        `${window.location.origin}/join?flow=premium${
-          promotionCode ? `&promotionCode=${promotionCode}` : ''
-        }`,
-        true
-      );
+      if (
+        await this.confirmService.openConfirmationDialog({
+          title: 'Finish on planningpoker.live',
+          content:
+            'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.',
+          positiveText: 'Sounds good',
+          negativeText: 'Cancel',
+        })
+      ) {
+        await this.zoomService.openUrl(
+          `${window.location.origin}/join?flow=premium${
+            promotionCode ? `&promotionCode=${promotionCode}` : ''
+          }`,
+          true
+        );
+      }
+
       return;
     }
 
     if (this.config.runningIn === 'teams') {
-      window.open(
-        `${window.location.origin}/join?flow=premium${
-          promotionCode ? `&promotionCode=${promotionCode}` : ''
-        }`,
-        '_blank'
-      );
+      if (
+        await this.confirmService.openConfirmationDialog({
+          title: 'Finish on planningpoker.live',
+          content:
+            'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.',
+          positiveText: 'Sounds good',
+          negativeText: 'Cancel',
+        })
+      ) {
+        window.open(
+          `${window.location.origin}/join?flow=premium${
+            promotionCode ? `&promotionCode=${promotionCode}` : ''
+          }`,
+          '_blank'
+        );
+      }
       return;
     }
 
@@ -123,28 +141,38 @@ export class PaymentService {
 
   async createPortalLink() {
     if (this.config.runningIn === 'zoom') {
-      /* if (
-        confirm(
-          'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.'
-        )
-      ) { */
-      await this.zoomService.openUrl(
-        `${window.location.origin}/join?flow=manageSubscription`,
-        true
-      );
+      if (
+        await this.confirmService.openConfirmationDialog({
+          title: 'Finish on planningpoker.live',
+          content:
+            'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.',
+          positiveText: 'Sounds good',
+          negativeText: 'Cancel',
+        })
+      ) {
+        await this.zoomService.openUrl(
+          `${window.location.origin}/join?flow=manageSubscription`,
+          true
+        );
+      }
       return;
     }
 
     if (this.config.runningIn === 'teams') {
-      /* if (
-        confirm(
-          'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.'
-        )
-      ) { */
-      window.open(
-        `${window.location.origin}/join?flow=manageSubscription`,
-        '_blank'
-      );
+      if (
+        await this.confirmService.openConfirmationDialog({
+          title: 'Finish on planningpoker.live',
+          content:
+            'Managing your subscription is only available on the web version of the app. You will now be redirected there, please sign in with the same account to manage this subscription.',
+          positiveText: 'Sounds good',
+          negativeText: 'Cancel',
+        })
+      ) {
+        window.open(
+          `${window.location.origin}/join?flow=manageSubscription`,
+          '_blank'
+        );
+      }
       return;
     }
 

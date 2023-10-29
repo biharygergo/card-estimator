@@ -7,6 +7,7 @@
           matTooltip="View previous round"
           (click)="changeLocalRound(-1)"
           [disabled]="localActiveRound.value === 0"
+          id="async-previous-round"
         >
           <mat-icon>chevron_left</mat-icon>
         </button>
@@ -16,6 +17,7 @@
           matTooltip="View next round"
           (click)="changeLocalRound(1)"
           [disabled]="localActiveRound.value === rounds.length - 1"
+          id="async-next-round"
         >
           <mat-icon>chevron_right</mat-icon>
         </button>
@@ -314,7 +316,7 @@
     <mat-checkbox
       (click)="toggleAsyncVoting(); $event.stopPropagation()"
       [checked]="room?.isAsyncVotingEnabled"
-      class="pass-option-checkbox"
+      class="menu-option-checkbox async-vote-checkbox"
       ><span class="pass-option-label">Enable async voting</span></mat-checkbox
     >
   </div>
@@ -350,7 +352,7 @@
     <mat-checkbox
       (click)="toggleShowPassOption(); $event.stopPropagation()"
       [checked]="room?.showPassOption"
-      class="pass-option-checkbox"
+      class="menu-option-checkbox pass-option-checkbox"
       ><span class="pass-option-label"
         >Include "Pass" (?) card</span
       ></mat-checkbox

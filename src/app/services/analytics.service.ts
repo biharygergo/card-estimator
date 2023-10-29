@@ -140,6 +140,12 @@ export class AnalyticsService {
     });
   }
 
+  logToggleAsyncVote(asyncEnabled: boolean) {
+    logEvent(this.analytics, 'toggled_async_vote', {
+      async_enabled: asyncEnabled,
+    });
+  }
+
   logClickedEditAvatar(source: 'profile_icon' | 'snackbar') {
     logEvent(this.analytics, 'clicked_edit_avatar', { source });
   }
@@ -318,5 +324,9 @@ export class AnalyticsService {
 
   logClickedPremiumDeal() {
     logEvent(this.analytics, 'clicked_premium_deal');
+  }
+
+  logClickedChangeLocalRound() {
+    logEvent(this.analytics, 'clicked_change_local_round');
   }
 }

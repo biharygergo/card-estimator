@@ -155,6 +155,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     );
 
     this.roomDataService.localActiveRound.next(nextRound);
+    this.analytics.logClickedChangeLocalRound();
   }
 
   showResults() {
@@ -226,6 +227,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   }
 
   toggleAsyncVoting() {
+    this.analytics.logToggleAsyncVote(!this.room.isAsyncVotingEnabled);
     this.estimatorService.toggleAsyncVoting(
       this.room.roomId,
       !this.room.isAsyncVotingEnabled

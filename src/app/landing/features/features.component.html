@@ -118,8 +118,59 @@
         </div>
       </div>
     </div>
-    <div class="banner-wrapper">
-      <start-planning-cta></start-planning-cta>
+    <div class="feature-grid-row">
+      <div class="feature-grid-item feature-card fat video-only">
+        <video
+          #videoEmoji
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="videoEmoji.play()"
+          (loadedmetadata)="videoEmoji.muted = true"
+        >
+          <source
+            src="https://res.cloudinary.com/dtvhnllmc/video/upload/Emoji_vevcgs.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+      <div class="feature-grid-item feature-card">
+        <h5 class="header">Fun collaboration</h5>
+        <h2 class="title">Send reactions to topics</h2>
+        <p class="details">
+          Express your thoughts and opinions on each topic, without having to
+          interrupt the meeting. Improve meeting participation and engagement,
+          and make planning poker more fun and enjoyable for everyone involved.
+        </p>
+      </div>
+    </div>
+    <div class="feature-grid-row">
+      <div class="feature-grid-item feature-card">
+        <h5 class="header">Efficient planning meetings</h5>
+        <h2 class="title">Use PlanningPoker.live asynchronously</h2>
+        <p class="details">
+          Asynchronous planning meetings help teams plan more efficiently by
+          allowing participants to prepare for and vote on topics at their own
+          pace, before meeting to discuss the results and make decisions.
+        </p>
+      </div>
+      <div class="feature-grid-item feature-card fat video-only">
+        <video
+          #videoAsync
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="videoAsync.play()"
+          (loadedmetadata)="videoAsync.muted = true"
+        >
+          <source
+            src="https://res.cloudinary.com/dtvhnllmc/video/upload/Async_btgxf6.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
     </div>
     <div class="highlight" id="jira">
       <div class="feature-grid-row vertical">
@@ -227,6 +278,9 @@
           <mat-icon>launch</mat-icon>
         </a>
       </div>
+    </div>
+    <div class="banner-wrapper">
+      <start-planning-cta></start-planning-cta>
     </div>
   </section>
 </main>

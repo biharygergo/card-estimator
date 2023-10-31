@@ -1,9 +1,8 @@
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import {
-  NgModule,
-  APP_INITIALIZER,
-  ErrorHandler,
-} from '@angular/core';
+  BrowserModule,
+  provideClientHydration,
+} from '@angular/platform-browser';
+import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,7 +17,7 @@ import {
 } from '@angular/fire/firestore';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import {
-  getAnalytics,
+  initializeAnalytics,
   provideAnalytics,
   ScreenTrackingService,
 } from '@angular/fire/analytics';
@@ -80,7 +79,12 @@ import { HttpClientModule } from '@angular/common/http';
       }
       return auth;
     }),
-    provideAnalytics(() => getAnalytics()),
+    provideAnalytics(() => {
+      const app = initializeApp(environment.firebase);
+      return initializeAnalytics(app, {
+        config: { cookie_flags: 'SameSite=None;Secure' },
+      });
+    }),
     provideStorage(() => {
       const storage = getStorage();
       if (environment.useEmulators) {
@@ -113,7 +117,6 @@ import { HttpClientModule } from '@angular/common/http';
       multi: true,
     },
     provideClientHydration(),
-
   ],
   bootstrap: [AppComponent],
 })

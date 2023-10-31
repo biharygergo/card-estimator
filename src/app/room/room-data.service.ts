@@ -57,6 +57,7 @@ export class RoomDataService {
     this.currentRoundNumber$,
   ]).pipe(
     map(([room, roundNumber]) => room.rounds[roundNumber]),
+    filter(round => !!round),
     distinctUntilChanged(isEqual)
   );
 

@@ -63,7 +63,9 @@
         }
         gtag("js", new Date());
 
-        gtag("config", "AW-970033218");
+        gtag("config", "AW-970033218", {
+          'cookie_flags': 'SameSite=None;Secure'
+        });
       } else if (window) {
         window["ga-disable-G-ZVXZ9HTLGS"] = true;
       }

@@ -262,7 +262,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       });
 
     this.activeMember$.subscribe((member) => {
-      if (member.status === MemberStatus.REMOVED_FROM_ROOM) {
+      if (member?.status === MemberStatus.REMOVED_FROM_ROOM) {
         this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
       } else if (member?.type === MemberType.OBSERVER) {
         this.joinAsObserver();

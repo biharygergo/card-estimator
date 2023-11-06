@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .dialog-content {
     display: flex;
     flex-direction: column;
@@ -71,6 +73,10 @@
 
     @media only screen and (max-width: 600px) {
         flex-direction: column;
+    }
+
+    @include extraSmallScreen {
+        padding: 0;
     }
 
     .profile-image {

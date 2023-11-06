@@ -139,13 +139,13 @@
 <ng-template #links>
   <div class="links">
     <a
-      mat-button
+      mat-flat-button
       routerLink="/create"
       *ngIf="(pageMode | async) === PageMode.JOIN"
       ><mat-icon>add</mat-icon>Create a new room</a
     >
     <a
-      mat-button
+      mat-flat-button
       routerLink="/join"
       *ngIf="(pageMode | async) === PageMode.CREATE"
     >

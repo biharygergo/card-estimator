@@ -325,12 +325,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.showOrHideAloneInRoomModal();
       });
 
-    this.shouldOpenPremiumDealBanner$
-      .pipe(takeUntil(this.destroy))
-      .subscribe(() => {
-        this.dialog.open(...premiumInAppModalCreator());
-      });
-
     this.authService.avatarUpdated
       .pipe(
         distinctUntilChanged(),

@@ -35,6 +35,10 @@
   &.update-round {
     padding-top: 0;
   }
+
+  @include extraSmallScreen {
+    padding: 0.5rem;
+  }
 }
 
 .add-round-button {

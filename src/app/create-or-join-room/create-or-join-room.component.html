@@ -85,7 +85,7 @@
           id="create-room-button"
         >
           <mat-icon>add</mat-icon>
-          Create new Room
+          Create room
         </button>
         <ng-container *ngIf="!viewModel.user">
           <ng-container *ngTemplateOutlet="terms"></ng-container>
@@ -122,7 +122,7 @@
           id="join-room-button"
         >
           <mat-icon>login</mat-icon>
-          Join Room
+          Join room
         </button>
         <ng-container *ngIf="!viewModel.user">
           <ng-container *ngTemplateOutlet="terms"></ng-container>
@@ -137,6 +137,7 @@
 </ng-template>
 
 <ng-template #links>
+  <span class="other">You could also: </span>
   <div class="links">
     <a
       mat-flat-button
@@ -217,7 +218,7 @@
     <mat-label>Room ID</mat-label>
     <input
       matInput
-      placeholder="random-room-name"
+      placeholder="existing-room-id"
       [formControl]="roomId"
       (blur)="onRoomIdBlur()"
       (keyup.enter)="onJoinRoomClicked.next()"

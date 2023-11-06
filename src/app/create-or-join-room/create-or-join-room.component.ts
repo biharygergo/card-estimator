@@ -287,7 +287,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           from(this.joinRoom()).pipe(
             catchError((e) => {
               if (e.code !== 'permission-denied') {
-                throw e;
+                this.showUnableToJoinRoom();
+                return of(false);
               } else {
                 const dialogRef = this.dialog.open(
                   ...roomAuthenticationModalCreator({
@@ -308,15 +309,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
             })
           )
         ),
-        catchError((error) => {
-          if (error instanceof RoomNotFoundError) {
-            this.showUnableToJoinRoom();
-            return of(false);
-          }
-          this.isBusy.next(false);
-          // Unknown error occured
-          throw error;
-        }),
         tap(() => this.isBusy.next(false)),
         takeUntil(this.destroy)
       )

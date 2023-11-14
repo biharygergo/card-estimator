@@ -3,6 +3,8 @@
   background: var(--light-background-color);
   margin: 1rem 0;
   border-radius: 18px;
+  max-height: 300px;
+  overflow-y: auto;
 
   .rich-topic-header {
     display: flex;
@@ -74,7 +76,7 @@
     }
 
     a {
-      color: var(--text-on-white)
+      color: var(--text-on-white);
     }
   }
 }

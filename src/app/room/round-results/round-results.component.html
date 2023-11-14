@@ -38,7 +38,10 @@
           </div>
         </h3>
       </mat-list-item>
-      <mat-list-item class="statistic-line">
+      <mat-list-item
+        class="statistic-line"
+        *ngIf="!statistics.consensus.isConsensus"
+      >
         <h3 matLine class="statistic">
           <div class="statistic-title">Average</div>
           <mat-chip-set>
@@ -54,7 +57,10 @@
           </mat-chip-set>
         </h3>
       </mat-list-item>
-      <mat-list-item class="statistic-line">
+      <mat-list-item
+        class="statistic-line"
+        *ngIf="!statistics.consensus.isConsensus"
+      >
         <h3 matLine class="statistic">
           <div class="statistic-title">Highest</div>
           <mat-chip-set>
@@ -70,7 +76,10 @@
           </mat-chip-set>
         </h3>
       </mat-list-item>
-      <mat-list-item class="statistic-line">
+      <mat-list-item
+        class="statistic-line"
+        *ngIf="!statistics.consensus.isConsensus"
+      >
         <h3 matLine class="statistic">
           <div class="statistic-title">Lowest</div>
           <mat-chip-set>

@@ -47,6 +47,7 @@
     "express": "^4.15.2",
     "firebase": "^9.20.0",
     "firebase-admin": "^10.3.0",
+    "jira2md": "^3.0.1",
     "js-cookie": "^3.0.1",
     "lodash-es": "^4.17.21",
     "ngx-lottie": "^10.0.0",

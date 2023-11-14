@@ -22,6 +22,8 @@ import {
 import { finalize } from 'rxjs/operators';
 import { EstimateConverterPipe } from 'src/app/pipes/estimate-converter.pipe';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import * as jira2md from 'jira2md';
+
 @Component({
   selector: 'app-rich-topic',
   templateUrl: './rich-topic.component.html',
@@ -58,10 +60,7 @@ export class RichTopicComponent implements OnChanges {
         | undefined;
 
       if (newTopic) {
-        this.cleanedMarkdown = newTopic.description
-          ?.replace(/\[([^[\]|]+?)\|([^[\]|]+?)\]/g, '[$2]($1)') // Named
-          ?.replace(/\[([^|{}\\^~[\]\s"`]+\.[^|{}\\^~[\]\s"`]+)\]/g, '[$1]($1)') // Unnamed
-          ?.replace(/\[([^[\]|]+?)\|([^[\]|]+?)\|(smart-link)\]/g, '[$2]($1)'); // Smart
+        this.cleanedMarkdown = jira2md.to_markdown(newTopic.description);
       } else {
         this.cleanedMarkdown = '';
       }

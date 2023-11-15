@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FieldValue } from 'firebase/firestore';
+import { FieldValue, Timestamp } from 'firebase/firestore';
 import {
   BehaviorSubject,
   Observable,
@@ -110,7 +110,13 @@ export class RoundHistoryTableComponent
           })
         );
       });
-      return rounds.flat();
+      return rounds
+        .flat()
+        .sort(
+          (a, b) =>
+            (b.startedAt as Timestamp).toMillis() -
+            (a.startedAt as Timestamp).toMillis()
+        );
     }),
     tap(() => this.isLoading.next(false))
   );

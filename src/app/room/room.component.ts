@@ -123,7 +123,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
 
   room$: Observable<Room> = this.roomDataService.room$.pipe(
-    catchError((e) => this.onRoomUpdateError(e)),
     takeUntil(this.destroy)
   );
 
@@ -254,7 +253,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.teamsService.configureApp();
     }
 
-    this.roomDataService.room$
+    this.room$
       .pipe(takeUntil(this.destroy))
       .subscribe((room) => {
         this.room = room;
@@ -403,31 +402,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  private onRoomUpdateError(error: any): Observable<any> {
-    if (error?.code === 'permission-denied') {
-      return this.dialog
-        .open(...roomAuthenticationModalCreator({ roomId: this.room.roomId }))
-        .afterClosed()
-        .pipe(
-          switchMap((result) => {
-            if (result && result?.joined) {
-              return this.estimatorService.getRoomById(this.room.roomId);
-            } else {
-              this.errorGoBackToJoinPage({});
-              return EMPTY;
-            }
-          })
-        );
-    } else {
-      const message =
-        error instanceof NotLoggedInError
-          ? "You've been signed out"
-          : undefined;
-      this.errorGoBackToJoinPage({ message });
-      return EMPTY;
-    }
-  }
-
   private joinAsObserver() {
     if (!this.isObserver) {
       this.snackBar
@@ -519,20 +493,6 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.analytics.logClickedEditAvatar('snackbar');
         });
     }
-  }
-
-  private errorGoBackToJoinPage({
-    message = 'Something went wrong. Please try again later.',
-    duration = 5000,
-  }: {
-    message?: string;
-    duration?: number | null;
-  }) {
-    this.snackBar.open(message, null, {
-      duration: duration === null ? undefined : duration,
-      horizontalPosition: 'right',
-    });
-    this.router.navigate(['join']);
   }
 
   playNotificationSound() {

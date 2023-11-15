@@ -9,6 +9,8 @@ import {
   combineLatest,
   withLatestFrom,
   Subscription,
+  catchError,
+  EMPTY,
 } from 'rxjs';
 import {
   CardSet,
@@ -21,9 +23,16 @@ import {
   Round,
   UserProfileMap,
 } from '../types';
-import { EstimatorService } from '../services/estimator.service';
+import {
+  EstimatorService,
+  NotLoggedInError,
+} from '../services/estimator.service';
 import { isEqual } from 'lodash';
 import { AuthService } from '../services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
+import { ToastService } from '../services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -57,7 +66,7 @@ export class RoomDataService {
     this.currentRoundNumber$,
   ]).pipe(
     map(([room, roundNumber]) => room.rounds[roundNumber]),
-    filter(round => !!round),
+    filter((round) => !!round),
     distinctUntilChanged(isEqual)
   );
 
@@ -137,7 +146,10 @@ export class RoomDataService {
 
   constructor(
     private readonly estimatorService: EstimatorService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly dialog: MatDialog,
+    private readonly router: Router,
+    private readonly toastService: ToastService
   ) {}
 
   loadRoom(roomId: string, startWithRoom?: Room) {
@@ -147,6 +159,12 @@ export class RoomDataService {
 
     this.roomSubscription = this.estimatorService
       .getRoomById(roomId)
+      .pipe(
+        catchError((error) => {
+          this.onRoomUpdateError(error);
+          return EMPTY;
+        })
+      )
       .subscribe((room) => {
         if (this.localActiveRound.value === undefined) {
           this.localActiveRound.next(room.currentRound ?? 0);
@@ -158,5 +176,46 @@ export class RoomDataService {
   leaveRoom() {
     this.roomSubject.next(undefined);
     this.roomSubscription.unsubscribe();
+  }
+
+  private onRoomUpdateError(error: any): Observable<any> {
+    if (error?.code === 'permission-denied') {
+      return this.dialog
+        .open(
+          ...roomAuthenticationModalCreator({
+            roomId: this.roomSubject.value.roomId,
+          })
+        )
+        .afterClosed()
+        .pipe(
+          switchMap((result) => {
+            if (result && result?.joined) {
+              return this.estimatorService.getRoomById(
+                this.roomSubject.value.roomId
+              );
+            } else {
+              this.errorGoBackToJoinPage({});
+              return EMPTY;
+            }
+          })
+        );
+    } else {
+      const message =
+        error instanceof NotLoggedInError
+          ? "You've been signed out"
+          : undefined;
+      this.errorGoBackToJoinPage({ message });
+      return EMPTY;
+    }
+  }
+
+  private errorGoBackToJoinPage({
+    message = 'Something went wrong. Please try again later.',
+  }: {
+    message?: string;
+    duration?: number | null;
+  }) {
+    this.toastService.showMessage(message);
+    this.router.navigate(['join']);
   }
 }

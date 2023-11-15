@@ -5,7 +5,7 @@
     subscriptSizing="dynamic"
   >
     <input
-      placeholder="Write a short description of the topic or select a JIRA ticket"
+      placeholder="Write a short description of the topic or search/select a JIRA ticket"
       [formControl]="roundTopic"
       cdkFocusInitial
       autofocus
@@ -38,6 +38,11 @@
       (optionSelected)="issueSelected($event.option.value)"
       class="issue-autocomplete"
     >
+      <mat-optgroup
+        ><span class="group-label help-label"
+          >Search for tickets by typing in the field above</span
+        ></mat-optgroup
+      >
       <ng-container *ngIf="jiraIssues$ | async as jiraIssues">
         <mat-optgroup *ngIf="jiraIssues.search.length">
           <span class="group-label"
@@ -92,7 +97,11 @@
   >
     <span class="button-with-custom-icon">
       <img class="jira-icon" src="/assets/jira.png" />
-      {{ (jiraIntegration$ | async) === undefined ? 'Connect to Jira' : 'Connected to Jira'}}
+      {{
+        (jiraIntegration$ | async) === undefined
+          ? "Connect to Jira"
+          : "Connected to Jira"
+      }}
     </span>
   </button>
   <div class="nested-buttons">

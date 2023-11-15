@@ -20,8 +20,13 @@ export async function searchJira(data: any, context: CallableContext) {
         ?.replace(/[-_]+/g, " ")
         ?.replace(/[^0-9a-zA-Z\s]+/g, "");
 
+    const keyRegex = /\b[A-Z][A-Z0-9_]+-[1-9][0-9]*/gm;
+    const matches = (query as string)?.match(keyRegex);
+
+    const keyPart = matches?.[0] ? ` OR key = ${matches[0]}` : "";
+
     const searchFilter = filteredQuery ?
-      `text ~ "${filteredQuery.trimEnd()}*"` :
+      `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
       "issue in issueHistory()";
     const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
 

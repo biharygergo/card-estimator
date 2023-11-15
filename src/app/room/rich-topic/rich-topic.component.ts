@@ -59,7 +59,7 @@ export class RichTopicComponent implements OnChanges {
         | null
         | undefined;
 
-      if (newTopic) {
+      if (newTopic?.description) {
         this.cleanedMarkdown = jira2md.to_markdown(newTopic.description);
       } else {
         this.cleanedMarkdown = '';

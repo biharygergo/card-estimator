@@ -475,7 +475,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   private async showAvatarPrompt() {
     const user = await this.authService.getUser();
-    if (!user.photoURL) {
+    if (!user?.photoURL) {
       this.snackBar.dismiss();
       this.snackBar
         .open(

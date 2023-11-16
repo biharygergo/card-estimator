@@ -278,7 +278,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       this.teamsService.configureApp().then(async () => {
         const roomId = await this.teamsService.getLinkedRoomId();
         if (roomId) {
-          this.router.navigate(['join'], { queryParams: { roomId } });
+          // TODO: This does not fully work yet
+          // this.router.navigate(['join'], { queryParams: { roomId } });
         }
       });
     }

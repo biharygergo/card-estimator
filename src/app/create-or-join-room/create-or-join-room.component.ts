@@ -277,9 +277,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       this.configService.setSessionCookie('runningInTeams', '1');
       this.teamsService.configureApp().then(async () => {
         const roomId = await this.teamsService.getLinkedRoomId();
-        if (roomId) {
-          // TODO: This does not fully work yet
-          // this.router.navigate(['join'], { queryParams: { roomId } });
+        if (
+          roomId &&
+          this.activatedRoute.snapshot.fragment === 'follow-deep-link'
+        ) {
+          this.router.navigate(['join'], { queryParams: { roomId } });
         }
       });
     }

@@ -18,7 +18,7 @@ export class AnalyticsService {
 
   private logEventInternal(eventName: string, params?: any) {
     try {
-      logEvent(this.analytics, eventName, params)
+      logEvent(this.analytics, eventName, params);
     } catch (e) {
       console.error('Failed to log event to Analytics', e);
     }
@@ -336,5 +336,9 @@ export class AnalyticsService {
 
   logClickedChangeLocalRound() {
     this.logEventInternal('clicked_change_local_round');
+  }
+
+  logSharedToStage() {
+    this.logEventInternal('shared_room_to_meeting_stage');
   }
 }

@@ -59,6 +59,30 @@ export class TeamsService {
     }
   }
 
+  async shareAppContentToStage(roomId: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      microsoftTeams.meeting.getAppContentStageSharingCapabilities(
+        (err, result) => {
+          if (result.doesAppHaveSharePermission) {
+            const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
+            microsoftTeams.meeting.shareAppContentToStage((err, result) => {
+              if (result) {
+                resolve(true);
+              }
+
+              if (err) {
+                console.error(err);
+                resolve(false);
+              }
+            }, roomUrl);
+          } else {
+            resolve(false);
+          }
+        }
+      );
+    });
+  }
+
   async inviteAllParticipants(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
     const context = await microsoftTeams.app.getContext();
@@ -67,17 +91,6 @@ export class TeamsService {
     const deepLink = `https://teams.microsoft.com/l/entity/609fe794-87f9-4045-9ca7-0f79cc734930/create_a_room?webUrl=${joinUrl}&context=${linkContext}&openInMeeting=${
       isRunningInMeeting ? 'true' : 'false'
     }`;
-
-    const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
-    microsoftTeams.meeting.shareAppContentToStage((err, result) => {
-      if (result) {
-        console.log(result);
-      }
-
-      if (err) {
-        console.error(err);
-      }
-    }, roomUrl);
 
     return deepLink;
   }

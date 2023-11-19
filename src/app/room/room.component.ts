@@ -253,12 +253,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.teamsService.configureApp();
     }
 
-    this.room$
-      .pipe(takeUntil(this.destroy))
-      .subscribe((room) => {
-        this.room = room;
-        this.rounds = Object.values(room.rounds);
-      });
+    this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
+      this.room = room;
+      this.rounds = Object.values(room.rounds);
+    });
 
     this.activeMember$.subscribe((member) => {
       if (member?.status === MemberStatus.REMOVED_FROM_ROOM) {
@@ -635,11 +633,21 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.clipboard.copy(roomUrl);
       }
     } else if (this.config.runningIn === 'teams') {
+      const isSharingToStage = await this.teamsService.shareAppContentToStage(
+        this.room.roomId
+      );
+      if (isSharingToStage) {
+        message =
+          'Started sharing app to meeting stage. All meeting participants invited and link copied to clipboard.';
+        this.analytics.logSharedToStage();
+      } else {
+        message =
+          'Meeting link copied, share it in the chat so others can join this room.';
+      }
       const link = await this.teamsService.inviteAllParticipants(
         this.room.roomId
       );
-      message =
-        'Meeting link copied, share it in the chat or open the app in Stage Mode.';
+
       this.clipboard.copy(link);
     } else {
       this.clipboard.copy(roomUrl);

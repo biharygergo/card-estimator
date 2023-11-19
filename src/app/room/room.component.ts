@@ -607,6 +607,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   async copyRoomId() {
     this.analytics.logClickedShareRoom('main');
     let message = '';
+    let duration = 3000;
+
     const host = window.origin || 'https://card-estimator.web.app';
     const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
     if (this.config.runningIn === 'zoom') {
@@ -638,15 +640,14 @@ export class RoomComponent implements OnInit, OnDestroy {
       );
       if (isSharingToStage) {
         message =
-          'Started sharing app to meeting stage. All meeting participants invited and link copied to clipboard.';
+          '🎉 Started sharing app to meeting stage for all meeting participants. You can close this side-panel.';
+        duration = 10000;
         this.analytics.logSharedToStage();
       } else {
         message =
-          'Meeting link copied, share it in the chat so others can join this room.';
+          'Join link copied, share it in the chat so others can join this room.';
       }
-      const link = await this.teamsService.inviteAllParticipants(
-        this.room.roomId
-      );
+      const link = await this.teamsService.getDeepLink(this.room.roomId);
 
       this.clipboard.copy(link);
     } else {
@@ -654,6 +655,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       message = 'Join link copied to clipboard.';
     }
 
-    this.toastService.showMessage(message);
+    this.toastService.showMessage(message, duration);
   }
 }

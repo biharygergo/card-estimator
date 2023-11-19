@@ -92,7 +92,7 @@ export class TeamsService {
     });
   }
 
-  async inviteAllParticipants(roomId: string) {
+  async getDeepLink(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
     const context = await microsoftTeams.app.getContext();
     const isRunningInMeeting = !!context.meeting?.id;

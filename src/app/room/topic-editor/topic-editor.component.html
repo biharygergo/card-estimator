@@ -38,12 +38,13 @@
       (optionSelected)="issueSelected($event.option.value)"
       class="issue-autocomplete"
     >
-      <mat-optgroup
-        ><span class="group-label help-label"
-          >Search for tickets by typing in the field above</span
-        ></mat-optgroup
-      >
       <ng-container *ngIf="jiraIssues$ | async as jiraIssues">
+        <mat-optgroup
+          *ngIf="jiraIssues.search.length || jiraIssues.recent.length"
+          ><span class="group-label help-label"
+            >Search for tickets by typing in the field above</span
+          ></mat-optgroup
+        >
         <mat-optgroup *ngIf="jiraIssues.search.length">
           <span class="group-label"
             ><mat-icon>search</mat-icon>Search results</span

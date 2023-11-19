@@ -165,7 +165,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         this.analytics.logAutoFilledRoomId();
       }
     }),
-    shareReplay(1),
+    shareReplay(1)
   );
 
   flowFromParams$: Observable<string> = this.activatedRoute.queryParamMap.pipe(
@@ -278,6 +278,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     if (this.config.runningIn === 'teams') {
       this.configService.setSessionCookie('runningInTeams', '1');
+      this.teamsService.configureApp().then(async () => {
+        const roomId = await this.teamsService.getLinkedRoomId();
+        if (
+          roomId &&
+          this.activatedRoute.snapshot.fragment === 'follow-deep-link'
+        ) {
+          this.router.navigate(['join'], { queryParams: { roomId } });
+        }
+      });
     }
 
     this.onJoinRoomClicked

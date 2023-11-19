@@ -26,7 +26,7 @@ export class ConfigureTabComponent implements OnInit {
           .setConfig({
             suggestedDisplayName: 'Planning Poker',
             entityId: 'create_a_room',
-            contentUrl: baseUrl + '/join?s=teams&roomId={page.subPageId}',
+            contentUrl: baseUrl + '/join?s=teams#follow-deep-link',
             websiteUrl: baseUrl + '/',
           })
           .then(() => {

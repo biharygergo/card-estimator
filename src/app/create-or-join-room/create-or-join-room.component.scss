@@ -34,9 +34,16 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   margin-bottom: 1rem;
   text-align: center;
 
+  #welcome-back {
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+    max-width: 500px;
+  }
+
   @include extraSmallScreen {
     #welcome-back {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      line-height: 1.2rem;
       padding: 0 0.5rem;
     }
   }

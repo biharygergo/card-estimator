@@ -43,7 +43,7 @@
       </div>
     </div>
   </div>
-  <ng-container *ngIf="(vm | async)?.user">
+  <ng-container *ngIf="(vm | async)?.user; else newUserWelcome">
     <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
   </ng-container>
   <ng-container *ngIf="pageMode | async; let pageMode">
@@ -145,6 +145,14 @@
       *ngIf="(pageMode | async) === PageMode.JOIN"
       ><mat-icon>add</mat-icon>Create a new room</a
     >
+    <button
+      mat-flat-button
+      (click)="clearRoomIdParam()"
+      *ngIf="(pageMode | async) === PageMode.JOIN && (roomIdFromParams | async)"
+    >
+      <mat-icon>close</mat-icon>
+      Join a different room
+    </button>
     <a
       mat-flat-button
       routerLink="/join"
@@ -166,6 +174,17 @@
     </p>
   </div>
 </ng-template>
+<ng-template #newUserWelcome>
+  <div class="welcome-name-container" *ngIf="vm | async">
+    <h1 id="welcome-back">
+      {{
+        (pageMode | async) === PageMode.JOIN
+          ? "Welcome! 👋 Set your name and the room you want to join and you'll be planning in no time."
+          : "Welcome! 👋 Set your name, create a new room and invite your team to start planning."
+      }}
+    </h1>
+  </div>
+</ng-template>
 
 <ng-template #invitedToRoomText>
   <h4>
@@ -180,7 +199,7 @@
     *ngIf="
       !hideRecentlyLeftRoom && recentlyLeftRoom$ | async as recentlyLeftRoom
     "
-    @delayedFadeAnimation
+    @fadeAnimation
   >
     <mat-card-content>
       <p>
@@ -197,9 +216,7 @@
         <mat-icon>play_arrow</mat-icon>
         Continue
       </button>
-      <button mat-button (click)="hideRecentlyLeftRoom = true">
-        Start fresh
-      </button>
+      <button mat-button (click)="hideRecentlyLeftRoom = true">Close</button>
     </mat-card-actions>
   </mat-card>
 </ng-template>

@@ -31,6 +31,7 @@ import {
   finalize,
   first,
   map,
+  shareReplay,
   switchMap,
   take,
   takeUntil,
@@ -163,7 +164,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         this.roomId.setValue(roomId);
         this.analytics.logAutoFilledRoomId();
       }
-    })
+    }),
+    shareReplay(1),
   );
 
   flowFromParams$: Observable<string> = this.activatedRoute.queryParamMap.pipe(
@@ -219,7 +221,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       const mode = currentPath === 'create' ? PageMode.CREATE : PageMode.JOIN;
       return { roomId, mode, user };
     }),
-    tap(() => this.isLoadingUser.next(false))
+    tap(() => this.isLoadingUser.next(false)),
+    shareReplay(1)
   );
 
   organization: Observable<Organization | undefined> = this.user.pipe(
@@ -275,15 +278,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     if (this.config.runningIn === 'teams') {
       this.configService.setSessionCookie('runningInTeams', '1');
-      this.teamsService.configureApp().then(async () => {
-        const roomId = await this.teamsService.getLinkedRoomId();
-        if (
-          roomId &&
-          this.activatedRoute.snapshot.fragment === 'follow-deep-link'
-        ) {
-          this.router.navigate(['join'], { queryParams: { roomId } });
-        }
-      });
     }
 
     this.onJoinRoomClicked
@@ -446,5 +440,12 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   onRoomIdBlur() {
     this.analytics.logFilledRoomId();
+  }
+
+  clearRoomIdParam() {
+    this.router.navigate([], {
+      queryParams: { roomId: null },
+      queryParamsHandling: 'merge',
+    });
   }
 }

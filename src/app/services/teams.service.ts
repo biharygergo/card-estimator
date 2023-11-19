@@ -63,7 +63,11 @@ export class TeamsService {
     return new Promise((resolve) => {
       microsoftTeams.meeting.getAppContentStageSharingCapabilities(
         (err, result) => {
-          if (result.doesAppHaveSharePermission) {
+          const frameContext = microsoftTeams.app.getFrameContext();
+          const isInMeeting =
+            frameContext === 'sidePanel' || frameContext === 'meetingStage';
+            
+          if (result.doesAppHaveSharePermission && isInMeeting) {
             const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
             microsoftTeams.meeting.shareAppContentToStage((err, result) => {
               if (result) {

@@ -549,7 +549,7 @@ export class EstimatorService {
           this.firestore,
           this.ROOMS_COLLECTION
         ) as CollectionReference<Room>;
-        const q = query<Room>(
+        const q = query(
           ref,
           where('memberIds', 'array-contains', user.uid),
           orderBy('createdAt', 'desc'),
@@ -599,7 +599,7 @@ export class EstimatorService {
       'summaries'
     ) as CollectionReference<RoomSummary>;
 
-    const q = query<RoomSummary>(ref, orderBy('createdAt', 'desc'));
+    const q = query(ref, orderBy('createdAt', 'desc'));
 
     return collectionData(q);
   }

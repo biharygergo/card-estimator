@@ -194,7 +194,7 @@ export class PaymentService {
           this.firestore,
           `customers/${user.uid}/subscriptions`
         ) as CollectionReference<Subscription>;
-        const q = query<Subscription>(
+        const q = query(
           collectionRef,
           where('status', 'in', ['trialing', 'active', 'past_due'])
         );

@@ -97,7 +97,7 @@ export class OrganizationService {
       organizationId,
       'memberInvitations'
     ) as CollectionReference<InvitationData>;
-    const q = query<InvitationData>(collectionReference);
+    const q = query(collectionReference);
 
     return collectionData<InvitationData>(q);
   }
@@ -154,7 +154,7 @@ export class OrganizationService {
         if (!user) {
           return of(undefined);
         }
-        const q = query<Organization>(
+        const q = query(
           ref,
           where('memberIds', 'array-contains', user.uid)
         );

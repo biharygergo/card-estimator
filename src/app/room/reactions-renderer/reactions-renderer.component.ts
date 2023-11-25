@@ -63,7 +63,7 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
           );
 
           this.counter += 1;
-          // this.changeDetectorRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
           return of(visibleReaction).pipe(delay(4000));
         }),
         takeUntil(this.destroy)
@@ -73,7 +73,7 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
         this.visibleReactions = this.visibleReactions.filter(
           (reaction) => reaction.id !== reactionToRemove.id
         );
-        // this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       });
   }
 

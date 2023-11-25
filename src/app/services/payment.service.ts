@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
+  addDoc,
   collectionData,
+  docData,
   Firestore,
   query,
   where,
@@ -9,9 +11,7 @@ import {
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  getStripePayments,
   StripePayments,
-  createCheckoutSession,
   Subscription,
 } from '@stripe/firestore-stripe-payments';
 import { collection, CollectionReference } from 'firebase/firestore';
@@ -44,12 +44,7 @@ export class PaymentService {
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig,
     private readonly confirmService: ConfirmDialogService
-  ) {
-    this.payments = getStripePayments(app, {
-      productsCollection: 'products',
-      customersCollection: 'customers',
-    });
-  }
+  ) {}
 
   async startSubscriptionToPremium(promotionCode?: string) {
     let user = await this.authService.getUser();
@@ -114,7 +109,14 @@ export class PaymentService {
       return;
     }
 
-    const session = await createCheckoutSession(this.payments, {
+    const checkoutSessionsCollection = collection(
+      this.firestore,
+      'customers',
+      user.uid,
+      'checkout_sessions'
+    );
+
+    const sessionRef = await addDoc(checkoutSessionsCollection, {
       price: environment.premiumPriceId, // Premium plan
       automatic_tax: true,
       allow_promotion_codes: true,
@@ -125,7 +127,17 @@ export class PaymentService {
       trial_from_plan: true,
       promotion_code: promotionCode,
     });
-    window.location.assign(session.url);
+
+    return new Promise((resolve, rejet) => {
+      docData(sessionRef).subscribe((session) => {
+        if (session.url) {
+          window.location.assign(session.url);
+          resolve(true);
+        } else if (session.error?.message) {
+          rejet(session.error.message);
+        }
+      });
+    });
   }
 
   async isPremiumSubscriber() {

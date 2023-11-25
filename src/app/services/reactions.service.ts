@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionReference, Timestamp } from 'firebase/firestore';
-import { Observable, Subject, filter, map } from 'rxjs';
+import { Observable, Subject, filter, map, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import {
   Firestore,
@@ -120,7 +120,8 @@ export class ReactionsService {
     const q = query(ref, where('createdAt', '>=', Timestamp.now()));
     return sortedChanges(q, { events: ['added'] }).pipe(
       filter((changes) => !!changes.length),
-      map((documentChange) => documentChange.pop().doc.data())
+      map((documentChange) => documentChange.pop().doc.data()),
+      tap(item => console.log(item)),
     );
   }
 

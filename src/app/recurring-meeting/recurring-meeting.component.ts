@@ -43,8 +43,8 @@ type State = {
     RouterModule,
     SharedModule,
     ZoomAppBannerComponent,
-    AppConfigModule,
-  ],
+    AppConfigModule
+],
   templateUrl: './recurring-meeting.component.html',
   styleUrls: ['./recurring-meeting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

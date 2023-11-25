@@ -1,13 +1,14 @@
-<div
-  class="reaction-wrapper"
-  *ngFor="let reaction of visibleReactions; trackBy: identify"
-  [style.left]="reaction.leftPosition"
->
-  <ng-lottie
-    width="70px"
-    height="70px"
-    containerClass="reaction-emoji"
-    [options]="reaction.lottieOptions"
-  ></ng-lottie>
-  <span class="name-tag">{{ reaction.userName }}</span>
-</div>
+@for (reaction of visibleReactions; track reaction.id) {
+  <div
+    class="reaction-wrapper"
+    [style.left]="reaction.leftPosition"
+    >
+    <ng-lottie
+      width="70px"
+      height="70px"
+      containerClass="reaction-emoji"
+      [options]="reaction.lottieOptions"
+    ></ng-lottie>
+    <span class="name-tag">{{ reaction.userName }}</span>
+  </div>
+}

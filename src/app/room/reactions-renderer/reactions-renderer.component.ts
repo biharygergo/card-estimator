@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AnimationOptions } from 'ngx-lottie/lib/symbols';
 import { Observable, Subject, delay, mergeMap, of, takeUntil } from 'rxjs';
 import { ReactionsService } from 'src/app/services/reactions.service';
@@ -23,12 +23,14 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
 
   visibleReactions: VisibleReaction[] = [];
   membersMap: { [userId: string]: Member };
+  counter = 0;
 
   destroy = new Subject<void>();
 
   constructor(
     private readonly reactionsService: ReactionsService,
-    private readonly liveAnnouncer: LiveAnnouncer
+    private readonly liveAnnouncer: LiveAnnouncer,
+    private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,7 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
       .getReactionsStream(this.roomId)
       .pipe(
         mergeMap((reaction) => {
+          console.log('got reaction', reaction);
           const reactionFromDict =
             this.reactionsService.reactionsMap[reaction.reactionId];
           const visibleReaction: VisibleReaction = {
@@ -59,14 +62,18 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
             `New reaction "${reactionFromDict.alt}" from ${visibleReaction.userName}`
           );
 
+          this.counter += 1;
+          // this.changeDetectorRef.detectChanges();
           return of(visibleReaction).pipe(delay(4000));
         }),
         takeUntil(this.destroy)
       )
       .subscribe((reactionToRemove) => {
+        console.log('removing', this.visibleReactions, reactionToRemove)
         this.visibleReactions = this.visibleReactions.filter(
           (reaction) => reaction.id !== reactionToRemove.id
         );
+        // this.changeDetectorRef.detectChanges();
       });
   }
 

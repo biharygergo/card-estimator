@@ -1,18 +1,20 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-page-header',
   template: `
-    <header>
-      <div class="title">
-        <h1>{{ title }}</h1>
-        <h3 *ngIf="subtitle">{{ subtitle }}</h3>
-      </div>
-    </header>
-  `,
+<header>
+  <div class="title">
+    <h1>{{ title }}</h1>
+    @if (subtitle) {
+      <h3>{{ subtitle }}</h3>
+    }
+  </div>
+</header>
+`,
   styleUrls: ['./page-header.component.scss'],
-  imports: [CommonModule],
+  imports: [],
   standalone: true,
 })
 export class PageHeaderComponent implements OnInit {

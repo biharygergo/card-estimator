@@ -1,58 +1,62 @@
-<div class="rich-topic" *ngIf="richTopic">
-  <div class="rich-topic-header">
-    <h4 class="summary">
-      <img class="jira-icon-header" src="/assets/jira.png" />
-      {{ richTopic.key }}: {{ richTopic.summary }}
-    </h4>
-    <div class="header-buttons">
-      <button
-        *ngIf="enableEditing"
-        (click)="deleted.next(true)"
-        mat-icon-button
-        aria-label="Remove selection"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-      <div
-        [matTooltip]="
+@if (richTopic) {
+  <div class="rich-topic">
+    <div class="rich-topic-header">
+      <h4 class="summary">
+        <img class="jira-icon-header" src="/assets/jira.png" />
+        {{ richTopic.key }}: {{ richTopic.summary }}
+      </h4>
+      <div class="header-buttons">
+        @if (enableEditing) {
+          <button
+            (click)="deleted.next(true)"
+            mat-icon-button
+            aria-label="Remove selection"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+        <div
+          [matTooltip]="
           (isPremium$ | async)
-            ? 'Save story points to Jira'
-            : 'You need a Premium subscription to save story points to Jira.'
-        "
-      >
+          ? 'Save story points to Jira'
+          : 'You need a Premium subscription to save story points to Jira.'
+          "
+          >
+          @if (!enableEditing) {
+            <button
+              (click)="saveEstimateToJira()"
+              mat-icon-button
+              aria-label="Save story points to Jira"
+              [disabled]="isSavingToJira || !(isPremium$ | async)"
+              >
+              <mat-icon>publish</mat-icon>
+            </button>
+          }
+        </div>
         <button
-          (click)="saveEstimateToJira()"
+          (click)="openRemoteTopic()"
           mat-icon-button
-          aria-label="Save story points to Jira"
-          *ngIf="!enableEditing"
-          [disabled]="isSavingToJira || !(isPremium$ | async)"
-        >
-          <mat-icon>publish</mat-icon>
+          aria-label="Open in Jira"
+          matTooltip="Open in Jira"
+          >
+          <mat-icon>launch</mat-icon>
         </button>
       </div>
-      <button
-        (click)="openRemoteTopic()"
-        mat-icon-button
-        aria-label="Open in Jira"
-        matTooltip="Open in Jira"
-      >
-        <mat-icon>launch</mat-icon>
-      </button>
+    </div>
+    <div class="rich-topic-body">
+      <div class="info-block">
+        <h5 class="info-block-title">Status</h5>
+        <span class="rectangular-badge">{{ richTopic.status ?? "N/A" }}</span>
+      </div>
+      <div class="info-block">
+        <h5 class="info-block-title">Assignee</h5>
+        <span class="rectangular-badge">{{ richTopic.assignee ?? "N/A" }}</span>
+      </div>
+      <h5 class="info-block-title standalone">Description</h5>
+      <div class="markdown-content">
+        <markdown [data]="cleanedMarkdown ?? 'No description available'">
+        </markdown>
+      </div>
     </div>
   </div>
-  <div class="rich-topic-body">
-    <div class="info-block">
-      <h5 class="info-block-title">Status</h5>
-      <span class="rectangular-badge">{{ richTopic.status ?? "N/A" }}</span>
-    </div>
-    <div class="info-block">
-      <h5 class="info-block-title">Assignee</h5>
-      <span class="rectangular-badge">{{ richTopic.assignee ?? "N/A" }}</span>
-    </div>
-    <h5 class="info-block-title standalone">Description</h5>
-    <div class="markdown-content">
-      <markdown [data]="cleanedMarkdown ?? 'No description available'">
-      </markdown>
-    </div>
-  </div>
-</div>
+}

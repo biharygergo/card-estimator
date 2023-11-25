@@ -3,7 +3,7 @@
     class="topic-control"
     appearance="outline"
     subscriptSizing="dynamic"
-  >
+    >
     <input
       placeholder="Write a short description of the topic or search/select a JIRA ticket"
       [formControl]="roundTopic"
@@ -15,106 +15,111 @@
       [matAutocomplete]="auto"
       (keyup.escape)="canceled.next(true)"
       #topicInput
-    />
+      />
     <span class="input-suffix" matSuffix>
-      <mat-spinner
-        *ngIf="isSearching || isFetchingRecents"
-        diameter="20"
-        class="jira-loading"
-        matTooltip="Connecting to Jira"
-      ></mat-spinner>
-      <button
-        mat-icon-button
-        (click)="roundTopic.reset()"
-        *ngIf="roundTopic.value"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
+      @if (isSearching || isFetchingRecents) {
+        <mat-spinner
+          diameter="20"
+          class="jira-loading"
+          matTooltip="Connecting to Jira"
+        ></mat-spinner>
+      }
+      @if (roundTopic.value) {
+        <button
+          mat-icon-button
+          (click)="roundTopic.reset()"
+          >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
     </span>
-
     <mat-autocomplete
       #auto="matAutocomplete"
       [displayWith]="displayFn"
       (optionSelected)="issueSelected($event.option.value)"
       class="issue-autocomplete"
-    >
-      <ng-container *ngIf="jiraIssues$ | async as jiraIssues">
-        <mat-optgroup
-          *ngIf="jiraIssues.search.length || jiraIssues.recent.length"
-          ><span class="group-label help-label"
-            >Search for tickets by typing in the field above</span
-          ></mat-optgroup
-        >
-        <mat-optgroup *ngIf="jiraIssues.search.length">
-          <span class="group-label"
+      >
+      @if (jiraIssues$ | async; as jiraIssues) {
+        @if(jiraIssues.search.length || jiraIssues.recent.length) {
+          <mat-optgroup
+            ><span class="group-label help-label"
+              >Search for tickets by typing in the field above</span
+            ></mat-optgroup
+          >
+        }
+        @if (jiraIssues.search.length) {
+          <mat-optgroup>
+            <span class="group-label"
             ><mat-icon>search</mat-icon>Search results</span
-          >
-          <mat-option
-            *ngFor="let issue of jiraIssues.search"
-            [value]="issue"
-            class="issue-autocomplete-item"
-          >
-            <span class="issue-autocomplete-label">
-              <img class="jira-icon" src="/assets/jira.png" />
-              <span class="issue-autocomplete-item-text"
-                >{{ issue.key }}: {{ issue.summary }}</span
+            >
+            @for (issue of jiraIssues.search; track issue.id) {
+              <mat-option
+                [value]="issue"
+                class="issue-autocomplete-item"
+                >
+                <span class="issue-autocomplete-label">
+                  <img class="jira-icon" src="/assets/jira.png" />
+                  <span class="issue-autocomplete-item-text"
+                    >{{ issue.key }}: {{ issue.summary }}</span
+                    >
+                  </span>
+                </mat-option>
+              }
+            </mat-optgroup>
+          }
+          @if (jiraIssues.recent.length) {
+            <mat-optgroup>
+              <span class="group-label"
+              ><mat-icon>history</mat-icon>Recent tickets</span
               >
-            </span>
-          </mat-option>
-        </mat-optgroup>
-        <mat-optgroup *ngIf="jiraIssues.recent.length">
-          <span class="group-label"
-            ><mat-icon>history</mat-icon>Recent tickets</span
+              @for (issue of jiraIssues.recent; track issue.id) {
+                <mat-option
+                  [value]="issue"
+                  class="issue-autocomplete-item"
+                  >
+                  <span class="issue-autocomplete-label">
+                    <img class="jira-icon" src="/assets/jira.png" />
+                    <span class="issue-autocomplete-item-text"
+                      >{{ issue.key }}: {{ issue.summary }}</span
+                      >
+                    </span>
+                  </mat-option>
+                }
+              </mat-optgroup>
+            }
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <app-rich-topic
+      [richTopic]="selectedRichTopic"
+      [enableEditing]="true"
+      (deleted)="selectedRichTopic = null"
+    ></app-rich-topic>
+    <div class="buttons">
+      <button
+        matSuffix
+        mat-stroked-button
+        color="primary"
+        (click)="startJiraAuth.next()"
+        [disabled]="(jiraIntegration$ | async) !== undefined"
+        >
+        <span class="button-with-custom-icon">
+          <img class="jira-icon" src="/assets/jira.png" />
+          {{ (jiraIntegration$ | async) === undefined ? 'Connect to Jira' : 'Connected to Jira'}}
+        </span>
+      </button>
+      <div class="nested-buttons">
+        <button matSuffix mat-button (click)="canceled.next(true)">Cancel</button>
+        <button
+          matSuffix
+          mat-flat-button
+          color="primary"
+          (click)="topicBlur()"
+          [disabled]="!roundTopic.value"
           >
-          <mat-option
-            *ngFor="let issue of jiraIssues.recent"
-            [value]="issue"
-            class="issue-autocomplete-item"
-          >
-            <span class="issue-autocomplete-label">
-              <img class="jira-icon" src="/assets/jira.png" />
-              <span class="issue-autocomplete-item-text"
-                >{{ issue.key }}: {{ issue.summary }}</span
-              >
-            </span>
-          </mat-option>
-        </mat-optgroup>
-      </ng-container>
-    </mat-autocomplete>
-  </mat-form-field>
-</div>
-<app-rich-topic
-  [richTopic]="selectedRichTopic"
-  [enableEditing]="true"
-  (deleted)="selectedRichTopic = null"
-></app-rich-topic>
-<div class="buttons">
-  <button
-    matSuffix
-    mat-stroked-button
-    color="primary"
-    (click)="startJiraAuth.next()"
-    [disabled]="(jiraIntegration$ | async) !== undefined"
-  >
-    <span class="button-with-custom-icon">
-      <img class="jira-icon" src="/assets/jira.png" />
-      {{
-        (jiraIntegration$ | async) === undefined
-          ? "Connect to Jira"
-          : "Connected to Jira"
-      }}
-    </span>
-  </button>
-  <div class="nested-buttons">
-    <button matSuffix mat-button (click)="canceled.next(true)">Cancel</button>
-    <button
-      matSuffix
-      mat-flat-button
-      color="primary"
-      (click)="topicBlur()"
-      [disabled]="!roundTopic.value"
-    >
-      Save
-    </button>
-  </div>
-</div>
+          Save
+        </button>
+      </div>
+    </div>
+    

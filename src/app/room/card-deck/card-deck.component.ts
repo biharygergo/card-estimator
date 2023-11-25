@@ -52,7 +52,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
     this.onDestroy.complete();
   }
 
-  setEstimate(amount: number) {
+  setEstimate(amount: string) {
     this.analytics.logClickedVoteOption();
     this.estimatorService.setEstimate(
       this.room,

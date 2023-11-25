@@ -1,49 +1,50 @@
 <div mat-dialog-content resizeMonitor [verticalSpacing]="0" id="sign-up-modal">
   <div class="content">
     <div class="main-panel">
-      <div class="error" *ngIf="errorMessage$ | async as errorMessage">
-        Oh-oh, something went wrong: {{ errorMessage }}
-      </div>
-      <ng-container *ngIf="isBusy | async; else notBusy">
+      @if (errorMessage$ | async; as errorMessage) {
+        <div class="error">
+          Oh-oh, something went wrong: {{ errorMessage }}
+        </div>
+      }
+      @if (isBusy | async) {
         <div class="progress-container">
           <mat-progress-spinner
             mode="indeterminate"
             [diameter]="30"
           ></mat-progress-spinner>
         </div>
-      </ng-container>
-      <ng-template #notBusy>
+      } @else {
         <div class="social">
           <h2 class="title">
             {{
-              dialogData.titleOverride ||
-                (intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                  ? "Create a free account"
-                  : "Sign in or create an account")
+            dialogData.titleOverride ||
+            (intent === SignUpOrLoginIntent.LINK_ACCOUNT
+            ? "Create a free account"
+            : "Sign in or create an account")
             }}
           </h2>
           <small
             >{{
-              intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                ? "Register"
-                : "Register or login"
+            intent === SignUpOrLoginIntent.LINK_ACCOUNT
+            ? "Register"
+            : "Register or login"
             }}
             with your work account in a single click.</small
-          >
-          <button
-            mat-stroked-button
-            color="primary"
-            (click)="onSignUpWithGoogleClicked.next()"
-          >
-            <mat-icon
-              ><svg
+            >
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="onSignUpWithGoogleClicked.next()"
+              >
+              <mat-icon
+                ><svg
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 width="18px"
                 height="18px"
                 viewBox="0 0 48 48"
                 class="abcRioButtonSvg"
-              >
+                >
                 <g>
                   <path
                     fill="#EA4335"
@@ -66,9 +67,9 @@
               </svg>
             </mat-icon>
             {{
-              intent === SignUpOrLoginIntent.LINK_ACCOUNT
-                ? "Register with Google"
-                : "Sign in with Google"
+            intent === SignUpOrLoginIntent.LINK_ACCOUNT
+            ? "Register with Google"
+            : "Sign in with Google"
             }}
           </button>
         </div>
@@ -76,7 +77,7 @@
         <mat-tab-group
           [dynamicHeight]="true"
           [selectedIndex]="screen === 'signUp' ? 1 : 0"
-        >
+          >
           <mat-tab label="Sign in">
             <div class="traditional">
               <small>Sign in with your work e-mail address:</small>
@@ -89,114 +90,123 @@
                     placeholder="you@company.com"
                     formControlName="email"
                     id="email-input"
-                  />
+                    />
                   <mat-icon matSuffix>alternate_email</mat-icon>
-                  <mat-error *ngIf="form.controls.email.errors?.['email']"
-                    >This does not look like a valid e-mail.</mat-error
-                  >
-                </mat-form-field>
-                <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                  <mat-label>Password</mat-label>
-                  <input
-                    matInput
-                    type="password"
-                    formControlName="password"
-                    id="password-input"
-                  />
-                  <mat-icon matSuffix>lock</mat-icon>
-                  <mat-error
-                    *ngIf="form.controls.password.errors?.['minlength']"
-                    >Password must be at least 8 characters long.</mat-error
-                  >
-                </mat-form-field>
-              </form>
-              <button
-                mat-stroked-button
-                [disabled]="!form.valid"
-                (click)="onSignInClicked.next()"
-                id="create-account-button"
-              >
-                Sign in
-              </button>
-              <button
-                class="forgot-password-button"
-                mat-button
-                (click)="forgotPassword()"
-              >
-                Forgot your password?
-              </button>
+                  @if (form.controls.email.errors?.['email']) {
+                    <mat-error
+                      >This does not look like a valid e-mail.</mat-error
+                      >
+                    }
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Password</mat-label>
+                    <input
+                      matInput
+                      type="password"
+                      formControlName="password"
+                      id="password-input"
+                      />
+                    <mat-icon matSuffix>lock</mat-icon>
+                    @if (form.controls.password.errors?.['minlength']) {
+                      <mat-error
+                        >Password must be at least 8 characters long.</mat-error
+                        >
+                      }
+                    </mat-form-field>
+                  </form>
+                  <button
+                    mat-stroked-button
+                    [disabled]="!form.valid"
+                    (click)="onSignInClicked.next()"
+                    id="create-account-button"
+                    >
+                    Sign in
+                  </button>
+                  <button
+                    class="forgot-password-button"
+                    mat-button
+                    (click)="forgotPassword()"
+                    >
+                    Forgot your password?
+                  </button>
+                </div>
+              </mat-tab>
+              <mat-tab label="Register">
+                <div class="traditional">
+                  <small>Register with your work e-mail address:</small>
+                  <form [formGroup]="form">
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                      <mat-label>Name</mat-label>
+                      <input
+                        matInput
+                        placeholder="Best Engineer"
+                        formControlName="name"
+                        id="name-input"
+                        />
+                      <mat-icon matSuffix>person</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                      <mat-label>E-mail</mat-label>
+                      <input
+                        matInput
+                        type="email"
+                        placeholder="you@company.com"
+                        formControlName="email"
+                        id="email-input"
+                        />
+                      <mat-icon matSuffix>alternate_email</mat-icon>
+                      @if (form.controls.email.errors?.['email']) {
+                        <mat-error
+                          >This does not look like a valid e-mail.</mat-error
+                          >
+                        }
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                        <mat-label>Password</mat-label>
+                        <input
+                          matInput
+                          type="password"
+                          formControlName="password"
+                          id="password-input"
+                          />
+                        <mat-icon matSuffix>lock</mat-icon>
+                        @if (form.controls.password.errors?.['minlength']) {
+                          <mat-error
+                            >Password must be at least 8 characters long.</mat-error
+                            >
+                          }
+                        </mat-form-field>
+                      </form>
+                      <button
+                        mat-stroked-button
+                        [disabled]="!form.valid"
+                        (click)="onCreateAccountClicked.next()"
+                        id="create-account-button"
+                        >
+                        Create account
+                      </button>
+                    </div></mat-tab
+                    >
+                  </mat-tab-group>
+                }
+              </div>
+              <div class="side-panel">
+                @if (!(isBusy | async)) {
+                  <div class="branding">
+                    <img src="/assets/logo.png" />
+                    <h4>Real-time online planning poker for remote scrum teams.</h4>
+                  </div>
+                }
+                <picture>
+                  <source srcset="/assets/easy_accessible.webp" type="image/webp" />
+                  <source srcset="/assets/easy_accessible.jpeg" type="image/jpeg" />
+                  <img
+                    src="/assets/easy_accessible.jpeg"
+                    alt="UI components laid out visually"
+                    class="background-image"
+                    />
+                </picture>
+              </div>
             </div>
-          </mat-tab>
-          <mat-tab label="Register">
-            <div class="traditional">
-              <small>Register with your work e-mail address:</small>
-              <form [formGroup]="form">
-                <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                  <mat-label>Name</mat-label>
-                  <input
-                    matInput
-                    placeholder="Best Engineer"
-                    formControlName="name"
-                    id="name-input"
-                  />
-                  <mat-icon matSuffix>person</mat-icon>
-                </mat-form-field>
-                <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                  <mat-label>E-mail</mat-label>
-                  <input
-                    matInput
-                    type="email"
-                    placeholder="you@company.com"
-                    formControlName="email"
-                    id="email-input"
-                  />
-                  <mat-icon matSuffix>alternate_email</mat-icon>
-                  <mat-error *ngIf="form.controls.email.errors?.['email']"
-                    >This does not look like a valid e-mail.</mat-error
-                  >
-                </mat-form-field>
-                <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                  <mat-label>Password</mat-label>
-                  <input
-                    matInput
-                    type="password"
-                    formControlName="password"
-                    id="password-input"
-                  />
-                  <mat-icon matSuffix>lock</mat-icon>
-                  <mat-error
-                    *ngIf="form.controls.password.errors?.['minlength']"
-                    >Password must be at least 8 characters long.</mat-error
-                  >
-                </mat-form-field>
-              </form>
-              <button
-                mat-stroked-button
-                [disabled]="!form.valid"
-                (click)="onCreateAccountClicked.next()"
-                id="create-account-button"
-              >
-                Create account
-              </button>
-            </div></mat-tab
-          >
-        </mat-tab-group>
-      </ng-template>
-    </div>
-    <div class="side-panel">
-      <div class="branding" *ngIf="!(isBusy | async)">
-        <img src="/assets/logo.png" />
-        <h4>Real-time online planning poker for remote scrum teams.</h4>
-      </div>
-      <picture>
-        <source srcset="/assets/easy_accessible.webp" type="image/webp" />
-        <source srcset="/assets/easy_accessible.jpeg" type="image/jpeg" />
-        <img
-          src="/assets/easy_accessible.jpeg"
-          alt="UI components laid out visually"
-          class="background-image"
-        />
-      </picture>
-    </div>
-  </div>
-</div>
+          </div>
+          

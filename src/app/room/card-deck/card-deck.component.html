@@ -1,52 +1,58 @@
 <div class="card-deck">
   <div class="wrapper">
-    <div class="reactions" *ngIf="showReactions" @fadeAnimation>
-      <div class="reaction-buttons">
-        <button
-          mat-icon-button
-          *ngFor="let reaction of reactions; let i = index"
-          (click)="onReaction.next(reaction.id)"
-          [matTooltip]="reaction.tooltip"
-          [id]="'reaction-button-' + i"
-        >
-          <img [src]="reaction.svg" [alt]="reaction.alt" />
-        </button>
+    @if (showReactions) {
+      <div class="reactions" @fadeAnimation>
+        <div class="reaction-buttons">
+          @for (reaction of reactions; track reaction.id; let i = $index) {
+            <button
+              mat-icon-button
+              (click)="onReaction.next(reaction.id)"
+              [matTooltip]="reaction.tooltip"
+              [id]="'reaction-button-' + i"
+              >
+              <img [src]="reaction.svg" [alt]="reaction.alt" />
+            </button>
+          }
+        </div>
       </div>
-    </div>
+    }
     <div class="main-row">
       <div class="estimator-buttons">
-        <div
-          class="estimator-button-container"
-          *ngFor="let item of estimationValues"
-        >
-          <button
-            mat-raised-button
-            class="estimator-button"
-            (click)="setEstimate(item.key)"
-            [color]="+item.key === currentEstimate && 'accent'"
-            [disabled]="
+        @for (item of estimationValues; track item.key) {
+          <div
+            class="estimator-button-container"
+            >
+            <button
+              mat-raised-button
+              class="estimator-button"
+              (click)="setEstimate(item.key)"
+              [color]="+item.key === currentEstimate && 'accent'"
+              [disabled]="
               !(permissionsService.canVote() | async) ||
               (room?.rounds)[currentRound]?.show_results
-            "
-          >
-            {{ item.value }}
-          </button>
-        </div>
-        <div class="estimator-button-container" *ngIf="room?.showPassOption">
-          <button
-            mat-raised-button
-            class="estimator-button pass-option-button"
-            (click)="setWildcard()"
-            [color]="currentEstimate === null && 'accent'"
-            [disabled]="
+              "
+              >
+              {{ item.value }}
+            </button>
+          </div>
+        }
+        @if (room?.showPassOption) {
+          <div class="estimator-button-container">
+            <button
+              mat-raised-button
+              class="estimator-button pass-option-button"
+              (click)="setWildcard()"
+              [color]="currentEstimate === null && 'accent'"
+              [disabled]="
               !(permissionsService.canVote() | async) ||
               (room?.rounds)[currentRound]?.show_results
-            "
-            id="pass-option-card"
-          >
-            ?
-          </button>
-        </div>
+              "
+              id="pass-option-card"
+              >
+              ?
+            </button>
+          </div>
+        }
       </div>
       <div class="control-buttons">
         <mat-button-toggle
@@ -55,7 +61,7 @@
           (change)="toggleReactions()"
           [checked]="showReactions"
           matTooltip="Toggle reactions bar"
-        >
+          >
           <mat-icon>mood</mat-icon>
         </mat-button-toggle>
       </div>

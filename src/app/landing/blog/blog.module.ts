@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
-import {
-  CommonModule,
-  NgOptimizedImage,
-  provideCloudinaryLoader,
-} from '@angular/common';
+import { CommonModule, NgOptimizedImage, provideCloudinaryLoader } from '@angular/common';
 import { ArticleComponent } from './article/article.component';
 import {
   RouterModule,

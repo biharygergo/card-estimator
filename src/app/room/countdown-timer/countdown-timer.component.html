@@ -1,117 +1,129 @@
-<div class="timer-container" *ngIf="!minimized && timer">
-  <div class="progress">
-    <mat-progress-bar
-      mode="determinate"
-      [value]="progressValue"
-      [color]="durationLeft < 10 ? 'accent' : 'primary'"
-      id="timer-progress-bar"
-    ></mat-progress-bar>
-    <span class="time-left">
-      <ng-container *ngIf="timer.state === TimerState.INIT"
-        >{{ durationLeft }} second timer</ng-container
-      >
-      <ng-container *ngIf="timer.state !== TimerState.INIT && durationLeft > 0"
-        >{{ durationLeft }} seconds remaining</ng-container
-      >
-      <ng-container
-        *ngIf="timer.state !== TimerState.INIT && durationLeft === 0"
-        >Time is up!</ng-container
-      ></span
-    >
-  </div>
-
-  <div class="controls">
-    <button
-      mat-stroked-button
-      [disabled]="!(permissionsService.canSetTimer() | async)"
-      (click)="addSeconds()"
-      *ngIf="
-        timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
-      "
-      id="add-time-button"
-    >
-      <mat-icon>add</mat-icon>
-      30s
-    </button>
-    <button
-      mat-stroked-button
-      [disabled]="!(permissionsService.canSetTimer() | async)"
-      (click)="resetTimer(true)"
-      *ngIf="timer.state === TimerState.STOPPED"
-      id="reset-button"
-    >
-      <mat-icon>restart_alt</mat-icon>
-      Reset
-    </button>
-    <button
-      mat-stroked-button
-      (click)="startTimer(true)"
-      *ngIf="
-        timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
-      "
-      [disabled]="
-        durationLeft === 0 || !(permissionsService.canSetTimer() | async)
-      "
-      id="start-button"
-    >
-      <mat-icon>play_arrow</mat-icon>
-      Start
-    </button>
-    <button
-      mat-stroked-button
-      [disabled]="!(permissionsService.canSetTimer() | async)"
-      (click)="stopTimer(true)"
-      *ngIf="timer.state === TimerState.ACTIVE"
-      id="pause-button"
-    >
-      <mat-icon>pause</mat-icon>
-      Pause
-    </button>
-  </div>
-</div>
-<ng-container *ngIf="minimized && timer">
-  <button
-    mat-icon-button
-    [disabled]="!(permissionsService.canSetTimer() | async)"
-    (click)="resetTimer(true)"
-    *ngIf="timer.state === TimerState.STOPPED && durationLeft === 0"
-    id="reset-button"
-    matTooltip="Reset timer"
-    [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-  >
-    <mat-icon>restart_alt</mat-icon>
-  </button>
-  <button
-    mat-icon-button
-    (click)="startTimer(true)"
-    *ngIf="
-      timer.state === TimerState.INIT ||
-      (timer.state === TimerState.STOPPED && durationLeft !== 0)
-    "
-    [disabled]="
-      durationLeft === 0 || !(permissionsService.canSetTimer() | async)
-    "
-    id="start-button"
-    matTooltip="Start timer"
-    [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-  >
-    <mat-icon>play_arrow</mat-icon>
-  </button>
-  <button
-    mat-icon-button
-    [disabled]="!(permissionsService.canSetTimer() | async)"
-    (click)="stopTimer(true)"
-    *ngIf="timer.state === TimerState.ACTIVE"
-    class="mini-pause-button"
-    matTooltip="Pause timer"
-    [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-  >
-    <span class="duration-left" *ngIf="durationLeft > -1">{{
-      durationLeft
-    }}</span>
-    <mat-icon class="pause-icon">pause</mat-icon>
-  </button>
-</ng-container>
-<div class="loading" *ngIf="!timer">
-  <mat-spinner diameter="20" />
-</div>
+@if (!minimized && timer) {
+  <div class="timer-container">
+    <div class="progress">
+      <mat-progress-bar
+        mode="determinate"
+        [value]="progressValue"
+        [color]="durationLeft < 10 ? 'accent' : 'primary'"
+        id="timer-progress-bar"
+      ></mat-progress-bar>
+      <span class="time-left">
+        @if (timer.state === TimerState.INIT) {
+          {{ durationLeft }} second timer
+        }
+        @if (timer.state !== TimerState.INIT && durationLeft > 0) {
+          {{ durationLeft }} seconds remaining
+        }
+        @if (timer.state !== TimerState.INIT && durationLeft === 0) {
+          Time is up!
+          }</span
+          >
+        </div>
+        <div class="controls">
+          @if (
+            timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
+            ) {
+            <button
+              mat-stroked-button
+              [disabled]="!(permissionsService.canSetTimer() | async)"
+              (click)="addSeconds()"
+              id="add-time-button"
+              >
+              <mat-icon>add</mat-icon>
+              30s
+            </button>
+          }
+          @if (timer.state === TimerState.STOPPED) {
+            <button
+              mat-stroked-button
+              [disabled]="!(permissionsService.canSetTimer() | async)"
+              (click)="resetTimer(true)"
+              id="reset-button"
+              >
+              <mat-icon>restart_alt</mat-icon>
+              Reset
+            </button>
+          }
+          @if (
+            timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
+            ) {
+            <button
+              mat-stroked-button
+              (click)="startTimer(true)"
+              [disabled]="
+              durationLeft === 0 || !(permissionsService.canSetTimer() | async)
+              "
+              id="start-button"
+              >
+              <mat-icon>play_arrow</mat-icon>
+              Start
+            </button>
+          }
+          @if (timer.state === TimerState.ACTIVE) {
+            <button
+              mat-stroked-button
+              [disabled]="!(permissionsService.canSetTimer() | async)"
+              (click)="stopTimer(true)"
+              id="pause-button"
+              >
+              <mat-icon>pause</mat-icon>
+              Pause
+            </button>
+          }
+        </div>
+      </div>
+    }
+    @if (minimized && timer) {
+      @if (timer.state === TimerState.STOPPED && durationLeft === 0) {
+        <button
+          mat-icon-button
+          [disabled]="!(permissionsService.canSetTimer() | async)"
+          (click)="resetTimer(true)"
+          id="reset-button"
+          matTooltip="Reset timer"
+          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+          >
+          <mat-icon>restart_alt</mat-icon>
+        </button>
+      }
+      @if (
+        timer.state === TimerState.INIT ||
+        (timer.state === TimerState.STOPPED && durationLeft !== 0)
+        ) {
+        <button
+          mat-icon-button
+          (click)="startTimer(true)"
+          [disabled]="
+          durationLeft === 0 || !(permissionsService.canSetTimer() | async)
+          "
+          id="start-button"
+          matTooltip="Start timer"
+          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+          >
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      }
+      @if (timer.state === TimerState.ACTIVE) {
+        <button
+          mat-icon-button
+          [disabled]="!(permissionsService.canSetTimer() | async)"
+          (click)="stopTimer(true)"
+          class="mini-pause-button"
+          matTooltip="Pause timer"
+          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+          >
+          @if (durationLeft > -1) {
+            <span class="duration-left">{{
+              durationLeft
+            }}</span>
+          }
+          <mat-icon class="pause-icon">pause</mat-icon>
+        </button>
+      }
+    }
+    @if (!timer) {
+      <div class="loading">
+        <mat-spinner diameter="20" />
+      </div>
+    }
+    

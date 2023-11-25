@@ -1,60 +1,64 @@
-<ng-container *ngIf="state | async as state">
+@if (state | async; as state) {
   <div mat-dialog-content>
     <div class="content-container">
-      <ng-container *ngIf="state === AuthProgressState.IN_PROGRESS">
+      @if (state === AuthProgressState.IN_PROGRESS) {
         <mat-spinner diameter="40"></mat-spinner>
         <p>Waiting for authentication with Zoom and Google to finish.</p>
-      </ng-container>
-      <ng-container *ngIf="state === AuthProgressState.SUCCESS">
+      }
+      @if (state === AuthProgressState.SUCCESS) {
         <mat-icon color="success">check</mat-icon>
         <p>
           Awesome, you are now signed in to your permanent Planning Poker
           account!
         </p>
-      </ng-container>
-      <ng-container *ngIf="state === AuthProgressState.ERROR">
+      }
+      @if (state === AuthProgressState.ERROR) {
         <mat-icon>error</mat-icon>
         <p>
           An unknown error occurred during account set-up. Please try again or
           file an issue on Github if the problem persists.
         </p>
         <p>
-          The error is: <strong>{{ errorMessage }}</strong>
-        </p>
-      </ng-container>
-      <ng-container *ngIf="state === AuthProgressState.ACCOUNT_EXISTS">
-        <mat-icon>error</mat-icon>
-        <p>
-          A previous Planning Poker account has already been linked to these
-          credentials. We currently do not support linking multiple accounts,
-          but it is on the roadmap.
-        </p>
-        <p>
-          As a workaround, you can sign out of this anonymous account and sign
-          back in with your existing permanent account. You'll lose access to
-          rooms created with your current anonymous account. If you really need
-          the linking feature, put some friendly pressure on the developers and
-          file an issue on Github.
-        </p>
-      </ng-container>
-    </div>
+        The error is: <strong>{{ errorMessage }}</strong>
+      </p>
+    }
+    @if (state === AuthProgressState.ACCOUNT_EXISTS) {
+      <mat-icon>error</mat-icon>
+      <p>
+        A previous Planning Poker account has already been linked to these
+        credentials. We currently do not support linking multiple accounts,
+        but it is on the roadmap.
+      </p>
+      <p>
+        As a workaround, you can sign out of this anonymous account and sign
+        back in with your existing permanent account. You'll lose access to
+        rooms created with your current anonymous account. If you really need
+        the linking feature, put some friendly pressure on the developers and
+        file an issue on Github.
+      </p>
+    }
   </div>
-  <div mat-dialog-actions *ngIf="hasAction">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="returnToPrevious()"
-      *ngIf="returnPath"
-    >
-      Continue
-    </button>
-    <button
-      mat-flat-button
-      color="error"
-      (click)="signOut()"
-      *ngIf="state === AuthProgressState.ACCOUNT_EXISTS"
-    >
-      Sign out of temporary account
-    </button>
+</div>
+@if (hasAction) {
+  <div mat-dialog-actions>
+    @if (returnPath) {
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="returnToPrevious()"
+        >
+        Continue
+      </button>
+    }
+    @if (state === AuthProgressState.ACCOUNT_EXISTS) {
+      <button
+        mat-flat-button
+        color="error"
+        (click)="signOut()"
+        >
+        Sign out of temporary account
+      </button>
+    }
   </div>
-</ng-container>
+}
+}

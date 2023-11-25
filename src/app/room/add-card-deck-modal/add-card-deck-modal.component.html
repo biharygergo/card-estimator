@@ -11,7 +11,7 @@
             formControlName="cardDeckName"
             autocomplete="off"
             id="deck-name-input"
-          />
+            />
         </mat-form-field>
         <p class="hint">Name your card deck so you can find it among other decks</p>
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -22,18 +22,19 @@
             formControlName="cardDeckValues"
             autocomplete="off"
             id="deck-values-input"
-          />
-
-          <mat-error
-            *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']"
-          >
-            Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
-          </mat-error>
-          <mat-error
-            *ngIf="cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']"
-          >
-            All cards must be unique.
-          </mat-error>
+            />
+          @if (cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']) {
+            <mat-error
+              >
+              Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
+            </mat-error>
+          }
+          @if (cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']) {
+            <mat-error
+              >
+              All cards must be unique.
+            </mat-error>
+          }
         </mat-form-field>
         <p class="hint">
           Card values as a comma separated list in ascending order. You can use
@@ -41,40 +42,42 @@
         </p>
       </form>
       <div class="preview-cards">
-        <ng-container *ngFor="let card of cardPreview; let i = index">
-          <mat-card
-            class="preview-card"
-            *ngIf="i < CARD_DECK_IDEAL_SIZE || card !== undefined"
-            [ngClass]="{ filled: card !== undefined }"
-          >
-            {{ card ?? "?" }}
-          </mat-card>
-        </ng-container>
+        @for (card of cardPreview; track card; let i = $index) {
+          @if (i < CARD_DECK_IDEAL_SIZE || card !== undefined) {
+            <mat-card
+              class="preview-card"
+              [ngClass]="{ filled: card !== undefined }"
+              >
+              {{ card ?? "?" }}
+            </mat-card>
+          }
+        }
       </div>
     </div>
-    <div
-      class="premium-banner"
-      *ngIf="!(permissionService.hasPremiumAccess() | async)"
-    >
-      <h2 class="title">Better with Premium</h2>
-      <p>
-        Do you want to reuse this custom card deck in your next meeting?
-        Subscribe to Premium to automatically store your card decks in the
-        cloud!
-      </p>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="clickedLearnMorePremium()"
-        [disabled]="paymentsService.isSubscriptionDisabled"
+    @if (!(permissionService.hasPremiumAccess() | async)) {
+      <div
+        class="premium-banner"
         >
+        <h2 class="title">Better with Premium</h2>
+        <p>
+          Do you want to reuse this custom card deck in your next meeting?
+          Subscribe to Premium to automatically store your card decks in the
+          cloud!
+        </p>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="clickedLearnMorePremium()"
+          [disabled]="paymentsService.isSubscriptionDisabled"
+          >
           {{
-            paymentsService.isSubscriptionDisabled
-              ? "Not available on Teams mobile"
-              : "Learn more"
+          paymentsService.isSubscriptionDisabled
+          ? "Not available on Teams mobile"
+          : "Learn more"
           }}
-      </button>
-    </div>
+        </button>
+      </div>
+    }
   </div>
   <div mat-dialog-actions>
     <button mat-flat-button mat-dialog-close color="secondary">
@@ -87,7 +90,7 @@
       [disabled]="!cardDeckForm.valid"
       (click)="onSaveClick()"
       id="set-card-deck-button"
-    >
+      >
       <mat-icon>done</mat-icon>
       Set
     </button>

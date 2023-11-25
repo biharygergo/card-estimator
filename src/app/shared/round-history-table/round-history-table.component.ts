@@ -64,8 +64,8 @@ interface TableRow {
     MatPaginatorModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    RouterModule,
-  ],
+    RouterModule
+],
   providers: [CdkColumnDef],
   templateUrl: './round-history-table.component.html',
   styleUrls: ['./round-history-table.component.scss'],

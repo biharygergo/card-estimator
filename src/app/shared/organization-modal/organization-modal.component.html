@@ -1,312 +1,338 @@
 <h1 mat-dialog-title class="dialog-title">My organization</h1>
 <div mat-dialog-content>
-  <ng-template #premiumBanner>
-    <div
-      class="premium-banner"
-      *ngIf="
-        !(permissionsService.hasPremiumAccess() | async) &&
-        organization &&
-        organization?.activePlan !== 'premium'
-      "
-      @fadeAnimation
-    >
-      <h2 class="title">Preview this Premium Feature</h2>
-      <p>
-        Create an organization for <strong>up to 5 members for free</strong>.
-        Set up your brand, invite members and schedule recurring meetings.
-      </p>
-      <div class="premium-banner-buttons">
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="openLearnMore()"
-          class="learn-more"
-          [disabled]="paymentsService.isSubscriptionDisabled"
+  @if (checklist$ | async; as checklist) {
+    @if (organization && !checklist.allCompleted) {
+      <mat-card
+        class="checklist-banner"
+        appearance="outline"
+        @fadeAnimation
         >
-          {{
-            paymentsService.isSubscriptionDisabled
-              ? "Not available on Teams mobile"
-              : "Learn more"
-          }}
-        </button>
-      </div>
-    </div>
-  </ng-template>
-
-  <ng-container *ngIf="checklist$ | async as checklist">
-    <mat-card
-      class="checklist-banner"
-      appearance="outline"
-      *ngIf="organization && !checklist.allCompleted; else premiumBanner"
-      @fadeAnimation
-    >
-      <mat-card-content class="checklist">
-        <h3>Just a few more steps to get the most out of your organization:</h3>
-        <ul>
-          <li>
-            <mat-icon>check</mat-icon>
-            <span>Create your organization</span>
-          </li>
-          <li>
-            <mat-icon *ngIf="!checklist.items.logoUploaded; else check"
-              >pending_actions</mat-icon
-            >
-            <ng-template #check><mat-icon>check</mat-icon></ng-template>
-            <span>Upload your logo to customize the app</span>
-          </li>
-          <li>
-            <mat-icon *ngIf="!checklist.items.colleaguesInvited; else check"
-              >pending_actions</mat-icon
-            >
-            <ng-template #check><mat-icon>check</mat-icon></ng-template>
-            <span>Expand your organization with colleagues</span>
-          </li>
-          <li>
-            <mat-icon
-              *ngIf="!checklist.items.recurringMeetingCreated; else check"
-              >pending_actions</mat-icon
-            >
-            <ng-template #check><mat-icon>check</mat-icon></ng-template>
-            <span>Set up a recurring meeting</span>
-          </li>
-        </ul>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
-  <ng-container *ngIf="organization !== null; else loading">
-    <ng-container *ngIf="!organization && showIntro">
-      <div class="empty-state">
-        <h5 class="section-title">Why create an organization?</h5>
-        <p>
-          With an organization, you can create rooms just for your teammates,
-          personalize the app with your logo, schedule recurring meetings and
-          much more!
-        </p>
-        <button
-          mat-flat-button
-          *ngIf="(authService.user | async)?.isAnonymous"
-          color="primary"
-          (click)="openCreateAccountModal()"
-          class="create-account-button"
-        >
-          Create an account first
-        </button>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="createEmptyOrganization()"
-          [disabled]="(authService.user | async)?.isAnonymous"
-        >
-          Let's set it up!
-        </button>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="organization || !showIntro">
-      <mat-tab-group
-        class="custom-tab-group"
-        mat-align-tabs="center"
-        [dynamicHeight]="true"
-        backgroundColor="primary"
-      >
-        <mat-tab label="Details">
-          <div class="tab-content">
-            <div class="tab-section">
-              <form class="organization-form" [formGroup]="organizationForm">
-                <h5 class="section-title">
-                  <mat-icon>apartment</mat-icon> Organization's name
-                </h5>
-                <mat-form-field class="form-input" appearance="outline">
-                  <input
-                    matInput
-                    formControlName="name"
-                    placeholder="Best Company Ltd."
-                    [disabled]="!isOrganizationCreator"
-                  />
-                  <mat-hint
-                    >Set your company's name here, like: "Great Code
-                    LLC"</mat-hint
+        <mat-card-content class="checklist">
+          <h3>Just a few more steps to get the most out of your organization:</h3>
+          <ul>
+            <li>
+              <mat-icon>check</mat-icon>
+              <span>Create your organization</span>
+            </li>
+            <li>
+              @if (!checklist.items.logoUploaded) {
+                <mat-icon
+                  >pending_actions</mat-icon
                   >
-                </mat-form-field>
-              </form>
-
-              <button
-                mat-stroked-button
-                color="primary"
-                (click)="saveOrganization()"
-                *ngIf="organization || !showIntro"
-                class="save-button"
-                [disabled]="
-                  organization?.name === organizationForm.controls.name.value ||
-                  !isOrganizationCreator
-                "
-              >
-                Update
-              </button>
-              <h5 class="section-title">
-                <mat-icon>diamond</mat-icon> Organization's logo
-              </h5>
-
-              <small
-                >The logo will be used to personalize the welcome screen of the
-                app. Select an image that fits nicely in a square logo
-                container, similar to Planning Poker's own logo.</small
-              >
-              <div class="logo-container" *ngIf="organization?.logoUrl">
-                <img class="logo" [src]="organization?.logoUrl" />
-                <button
-                  mat-button
-                  (click)="removeLogo()"
-                  [disabled]="!isOrganizationCreator"
-                >
-                  Remove logo
-                </button>
-              </div>
-              <div class="file-upload">
-                <file-upload-drag-drop
-                  (onFileDropped)="onLogoDropped($event)"
-                  *ngIf="!organization?.logoUrl"
-                ></file-upload-drag-drop>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-        <mat-tab label="Members">
-          <div class="tab-content">
-            <div class="tab-section">
-              <div class="members-section" *ngIf="organization?.memberIds">
-                <h5 class="section-title">
-                  <mat-icon>people</mat-icon> Manage members
-                  <mat-chip
-                    *ngIf="organization?.activePlan === 'basic'"
-                    [matTooltip]="
-                      organization?.memberIds.length > 5
-                        ? 'You are over the free organization members limit. Please subscribe to Premium to keep your extra members.'
-                        : ''
-                    "
-                    >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
-                  >
-                </h5>
-                <ul class="members-list">
-                  <li *ngFor="let member of members$ | async">
-                    <div class="member">
-                      <div class="member-meta">
-                        <span class="avatar">
-                          <img
-                            *ngIf="member?.avatarUrl"
-                            [src]="member.avatarUrl"
-                            class="avatar-image"
-                            alt="A user's avatar"
-                          />
-                          <div class="avatar-text" *ngIf="!member?.avatarUrl">
-                            {{ member.displayName?.charAt(0) }}
-                          </div>
-                        </span>
-                        <div>
-                          <h3>
-                            {{ member.displayName }}
-                          </h3>
-                          <small *ngIf="member.id === organization?.createdById"
-                            >Admin</small
-                          >
-                        </div>
-                      </div>
-                      <button
-                        mat-icon-button
-                        [matMenuTriggerFor]="menu"
-                        class="member-menu-button"
+                } @else {
+                  <mat-icon>check</mat-icon>
+                }
+                <ng-template #check><mat-icon>check</mat-icon></ng-template>
+                <span>Upload your logo to customize the app</span>
+              </li>
+              <li>
+                @if (!checklist.items.colleaguesInvited) {
+                  <mat-icon
+                    >pending_actions</mat-icon
+                    >
+                  } @else {
+                    <mat-icon>check</mat-icon>
+                  }
+                  <ng-template #check><mat-icon>check</mat-icon></ng-template>
+                  <span>Expand your organization with colleagues</span>
+                </li>
+                <li>
+                  @if (!checklist.items.recurringMeetingCreated) {
+                    <mat-icon
+                      >pending_actions</mat-icon
                       >
-                        <mat-icon>more_horiz</mat-icon>
-                      </button>
-                      <mat-menu #menu="matMenu">
-                        <button
-                          mat-menu-item
-                          [disabled]="member.id === organization?.createdById"
-                          (click)="removeFromOrganization(member.id)"
-                        >
-                          <mat-icon>group_remove</mat-icon> Remove from
-                          organization
-                        </button>
-                      </mat-menu>
-                    </div>
+                    } @else {
+                      <mat-icon>check</mat-icon>
+                    }
+                    <ng-template #check><mat-icon>check</mat-icon></ng-template>
+                    <span>Set up a recurring meeting</span>
                   </li>
                 </ul>
-              </div>
-              <h5 class="section-title">
-                <mat-icon>mail</mat-icon> Invite by email
-              </h5>
-              <mat-form-field
-                class="form-input invite-email"
-                appearance="outline"
-                subscriptSizing="dynamic"
-              >
-                <input
-                  matInput
-                  [formControl]="invitationEmail"
-                  placeholder="colleague@company.com"
-                  [disabled]="!isOrganizationCreator"
-                />
-                <button
-                  mat-icon-button
-                  matSuffix
-                  (click)="inviteMember()"
-                  [attr.aria-label]="'Invite member'"
-                  [disabled]="!invitationEmail.valid || !isOrganizationCreator"
-                  color="primary"
+              </mat-card-content>
+            </mat-card>
+          } @else {
+            @if (
+              !(permissionsService.hasPremiumAccess() | async) &&
+              organization &&
+              organization?.activePlan !== 'premium'
+              ) {
+              <div
+                class="premium-banner"
+                @fadeAnimation
                 >
-                  <mat-icon>send</mat-icon>
+                <h2 class="title">Preview this Premium Feature</h2>
+                <p>
+                Create an organization for <strong>up to 5 members for free</strong>.
+                Set up your brand, invite members and schedule recurring meetings.
+              </p>
+              <div class="premium-banner-buttons">
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="openLearnMore()"
+                  class="learn-more"
+                  [disabled]="paymentsService.isSubscriptionDisabled"
+                  >
+                  {{
+                  paymentsService.isSubscriptionDisabled
+                  ? "Not available on Teams mobile"
+                  : "Learn more"
+                  }}
                 </button>
-              </mat-form-field>
-              <ng-container *ngIf="invitations$ | async as invitations">
-                <ng-container *ngIf="invitations.length">
-                  <h5 class="section-title">
-                    <mat-icon>send</mat-icon> Pending members
-                  </h5>
-                  <mat-chip-listbox aria-label="Sent invitations">
-                    <ng-container *ngFor="let invite of invitations">
-                      <mat-chip>
-                        <div class="invite-chip">
-                          <mat-icon
-                            matTooltip="Invitation email sent"
-                            *ngIf="invite.emailStatus === 'success'"
-                            >check</mat-icon
-                          >
-                          <mat-icon
-                            matTooltip="Waiting for delivery"
-                            *ngIf="invite.emailStatus === 'pending'"
-                            >hourglass_empty</mat-icon
-                          >
-                          <mat-icon
-                            matTooltip="Mail could not be delivered"
-                            *ngIf="invite.emailStatus === 'error'"
-                            >warning</mat-icon
-                          >
-                          {{ invite.invitationEmail }}
-                        </div>
-                      </mat-chip>
-                    </ng-container>
-                  </mat-chip-listbox>
-                </ng-container>
-              </ng-container>
+              </div>
             </div>
+          }
+        }
+      }
+      @if (organization !== null) {
+        @if (!organization && showIntro) {
+          <div class="empty-state">
+            <h5 class="section-title">Why create an organization?</h5>
+            <p>
+              With an organization, you can create rooms just for your teammates,
+              personalize the app with your logo, schedule recurring meetings and
+              much more!
+            </p>
+            @if ((authService.user | async)?.isAnonymous) {
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openCreateAccountModal()"
+                class="create-account-button"
+                >
+                Create an account first
+              </button>
+            }
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="createEmptyOrganization()"
+              [disabled]="(authService.user | async)?.isAnonymous"
+              >
+              Let's set it up!
+            </button>
           </div>
-        </mat-tab>
-        <mat-tab label="Recurring meetings">
-          <div class="tab-content">
-            <app-recurring-meetings-modal></app-recurring-meetings-modal>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-    </ng-container>
-  </ng-container>
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button mat-dialog-close>Close</button>
-</div>
-<ng-template #loading>
-  <div class="loading">
-    <mat-progress-spinner
-      mode="indeterminate"
-      [diameter]="30"
-    ></mat-progress-spinner>
-  </div>
-</ng-template>
+        }
+        @if (organization || !showIntro) {
+          <mat-tab-group
+            class="custom-tab-group"
+            mat-align-tabs="center"
+            [dynamicHeight]="true"
+            backgroundColor="primary"
+            >
+            <mat-tab label="Details">
+              <div class="tab-content">
+                <div class="tab-section">
+                  <form class="organization-form" [formGroup]="organizationForm">
+                    <h5 class="section-title">
+                      <mat-icon>apartment</mat-icon> Organization's name
+                    </h5>
+                    <mat-form-field class="form-input" appearance="outline">
+                      <input
+                        matInput
+                        formControlName="name"
+                        placeholder="Best Company Ltd."
+                        [disabled]="!isOrganizationCreator"
+                        />
+                      <mat-hint
+                        >Set your company's name here, like: "Great Code
+                        LLC"</mat-hint
+                        >
+                      </mat-form-field>
+                    </form>
+                    @if (organization || !showIntro) {
+                      <button
+                        mat-stroked-button
+                        color="primary"
+                        (click)="saveOrganization()"
+                        class="save-button"
+                        [disabled]="
+                        organization?.name === organizationForm.controls.name.value ||
+                        !isOrganizationCreator
+                        "
+                        >
+                        Update
+                      </button>
+                    }
+                    <h5 class="section-title">
+                      <mat-icon>diamond</mat-icon> Organization's logo
+                    </h5>
+                    <small
+                      >The logo will be used to personalize the welcome screen of the
+                      app. Select an image that fits nicely in a square logo
+                      container, similar to Planning Poker's own logo.</small
+                      >
+                      @if (organization?.logoUrl) {
+                        <div class="logo-container">
+                          <img class="logo" [src]="organization?.logoUrl" />
+                          <button
+                            mat-button
+                            (click)="removeLogo()"
+                            [disabled]="!isOrganizationCreator"
+                            >
+                            Remove logo
+                          </button>
+                        </div>
+                      }
+                      <div class="file-upload">
+                        @if (!organization?.logoUrl) {
+                          <file-upload-drag-drop
+                            (onFileDropped)="onLogoDropped($event)"
+                          ></file-upload-drag-drop>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </mat-tab>
+                <mat-tab label="Members">
+                  <div class="tab-content">
+                    <div class="tab-section">
+                      @if (organization?.memberIds) {
+                        <div class="members-section">
+                          <h5 class="section-title">
+                            <mat-icon>people</mat-icon> Manage members
+                            @if (organization?.activePlan === 'basic') {
+                              <mat-chip
+                                [matTooltip]="
+                                organization?.memberIds.length > 5
+                                ? 'You are over the free organization members limit. Please subscribe to Premium to keep your extra members.'
+                                : ''
+                                "
+                                >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
+                                >
+                              }
+                            </h5>
+                            <ul class="members-list">
+                              @for (member of members$ | async; track member.id) {
+                                <li>
+                                  <div class="member">
+                                    <div class="member-meta">
+                                      <span class="avatar">
+                                        <div class="avatar-text">
+                                          {{ member.displayName?.charAt(0) }}
+                                        </div>
+                                      </span>
+                                      <div>
+                                        <h3>
+                                          {{ member.displayName }}
+                                        </h3>
+                                        @if (member.id === organization?.createdById) {
+                                          <small
+                                            >Admin</small
+                                            >
+                                          }
+                                        </div>
+                                      </div>
+                                      <button
+                                        mat-icon-button
+                                        [matMenuTriggerFor]="menu"
+                                        class="member-menu-button"
+                                        >
+                                        <mat-icon>more_horiz</mat-icon>
+                                      </button>
+                                      <mat-menu #menu="matMenu">
+                                        <button
+                                          mat-menu-item
+                                          [disabled]="member.id === organization?.createdById"
+                                          (click)="removeFromOrganization(member.id)"
+                                          >
+                                          <mat-icon>group_remove</mat-icon> Remove from
+                                          organization
+                                        </button>
+                                      </mat-menu>
+                                    </div>
+                                  </li>
+                                }
+                              </ul>
+                            </div>
+                          }
+                          <h5 class="section-title">
+                            <mat-icon>mail</mat-icon> Invite by email
+                          </h5>
+                          <mat-form-field
+                            class="form-input invite-email"
+                            appearance="outline"
+                            subscriptSizing="dynamic"
+                            >
+                            <input
+                              matInput
+                              [formControl]="invitationEmail"
+                              placeholder="colleague@company.com"
+                              [disabled]="!isOrganizationCreator"
+                              />
+                            <button
+                              mat-icon-button
+                              matSuffix
+                              (click)="inviteMember()"
+                              [attr.aria-label]="'Invite member'"
+                              [disabled]="!invitationEmail.valid || !isOrganizationCreator"
+                              color="primary"
+                              >
+                              <mat-icon>send</mat-icon>
+                            </button>
+                          </mat-form-field>
+                          @if (invitations$ | async; as invitations) {
+                            @if (invitations.length) {
+                              <h5 class="section-title">
+                                <mat-icon>send</mat-icon> Pending members
+                              </h5>
+                              <mat-chip-listbox aria-label="Sent invitations">
+                                @for (invite of invitations; track invite) {
+                                  <mat-chip>
+                                    <div class="invite-chip">
+                                      @if (invite.emailStatus === 'success') {
+                                        <mat-icon
+                                          matTooltip="Invitation email sent"
+                                          >check</mat-icon
+                                          >
+                                        }
+                                        @if (invite.emailStatus === 'pending') {
+                                          <mat-icon
+                                            matTooltip="Waiting for delivery"
+                                            >hourglass_empty</mat-icon
+                                            >
+                                          }
+                                          @if (invite.emailStatus === 'error') {
+                                            <mat-icon
+                                              matTooltip="Mail could not be delivered"
+                                              >warning</mat-icon
+                                              >
+                                            }
+                                            {{ invite.invitationEmail }}
+                                          </div>
+                                        </mat-chip>
+                                      }
+                                    </mat-chip-listbox>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </mat-tab>
+                          <mat-tab label="Recurring meetings">
+                            <div class="tab-content">
+                              <app-recurring-meetings-modal></app-recurring-meetings-modal>
+                            </div>
+                          </mat-tab>
+                        </mat-tab-group>
+                      }
+                    } @else {
+                      <div class="loading">
+                        <mat-progress-spinner
+                          mode="indeterminate"
+                          [diameter]="30"
+                        ></mat-progress-spinner>
+                      </div>
+                    }
+                  </div>
+                  <div mat-dialog-actions>
+                    <button mat-flat-button mat-dialog-close>Close</button>
+                  </div>
+                  <ng-template #loading>
+                    <div class="loading">
+                      <mat-progress-spinner
+                        mode="indeterminate"
+                        [diameter]="30"
+                      ></mat-progress-spinner>
+                    </div>
+                  </ng-template>
+                  

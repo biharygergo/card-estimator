@@ -8,7 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   standalone: true,
   imports: [
     SharedModule
-  ]
+]
 })
 export class IntegrationResultComponent {
 }

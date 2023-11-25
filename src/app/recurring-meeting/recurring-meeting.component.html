@@ -4,94 +4,110 @@
   </div>
 </div>
 <div class="lobby-container">
-  <ng-container *ngIf="state; else loading">
-    <mat-card class="error-container" *ngIf="state.error">
-      <mat-card-content>
-        <p>
-          Oh-oh, something does not seem to work. To join a recurring meeting,
-          you need to:
-        </p>
-        <ul>
-          <li>have a valid recurring meeting link,</li>
-          <li>be signed in to your permanent PlanningPoker.live account,</li>
-          <li>and be a member of the host's organization.</li>
-        </ul>
-        <p>
-          If you think something is still wrong, report an issue from the Menu above.
-        </p>
-      </mat-card-content>
-    </mat-card>
-    <mat-card appearance="outline" class="card" *ngIf="!state.error">
-      <mat-card-content>
-        <h2>
-          {{ state.meetingLink.name }}
-        </h2>
-        <ng-container *ngIf="state.userState === 'creator'">
-          <p>You are the host of this recurring meeting.</p>
-          <div class="host-no-room" *ngIf="!state.roomId">
-            <p>
-              No rooms found for this meeting in the last
-              {{ state.meetingLink.frequencyDays }} days. Create one now, so
-              members can automatically join the latest room when they visit
-              this link.
-            </p>
+  @if (state) {
+    @if (state.error) {
+      <mat-card class="error-container">
+        <mat-card-content>
+          <p>
+            Oh-oh, something does not seem to work. To join a recurring meeting,
+            you need to:
+          </p>
+          <ul>
+            <li>have a valid recurring meeting link,</li>
+            <li>be signed in to your permanent PlanningPoker.live account,</li>
+            <li>and be a member of the host's organization.</li>
+          </ul>
+          <p>
+            If you think something is still wrong, report an issue from the Menu above.
+          </p>
+        </mat-card-content>
+      </mat-card>
+    }
+    @if (!state.error) {
+      <mat-card appearance="outline" class="card">
+        <mat-card-content>
+          <h2>
+            {{ state.meetingLink.name }}
+          </h2>
+          @if (state.userState === 'creator') {
+            <p>You are the host of this recurring meeting.</p>
+            @if (!state.roomId) {
+              <div class="host-no-room">
+                <p>
+                  No rooms found for this meeting in the last
+                  {{ state.meetingLink.frequencyDays }} days. Create one now, so
+                  members can automatically join the latest room when they visit
+                  this link.
+                </p>
+              </div>
+            }
+            @if (state.roomId) {
+              <div class="host-has-room">
+                <p>
+                  There is already a room created for this recurring meeting with ID
+                  <strong>{{ state.roomId }}</strong> within your frequency of
+                  {{ state.meetingLink.frequencyDays }} days.
+                </p>
+                <p>
+                  You can either join this room or create a new one. Members will be
+                  redirected to the latest room when they visit this link.
+                </p>
+              </div>
+            }
+            <div class="buttons">
+              <a
+                mat-flat-button
+                color="primary"
+                routerLink="/create"
+                [queryParams]="{ recurringMeetingId: state.meetingLink.id }"
+                >Create a room</a
+                >
+                @if (state.roomId) {
+                  <a
+                    mat-button
+                    [routerLink]="'/room/' + state.roomId"
+                    >Join existing room</a
+                    >
+                  }
+                </div>
+              }
+              @if (state.userState === 'member') {
+                @if (!state.roomId) {
+                  <div class="waiting-for-host">
+                    <mat-spinner [diameter]="30"></mat-spinner>
+                    <p>
+                      Waiting for your host to create a room for this session. Let them
+                      know you are waiting.
+                    </p>
+                  </div>
+                } @else {
+                  <p>
+                    Awesome, your meeting host has created a room with id
+                    <strong>{{ state.roomId }}</strong> for this recurring event!
+                  </p>
+                  <p>Click the button below to join the session.</p>
+                  <a
+                    mat-flat-button
+                    color="primary"
+                    [routerLink]="'/room/' + state.roomId"
+                    >Continue to room</a
+                    >
+                  }
+                }
+              </mat-card-content>
+            </mat-card>
+          }
+        } @else {
+          <div class="loading-spinner-container">
+            <mat-spinner [diameter]="40" class="spinner"></mat-spinner>
+            <p>Fetching the latest room for this recurring meeting</p>
           </div>
-          <div class="host-has-room" *ngIf="state.roomId">
-            <p>
-              There is already a room created for this recurring meeting with ID
-              <strong>{{ state.roomId }}</strong> within your frequency of
-              {{ state.meetingLink.frequencyDays }} days.
-            </p>
-            <p>
-              You can either join this room or create a new one. Members will be
-              redirected to the latest room when they visit this link.
-            </p>
+        }
+        <ng-template #loading>
+          <div class="loading-spinner-container">
+            <mat-spinner [diameter]="40" class="spinner"></mat-spinner>
+            <p>Fetching the latest room for this recurring meeting</p>
           </div>
-          <div class="buttons">
-            <a
-              mat-flat-button
-              color="primary"
-              routerLink="/create"
-              [queryParams]="{ recurringMeetingId: state.meetingLink.id }"
-              >Create a room</a
-            >
-            <a
-              mat-button
-              [routerLink]="'/room/' + state.roomId"
-              *ngIf="state.roomId"
-              >Join existing room</a
-            >
-          </div>
-        </ng-container>
-        <ng-container *ngIf="state.userState === 'member'">
-          <div class="waiting-for-host" *ngIf="!state.roomId; else joinRoom">
-            <mat-spinner [diameter]="30"></mat-spinner>
-            <p>
-              Waiting for your host to create a room for this session. Let them
-              know you are waiting.
-            </p>
-          </div>
-          <ng-template #joinRoom>
-            <p>
-              Awesome, your meeting host has created a room with id
-              <strong>{{ state.roomId }}</strong> for this recurring event!
-            </p>
-            <p>Click the button below to join the session.</p>
-            <a
-              mat-flat-button
-              color="primary"
-              [routerLink]="'/room/' + state.roomId"
-              >Continue to room</a
-            >
-          </ng-template>
-        </ng-container>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
-  <ng-template #loading>
-    <div class="loading-spinner-container">
-      <mat-spinner [diameter]="40" class="spinner"></mat-spinner>
-      <p>Fetching the latest room for this recurring meeting</p>
-    </div>
-  </ng-template>
-</div>
+        </ng-template>
+      </div>
+      

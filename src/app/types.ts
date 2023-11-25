@@ -1,4 +1,4 @@
-import { FieldValue } from '@angular/fire/firestore';
+import { FieldValue, Timestamp } from '@angular/fire/firestore';
 
 export enum CardSet {
   DEFAULT = 'DEFAULT',
@@ -400,7 +400,7 @@ export type RecurringMeetingLink = {
 }
 
 export type RecurringMeetingLinkCreatedRoom = {
-  createdAt: FieldValue;
+  createdAt: Timestamp;
   roomId: string;
 }
 

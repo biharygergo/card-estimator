@@ -9,7 +9,7 @@
       class="custom-tab-group"
       mat-align-tabs="center"
       backgroundColor="primary"
-    >
+      >
       <mat-tab label="Profile">
         <div class="tab-content">
           <div class="tab-section">
@@ -17,15 +17,18 @@
             <div class="profile-overview">
               <div class="profile-image">
                 <div class="avatar">
-                  <img
-                    *ngIf="user?.photoURL"
-                    [src]="user?.photoURL"
-                    alt="The user's avatar"
-                    class="avatar-image"
-                  />
-                  <div class="avatar-text" *ngIf="!user?.photoURL">
-                    {{ user?.displayName?.charAt(0) }}
-                  </div>
+                  @if (user?.photoURL) {
+                    <img
+                      [src]="user?.photoURL"
+                      alt="The user's avatar"
+                      class="avatar-image"
+                      />
+                  }
+                  @if (!user?.photoURL) {
+                    <div class="avatar-text">
+                      {{ user?.displayName?.charAt(0) }}
+                    </div>
+                  }
                 </div>
               </div>
               <div class="profile-details">
@@ -35,20 +38,21 @@
                     matInput
                     [formControl]="accountTypeForm"
                     id="account-type-input"
-                  />
+                    />
                 </mat-form-field>
-                <mat-form-field
-                  class="name"
-                  appearance="outline"
-                  *ngIf="emailControl.value"
-                >
-                  <mat-label>E-mail</mat-label>
-                  <input
-                    matInput
-                    [formControl]="emailControl"
-                    id="email-input"
-                  />
-                </mat-form-field>
+                @if (emailControl.value) {
+                  <mat-form-field
+                    class="name"
+                    appearance="outline"
+                    >
+                    <mat-label>E-mail</mat-label>
+                    <input
+                      matInput
+                      [formControl]="emailControl"
+                      id="email-input"
+                      />
+                  </mat-form-field>
+                }
                 <mat-form-field class="name" appearance="outline">
                   <mat-label>Your name</mat-label>
                   <input
@@ -56,14 +60,14 @@
                     placeholder="Best Engineer"
                     [formControl]="displayNameForm"
                     autocomplete="name"
-                  />
+                    />
                 </mat-form-field>
                 <button
                   mat-flat-button
                   color="primary"
                   [disabled]="!isNameUpdated || (isSavingUser | async)"
                   (click)="onClickUpdateUserName.next()"
-                >
+                  >
                   <mat-icon>done</mat-icon>
                   Update name
                 </button>
@@ -76,11 +80,9 @@
         <div class="tab-content">
           <div class="tab-section">
             <h2 class="section-title">Manage subscription</h2>
-            <ng-container
-              *ngIf="subscription$ | async as subscription; else noSubscription"
-            >
+            @if (subscription$ | async; as subscription) {
               <mat-chip class="subscription-chip"
-                ><span class="label">Premium</span></mat-chip
+              ><span class="label">Premium</span></mat-chip
               >
               <div class="data-items">
                 <div class="data-item">
@@ -89,189 +91,196 @@
                 </div>
                 <div class="data-item">
                   <strong>Plan</strong>
-                  <span *ngIf="activePlan$ | async as plan"
-                    >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
+                  @if (activePlan$ | async; as plan) {
+                    <span
+                      >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
                       plan?.interval
-                    }}</span
-                  >
-                </div>
-                <div class="data-item">
-                  <strong>Created at</strong>
-                  <span>{{
-                    subscription.created.toMillis() | date : "medium"
-                  }}</span>
-                </div>
-                <div class="data-item">
-                  <strong>{{
-                    subscription.cancel_at_period_end
+                      }}</span
+                      >
+                    }
+                  </div>
+                  <div class="data-item">
+                    <strong>Created at</strong>
+                    <span>{{
+                      subscription.created.toMillis() | date : "medium"
+                    }}</span>
+                  </div>
+                  <div class="data-item">
+                    <strong>{{
+                      subscription.cancel_at_period_end
                       ? "Ends at"
                       : "Next
-                    payment at"
-                  }}</strong>
-                  <span>{{
-                    subscription.current_period_end.toMillis() | date : "medium"
-                  }}</span>
+                      payment at"
+                    }}</strong>
+                    <span>{{
+                      subscription.current_period_end.toMillis() | date : "medium"
+                    }}</span>
+                  </div>
                 </div>
-              </div>
-              <button
-                mat-flat-button
-                color="primary"
-                (click)="redirectToCustomerPortal()"
-                [disabled]="isLoadingStripe"
-              >
-                <mat-icon>edit</mat-icon>
-                {{
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="redirectToCustomerPortal()"
+                  [disabled]="isLoadingStripe"
+                  >
+                  <mat-icon>edit</mat-icon>
+                  {{
                   isLoadingStripe
-                    ? "Redirecting you to Stripe..."
-                    : "Manage subscription"
-                }}
-              </button>
-            </ng-container>
-            <ng-template #noSubscription>
-              <p>
-                You don't have an active Premium subscription. Subscribe now to
-                unlock new features, such as password protected rooms,
-                organizations, invitations and more.
-              </p>
-              <button
-                mat-flat-button
-                color="primary"
-                class="learn-more-button"
-                (click)="openLearnMore()"
-                [disabled]="paymentsService.isSubscriptionDisabled"
-              >
-                {{ paymentsService.isSubscriptionDisabled ? 'Not available on Teams mobile' : 'Learn more'}}
-              </button>
-            </ng-template>
+                  ? "Redirecting you to Stripe..."
+                  : "Manage subscription"
+                  }}
+                </button>
+              } @else {
+                <p>
+                  You don't have an active Premium subscription. Subscribe now to
+                  unlock new features, such as password protected rooms,
+                  organizations, invitations and more.
+                </p>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  class="learn-more-button"
+                  (click)="openLearnMore()"
+                  [disabled]="paymentsService.isSubscriptionDisabled"
+                  >
+                  {{ paymentsService.isSubscriptionDisabled ? 'Not available on Teams mobile' : 'Learn more'}}
+                </button>
+              }
+            </div>
           </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Avatar">
-        <div class="tab-content">
-          <div class="tab-section">
-            <div class="configuration-row">
-              <mat-accordion displayMode="flat">
-                <mat-expansion-panel class="customizer-panel">
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>Customize avatars</mat-panel-title>
-                  </mat-expansion-panel-header>
+        </mat-tab>
+        <mat-tab label="Avatar">
+          <div class="tab-content">
+            <div class="tab-section">
+              <div class="configuration-row">
+                <mat-accordion displayMode="flat">
+                  <mat-expansion-panel class="customizer-panel">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>Customize avatars</mat-panel-title>
+                    </mat-expansion-panel-header>
                   <!-- <span>Facial hair</span>
-              <mat-chip-listbox
-                aria-label="Facial hair options"
-                selectable
-                class="chip-selector"
-              >
-                <mat-chip-option
-                  *ngFor="let option of facialHairOptions"
-                  [selected]="selectedFacialHairOption === option.value"
-                  (click)="selectedFacialHairOption = option.value"
-                  >{{ option.label }}</mat-chip-option
-                >
-              </mat-chip-listbox> -->
-                  <span>Hair</span>
                   <mat-chip-listbox
                     aria-label="Facial hair options"
-                    class="chip-selector"
-                    multiple
                     selectable
-                  >
+                    class="chip-selector"
+                    >
                     <mat-chip-option
-                      *ngFor="let option of hairOptions"
-                      [selected]="selectedHairOptions[option.value] === true"
-                      (click)="
-                        selectedHairOptions[option.value] =
-                          !selectedHairOptions[option.value]
-                      "
+                      *ngFor="let option of facialHairOptions"
+                      [selected]="selectedFacialHairOption === option.value"
+                      (click)="selectedFacialHairOption = option.value"
                       >{{ option.label }}</mat-chip-option
-                    >
-                  </mat-chip-listbox>
-                  <span>Skin tone</span>
-                  <mat-chip-listbox
-                    aria-label="Skin tone options"
-                    class="chip-selector"
-                    multiple
-                    selectable
-                  >
-                    <mat-chip-option
-                      *ngFor="let option of skinToneOptions"
-                      [selected]="
-                        selectedSkinToneOptions[option.value] === true
-                      "
-                      (click)="
-                        selectedSkinToneOptions[option.value] =
-                          !selectedSkinToneOptions[option.value]
-                      "
-                      [style.backgroundColor]="'#' + option.value"
-                      >#{{ option.label }}</mat-chip-option
-                    >
-                  </mat-chip-listbox>
-                  <small>
-                    Avatars provided by DiceBear:
-                    https://dicebear.com/styles/avataaars <br />
-                    The options selected above provide seed for avatar
-                    generation. Generated avatars might still include items that
-                    don't fit the filters.
-                  </small>
-                  <mat-action-row>
-                    <button
-                      mat-flat-button
-                      color="primary"
-                      (click)="randomizeAvatars()"
-                    >
-                      Generate avatars
-                    </button>
-                  </mat-action-row>
-                </mat-expansion-panel>
-              </mat-accordion>
-            </div>
-            <div class="avatar-selector">
-              <div class="avatar-selector-item clear">
-                <div class="avatar avatar-image" (click)="selectAvatar(null)">
-                  <div>{{ user?.displayName?.charAt(0) }}</div>
+                      >
+                    </mat-chip-listbox> -->
+                    <span>Hair</span>
+                    <mat-chip-listbox
+                      aria-label="Facial hair options"
+                      class="chip-selector"
+                      multiple
+                      selectable
+                      >
+                      @for (option of hairOptions; track option) {
+                        <mat-chip-option
+                          [selected]="selectedHairOptions[option.value] === true"
+                          (click)="
+                          selectedHairOptions[option.value] =
+                          !selectedHairOptions[option.value]
+                          "
+                          >{{ option.label }}</mat-chip-option
+                          >
+                        }
+                      </mat-chip-listbox>
+                      <span>Skin tone</span>
+                      <mat-chip-listbox
+                        aria-label="Skin tone options"
+                        class="chip-selector"
+                        multiple
+                        selectable
+                        >
+                        @for (option of skinToneOptions; track option) {
+                          <mat-chip-option
+                            [selected]="
+                            selectedSkinToneOptions[option.value] === true
+                            "
+                            (click)="
+                            selectedSkinToneOptions[option.value] =
+                            !selectedSkinToneOptions[option.value]
+                            "
+                            [style.backgroundColor]="'#' + option.value"
+                            >#{{ option.label }}</mat-chip-option
+                            >
+                          }
+                        </mat-chip-listbox>
+                        <small>
+                          Avatars provided by DiceBear:
+                          https://dicebear.com/styles/avataaars <br />
+                          The options selected above provide seed for avatar
+                          generation. Generated avatars might still include items that
+                          don't fit the filters.
+                        </small>
+                        <mat-action-row>
+                          <button
+                            mat-flat-button
+                            color="primary"
+                            (click)="randomizeAvatars()"
+                            >
+                            Generate avatars
+                          </button>
+                        </mat-action-row>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                  </div>
+                  <div class="avatar-selector">
+                    <div class="avatar-selector-item clear">
+                      <div class="avatar avatar-image" (click)="selectAvatar(null)">
+                        <div>{{ user?.displayName?.charAt(0) }}</div>
+                      </div>
+                    </div>
+                    @for (avatar of avatars; track avatar.url) {
+                      <button
+                        mat-icon-button
+                        class="avatar-selector-item"
+                        [class.selected]="user?.photoURL === avatar.url"
+                        (click)="selectAvatar(avatar)"
+                        >
+                        <img
+                          [src]="avatar.url"
+                          class="avatar-image"
+                          loading="lazy"
+                          alt="A user's avatar"
+                          />
+                      </button>
+                    }
+                  </div>
                 </div>
               </div>
-              <button
-                mat-icon-button
-                class="avatar-selector-item"
-                *ngFor="let avatar of avatars"
-                [class.selected]="user?.photoURL === avatar.url"
-                (click)="selectAvatar(avatar)"
-              >
-                <img
-                  [src]="avatar.url"
-                  class="avatar-image"
-                  loading="lazy"
-                  alt="A user's avatar"
-                />
-              </button>
-            </div>
-          </div>
+            </mat-tab>
+          </mat-tab-group>
         </div>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-flat-button cdkFocusInitial mat-dialog-close>
-      <mat-icon>close</mat-icon>
-      Close
-    </button>
-    <button
-      mat-button
-      color="warn"
-      (click)="signOut()"
-      *ngIf="selectedTabIndex === 0 && user"
-    >
-      <mat-icon>logout</mat-icon>
-      Sign out {{ user?.isAnonymous ? '& delete account' : ''}}
-    </button>
-    <button
-      mat-button
-      (click)="randomizeAvatars()"
-      color="primary"
-      *ngIf="selectedTabIndex === 2"
-    >
-      <mat-icon>shuffle</mat-icon>
-      Generate new avatars
-    </button>
-  </div>
-</div>
+        <div mat-dialog-actions>
+          <button mat-flat-button cdkFocusInitial mat-dialog-close>
+            <mat-icon>close</mat-icon>
+            Close
+          </button>
+          @if (selectedTabIndex === 0 && user) {
+            <button
+              mat-button
+              color="warn"
+              (click)="signOut()"
+              >
+              <mat-icon>logout</mat-icon>
+              Sign out {{ user?.isAnonymous ? '& delete account' : ''}}
+            </button>
+          }
+          @if (selectedTabIndex === 2) {
+            <button
+              mat-button
+              (click)="randomizeAvatars()"
+              color="primary"
+              >
+              <mat-icon>shuffle</mat-icon>
+              Generate new avatars
+            </button>
+          }
+        </div>
+      </div>
+      

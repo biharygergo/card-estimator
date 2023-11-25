@@ -1,57 +1,59 @@
-<mat-card
-  class="banner banner-info"
-  *ngIf="(user | async)?.isAnonymous && (!hideable || (hideable && !isHidden))"
-  [class.banner-gray]="bannerStyle === 'gray'"
->
-  <mat-card-content class="banner-main">
-    <mat-icon class="banner-icon" color="primary"> info </mat-icon>
-    <div class="banner-content">
-      <p>
-        You are currently using Planning Poker with an anonymous account. Create
-        a free a permanent account in two clicks to:
-      </p>
-      <ul>
-        <li>
-          <mat-icon>history</mat-icon
-          ><span>Store your session and voting history securely</span>
-        </li>
-        <li>
-          <mat-icon>account_circle</mat-icon>
-          <span
-            >Use the same profile across multiple devices and platforms (web &
-            Zoom/Teams/Webex)</span
-          >
-        </li>
-        <li>
-          <mat-icon>link</mat-icon>
-          <span
-            >And more: import tickets from JIRA, create an organization or
-            generate a summary with PokerBot!</span
-          >
-        </li>
-      </ul>
-    </div>
-  </mat-card-content>
-
-  <mat-card-actions class="banner-action">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="onSignUpClicked.next()"
-      [disabled]="isBusy | async"
-      id="create-account-button-banner"
+@if ((user | async)?.isAnonymous && (!hideable || (hideable && !isHidden))) {
+  <mat-card
+    class="banner banner-info"
+    [class.banner-gray]="bannerStyle === 'gray'"
     >
-      <mat-icon>account_circle</mat-icon>
-      Create an account
-    </button>
-    <button
-      mat-flat-button
-      color="secondary"
-      (click)="hideBanner()"
-      *ngIf="hideable"
-    >
-      <mat-icon>schedule</mat-icon>
-      Maybe later
-    </button>
-  </mat-card-actions>
-</mat-card>
+    <mat-card-content class="banner-main">
+      <mat-icon class="banner-icon" color="primary"> info </mat-icon>
+      <div class="banner-content">
+        <p>
+          You are currently using Planning Poker with an anonymous account. Create
+          a free a permanent account in two clicks to:
+        </p>
+        <ul>
+          <li>
+            <mat-icon>history</mat-icon
+            ><span>Store your session and voting history securely</span>
+          </li>
+          <li>
+            <mat-icon>account_circle</mat-icon>
+            <span
+              >Use the same profile across multiple devices and platforms (web &
+              Zoom/Teams/Webex)</span
+              >
+            </li>
+            <li>
+              <mat-icon>link</mat-icon>
+              <span
+                >And more: import tickets from JIRA, create an organization or
+                generate a summary with PokerBot!</span
+                >
+              </li>
+            </ul>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="banner-action">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="onSignUpClicked.next()"
+            [disabled]="isBusy | async"
+            id="create-account-button-banner"
+            >
+            <mat-icon>account_circle</mat-icon>
+            Create an account
+          </button>
+          @if (hideable) {
+            <button
+              mat-flat-button
+              color="secondary"
+              (click)="hideBanner()"
+              >
+              <mat-icon>schedule</mat-icon>
+              Maybe later
+            </button>
+          }
+        </mat-card-actions>
+      </mat-card>
+    }
+    

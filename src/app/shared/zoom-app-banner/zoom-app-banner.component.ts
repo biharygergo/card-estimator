@@ -23,8 +23,8 @@ const ZOOM_APP_PROMO_SEEN_KEY = 'zoomAppPromoSeen';
     RouterModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
   selector: 'zoom-app-banner',
   templateUrl: './zoom-app-banner.component.html',
   styleUrls: ['./zoom-app-banner.component.scss'],

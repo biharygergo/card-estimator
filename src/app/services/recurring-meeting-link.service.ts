@@ -72,7 +72,7 @@ export class RecurringMeetingLinkService {
           recurringMeetingLinkId,
           'createdRooms'
         ) as CollectionReference<RecurringMeetingLinkCreatedRoom>;
-        const q = query<RecurringMeetingLinkCreatedRoom>(
+        const q = query(
           ref,
           where('createdAt', '>=', Timestamp.fromDate(date)),
           orderBy('createdAt', 'desc')
@@ -141,7 +141,7 @@ export class RecurringMeetingLinkService {
           this.firestore,
           'recurringMeetingLinks'
         ) as CollectionReference<RecurringMeetingLink>;
-        const q = query<RecurringMeetingLink>(
+        const q = query(
           collectionReference,
           where('createdById', '==', user.uid)
         );
@@ -164,7 +164,7 @@ export class RecurringMeetingLinkService {
           this.firestore,
           'recurringMeetingLinks'
         ) as CollectionReference<RecurringMeetingLink>;
-        const q = query<RecurringMeetingLink>(
+        const q = query(
           collectionReference,
           where('organizationId', '==', organization.id)
         );

@@ -121,8 +121,8 @@ const GREETINGS: { [hour: number]: string } = {
     SharedModule,
     ZoomAppBannerComponent,
     AppConfigModule,
-    CarbonAdComponent,
-  ],
+    CarbonAdComponent
+],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],

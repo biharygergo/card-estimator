@@ -1,409 +1,440 @@
 <mat-card appearance="outlined" class="rounded-card">
-  <mat-card-content class="big-panel" *ngIf="isExpanded">
-    <div class="action-buttons-container">
-      <div class="alert" *ngIf="room?.isAsyncVotingEnabled">
+  @if (isExpanded) {
+    <mat-card-content class="big-panel">
+      <div class="action-buttons-container">
+        @if (room?.isAsyncVotingEnabled) {
+          <div class="alert">
+            <button
+              mat-icon-button
+              matTooltip="View previous round"
+              (click)="changeLocalRound(-1)"
+              [disabled]="localActiveRound.value === 0"
+              id="async-previous-round"
+              >
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span>Async voting enabled</span>
+            <button
+              mat-icon-button
+              matTooltip="View next round"
+              (click)="changeLocalRound(1)"
+              [disabled]="localActiveRound.value === rounds.length - 1"
+              id="async-next-round"
+              >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        }
+        @if (currentRound === rounds.length - 1 && !room.isAsyncVotingEnabled) {
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="newRoundClicked.next()"
+            [disabled]="
+            !(permissionsService.canCreateRounds() | async) ||
+            (newRoundButtonCooldownState$ | async).includes('cooldown') ||
+            isEditingTopic
+            "
+            class="new-round-button"
+            id="new-round-button"
+            >
+            @if ((newRoundButtonCooldownState$ | async) === 'cooldown') {
+              <div
+                class="center-icon-button"
+                @fadeAnimation
+                >
+                <mat-icon>checkmark</mat-icon>
+                Round #{{ currentRound + 1 }} created
+              </div>
+            }
+            @if ((newRoundButtonCooldownState$ | async) === 'initial') {
+              <div
+                class="center-icon-button"
+                @fadeAnimation
+                >
+                <mat-icon>add</mat-icon>
+                New round
+              </div>
+            }
+          </button>
+        }
+        @if (currentRound < rounds.length - 1 && !room?.isAsyncVotingEnabled) {
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="nextRound()"
+            [disabled]="
+            !(permissionsService.canCreateRounds() | async) || isEditingTopic
+            "
+            id="next-round-button"
+            >
+            <div class="center-icon-button">
+              <mat-icon>navigate_next</mat-icon>
+              Next round
+            </div>
+          </button>
+        }
+        @if (!room?.isAsyncVotingEnabled) {
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="showResults()"
+            [disabled]="
+            (room?.rounds)[currentRound]?.show_results ||
+            !(permissionsService.canRevealResults() | async)
+            "
+            id="reveal-results-button"
+            >
+            <div class="center-icon-button">
+              <mat-icon>visibility</mat-icon>
+              {{
+              (room?.rounds)[currentRound]?.show_results
+              ? "Votes revealed"
+              : "Reveal votes"
+              }}
+            </div>
+          </button>
+        }
+      </div>
+      <div class="room-id-container">
+        <h4>
+          <span
+          >Room ID: <strong>{{ room?.roomId }}</strong></span
+          >
+          <button
+            mat-stroked-button
+            (click)="inviteButtonClicked.next()"
+            [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+            id="invite-button"
+            >
+            @if ((inviteButtonCooldownState$ | async) === 'initial') {
+              <div
+                class="center-icon-button"
+                @fadeAnimation
+                >
+                <mat-icon>link</mat-icon>
+                Invite
+              </div>
+            }
+            @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
+              <div
+                class="center-icon-button"
+                @fadeAnimation
+                >
+                <mat-icon>checkmark</mat-icon>
+                {{ config.runningIn === "web" ? "Copied" : "Invited" }}
+              </div>
+            }
+          </button>
+        </h4>
+      </div>
+      <div class="card-footer-actions">
+        <countdown-timer [room]="room$"></countdown-timer>
+      </div>
+      <div class="card-footer-actions align-right">
         <button
-          mat-icon-button
-          matTooltip="View previous round"
-          (click)="changeLocalRound(-1)"
-          [disabled]="localActiveRound.value === 0"
-          id="async-previous-round"
-        >
-          <mat-icon>chevron_left</mat-icon>
+          mat-stroked-button
+          [matMenuTriggerFor]="roomSettingsMenu"
+          id="room-options-button"
+          class="responsive-label-button"
+          matTooltip="Room options"
+          >
+          <mat-icon>settings</mat-icon>
+          Options
         </button>
-        <span>Async voting enabled</span>
         <button
-          mat-icon-button
-          matTooltip="View next round"
-          (click)="changeLocalRound(1)"
-          [disabled]="localActiveRound.value === rounds.length - 1"
-          id="async-next-round"
-        >
-          <mat-icon>chevron_right</mat-icon>
+          mat-stroked-button
+          matTooltip="Minimize control panel"
+          (click)="expandClicked.emit()"
+          class="responsive-label-button forced"
+          id="minimize-panel-button"
+          >
+          @if (!isSmallScreen) {
+            <mat-icon>chevron_right</mat-icon>
+          } @else {
+            <mat-icon>expand_less</mat-icon>
+          }
         </button>
       </div>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="newRoundClicked.next()"
-        *ngIf="currentRound === rounds.length - 1 && !room.isAsyncVotingEnabled"
-        [disabled]="
+    </mat-card-content>
+  }
+  @if (!isExpanded) {
+    <mat-card-content class="mini-panel">
+      @if (currentRound === rounds.length - 1 && !room.isAsyncVotingEnabled) {
+        <button
+          mat-icon-button
+          aria-label="New round"
+          color="primary"
+          (click)="newRoundClicked.next()"
+          [disabled]="
           !(permissionsService.canCreateRounds() | async) ||
           (newRoundButtonCooldownState$ | async).includes('cooldown') ||
           isEditingTopic
-        "
-        class="new-round-button"
-        id="new-round-button"
-      >
-        <div
-          class="center-icon-button"
-          *ngIf="(newRoundButtonCooldownState$ | async) === 'cooldown'"
-          @fadeAnimation
-        >
-          <mat-icon>checkmark</mat-icon>
-          Round #{{ currentRound + 1 }} created
-        </div>
-        <div
-          class="center-icon-button"
-          *ngIf="(newRoundButtonCooldownState$ | async) === 'initial'"
-          @fadeAnimation
-        >
-          <mat-icon>add</mat-icon>
-          New round
-        </div>
-      </button>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="nextRound()"
-        [disabled]="
-          !(permissionsService.canCreateRounds() | async) || isEditingTopic
-        "
-        *ngIf="currentRound < rounds.length - 1 && !room?.isAsyncVotingEnabled"
-        id="next-round-button"
-      >
-        <div class="center-icon-button">
-          <mat-icon>navigate_next</mat-icon>
-          Next round
-        </div>
-      </button>
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="showResults()"
-        [disabled]="
-          (room?.rounds)[currentRound]?.show_results ||
-          !(permissionsService.canRevealResults() | async)
-        "
-        id="reveal-results-button"
-        *ngIf="!room?.isAsyncVotingEnabled"
-      >
-        <div class="center-icon-button">
-          <mat-icon>visibility</mat-icon>
-          {{
-            (room?.rounds)[currentRound]?.show_results
-              ? "Votes revealed"
-              : "Reveal votes"
-          }}
-        </div>
-      </button>
-    </div>
-    <div class="room-id-container">
-      <h4>
-        <span
-          >Room ID: <strong>{{ room?.roomId }}</strong></span
-        >
-        <button
-          mat-stroked-button
-          (click)="inviteButtonClicked.next()"
-          [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
-          id="invite-button"
-        >
-          <div
-            class="center-icon-button"
-            *ngIf="(inviteButtonCooldownState$ | async) === 'initial'"
-            @fadeAnimation
+          "
+          class="new-round-button"
+          id="new-round-button"
+          matTooltip="Add a new round"
+          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
           >
-            <mat-icon>link</mat-icon>
-            Invite
-          </div>
+          @if ((newRoundButtonCooldownState$ | async) === 'cooldown') {
+            <mat-icon
+              @fadeAnimation
+              >checkmark</mat-icon
+              >
+            }
+            @if ((newRoundButtonCooldownState$ | async) === 'initial') {
+              <mat-icon
+                @fadeAnimation
+                >add</mat-icon
+                >
+              }
+            </button>
+          }
+          @if (currentRound < rounds.length - 1 && !room.isAsyncVotingEnabled) {
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="nextRound()"
+              [disabled]="
+              !(permissionsService.canCreateRounds() | async) || isEditingTopic
+              "
+              matTooltip="Go to next round"
+              [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+              id="next-round-button"
+              >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          }
+          @if (!room.isAsyncVotingEnabled) {
+            <button
+              mat-icon-button
+              (click)="showResults()"
+              [disabled]="
+              (room?.rounds)[currentRound]?.show_results ||
+              !(permissionsService.canRevealResults() | async)
+              "
+              matTooltip="Reveal results"
+              [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+              id="reveal-results-button"
+              >
+              <mat-icon>visibility</mat-icon>
+            </button>
+          }
+          @if (room.isAsyncVotingEnabled) {
+            <button
+              mat-icon-button
+              matTooltip="View previous round"
+              (click)="changeLocalRound(-1)"
+              [disabled]="localActiveRound.value === 0"
+              color="primary"
+              >
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+          }
+          @if (room.isAsyncVotingEnabled) {
+            <button
+              mat-icon-button
+              matTooltip="View next round"
+              (click)="changeLocalRound(1)"
+              [disabled]="localActiveRound.value === rounds.length - 1"
+              color="primary"
+              >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          }
+          <button
+            mat-icon-button
+            (click)="inviteButtonClicked.next()"
+            [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+            matTooltip="Invite others"
+            [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+            id="invite-button"
+            >
+            @if ((inviteButtonCooldownState$ | async) === 'initial') {
+              <mat-icon
+                @fadeAnimation
+                >link</mat-icon
+                >
+              }
+              @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
+                <mat-icon
+                  @fadeAnimation
+                  >checkmark</mat-icon
+                  >
+                }
+              </button>
+              <countdown-timer [room]="room$" [minimized]="true"></countdown-timer>
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="roomSettingsMenu"
+                id="room-options-button"
+                matTooltip="Room settings"
+                [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+                >
+                <mat-icon>settings</mat-icon>
+              </button>
+              <div>
+                <button
+                  mat-icon-button
+                  (click)="expandClicked.emit()"
+                  matTooltip="Expand control panel"
+                  [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+                  id="expand-button"
+                  >
+                  @if (!isSmallScreen) {
+                    <mat-icon>chevron_left</mat-icon>
+                  } @else {
+                    <mat-icon>expand_more</mat-icon>
+                  }
+                </button>
+              </div>
+            </mat-card-content>
+          }
+        </mat-card>
+        <mat-menu #roomSettingsMenu="matMenu">
+          <button
+            mat-menu-item
+            aria-label="Toggle topics sidebar"
+            (click)="sidebarTriggered.emit()"
+            class="topics-toggle"
+            id="topics-toggle"
+            >
+            <mat-icon>list</mat-icon>
+            Manage rounds
+          </button>
+          <mat-divider />
+          <button
+            mat-menu-item
+            [matMenuTriggerFor]="menu"
+            aria-label="Estimator settings"
+            class="estimator-settings-button"
+            (click)="clickedUnitsButton()"
+            id="card-sets-button"
+            [disabled]="!(permissionsService.canChangeCardSet() | async)"
+            >
+            <mat-icon>style</mat-icon>
+            Set cards
+          </button>
+          <button
+            mat-menu-item
+            [matMenuTriggerFor]="changeRoleMenu"
+            aria-label="Switch current role"
+            id="switch-role-button"
+            >
+            <mat-icon>switch_account</mat-icon>
+            Change role
+          </button>
+          <button
+            mat-menu-item
+            aria-label="Permissions and security"
+            class="estimator-settings-button"
+            (click)="openRoomConfigurationModal()"
+            >
+            <mat-icon>security</mat-icon>
+            <span>Security and permissions</span>
+          </button>
+          <mat-divider />
           <div
-            class="center-icon-button"
-            *ngIf="(inviteButtonCooldownState$ | async) === 'cooldown'"
-            @fadeAnimation
-          >
-            <mat-icon>checkmark</mat-icon>
-            {{ config.runningIn === "web" ? "Copied" : "Invited" }}
+            mat-menu-item
+            role="menuitemcheckbox"
+            class="pass-option"
+            matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
+            matTooltipPosition="left"
+            >
+            <mat-checkbox
+              (click)="toggleAsyncVoting(); $event.stopPropagation()"
+              [checked]="room?.isAsyncVotingEnabled"
+              class="menu-option-checkbox async-vote-checkbox"
+            ><span class="pass-option-label">Enable async voting</span></mat-checkbox
+            >
           </div>
-        </button>
-      </h4>
-    </div>
-    <div class="card-footer-actions">
-      <countdown-timer [room]="room$"></countdown-timer>
-    </div>
-    <div class="card-footer-actions align-right">
-      <button
-        mat-stroked-button
-        [matMenuTriggerFor]="roomSettingsMenu"
-        id="room-options-button"
-        class="responsive-label-button"
-        matTooltip="Room options"
-      >
-        <mat-icon>settings</mat-icon>
-        Options
-      </button>
-      <button
-        mat-stroked-button
-        matTooltip="Minimize control panel"
-        (click)="expandClicked.emit()"
-        class="responsive-label-button forced"
-        id="minimize-panel-button"
-      >
-        <mat-icon *ngIf="!isSmallScreen; else upIcon">chevron_right</mat-icon>
-        <ng-template #upIcon><mat-icon>expand_less</mat-icon></ng-template>
-      </button>
-    </div>
-  </mat-card-content>
-  <mat-card-content class="mini-panel" *ngIf="!isExpanded">
-    <button
-      mat-icon-button
-      aria-label="New round"
-      color="primary"
-      (click)="newRoundClicked.next()"
-      *ngIf="currentRound === rounds.length - 1 && !room.isAsyncVotingEnabled"
-      [disabled]="
-        !(permissionsService.canCreateRounds() | async) ||
-        (newRoundButtonCooldownState$ | async).includes('cooldown') ||
-        isEditingTopic
-      "
-      class="new-round-button"
-      id="new-round-button"
-      matTooltip="Add a new round"
-      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-    >
-      <mat-icon
-        *ngIf="(newRoundButtonCooldownState$ | async) === 'cooldown'"
-        @fadeAnimation
-        >checkmark</mat-icon
-      >
-      <mat-icon
-        *ngIf="(newRoundButtonCooldownState$ | async) === 'initial'"
-        @fadeAnimation
-        >add</mat-icon
-      >
-    </button>
-    <button
-      mat-icon-button
-      color="primary"
-      (click)="nextRound()"
-      [disabled]="
-        !(permissionsService.canCreateRounds() | async) || isEditingTopic
-      "
-      *ngIf="currentRound < rounds.length - 1 && !room.isAsyncVotingEnabled"
-      matTooltip="Go to next round"
-      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-      id="next-round-button"
-    >
-      <mat-icon>navigate_next</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      (click)="showResults()"
-      [disabled]="
-        (room?.rounds)[currentRound]?.show_results ||
-        !(permissionsService.canRevealResults() | async)
-      "
-      matTooltip="Reveal results"
-      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-      id="reveal-results-button"
-      *ngIf="!room.isAsyncVotingEnabled"
-    >
-      <mat-icon>visibility</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      matTooltip="View previous round"
-      (click)="changeLocalRound(-1)"
-      [disabled]="localActiveRound.value === 0"
-      color="primary"
-      *ngIf="room.isAsyncVotingEnabled"
-    >
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      matTooltip="View next round"
-      (click)="changeLocalRound(1)"
-      [disabled]="localActiveRound.value === rounds.length - 1"
-      color="primary"
-      *ngIf="room.isAsyncVotingEnabled"
-    >
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      (click)="inviteButtonClicked.next()"
-      [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
-      matTooltip="Invite others"
-      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-      id="invite-button"
-    >
-      <mat-icon
-        *ngIf="(inviteButtonCooldownState$ | async) === 'initial'"
-        @fadeAnimation
-        >link</mat-icon
-      >
-      <mat-icon
-        *ngIf="(inviteButtonCooldownState$ | async) === 'cooldown'"
-        @fadeAnimation
-        >checkmark</mat-icon
-      >
-    </button>
-    <countdown-timer [room]="room$" [minimized]="true"></countdown-timer>
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="roomSettingsMenu"
-      id="room-options-button"
-      matTooltip="Room settings"
-      [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-    >
-      <mat-icon>settings</mat-icon>
-    </button>
-    <div>
-      <button
-        mat-icon-button
-        (click)="expandClicked.emit()"
-        matTooltip="Expand control panel"
-        [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
-        id="expand-button"
-      >
-        <mat-icon *ngIf="!isSmallScreen; else downIcon">chevron_left</mat-icon>
-        <ng-template #downIcon><mat-icon>expand_more</mat-icon></ng-template>
-      </button>
-    </div>
-  </mat-card-content>
-</mat-card>
-<mat-menu #roomSettingsMenu="matMenu">
-  <button
-    mat-menu-item
-    aria-label="Toggle topics sidebar"
-    (click)="sidebarTriggered.emit()"
-    class="topics-toggle"
-    id="topics-toggle"
-  >
-    <mat-icon>list</mat-icon>
-    Manage rounds
-  </button>
-  <mat-divider />
-  <button
-    mat-menu-item
-    [matMenuTriggerFor]="menu"
-    aria-label="Estimator settings"
-    class="estimator-settings-button"
-    (click)="clickedUnitsButton()"
-    id="card-sets-button"
-    [disabled]="!(permissionsService.canChangeCardSet() | async)"
-  >
-    <mat-icon>style</mat-icon>
-    Set cards
-  </button>
-  <button
-    mat-menu-item
-    [matMenuTriggerFor]="changeRoleMenu"
-    aria-label="Switch current role"
-    id="switch-role-button"
-  >
-    <mat-icon>switch_account</mat-icon>
-    Change role
-  </button>
-  <button
-    mat-menu-item
-    aria-label="Permissions and security"
-    class="estimator-settings-button"
-    (click)="openRoomConfigurationModal()"
-  >
-    <mat-icon>security</mat-icon>
-    <span>Security and permissions</span>
-  </button>
-  <mat-divider />
-  <div
-    mat-menu-item
-    role="menuitemcheckbox"
-    class="pass-option"
-    matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
-    matTooltipPosition="left"
-  >
-    <mat-checkbox
-      (click)="toggleAsyncVoting(); $event.stopPropagation()"
-      [checked]="room?.isAsyncVotingEnabled"
-      class="menu-option-checkbox async-vote-checkbox"
-      ><span class="pass-option-label">Enable async voting</span></mat-checkbox
-    >
-  </div>
-  <mat-divider></mat-divider>
-  <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
-    <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
-    {{ isMuted ? "Sound is off" : "Sound is on" }}
-  </button>
-  <button
-    mat-menu-item
-    color="warn"
-    (click)="leaveRoom()"
-    id="leave-room-button"
-  >
-    <mat-icon>exit_to_app</mat-icon>
-    Leave room
-  </button>
-</mat-menu>
-<mat-menu #menu="matMenu">
-  <button
-    mat-menu-item
-    *ngFor="let cardSet of estimationCardSets"
-    (click)="setEstimationCardSet(cardSet)"
-    [ngClass]="selectedEstimationCardSetValue.key === cardSet.key && 'selected'"
-  >
-    <mat-icon>{{ cardSet.icon }}</mat-icon>
-    <span class="card-set-title"
-      >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
-    >
-  </button>
-  <mat-divider></mat-divider>
-  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
-    <mat-checkbox
-      (click)="toggleShowPassOption(); $event.stopPropagation()"
-      [checked]="room?.showPassOption"
-      class="menu-option-checkbox pass-option-checkbox"
-      ><span class="pass-option-label"
-        >Include "Pass" (?) card</span
-      ></mat-checkbox
-    >
-  </div>
-  <mat-divider></mat-divider>
-  <button
-    mat-menu-item
-    [matMenuTriggerFor]="savedCardsMenu"
-    aria-label="Saved card sets"
-    id="card-saved-sets-button"
-    [disabled]="
-      savedCardSets.length === 0 ||
-      !(permissionsService.hasPremiumAccess() | async)
-    "
-  >
-    <mat-icon>cloud</mat-icon>
-    Saved card sets ({{ savedCardSets.length }})
-  </button>
-  <mat-menu #savedCardsMenu="matMenu">
-    <button
-      mat-menu-item
-      *ngFor="let cardSet of savedCardSets"
-      (click)="setEstimationCardSet(cardSet)"
-    >
-      <mat-icon>cloud_download</mat-icon>
-      <span class="card-set-title"
-        >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
-      >
-    </button>
-  </mat-menu>
-  <button mat-menu-item (click)="openAddCardDeckModal()">
-    <mat-icon>add</mat-icon>
-    <span>Set a custom card deck</span>
-  </button>
-</mat-menu>
-<mat-menu #changeRoleMenu="matMenu">
-  <button
-    mat-menu-item
-    [class.selected]="(activeMember$ | async)?.type === MemberType.ESTIMATOR"
-    (click)="updateMemberType(MemberType.ESTIMATOR)"
-  >
-    <mat-icon>how_to_vote</mat-icon>
-    Estimator
-  </button>
-  <button
-    mat-menu-item
-    [class.selected]="(activeMember$ | async)?.type === MemberType.OBSERVER"
-    (click)="updateMemberType(MemberType.OBSERVER)"
-  >
-    <mat-icon>visibility</mat-icon>
-    Observer
-  </button>
-</mat-menu>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
+            <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>
+            {{ isMuted ? "Sound is off" : "Sound is on" }}
+          </button>
+          <button
+            mat-menu-item
+            color="warn"
+            (click)="leaveRoom()"
+            id="leave-room-button"
+            >
+            <mat-icon>exit_to_app</mat-icon>
+            Leave room
+          </button>
+        </mat-menu>
+        <mat-menu #menu="matMenu">
+          @for (cardSet of estimationCardSets; track cardSet) {
+            <button
+              mat-menu-item
+              (click)="setEstimationCardSet(cardSet)"
+              [ngClass]="selectedEstimationCardSetValue.key === cardSet.key && 'selected'"
+              >
+              <mat-icon>{{ cardSet.icon }}</mat-icon>
+              <span class="card-set-title"
+                >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
+                >
+              </button>
+            }
+            <mat-divider></mat-divider>
+            <div mat-menu-item role="menuitemcheckbox" class="pass-option">
+              <mat-checkbox
+                (click)="toggleShowPassOption(); $event.stopPropagation()"
+                [checked]="room?.showPassOption"
+                class="menu-option-checkbox pass-option-checkbox"
+                ><span class="pass-option-label"
+                >Include "Pass" (?) card</span
+                ></mat-checkbox
+                >
+              </div>
+              <mat-divider></mat-divider>
+              <button
+                mat-menu-item
+                [matMenuTriggerFor]="savedCardsMenu"
+                aria-label="Saved card sets"
+                id="card-saved-sets-button"
+                [disabled]="
+                savedCardSets.length === 0 ||
+                !(permissionsService.hasPremiumAccess() | async)
+                "
+                >
+                <mat-icon>cloud</mat-icon>
+                Saved card sets ({{ savedCardSets.length }})
+              </button>
+              <mat-menu #savedCardsMenu="matMenu">
+                @for (cardSet of savedCardSets; track cardSet) {
+                  <button
+                    mat-menu-item
+                    (click)="setEstimationCardSet(cardSet)"
+                    >
+                    <mat-icon>cloud_download</mat-icon>
+                    <span class="card-set-title"
+                      >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
+                      >
+                    </button>
+                  }
+                </mat-menu>
+                <button mat-menu-item (click)="openAddCardDeckModal()">
+                  <mat-icon>add</mat-icon>
+                  <span>Set a custom card deck</span>
+                </button>
+              </mat-menu>
+              <mat-menu #changeRoleMenu="matMenu">
+                <button
+                  mat-menu-item
+                  [class.selected]="(activeMember$ | async)?.type === MemberType.ESTIMATOR"
+                  (click)="updateMemberType(MemberType.ESTIMATOR)"
+                  >
+                  <mat-icon>how_to_vote</mat-icon>
+                  Estimator
+                </button>
+                <button
+                  mat-menu-item
+                  [class.selected]="(activeMember$ | async)?.type === MemberType.OBSERVER"
+                  (click)="updateMemberType(MemberType.OBSERVER)"
+                  >
+                  <mat-icon>visibility</mat-icon>
+                  Observer
+                </button>
+              </mat-menu>
+              

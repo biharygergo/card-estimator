@@ -72,6 +72,7 @@ const routes: Routes = [
       initialNavigation: 'enabledBlocking',
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
+      enableViewTransitions: true,
     }),
   ],
   exports: [RouterModule],

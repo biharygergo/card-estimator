@@ -41,7 +41,7 @@ export class MeteredUsageService {
           user.uid,
           'meteredUsage'
         ) as CollectionReference<MeteredUsage>;
-        const q = query<MeteredUsage>(
+        const q = query(
           ref,
           where('type', '==', usageType),
           where('createdAt', '>=', Timestamp.fromDate(firstDayOfMonth))

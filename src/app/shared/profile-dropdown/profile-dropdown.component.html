@@ -4,75 +4,78 @@
     [matMenuTriggerFor]="menu"
     class="menu-button responsive-label-button"
     id="menu-button"
-  >
+    >
     <mat-icon>more_vert</mat-icon>
     Menu
   </button>
   <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
-    <button
-      mat-menu-item
-      (click)="openAvatarSelector()"
-      *ngIf="currentUser | async as user; else signInButton"
-      id="account-menu-item"
-    >
-      <mat-icon>account_circle</mat-icon>
-      <span>My account</span>
-    </button>
-    <ng-template #signInButton>
+    @if (currentUser | async; as user) {
+      <button
+        mat-menu-item
+        (click)="openAvatarSelector()"
+        id="account-menu-item"
+        >
+        <mat-icon>account_circle</mat-icon>
+        <span>My account</span>
+      </button>
+    } @else {
       <button
         mat-menu-item
         (click)="openCreateAccountModal()"
         id="sign-in-menu-item"
-      >
+        >
         <mat-icon>account_circle</mat-icon>
         <span>Sign in</span>
       </button>
-    </ng-template>
-
-    <button
-      mat-menu-item
-      (click)="openOrganizationModal()"
-      *ngIf="currentUser | async as user"
-    >
-      <mat-icon>groups</mat-icon>
-      <span>My organization</span>
-    </button>
+    }
+    @if (currentUser | async; as user) {
+      <button
+        mat-menu-item
+        (click)="openOrganizationModal()"
+        >
+        <mat-icon>groups</mat-icon>
+        <span>My organization</span>
+      </button>
+    }
     <button mat-menu-item (click)="openIntegrationsModal()">
       <mat-icon>extension</mat-icon>
       <span>Integrations</span>
     </button>
-    <button
-      mat-menu-item
-      (click)="openPremiumLearnMoreModal()"
-      *ngIf="
-        !(permissionsService.hasPremiumAccess() | async) &&
-        !paymentService.isSubscriptionDisabled
-      "
-    >
-      <mat-icon>lock_open</mat-icon>
-      <span>Unlock features</span>
-    </button>
+    @if (
+      !(permissionsService.hasPremiumAccess() | async) &&
+      !paymentService.isSubscriptionDisabled
+      ) {
+      <button
+        mat-menu-item
+        (click)="openPremiumLearnMoreModal()"
+        >
+        <mat-icon>lock_open</mat-icon>
+        <span>Unlock features</span>
+      </button>
+    }
     <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>
       <span>Previous sessions</span>
     </a>
     <mat-divider></mat-divider>
-    <button
-      mat-menu-item
-      (click)="toggleDarkMode()"
-      *ngIf="themeService.currentTheme === 'dark'"
-    >
-      <mat-icon>light_mode</mat-icon>
-      <span>Light mode</span>
-    </button>
-    <button
-      mat-menu-item
-      (click)="toggleDarkMode()"
-      *ngIf="themeService.currentTheme === 'default'"
-    >
-      <mat-icon>dark_mode</mat-icon>
-      <span>Dark mode</span>
-    </button>
+    @if (themeService.currentTheme === 'dark') {
+      <button
+        mat-menu-item
+        (click)="toggleDarkMode()"
+        >
+        <mat-icon>light_mode</mat-icon>
+        <span>Light mode</span>
+      </button>
+    }
+    @if (themeService.currentTheme === 'default') {
+      <button
+        mat-menu-item
+        (click)="toggleDarkMode()"
+        >
+        <mat-icon>dark_mode</mat-icon>
+        <span>Dark mode</span>
+      </button>
+    }
     <button mat-menu-item (click)="reportAnIssue()">
       <mat-icon>bug_report</mat-icon>
       <span>Report an issue</span>

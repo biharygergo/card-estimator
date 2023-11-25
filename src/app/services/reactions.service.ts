@@ -117,10 +117,10 @@ export class ReactionsService {
       roomId,
       'reactions'
     ) as CollectionReference<Reaction>;
-    const q = query<Reaction>(ref, where('createdAt', '>=', Timestamp.now()));
+    const q = query(ref, where('createdAt', '>=', Timestamp.now()));
     return sortedChanges(q, { events: ['added'] }).pipe(
       filter((changes) => !!changes.length),
-      map((documentChange) => documentChange.pop().doc.data())
+      map((documentChange) => documentChange.pop().doc.data()),
     );
   }
 

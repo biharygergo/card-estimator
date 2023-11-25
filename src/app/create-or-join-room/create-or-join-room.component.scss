@@ -104,6 +104,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   border-radius: 8px;
   box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
     rgba(5, 18, 37, 0.24) 0px 0px 8px;
+  view-transition-name: pp-logo;
 
   &.organization-logo {
     background: white;

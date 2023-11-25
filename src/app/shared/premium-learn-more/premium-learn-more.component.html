@@ -1,10 +1,11 @@
 <div class="content" [class.modal]="pageMode === 'modal'">
-  <div class="close-button" *ngIf="pageMode === 'modal'">
-    <button mat-button mat-dialog-close>
-      <mat-icon>arrow_back</mat-icon>Back
-    </button>
-  </div>
-
+  @if (pageMode === 'modal') {
+    <div class="close-button">
+      <button mat-button mat-dialog-close>
+        <mat-icon>arrow_back</mat-icon>Back
+      </button>
+    </div>
+  }
   <div class="details">
     <div class="details-inner">
       <h1 class="title">
@@ -101,42 +102,42 @@
             <h2
               class="monthly-price"
               matTooltip="The subscription allows the facilitator to create rooms with Premium benefits. One license is enough for small/medium sized organizations."
-            >
-              €15 <span class="light">/team/month</span>
-            </h2>
-            <span class="free-trial">14 days free</span>
-          </div>
-          <div class="yearly">
-            <span
-              ><span class="saving">Save €30</span> with annual billing</span
-            >
-            <span class="yearly-price">€150 /year</span>
-          </div>
+              >
+            €15 <span class="light">/team/month</span>
+          </h2>
+          <span class="free-trial">14 days free</span>
         </div>
-
-        <div class="stripe">
-          <p class="description">Secure global payment and invoicing with</p>
-          <img src="/assets/stripe.png" class="stripe-logo" />
+        <div class="yearly">
+          <span
+          ><span class="saving">Save €30</span> with annual billing</span
+          >
+          <span class="yearly-price">€150 /year</span>
         </div>
-
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="subscribeToPremium()"
-          [disabled]="isPremium$ | async"
-          class="stripe-button"
+      </div>
+      <div class="stripe">
+        <p class="description">Secure global payment and invoicing with</p>
+        <img src="/assets/stripe.png" class="stripe-logo" />
+      </div>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="subscribeToPremium()"
+        [disabled]="isPremium$ | async"
+        class="stripe-button"
         >
-          {{
-            isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial"
-          }}
-        </button>
-        <p class="promotion discount" *ngIf="promotionCodeFromParams">
+        {{
+        isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial"
+        }}
+      </button>
+      @if (promotionCodeFromParams) {
+        <p class="promotion discount">
           Your promotion code will be automatically applied at checkout.
         </p>
-        <button mat-button (click)="getQuote()">
-          Need a custom quote? Get in touch
-        </button>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      }
+      <button mat-button (click)="getQuote()">
+        Need a custom quote? Get in touch
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>
 </div>

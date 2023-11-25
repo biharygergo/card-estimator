@@ -7,28 +7,28 @@
         Poker, agile estimation and related topics.
       </h2>
     </div>
-
     <div class="articles">
-      <a
-        class="article"
-        *ngFor="let article of articles"
-        [routerLink]="article.slug"
-      >
-        <div class="article-image">
-          <img
-            [ngSrc]="article.coverImageId"
-            [alt]="article.coverImageAlt"
-            fill
-            sizes="20wv"
-            priority
-          />
-        </div>
-        <div class="article-preview">
-          <h3>{{ article.title }}</h3>
-          <h5>{{ article.lastUpdated | date:'mediumDate' }}, {{ article.author }}</h5>
-          <p>{{ article.description }}</p>
-        </div>
-      </a>
+      @for (article of articles; track article.slug) {
+        <a
+          class="article"
+          [routerLink]="article.slug"
+          >
+          <div class="article-image">
+            <img
+              [ngSrc]="article.coverImageId"
+              [alt]="article.coverImageAlt"
+              fill
+              sizes="20wv"
+              priority
+              />
+          </div>
+          <div class="article-preview">
+            <h3>{{ article.title }}</h3>
+            <h5>{{ article.lastUpdated | date:'mediumDate' }}, {{ article.author }}</h5>
+            <p>{{ article.description }}</p>
+          </div>
+        </a>
+      }
     </div>
   </div>
 </main>

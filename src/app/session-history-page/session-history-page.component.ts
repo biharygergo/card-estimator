@@ -10,7 +10,7 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     RouterModule,
     SharedModule
-  ],
+],
   selector: 'app-session-history-page',
   templateUrl: './session-history-page.component.html',
   styleUrls: ['./session-history-page.component.scss'],

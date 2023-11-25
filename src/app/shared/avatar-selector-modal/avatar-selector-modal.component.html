@@ -102,7 +102,7 @@
                   <div class="data-item">
                     <strong>Created at</strong>
                     <span>{{
-                      subscription.created | date : "medium"
+                      subscription.created.toMillis() | date : "medium"
                     }}</span>
                   </div>
                   <div class="data-item">
@@ -113,7 +113,7 @@
                       payment at"
                     }}</strong>
                     <span>{{
-                      subscription.current_period_end | date : "medium"
+                      subscription.current_period_end.toMillis() | date : "medium"
                     }}</span>
                   </div>
                 </div>

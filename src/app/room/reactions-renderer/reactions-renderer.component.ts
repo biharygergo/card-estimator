@@ -45,7 +45,6 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
       .getReactionsStream(this.roomId)
       .pipe(
         mergeMap((reaction) => {
-          console.log('got reaction', reaction);
           const reactionFromDict =
             this.reactionsService.reactionsMap[reaction.reactionId];
           const visibleReaction: VisibleReaction = {
@@ -69,7 +68,6 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe((reactionToRemove) => {
-        console.log('removing', this.visibleReactions, reactionToRemove)
         this.visibleReactions = this.visibleReactions.filter(
           (reaction) => reaction.id !== reactionToRemove.id
         );

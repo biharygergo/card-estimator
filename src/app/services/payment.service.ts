@@ -14,7 +14,7 @@ import {
   StripePayments,
   Subscription,
 } from '@stripe/firestore-stripe-payments';
-import { collection, CollectionReference } from 'firebase/firestore';
+import { collection, CollectionReference, Timestamp } from 'firebase/firestore';
 import { Observable, of, switchMap, map, firstValueFrom } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import {
@@ -26,7 +26,11 @@ import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 
-export type StripeSubscription = Subscription;
+export type CorrectSubscription = Subscription & {
+  created: Timestamp
+  current_period_end: Timestamp;
+}
+export type StripeSubscription = CorrectSubscription;
 
 @Injectable({
   providedIn: 'root',
@@ -195,7 +199,7 @@ export class PaymentService {
     window.location.assign((result.data as any).url);
   }
 
-  getSubscription(): Observable<Subscription | undefined> {
+  getSubscription(): Observable<StripeSubscription | undefined> {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user || user?.isAnonymous) {
@@ -205,12 +209,12 @@ export class PaymentService {
         const collectionRef = collection(
           this.firestore,
           `customers/${user.uid}/subscriptions`
-        ) as CollectionReference<Subscription>;
+        ) as CollectionReference<StripeSubscription>;
         const q = query(
           collectionRef,
           where('status', 'in', ['trialing', 'active', 'past_due'])
         );
-        return collectionData<Subscription>(q).pipe(
+        return collectionData<StripeSubscription>(q).pipe(
           map((subscriptions) => {
             return subscriptions?.length ? subscriptions[0] : undefined;
           })

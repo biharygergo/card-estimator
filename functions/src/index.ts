@@ -1,5 +1,5 @@
-import * as functions from "firebase-functions";
 import {onRequest, onCall} from "firebase-functions/v2/https";
+import {onDocumentCreated, onDocumentUpdated} from "firebase-functions/v2/firestore";
 
 import {initializeApp} from "firebase-admin/app";
 import {appCheck} from "firebase-admin";
@@ -127,13 +127,9 @@ exports.sendEmail = onRequest({cors: true}, async (req, res) => {
   );
 });
 
-exports.onUserDetailsCreate = functions.firestore
-    .document("userDetails/{userId}")
-    .onCreate(onUserDetailsCreate);
+exports.onUserDetailsCreate = onDocumentCreated("userDetails/{userId}", onUserDetailsCreate);
 
-exports.onUserDetailsUpdate = functions.firestore
-    .document("userDetails/{userId}")
-    .onUpdate(onUserDetailsUpdate);
+exports.onUserDetailsUpdate = onDocumentUpdated("userDetails/{userId}", onUserDetailsUpdate);
 
 exports.setRoomPassword = onCall(async (request) => setRoomPassword(request));
 
@@ -141,13 +137,9 @@ exports.enterProtectedRoom = onCall(async (request) =>
   enterProtectedRoom(request)
 );
 
-exports.onOrganizationUpdated = functions.firestore
-    .document("organizations/{organizationId}")
-    .onUpdate(onOrganizationUpdated);
+exports.onOrganizationUpdated = onDocumentUpdated("organizations/{organizationId}", onOrganizationUpdated);
 
-exports.onOrganizationInvitation = functions.firestore
-    .document("organizations/{organizationId}/memberInvitations/{invitationId}")
-    .onCreate(onOrganizationInviteCreated);
+exports.onOrganizationInvitation = onDocumentCreated("organizations/{organizationId}/memberInvitations/{invitationId}", onOrganizationInviteCreated);
 
 exports.acceptOrganizationInvitation = onRequest(
     {cors: true},
@@ -156,13 +148,9 @@ exports.acceptOrganizationInvitation = onRequest(
     }
 );
 
-exports.onUserSubscriptionCreated = functions.firestore
-    .document("customers/{customerId}/subscriptions/{subscriptionId}")
-    .onCreate(onCustomerSubscriptionCreated);
+exports.onUserSubscriptionCreated = onDocumentCreated("customers/{customerId}/subscriptions/{subscriptionId}", onCustomerSubscriptionCreated);
 
-exports.onUserSubscriptionUpdated = functions.firestore
-    .document("customers/{customerId}/subscriptions/{subscriptionId}")
-    .onUpdate(onCustomerSubscriptionUpdated);
+exports.onUserSubscriptionUpdated = onDocumentUpdated("customers/{customerId}/subscriptions/{subscriptionId}", onCustomerSubscriptionUpdated);
 
 exports.startJiraAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startJiraAuthFlow(req, res));
@@ -186,9 +174,7 @@ exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
 
 exports.createSummary = onCall(async (req) => createSummary(req));
 
-exports.onRoomCreated = functions.firestore
-    .document("rooms/{roomId}")
-    .onCreate(onRoomCreated);
+exports.onRoomCreated = onDocumentCreated("rooms/{roomId}", onRoomCreated);
 
 exports.startTeamsGoogleAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startTeamsGoogleAuth(req, res));

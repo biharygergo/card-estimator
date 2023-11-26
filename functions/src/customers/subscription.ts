@@ -1,29 +1,29 @@
-import {DocumentSnapshot, getFirestore} from "firebase-admin/firestore";
-import {Change} from "firebase-functions/v1";
+import {getFirestore} from "firebase-admin/firestore";
+import {FirestoreEvent, QueryDocumentSnapshot, Change} from "firebase-functions/v2/firestore";
 
 export async function onCustomerSubscriptionCreated(
-    snap: DocumentSnapshot,
+    snap: FirestoreEvent<QueryDocumentSnapshot|undefined>,
 ) {
-  const userId = snap.ref.parent.parent?.id;
+  const userId = snap.data?.ref.parent.parent?.id;
 
   if (!userId) {
     throw Error("No user id available");
   }
 
-  console.log("<Subscription created>", userId, snap.data());
+  console.log("<Subscription created>", userId, snap.data?.data());
   return updateCreatedOrganizations(userId, "premium");
 }
 
 export async function onCustomerSubscriptionUpdated(
-    change: Change<DocumentSnapshot>
+    change: FirestoreEvent<Change<QueryDocumentSnapshot> | undefined>
 ) {
-  const updatedSubscriptionRef = change.after;
-  if (!updatedSubscriptionRef.ref.parent.parent?.id) {
+  const updatedSubscriptionRef = change.data?.after;
+  if (!updatedSubscriptionRef?.ref.parent.parent?.id) {
     throw Error("No user id available");
   }
 
   const customerId = updatedSubscriptionRef.ref.parent.parent.id;
-  console.log("<Subscription updated>", customerId, change.after.data());
+  console.log("<Subscription updated>", customerId, change.data?.after.data());
 
   const activeSubscriptions = await getFirestore()
       .collection(`customers/${customerId}/subscriptions`)

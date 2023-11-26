@@ -1,10 +1,9 @@
 import {getAuth} from "firebase-admin/auth";
 import {Timestamp, getFirestore} from "firebase-admin/firestore";
-import {HttpsError} from "firebase-functions/v1/https";
 import {Configuration, OpenAIApi} from "openai";
 import {isPremiumSubscriber} from "../shared/customClaims";
 import {getChatGptUsageThisMonth, saveMeteredUsage} from "../usage";
-import {CallableRequest} from "firebase-functions/v2/https";
+import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 
 const configuration = new Configuration({
   organization: "org-wBmr0xodAPTosU3YBSBxqufh",

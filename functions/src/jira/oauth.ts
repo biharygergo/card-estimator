@@ -21,7 +21,7 @@ export async function startJiraAuthFlow(
   const client = new JiraClient();
   await client.initializeClient();
 
-  const redirectUrl = client.authorize(req, res);
+  const redirectUrl = client.authorize();
   return res.redirect(redirectUrl);
 }
 
@@ -37,7 +37,7 @@ export async function onJiraAuthorizationReceived(
     return;
   }
 
-  const tokenSet = await client.getToken(req, res);
+  const tokenSet = await client.getToken(req);
 
   try {
     const availableResources: JiraResource[] = await axios

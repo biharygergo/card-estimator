@@ -1,12 +1,12 @@
 import axios from "axios";
 import {getActiveJiraIntegration} from "./client";
-import {CallableContext} from "firebase-functions/v1/https";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
+import {CallableRequest} from "firebase-functions/v2/https";
 
-export async function searchJira(data: any, context: CallableContext) {
-  const query = data.search;
-  const userId = context.auth?.uid;
+export async function searchJira(request: CallableRequest) {
+  const query = request.data.search;
+  const userId = request.auth?.uid;
   if (!userId) {
     throw new Error("Not signed in");
   }

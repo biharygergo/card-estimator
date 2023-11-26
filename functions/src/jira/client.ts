@@ -34,7 +34,7 @@ export class JiraClient {
     });
   }
 
-  authorize(request: functions.Request, response: functions.Response): string {
+  authorize(): string {
     if (!this.client) {
       throw new Error("Please call initialize() first.");
     }
@@ -54,7 +54,7 @@ export class JiraClient {
     });
   }
 
-  async getToken(req: functions.Request, res: functions.Response) {
+  async getToken(req: functions.Request) {
     const params = this.client!.callbackParams(req);
 
     const tokenSet = await this.client!.oauthCallback(this.config.redirectUri, {

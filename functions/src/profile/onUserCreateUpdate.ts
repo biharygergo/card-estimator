@@ -1,7 +1,6 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
-import {Change, EventContext} from "firebase-functions/v1";
-import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 import {addContact} from "../email";
+import {FirestoreEvent, QueryDocumentSnapshot, Change} from "firebase-functions/v2/firestore";
 
 const PROFILES_COLLECTION = "userProfiles";
 
@@ -32,10 +31,9 @@ export function createUserProfile(userDetails: UserDetails) {
 }
 
 export async function onUserDetailsCreate(
-    snap: DocumentSnapshot,
-    context: EventContext
+    snap: FirestoreEvent<QueryDocumentSnapshot|undefined>,
 ) {
-  const userDetails = snap.data() as UserDetails;
+  const userDetails = snap.data?.data() as UserDetails;
   try {
     await addContact({email: userDetails.email, name: userDetails.displayName});
   } catch (e) {
@@ -44,8 +42,8 @@ export async function onUserDetailsCreate(
   return createUserProfile(userDetails);
 }
 
-export function onUserDetailsUpdate(change: Change<DocumentSnapshot>) {
-  const updatedDetails = change.after.data() as UserDetails;
+export function onUserDetailsUpdate(change: FirestoreEvent<Change<QueryDocumentSnapshot> | undefined>) {
+  const updatedDetails = change.data?.after.data() as UserDetails;
   const userProfile: Partial<UserProfile> = {
     displayName: updatedDetails.displayName,
   };

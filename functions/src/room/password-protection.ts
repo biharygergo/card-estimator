@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 import {hash, compare} from "bcrypt";
 import {getFirestore} from "firebase-admin/firestore";
-import {CallableContext} from "firebase-functions/v1/https";
 import {getCustomClaims, RoomAccessValue} from "../shared/customClaims";
+import {CallableRequest} from "firebase-functions/v2/https";
 
 const ROOMS_COLLECTION = "rooms";
 
@@ -36,13 +36,13 @@ async function setRoomAccessCustomClaims(
   await accessList.doc(userId).set(roomAccess);
 }
 
-export async function setRoomPassword(data: any, context: CallableContext) {
-  const {password, roomId} = data;
+export async function setRoomPassword(request: CallableRequest) {
+  const {password, roomId} = request.data;
   const roomDoc = await getFirestore().collection(ROOMS_COLLECTION).doc(roomId);
 
   const room = await roomDoc.get().then((snapshot) => snapshot.data());
 
-  const userId = context.auth?.uid;
+  const userId = request.auth?.uid;
 
   // Validate that the user can set a password on this room
   if (
@@ -71,8 +71,8 @@ export async function setRoomPassword(data: any, context: CallableContext) {
   return {success: true};
 }
 
-export async function enterProtectedRoom(data: any, context: CallableContext) {
-  const {roomId, password} = data;
+export async function enterProtectedRoom(request: CallableRequest) {
+  const {roomId, password} = request.data;
   const roomDoc = await getFirestore().collection(ROOMS_COLLECTION).doc(roomId);
 
   const room = await roomDoc.get().then((snapshot) => snapshot.data());
@@ -81,7 +81,7 @@ export async function enterProtectedRoom(data: any, context: CallableContext) {
     throw new functions.https.HttpsError("not-found", "Room not found");
   }
 
-  if (!context.auth?.uid) {
+  if (!request.auth?.uid) {
     throw new functions.https.HttpsError(
         "unauthenticated",
         "You must be authenticated to continue."
@@ -111,7 +111,7 @@ export async function enterProtectedRoom(data: any, context: CallableContext) {
   }
 
   // Update the user's custom claims
-  await setRoomAccessCustomClaims(context.auth.uid, roomId, roomPasswordHash);
+  await setRoomAccessCustomClaims(request.auth.uid, roomId, roomPasswordHash);
 
   return {success: true};
 }

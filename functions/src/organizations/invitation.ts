@@ -1,10 +1,9 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
-import {EventContext} from "firebase-functions/v1";
-import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 import {sendEmail} from "../email";
 import * as functions from "firebase-functions";
 import {getAuth, UserRecord} from "firebase-admin/auth";
 import {getHost} from "../config";
+import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
 
 // TODO: move to shared types package
 type InvitationData = {
@@ -19,7 +18,6 @@ type InvitationData = {
 
 export async function acceptInvitation(
     req: functions.Request,
-    res: functions.Response
 ) {
   console.log("<Accepting invitation>");
   const invitationId = req.query.invitationId;
@@ -75,12 +73,11 @@ export async function acceptInvitation(
 }
 
 export async function onOrganizationInviteCreated(
-    snap: DocumentSnapshot,
-    context: EventContext
+    snap: FirestoreEvent<QueryDocumentSnapshot|undefined>
 ) {
-  const emailData = snap.data() as InvitationData;
-  const organizationId = context.params.organizationId;
-  const invitationId = context.params.invitationId;
+  const emailData = snap.data?.data() as InvitationData;
+  const organizationId = snap.params.organizationId;
+  const invitationId = snap.params.invitationId;
 
   const organization = (
     await getFirestore().doc(`organizations/${organizationId}`).get()

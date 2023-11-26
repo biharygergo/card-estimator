@@ -1,9 +1,9 @@
 import {getAuth} from "firebase-admin/auth";
 import {Timestamp, getFirestore} from "firebase-admin/firestore";
-import {CallableContext, HttpsError} from "firebase-functions/v1/https";
 import {Configuration, OpenAIApi} from "openai";
 import {isPremiumSubscriber} from "../shared/customClaims";
 import {getChatGptUsageThisMonth, saveMeteredUsage} from "../usage";
+import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 
 const configuration = new Configuration({
   organization: "org-wBmr0xodAPTosU3YBSBxqufh",
@@ -21,16 +21,16 @@ interface RoomSummary {
   createdById: string;
 }
 
-export async function createSummary(data: any, context: CallableContext) {
-  if (!context.auth?.uid) {
+export async function createSummary(request: CallableRequest) {
+  if (!request.auth?.uid) {
     throw new HttpsError(
         "unauthenticated",
         "A user account is required for summarization"
     );
   }
 
-  const user = await getAuth().getUser(context.auth.uid);
-  const roomId = data.roomId;
+  const user = await getAuth().getUser(request.auth.uid);
+  const roomId = request.data.roomId;
 
   if (!user.providerData.length) {
     throw new HttpsError(
@@ -70,7 +70,7 @@ Finish with a motivating sentence for the upcoming sprint to keep the team energ
     model: "gpt-4",
     messages: [
       {role: "system", content: systemPrompt},
-      {role: "user", content: data.csvSummary},
+      {role: "user", content: request.data.csvSummary},
     ],
     max_tokens: 800,
   });

@@ -1,11 +1,10 @@
-import {DocumentSnapshot, getFirestore} from "firebase-admin/firestore";
-import {EventContext} from "firebase-functions";
+import {getFirestore} from "firebase-admin/firestore";
+import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
 
 export async function onRoomCreated(
-    snap: DocumentSnapshot,
-    context: EventContext
+    snap: FirestoreEvent<QueryDocumentSnapshot|undefined>,
 ) {
-  const roomData = snap.data();
+  const roomData = snap.data?.data();
 
   if (roomData?.relatedRecurringMeetingLinkId) {
     await getFirestore()

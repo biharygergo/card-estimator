@@ -1,10 +1,9 @@
 import {FieldValue, getFirestore} from "firebase-admin/firestore";
-import {Change} from "firebase-functions/v1";
-import {DocumentSnapshot} from "firebase-functions/v1/firestore";
+import {FirestoreEvent, QueryDocumentSnapshot, Change} from "firebase-functions/v2/firestore";
 
-export async function onOrganizationUpdated(change: Change<DocumentSnapshot>) {
-  const beforeOrg = change.before.data();
-  const afterOrg = change.after.data();
+export async function onOrganizationUpdated(change: FirestoreEvent<Change<QueryDocumentSnapshot> | undefined>) {
+  const beforeOrg = change.data?.before.data();
+  const afterOrg = change.data?.after.data();
 
   if (
     beforeOrg &&
@@ -19,7 +18,7 @@ export async function onOrganizationUpdated(change: Change<DocumentSnapshot>) {
 
     const roomIdsWithProtection = await getFirestore()
         .collectionGroup("metadata")
-        .where("organizationProtection", "==", change.after.id)
+        .where("organizationProtection", "==", change.data!.after.id)
         .get()
         .then((snapshot) =>
           snapshot.docs.map((doc) => doc.ref.parent.parent?.id)

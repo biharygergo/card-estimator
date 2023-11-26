@@ -1,5 +1,5 @@
 import {
-  BrowserModule,
+  BrowserModule, provideClientHydration,
 } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
@@ -115,6 +115,7 @@ import { HttpClientModule } from '@angular/common/http';
       deps: [Sentry.TraceService],
       multi: true,
     },
+    provideClientHydration()
   ],
   bootstrap: [AppComponent],
 })

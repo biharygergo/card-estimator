@@ -1,17 +1,17 @@
 import axios from "axios";
 import {getActiveJiraIntegration} from "./client";
-import {CallableContext} from "firebase-functions/v1/https";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
+import {CallableRequest} from "firebase-functions/v2/https";
 
 interface JiraUpdateRequestData {
   issueId: string;
   storyPoints: number;
 }
 
-export async function updateIssue(data: any, context: CallableContext) {
-  const updateRequest = data.updateRequest as JiraUpdateRequestData;
-  const userId = context.auth?.uid;
+export async function updateIssue(request: CallableRequest) {
+  const updateRequest = request.data.updateRequest as JiraUpdateRequestData;
+  const userId = request.auth?.uid;
   if (!userId) {
     throw new Error("Not signed in");
   }

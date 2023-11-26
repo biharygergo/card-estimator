@@ -1,4 +1,6 @@
 import * as functions from "firebase-functions";
+import {onRequest, onCall} from "firebase-functions/v2/https";
+
 import {initializeApp} from "firebase-admin/app";
 import {appCheck} from "firebase-admin";
 import * as cookieParser from "cookie-parser";
@@ -11,7 +13,6 @@ import {
   installZoomApp,
   zoomHome,
 } from "./zoom/routes";
-import {CallableContext} from "firebase-functions/v1/https";
 import {
   googleAuthSuccess,
   startGoogleOauthFlow,
@@ -51,72 +52,72 @@ Sentry.init({
   tracesSampleRate: 0.7,
 });
 
-exports.authorizeZoomApp = functions.https.onRequest(async (req, res) => {
+exports.authorizeZoomApp = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, async () => authorizeZoomApp(req, res));
 });
 
-exports.zoomHome = functions.https.onRequest(async (req, res) => {
+exports.zoomHome = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => zoomHome(req, res));
 });
 
-exports.installZoomApp = functions.https.onRequest(installZoomApp);
+exports.installZoomApp = onRequest({cors: true}, installZoomApp);
 
-exports.uninstallZoomApp = functions.https.onRequest(async (req, res) => {
+exports.uninstallZoomApp = onRequest({cors: true}, async (req) => {
   console.log("Zoom App Uninstallation");
   console.log(req.body);
 });
 
-exports.fetchAppCheckToken = functions.https.onCall(
-    async (data: any, context: CallableContext) => {
-      const appId = "1:417578634660:web:3617c13e4d28109aa18531";
-      try {
-        const result = await appCheck().createToken(appId);
-        const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
-        return {token: result.token, expiresAt};
-      } catch (err) {
-        console.error("Unable to create App Check token.", err);
-        captureError(err);
-        return "An error occured, please check the logs.";
-      }
-    }
-);
+exports.fetchAppCheckToken = onCall(async () => {
+  const appId = "1:417578634660:web:3617c13e4d28109aa18531";
+  try {
+    const result = await appCheck().createToken(appId);
+    const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
+    return {token: result.token, expiresAt};
+  } catch (err) {
+    console.error("Unable to create App Check token.", err);
+    captureError(err);
+    return "An error occured, please check the logs.";
+  }
+});
 
-exports.generateCodeChallenge = functions.https.onRequest(async (req, res) => {
+exports.generateCodeChallenge = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => generateCodeChallenge(req, res));
 });
 
-exports.inClientOnAuthorized = functions.https.onRequest(async (req, res) => {
+exports.inClientOnAuthorized = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => inClientOnAuthorized(req, res));
 });
 
-exports.startGoogleAuth = functions.https.onRequest(async (req, res) => {
+exports.startGoogleAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startGoogleOauthFlow(req, res));
 });
 
-exports.onZoomAuthResponseRedirectToGoogle = functions.https.onRequest(
+exports.onZoomAuthResponseRedirectToGoogle = onRequest(
+    {cors: true},
     async (req, res) => {
       cookieParser()(req, res, () => zoomAuthSuccess(req, res));
     }
 );
 
-exports.onGoogleAuthResponseDeeplink = functions.https.onRequest(
+exports.onGoogleAuthResponseDeeplink = onRequest(
+    {cors: true},
     async (req, res) => {
       cookieParser()(req, res, () => googleAuthSuccess(req, res));
     }
 );
 
-exports.giveFeedback = functions.https.onRequest(async (req, res) => {
+exports.giveFeedback = onRequest({cors: true}, async (req, res) => {
   res.redirect("https://forms.gle/Rhd8mAQqCmewhfCR7");
 });
 
-exports.reportAnIssue = functions.https.onRequest(async (req, res) => {
+exports.reportAnIssue = onRequest({cors: true}, async (req, res) => {
   res.redirect(
       // eslint-disable-next-line max-len
       "mailto:info@planningpoker.live?subject=Issue%20Report%20-%20Planning%20Poker&body=Dear%20Developers%2C%0D%0A%0D%0AI%20have%20run%20into%20the%20following%20issue%20while%20using%20the%20Planning%20Poker%20app%3A%0D%0A%0D%0A%3CDescribe%20your%20issue%20in%20detail%20here%3E%0D%0A%0D%0AHave%20a%20great%20day%2C%0D%0A%3CYour%20name%3E"
   );
 });
 
-exports.sendEmail = functions.https.onRequest(async (req, res) => {
+exports.sendEmail = onRequest({cors: true}, async (req, res) => {
   const subject = encodeURIComponent(
       (req.query.subject as string | undefined) || ""
   );
@@ -134,13 +135,10 @@ exports.onUserDetailsUpdate = functions.firestore
     .document("userDetails/{userId}")
     .onUpdate(onUserDetailsUpdate);
 
-exports.setRoomPassword = functions.https.onCall(
-    async (data: any, context: CallableContext) => setRoomPassword(data, context)
-);
+exports.setRoomPassword = onCall(async (request) => setRoomPassword(request));
 
-exports.enterProtectedRoom = functions.https.onCall(
-    async (data: any, context: CallableContext) =>
-      enterProtectedRoom(data, context)
+exports.enterProtectedRoom = onCall(async (request) =>
+  enterProtectedRoom(request)
 );
 
 exports.onOrganizationUpdated = functions.firestore
@@ -151,9 +149,10 @@ exports.onOrganizationInvitation = functions.firestore
     .document("organizations/{organizationId}/memberInvitations/{invitationId}")
     .onCreate(onOrganizationInviteCreated);
 
-exports.acceptOrganizationInvitation = functions.https.onRequest(
+exports.acceptOrganizationInvitation = onRequest(
+    {cors: true},
     async (req, res) => {
-      cookieParser()(req, res, () => acceptInvitation(req, res));
+      cookieParser()(req, res, () => acceptInvitation(req));
     }
 );
 
@@ -165,23 +164,19 @@ exports.onUserSubscriptionUpdated = functions.firestore
     .document("customers/{customerId}/subscriptions/{subscriptionId}")
     .onUpdate(onCustomerSubscriptionUpdated);
 
-exports.startJiraAuth = functions.https.onRequest(async (req, res) => {
+exports.startJiraAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startJiraAuthFlow(req, res));
 });
 
-exports.onJiraAuthResponse = functions.https.onRequest(async (req, res) => {
+exports.onJiraAuthResponse = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
 });
 
-exports.queryJiraIssues = functions.https.onCall(
-    async (data: any, context: CallableContext) => searchJira(data, context)
-);
+exports.queryJiraIssues = onCall(async (request) => searchJira(request));
 
-exports.updateIssue = functions.https.onCall(
-    async (data: any, context: CallableContext) => updateIssue(data, context)
-);
+exports.updateIssue = onCall(async (req) => updateIssue(req));
 
-exports.safeRedirect = functions.https.onRequest(async (req, res) => {
+exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
   const redirectTo = req.query.redirectTo;
   if (typeof redirectTo === "string") {
     res.redirect(redirectTo);
@@ -189,19 +184,18 @@ exports.safeRedirect = functions.https.onRequest(async (req, res) => {
   return;
 });
 
-exports.createSummary = functions.https.onCall(
-    async (data: any, context: CallableContext) => createSummary(data, context)
-);
+exports.createSummary = onCall(async (req) => createSummary(req));
 
 exports.onRoomCreated = functions.firestore
     .document("rooms/{roomId}")
     .onCreate(onRoomCreated);
 
-exports.startTeamsGoogleAuth = functions.https.onRequest(async (req, res) => {
+exports.startTeamsGoogleAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startTeamsGoogleAuth(req, res));
 });
 
-exports.onTeamsGoogleAuthResult = functions.https.onRequest(
+exports.onTeamsGoogleAuthResult = onRequest(
+    {cors: true},
     async (req, res) => {
       cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
     }

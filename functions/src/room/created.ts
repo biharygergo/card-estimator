@@ -1,9 +1,7 @@
 import {DocumentSnapshot, getFirestore} from "firebase-admin/firestore";
-import {EventContext} from "firebase-functions";
 
 export async function onRoomCreated(
     snap: DocumentSnapshot,
-    context: EventContext
 ) {
   const roomData = snap.data();
 

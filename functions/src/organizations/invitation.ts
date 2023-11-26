@@ -19,7 +19,6 @@ type InvitationData = {
 
 export async function acceptInvitation(
     req: functions.Request,
-    res: functions.Response
 ) {
   console.log("<Accepting invitation>");
   const invitationId = req.query.invitationId;

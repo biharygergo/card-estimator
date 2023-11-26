@@ -1,9 +1,8 @@
 import {DocumentSnapshot, getFirestore} from "firebase-admin/firestore";
-import {Change, EventContext} from "firebase-functions/v1";
+import {Change} from "firebase-functions/v1";
 
 export async function onCustomerSubscriptionCreated(
     snap: DocumentSnapshot,
-    context: EventContext
 ) {
   const userId = snap.ref.parent.parent?.id;
 

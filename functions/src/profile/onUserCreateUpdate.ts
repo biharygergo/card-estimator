@@ -1,5 +1,5 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
-import {Change, EventContext} from "firebase-functions/v1";
+import {Change} from "firebase-functions/v1";
 import {DocumentSnapshot} from "firebase-functions/v1/firestore";
 import {addContact} from "../email";
 
@@ -33,7 +33,6 @@ export function createUserProfile(userDetails: UserDetails) {
 
 export async function onUserDetailsCreate(
     snap: DocumentSnapshot,
-    context: EventContext
 ) {
   const userDetails = snap.data() as UserDetails;
   try {

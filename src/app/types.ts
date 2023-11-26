@@ -49,8 +49,8 @@ export interface Round {
   id: string;
   topic: string;
   richTopic?: RichTopic | null;
-  started_at: FieldValue;
-  finished_at: FieldValue;
+  started_at: Timestamp;
+  finished_at: Timestamp | null;
   estimates: { [memberId: string]: number | null };
   show_results: boolean;
   notes?: Notes;
@@ -271,7 +271,7 @@ export interface AuthorizationMetadata {
 
 export interface SubscriptionMetadata {
   createdWithPlan: 'premium' | 'basic';
-  createdWithOrganization?: string;
+  createdWithOrganization?: string|null;
 }
 
 export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {

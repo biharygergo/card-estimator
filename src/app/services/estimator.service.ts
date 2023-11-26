@@ -12,14 +12,6 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import {
-  uniqueNamesGenerator,
-  Config,
-  adjectives,
-  colors,
-  animals,
-  languages,
-} from 'unique-names-generator';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
 import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import {
@@ -34,7 +26,6 @@ import {
   Timer,
   RoomConfiguration,
   AuthorizationMetadata,
-  SubscriptionMetadata,
   RichTopic,
   RoomSummary,
   MemberType,
@@ -45,6 +36,7 @@ import {
   doc,
   serverTimestamp,
   setDoc,
+  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 import { DocumentReference } from 'rxfire/firestore/interfaces';
@@ -131,66 +123,17 @@ export class EstimatorService {
   ): Promise<{ room: Room; member: Member }> {
     await this.signInAsMember(member);
 
-    const customConfig: Config = {
-      dictionaries: [adjectives, colors, animals, languages],
-      separator: '-',
-      length: 3,
-      style: 'lowerCase',
-    };
-
-    let roomId = uniqueNamesGenerator(customConfig).replace(' ', '-');
-
-    while (await this.doesRoomAlreadyExist(roomId)) {
-      roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(
-        ' ',
-        '-'
-      );
-    }
-
-    const subscriptionMetadata = await this.getSubscriptionMetadata();
-
-    const room: Room = {
-      id: this.createId(),
-      roomId,
-      members: [member],
-      rounds: { 0: this.createRound([member], 1) },
-      currentRound: 0,
-      isOpen: true,
-      createdAt: serverTimestamp(),
-      cardSet: CardSet.DEFAULT,
-      createdById: member.id,
-      memberIds: [member.id],
-      subscriptionMetadata,
-    };
-
-    if (recurringMeetingId) {
-      room.relatedRecurringMeetingLinkId = recurringMeetingId;
-    }
-
-    await setDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), room);
+    const result = await httpsCallable<
+      { member: Member; recurringMeetingId: string | null },
+      { room: Room }
+    >(
+      this.functions,
+      'createRoom'
+    )({ member, recurringMeetingId });
 
     this.activeMember = member;
 
-    return { room, member };
-  }
-
-  private async getSubscriptionMetadata(): Promise<SubscriptionMetadata> {
-    const isPremium = await this.paymentService.isPremiumSubscriber();
-    const organization = await firstValueFrom(
-      this.organizationService.getMyOrganization()
-    );
-    const subscriptionMetadata: SubscriptionMetadata = {
-      createdWithPlan: isPremium ? 'premium' : 'basic',
-      createdWithOrganization: organization ? organization.id : null,
-    };
-
-    return subscriptionMetadata;
-  }
-
-  async doesRoomAlreadyExist(roomId: string): Promise<boolean> {
-    return this.getRoom(roomId)
-      .then((room) => !!room)
-      .catch(() => false);
+    return { room: result.data.room, member };
   }
 
   async joinRoom(roomId: string, member: Member) {
@@ -337,10 +280,11 @@ export class EstimatorService {
     return { currentRoundId, numberOfRounds, nextRoundId, nextRoundNumber };
   }
 
+  // Keep this in sync with /functions
   newRound(room: Room) {
     const { currentRoundId, nextRoundId, nextRoundNumber } =
       this.getRoundIds(room);
-    room.rounds[currentRoundId].finished_at = serverTimestamp();
+    room.rounds[currentRoundId].finished_at = Timestamp.now();
     room.rounds[nextRoundId] = this.createRound(room.members, nextRoundNumber);
     return this.updateRoom(room.roomId, {
       rounds: room.rounds,
@@ -446,6 +390,7 @@ export class EstimatorService {
     });
   }
 
+  // Keep this in sync with /functions
   createRound(
     members: Member[],
     roundNumber: number,
@@ -455,7 +400,7 @@ export class EstimatorService {
     const round: Round = {
       id: this.createId(),
       topic: topic ?? `Topic of Round ${roundNumber}`,
-      started_at: serverTimestamp(),
+      started_at: Timestamp.now(),
       finished_at: null,
       estimates: {},
       show_results: false,
@@ -475,7 +420,7 @@ export class EstimatorService {
   private revoteRound(round: Round): Round {
     return {
       ...round,
-      started_at: serverTimestamp(),
+      started_at: Timestamp.now(),
       finished_at: null,
       estimates: {},
       show_results: false,

@@ -43,6 +43,7 @@ import {createSummary} from "./summary";
 import {onRoomCreated} from "./room/created";
 import {updateIssue} from "./jira/updateIssue";
 import {onTeamsGoogleAuthResult, startTeamsGoogleAuth} from "./ms-teams";
+import {createRoom} from "./room/new-room";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -67,7 +68,7 @@ exports.uninstallZoomApp = onRequest({cors: true}, async (req) => {
   console.log(req.body);
 });
 
-exports.fetchAppCheckToken = onCall(async () => {
+exports.fetchAppCheckToken = onCall({cors: true}, async () => {
   const appId = "1:417578634660:web:3617c13e4d28109aa18531";
   try {
     const result = await appCheck().createToken(appId);
@@ -131,9 +132,9 @@ exports.onUserDetailsCreate = onDocumentCreated("userDetails/{userId}", onUserDe
 
 exports.onUserDetailsUpdate = onDocumentUpdated("userDetails/{userId}", onUserDetailsUpdate);
 
-exports.setRoomPassword = onCall(async (request) => setRoomPassword(request));
+exports.setRoomPassword = onCall({cors: true}, async (request) => setRoomPassword(request));
 
-exports.enterProtectedRoom = onCall(async (request) =>
+exports.enterProtectedRoom = onCall({cors: true}, async (request) =>
   enterProtectedRoom(request)
 );
 
@@ -160,9 +161,9 @@ exports.onJiraAuthResponse = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
 });
 
-exports.queryJiraIssues = onCall(async (request) => searchJira(request));
+exports.queryJiraIssues = onCall({cors: true}, async (request) => searchJira(request));
 
-exports.updateIssue = onCall(async (req) => updateIssue(req));
+exports.updateIssue = onCall({cors: true}, async (req) => updateIssue(req));
 
 exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
   const redirectTo = req.query.redirectTo;
@@ -172,7 +173,7 @@ exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
   return;
 });
 
-exports.createSummary = onCall(async (req) => createSummary(req));
+exports.createSummary = onCall({cors: true}, async (req) => createSummary(req));
 
 exports.onRoomCreated = onDocumentCreated("rooms/{roomId}", onRoomCreated);
 
@@ -186,3 +187,5 @@ exports.onTeamsGoogleAuthResult = onRequest(
       cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
     }
 );
+
+exports.createRoom = onCall({cors: true}, createRoom);

@@ -56,7 +56,6 @@
     "rxjs": "^7.4.0",
     "tslib": "^2.0.0",
     "typed.js": "^2.0.15",
-    "unique-names-generator": "^4.7.1",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {

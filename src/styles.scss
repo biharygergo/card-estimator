@@ -371,6 +371,10 @@ body {
   .mdc-snackbar__surface {
     background: #93000a !important;
     color: #ffdad6 !important;
+
+    .mdc-snackbar__label {
+      color: #ffdad6;
+    }
   }
 }
 

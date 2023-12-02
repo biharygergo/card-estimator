@@ -1,4 +1,4 @@
-import {Timestamp, getFirestore} from "firebase-admin/firestore";
+import { Timestamp, getFirestore } from 'firebase-admin/firestore';
 import {
   Room,
   Member,
@@ -7,7 +7,7 @@ import {
   RichTopic,
   SubscriptionMetadata,
   Organization,
-} from "../../../src/app/types";
+} from '../../../src/app/types';
 import {
   uniqueNamesGenerator,
   Config,
@@ -15,45 +15,69 @@ import {
   colors,
   animals,
   languages,
-} from "unique-names-generator";
-import {isPremiumSubscriber} from "../shared/customClaims";
-import {CallableRequest} from "firebase-functions/v2/https";
+} from 'unique-names-generator';
+import { isPremiumSubscriber } from '../shared/customClaims';
+import { CallableRequest, HttpsError } from 'firebase-functions/v2/https';
+import {
+  assignWelcomeCreditsIfNeeded,
+  getCreditForNewRoom,
+  updateCreditUsage,
+} from '../credits';
 
 export async function createRoom(
-    request: CallableRequest
+  request: CallableRequest
 ): Promise<{ room: Room; member: Member }> {
   const member: Member = request.data.member;
   const recurringMeetingId: string | null = request.data.recurringMeetingId;
 
-  const customConfig: Config = {
-    dictionaries: [adjectives, colors, animals, languages],
-    separator: "-",
-    length: 3,
-    style: "lowerCase",
-  };
+  if (!request.auth) {
+    throw new HttpsError(
+      'failed-precondition',
+      'You are not authenticated. Please try again.'
+    );
+  }
+  const userId = request.auth.uid;
 
-  let roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
+  await assignWelcomeCreditsIfNeeded(userId);
+  const creditToUse = await getCreditForNewRoom(userId);
 
-  while (await doesRoomAlreadyExist(roomId)) {
-    roomId = uniqueNamesGenerator({...customConfig, length: 4}).replace(
-        " ",
-        "-"
+  if (!creditToUse) {
+    throw new HttpsError(
+      'failed-precondition',
+      'No available credits to create room',
+      'error-no-credits'
     );
   }
 
-  const subscriptionMetadata = await getSubscriptionMetadata(member.id);
+  const customConfig: Config = {
+    dictionaries: [adjectives, colors, animals, languages],
+    separator: '-',
+    length: 3,
+    style: 'lowerCase',
+  };
+
+  let roomId = uniqueNamesGenerator(customConfig).replace(' ', '-');
+
+  while (await doesRoomAlreadyExist(roomId)) {
+    roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(
+      ' ',
+      '-'
+    );
+  }
+
+  const subscriptionMetadata = await getSubscriptionMetadata(userId);
 
   const room: Room = {
     id: createId(),
     roomId,
     members: [member],
-    rounds: {0: createRound([member], 1)},
+    rounds: { 0: createRound([member], 1) },
     currentRound: 0,
     isOpen: true,
     createdAt: Timestamp.now(),
     cardSet: CardSet.DEFAULT,
-    createdById: member.id,
-    memberIds: [member.id],
+    createdById: userId,
+    memberIds: [userId],
     subscriptionMetadata,
   };
 
@@ -61,15 +85,17 @@ export async function createRoom(
     room.relatedRecurringMeetingLinkId = recurringMeetingId;
   }
 
-  await getFirestore().collection("rooms").doc(room.roomId).set(room);
+  await getFirestore().collection('rooms').doc(room.roomId).set(room);
 
-  return {room, member};
+  await updateCreditUsage(creditToUse?.id, userId, room.roomId);
+
+  return { room, member };
 }
 
 async function doesRoomAlreadyExist(roomId: string): Promise<boolean> {
   return getRoom(roomId)
-      .then((room) => !!room)
-      .catch(() => false);
+    .then((room) => !!room)
+    .catch(() => false);
 }
 
 async function getRoom(roomId: string): Promise<Room | undefined> {
@@ -78,10 +104,10 @@ async function getRoom(roomId: string): Promise<Room | undefined> {
 }
 
 function createRound(
-    members: Member[],
-    roundNumber: number,
-    topic?: string,
-    richTopic?: RichTopic
+  members: Member[],
+  roundNumber: number,
+  topic?: string,
+  richTopic?: RichTopic
 ): Round {
   const round: Round = {
     id: createId(),
@@ -91,7 +117,7 @@ function createRound(
     estimates: {},
     show_results: false,
     notes: {
-      note: "",
+      note: '',
       editedBy: null,
     },
   };
@@ -104,24 +130,24 @@ function createRound(
 }
 
 function createId(): string {
-  return getFirestore().collection("rooms").doc().id;
+  return getFirestore().collection('rooms').doc().id;
 }
 
 async function getSubscriptionMetadata(
-    userId: string
+  userId: string
 ): Promise<SubscriptionMetadata> {
   const isPremium = await isPremiumSubscriber(userId);
   const myOrgs = await getFirestore()
-      .collection("organizations")
-      .where("memberIds", "array-contains", userId)
-      .get();
+    .collection('organizations')
+    .where('memberIds', 'array-contains', userId)
+    .get();
 
-  const organization = myOrgs.docs.length ?
-    (myOrgs.docs[0].data() as Organization) :
-    undefined;
+  const organization = myOrgs.docs.length
+    ? (myOrgs.docs[0].data() as Organization)
+    : undefined;
 
   const subscriptionMetadata: SubscriptionMetadata = {
-    createdWithPlan: isPremium ? "premium" : "basic",
+    createdWithPlan: isPremium ? 'premium' : 'basic',
     createdWithOrganization: organization ? organization.id : null,
   };
 

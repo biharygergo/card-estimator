@@ -2,6 +2,7 @@ import { Timestamp, getFirestore } from 'firebase-admin/firestore';
 import { Credit, BundleName, CreditBundle } from '../types';
 import * as moment from 'moment';
 import { getAuth } from 'firebase-admin/auth';
+import { isPremiumSubscriber } from '../shared/customClaims';
 
 const CREDITS_COLLECTION = 'credits';
 const BUNDLES_COLLECTION = 'bundles';
@@ -14,7 +15,10 @@ export async function getAllCreditsAndAssignWelcome(
 }
 
 export async function assignWelcomeCreditsIfNeeded(userId: string) {
-  if (!(await hasReceivedWelcomeBundle(userId))) {
+  if (
+    !(await hasReceivedWelcomeBundle(userId)) &&
+    !(await isPremiumSubscriber(userId))
+  ) {
     const user = await getAuth().getUser(userId);
     if (moment(user.metadata.creationTime).isBefore(moment('2023-12-02'))) {
       await createBundle(

@@ -29,7 +29,6 @@ export async function createRoom(
 ): Promise<{ room: Room; member: Member }> {
   const member: Member = request.data.member;
   const recurringMeetingId: string | null = request.data.recurringMeetingId;
-
   if (!request.auth) {
     throw new HttpsError(
       'failed-precondition',
@@ -37,11 +36,12 @@ export async function createRoom(
     );
   }
   const userId = request.auth.uid;
+  const isPremium = await isPremiumSubscriber(userId);
 
   await assignWelcomeCreditsIfNeeded(userId);
   const creditToUse = await getCreditForNewRoom(userId);
 
-  if (!creditToUse) {
+  if (!creditToUse && !isPremium) {
     throw new HttpsError(
       'failed-precondition',
       'No available credits to create room',
@@ -65,7 +65,7 @@ export async function createRoom(
     );
   }
 
-  const subscriptionMetadata = await getSubscriptionMetadata(userId);
+  const subscriptionMetadata = await getSubscriptionMetadata(userId, creditToUse?.id);
 
   const room: Room = {
     id: createId(),
@@ -87,7 +87,9 @@ export async function createRoom(
 
   await getFirestore().collection('rooms').doc(room.roomId).set(room);
 
-  await updateCreditUsage(creditToUse?.id, userId, room.roomId);
+  if (!isPremium) {
+    await updateCreditUsage(creditToUse!.id, userId, room.roomId);
+  }
 
   return { room, member };
 }
@@ -134,7 +136,8 @@ function createId(): string {
 }
 
 async function getSubscriptionMetadata(
-  userId: string
+  userId: string,
+  creditId: string | undefined
 ): Promise<SubscriptionMetadata> {
   const isPremium = await isPremiumSubscriber(userId);
   const myOrgs = await getFirestore()
@@ -147,7 +150,7 @@ async function getSubscriptionMetadata(
     : undefined;
 
   const subscriptionMetadata: SubscriptionMetadata = {
-    createdWithPlan: isPremium ? 'premium' : 'basic',
+    createdWithPlan: isPremium ? 'premium' : creditId ? 'credit' : 'basic',
     createdWithOrganization: organization ? organization.id : null,
   };
 

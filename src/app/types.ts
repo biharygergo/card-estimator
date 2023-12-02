@@ -270,7 +270,7 @@ export interface AuthorizationMetadata {
 }
 
 export interface SubscriptionMetadata {
-  createdWithPlan: 'premium' | 'basic';
+  createdWithPlan: 'premium' | 'basic' | 'credit';
   createdWithOrganization?: string | null;
 }
 

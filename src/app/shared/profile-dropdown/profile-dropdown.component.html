@@ -41,7 +41,7 @@
       <mat-icon>extension</mat-icon>
       <span>Integrations</span>
     </button>
-    @if (
+    <!-- @if (
       !(permissionsService.hasPremiumAccess() | async) &&
       !paymentService.isSubscriptionDisabled
       ) {
@@ -52,7 +52,7 @@
         <mat-icon>lock_open</mat-icon>
         <span>Unlock features</span>
       </button>
-    }
+    } -->
     <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>
       <span>Previous sessions</span>

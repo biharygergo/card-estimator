@@ -17,7 +17,6 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
   animations: [],
 })
 export class SessionHistoryComponent {
-  isPremium$ = from(this.paymentsService.isPremiumSubscriber());
 
   constructor(
     public readonly permissionsService: PermissionsService,

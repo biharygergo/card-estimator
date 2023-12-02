@@ -12,7 +12,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const USAGE_LIMIT = 5;
+const USAGE_LIMIT = 100;
 
 // TODO: Move to shared types
 interface RoomSummary {
@@ -45,15 +45,13 @@ export async function createSummary(request: CallableRequest) {
       .collection("summaries");
 
   const isPremiumUser = await isPremiumSubscriber(user.uid);
-  if (!isPremiumUser) {
-    const usageCountThisMonth = await getChatGptUsageThisMonth(user.uid);
+  const usageCountThisMonth = await getChatGptUsageThisMonth(user.uid);
 
-    if (usageCountThisMonth >= USAGE_LIMIT) {
-      throw new HttpsError(
-          "resource-exhausted",
-          "You have exceeded your summary limit for the month"
-      );
-    }
+  if (usageCountThisMonth >= USAGE_LIMIT) {
+    throw new HttpsError(
+        "resource-exhausted",
+        "You have exceeded your summary limit for the month"
+    );
   }
 
   const systemPrompt = `

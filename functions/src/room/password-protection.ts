@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import {hash, compare} from "bcrypt";
 import {getFirestore} from "firebase-admin/firestore";
-import {getCustomClaims, RoomAccessValue} from "../shared/customClaims";
+import {RoomAccessValue} from "../shared/customClaims";
 import {CallableRequest} from "firebase-functions/v2/https";
 
 const ROOMS_COLLECTION = "rooms";
@@ -47,8 +47,7 @@ export async function setRoomPassword(request: CallableRequest) {
   // Validate that the user can set a password on this room
   if (
     !userId ||
-    room?.createdById !== userId ||
-    (await getCustomClaims(userId)).stripeRole !== "premium"
+    room?.createdById !== userId
   ) {
     throw new functions.https.HttpsError(
         "permission-denied",

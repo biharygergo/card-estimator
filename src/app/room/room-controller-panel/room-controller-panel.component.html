@@ -393,10 +393,7 @@
                 [matMenuTriggerFor]="savedCardsMenu"
                 aria-label="Saved card sets"
                 id="card-saved-sets-button"
-                [disabled]="
-                savedCardSets.length === 0 ||
-                !(permissionsService.hasPremiumAccess() | async)
-                "
+                [disabled]="savedCardSets.length === 0"
                 >
                 <mat-icon>cloud</mat-icon>
                 Saved card sets ({{ savedCardSets.length }})

@@ -41,8 +41,6 @@ export class RichTopicComponent implements OnChanges {
   cleanedMarkdown = '';
   isSavingToJira = false;
 
-  isPremium$ = this.permissionService.hasPremiumAccess();
-
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly zoomService: ZoomApiService,

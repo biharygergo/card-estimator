@@ -268,17 +268,13 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   organization: Organization | undefined;
 
   user$ = this.authService.user;
-  isPremiumSubscriber$ = this.permissionsService
-    .hasPremiumAccess()
-    .pipe(takeUntil(this.destroy));
 
   hasConfigurationAccess$ = combineLatest([
     this.room$,
     this.user$,
-    this.isPremiumSubscriber$,
   ]).pipe(
-    map(([room, user, isPremium]) => {
-      return room.createdById === user.uid && isPremium;
+    map(([room, user]) => {
+      return room.createdById === user.uid && !user.isAnonymous;
     }),
     tap((hasAccess) => {
       hasAccess ? this.roomPassword.enable() : this.roomPassword.disable();

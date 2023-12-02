@@ -85,31 +85,14 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
       shareReplay()
     );
 
-  isPremiumSubscriber$ = this.permissionsService.hasPremiumAccess();
-
-  showOutOfCredits$: Observable<boolean> = combineLatest([
-    this.remainingUsage$,
-    this.isPremiumSubscriber$,
-  ]).pipe(
-    map(([remainingUsage, isPremium]) => {
-      return !isPremium && remainingUsage <= 0;
-    })
-  );
-
   failedPrecondition$: Observable<
     'room-size' | 'user' | 'credits' | undefined
-  > = combineLatest([
-    this.isRoomProper$,
-    this.authService.user,
-    this.showOutOfCredits$,
-  ]).pipe(
-    map(([isRoomProper, user, isOutOfCredits]) => {
+  > = combineLatest([this.isRoomProper$, this.authService.user]).pipe(
+    map(([isRoomProper, user]) => {
       if (user.isAnonymous) {
         return 'user';
       } else if (!isRoomProper) {
         return 'room-size';
-      } else if (isOutOfCredits) {
-        return 'credits';
       }
 
       return undefined;
@@ -170,16 +153,15 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     combineLatest([
       this.latestRoomSummary$,
-      this.showOutOfCredits$,
       this.failedPrecondition$,
     ])
       .pipe(first(), takeUntil(this.destroy))
-      .subscribe(([summary, outOfCredits, failedPrecondition]) => {
+      .subscribe(([summary, failedPrecondition]) => {
         if (summary) {
           if (!this.summaryResponse$.value) {
             this.summaryResponse$.next({ text: summary, static: true });
           }
-        } else if (!outOfCredits && failedPrecondition === undefined) {
+        } else if (failedPrecondition === undefined) {
           this.generateSummary();
         }
       });

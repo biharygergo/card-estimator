@@ -193,21 +193,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     filter((shouldOpen) => !!shouldOpen)
   );
 
-  isPremium$ = from(this.paymentService.isPremiumSubscriber());
-
-  shouldOpenPremiumDealBanner$: Observable<boolean> = combineLatest([
-    this.room$,
-    this.user$,
-    this.sessionCount$,
-    this.isPremium$,
-  ]).pipe(
-    map(([room, user, sessionCount, isPremium]) => {
-      return !isPremium && sessionCount > 5 && room.createdById === user.uid;
-    }),
-    filter((shouldOpen) => !!shouldOpen),
-    first()
-  );
-
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
 
   readonly MemberType = MemberType;

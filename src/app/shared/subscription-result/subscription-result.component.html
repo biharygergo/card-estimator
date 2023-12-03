@@ -1,15 +1,13 @@
 <h1 mat-dialog-title>
-  {{ subscriptionResult === "success" ? "Subscribed to Premium" : "Oops!" }}
+  {{ subscriptionResult === "success" ? "Success!" : "Oops!" }}
 </h1>
 <div mat-dialog-content>
   <div class="tab-section">
     @if (subscriptionResult === 'success') {
     <p class="description">
-      Thanks for subscribing to the Premium plan, you are amazing!
-      <strong
-        >It might take a couple of minutes for your subscription to finalize,
-        hold tight and refresh the page in a minute or so.
-      </strong>
+      Thanks for your purchase, you are amazing! It might take a couple of
+      seconds for everything to finalize, hold tight and refresh the page if
+      your credits/subscription does not show.
     </p>
     } @if (subscriptionResult === 'cancel') {
     <p>

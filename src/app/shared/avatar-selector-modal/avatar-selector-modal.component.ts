@@ -11,13 +11,15 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   PaymentService,
   StripeSubscription,
 } from 'src/app/services/payment.service';
 import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
+import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
+import * as moment from 'moment';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -37,7 +39,7 @@ export const avatarModalCreator = ({
     data: {
       openAtTab,
     },
-    panelClass: 'custom-dialog'
+    panelClass: 'custom-dialog',
   },
 ];
 
@@ -174,6 +176,27 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   activePlan$ = this.subscription$.pipe(
     map((subscription) => subscription?.items?.[0]?.plan)
+  );
+
+  creditBundles$: Observable<
+    Array<
+      BundleWithCredits & {
+        title: string;
+        availableCredits: Credit[];
+        expiresInReadable: string;
+        isExpired: boolean;
+      }
+    >
+  > = from(this.paymentsService.getAndAssignCreditBundles()).pipe(
+    map((creditBundles) => {
+      return creditBundles.map((bundle) => ({
+        ...bundle,
+        title: getBundleTitle(bundle.name),
+        availableCredits: bundle.credits.filter((c) => !c.usedForRoomId),
+        expiresInReadable: moment(bundle.expiresAt.toDate()).fromNow(),
+        isExpired: moment(bundle.expiresAt.toDate()).isBefore(moment()),
+      }));
+    })
   );
 
   isLoadingStripe = false;

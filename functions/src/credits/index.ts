@@ -1,5 +1,5 @@
 import {Timestamp, getFirestore} from "firebase-admin/firestore";
-import {Credit, BundleName, CreditBundle} from "../types";
+import {Credit, BundleName, CreditBundle, BundleWithCredits} from "../types";
 import * as moment from "moment";
 import {getAuth} from "firebase-admin/auth";
 import {isPremiumSubscriber} from "../shared/customClaims";
@@ -7,11 +7,16 @@ import {isPremiumSubscriber} from "../shared/customClaims";
 const CREDITS_COLLECTION = "credits";
 const BUNDLES_COLLECTION = "bundles";
 
-export async function getAllCreditsAndAssignWelcome(
+export async function getAllCreditBundles(
     userId: string
-): Promise<Credit[]> {
-  await assignWelcomeCreditsIfNeeded(userId);
-  return getAllCredits(userId);
+): Promise<BundleWithCredits[]> {
+  const allCredits = await getAllCredits(userId);
+  const allBundles = await getAllBundles(userId);
+
+  return allBundles.map((bundle) => ({
+    ...bundle,
+    credits: allCredits.filter((c) => c.bundleId === bundle.id),
+  }));
 }
 
 export async function assignWelcomeCreditsIfNeeded(userId: string) {
@@ -45,6 +50,16 @@ function getAllCredits(userId: string): Promise<Credit[]> {
       .get()
       .then((snapshot) =>
         snapshot.docs.map((docSnapshot) => docSnapshot.data() as Credit)
+      );
+}
+
+function getAllBundles(userId: string): Promise<CreditBundle[]> {
+  return getFirestore()
+      .collection(`userDetails/${userId}/${BUNDLES_COLLECTION}`)
+      .orderBy("expiresAt", "asc")
+      .get()
+      .then((snapshot) =>
+        snapshot.docs.map((docSnapshot) => docSnapshot.data() as CreditBundle)
       );
 }
 
@@ -118,6 +133,7 @@ export async function createBundle(
     createdAt: Timestamp.now() as any,
     name: bundleName,
     creditCount,
+    expiresAt: getBundleExpirationDate(bundleName) as any,
   };
 
   await newBundleRef.set(bundle);

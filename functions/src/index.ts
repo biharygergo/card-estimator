@@ -1,5 +1,8 @@
-import {onRequest, onCall} from "firebase-functions/v2/https";
-import {onDocumentCreated, onDocumentUpdated} from "firebase-functions/v2/firestore";
+import {onRequest, onCall, HttpsError} from "firebase-functions/v2/https";
+import {
+  onDocumentCreated,
+  onDocumentUpdated,
+} from "firebase-functions/v2/firestore";
 
 import {initializeApp} from "firebase-admin/app";
 import {appCheck} from "firebase-admin";
@@ -44,6 +47,7 @@ import {onRoomCreated} from "./room/created";
 import {updateIssue} from "./jira/updateIssue";
 import {onTeamsGoogleAuthResult, startTeamsGoogleAuth} from "./ms-teams";
 import {createRoom} from "./room/new-room";
+import {assignWelcomeCreditsIfNeeded, getAllCreditBundles} from "./credits";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -128,19 +132,33 @@ exports.sendEmail = onRequest({cors: true}, async (req, res) => {
   );
 });
 
-exports.onUserDetailsCreate = onDocumentCreated("userDetails/{userId}", onUserDetailsCreate);
+exports.onUserDetailsCreate = onDocumentCreated(
+    "userDetails/{userId}",
+    onUserDetailsCreate
+);
 
-exports.onUserDetailsUpdate = onDocumentUpdated("userDetails/{userId}", onUserDetailsUpdate);
+exports.onUserDetailsUpdate = onDocumentUpdated(
+    "userDetails/{userId}",
+    onUserDetailsUpdate
+);
 
-exports.setRoomPassword = onCall({cors: true}, async (request) => setRoomPassword(request));
+exports.setRoomPassword = onCall({cors: true}, async (request) =>
+  setRoomPassword(request)
+);
 
 exports.enterProtectedRoom = onCall({cors: true}, async (request) =>
   enterProtectedRoom(request)
 );
 
-exports.onOrganizationUpdated = onDocumentUpdated("organizations/{organizationId}", onOrganizationUpdated);
+exports.onOrganizationUpdated = onDocumentUpdated(
+    "organizations/{organizationId}",
+    onOrganizationUpdated
+);
 
-exports.onOrganizationInvitation = onDocumentCreated("organizations/{organizationId}/memberInvitations/{invitationId}", onOrganizationInviteCreated);
+exports.onOrganizationInvitation = onDocumentCreated(
+    "organizations/{organizationId}/memberInvitations/{invitationId}",
+    onOrganizationInviteCreated
+);
 
 exports.acceptOrganizationInvitation = onRequest(
     {cors: true},
@@ -149,9 +167,15 @@ exports.acceptOrganizationInvitation = onRequest(
     }
 );
 
-exports.onUserSubscriptionCreated = onDocumentCreated("customers/{customerId}/subscriptions/{subscriptionId}", onCustomerSubscriptionCreated);
+exports.onUserSubscriptionCreated = onDocumentCreated(
+    "customers/{customerId}/subscriptions/{subscriptionId}",
+    onCustomerSubscriptionCreated
+);
 
-exports.onUserSubscriptionUpdated = onDocumentUpdated("customers/{customerId}/subscriptions/{subscriptionId}", onCustomerSubscriptionUpdated);
+exports.onUserSubscriptionUpdated = onDocumentUpdated(
+    "customers/{customerId}/subscriptions/{subscriptionId}",
+    onCustomerSubscriptionUpdated
+);
 
 exports.startJiraAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startJiraAuthFlow(req, res));
@@ -161,7 +185,9 @@ exports.onJiraAuthResponse = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
 });
 
-exports.queryJiraIssues = onCall({cors: true}, async (request) => searchJira(request));
+exports.queryJiraIssues = onCall({cors: true}, async (request) =>
+  searchJira(request)
+);
 
 exports.updateIssue = onCall({cors: true}, async (req) => updateIssue(req));
 
@@ -173,7 +199,9 @@ exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
   return;
 });
 
-exports.createSummary = onCall({cors: true}, async (req) => createSummary(req));
+exports.createSummary = onCall({cors: true}, async (req) =>
+  createSummary(req)
+);
 
 exports.onRoomCreated = onDocumentCreated("rooms/{roomId}", onRoomCreated);
 
@@ -189,3 +217,14 @@ exports.onTeamsGoogleAuthResult = onRequest(
 );
 
 exports.createRoom = onCall({cors: true}, createRoom);
+exports.getAllCreditsAndAssignWelcome = onCall({cors: true}, async (request) => {
+  if (!request.auth?.uid) {
+    throw new HttpsError(
+        "unauthenticated",
+        "You need to be authenticated to fetch credits."
+    );
+  }
+  await assignWelcomeCreditsIfNeeded(request.auth.uid);
+
+  return getAllCreditBundles(request.auth.uid);
+});

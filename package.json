@@ -50,6 +50,7 @@
     "jira2md": "^3.0.1",
     "js-cookie": "^3.0.1",
     "lodash-es": "^4.17.21",
+    "moment": "^2.29.4",
     "ngx-lottie": "^10.0.0",
     "ngx-markdown": "^17.1.1",
     "rxfire": "^6.0.0",

@@ -448,6 +448,11 @@ export interface CreditBundle {
   createdAt: Timestamp;
   name: BundleName;
   creditCount: number;
+  expiresAt: Timestamp | null;
+}
+
+export interface BundleWithCredits extends CreditBundle {
+  credits: Credit[];
 }
 
 export enum BundleName {
@@ -456,4 +461,21 @@ export enum BundleName {
   SMALL_BUNDLE = 'SMALL_BUNDLE',
   LARGE_BUNDLE = 'LARGE_BUNDLE',
   MEGA_BUNDLE = 'MEGA_BUNDLE',
+}
+
+export function getBundleTitle(bundleName: BundleName) {
+  switch (bundleName) {
+    case BundleName.LARGE_BUNDLE:
+      return 'Large Bundle';
+    case BundleName.SMALL_BUNDLE:
+      return 'Small Bundle';
+    case BundleName.MEGA_BUNDLE:
+      return 'Mega Bundle';
+    case BundleName.WELCOME_BUNDLE_EXISTING_USER:
+      return 'Welcome Bundle for Existing Users';
+    case BundleName.WELCOME_BUNDLE_STANDARD:
+      return 'Welcome Bundle for New Users';
+    default:
+      return bundleName;
+  }
 }

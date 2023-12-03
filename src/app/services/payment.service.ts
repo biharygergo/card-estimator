@@ -25,11 +25,12 @@ import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
+import { BundleWithCredits, CreditBundle } from '../types';
 
 export type CorrectSubscription = Subscription & {
-  created: Timestamp
+  created: Timestamp;
   current_period_end: Timestamp;
-}
+};
 export type StripeSubscription = CorrectSubscription;
 
 @Injectable({
@@ -221,5 +222,17 @@ export class PaymentService {
         );
       })
     );
+  }
+
+  async getAndAssignCreditBundles(): Promise<BundleWithCredits[]> {
+    const result = await httpsCallable(
+      this.functions,
+      'getAllCreditsAndAssignWelcome'
+    )();
+
+    return (result.data as BundleWithCredits[]).map((bundle) => ({
+      ...bundle,
+      expiresAt: Timestamp.fromDate(new Date((bundle.expiresAt as any)._seconds * 1000)),
+    }));
   }
 }

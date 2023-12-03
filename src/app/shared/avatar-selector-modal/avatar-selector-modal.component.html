@@ -82,23 +82,40 @@
               backgroundColor="primary"
             >
               <mat-tab label="Credits">
+                @for(creditBundle of creditBundles$ | async; track
+                creditBundle.id) {
                 <div class="bundle-wrap">
                   <div class="bundle-content">
                     <div class="image-wrap">
                       <img src="/assets/coin-stack.png" />
                     </div>
                     <div class="content">
-                      <h3 class="title">Welcome bundle for existing users</h3>
+                      <h3 class="title">{{ creditBundle.title }}</h3>
                       <div class="credit-status">
-                        <span>5 out of 10 credits available</span>
+                        <span
+                          >{{ creditBundle.availableCredits.length }} out of
+                          {{ creditBundle.credits.length }} credits
+                          available</span
+                        >
                       </div>
-                      <p>Expires in 2 months</p>
+                      @if (creditBundle.isExpired) {
+                      <p>Expired {{ creditBundle.expiresInReadable }}</p>
+                      } @else {
+                      <p>Expires {{ creditBundle.expiresInReadable }}</p>
+                      }
                     </div>
                   </div>
                   <div class="actions">
-                    <button mat-button>View on Stripe</button>
+                    <button
+                      mat-button
+                      (click)="redirectToCustomerPortal()"
+                      [disabled]="!creditBundle.paymentId"
+                    >
+                      View invoice on Stripe
+                    </button>
                   </div>
                 </div>
+                }
                 <button mat-flat-button color="primary">
                   Buy more credits
                 </button>

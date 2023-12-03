@@ -1,0 +1,163 @@
+<div class="page-wrapper">
+    @if (pageMode === 'modal') {
+        <div class="close-button">
+            <button mat-button mat-dialog-close>
+            <mat-icon>arrow_back</mat-icon>Back
+            </button>
+        </div>
+    }
+  <div class="content">
+    <h1 class="title">Pricing</h1>
+    <p class="description">
+      Get started for free and if you enjoy using the app, top-up your credits.
+      Select the bundle that best fits your usage or subscribe for unlimited
+      use.
+    </p>
+    <mat-tab-group class="plan-selector">
+      <mat-tab label="One-time purchase">
+        <div class="options-wrapper">
+          @for(plan of PLANS; track plan.id) {
+          <div class="option">
+            <div class="image-wrapper">
+              <img class="plan-image" [src]="plan.imageUrl" />
+            </div>
+            <h3 class="plan-title">{{ plan.title }}</h3>
+            <p class="plan-description">
+              <strong>{{ plan.creditAmount }} credits</strong>
+              {{ plan.description }}
+            </p>
+            <div class="plan-price">
+              <span class="price-amount">€{{ plan.priceEuro }}</span>
+              <span class="price-description">{{ plan.priceDescription }}</span>
+            </div>
+            <button
+              mat-flat-button
+              color="primary"
+              class="select-plan"
+              [disabled]="plan.isSelectDisabled"
+              (click)="buyBundle(plan.bundleName)"
+            >
+              Buy
+            </button>
+          </div>
+          }
+        </div>
+      </mat-tab>
+      <mat-tab label="Subscription">
+        <div class="options-wrapper">
+          <div class="option">
+            <div class="image-wrapper">
+              <img class="plan-image" [src]="" />
+            </div>
+            <h3 class="plan-title">Premium subscription</h3>
+            <p class="plan-description">
+              <strong>Unlimited credits</strong> for SCRUM masters of multiple
+              teams who do not want to mess with top-ups.
+            </p>
+            <div class="plan-price">
+              <span class="price-amount">€15</span>
+              <span class="price-description">billed monthly</span>
+            </div>
+            <button mat-flat-button color="primary" class="select-plan" (click)="subscribeToPremium()">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <h2 class="title">Choose the best app</h2>
+    <p class="description">
+      Everything you need for awesome planning sessions. Integrated with your
+      favorite tools. Used by tens of thousands every month. Open-source
+      codebase.
+    </p>
+    <div class="features-list-container">
+      <ul class="premium-features-list">
+        <li>
+          <div class="icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Unlimited rounds & topics</h5>
+            Invite everyone to the room and vote on all of your topics
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>video_call</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Video conferencing</h5>
+            The most convenient planning app lives right in your meeting.
+            Download our extension for Teams, Zoom or Webex.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>link</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>JIRA integration</h5>
+            Super fast & simple ticket selection right from the topic editor.
+            Upload your results with a single click.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>security</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Private rooms</h5>
+            Create private rooms protected by a password or open them for your
+            org only.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>manage_history</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Keep track of previous sessions</h5>
+            View your history, compare votes and download results.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>style</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Customize card sets</h5>
+            Create a custom card set and reuse sets across meetings.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>settings_input_composite</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Custom permissions</h5>
+            Adjust room member permissions to your preferences.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>coffee</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Async voting</h5>
+            Let members vote on their own pace and vote asynchronously.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>auto_fix_normal</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Summarize meetings with PokerBot</h5>
+            Use the AI Scrum Master to generate useful summaries for follow-ups.
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

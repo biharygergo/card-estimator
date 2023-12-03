@@ -17,7 +17,10 @@ export const environment = {
   recaptcha3SiteKey: '6Lf5e-weAAAAAIkZ1MWmXR9xxHkv2jPQda325CRm',
   useEmulators: true,
   premiumPriceId: 'price_1MhxFgCG1hllVHnccUeyTdNX',
-  powerUserPromoCode: 'promo_1O44WwCG1hllVHncTTEcBsWM'
+  powerUserPromoCode: 'promo_1O44WwCG1hllVHncTTEcBsWM',
+  smallBundlePriceId: 'price_1OJHgwCG1hllVHnc4Ikzm1Jv',
+  largeBundlePriceId: 'price_1OJHhJCG1hllVHnchusIfXGT',
+  megaBundlePriceId: 'price_1OJHhaCG1hllVHncOsDUJ3Ae',
 };
 
 /*

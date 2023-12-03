@@ -3,7 +3,11 @@
     {
       "target": "estimator",
       "public": "dist/estimator/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "trailingSlash": false,
       "rewrites": [
         {

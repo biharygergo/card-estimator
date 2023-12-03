@@ -7,7 +7,6 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 
 import { PaymentService } from 'src/app/services/payment.service';
 import { MatDialog } from '@angular/material/dialog';
-import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
@@ -25,9 +24,4 @@ export class SessionHistoryComponent {
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
-
-  clickedLearnMorePremium() {
-    this.analytics.logClickedLearnMorePremium('history');
-    this.dialog.open(...premiumLearnMoreModalCreator());
-  }
 }

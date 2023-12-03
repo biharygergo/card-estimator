@@ -5,22 +5,6 @@
         <app-profile-dropdown class="profile-dropdown"></app-profile-dropdown>
       </div>
       <div class="navbar-right">
-        @if (
-          (permissionsService.hasPremiumAccess() | async) === false &&
-          room?.subscriptionMetadata?.createdWithPlan === 'basic' &&
-          !paymentService.isSubscriptionDisabled
-          ) {
-          <button
-            mat-stroked-button
-            class="unlock-features-button responsive-label-button"
-            matTooltip="Get the most out of your planning with Premium"
-            (click)="openPremiumLearnMoreModal()"
-            @fadeAnimation
-            >
-            <mat-icon>lock_open</mat-icon>
-            Unlock features
-          </button>
-        }
         @if ((user$ | async)?.isAnonymous) {
           <button
             mat-flat-button

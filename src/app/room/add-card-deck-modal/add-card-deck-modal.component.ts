@@ -26,7 +26,6 @@ import {
   CardDeckService,
   UnauthorizedError,
 } from 'src/app/services/card-deck.service';
-import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { PaymentService } from 'src/app/services/payment.service';
 
@@ -119,10 +118,5 @@ export class AddCardDeckModalComponent implements OnInit {
         })
       )
       .subscribe(() => this.dialogRef.close());
-  }
-
-  clickedLearnMorePremium() {
-    this.analytics.logClickedLearnMorePremium('card_deck_editor');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

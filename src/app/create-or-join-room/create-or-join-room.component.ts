@@ -59,7 +59,6 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { OrganizationService } from '../services/organization.service';
-import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import { ConfigService } from '../services/config.service';
@@ -67,6 +66,7 @@ import { TeamsService } from '../services/teams.service';
 import { Timestamp } from 'firebase/firestore';
 import { NavigationService } from '../services/navigation.service';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
+import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -366,7 +366,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(async (flowParam) => {
         if (flowParam === 'premium') {
-          this.dialog.open(...premiumLearnMoreModalCreator());
+          this.dialog.open(...pricingModalCreator());
         } else if (flowParam === 'manageSubscription') {
           const user = await this.authService.getUser();
           if (user) {

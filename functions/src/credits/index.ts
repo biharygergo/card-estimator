@@ -87,7 +87,7 @@ export async function getCreditForNewRoom(
     return a.expiresAt.seconds - b.expiresAt.seconds;
   });
 
-  return credits.at(0);
+  return credits.at(-1);
 }
 
 export async function updateCreditUsage(

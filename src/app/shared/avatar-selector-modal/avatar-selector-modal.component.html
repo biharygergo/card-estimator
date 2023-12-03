@@ -82,6 +82,7 @@
               backgroundColor="primary"
             >
               <mat-tab label="Credits">
+                <h2 class="section-title">Your credits</h2>
                 @for(creditBundle of creditBundles$ | async; track
                 creditBundle.id) {
                 <div class="bundle-wrap">
@@ -98,22 +99,17 @@
                           available</span
                         >
                       </div>
-                      @if (creditBundle.isExpired) {
-                      <p>Expired {{ creditBundle.expiresInReadable }}</p>
-                      } @else {
-                      <p>Expires {{ creditBundle.expiresInReadable }}</p>
+                      @if(creditBundle.expiresInReadable) {
+                        @if (creditBundle.isExpired) {
+                          <p>Expired {{ creditBundle.expiresInReadable }}</p>
+                          } @else {
+                          <p>Expires {{ creditBundle.expiresInReadable }}</p>
+                          }
                       }
+                      
                     </div>
                   </div>
-                  <div class="actions">
-                    <button
-                      mat-button
-                      (click)="redirectToCustomerPortal()"
-                      [disabled]="!creditBundle.paymentId"
-                    >
-                      View invoice on Stripe
-                    </button>
-                  </div>
+                  <div class="actions"></div>
                 </div>
                 }
                 <button mat-flat-button color="primary">

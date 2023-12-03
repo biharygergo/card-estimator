@@ -66,7 +66,6 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash-es';
-import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { WebexApiService } from '../services/webex-api.service';
 import {
@@ -74,7 +73,6 @@ import {
   fadeAnimation,
   bounceAnimation,
 } from '../shared/animations';
-import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { TeamsService } from '../services/teams.service';
 import { PaymentService } from '../services/payment.service';
 import { Timestamp } from '@angular/fire/firestore';
@@ -82,7 +80,6 @@ import { ToastService } from '../services/toast.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
-import { premiumInAppModalCreator } from '../shared/premium-in-app-modal/premium-in-app-modal.component';
 import { RoomDataService } from './room-data.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
@@ -582,11 +579,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
-  }
-
-  openPremiumLearnMoreModal() {
-    this.analytics.logClickedLearnMorePremium('room_navbar');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 
   async copyRoomId() {

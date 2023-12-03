@@ -36,6 +36,7 @@ import {
 } from "./organizations/invitation";
 import {onOrganizationUpdated} from "./organizations/protection";
 import {
+  onCustomerPaymentCreated,
   onCustomerSubscriptionCreated,
   onCustomerSubscriptionUpdated,
 } from "./customers/subscription";
@@ -228,3 +229,8 @@ exports.getAllCreditsAndAssignWelcome = onCall({cors: true}, async (request) => 
 
   return getAllCreditBundles(request.auth.uid);
 });
+
+exports.onUserPaymentCreated = onDocumentCreated(
+    "customers/{customerId}/payments/{paymentId}",
+    onCustomerPaymentCreated
+);

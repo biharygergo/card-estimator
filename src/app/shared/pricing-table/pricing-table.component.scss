@@ -1,0 +1,152 @@
+.page-wrapper {
+  min-height: 100vh;
+  background: white;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 5rem;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.plan-selector {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-bottom: 5rem;
+}
+
+.description {
+  text-align: center;
+  color: #808ca1;
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+  margin-bottom: 5rem;
+}
+
+.options-wrapper {
+  display: flex;
+  gap: 1rem;
+  padding: 3rem;
+  justify-content: center;
+
+  .option {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0;
+    max-width: 200px;
+
+    .image-wrapper {
+      aspect-ratio: 1/1;
+      background: lightgrey;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .plan-title {
+      color: #001a43;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-description {
+      color: #808ca1;
+      line-height: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .plan-price {
+      margin-bottom: 2rem;
+      margin-top: auto;
+      .price-amount {
+        font-size: 2rem;
+        color: #575e71;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .price-description {
+        color: #575e71;
+        font-size: 0.8rem;
+      }
+    }
+
+    .select-plan {
+      width: 100%;
+    }
+  }
+}
+
+.features-list-container {
+  margin: 0 auto;
+  padding-bottom: 5rem;
+  max-width: 600px;
+}
+
+.premium-features-list {
+  list-style-type: none;
+  padding-left: 0;
+
+  li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    &.spacer-below {
+      margin-bottom: 2rem;
+    }
+
+    h5 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      .badge {
+        background: #725573;
+        border-radius: 40px;
+        font-size: 0.7rem;
+        padding: 0rem 0.5rem;
+        color: white;
+        font-weight: 600;
+      }
+    }
+
+    .icon {
+      flex-shrink: 0;
+      height: 40px;
+      width: 40px;
+      background: #eef1fe;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #345ca8;
+    }
+
+    .feature-details {
+      h5 {
+        color: var(--title-on-dark);
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 6px;
+      }
+    }
+  }
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }

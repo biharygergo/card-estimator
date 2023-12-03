@@ -43,7 +43,6 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ToastService } from 'src/app/services/toast.service';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
@@ -463,10 +462,5 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   async addToOrganization(memberId: string) {
     await this.organizationService.addMember(this.organization.id, memberId);
     this.showMessage('Added to organization!');
-  }
-
-  openLearnMore() {
-    this.analyticsService.logClickedLearnMorePremium('room_configuration');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

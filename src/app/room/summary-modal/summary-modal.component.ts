@@ -24,12 +24,10 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { MeteredUsageService } from 'src/app/services/metered-usage.service';
-import { PaymentService } from 'src/app/services/payment.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { SerializerService } from 'src/app/services/serializer.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
-import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 import Typed from 'typed.js';
 
 export interface SummaryModalData {
@@ -198,10 +196,5 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
     this.clipboard.copy(this.summaryResponse$.value.text);
     this.toastService.showMessage('Summary copied to clipboard!');
     this.analyticsService.logClickedCopySummaryToClipboard();
-  }
-
-  upgradeToPremium() {
-    this.analyticsService.logClickedLearnMorePremium('summary_modal');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

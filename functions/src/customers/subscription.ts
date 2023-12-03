@@ -1,8 +1,41 @@
 import {getFirestore} from "firebase-admin/firestore";
-import {FirestoreEvent, QueryDocumentSnapshot, Change} from "firebase-functions/v2/firestore";
+import {
+  FirestoreEvent,
+  QueryDocumentSnapshot,
+  Change,
+} from "firebase-functions/v2/firestore";
+import {BundleName} from "../types";
+import {createBundle} from "../credits";
+
+export async function onCustomerPaymentCreated(
+    snap: FirestoreEvent<QueryDocumentSnapshot | undefined>
+) {
+  const userId = snap.data?.ref.parent.parent?.id;
+
+  if (!userId) {
+    throw Error("No user id available");
+  }
+
+  const bundleName = snap.data?.data().metadata?.bundleName;
+
+  if (
+    !bundleName ||
+    [
+      BundleName.LARGE_BUNDLE,
+      BundleName.MEGA_BUNDLE,
+      BundleName.SMALL_BUNDLE,
+    ].includes(bundleName) === false
+  ) {
+    console.error('Unknown bundle name', bundleName);
+    return;
+  }
+
+  console.log(bundleName, userId, snap.data?.data().id);
+  await createBundle(bundleName, userId, snap.data?.data().id, true);
+}
 
 export async function onCustomerSubscriptionCreated(
-    snap: FirestoreEvent<QueryDocumentSnapshot|undefined>,
+    snap: FirestoreEvent<QueryDocumentSnapshot | undefined>
 ) {
   const userId = snap.data?.ref.parent.parent?.id;
 

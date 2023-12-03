@@ -17,9 +17,9 @@ import {
   PaymentService,
   StripeSubscription,
 } from 'src/app/services/payment.service';
-import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
 import * as moment from 'moment';
+import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -193,8 +193,8 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
         ...bundle,
         title: getBundleTitle(bundle.name),
         availableCredits: bundle.credits.filter((c) => !c.usedForRoomId),
-        expiresInReadable: moment(bundle.expiresAt.toDate()).fromNow(),
-        isExpired: moment(bundle.expiresAt.toDate()).isBefore(moment()),
+        expiresInReadable: bundle.expiresAt ? moment(bundle.expiresAt.toDate()).fromNow() : '',
+        isExpired: bundle.expiresAt ? moment(bundle.expiresAt.toDate()).isBefore(moment()) : false,
       }));
     })
   );
@@ -298,6 +298,8 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   openLearnMore() {
     this.analytics.logClickedLearnMorePremium('profile');
-    this.dialog.open(...premiumLearnMoreModalCreator());
+    this.dialog.open(...pricingModalCreator());
   }
+
+  
 }

@@ -1,17 +1,17 @@
 <div class="page-wrapper">
-    @if (pageMode === 'modal') {
-        <div class="close-button">
-            <button mat-button mat-dialog-close>
-            <mat-icon>arrow_back</mat-icon>Back
-            </button>
-        </div>
-    }
+  @if (pageMode === 'modal') {
+  <div class="close-button">
+    <button mat-button mat-dialog-close>
+      <mat-icon>arrow_back</mat-icon>Back
+    </button>
+  </div>
+  }
   <div class="content">
     <h1 class="title">Pricing</h1>
     <p class="description">
+      Simple, pay-as-you-go pricing where a credit allows you to create a room.
       Get started for free and if you enjoy using the app, top-up your credits.
-      Select the bundle that best fits your usage or subscribe for unlimited
-      use.
+      No hidden fees and no restricted features.
     </p>
     <mat-tab-group class="plan-selector">
       <mat-tab label="One-time purchase">
@@ -58,7 +58,12 @@
               <span class="price-amount">€15</span>
               <span class="price-description">billed monthly</span>
             </div>
-            <button mat-flat-button color="primary" class="select-plan" (click)="subscribeToPremium()">
+            <button
+              mat-flat-button
+              color="primary"
+              class="select-plan"
+              (click)="subscribeToPremium()"
+            >
               Subscribe
             </button>
           </div>

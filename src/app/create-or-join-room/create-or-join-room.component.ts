@@ -20,6 +20,7 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
+  EMPTY,
   from,
   Observable,
   of,
@@ -67,6 +68,8 @@ import { Timestamp } from 'firebase/firestore';
 import { NavigationService } from '../services/navigation.service';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
+import { ToastService } from '../services/toast.service';
+import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -121,8 +124,8 @@ const GREETINGS: { [hour: number]: string } = {
     SharedModule,
     ZoomAppBannerComponent,
     AppConfigModule,
-    CarbonAdComponent
-],
+    CarbonAdComponent,
+  ],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],
@@ -252,6 +255,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly teamsService: TeamsService,
     private readonly navigationService: NavigationService,
+    private readonly toastService: ToastService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -336,7 +340,26 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         }),
         switchMap(() => this.recurringMeetingId$),
         switchMap((recurringMeetingId) =>
-          from(this.createRoom(recurringMeetingId))
+          from(this.createRoom(recurringMeetingId)).pipe(
+            catchError((e) => {
+              if (e.details === 'error-no-credits') {
+                this.toastService
+                  .showMessage(
+                    '🤯 Oh-oh, it looks like you ran out of credits. Please top-up your credits or wait for your next free monthly bundle to create new rooms.',
+                    10000,
+                    'error',
+                    'View my credits'
+                  )
+                  .onAction()
+                  .pipe()
+                  .subscribe(() => {
+                    this.dialog.open(...avatarModalCreator({openAtTab: 'subscription'}));
+                  });
+              }
+              this.isBusy.next(false);
+              return of({});
+            })
+          )
         ),
         takeUntil(this.destroy),
         finalize(() => this.isBusy.next(false))

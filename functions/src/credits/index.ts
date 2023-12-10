@@ -34,8 +34,7 @@ export async function assignCreditsAsNeeded(userId: string) {
         : BundleName.WELCOME_BUNDLE_STANDARD,
       userId,
       null,
-      undefined,
-      
+      undefined
     );
   }
 
@@ -63,7 +62,7 @@ function getAllCredits(userId: string): Promise<Credit[]> {
 function getAllBundles(userId: string): Promise<CreditBundle[]> {
   return getFirestore()
     .collection(`userDetails/${userId}/${BUNDLES_COLLECTION}`)
-    .orderBy('expiresAt', 'asc')
+    .orderBy('createdAt', 'desc')
     .get()
     .then((snapshot) =>
       snapshot.docs.map((docSnapshot) => docSnapshot.data() as CreditBundle)
@@ -224,9 +223,6 @@ function getBundleExpirationDate(
         moment(creationDate.toDate()).add(2, 'months').toDate()
       );
     case BundleName.WELCOME_BUNDLE_EXISTING_USER:
-      return Timestamp.fromDate(
-        moment(creationDate.toDate()).add(3, 'months').toDate()
-      );
     case BundleName.MONTHLY_BUNDLE:
       return Timestamp.fromDate(
         moment(creationDate.toDate()).add(3, 'months').toDate()

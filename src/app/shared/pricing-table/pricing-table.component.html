@@ -9,19 +9,31 @@
   <div class="content">
     <h1 class="title">Pricing</h1>
     <p class="description">
-      Simple, pay-as-you-go pricing where a credit allows you to create a room.
-      Get started for free and if you enjoy using the app, top-up your credits.
-      No hidden fees and no restricted features.
+      Enjoy flexible, pay-as-you-go pricing. Create a room with each credit and
+      only pay for what you need. Try it out risk-free with our free starter
+      plan. When you love using the app, easily top-up your credits or go
+      unlimited. No hidden fees, no surprises.
     </p>
     <mat-tab-group class="plan-selector">
-      <mat-tab label="One-time purchase">
+      <mat-tab label="Pay-as-you-go">
         <div class="options-wrapper">
           @for(plan of PLANS; track plan.id) {
           <div class="option">
-            <div class="image-wrapper">
-              <img class="plan-image" [src]="plan.imageUrl" />
+            <div class="plan-image-and-title">
+              <div class="image-wrapper">
+                @if(config.runningIn !== 'web') {
+                <img class="plan-image" [src]="plan.imageUrl" />
+                } @else {
+                <img
+                  class="plan-image"
+                  [ngSrc]="plan.cloudinaryId"
+                  width="675"
+                  height="675"
+                />
+                }
+              </div>
+              <h3 class="plan-title">{{ plan.title }}</h3>
             </div>
-            <h3 class="plan-title">{{ plan.title }}</h3>
             <p class="plan-description">
               <strong>{{ plan.creditAmount }} credits</strong>
               {{ plan.description }}
@@ -43,20 +55,24 @@
           }
         </div>
       </mat-tab>
-      <mat-tab label="Subscription">
+      <mat-tab label="Unlimited use">
         <div class="options-wrapper">
           <div class="option">
-            <div class="image-wrapper">
-              <img class="plan-image" [src]="" />
+            <div class="plan-image-and-title">
+              <div class="image-wrapper">
+                <img class="plan-image" src="/assets/logo.png" />
+              </div>
+              <h3 class="plan-title">Premium subscription</h3>
             </div>
-            <h3 class="plan-title">Premium subscription</h3>
+
             <p class="plan-description">
               <strong>Unlimited credits</strong> for SCRUM masters of multiple
-              teams who do not want to mess with top-ups.
+              teams in larger organizations. Simple monthly or yearly invoicing,
+              personal customer support.
             </p>
             <div class="plan-price">
               <span class="price-amount">€15</span>
-              <span class="price-description">billed monthly</span>
+              <span class="price-description">billed monthly or 150€/year</span>
             </div>
             <button
               mat-flat-button
@@ -150,7 +166,7 @@
           </div>
           <div class="feature-details">
             <h5>Async voting</h5>
-            Let members vote on their own pace and vote asynchronously.
+            Let members vote on their own pace asynchronously.
           </div>
         </li>
         <li>

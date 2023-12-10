@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, Input } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { PaymentService } from 'src/app/services/payment.service';
 import { BundleName } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 
 export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
@@ -26,6 +27,7 @@ interface PurchaseOption {
   bundleName: BundleName | undefined;
   stripeProductId: string;
   imageUrl: string;
+  cloudinaryId: string;
   title: string;
   description: string;
   creditAmount: number;
@@ -39,9 +41,11 @@ const PLANS: PurchaseOption[] = [
     id: 'welcome-bundle',
     bundleName: undefined,
     stripeProductId: 'example-id', // TODO
-    imageUrl: '/assets/credit_5.png',
+    imageUrl: '/assets/bundle_5.png',
+    cloudinaryId: 'bundle_5',
     title: 'Welcome bundle',
-    description: 'for every new user, expires after 2 months',
+    description:
+      'when you register and 1 free credit every month afterwards. Credits expire after two months.',
     creditAmount: 5,
     priceEuro: 0,
     priceDescription: 'assigned automatically',
@@ -51,9 +55,11 @@ const PLANS: PurchaseOption[] = [
     id: 'small-bundle',
     bundleName: BundleName.SMALL_BUNDLE,
     stripeProductId: 'example-id', // TODO
-    imageUrl: '/assets/credit_7.png',
+    imageUrl: '/assets/bundle_7.png',
+    cloudinaryId: 'bundle_7',
     title: 'Small bundle',
-    description: 'for SCRUM masters of a single team with bi-weekly planning',
+    description:
+      'ideal for the SCRUM master of a team that plans biweekly. Credits do not expire.',
     creditAmount: 7,
     priceEuro: 9,
     priceDescription: 'one-time purchase',
@@ -63,9 +69,11 @@ const PLANS: PurchaseOption[] = [
     id: 'large-bundle',
     bundleName: BundleName.LARGE_BUNDLE,
     stripeProductId: 'example-id', // TODO
-    imageUrl: '/assets/credit_15.png',
+    imageUrl: '/assets/bundle_15.png',
+    cloudinaryId: 'bundle_15',
     title: 'Large bundle',
-    description: 'for SCRUM masters of a single team with weekly planning',
+    description:
+      'ideal for the SCRUM master of a team with weekly planning. Credits do not expire.',
     creditAmount: 15,
     priceEuro: 17,
     priceDescription: 'one-time purchase',
@@ -75,9 +83,11 @@ const PLANS: PurchaseOption[] = [
     id: 'mega-bundle',
     bundleName: BundleName.MEGA_BUNDLE,
     stripeProductId: 'example-id', // TODO
-    imageUrl: '/assets/credit_50.png',
+    imageUrl: '/assets/bundle_50.png',
+    cloudinaryId: 'bundle_50',
     title: 'Mega bundle',
-    description: 'for SCRUM masters of multiple teams with weekly planning',
+    description:
+      'great for the SCRUM master of multiple teams with many planning meetings per week. Credits do not expire.',
     creditAmount: 50,
     priceEuro: 50,
     priceDescription: 'one-time purchase',
@@ -93,6 +103,7 @@ const PLANS: PurchaseOption[] = [
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    NgOptimizedImage
   ],
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss',
@@ -107,7 +118,8 @@ export class PricingTableComponent {
   constructor(
     private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
-    private readonly linkService: LinkService
+    private readonly linkService: LinkService,
+    @Inject(APP_CONFIG) public config: AppConfig,
   ) {}
 
   async buyBundle(bundleName: BundleName) {

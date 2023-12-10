@@ -1,3 +1,5 @@
+@import "../../common.scss";
+
 .page-wrapper {
   min-height: 100vh;
   background: white;
@@ -18,9 +20,14 @@
 }
 
 .plan-selector {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   margin-bottom: 5rem;
+}
+
+::ng-deep .mat-mdc-tab-label-container {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .description {
@@ -31,6 +38,7 @@
   max-width: 700px;
   margin: 0 auto;
   margin-bottom: 5rem;
+  padding: 0.5rem;
 }
 
 .options-wrapper {
@@ -39,23 +47,55 @@
   padding: 3rem;
   justify-content: center;
 
+  @include extraSmallScreen {
+    flex-direction: column;
+    padding: 1rem;
+    padding-top: 2rem;
+  }
+
   .option {
     display: flex;
     flex-direction: column;
     flex: 1 0;
-    max-width: 164px;
+    max-width: 200px;
+
+    @include extraSmallScreen() {
+      flex-direction: row;
+      max-width: unset;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .plan-image-and-title {
+      @include extraSmallScreen() {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+    }
 
     .image-wrapper {
       aspect-ratio: 1/1;
-      background: #F4F5F6;
+      background: #f4f5f6;
       border-radius: 24px;
       overflow: hidden;
       margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+
+      @include extraSmallScreen {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+        margin-bottom: 0;
+        border-radius: 8px;
       }
     }
 
@@ -152,7 +192,7 @@
 }
 
 .close-button {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-  }
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}

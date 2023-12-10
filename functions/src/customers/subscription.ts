@@ -31,7 +31,7 @@ export async function onCustomerPaymentCreated(
   }
 
   console.log(bundleName, userId, snap.data?.data().id);
-  await createBundle(bundleName, userId, snap.data?.data().id, true);
+  await createBundle(bundleName, userId, snap.data?.data().id);
 }
 
 export async function onCustomerSubscriptionCreated(

@@ -2,7 +2,6 @@
 
 .page-wrapper {
   min-height: 100vh;
-  background: white;
   margin: 0 auto;
 }
 
@@ -77,7 +76,7 @@
 
     .image-wrapper {
       aspect-ratio: 1/1;
-      background: #f4f5f6;
+      background: var(--light-background-color);
       border-radius: 24px;
       overflow: hidden;
       margin-bottom: 1.5rem;
@@ -100,7 +99,7 @@
     }
 
     .plan-title {
-      color: #001a43;
+      color: var(--title-on-dark);
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
@@ -116,14 +115,14 @@
       margin-top: auto;
       .price-amount {
         font-size: 2rem;
-        color: #575e71;
+        color: var(--subtitle-on-dark);
         font-weight: bold;
         display: block;
         margin-bottom: 4px;
       }
 
       .price-description {
-        color: #575e71;
+        color: var(--subtitle-on-dark);
         font-size: 0.8rem;
       }
     }

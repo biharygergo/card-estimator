@@ -353,8 +353,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
                   .onAction()
                   .pipe()
                   .subscribe(() => {
-                    this.dialog.open(...avatarModalCreator({openAtTab: 'subscription'}));
+                    this.dialog.open(
+                      ...avatarModalCreator({ openAtTab: 'subscription' })
+                    );
                   });
+              } else {
+                this.toastService.showMessage(
+                  `An error occured: ${e.message}. Please try again or report this is issue.`
+                );
+                console.error(e);
               }
               this.isBusy.next(false);
               return of({});

@@ -72,125 +72,112 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Credits & subscription">
+      <mat-tab label="Credits">
         <div class="tab-content">
           <div class="tab-section">
-            <mat-tab-group
-              [dynamicHeight]="true"
-              class="custom-tab-group"
-              mat-align-tabs="center"
-              backgroundColor="primary"
-            >
-              <mat-tab label="Credits">
-                <h2 class="section-title">Your credits</h2>
-                @for(creditBundle of creditBundles$ | async; track
-                creditBundle.id) {
-                <div class="bundle-wrap">
-                  <div class="bundle-content">
-                    <div class="image-wrap">
-                      <img src="/assets/coin-stack.png" />
-                    </div>
-                    <div class="content">
-                      <h3 class="title">{{ creditBundle.title }}</h3>
-                      <div class="credit-status">
-                        <span
-                          >{{ creditBundle.availableCredits.length }} out of
-                          {{ creditBundle.credits.length }} credits
-                          available</span
-                        >
-                      </div>
-                      @if(creditBundle.expiresInReadable) {
-                        @if (creditBundle.isExpired) {
-                          <p>Expired {{ creditBundle.expiresInReadable }}</p>
-                          } @else {
-                          <p>Expires {{ creditBundle.expiresInReadable }}</p>
-                          }
-                      }
-                      
-                    </div>
-                  </div>
-                  <div class="actions"></div>
+            <h2 class="section-title">Your credits</h2>
+            <div class="bundle-wrap">
+              <div class="bundle-content">
+                <div class="image-wrap">
+                  <img src="/assets/credits_no_number.png" />
                 </div>
-                }
-                <button mat-flat-button color="primary">
-                  Buy more credits
-                </button>
-              </mat-tab>
-              <mat-tab label="Subscription">
-                <h2 class="section-title">Manage subscription</h2>
-                @if (subscription$ | async; as subscription) {
-                <mat-chip class="subscription-chip"
-                  ><span class="label">Premium</span></mat-chip
-                >
-                <div class="data-items">
-                  <div class="data-item">
-                    <strong>Status</strong>
-                    <span>{{ subscription.status | titlecase }}</span>
-                  </div>
-                  <div class="data-item">
-                    <strong>Plan</strong>
-                    @if (activePlan$ | async; as plan) {
+                <div class="content">
+                  @if(creditBundles$ | async; as creditsAndBundles) {
+                  <h3 class="title">Pay as you go</h3>
+                  <div class="credit-status">
                     <span
-                      >{{ plan?.amount / 100 }}
-                      {{ plan?.currency | uppercase }}/{{
-                        plan?.interval
-                      }}</span
+                      >{{ creditsAndBundles.availableCredits.length }} credits
+                      available</span
                     >
-                    }
                   </div>
-                  <div class="data-item">
-                    <strong>Created at</strong>
-                    <span>{{
-                      subscription.created.toMillis() | date : "medium"
-                    }}</span>
-                  </div>
-                  <div class="data-item">
-                    <strong>{{
-                      subscription.cancel_at_period_end
-                        ? "Ends at"
-                        : "Next
-                          payment at"
-                    }}</strong>
-                    <span>{{
-                      subscription.current_period_end.toMillis()
-                        | date : "medium"
-                    }}</span>
-                  </div>
+                  @if(creditsAndBundles.nextBatchExpiring?.length) {
+                  <p class="next-expiry">
+                    {{ creditsAndBundles.nextBatchExpiring.length }} credits
+                    will expire on
+                    {{
+                      creditsAndBundles.nextBatchExpiring[0].expiresAt.toDate()
+                        | date
+                    }}.
+                  </p>
+                  } }
+                  <p class="next-credit">Next free credit on {{ nextMonthStart | date }}</p>
                 </div>
-                <button
-                  mat-flat-button
-                  color="primary"
-                  (click)="redirectToCustomerPortal()"
-                  [disabled]="isLoadingStripe"
+              </div>
+              <div class="actions"></div>
+            </div>
+            <button mat-flat-button color="primary" (click)="openLearnMore()">Buy more credits</button>
+          </div>
+          <div class="tab-section">
+            <h2 class="section-title">Your plan</h2>
+            @if (subscription$ | async; as subscription) {
+            <mat-chip class="subscription-chip"
+              ><span class="label">Premium</span></mat-chip
+            >
+            <div class="data-items">
+              <div class="data-item">
+                <strong>Status</strong>
+                <span>{{ subscription.status | titlecase }}</span>
+              </div>
+              <div class="data-item">
+                <strong>Plan</strong>
+                @if (activePlan$ | async; as plan) {
+                <span
+                  >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
+                    plan?.interval
+                  }}</span
                 >
-                  <mat-icon>edit</mat-icon>
-                  {{
-                    isLoadingStripe
-                      ? "Redirecting you to Stripe..."
-                      : "Manage subscription"
-                  }}
-                </button>
-                } @else {
-                <p>
-                  You don't have an active Premium subscription. Subscribe now
-                  for unlimited credits.
-                </p>
-                <button
-                  mat-flat-button
-                  color="primary"
-                  class="learn-more-button"
-                  (click)="openLearnMore()"
-                  [disabled]="paymentsService.isSubscriptionDisabled"
-                >
-                  {{
-                    paymentsService.isSubscriptionDisabled
-                      ? "Not available on Teams mobile"
-                      : "Learn more"
-                  }}
-                </button>
                 }
-              </mat-tab>
-            </mat-tab-group>
+              </div>
+              <div class="data-item">
+                <strong>Created at</strong>
+                <span>{{
+                  subscription.created.toMillis() | date : "medium"
+                }}</span>
+              </div>
+              <div class="data-item">
+                <strong>{{
+                  subscription.cancel_at_period_end
+                    ? "Ends at"
+                    : "Next
+                          payment at"
+                }}</strong>
+                <span>{{
+                  subscription.current_period_end.toMillis() | date : "medium"
+                }}</span>
+              </div>
+            </div>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="redirectToCustomerPortal()"
+              [disabled]="isLoadingStripe"
+            >
+              <mat-icon>edit</mat-icon>
+              {{
+                isLoadingStripe
+                  ? "Redirecting you to Stripe..."
+                  : "Manage subscription"
+              }}
+            </button>
+            } @else {
+            <p>
+              You are currently on the free, pay as you go Basic plan. Subscribe
+              now for unlimited credits and priority support.
+            </p>
+            <button
+              mat-flat-button
+              color="primary"
+              class="learn-more-button"
+              (click)="openLearnMore()"
+              [disabled]="paymentsService.isSubscriptionDisabled"
+            >
+              {{
+                paymentsService.isSubscriptionDisabled
+                  ? "Not available on Teams mobile"
+                  : "Subscribe to Premium"
+              }}
+            </button>
+            }
           </div>
         </div>
       </mat-tab>

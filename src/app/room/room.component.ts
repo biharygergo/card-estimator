@@ -8,18 +8,14 @@ import {
 } from '@angular/core';
 import {
   EstimatorService,
-  NotLoggedInError,
 } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  catchError,
   combineLatest,
   distinctUntilChanged,
-  EMPTY,
   filter,
   first,
-  from,
   interval,
   map,
   Observable,

@@ -9,14 +9,16 @@ const BUNDLES_COLLECTION = "bundles";
 
 export async function getAllCreditBundles(
     userId: string
-): Promise<BundleWithCredits[]> {
+): Promise<{ credits: Credit[]; bundles: BundleWithCredits[] }> {
   const allCredits = await getAllCredits(userId);
   const allBundles = await getAllBundles(userId);
 
-  return allBundles.map((bundle) => ({
+  const bundles = allBundles.map((bundle) => ({
     ...bundle,
     credits: allCredits.filter((c) => c.bundleId === bundle.id),
   }));
+
+  return {credits: allCredits, bundles};
 }
 
 export async function assignCreditsAsNeeded(userId: string) {

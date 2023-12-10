@@ -12,11 +12,12 @@
   --on-light-background-color-2: #edf0ff;
   --on-light-background-color-3: #efefef;
   --on-light-background-color-4: #eef1fe;
+  --on-light-background-color-5: #ebeced;
   --blue-background-color: #d9e2ff;
   --title-on-dark: #001a43;
   --subtitle-on-dark: #575e71;
   --paragraph-on-premium: #15448f;
-  --ad-background: #18325D;
+  --ad-background: #18325d;
 
   --light-blue: #d9e2ff;
   --text-on-white: #3f4759;
@@ -79,6 +80,7 @@ body {
     --on-light-background-color-3: #1f1f1f;
     --blue-background-color: #1f1f1f;
     --on-light-background-color-4: black;
+    --on-light-background-color-5: #3d3d3d;
     --text-on-white: #efefef;
     --title-on-dark: #efefef;
     --subtitle-on-dark: white;
@@ -227,7 +229,6 @@ body {
 
   @media screen and (max-width: 800px) {
     padding: 1rem;
-
   }
 
   @include extraSmallScreen {
@@ -400,7 +401,9 @@ body {
   min-width: 150px !important;
 }
 
-.cdk-overlay-pane.rounded-dialog .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+.cdk-overlay-pane.rounded-dialog
+  .mat-mdc-dialog-container
+  .mat-mdc-dialog-surface {
   border-radius: 20px;
 }
 

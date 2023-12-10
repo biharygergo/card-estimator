@@ -3,6 +3,9 @@
 .page-wrapper {
   min-height: 100vh;
   margin: 0 auto;
+  background: var(--light-background);
+  overflow-y: auto;
+  width: 100%;
 }
 
 .content {
@@ -16,6 +19,7 @@
   font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 2rem;
+  color: var(--title-on-dark)
 }
 
 .plan-selector {
@@ -180,8 +184,8 @@
     }
 
     .feature-details {
+      color: var(--title-on-dark);
       h5 {
-        color: var(--title-on-dark);
         font-weight: bold;
         font-size: 1rem;
         margin-bottom: 6px;

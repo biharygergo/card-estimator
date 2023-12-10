@@ -25,7 +25,7 @@ import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
-import { BundleName, BundleWithCredits, CreditBundle } from '../types';
+import { BundleName, BundleWithCredits, Credit, CreditBundle } from '../types';
 import { User } from '@angular/fire/auth';
 
 export type CorrectSubscription = Subscription & {
@@ -65,13 +65,11 @@ export class PaymentService {
     }
   }
   async buyBundle(bundleName: BundleName) {
-
     const passes = await this.checkPrerequisites(
       'Before you buy a bundle, please log in or create a permanent account',
       'Purchasing a bundle requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the purchase flow.'
     );
     let user = await this.authService.getUser();
-
 
     if (!passes) return;
 
@@ -167,7 +165,6 @@ export class PaymentService {
   }
 
   async startSubscriptionToPremium(promotionCode?: string) {
-
     const passes = await this.checkPrerequisites(
       'Before you subscribe to Premium, please log in or create a permanent account',
       'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
@@ -286,17 +283,37 @@ export class PaymentService {
     );
   }
 
-  async getAndAssignCreditBundles(): Promise<BundleWithCredits[]> {
+  async getAndAssignCreditBundles(): Promise<{
+    credits: Credit[];
+    bundles: BundleWithCredits[];
+  }> {
     const result = await httpsCallable(
       this.functions,
       'getAllCreditsAndAssignWelcome'
     )();
 
-    return (result.data as BundleWithCredits[]).map((bundle) => ({
-      ...bundle,
-      expiresAt: bundle.expiresAt ? Timestamp.fromDate(
-        new Date((bundle.expiresAt as any)._seconds * 1000)
-      ) : null,
-    }));
+    const bundles = ((result.data as any).bundles as BundleWithCredits[]).map(
+      (bundle) => ({
+        ...bundle,
+        expiresAt: bundle.expiresAt
+          ? Timestamp.fromDate(
+              new Date((bundle.expiresAt as any)._seconds * 1000)
+            )
+          : null,
+      })
+    );
+
+    const credits = ((result.data as any).credits as Credit[]).map(
+      (credit) => ({
+        ...credit,
+        expiresAt: credit.expiresAt
+          ? Timestamp.fromDate(
+              new Date((credit.expiresAt as any)._seconds * 1000)
+            )
+          : null,
+      })
+    );
+
+    return { credits, bundles };
   }
 }

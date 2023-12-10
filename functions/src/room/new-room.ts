@@ -19,7 +19,7 @@ import {
 import {isPremiumSubscriber} from "../shared/customClaims";
 import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 import {
-  assignWelcomeCreditsIfNeeded,
+  assignCreditsAsNeeded,
   getCreditForNewRoom,
   updateCreditUsage,
 } from "../credits";
@@ -38,7 +38,7 @@ export async function createRoom(
   const userId = request.auth.uid;
   const isPremium = await isPremiumSubscriber(userId);
 
-  await assignWelcomeCreditsIfNeeded(userId);
+  await assignCreditsAsNeeded(userId);
   const creditToUse = await getCreditForNewRoom(userId);
 
   if (!creditToUse && !isPremium) {

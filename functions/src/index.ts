@@ -48,7 +48,7 @@ import {onRoomCreated} from "./room/created";
 import {updateIssue} from "./jira/updateIssue";
 import {onTeamsGoogleAuthResult, startTeamsGoogleAuth} from "./ms-teams";
 import {createRoom} from "./room/new-room";
-import {assignWelcomeCreditsIfNeeded, getAllCreditBundles} from "./credits";
+import {assignCreditsAsNeeded, getAllCreditBundles} from "./credits";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -225,7 +225,7 @@ exports.getAllCreditsAndAssignWelcome = onCall({cors: true}, async (request) => 
         "You need to be authenticated to fetch credits."
     );
   }
-  await assignWelcomeCreditsIfNeeded(request.auth.uid);
+  await assignCreditsAsNeeded(request.auth.uid);
 
   return getAllCreditBundles(request.auth.uid);
 });

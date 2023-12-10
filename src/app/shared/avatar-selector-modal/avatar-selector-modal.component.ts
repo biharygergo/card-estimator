@@ -191,7 +191,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     map((creditBundles) => {
       return creditBundles.map((bundle) => ({
         ...bundle,
-        title: getBundleTitle(bundle.name),
+        title: bundle.displayName ?? getBundleTitle(bundle.name),
         availableCredits: bundle.credits.filter((c) => !c.usedForRoomId),
         expiresInReadable: bundle.expiresAt ? moment(bundle.expiresAt.toDate()).fromNow() : '',
         isExpired: bundle.expiresAt ? moment(bundle.expiresAt.toDate()).isBefore(moment()) : false,

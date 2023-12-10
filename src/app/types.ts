@@ -447,6 +447,7 @@ export interface CreditBundle {
   paymentId: string | null;
   createdAt: Timestamp;
   name: BundleName;
+  displayName?: string;
   creditCount: number;
   expiresAt: Timestamp | null;
 }
@@ -461,6 +462,7 @@ export enum BundleName {
   SMALL_BUNDLE = 'SMALL_BUNDLE',
   LARGE_BUNDLE = 'LARGE_BUNDLE',
   MEGA_BUNDLE = 'MEGA_BUNDLE',
+  MONTHLY_BUNDLE = 'MONTHLY_BUNDLE',
 }
 
 export function getBundleTitle(bundleName: BundleName) {

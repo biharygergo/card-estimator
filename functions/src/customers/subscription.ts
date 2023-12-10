@@ -26,7 +26,7 @@ export async function onCustomerPaymentCreated(
       BundleName.SMALL_BUNDLE,
     ].includes(bundleName) === false
   ) {
-    console.error('Unknown bundle name', bundleName);
+    console.error("Unknown bundle name", bundleName);
     return;
   }
 

@@ -28,7 +28,7 @@ export async function assignCreditsAsNeeded(userId: string) {
   ) {
     const user = await getAuth().getUser(userId);
     const isExistingUser = moment(user.metadata.creationTime).isBefore(
-        moment("2023-12-12")
+        moment("2023-12-11")
     );
     await createBundle(
       isExistingUser ?
@@ -203,9 +203,9 @@ function getCreditCountForBundle(bundleType: BundleName) {
     case BundleName.WELCOME_BUNDLE_EXISTING_USER:
       return 10;
     case BundleName.SMALL_BUNDLE:
-      return 5;
+      return 7;
     case BundleName.LARGE_BUNDLE:
-      return 10;
+      return 15;
     case BundleName.MEGA_BUNDLE:
       return 50;
     case BundleName.MONTHLY_BUNDLE:

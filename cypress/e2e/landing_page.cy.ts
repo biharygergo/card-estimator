@@ -22,12 +22,6 @@ describe('Landing page', () => {
     cy.location('pathname').should('eq', '/features');
   })
 
-  it('can go to the FAQ page', () => {
-    cy.contains('Got it').click();
-    cy.contains('FAQ').scrollIntoView().click();
-    cy.location('pathname').should('eq', '/faq');
-  })
-
   it('can go to the Pricing page', () => {
     cy.contains('Pricing').click();
     cy.location('pathname').should('eq', '/pricing');

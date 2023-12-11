@@ -18,6 +18,7 @@ import {
   Subject,
   from,
   map,
+  of,
   switchMap,
   takeUntil,
   tap,
@@ -89,11 +90,10 @@ export class RoundHistoryTableComponent
 
   isLoading = new BehaviorSubject(true);
 
-  isPremium$ = from(this.paymentsService.isPremiumSubscriber());
-  previousRounds: Observable<TableRow[]> = this.isPremium$.pipe(
+  previousRounds: Observable<TableRow[]> = of(undefined).pipe(
     tap(() => this.isLoading.next(true)),
-    switchMap((isPremium) =>
-      this.estimatorService.getPreviousSessions(isPremium ? undefined : 3)
+    switchMap(() =>
+      this.estimatorService.getPreviousSessions()
     ),
     map((rooms) => {
       const rounds = rooms.map((room) => {

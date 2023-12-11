@@ -1,53 +1,23 @@
 <h1 mat-dialog-title>
-  {{ subscriptionResult === "success" ? "Subscribed to Premium" : "Oops!" }}
+  {{ subscriptionResult === "success" ? "Success!" : "Oops!" }}
 </h1>
 <div mat-dialog-content>
   <div class="tab-section">
     @if (subscriptionResult === 'success') {
-      <p class="description">
-        Thanks for subscribing to a Premium plan, you are amazing!
-        <strong
-          >It might take a couple of minutes for your subscription to finalize,
-          hold tight and refresh the page in a minute or so. </strong
-          >Until then, here are some the features you've just unlocked:
-        </p>
-        <mat-divider></mat-divider>
-        <ul class="features-list">
-          <li>
-            <mat-icon>check_circle</mat-icon>
-            <span
-              >Protect your planning sessions with a password, invitations and
-              fine tune permissions</span
-              >
-            </li>
-            <li>
-              <mat-icon>check_circle</mat-icon>
-              <span>Add unlimited members to your organization</span>
-            </li>
-            <li>
-              <mat-icon>check_circle</mat-icon>
-              <span>View your full planning history</span>
-            </li>
-            <li>
-              <mat-icon>check_circle</mat-icon>
-              <span>Support open-source app development</span>
-            </li>
-            <li>
-              <mat-icon>check_circle</mat-icon>
-              <span>Integrate with Jira (Coming Soon)</span>
-            </li>
-          </ul>
-        }
-        @if (subscriptionResult === 'cancel') {
-          <p>
-            It seems like your payment process was cancelled. If you think something
-            has gone wrong, don't hesitate to email us at <br /><br />
-            <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a>.
-          </p>
-        }
-      </div>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-flat-button mat-dialog-close>Close</button>
-    </div>
-    
+    <p class="description">
+      Thanks for your purchase, you are amazing! It might take a couple of
+      seconds for everything to finalize, hold tight and refresh the page if
+      your credits/subscription does not show.
+    </p>
+    } @if (subscriptionResult === 'cancel') {
+    <p>
+      It seems like your payment process was cancelled. If you think something
+      has gone wrong, don't hesitate to email us at <br /><br />
+      <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a>.
+    </p>
+    }
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>Close</button>
+</div>

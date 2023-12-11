@@ -16,18 +16,14 @@
           </button>
         }
         <div
-          [matTooltip]="
-          (isPremium$ | async)
-          ? 'Save story points to Jira'
-          : 'You need a Premium subscription to save story points to Jira.'
-          "
+          matTooltip="Save story points to Jira"
           >
           @if (!enableEditing) {
             <button
               (click)="saveEstimateToJira()"
               mat-icon-button
               aria-label="Save story points to Jira"
-              [disabled]="isSavingToJira || !(isPremium$ | async)"
+              [disabled]="isSavingToJira"
               >
               <mat-icon>publish</mat-icon>
             </button>

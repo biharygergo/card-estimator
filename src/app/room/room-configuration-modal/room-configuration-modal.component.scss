@@ -1,4 +1,4 @@
-@import '../../common.scss';
+@import "../../common.scss";
 
 .permission {
   margin-bottom: 1rem;
@@ -19,24 +19,20 @@
 .role-option {
   background: transparent;
   border: 1px solid;
-  --mdc-chip-label-text-color: black;
-  --mdc-chip-with-icon-selected-icon-color: black;
+  --mdc-chip-label-text-color: black !important;
+  --mdc-chip-with-icon-selected-icon-color: black !important;
   font-weight: 500;
 
   &.mat-mdc-chip-selected {
-    --mdc-chip-label-text-color: black;
-    --mdc-chip-with-icon-selected-icon-color: black;
-    --mdc-chip-elevated-disabled-container-color: #d4e3c4;
+    --mdc-chip-label-text-color: black !important;
+    --mdc-chip-with-icon-selected-icon-color: black !important;
+    --mdc-chip-elevated-disabled-container-color: #d4e3c4 !important;
     background: #d4e3c4 !important;
-    border: none;
+    border: none !important;
   }
 
   &.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
     opacity: 0.6;
-  }
-
-  .mat-mdc-chip-action-label {
-    font-weight: 500;
   }
 }
 

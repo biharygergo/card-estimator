@@ -50,39 +50,7 @@
                 </ul>
               </mat-card-content>
             </mat-card>
-          } @else {
-            @if (
-              !(permissionsService.hasPremiumAccess() | async) &&
-              organization &&
-              organization?.activePlan !== 'premium'
-              ) {
-              <div
-                class="premium-banner"
-                @fadeAnimation
-                >
-                <h2 class="title">Preview this Premium Feature</h2>
-                <p>
-                Create an organization for <strong>up to 5 members for free</strong>.
-                Set up your brand, invite members and schedule recurring meetings.
-              </p>
-              <div class="premium-banner-buttons">
-                <button
-                  mat-flat-button
-                  color="primary"
-                  (click)="openLearnMore()"
-                  class="learn-more"
-                  [disabled]="paymentsService.isSubscriptionDisabled"
-                  >
-                  {{
-                  paymentsService.isSubscriptionDisabled
-                  ? "Not available on Teams mobile"
-                  : "Learn more"
-                  }}
-                </button>
-              </div>
-            </div>
           }
-        }
       }
       @if (organization !== null) {
         @if (!organization && showIntro) {
@@ -191,16 +159,6 @@
                         <div class="members-section">
                           <h5 class="section-title">
                             <mat-icon>people</mat-icon> Manage members
-                            @if (organization?.activePlan === 'basic') {
-                              <mat-chip
-                                [matTooltip]="
-                                organization?.memberIds.length > 5
-                                ? 'You are over the free organization members limit. Please subscribe to Premium to keep your extra members.'
-                                : ''
-                                "
-                                >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
-                                >
-                              }
                             </h5>
                             <ul class="members-list">
                               @for (member of members$ | async; track member.id) {

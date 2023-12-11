@@ -54,30 +54,6 @@
         }
       </div>
     </div>
-    @if (!(permissionService.hasPremiumAccess() | async)) {
-      <div
-        class="premium-banner"
-        >
-        <h2 class="title">Better with Premium</h2>
-        <p>
-          Do you want to reuse this custom card deck in your next meeting?
-          Subscribe to Premium to automatically store your card decks in the
-          cloud!
-        </p>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="clickedLearnMorePremium()"
-          [disabled]="paymentsService.isSubscriptionDisabled"
-          >
-          {{
-          paymentsService.isSubscriptionDisabled
-          ? "Not available on Teams mobile"
-          : "Learn more"
-          }}
-        </button>
-      </div>
-    }
   </div>
   <div mat-dialog-actions>
     <button mat-flat-button mat-dialog-close color="secondary">

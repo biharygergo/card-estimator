@@ -6,20 +6,14 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import {
-  EstimatorService,
-  NotLoggedInError,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  catchError,
   combineLatest,
   distinctUntilChanged,
-  EMPTY,
   filter,
   first,
-  from,
   interval,
   map,
   Observable,
@@ -31,6 +25,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
@@ -66,7 +61,6 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash-es';
-import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { WebexApiService } from '../services/webex-api.service';
 import {
@@ -74,7 +68,6 @@ import {
   fadeAnimation,
   bounceAnimation,
 } from '../shared/animations';
-import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { TeamsService } from '../services/teams.service';
 import { PaymentService } from '../services/payment.service';
 import { Timestamp } from '@angular/fire/firestore';
@@ -82,8 +75,9 @@ import { ToastService } from '../services/toast.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
-import { premiumInAppModalCreator } from '../shared/premium-in-app-modal/premium-in-app-modal.component';
 import { RoomDataService } from './room-data.service';
+import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
+import * as moment from 'moment';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -186,25 +180,26 @@ export class RoomComponent implements OnInit, OnDestroy {
   shouldOpenAloneInRoomModal$: Observable<boolean> = combineLatest([
     this.roundNumber$,
     this.sessionCount$,
+    this.userPreferences$.pipe(first()),
   ]).pipe(
-    map(([roundNumber, sessionCount]) => {
-      return roundNumber > 0 && sessionCount < 2;
+    map(([roundNumber, sessionCount, pref]) => {
+      return roundNumber > 0 && sessionCount < 2 && !pref.aloneInRoomModalShown;
     }),
     filter((shouldOpen) => !!shouldOpen)
   );
 
-  isPremium$ = from(this.paymentService.isPremiumSubscriber());
-
-  shouldOpenPremiumDealBanner$: Observable<boolean> = combineLatest([
-    this.room$,
+  shouldOpenExistingUserPricingModal$: Observable<boolean> = combineLatest([
     this.user$,
-    this.sessionCount$,
-    this.isPremium$,
+    this.userPreferences$.pipe(first()),
   ]).pipe(
-    map(([room, user, sessionCount, isPremium]) => {
-      return !isPremium && sessionCount > 5 && room.createdById === user.uid;
+    filter(([user, pref]) => {
+      return (
+        user &&
+        moment(user.metadata.creationTime).isBefore('2023-12-11') &&
+        !pref.updatedPricingModalShown
+      );
     }),
-    filter((shouldOpen) => !!shouldOpen),
+    map(() => true),
     first()
   );
 
@@ -320,6 +315,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         this.showOrHideAloneInRoomModal();
+        this.authService.updateUserPreference({aloneInRoomModalShown: true}).subscribe();
       });
 
     this.authService.avatarUpdated
@@ -347,6 +343,17 @@ export class RoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
+
+    this.shouldOpenExistingUserPricingModal$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.dialog.open(...introducingNewPricingModalCreator());
+        this.authService
+          .updateUserPreference({
+            updatedPricingModalShown: true,
+          })
+          .subscribe();
+      });
   }
 
   ngAfterViewInit() {
@@ -597,11 +604,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
-  }
-
-  openPremiumLearnMoreModal() {
-    this.analytics.logClickedLearnMorePremium('room_navbar');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 
   async copyRoomId() {

@@ -41,11 +41,10 @@ export class CardDeckService {
     return combineLatest([
       this.authService.user,
       this.organizationService.getMyOrganization(),
-      this.permissionsService.hasPremiumAccess(),
     ]).pipe(
       first(),
-      switchMap(async ([user, organization, isPremium]) => {
-        if (!user || user.isAnonymous || !isPremium) {
+      switchMap(async ([user, organization]) => {
+        if (!user || user.isAnonymous) {
           return throwError(() => new UnauthorizedError());
         }
         const savedCardSet: SavedCardSetValue = {

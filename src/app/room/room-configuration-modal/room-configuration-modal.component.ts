@@ -43,7 +43,6 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { premiumLearnMoreModalCreator } from 'src/app/shared/premium-learn-more/premium-learn-more.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ToastService } from 'src/app/services/toast.service';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
@@ -268,17 +267,13 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   organization: Organization | undefined;
 
   user$ = this.authService.user;
-  isPremiumSubscriber$ = this.permissionsService
-    .hasPremiumAccess()
-    .pipe(takeUntil(this.destroy));
 
   hasConfigurationAccess$ = combineLatest([
     this.room$,
     this.user$,
-    this.isPremiumSubscriber$,
   ]).pipe(
-    map(([room, user, isPremium]) => {
-      return room.createdById === user.uid && isPremium;
+    map(([room, user]) => {
+      return room.createdById === user.uid && !user.isAnonymous;
     }),
     tap((hasAccess) => {
       hasAccess ? this.roomPassword.enable() : this.roomPassword.disable();
@@ -467,10 +462,5 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   async addToOrganization(memberId: string) {
     await this.organizationService.addMember(this.organization.id, memberId);
     this.showMessage('Added to organization!');
-  }
-
-  openLearnMore() {
-    this.analyticsService.logClickedLearnMorePremium('room_configuration');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

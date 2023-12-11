@@ -54,3 +54,4 @@ cypress.env.json
 /cypress/videos
 /cypress/screenshots
 appPackage/build
+/extensions/firestore-stripe-payments.secret.local

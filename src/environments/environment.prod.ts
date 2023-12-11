@@ -13,5 +13,8 @@ export const environment = {
   recaptcha3SiteKey: '6Lf5e-weAAAAAIkZ1MWmXR9xxHkv2jPQda325CRm',
   useEmulators: false,
   premiumPriceId: 'price_1MkYV6CG1hllVHncXLgIFXLK',
-  powerUserPromoCode: 'promo_1O436TCG1hllVHncuVzCCRoD'
+  powerUserPromoCode: 'promo_1O436TCG1hllVHncuVzCCRoD',
+  smallBundlePriceId: 'price_1OMHDkCG1hllVHncXUhbbxLw',
+  largeBundlePriceId: 'price_1OMHEACG1hllVHncfpLi6Azq',
+  megaBundlePriceId: 'price_1OMHErCG1hllVHncExHhvwEg',
 };

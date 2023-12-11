@@ -1,36 +1,31 @@
 <h1 mat-dialog-title class="dialog-title">Room security & permissions</h1>
 <div mat-dialog-content>
-  @if (!(isPremiumSubscriber$ | async)) {
-    <div class="premium-banner">
-      <h2 class="title">Premium Feature</h2>
-      <p>
-        Setting up your room's security and permissions is a new feature available
-        for Premium subscribers. See how it suits your team with a 14-day free
-        trial.
-      </p>
-      <div class="premium-banner-buttons">
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="openLearnMore()"
-          class="learn-more"
-          [disabled]="paymentService.isSubscriptionDisabled"
-          >
-          {{
-          paymentService.isSubscriptionDisabled
-          ? "Not available on Teams mobile"
-          : "Learn more"
-          }}
-        </button>
-      </div>
+  @if ((user$ | async)?.isAnonymous) {
+  <div class="premium-banner">
+    <h2 class="title">⚠️ Create a permanent account first</h2>
+    <p>
+      Setting up passwords and permissions requires a (free) permanent account.
+      Otherwise you could lose access to your room if you use a different
+      browser - we don't want that.
+    </p>
+    <div class="premium-banner-buttons">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="openAuthModal()"
+        class="learn-more"
+        >
+        Create an account
+      </button>
     </div>
+  </div>
   }
   <mat-tab-group
     class="custom-tab-group"
     mat-align-tabs="center"
     [dynamicHeight]="true"
     backgroundColor="primary"
-    >
+  >
     <mat-tab label="Security">
       <div class="tab-content">
         <div class="tab-section">
@@ -42,219 +37,213 @@
                 >Only people who know the password will be able to enter the
                 planning session. Existing participants will need to re-join if
                 a new password is set.</small
-                >
-              </p>
-              <div class="toggle-container">
-                <span
-                  [matTooltip]="
+              >
+            </p>
+            <div class="toggle-container">
+              <span
+                [matTooltip]="
                   !(isPasswordSet$ | async)
-                  ? 'You must save a password first to enable this protection'
-                  : ''
-                  "
-                  >
-                  <mat-slide-toggle
-                    color="primary"
-                    (change)="togglePasswordProtection()"
-                    [checked]="
+                    ? 'You must save a password first to enable this protection'
+                    : ''
+                "
+              >
+                <mat-slide-toggle
+                  color="primary"
+                  (change)="togglePasswordProtection()"
+                  [checked]="
                     (authorizationMetadata$ | async)?.passwordProtectionEnabled
-                    "
-                    [disabled]="
+                  "
+                  [disabled]="
                     !(isPasswordSet$ | async) || !hasConfigurationAccess
-                    "
-                    id="password-protection-toggle"
-                    ></mat-slide-toggle
-                  ></span>
-                </div>
-              </div>
-              <mat-form-field class="room-id" appearance="outline">
-                <mat-label>{{
-                  (isPasswordSet$ | async) ? "Update password" : "Create password"
-                }}</mat-label>
-                <input matInput type="password" [formControl]="roomPassword" />
-                @if (roomPassword.errors?.minlength) {
-                  <mat-error
-                    >Password must be at least 8 characters long</mat-error
-                    >
+                  "
+                  id="password-protection-toggle"
+                ></mat-slide-toggle
+              ></span>
+            </div>
+          </div>
+          <mat-form-field class="room-id" appearance="outline">
+            <mat-label>{{
+              (isPasswordSet$ | async) ? "Update password" : "Create password"
+            }}</mat-label>
+            <input matInput type="password" [formControl]="roomPassword" />
+            @if (roomPassword.errors?.minlength) {
+            <mat-error>Password must be at least 8 characters long</mat-error>
+            }
+          </mat-form-field>
+          <div>
+            <button
+              mat-flat-button
+              color="primary"
+              class="update-password-button"
+              (click)="saveRoomPassword()"
+              [disabled]="
+                !roomPassword.value ||
+                !roomPassword.valid ||
+                !hasConfigurationAccess ||
+                isSavingPassword
+              "
+            >
+              {{ isSavingPassword ? "Setting password..." : "Save password" }}
+            </button>
+          </div>
+        </div>
+        <div class="tab-section">
+          <div class="protection-detail">
+            <p>
+              <strong>Organization protection</strong>
+              <br /><small
+                >Only people who are part of your organization will be able to
+                enter the room. Existing participants will need to re-join if
+                organization protection is set.</small
+              >
+            </p>
+            <div class="toggle-container">
+              <span
+                [matTooltip]="
+                  !organization
+                    ? 'You must create an organization first to enable this protection'
+                    : ''
+                "
+              >
+                <mat-slide-toggle
+                  color="primary"
+                  (change)="toggleOrganizationProtection()"
+                  [checked]="
+                    (authorizationMetadata$ | async)?.organizationProtection
+                  "
+                  [disabled]="!(hasConfigurationAccess && organization)"
+                  id="organization-protection-toggle"
+                >
+                </mat-slide-toggle>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Permissions" id="permissions-tab">
+      <div class="tab-content">
+        <div class="tab-section">
+          <div class="permissions-container">
+            @for (configuration of permissionForms; track configuration; let i =
+            $index) {
+            <div class="permission">
+              <h4 class="permission-title">
+                <mat-icon>{{ configuration.icon }}</mat-icon
+                >{{ configuration.prompt }}
+              </h4>
+              <mat-chip-listbox
+                aria-label="Topic editors"
+                class="chip-selector"
+                multiple
+                selectable
+                [disabled]="!hasConfigurationAccess"
+              >
+                @for (option of configuration.options; track option; let i =
+                $index) {
+                <mat-chip-option
+                  [selected]="configuration.isSelected(option.value)"
+                  (click)="configuration.toggleOption(option.value)"
+                  class="role-option"
+                  [disabled]="!hasConfigurationAccess"
+                  [id]="configuration.permission + '-' + i"
+                  >{{ option.label }}</mat-chip-option
+                >
+                }
+              </mat-chip-listbox>
+              @if (i < permissionForms.length - 1) {
+              <mat-divider></mat-divider>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Participants">
+      <div class="tab-content">
+        <div class="tab-section">
+          <span
+            [matTooltip]="
+              (authService.user | async)?.isAnonymous
+                ? 'You need to create a permanent account before creating an organization'
+                : ''
+            "
+            ><button
+              mat-stroked-button
+              (click)="openOrganizationModal()"
+              [disabled]="(authService.user | async)?.isAnonymous"
+            >
+              <mat-icon>groups</mat-icon
+              >{{
+                organization ? "Manage organization" : "Create organization"
+              }}
+            </button>
+          </span>
+          <ul class="participants-list">
+            @for (member of members$ | async; track member.id) {
+            <li class="participant">
+              <div class="participant-meta">
+                <span class="avatar">
+                  @if (member.avatarUrl) {
+                  <img
+                    [src]="member.avatarUrl"
+                    class="avatar-image"
+                    alt="A user's avatar"
+                  />
+                  } @if (!member.avatarUrl) {
+                  <div class="avatar-text">
+                    {{ member.name?.charAt(0) }}
+                  </div>
                   }
-                </mat-form-field>
-                <div>
-                  <button
-                    mat-flat-button
-                    color="primary"
-                    class="update-password-button"
-                    (click)="saveRoomPassword()"
-                    [disabled]="
-                    !roomPassword.value ||
-                    !roomPassword.valid ||
-                    !hasConfigurationAccess ||
-                    isSavingPassword
-                    "
-                    >
-                    {{ isSavingPassword ? "Setting password..." : "Save password" }}
-                  </button>
-                </div>
+                </span>
               </div>
-              <div class="tab-section">
-                <div class="protection-detail">
-                  <p>
-                    <strong>Organization protection</strong>
-                    <br /><small
-                    >Only people who are part of your organization will be able to
-                    enter the room. Existing participants will need to re-join if
-                    organization protection is set.</small
-                    >
-                  </p>
-                  <div class="toggle-container">
-                    <span
-                      [matTooltip]="
-                      !organization
-                      ? 'You must create an organization first to enable this protection'
-                      : ''
-                      "
-                      >
-                      <mat-slide-toggle
-                        color="primary"
-                        (change)="toggleOrganizationProtection()"
-                        [checked]="
-                        (authorizationMetadata$ | async)?.organizationProtection
-                        "
-                        [disabled]="!(hasConfigurationAccess && organization)"
-                        id="organization-protection-toggle"
-                        >
-                      </mat-slide-toggle>
-                    </span>
-                  </div>
-                </div>
+              <div>
+                <h3 class="member">
+                  <span class="member-name">
+                    {{ member.name }}
+                    @if (member.isPermanent) {
+                    <mat-icon class="verified-icon">verified</mat-icon>
+                    }
+                  </span>
+                </h3>
+                <small>
+                  {{ member.isCreator ? "Creator" : (member.type | titlecase) }}
+                </small>
               </div>
-            </div>
-          </mat-tab>
-          <mat-tab label="Permissions" id="permissions-tab">
-            <div class="tab-content">
-              <div class="tab-section">
-                <div class="permissions-container">
-                  @for (configuration of permissionForms; track configuration; let i = $index) {
-                    <div
-                      class="permission"
-                      >
-                      <h4 class="permission-title">
-                        <mat-icon>{{ configuration.icon }}</mat-icon
-                          >{{ configuration.prompt }}
-                        </h4>
-                        <mat-chip-listbox
-                          aria-label="Topic editors"
-                          class="chip-selector"
-                          multiple
-                          selectable
-                          [disabled]="!hasConfigurationAccess"
-                          >
-                          @for (option of configuration.options; track option; let i = $index) {
-                            <mat-chip-option
-                              [selected]="configuration.isSelected(option.value)"
-                              (click)="configuration.toggleOption(option.value)"
-                              class="role-option"
-                              [disabled]="!hasConfigurationAccess"
-                              [id]="configuration.permission + '-' + i"
-                              >{{ option.label }}</mat-chip-option
-                              >
-                            }
-                          </mat-chip-listbox>
-                          @if (i < permissionForms.length - 1) {
-                            <mat-divider></mat-divider>
-                          }
-                        </div>
-                      }
-                    </div>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab label="Participants">
-                <div class="tab-content">
-                  <div class="tab-section">
-                    <span
-                      [matTooltip]="
-                      (authService.user | async)?.isAnonymous
-                      ? 'You need to create a permanent account before creating an organization'
-                      : ''
-                      "
-                      ><button
-                      mat-stroked-button
-                      (click)="openOrganizationModal()"
-                      [disabled]="(authService.user | async)?.isAnonymous"
-                      >
-                      <mat-icon>groups</mat-icon
-                        >{{
-                        organization ? "Manage organization" : "Create organization"
-                        }}
-                      </button>
-                    </span>
-                    <ul class="participants-list">
-                      @for (member of members$ | async; track member.id) {
-                        <li class="participant">
-                          <div class="participant-meta">
-                            <span class="avatar">
-                              @if (member.avatarUrl) {
-                                <img
-                                  [src]="member.avatarUrl"
-                                  class="avatar-image"
-                                  alt="A user's avatar"
-                                  />
-                              }
-                              @if (!member.avatarUrl) {
-                                <div class="avatar-text">
-                                  {{ member.name?.charAt(0) }}
-                                </div>
-                              }
-                            </span>
-                          </div>
-                          <div>
-                            <h3 class="member">
-                              <span class="member-name">
-                                {{ member.name }}
-                                @if (member.isPermanent) {
-                                  <mat-icon class="verified-icon"
-                                    >verified</mat-icon
-                                    >
-                                  }
-                                </span>
-                              </h3>
-                              <small>
-                                {{ member.isCreator ? "Creator" : (member.type | titlecase) }}
-                              </small>
-                            </div>
-                            <button
-                              mat-icon-button
-                              [matMenuTriggerFor]="menu"
-                              class="participant-menu-button"
-                              >
-                              <mat-icon>more_horiz</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                              <button
-                                mat-menu-item
-                                [disabled]="
-                                !organization ||
-                                organization.memberIds.includes(member.id) ||
-                                organization.createdById !== (user$ | async)?.uid ||
-                                !member.isPermanent
-                                "
-                                (click)="addToOrganization(member.id)"
-                                >
-                                <mat-icon>group_add</mat-icon> Add to organization
-                              </button>
-                              <mat-divider></mat-divider>
-                              <button mat-menu-item (click)="removeMember(member)">
-                                <mat-icon>person_remove</mat-icon> Remove from room
-                              </button>
-                            </mat-menu>
-                          </li>
-                        }
-                      </ul>
-                    </div>
-                  </div>
-                </mat-tab>
-              </mat-tab-group>
-            </div>
-            <div mat-dialog-actions>
-              <button mat-flat-button mat-dialog-close>Close</button>
-            </div>
-            
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                class="participant-menu-button"
+              >
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button
+                  mat-menu-item
+                  [disabled]="
+                    !organization ||
+                    organization.memberIds.includes(member.id) ||
+                    organization.createdById !== (user$ | async)?.uid ||
+                    !member.isPermanent
+                  "
+                  (click)="addToOrganization(member.id)"
+                >
+                  <mat-icon>group_add</mat-icon> Add to organization
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="removeMember(member)">
+                  <mat-icon>person_remove</mat-icon> Remove from room
+                </button>
+              </mat-menu>
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>Close</button>
+</div>

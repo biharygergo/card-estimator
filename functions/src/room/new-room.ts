@@ -17,13 +17,37 @@ import {
   languages,
 } from "unique-names-generator";
 import {isPremiumSubscriber} from "../shared/customClaims";
-import {CallableRequest} from "firebase-functions/v2/https";
+import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
+import {
+  assignCreditsAsNeeded,
+  getCreditForNewRoom,
+  updateCreditUsage,
+} from "../credits";
 
 export async function createRoom(
     request: CallableRequest
 ): Promise<{ room: Room; member: Member }> {
   const member: Member = request.data.member;
   const recurringMeetingId: string | null = request.data.recurringMeetingId;
+  if (!request.auth) {
+    throw new HttpsError(
+        "failed-precondition",
+        "You are not authenticated. Please try again."
+    );
+  }
+  const userId = request.auth.uid;
+  const isPremium = await isPremiumSubscriber(userId);
+
+  await assignCreditsAsNeeded(userId);
+  const creditToUse = await getCreditForNewRoom(userId);
+
+  if (!creditToUse && !isPremium) {
+    throw new HttpsError(
+        "failed-precondition",
+        "No available credits to create room",
+        "error-no-credits"
+    );
+  }
 
   const customConfig: Config = {
     dictionaries: [adjectives, colors, animals, languages],
@@ -41,7 +65,7 @@ export async function createRoom(
     );
   }
 
-  const subscriptionMetadata = await getSubscriptionMetadata(member.id);
+  const subscriptionMetadata = await getSubscriptionMetadata(userId, creditToUse?.id);
 
   const room: Room = {
     id: createId(),
@@ -52,8 +76,8 @@ export async function createRoom(
     isOpen: true,
     createdAt: Timestamp.now(),
     cardSet: CardSet.DEFAULT,
-    createdById: member.id,
-    memberIds: [member.id],
+    createdById: userId,
+    memberIds: [userId],
     subscriptionMetadata,
   };
 
@@ -62,6 +86,10 @@ export async function createRoom(
   }
 
   await getFirestore().collection("rooms").doc(room.roomId).set(room);
+
+  if (!isPremium) {
+    await updateCreditUsage(creditToUse!.id, userId, room.roomId);
+  }
 
   return {room, member};
 }
@@ -108,7 +136,8 @@ function createId(): string {
 }
 
 async function getSubscriptionMetadata(
-    userId: string
+    userId: string,
+    creditId: string | undefined
 ): Promise<SubscriptionMetadata> {
   const isPremium = await isPremiumSubscriber(userId);
   const myOrgs = await getFirestore()
@@ -121,7 +150,7 @@ async function getSubscriptionMetadata(
     undefined;
 
   const subscriptionMetadata: SubscriptionMetadata = {
-    createdWithPlan: isPremium ? "premium" : "basic",
+    createdWithPlan: isPremium ? "premium" : creditId ? "credit" : "basic",
     createdWithOrganization: organization ? organization.id : null,
   };
 

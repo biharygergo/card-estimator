@@ -113,10 +113,10 @@ export type CardSetValue = {
 export type SavedCardSetValue = CardSetValue & {
   id: string;
   createdAt: FieldValue;
-  organizationId: string|null;
-}
+  organizationId: string | null;
+};
 
-export type UserProfileMap = { [userId: string]: UserProfile|undefined };
+export type UserProfileMap = { [userId: string]: UserProfile | undefined };
 
 export type UserProfile = {
   id: string;
@@ -270,8 +270,8 @@ export interface AuthorizationMetadata {
 }
 
 export interface SubscriptionMetadata {
-  createdWithPlan: 'premium' | 'basic';
-  createdWithOrganization?: string|null;
+  createdWithPlan: 'premium' | 'basic' | 'credit';
+  createdWithOrganization?: string | null;
 }
 
 export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {
@@ -313,7 +313,6 @@ export interface JiraIssue {
   url: string;
 }
 
-
 export interface RichTopic {
   provider: 'jira';
   description: string;
@@ -351,10 +350,9 @@ export interface RoomSummary {
 
 export interface MeteredUsage {
   createdAt: FieldValue;
-  type: "chatgpt-query";
-  subscription: "premium" | "basic";
+  type: 'chatgpt-query';
+  subscription: 'premium' | 'basic';
 }
-
 
 export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
   [CardSet.DEFAULT]: {
@@ -397,12 +395,12 @@ export type RecurringMeetingLink = {
   isEnabled: boolean;
   frequencyDays: number;
   name: string;
-}
+};
 
 export type RecurringMeetingLinkCreatedRoom = {
   createdAt: Timestamp;
   roomId: string;
-}
+};
 
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   if (isNumericCardSet(cardSet)) {
@@ -426,11 +424,62 @@ export function isNumericCardSet(cardSet: CardSetValue) {
   return values.every((value) => isNumeric(value));
 }
 
-
 export interface UserPreference {
   lastJoinedRoom?: {
     roomId: string;
     heartbeatAt: FieldValue;
   };
   feedbackFormLastShown?: FieldValue;
+  updatedPricingModalShown?: boolean;
+  aloneInRoomModalShown?: boolean;
+}
+
+export interface Credit {
+  id: string;
+  assignedToUserId: string;
+  bundleId: string;
+  createdAt: Timestamp;
+  expiresAt: Timestamp | null;
+  usedForRoomId?: string;
+}
+
+export interface CreditBundle {
+  id: string;
+  userId: string;
+  paymentId: string | null;
+  createdAt: Timestamp;
+  name: BundleName;
+  displayName?: string;
+  creditCount: number;
+  expiresAt: Timestamp | null;
+}
+
+export interface BundleWithCredits extends CreditBundle {
+  credits: Credit[];
+}
+
+export enum BundleName {
+  WELCOME_BUNDLE_STANDARD = 'WELCOME_BUNDLE_STANDARD',
+  WELCOME_BUNDLE_EXISTING_USER = 'WELCOME_BUNDLE_EXISTING_USER',
+  SMALL_BUNDLE = 'SMALL_BUNDLE',
+  LARGE_BUNDLE = 'LARGE_BUNDLE',
+  MEGA_BUNDLE = 'MEGA_BUNDLE',
+  MONTHLY_BUNDLE = 'MONTHLY_BUNDLE',
+}
+
+export function getBundleTitle(bundleName: BundleName) {
+  switch (bundleName) {
+    case BundleName.LARGE_BUNDLE:
+      return 'Large Bundle';
+    case BundleName.SMALL_BUNDLE:
+      return 'Small Bundle';
+    case BundleName.MEGA_BUNDLE:
+      return 'Mega Bundle';
+    case BundleName.WELCOME_BUNDLE_EXISTING_USER:
+      return 'Welcome Bundle for Existing Users';
+    case BundleName.WELCOME_BUNDLE_STANDARD:
+      return 'Welcome Bundle for New Users';
+    default:
+      return bundleName;
+  }
 }

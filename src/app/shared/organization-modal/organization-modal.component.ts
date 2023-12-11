@@ -22,7 +22,6 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Organization } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
-import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
@@ -243,10 +242,5 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
-  }
-
-  openLearnMore() {
-    this.analytics.logClickedLearnMorePremium('organization_modal');
-    this.dialog.open(...premiumLearnMoreModalCreator());
   }
 }

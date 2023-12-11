@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, provideCloudinaryLoader } from '@angular/common';
 
 import { RouterModule, Routes } from '@angular/router';
 import { RoomComponent } from './room.component';
@@ -79,6 +79,7 @@ const routes: Routes = [
   ],
   providers: [
     AnimationLoader,
+    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')
   ]
 })
 export class RoomModule {}

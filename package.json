@@ -22,7 +22,8 @@
     "start:emulator": "firebase use default && firebase emulators:start",
     "generate-articles": "ts-node ./src/cli/generate_metadata.ts",
     "generate-routes": "ts-node src/cli/generate_routes.ts",
-    "upload-articles": "gsutil copy -r src/assets/articles gs://planning-poker-public-assets/articles"
+    "upload-articles": "gsutil copy -r src/assets/articles gs://planning-poker-public-assets/articles",
+    "stripe-forward-local": "stripe listen --forward-to 127.0.0.1:5001/ext-firestore-stripe-payments-handleWebhookEvents"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +51,7 @@
     "jira2md": "^3.0.1",
     "js-cookie": "^3.0.1",
     "lodash-es": "^4.17.21",
+    "moment": "^2.29.4",
     "ngx-lottie": "^10.0.0",
     "ngx-markdown": "^17.1.1",
     "rxfire": "^6.0.0",

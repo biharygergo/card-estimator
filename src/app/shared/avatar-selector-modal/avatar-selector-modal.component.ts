@@ -11,13 +11,16 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   PaymentService,
   StripeSubscription,
 } from 'src/app/services/payment.service';
-import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
+import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
+import * as moment from 'moment';
+import { pricingModalCreator } from '../pricing-table/pricing-table.component';
+import { groupBy } from 'lodash';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -37,7 +40,7 @@ export const avatarModalCreator = ({
     data: {
       openAtTab,
     },
-    panelClass: 'custom-dialog'
+    panelClass: 'custom-dialog',
   },
 ];
 
@@ -176,6 +179,69 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     map((subscription) => subscription?.items?.[0]?.plan)
   );
 
+  nextMonthStart = moment().add(1, 'month').startOf('month').toDate();
+  creditBundles$: Observable<{
+    bundles: Array<
+      BundleWithCredits & {
+        title: string;
+        availableCredits: Credit[];
+        expiresInReadable: string;
+        isExpired: boolean;
+      }
+    >;
+    credits: Array<
+      Credit & {
+        expiresInReadable: string;
+        isExpired: boolean;
+      }
+    >;
+    availableCredits: Credit[];
+    nextBatchExpiring?: Credit[];
+  }> = from(this.paymentsService.getAndAssignCreditBundles()).pipe(
+    map((creditsAndBundles) => {
+      const { credits, bundles } = creditsAndBundles;
+
+      const availableCredits = credits.filter(
+        (c) =>
+          !c.usedForRoomId && !moment(c.expiresAt.toDate()).isBefore(moment())
+      );
+
+      const nextBatchExpiring = Object.entries(
+        groupBy(
+          availableCredits.filter((c) => c.expiresAt),
+          (credit) => {
+            return credit.expiresAt!.seconds;
+          }
+        )
+      ).sort((a, b) => Number(b[0]) - Number(a[0]))?.[0]?.[1];
+
+      return {
+        availableCredits,
+        nextBatchExpiring,
+        credits: credits.map((credit) => ({
+          ...credit,
+          expiresInReadable: credit.expiresAt
+            ? moment(credit.expiresAt.toDate()).fromNow()
+            : '',
+          isExpired: credit.expiresAt
+            ? moment(credit.expiresAt.toDate()).isBefore(moment())
+            : false,
+        })),
+        bundles: bundles.map((bundle) => ({
+          ...bundle,
+          title: bundle.displayName ?? getBundleTitle(bundle.name),
+          availableCredits: bundle.credits.filter((c) => !c.usedForRoomId),
+          expiresInReadable: bundle.expiresAt
+            ? moment(bundle.expiresAt.toDate()).fromNow()
+            : '',
+          isExpired: bundle.expiresAt
+            ? moment(bundle.expiresAt.toDate()).isBefore(moment())
+            : false,
+        })),
+      };
+    })
+  );
+
   isLoadingStripe = false;
 
   constructor(
@@ -275,6 +341,6 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   openLearnMore() {
     this.analytics.logClickedLearnMorePremium('profile');
-    this.dialog.open(...premiumLearnMoreModalCreator());
+    this.dialog.open(...pricingModalCreator());
   }
 }

@@ -96,7 +96,7 @@ const faqs: FaqRow[] = [
     question: 'How are rooms protected? Can I set a password?',
     category: 'Privacy',
     answer:
-      'By default, rooms are protected via obfuscation: room IDs are hard to guess as they are generated randomly. For increased protection, you can enable password protected rooms by subscribing to Premium.',
+      'By default, rooms are protected via obfuscation: room IDs are hard to guess as they are generated randomly. For increased protection, you can enable password protection on rooms you create.',
   },
   {
     question: 'How can I create a team?',

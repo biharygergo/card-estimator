@@ -47,6 +47,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RoundHistoryTableComponent } from './round-history-table/round-history-table.component';
 import { PremiumInAppModalComponent } from './premium-in-app-modal/premium-in-app-modal.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { PricingTableComponent } from './pricing-table/pricing-table.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     ReactiveFormsModule,
     AppConfigModule,
     RoundHistoryTableComponent,
+    PricingTableComponent,
   ],
   exports: [
     CommonModule,
@@ -115,6 +117,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     RoundResultsComponent,
     EstimateConverterPipe,
     PremiumLearnMoreComponent,
+    PricingTableComponent,
     MatCardModule,
     MatInputModule,
     MatButtonModule,

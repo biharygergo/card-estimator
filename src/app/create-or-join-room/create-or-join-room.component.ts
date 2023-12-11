@@ -20,6 +20,7 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
+  EMPTY,
   from,
   Observable,
   of,
@@ -59,14 +60,14 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { OrganizationService } from '../services/organization.service';
-import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import { ConfigService } from '../services/config.service';
 import { TeamsService } from '../services/teams.service';
-import { Timestamp } from 'firebase/firestore';
 import { NavigationService } from '../services/navigation.service';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
+import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
+import { ToastService } from '../services/toast.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -121,8 +122,8 @@ const GREETINGS: { [hour: number]: string } = {
     SharedModule,
     ZoomAppBannerComponent,
     AppConfigModule,
-    CarbonAdComponent
-],
+    CarbonAdComponent,
+  ],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',
   styleUrls: ['./create-or-join-room.component.scss'],
@@ -252,6 +253,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly teamsService: TeamsService,
     private readonly navigationService: NavigationService,
+    private readonly toastService: ToastService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -336,7 +338,33 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         }),
         switchMap(() => this.recurringMeetingId$),
         switchMap((recurringMeetingId) =>
-          from(this.createRoom(recurringMeetingId))
+          from(this.createRoom(recurringMeetingId)).pipe(
+            catchError((e) => {
+              if (e.details === 'error-no-credits') {
+                this.toastService
+                  .showMessage(
+                    '🤯 Oh-oh, it looks like you ran out of credits. Please top-up your credits or wait for your next free monthly bundle to create new rooms.',
+                    10000,
+                    'error',
+                    'View my credits'
+                  )
+                  .onAction()
+                  .pipe()
+                  .subscribe(() => {
+                    this.dialog.open(
+                      ...avatarModalCreator({ openAtTab: 'subscription' })
+                    );
+                  });
+              } else {
+                this.toastService.showMessage(
+                  `An error occured: ${e.message}. Please try again or report this is issue.`
+                );
+                console.error(e);
+              }
+              this.isBusy.next(false);
+              return of({});
+            })
+          )
         ),
         takeUntil(this.destroy),
         finalize(() => this.isBusy.next(false))
@@ -366,7 +394,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(async (flowParam) => {
         if (flowParam === 'premium') {
-          this.dialog.open(...premiumLearnMoreModalCreator());
+          this.dialog.open(...pricingModalCreator());
         } else if (flowParam === 'manageSubscription') {
           const user = await this.authService.getUser();
           if (user) {

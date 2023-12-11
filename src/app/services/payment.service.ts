@@ -25,11 +25,13 @@ import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
+import { BundleName, BundleWithCredits, Credit, CreditBundle } from '../types';
+import { User } from '@angular/fire/auth';
 
 export type CorrectSubscription = Subscription & {
-  created: Timestamp
+  created: Timestamp;
   current_period_end: Timestamp;
-}
+};
 export type StripeSubscription = CorrectSubscription;
 
 @Injectable({
@@ -50,7 +52,63 @@ export class PaymentService {
     private readonly confirmService: ConfirmDialogService
   ) {}
 
-  async startSubscriptionToPremium(promotionCode?: string) {
+  private getPriceIdForBundle(bundleName: BundleName) {
+    switch (bundleName) {
+      case BundleName.SMALL_BUNDLE:
+        return environment.smallBundlePriceId;
+      case BundleName.LARGE_BUNDLE:
+        return environment.largeBundlePriceId;
+      case BundleName.MEGA_BUNDLE:
+        return environment.megaBundlePriceId;
+      default:
+        throw new Error(`No price id for ${bundleName}.`);
+    }
+  }
+  async buyBundle(bundleName: BundleName) {
+    const passes = await this.checkPrerequisites(
+      'Before you buy a bundle, please log in or create a permanent account',
+      'Purchasing a bundle requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the purchase flow.'
+    );
+    let user = await this.authService.getUser();
+
+    if (!passes) return;
+
+    const checkoutSessionsCollection = collection(
+      this.firestore,
+      'customers',
+      user.uid,
+      'checkout_sessions'
+    );
+
+    const sessionRef = await addDoc(checkoutSessionsCollection, {
+      price: this.getPriceIdForBundle(bundleName),
+      automatic_tax: true,
+      allow_promotion_codes: true,
+      tax_id_collection: true,
+      cancel_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=cancel`,
+      mode: 'payment',
+      success_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=success`,
+      metadata: {
+        bundleName,
+      },
+    });
+
+    return new Promise((resolve, rejet) => {
+      docData(sessionRef).subscribe((session) => {
+        if (session.url) {
+          window.location.assign(session.url);
+          resolve(true);
+        } else if (session.error?.message) {
+          rejet(session.error.message);
+        }
+      });
+    });
+  }
+
+  private async checkPrerequisites(
+    authModalTitle: string,
+    embeddedAppModalContent: string
+  ): Promise<boolean> {
     let user = await this.authService.getUser();
 
     if (!user || user?.isAnonymous) {
@@ -59,8 +117,7 @@ export class PaymentService {
           intent: user
             ? SignUpOrLoginIntent.LINK_ACCOUNT
             : SignUpOrLoginIntent.SIGN_IN,
-          titleOverride:
-            'Before you subscribe to Premium, please log in or create a permanent account',
+          titleOverride: authModalTitle,
         })
       );
 
@@ -68,7 +125,7 @@ export class PaymentService {
       user = await this.authService.getUser();
 
       if (!user || user?.isAnonymous) {
-        return;
+        return false;
       }
     }
 
@@ -76,42 +133,46 @@ export class PaymentService {
       if (
         await this.confirmService.openConfirmationDialog({
           title: 'Finish on planningpoker.live',
-          content:
-            'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.',
+          content: embeddedAppModalContent,
           positiveText: 'Sounds good',
           negativeText: 'Cancel',
         })
       ) {
         await this.zoomService.openUrl(
-          `${window.location.origin}/join?flow=premium${
-            promotionCode ? `&promotionCode=${promotionCode}` : ''
-          }`,
+          `${window.location.origin}/join?flow=premium`,
           true
         );
       }
 
-      return;
+      return false;
     }
 
     if (this.config.runningIn === 'teams') {
       if (
         await this.confirmService.openConfirmationDialog({
           title: 'Finish on planningpoker.live',
-          content:
-            'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.',
+          content: embeddedAppModalContent,
           positiveText: 'Sounds good',
           negativeText: 'Cancel',
         })
       ) {
-        window.open(
-          `${window.location.origin}/join?flow=premium${
-            promotionCode ? `&promotionCode=${promotionCode}` : ''
-          }`,
-          '_blank'
-        );
+        window.open(`${window.location.origin}/join?flow=premium`, '_blank');
       }
-      return;
+      return false;
     }
+
+    return true;
+  }
+
+  async startSubscriptionToPremium(promotionCode?: string) {
+    const passes = await this.checkPrerequisites(
+      'Before you subscribe to Premium, please log in or create a permanent account',
+      'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
+    );
+
+    const user = await this.authService.getUser();
+
+    if (!passes) return;
 
     const checkoutSessionsCollection = collection(
       this.firestore,
@@ -129,7 +190,6 @@ export class PaymentService {
       mode: 'subscription',
       success_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=success`,
       trial_from_plan: true,
-      promotion_code: promotionCode,
     });
 
     return new Promise((resolve, rejet) => {
@@ -221,5 +281,39 @@ export class PaymentService {
         );
       })
     );
+  }
+
+  async getAndAssignCreditBundles(): Promise<{
+    credits: Credit[];
+    bundles: BundleWithCredits[];
+  }> {
+    const result = await httpsCallable(
+      this.functions,
+      'getAllCreditsAndAssignWelcome'
+    )();
+
+    const bundles = ((result.data as any).bundles as BundleWithCredits[]).map(
+      (bundle) => ({
+        ...bundle,
+        expiresAt: bundle.expiresAt
+          ? Timestamp.fromDate(
+              new Date((bundle.expiresAt as any)._seconds * 1000)
+            )
+          : null,
+      })
+    );
+
+    const credits = ((result.data as any).credits as Credit[]).map(
+      (credit) => ({
+        ...credit,
+        expiresAt: credit.expiresAt
+          ? Timestamp.fromDate(
+              new Date((credit.expiresAt as any)._seconds * 1000)
+            )
+          : null,
+      })
+    );
+
+    return { credits, bundles };
   }
 }

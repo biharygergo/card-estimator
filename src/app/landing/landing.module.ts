@@ -77,9 +77,13 @@ const routes: Routes = [
   },
   {
     path: 'premium',
+    redirectTo: '/pricing',
+  },
+  {
+    path: 'pricing',
     loadComponent: () =>
       import('./premium/premium.component').then((mod) => mod.PremiumComponent),
-    data: { title: 'Premium' },
+    data: { title: 'Pricing'},
   },
   {
     path: 'integration/:result',

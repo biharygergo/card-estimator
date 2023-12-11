@@ -46,10 +46,19 @@
               mat-flat-button
               color="primary"
               class="select-plan"
-              [disabled]="plan.isSelectDisabled"
+              [disabled]="
+                plan.isSelectDisabled ||
+                (isLoadingStripeForBundle &&
+                  isLoadingStripeForBundle === plan.bundleName)
+              "
               (click)="buyBundle(plan.bundleName)"
             >
-              Buy
+              {{
+                isLoadingStripeForBundle &&
+                isLoadingStripeForBundle === plan.bundleName
+                  ? "Redirecting to Stripe..."
+                  : "Buy"
+              }}
             </button>
           </div>
           }
@@ -86,7 +95,7 @@
         </div>
       </mat-tab>
     </mat-tab-group>
-    <h2 class="title">Choose the best app on the market</h2>
+    <h2 class="title">Everything included</h2>
     <p class="description">
       Everything you need for awesome planning sessions. Integrated with your
       favorite tools. Used by tens of thousands every month. Open-source

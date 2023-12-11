@@ -64,12 +64,10 @@ import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selec
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import { ConfigService } from '../services/config.service';
 import { TeamsService } from '../services/teams.service';
-import { Timestamp } from 'firebase/firestore';
 import { NavigationService } from '../services/navigation.service';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 import { ToastService } from '../services/toast.service';
-import { premiumLearnMoreModalCreator } from '../shared/premium-learn-more/premium-learn-more.component';
 
 enum PageMode {
   CREATE = 'create',

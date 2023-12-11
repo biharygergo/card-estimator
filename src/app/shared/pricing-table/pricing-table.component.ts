@@ -113,6 +113,7 @@ export class PricingTableComponent {
 
   readonly PLANS = PLANS;
   isLoadingStripe = false;
+  isLoadingStripeForBundle: string;
   isPremium$ = this.paymentService.isPremiumSubscriber();
 
   constructor(
@@ -123,7 +124,7 @@ export class PricingTableComponent {
   ) {}
 
   async buyBundle(bundleName: BundleName) {
-    this.isLoadingStripe = true;
+    this.isLoadingStripeForBundle = bundleName;
     // this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
     await this.paymentService.buyBundle(bundleName);
   }

@@ -18,22 +18,22 @@ it now!</span
         </a>
         <p>
           No sign-up required, open-source and used by thousands every week.
-        Works in your browser & inside <a routerLink="/zoom">Zoom</a>,
-        <a routerLink="/teams">Teams</a> and <a routerLink="/webex">Webex</a>.
-      </p>
+          Works in your browser & inside <a routerLink="/zoom">Zoom</a>,
+          <a routerLink="/teams">Teams</a> and <a routerLink="/webex">Webex</a>.
+        </p>
+      </div>
+    </div>
+    <div class="header-cards">
+      <img
+        ngSrc="header_cards_cut"
+        alt="Two cards with numbers"
+        priority
+        width="1120"
+        height="699"
+        sizes="(max-width: 800px) 100vw, 60vw"
+      />
     </div>
   </div>
-  <div class="header-cards">
-    <img
-      ngSrc="header_cards_cut"
-      alt="Two cards with numbers"
-      priority
-      width="1120"
-      height="699"
-      sizes="(max-width: 800px) 100vw, 60vw"
-      />
-  </div>
-</div>
 </section>
 <section class="used-by-section">
   <div class="used-by-content">
@@ -41,17 +41,17 @@ it now!</span
     <div class="logo-carousel">
       <ul class="logo-carousel-track">
         @for (logo of logos; track logo; let i = $index) {
-          <li>
-            <picture>
-              <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
-              <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
-              <img
-                src="/assets/logos/{{ logo }}.png"
-                alt="Logo of {{ companies[i] }}"
-                [loading]="i < 5 ? 'eager' : 'lazy'"
-                />
-            </picture>
-          </li>
+        <li>
+          <picture>
+            <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
+            <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
+            <img
+              src="/assets/logos/{{ logo }}.png"
+              alt="Logo of {{ companies[i] }}"
+              [loading]="i < 5 ? 'eager' : 'lazy'"
+            />
+          </picture>
+        </li>
         }
       </ul>
     </div>
@@ -68,7 +68,7 @@ it now!</span
           alt="UI components laid out visually"
           fill
           sizes="(max-width: 800px) 100vw, 40vw"
-          />
+        />
       </div>
       <div class="feature-card">
         <h3>Simple round management and exports</h3>
@@ -77,7 +77,7 @@ it now!</span
           alt="Two example JIRA topic cards"
           sizes="(max-width: 800px) 100vw, 40vw"
           fill
-          />
+        />
       </div>
       <div class="feature-card">
         <h3>Customizable card sets</h3>
@@ -86,27 +86,27 @@ it now!</span
           alt="An example planning poker card set"
           fill
           sizes="(max-width: 800px) 100vw, 40vw"
-          />
+        />
       </div>
       <div class="feature-card wide">
         <h3>
-        Available on the web and in <a routerLink="/zoom">Zoom</a>,
-        <a routerLink="/teams">Teams</a> & <a routerLink="/webex">Webex</a>
-      </h3>
-      <img
-        ngSrc="zoom_app"
-        alt="The app running inside Zoom"
-        fill
-        sizes="(max-width: 800px) 100vw, 40vw"
+          Available on the web and in <a routerLink="/zoom">Zoom</a>,
+          <a routerLink="/teams">Teams</a> & <a routerLink="/webex">Webex</a>
+        </h3>
+        <img
+          ngSrc="zoom_app"
+          alt="The app running inside Zoom"
+          fill
+          sizes="(max-width: 800px) 100vw, 40vw"
         />
+      </div>
+    </div>
+    <div class="see-more">
+      <a mat-stroked-button routerLink="/features"
+        >View all features <mat-icon>visibility</mat-icon></a
+      >
     </div>
   </div>
-  <div class="see-more">
-    <a mat-stroked-button routerLink="/features"
-    >View all features <mat-icon>visibility</mat-icon></a
-    >
-  </div>
-</div>
 </section>
 <section class="demo-video-section">
   <div class="demo-video-section-content">
@@ -120,23 +120,23 @@ it now!</span
         (loadedmetadata)="video.muted = true"
         [controls]="!video.paused"
         poster="/assets/video_poster.webp"
-        >
+      >
         <source
           src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
           type="video/mp4"
-          />
+        />
       </video>
       <div
         class="start-video-overlay"
         [class.hidden]="!video.paused"
         (click)="video.play()"
-        >
+      >
         <button
           mat-fab
           color="primary"
           aria-label="Play demo video"
           (click)="video.play()"
-          >
+        >
           <mat-icon>play_arrow</mat-icon>
         </button>
       </div>
@@ -145,45 +145,45 @@ it now!</span
       <mat-tab-group dynamicHeight>
         <mat-tab label="Get ready"
           ><div class="step-content">
-          <p>
-            The team lead or SCRUM Master prepares the agenda for the meeting
-            and selects items from the backlog. A planning session takes about
-            30 minutes to complete.
-          </p>
-        </div>
-      </mat-tab>
-      <mat-tab label="Create room & invite others"
-        ><div class="step-content">
-        <p>
-          First, the leader creates a room on planningpoker.live then they
-          copy the invitation link and send it to the team to join.
-        </p>
-      </div>
-    </mat-tab>
-    <mat-tab label="Set cards & manage rounds"
-      ><div class="step-content">
-      <p>
-        Discuss tickets on the spot or create the agenda beforehand using
-        the topic sidebar. Use the default card set, Fibonacci or create a
-        completely custom one. The results of the meeting can be
-        downloaded as a .csv or uploaded to your project-management tool
-        like JIRA.
-      </p>
+            <p>
+              The team lead or SCRUM Master prepares the agenda for the meeting
+              and selects items from the backlog. A planning session takes about
+              30 minutes to complete.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Create room & invite others"
+          ><div class="step-content">
+            <p>
+              First, the leader creates a room on planningpoker.live then they
+              copy the invitation link and send it to the team to join.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Set cards & manage rounds"
+          ><div class="step-content">
+            <p>
+              Discuss tickets on the spot or create the agenda beforehand using
+              the topic sidebar. Use the default card set, Fibonacci or create a
+              completely custom one. The results of the meeting can be
+              downloaded as a .csv or uploaded to your project-management tool
+              like JIRA.
+            </p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Vote & find consensus"
+          ><div class="step-content">
+            <p>
+              During the game, each team member votes on the active topic and
+              the leader reveals the results. The group discusses the result and
+              finds consensus. The countdown timer helps to make sure everybody
+              stays on time.
+            </p>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
     </div>
-  </mat-tab>
-  <mat-tab label="Vote & find consensus"
-    ><div class="step-content">
-    <p>
-      During the game, each team member votes on the active topic and
-      the leader reveals the results. The group discusses the result and
-      finds consensus. The countdown timer helps to make sure everybody
-      stays on time.
-    </p>
   </div>
-</mat-tab>
-</mat-tab-group>
-</div>
-</div>
 </section>
 <section class="about-section">
   <div class="about-section-content">
@@ -239,70 +239,68 @@ it now!</span
               rel="noopener"
               target="_blank"
               >open-source</a
-              >
-              application developed as a hobby project. It is running on Google
-              Cloud servers hosted in the EU. The app is free to use, with
-            additional <a routerLink="/premium">Premium</a> features available
-            for SCRUM masters. By subscribing to Premium, you also support the
-            ongoing development of this open-source project.
+            >
+            application developed as a hobby project. It is running on Google
+            Cloud servers hosted in the EU. The app is free to use with monthly
+            credits that can be refilled if you use the app often.
           </p>
           <p>
             If you have any issues, concerns, feature ideas or you'd just like
             to send someone an email, please message us at
-            <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a
-              >.
-            </p>
-          </mat-expansion-panel>
-        </mat-accordion>
-        <div class="made-by">
-          <p>Developed & Designed by:</p>
-          <div class="authors">
-            <a
-              class="made-by-box"
-              href="https://gergelybihary.com"
-              rel="noopener"
-              target="_blank"
-              >
-              <picture>
-                <source srcset="/assets/gergely-bihary.webp" type="image/webp" />
-                <source srcset="/assets/gergely-bihary.jpeg" type="image/jpeg" />
-                <img
-                  src="/assets/gergely-bihary.jpeg"
-                  alt="A profile picture of Gergely Bihary"
-                  loading="lazy"
-                  />
-              </picture>
-              Gergely Bihary</a
-              >
-              <a
-                class="made-by-box"
-                href="https://www.kristofnagy.com/"
-                rel="noopener"
-                target="_blank"
-                >
-                <picture>
-                  <source srcset="/assets/kristof_nagy.webp" type="image/webp" />
-                  <source srcset="/assets/kristof_nagy.jpeg" type="image/jpeg" />
-                  <img
-                    src="/assets/kristof_nagy.jpeg"
-                    alt="A profile picture of Kristóf Nagy"
-                    loading="lazy"
-                    />
-                </picture>
-                Kristóf Nagy</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="about-section-right">
-            <img
-              ngSrc="meeting_table"
-              alt="People having a meeting around a table"
-              fill
-              sizes="(max-width: 800px) 100vw, 50vw"
+            <a href="mailto:info@planningpoker.live"
+              >info&#64;planningpoker.live</a
+            >.
+          </p>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <div class="made-by">
+        <p>Developed & Designed by:</p>
+        <div class="authors">
+          <a
+            class="made-by-box"
+            href="https://gergelybihary.com"
+            rel="noopener"
+            target="_blank"
+          >
+            <picture>
+              <source srcset="/assets/gergely-bihary.webp" type="image/webp" />
+              <source srcset="/assets/gergely-bihary.jpeg" type="image/jpeg" />
+              <img
+                src="/assets/gergely-bihary.jpeg"
+                alt="A profile picture of Gergely Bihary"
+                loading="lazy"
               />
-          </div>
+            </picture>
+            Gergely Bihary</a
+          >
+          <a
+            class="made-by-box"
+            href="https://www.kristofnagy.com/"
+            rel="noopener"
+            target="_blank"
+          >
+            <picture>
+              <source srcset="/assets/kristof_nagy.webp" type="image/webp" />
+              <source srcset="/assets/kristof_nagy.jpeg" type="image/jpeg" />
+              <img
+                src="/assets/kristof_nagy.jpeg"
+                alt="A profile picture of Kristóf Nagy"
+                loading="lazy"
+              />
+            </picture>
+            Kristóf Nagy</a
+          >
         </div>
-      </section>
-      <app-carbon-ad placement="landing" />
-      
+      </div>
+    </div>
+    <div class="about-section-right">
+      <img
+        ngSrc="meeting_table"
+        alt="People having a meeting around a table"
+        fill
+        sizes="(max-width: 800px) 100vw, 50vw"
+      />
+    </div>
+  </div>
+</section>
+<app-carbon-ad placement="landing" />

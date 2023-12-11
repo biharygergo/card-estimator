@@ -1,5 +1,6 @@
 import {
-  BrowserModule, provideClientHydration,
+  BrowserModule,
+  provideClientHydration,
 } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
@@ -42,6 +43,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { GlobalErrorHandler } from './error-handler';
 import { HttpClientModule } from '@angular/common/http';
+import { provideCloudinaryLoader } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, RoomLoadingComponent],
@@ -115,7 +117,8 @@ import { HttpClientModule } from '@angular/common/http';
       deps: [Sentry.TraceService],
       multi: true,
     },
-    provideClientHydration()
+    provideClientHydration(),
+    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
   ],
   bootstrap: [AppComponent],
 })

@@ -23,13 +23,14 @@ describe('Landing page', () => {
   })
 
   it('can go to the FAQ page', () => {
-    cy.contains('FAQ').click();
+    cy.contains('Got it').click();
+    cy.contains('FAQ').scrollIntoView().click();
     cy.location('pathname').should('eq', '/faq');
   })
 
-  it('can go to the Premium page', () => {
-    cy.contains('Premium').click();
-    cy.location('pathname').should('eq', '/premium');
+  it('can go to the Pricing page', () => {
+    cy.contains('Pricing').click();
+    cy.location('pathname').should('eq', '/pricing');
   })
 
   it('can go to the Zoom page', () => {

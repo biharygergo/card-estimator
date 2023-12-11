@@ -430,6 +430,8 @@ export interface UserPreference {
     heartbeatAt: FieldValue;
   };
   feedbackFormLastShown?: FieldValue;
+  updatedPricingModalShown?: boolean;
+  aloneInRoomModalShown?: boolean;
 }
 
 export interface Credit {

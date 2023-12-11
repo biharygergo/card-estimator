@@ -1,7 +1,4 @@
-import {
-  clearFirebaseLocalStorage,
-  setAppCheckCookie,
-} from '../support/utils';
+import { clearFirebaseLocalStorage, setAppCheckCookie } from '../support/utils';
 
 describe('Creating a room as a new user', () => {
   beforeEach(() => {
@@ -19,6 +16,12 @@ describe('Creating a room as a new user', () => {
     cy.get('#name').click().type('Test User');
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
+
+    // It uses a credit
+    cy.contains('Menu').click();
+    cy.contains('My account').click();
+    cy.contains('Credits').click();
+    cy.contains('10 credits available').should('be.visible');
   });
 });
 
@@ -37,5 +40,11 @@ describe('Creating a room as a returning user', () => {
     cy.get('#create-room-button').should('be.enabled');
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
+
+    // It uses a credit
+    cy.contains('Menu').click();
+    cy.contains('My account').click();
+    cy.contains('Credits').click();
+    cy.contains('9 credits available').should('be.visible');
   });
 });

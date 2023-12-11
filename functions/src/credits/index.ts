@@ -28,7 +28,7 @@ export async function assignCreditsAsNeeded(userId: string) {
   ) {
     const user = await getAuth().getUser(userId);
     const isExistingUser = moment(user.metadata.creationTime).isBefore(
-        moment("2023-12-02")
+        moment("2023-12-12")
     );
     await createBundle(
       isExistingUser ?

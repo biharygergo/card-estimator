@@ -159,16 +159,6 @@
                         <div class="members-section">
                           <h5 class="section-title">
                             <mat-icon>people</mat-icon> Manage members
-                            @if (organization?.activePlan === 'basic') {
-                              <mat-chip
-                                [matTooltip]="
-                                organization?.memberIds.length > 5
-                                ? 'You are over the free organization members limit. Please subscribe to Premium to keep your extra members.'
-                                : ''
-                                "
-                                >{{ organization?.memberIds.length ?? 0 }}/5 free</mat-chip
-                                >
-                              }
                             </h5>
                             <ul class="members-list">
                               @for (member of members$ | async; track member.id) {

@@ -6,9 +6,7 @@ import {
   OnDestroy,
   Inject,
 } from '@angular/core';
-import {
-  EstimatorService,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -27,6 +25,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
@@ -77,6 +76,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
 import { RoomDataService } from './room-data.service';
+import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
+import * as moment from 'moment';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -179,11 +180,27 @@ export class RoomComponent implements OnInit, OnDestroy {
   shouldOpenAloneInRoomModal$: Observable<boolean> = combineLatest([
     this.roundNumber$,
     this.sessionCount$,
+    this.userPreferences$.pipe(first()),
   ]).pipe(
-    map(([roundNumber, sessionCount]) => {
-      return roundNumber > 0 && sessionCount < 2;
+    map(([roundNumber, sessionCount, pref]) => {
+      return roundNumber > 0 && sessionCount < 2 && !pref.aloneInRoomModalShown;
     }),
     filter((shouldOpen) => !!shouldOpen)
+  );
+
+  shouldOpenExistingUserPricingModal$: Observable<boolean> = combineLatest([
+    this.user$,
+    this.userPreferences$.pipe(first()),
+  ]).pipe(
+    filter(([user, pref]) => {
+      return (
+        user &&
+        moment(user.metadata.creationTime).isBefore('2023-12-11') &&
+        !pref.updatedPricingModalShown
+      );
+    }),
+    map(() => true),
+    first()
   );
 
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
@@ -298,6 +315,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         this.showOrHideAloneInRoomModal();
+        this.authService.updateUserPreference({aloneInRoomModalShown: true}).subscribe();
       });
 
     this.authService.avatarUpdated
@@ -325,6 +343,17 @@ export class RoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe();
+
+    this.shouldOpenExistingUserPricingModal$
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.dialog.open(...introducingNewPricingModalCreator());
+        this.authService
+          .updateUserPreference({
+            updatedPricingModalShown: true,
+          })
+          .subscribe();
+      });
   }
 
   ngAfterViewInit() {

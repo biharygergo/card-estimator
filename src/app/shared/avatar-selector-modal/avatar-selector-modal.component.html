@@ -114,8 +114,17 @@
               </div>
               <div class="actions"></div>
             </div>
-            <button mat-flat-button color="primary" (click)="openLearnMore()">
-              Buy more credits
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="openLearnMore()"
+              [disabled]="paymentsService.isSubscriptionDisabled"
+            >
+              {{
+                paymentsService.isSubscriptionDisabled
+                  ? "Not available on Teams mobile"
+                  : "Buy more credits"
+              }}
             </button>
           </div>
           <div class="tab-section">

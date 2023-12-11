@@ -99,13 +99,24 @@
                         | date
                     }}.
                   </p>
-                  } }
-                  <p class="next-credit">Next free credit on {{ nextMonthStart | date }}</p>
+                  } } @else {
+                  <div class="loading-spinner-container">
+                    <mat-progress-spinner
+                      mode="indeterminate"
+                      [diameter]="30"
+                    />
+                  </div>
+                  }
+                  <p class="next-credit">
+                    Next free credit on {{ nextMonthStart | date }}
+                  </p>
                 </div>
               </div>
               <div class="actions"></div>
             </div>
-            <button mat-flat-button color="primary" (click)="openLearnMore()">Buy more credits</button>
+            <button mat-flat-button color="primary" (click)="openLearnMore()">
+              Buy more credits
+            </button>
           </div>
           <div class="tab-section">
             <h2 class="section-title">Your plan</h2>
@@ -165,7 +176,7 @@
               now for unlimited credits and priority support.
             </p>
             <button
-              mat-flat-button
+              mat-stroked-button
               color="primary"
               class="learn-more-button"
               (click)="openLearnMore()"

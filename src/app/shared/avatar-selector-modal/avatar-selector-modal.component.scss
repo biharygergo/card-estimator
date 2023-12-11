@@ -179,13 +179,22 @@
     display: inline-flex;
     gap: 1rem;
     color: #005890;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.4rem;
     font-size: 0.8rem;
   }
 
   .next-expiry, .next-credit {
     font-size: 0.8rem;
+    line-height: 1rem;
     color: #808ca1;
     margin-bottom: 0;
+    margin-top: 0px;
+  }
+
+  .loading-spinner-container {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

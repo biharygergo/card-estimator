@@ -103,7 +103,7 @@ export class RoundHistoryTableComponent
             id: statRow.roundId,
             topicName: statRow.topic,
             roomId: room.roomId,
-            startedAt: statRow.startedAt,
+            startedAt: statRow.startedAt || Timestamp.now(),
             majority: statRow.mostPopularVote || '-',
             average: statRow.average || '-',
             notes: statRow.notes.slice(1, -1) || '-',

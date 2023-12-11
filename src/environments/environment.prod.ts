@@ -14,7 +14,7 @@ export const environment = {
   useEmulators: false,
   premiumPriceId: 'price_1MkYV6CG1hllVHncXLgIFXLK',
   powerUserPromoCode: 'promo_1O436TCG1hllVHncuVzCCRoD',
-  smallBundlePriceId: 'price_1OJHgwCG1hllVHnc4Ikzm1Jv',
-  largeBundlePriceId: 'price_1OJHhJCG1hllVHnchusIfXGT',
-  megaBundlePriceId: 'price_1OJHhaCG1hllVHncOsDUJ3Ae',
+  smallBundlePriceId: 'price_1OMHDkCG1hllVHncXUhbbxLw',
+  largeBundlePriceId: 'price_1OMHEACG1hllVHncfpLi6Azq',
+  megaBundlePriceId: 'price_1OMHErCG1hllVHncExHhvwEg',
 };

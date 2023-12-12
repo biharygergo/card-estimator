@@ -12,6 +12,7 @@ export const routes = [
   '/teams',
   '/history',
   '/premium',
+  '/pricing',
   '/recurringMeeting',
   '/organizationInvitation',
   '/integration',

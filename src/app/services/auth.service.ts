@@ -285,7 +285,7 @@ export class AuthService {
   }
 
   setSessionCookie(value: string) {
-    Cookies.set('__session', value);
+    Cookies.set('__session', value, {secure: true});
   }
 
   getSessionCookie(): string | ParsedSessionCookie | undefined {

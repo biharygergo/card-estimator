@@ -132,5 +132,5 @@ export const setSessionVariable = (
     res: functions.Response,
     verifier: string
 ) => {
-  res.cookie("__session", verifier);
+  res.cookie("__session", verifier, {secure: true});
 };

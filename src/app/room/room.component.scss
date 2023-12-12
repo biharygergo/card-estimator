@@ -113,6 +113,8 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 0;
+    overflow-wrap: break-word;
+
     button {
       flex-shrink: 0;
     }

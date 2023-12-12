@@ -239,6 +239,7 @@ mat-list-item.statistic-line {
     font-size: 1rem;
     text-align: left;
     word-break: break-word;
+    overflow-wrap: break-word;
 
     .verified-icon {
       display: inline-block;

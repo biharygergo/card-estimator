@@ -62,7 +62,7 @@
   }
 
   .markdown-content {
-    word-break: break-word;
+    overflow-wrap: break-word;
     h1 {
       font-size: 16px;
     }

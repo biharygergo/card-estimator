@@ -16,6 +16,13 @@ export async function onCustomerPaymentCreated(
     throw Error("No user id available");
   }
 
+  const paymentData = snap.data?.data();
+  
+  if (paymentData.status !== "succeeded") {
+    console.error("Not successful payment");
+    return;
+  }
+
   const bundleName = snap.data?.data().metadata?.bundleName;
 
   if (

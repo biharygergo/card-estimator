@@ -203,7 +203,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
       const availableCredits = credits.filter(
         (c) =>
-          !c.usedForRoomId && !moment(c.expiresAt.toDate()).isBefore(moment())
+          !c.usedForRoomId && (!c.expiresAt || !moment(c.expiresAt.toDate()).isBefore(moment()))
       );
 
       const nextBatchExpiring = Object.entries(

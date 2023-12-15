@@ -17,8 +17,8 @@ export async function onCustomerPaymentCreated(
   }
 
   const paymentData = snap.data?.data();
-  
-  if (paymentData.status !== "succeeded") {
+
+  if (paymentData?.status !== "succeeded") {
     console.error("Not successful payment");
     return;
   }

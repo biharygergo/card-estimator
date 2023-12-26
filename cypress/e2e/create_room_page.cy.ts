@@ -21,7 +21,7 @@ describe('Creating a room as a new user', () => {
     cy.contains('Menu').click();
     cy.contains('My account').click();
     cy.contains('Credits').click();
-    cy.contains('10 credits available').should('be.visible');
+    cy.contains('5 credits available').should('be.visible');
   });
 });
 
@@ -45,6 +45,6 @@ describe('Creating a room as a returning user', () => {
     cy.contains('Menu').click();
     cy.contains('My account').click();
     cy.contains('Credits').click();
-    cy.contains('9 credits available').should('be.visible');
+    cy.contains('4 credits available').should('be.visible');
   });
 });

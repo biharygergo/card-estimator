@@ -104,6 +104,7 @@
           mode="indeterminate"
           [diameter]="30"
         ></mat-progress-spinner>
+        <span class="create-room-loading">{{ loadingMessage | async }} </span>
       </mat-card-content>
     }
   } @else {

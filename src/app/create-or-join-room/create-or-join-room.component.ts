@@ -20,8 +20,8 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
-  EMPTY,
   from,
+  interval,
   Observable,
   of,
   Subject,
@@ -33,6 +33,7 @@ import {
   first,
   map,
   shareReplay,
+  startWith,
   switchMap,
   take,
   takeUntil,
@@ -113,6 +114,14 @@ const GREETINGS: { [hour: number]: string } = {
   22: EVENING_GREETING,
   23: EVENING_GREETING,
 };
+
+const LOADING_MESSAGES = [
+  'Waking up the servers... 😴',
+  'Checking your credits... 🪙',
+  'Generating a great room name... 💭',
+  'Packing it all up... 📦',
+  'Redirecting to your room... 🔜',
+];
 
 @Component({
   standalone: true,
@@ -233,6 +242,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       } else {
         return of(undefined);
       }
+    })
+  );
+
+  loadingMessage = interval(2000).pipe(
+    startWith(-1),
+    map((_val, index) => {
+      const message =
+        LOADING_MESSAGES[Math.min(index, LOADING_MESSAGES.length - 1)];
+      return message;
     })
   );
 

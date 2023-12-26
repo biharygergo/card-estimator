@@ -199,12 +199,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     nextBatchExpiring?: Credit[];
   }> = from(this.paymentsService.getAndAssignCreditBundles()).pipe(
     map((creditsAndBundles) => {
-      const { credits, bundles } = creditsAndBundles;
-
-      const availableCredits = credits.filter(
-        (c) =>
-          !c.usedForRoomId && (!c.expiresAt || !moment(c.expiresAt.toDate()).isBefore(moment()))
-      );
+      const { credits, bundles, availableCredits } = creditsAndBundles;
 
       const nextBatchExpiring = Object.entries(
         groupBy(

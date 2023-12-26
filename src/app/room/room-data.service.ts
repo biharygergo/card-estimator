@@ -104,6 +104,14 @@ export class RoomDataService {
     distinctUntilChanged(isEqual)
   );
 
+  isRoomCreator$: Observable<boolean> = combineLatest([
+    this.authService.user,
+    this.room$,
+  ]).pipe(
+    map(([user, room]) => user.uid === room?.createdById),
+    distinctUntilChanged()
+  );
+
   userProfiles$: Observable<UserProfileMap> = this.activeMembers$.pipe(
     distinctUntilChanged(isEqual),
     switchMap((members) =>

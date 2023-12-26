@@ -14,12 +14,14 @@ import {
   distinctUntilChanged,
   filter,
   first,
+  from,
   interval,
   map,
   Observable,
   of as observableOf,
   of,
   share,
+  shareReplay,
   startWith,
   Subject,
   switchMap,
@@ -39,6 +41,7 @@ import {
   Round,
   RoundStatistics,
   UserProfileMap,
+  Credit,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
@@ -205,6 +208,22 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
 
+  isRoomCreator$ = this.roomDataService.isRoomCreator$;
+
+  creditsText$: Observable<string> = from(
+    this.paymentService.getAndAssignCreditBundles()
+  ).pipe(
+    map((response) => response.availableCredits),
+    map((credits) => {
+      return credits.length === 0
+        ? '0 credits'
+        : credits.length === 1
+        ? '1 credit'
+        : credits.length + ' credits';
+    }),
+    shareReplay(1)
+  );
+
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;
 
@@ -315,7 +334,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         this.showOrHideAloneInRoomModal();
-        this.authService.updateUserPreference({aloneInRoomModalShown: true}).subscribe();
+        this.authService
+          .updateUserPreference({ aloneInRoomModalShown: true })
+          .subscribe();
       });
 
     this.authService.avatarUpdated
@@ -658,5 +679,9 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     this.toastService.showMessage(message, duration);
+  }
+
+  viewCredits() {
+    this.dialog.open(...avatarModalCreator({ openAtTab: 'subscription' }));
   }
 }

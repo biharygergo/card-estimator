@@ -26,7 +26,7 @@ import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 import { BundleName, BundleWithCredits, Credit, CreditBundle } from '../types';
-import { User } from '@angular/fire/auth';
+import * as moment from 'moment';
 
 export type CorrectSubscription = Subscription & {
   created: Timestamp;
@@ -284,6 +284,7 @@ export class PaymentService {
   }
 
   async getAndAssignCreditBundles(): Promise<{
+    availableCredits: Credit[];
     credits: Credit[];
     bundles: BundleWithCredits[];
   }> {
@@ -314,6 +315,11 @@ export class PaymentService {
       })
     );
 
-    return { credits, bundles };
+    const availableCredits = credits.filter(
+      (c) =>
+        !c.usedForRoomId && (!c.expiresAt || !moment(c.expiresAt.toDate()).isBefore(moment()))
+    );
+
+    return { credits, bundles, availableCredits };
   }
 }

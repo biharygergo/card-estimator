@@ -106,6 +106,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   }
 
   onNoteBlur() {
+    (document.activeElement as HTMLTextAreaElement)?.blur();
     clearTimeout(this.blurTimeout);
     this.isCurrentUserEditing = false;
 

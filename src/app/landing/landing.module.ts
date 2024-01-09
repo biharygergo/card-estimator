@@ -58,17 +58,17 @@ const routes: Routes = [
   {
     path: 'zoom',
     component: ZoomComponent,
-    data: { title: 'Zoom Integration' },
+    data: { title: 'Planning Poker for Zoom Meetings' },
   },
   {
     path: 'webex',
     component: WebexComponent,
-    data: { title: 'Webex Integration' },
+    data: { title: 'Planning Poker for Webex Meetings' },
   },
   {
     path: 'teams',
     component: TeamsComponent,
-    data: { title: 'Teams Integration' },
+    data: { title: 'Planning Poker for Microsoft Teams' },
   },
   {
     path: 'organizationInvitation',

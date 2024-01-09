@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .rich-topic {
   padding: 1rem;
   background: var(--light-background-color);
@@ -11,6 +13,11 @@
     justify-content: space-between;
     margin-bottom: 1rem;
     align-items: center;
+
+    @include extraSmallScreen {
+      flex-direction: column;
+      align-items: flex-end;
+    }
   }
 
   .rich-topic-body {
@@ -77,6 +84,9 @@
 
     a {
       color: var(--text-on-white);
+      &::after {
+        content: ' ⧉';
+      }
     }
   }
 }

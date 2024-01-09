@@ -108,7 +108,7 @@ export class RoomDataService {
     this.authService.user,
     this.room$,
   ]).pipe(
-    map(([user, room]) => user.uid === room?.createdById),
+    map(([user, room]) => user?.uid === room?.createdById),
     distinctUntilChanged()
   );
 

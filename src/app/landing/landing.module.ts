@@ -42,9 +42,20 @@ const routes: Routes = [
   {
     path: 'features',
     component: FeaturesComponent,
-    data: { title: 'Features' },
+    data: {
+      title: 'Features',
+      description:
+        'Check out all the features available in our app. JIRA integration, customizable card sets and more.',
+    },
   },
-  { path: 'faq', component: FaqComponent, data: { title: 'FAQ' } },
+  {
+    path: 'faq',
+    component: FaqComponent,
+    data: {
+      title: 'FAQ',
+      description: 'All of our most frequently asked questions, answered.',
+    },
+  },
   {
     path: 'privacy',
     component: PrivacyComponent,
@@ -58,17 +69,32 @@ const routes: Routes = [
   {
     path: 'zoom',
     component: ZoomComponent,
-    data: { title: 'Planning Poker for Zoom Meetings' },
+    data: {
+      title: 'Planning Poker for Zoom Meetings',
+      description:
+        'Install our embedded app for Zoom Meetings, the most convenient way to estimate stories.',
+      disablePostfix: true,
+    },
   },
   {
     path: 'webex',
     component: WebexComponent,
-    data: { title: 'Planning Poker for Webex Meetings' },
+    data: {
+      title: 'Planning Poker for Webex Meetings',
+      disablePostfix: true,
+      description:
+        'Install our embedded app for Webex Meetings, the most convenient way to estimate stories.',
+    },
   },
   {
     path: 'teams',
     component: TeamsComponent,
-    data: { title: 'Planning Poker for Microsoft Teams' },
+    data: {
+      title: 'Planning Poker for Microsoft Teams',
+      disablePostfix: true,
+      description:
+        'Install our embedded app for Microsoft Teams, the most convenient way to estimate stories.',
+    },
   },
   {
     path: 'organizationInvitation',
@@ -83,7 +109,11 @@ const routes: Routes = [
     path: 'pricing',
     loadComponent: () =>
       import('./premium/premium.component').then((mod) => mod.PremiumComponent),
-    data: { title: 'Pricing'},
+    data: {
+      title: 'Pricing',
+      description:
+        'Free monthly credits with our pay-as-you-go plan or unlimited with a subscription. No hidden fees.',
+    },
   },
   {
     path: 'integration/:result',
@@ -133,7 +163,7 @@ const routes: Routes = [
     ZoomAppBannerComponent,
     NgOptimizedImage,
     PageHeaderComponent,
-    StartPlanningCtaComponent
+    StartPlanningCtaComponent,
   ],
   providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })

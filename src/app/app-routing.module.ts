@@ -16,7 +16,12 @@ const routes: Routes = [
       import('./create-or-join-room/create-or-join-room.component').then(
         (m) => m.CreateOrJoinRoomComponent
       ),
-    data: { title: 'Join', supportsTheme: true },
+    data: {
+      title: 'Join',
+      description:
+        'Join an existing room and estimate issues on PlanningPoker.live',
+      supportsTheme: true,
+    },
   },
   {
     path: 'create',
@@ -24,7 +29,12 @@ const routes: Routes = [
       import('./create-or-join-room/create-or-join-room.component').then(
         (m) => m.CreateOrJoinRoomComponent
       ),
-    data: { title: 'Create Room', supportsTheme: true },
+    data: {
+      title: 'Create Room',
+      description:
+        'Create a new room and estimate issues on PlanningPoker.live',
+      supportsTheme: true,
+    },
   },
   {
     path: 'history',
@@ -32,7 +42,12 @@ const routes: Routes = [
       import('./session-history-page/session-history-page.component').then(
         (m) => m.SessionHistoryPageComponent
       ),
-    data: { title: 'Session history', supportsTheme: true },
+    data: {
+      title: 'Session history',
+      description:
+        'Browser your previous sessions on PlanningPoker.live',
+      supportsTheme: true,
+    },
   },
   {
     path: 'room',

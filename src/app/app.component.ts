@@ -7,7 +7,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 import {
   NavigationEnd,
   ActivatedRoute,
@@ -51,14 +51,19 @@ export class AppComponent implements OnInit, OnDestroy {
     map(() => {
       let route: ActivatedRoute = this.router.routerState.root;
       let routeTitle = '';
+      let description: string;
       while (route!.firstChild) {
         route = route.firstChild;
       }
       if (route.snapshot.data['title']) {
         routeTitle = route!.snapshot.data['title'];
       }
+      if (route.snapshot.data['description']) {
+        description = route!.snapshot.data['description'];
+      }
       return {
         routeTitle,
+        description,
         disablePostfix: route?.snapshot?.data['disablePostfix'],
       };
     })
@@ -80,6 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly activatedRoute: ActivatedRoute,
     private router: Router,
     private titleService: Title,
+    private metaService: Meta,
     private readonly navigationService: NavigationService,
     private readonly dialog: MatDialog,
     private readonly themeService: ThemeService,
@@ -92,11 +98,17 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.onTitleUpdated$
       .pipe(takeUntil(this.destroyed))
-      .subscribe(({ routeTitle, disablePostfix }) => {
+      .subscribe(({ routeTitle, disablePostfix, description }) => {
         if (routeTitle) {
           this.titleService.setTitle(
             `${routeTitle}${disablePostfix ? '' : ' - Planning Poker'}`
           );
+        }
+        if (description) {
+          this.metaService.updateTag({
+            name: 'description',
+            content: description,
+          });
         }
       });
 

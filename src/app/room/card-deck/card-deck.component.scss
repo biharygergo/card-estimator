@@ -74,6 +74,14 @@
 
     @media (max-width: 800px) {
       width: 100%;
+      --mat-standard-button-toggle-height: 30px;
+      ::ng-deep {
+        mat-icon {
+          font-size: 20px;
+          height: 20px;
+          width: 20px;
+        }
+      }
     }
   }
 }
@@ -87,6 +95,21 @@
   padding: 0.2rem;
   margin-bottom: 0.5rem;
   overflow-x: auto;
+
+  @include extraSmallScreen {
+    ::ng-deep {
+      .mat-mdc-icon-button {
+        --mdc-icon-button-state-layer-size: 30px !important;
+        --mdc-icon-button-icon-size: 20px;
+        padding: 2px !important;
+      }
+
+      .mat-mdc-button-touch-target {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
 }
 
 .estimator-buttons {
@@ -119,6 +142,11 @@
       margin: 0 0.3rem;
       @media screen and (max-width: 800px) {
         margin: initial;
+        min-width: 50px;
+        min-height: 80px;
+        padding: 0.4rem;
+        font-size: 1.1rem;
+        aspect-ratio: unset;
       }
 
       &:disabled {

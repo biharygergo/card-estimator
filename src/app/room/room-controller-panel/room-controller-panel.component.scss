@@ -71,7 +71,10 @@
     ::ng-deep {
       .mat-mdc-icon-button {
         --mdc-icon-button-state-layer-size: 30px !important;
-        padding: 3px !important;
+        padding: 2px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .mat-mdc-button-touch-target {

@@ -11,7 +11,7 @@
           mat-stroked-button
           @fadeAnimation
           class="credits-button responsive-label-button"
-          matTooltip="View my credits"
+          [matTooltip]="creditsText"
           (click)="viewCredits()"
         >
           <mat-icon>toll</mat-icon>

@@ -3,7 +3,6 @@
     <mat-label>Notes</mat-label>
     <textarea
       matInput
-      placeholder="Ex. Jane will help Joe implement foo()"
       [formControl]="noteValue"
       (blur)="onNoteBlur()"
       (keydown.enter)="$event.preventDefault(); onNoteBlur()"

@@ -62,6 +62,7 @@ mat-list-item.statistic-line {
     display: flex;
     align-items: center;
     gap: 0.3rem;
+    margin-right: 8px;
   }
 
   .multiple-chips {
@@ -235,7 +236,7 @@ mat-list-item.statistic-line {
   .member-name {
     font-weight: 500;
     text-align: center;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     font-size: 1rem;
     text-align: left;
     word-break: break-word;

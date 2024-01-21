@@ -2,7 +2,7 @@ import {
   BrowserModule,
   provideClientHydration,
 } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
+import { NgModule, APP_INITIALIZER, ErrorHandler, isDevMode } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -44,6 +44,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { GlobalErrorHandler } from './error-handler';
 import { HttpClientModule } from '@angular/common/http';
 import { provideCloudinaryLoader } from '@angular/common';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent, RoomLoadingComponent],
@@ -99,6 +100,12 @@ import { provideCloudinaryLoader } from '@angular/common';
         connectFunctionsEmulator(functions, 'localhost', 5001);
       }
       return functions;
+    }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
     }),
   ],
   providers: [

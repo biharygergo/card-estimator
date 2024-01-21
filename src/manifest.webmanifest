@@ -5,7 +5,7 @@
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./join",
+  "start_url": "../join",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",

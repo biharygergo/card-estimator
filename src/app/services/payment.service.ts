@@ -26,7 +26,6 @@ import { ZoomApiService } from './zoom-api.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 import { BundleName, BundleWithCredits, Credit, CreditBundle } from '../types';
-import * as moment from 'moment';
 
 export type CorrectSubscription = Subscription & {
   created: Timestamp;
@@ -317,7 +316,7 @@ export class PaymentService {
 
     const availableCredits = credits.filter(
       (c) =>
-        !c.usedForRoomId && (!c.expiresAt || !moment(c.expiresAt.toDate()).isBefore(moment()))
+        !c.usedForRoomId && (!c.expiresAt || c.expiresAt.toDate().getTime() > Date.now())
     );
 
     return { credits, bundles, availableCredits };

@@ -80,7 +80,6 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
 import { RoomDataService } from './room-data.service';
 import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
-import * as moment from 'moment';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -196,9 +195,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.userPreferences$.pipe(first()),
   ]).pipe(
     filter(([user, pref]) => {
+      const releaseDate = new Date('2023-12-11');
       return (
         user &&
-        moment(user.metadata.creationTime).isBefore('2023-12-11') &&
+        releaseDate.getTime() >
+          new Date(user.metadata.creationTime).getTime() &&
         !pref.updatedPricingModalShown
       );
     }),

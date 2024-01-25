@@ -213,7 +213,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     filter(
       (lastJoinedRoom) =>
         (lastJoinedRoom.heartbeatAt as any).seconds * 1000 >
-        Date.now() - 1000 * 60 * 5
+        Date.now() - 1000 * 60 * 5 // 5 minutes
+    ),
+    shareReplay(1)
+  );
+
+  shouldAutoNavigateToRecentRoomInTeams$ = this.recentlyLeftRoom$.pipe(
+    filter(
+      (room) =>
+        this.config.runningIn === 'teams' &&
+        (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 2 // 2 minutes
+        && !this.hideRecentlyLeftRoom
     )
   );
 
@@ -427,6 +437,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
             );
           }
         }
+      });
+
+    this.shouldAutoNavigateToRecentRoomInTeams$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((room) => {
+        this.rejoinRoom(room.roomId);
+        this.snackBar.open(
+          "You've been automatically redirected to your last room in Teams",
+          undefined,
+          { duration: 5000, horizontalPosition: 'right' }
+        );
       });
   }
 

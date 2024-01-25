@@ -45,7 +45,7 @@ const PLANS: PurchaseOption[] = [
     cloudinaryId: 'bundle_5',
     title: 'Welcome bundle',
     description:
-      'when you register and 1 free credit every month afterwards. Credits expire after two months.',
+      'when you register and 1 free credit every month afterwards. Credits expire after two months & contains ads.',
     creditAmount: 5,
     priceEuro: 0,
     priceDescription: 'assigned automatically',
@@ -59,7 +59,7 @@ const PLANS: PurchaseOption[] = [
     cloudinaryId: 'bundle_7',
     title: 'Small bundle',
     description:
-      'ideal for the SCRUM master of a team that plans biweekly. Credits do not expire.',
+      'ideal for the SCRUM master of a team that plans biweekly. Credits do not expire & no ads.',
     creditAmount: 7,
     priceEuro: 9,
     priceDescription: 'one-time purchase',
@@ -73,7 +73,7 @@ const PLANS: PurchaseOption[] = [
     cloudinaryId: 'bundle_15',
     title: 'Large bundle',
     description:
-      'ideal for the SCRUM master of a team with weekly planning. Credits do not expire.',
+      'ideal for the SCRUM master of a team with weekly planning. Credits do not expire & no ads.',
     creditAmount: 15,
     priceEuro: 17,
     priceDescription: 'one-time purchase',
@@ -87,7 +87,7 @@ const PLANS: PurchaseOption[] = [
     cloudinaryId: 'bundle_50',
     title: 'Mega bundle',
     description:
-      'great for the SCRUM master of multiple teams with many planning meetings per week. Credits do not expire.',
+      'great for the SCRUM master of multiple teams with many planning meetings per week. Credits do not expire & no ads.',
     creditAmount: 50,
     priceEuro: 50,
     priceDescription: 'one-time purchase',

@@ -7,6 +7,7 @@ import {
   RichTopic,
   SubscriptionMetadata,
   Organization,
+  Credit,
 } from "../../../src/app/types";
 import {
   uniqueNamesGenerator,
@@ -65,7 +66,7 @@ export async function createRoom(
     );
   }
 
-  const subscriptionMetadata = await getSubscriptionMetadata(userId, creditToUse?.id);
+  const subscriptionMetadata = await getSubscriptionMetadata(userId, creditToUse);
 
   const room: Room = {
     id: createId(),
@@ -137,7 +138,7 @@ function createId(): string {
 
 async function getSubscriptionMetadata(
     userId: string,
-    creditId: string | undefined
+    credit: Credit | undefined
 ): Promise<SubscriptionMetadata> {
   const isPremium = await isPremiumSubscriber(userId);
   const myOrgs = await getFirestore()
@@ -150,7 +151,7 @@ async function getSubscriptionMetadata(
     undefined;
 
   const subscriptionMetadata: SubscriptionMetadata = {
-    createdWithPlan: isPremium ? "premium" : creditId ? "credit" : "basic",
+    createdWithPlan: isPremium ? "premium" : credit ? credit.isPaidCredit ? "paid-credit" : "credit" : "basic",
     createdWithOrganization: organization ? organization.id : null,
   };
 

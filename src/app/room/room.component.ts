@@ -407,7 +407,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           message,
           10000,
           'info',
-          'Top-up credits'
+          'Top up credits'
         );
         ref
           .onAction()

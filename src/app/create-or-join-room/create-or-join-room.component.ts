@@ -371,7 +371,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
               if (e.details === 'error-no-credits') {
                 this.toastService
                   .showMessage(
-                    '🤯 Oh-oh, it looks like you ran out of credits. Please top-up your credits or wait for your next free monthly bundle to create new rooms.',
+                    '🤯 Oh-oh, it looks like you ran out of credits. Please top up your credits or wait for your next free monthly bundle to create new rooms.',
                     10000,
                     'error',
                     'View my credits'

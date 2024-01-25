@@ -270,7 +270,7 @@ export interface AuthorizationMetadata {
 }
 
 export interface SubscriptionMetadata {
-  createdWithPlan: 'premium' | 'basic' | 'credit';
+  createdWithPlan: 'premium' | 'basic' | 'credit' | 'paid-credit';
   createdWithOrganization?: string | null;
 }
 
@@ -441,6 +441,7 @@ export interface Credit {
   createdAt: Timestamp;
   expiresAt: Timestamp | null;
   usedForRoomId?: string;
+  isPaidCredit?: boolean;
 }
 
 export interface CreditBundle {

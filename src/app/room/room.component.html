@@ -126,7 +126,10 @@
     } @if (room) {
     <app-carbon-ad
       placement="app"
-      [isPremiumRoom]="room?.subscriptionMetadata?.createdWithPlan !== 'basic'"
+      [isPremiumRoom]="
+        room?.subscriptionMetadata?.createdWithPlan === 'premium' ||
+        room?.subscriptionMetadata?.createdWithPlan === 'paid-credit'
+      "
     />
     }
   </mat-sidenav-content>

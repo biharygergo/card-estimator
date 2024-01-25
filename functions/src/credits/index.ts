@@ -190,6 +190,7 @@ export async function createCredits(
           bundleId: bundle.id,
           createdAt: createdAt as any,
           expiresAt: getBundleExpirationDate(bundle.name, createdAt) as any,
+          isPaidCredit: !!bundle.paymentId,
         };
         return creditRef.set(credit);
       })

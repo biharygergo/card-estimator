@@ -25,6 +25,7 @@ import {
   startWith,
   Subject,
   switchMap,
+  take,
   takeUntil,
   tap,
   withLatestFrom,
@@ -80,6 +81,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ThemeService } from '../services/theme.service';
 import { RoomDataService } from './room-data.service';
 import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
+import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -211,18 +213,30 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   isRoomCreator$ = this.roomDataService.isRoomCreator$;
 
-  creditsText$: Observable<string> = from(
+  availableCredits$ = from(
     this.paymentService.getAndAssignCreditBundles()
   ).pipe(
     map((response) => response.availableCredits),
+    shareReplay(1)
+  );
+
+  creditsText$: Observable<string> = this.availableCredits$.pipe(
     map((credits) => {
       return credits.length === 0
-        ? '0 credits'
+        ? 'Out of credits'
         : credits.length === 1
-        ? '1 credit'
+        ? '1 credit left'
         : credits.length + ' credits';
     }),
     shareReplay(1)
+  );
+
+  creditsAlert$: Observable<number> = combineLatest([
+    this.availableCredits$,
+    this.permissionsService.hasPremiumAccess(),
+  ]).pipe(
+    filter(([credits, isPremium]) => credits.length <= 1 && !isPremium),
+    map(([credits]) => credits.length)
   );
 
   readonly MemberType = MemberType;
@@ -375,6 +389,32 @@ export class RoomComponent implements OnInit, OnDestroy {
             updatedPricingModalShown: true,
           })
           .subscribe();
+      });
+
+    this.creditsAlert$
+      .pipe(takeUntil(this.destroy))
+      .subscribe((credits) => {
+        let message = '';
+        if (credits === 1) {
+          message =
+            'You have just 1 credit remaining. Top up your credits now!';
+        } else if (credits === 0) {
+          message =
+            'You ran out of credits. Top up your credits before your next planning session!';
+        }
+
+        const ref = this.toastService.showMessage(
+          message,
+          10000,
+          'info',
+          'Top-up credits'
+        );
+        ref
+          .onAction()
+          .pipe(take(1))
+          .subscribe(() => {
+            this.dialog.open(...pricingModalCreator());
+          });
       });
   }
 

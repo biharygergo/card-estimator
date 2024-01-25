@@ -11,6 +11,7 @@
           mat-stroked-button
           @fadeAnimation
           class="credits-button responsive-label-button"
+          [class.alert]="creditsAlert$ | async"
           [matTooltip]="creditsText"
           (click)="viewCredits()"
         >

@@ -19,6 +19,7 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 import { LinkService } from 'src/app/services/link.service';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
 import { PaymentService } from 'src/app/services/payment.service';
+import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -99,6 +100,11 @@ export class ProfileDropdownComponent implements OnInit {
   openPremiumLearnMoreModal() {
     this.analytics.logClickedLearnMorePremium('profile_dropdown');
     this.dialog.open(...premiumLearnMoreModalCreator());
+  }
+
+  openPricingModal() {
+    this.analytics.logClickedLearnMorePremium('profile_dropdown');
+    this.dialog.open(...pricingModalCreator());
   }
 
   reportAnIssue() {

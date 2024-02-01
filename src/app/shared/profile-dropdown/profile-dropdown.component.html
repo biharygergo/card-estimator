@@ -4,38 +4,30 @@
     [matMenuTriggerFor]="menu"
     class="menu-button responsive-label-button"
     id="menu-button"
-    >
+  >
     <mat-icon>more_vert</mat-icon>
     Menu
   </button>
   <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
     @if (currentUser | async; as user) {
-      <button
-        mat-menu-item
-        (click)="openAvatarSelector()"
-        id="account-menu-item"
-        >
-        <mat-icon>account_circle</mat-icon>
-        <span>My account</span>
-      </button>
+    <button mat-menu-item (click)="openAvatarSelector()" id="account-menu-item">
+      <mat-icon>account_circle</mat-icon>
+      <span>My account</span>
+    </button>
     } @else {
-      <button
-        mat-menu-item
-        (click)="openCreateAccountModal()"
-        id="sign-in-menu-item"
-        >
-        <mat-icon>account_circle</mat-icon>
-        <span>Sign in</span>
-      </button>
-    }
-    @if (currentUser | async; as user) {
-      <button
-        mat-menu-item
-        (click)="openOrganizationModal()"
-        >
-        <mat-icon>groups</mat-icon>
-        <span>My organization</span>
-      </button>
+    <button
+      mat-menu-item
+      (click)="openCreateAccountModal()"
+      id="sign-in-menu-item"
+    >
+      <mat-icon>account_circle</mat-icon>
+      <span>Sign in</span>
+    </button>
+    } @if (currentUser | async; as user) {
+    <button mat-menu-item (click)="openOrganizationModal()">
+      <mat-icon>groups</mat-icon>
+      <span>My organization</span>
+    </button>
     }
     <button mat-menu-item (click)="openIntegrationsModal()">
       <mat-icon>extension</mat-icon>
@@ -51,29 +43,27 @@
       <span>Buy credits</span>
     </button>
     @if(currentRoomId$ | async) {
-      <a mat-menu-item routerLink="/join">
-        <mat-icon>home</mat-icon>
-        <span>Home</span>
-      </a>
+    <a mat-menu-item routerLink="/join">
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </a>
     }
     <mat-divider></mat-divider>
-    @if (themeService.currentTheme === 'dark') {
-      <button
-        mat-menu-item
-        (click)="toggleDarkMode()"
-        >
-        <mat-icon>light_mode</mat-icon>
-        <span>Light mode</span>
-      </button>
-    }
-    @if (themeService.currentTheme === 'default') {
-      <button
-        mat-menu-item
-        (click)="toggleDarkMode()"
-        >
-        <mat-icon>dark_mode</mat-icon>
-        <span>Dark mode</span>
-      </button>
+    @if (config.runningIn !== 'web') {
+    <button mat-menu-item (click)="openInBrowser()">
+      <mat-icon>public</mat-icon>
+      <span>Open in browser</span>
+    </button>
+    } @if (themeService.currentTheme === 'dark') {
+    <button mat-menu-item (click)="toggleDarkMode()">
+      <mat-icon>light_mode</mat-icon>
+      <span>Light mode</span>
+    </button>
+    } @if (themeService.currentTheme === 'default') {
+    <button mat-menu-item (click)="toggleDarkMode()">
+      <mat-icon>dark_mode</mat-icon>
+      <span>Dark mode</span>
+    </button>
     }
     <button mat-menu-item (click)="reportAnIssue()">
       <mat-icon>bug_report</mat-icon>

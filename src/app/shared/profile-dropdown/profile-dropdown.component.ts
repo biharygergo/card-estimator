@@ -118,4 +118,9 @@ export class ProfileDropdownComponent implements OnInit {
       this.themeService.currentTheme === Theme.DARK ? Theme.DEFAULT : Theme.DARK
     );
   }
+
+  openInBrowser() {
+    const currentUrl = window.location.href;
+    this.linkService.openUrl(currentUrl);
+  }
 }

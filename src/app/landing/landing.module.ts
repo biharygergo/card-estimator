@@ -93,7 +93,7 @@ const routes: Routes = [
       title: 'Planning Poker for Microsoft Teams',
       disablePostfix: true,
       description:
-        'Install our embedded app for Microsoft Teams, the most convenient way to estimate stories.',
+        'Install our embedded app for Microsoft Teams, the most convenient way to estimate stories. Plugin made for Microsoft Teams.',
     },
   },
   {

@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Override majority vote</h2>
+<mat-dialog-content>
+  <div class="estimator-buttons">
+    @for (item of cards; track item.key) {
+    <div class="estimator-button-container">
+      <button
+        mat-raised-button
+        class="estimator-button"
+        (click)="setOverride(item.key)"
+        [color]="
+          +item.key === viewModel.majorityOverride
+            ? 'accent'
+            : +item.key === viewModel.majority
+            ? 'primary'
+            : ''
+        "
+      >
+        {{ item.value }}
+      </button>
+    </div>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button color="primary" matDialogClose cdkFocusInitial>
+    Close
+  </button>
+  <button
+    mat-button
+    color="secondary"
+    [disabled]="viewModel.majorityOverride === null"
+    (click)="setOverride(null)"
+  >
+    Clear override
+  </button>
+</mat-dialog-actions>

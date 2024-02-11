@@ -16,6 +16,8 @@ import {
   RoundStatistics,
   UserProfileMap,
 } from 'src/app/types';
+import { overrideMajorityVodeModalCreator } from '../override-majority-vote-modal/override-majority-vote-modal.component';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'app-round-results',
@@ -48,7 +50,8 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly dialog: MatDialog,
     private readonly toastService: ToastService,
-    private readonly organizationService: OrganizationService
+    private readonly organizationService: OrganizationService,
+    public readonly permissionsService: PermissionsService,
   ) {}
 
   ngOnInit() {
@@ -95,5 +98,13 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
 
   memberIdentity(index: number, member: Member) {
     return member.id;
+  }
+
+  openMajorityVoteOverrideModal() {
+    this.dialog.open(...overrideMajorityVodeModalCreator({
+      roomId: this.room.roomId,
+      roundId: this.currentRound,
+      selectedCardSet: this.selectedEstimationCardSetValue
+    }))
   }
 }

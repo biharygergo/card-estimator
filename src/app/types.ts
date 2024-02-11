@@ -54,6 +54,7 @@ export interface Round {
   estimates: { [memberId: string]: number | null };
   show_results: boolean;
   notes?: Notes;
+  majorityOverride?: number | null;
 }
 
 export interface Notes {
@@ -148,6 +149,7 @@ export enum RoomPermissionId {
   CAN_DOWNLOAD_RESULTS = 'CAN_DOWNLOAD_RESULTS',
   CAN_CHANGE_CARD_SETS = 'CAN_CHANGE_CARD_SETS',
   CAN_SET_TIMER = 'CAN_SET_TIMER',
+  CAN_OVERRIDE_MAJORITY_VOTE = 'CAN_OVERRIDE_MAJORITY_VOTE',
 }
 
 export interface RoomPermission {
@@ -201,6 +203,10 @@ export const PERMISSIONS_CATALOG: RoomPermission[] = [
     id: RoomPermissionId.CAN_SET_TIMER,
     label: 'Set the timer',
   },
+  {
+    id: RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE,
+    label: 'Override majority vote',
+  },
 ];
 
 export const PERMISSIONS_CATALOG_MAP: {
@@ -252,6 +258,10 @@ export const DEFAULT_PERMISSIONS: PermissionsMap = {
   [RoomPermissionId.CAN_SET_TIMER]: {
     permissionId: RoomPermissionId.CAN_SET_TIMER,
     value: ALL_ROLES_ALLOWED,
+  },
+  [RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE]: {
+    permissionId: RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE,
+    value: [UserRole.ROOM_CREATOR],
   },
 };
 

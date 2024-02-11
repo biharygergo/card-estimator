@@ -1,270 +1,239 @@
-@if (
-  (room?.rounds)[currentRound].show_results && roundStatistics[currentRound]
-  ) {
-  <mat-list
+@if ( (room?.rounds)[currentRound].show_results && roundStatistics[currentRound]
+) {
+<mat-list>
+  <ng-container>
+    @if (roundStatistics[currentRound]; as statistics) {
+    <h3 matSubheader class="subheader">Statistics</h3>
+    <mat-list-item class="statistic-line">
+      <h3 matLine class="statistic">
+        <div class="statistic-title">Majority</div>
+        <div class="multiple-chips">
+          <mat-chip-set>
+            @if (statistics.consensus.isConsensus) {
+            <mat-chip class="consensus">
+              <span matChipAvatar>🎉</span>
+              <strong>Consensus</strong>
+            </mat-chip>
+            } @else {
+            <mat-chip>
+              No consensus
+              <mat-icon
+                matChipRemove
+                tabIndex="0"
+                (click)="onRevoteClicked.next()"
+                (keydown.enter)="onRevoteClicked.next()"
+                matTooltip="Clear results and revote round"
+                >restart_alt</mat-icon
+              >
+            </mat-chip>
+            }
+            <mat-chip
+              [highlighted]="room?.rounds?.[currentRound]?.majorityOverride != null"
+              color="accent"
+            >
+              @if (permissionsService.canOverrideMajorityVote() | async) {
+              <mat-icon
+                matChipRemove
+                tabIndex="0"
+                (click)="openMajorityVoteOverrideModal()"
+                (keydown.enter)="openMajorityVoteOverrideModal()"
+                matTooltip="Override majority vote"
+                >edit</mat-icon
+              >
+              }
+
+              {{
+                (room?.rounds?.[currentRound]?.majorityOverride == null ? statistics.consensus.value : room?.rounds?.[currentRound]?.majorityOverride)
+                  | estimateConverter : selectedEstimationCardSetValue : "exact"
+              }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </h3>
+    </mat-list-item>
+    <mat-list-item
+      class="statistic-line"
+      *ngIf="!statistics.consensus.isConsensus"
     >
-    <ng-container>
-      @if (roundStatistics[currentRound]; as statistics) {
-        <h3 matSubheader class="subheader">Statistics</h3>
-        <mat-list-item class="statistic-line">
-          <h3 matLine class="statistic">
-            <div class="statistic-title">Majority</div>
-            <div class="multiple-chips">
-              <mat-chip-set>
-                @if (statistics.consensus.isConsensus) {
-                  <mat-chip
-                    class="consensus"
-                    >
-                    <span matChipAvatar>🎉</span>
-                    <strong>Consensus</strong>
-                  </mat-chip>
-                } @else {
-                  <mat-chip
-                    (click)="onRevoteClicked.next()"
-                    matTooltip="Click here to clear results on this round and restart voting."
-                    >
-                    No consensus. Revote?
-                  </mat-chip>
-                }
-                <mat-chip>
-                  {{
-                  statistics.consensus.value
-                  | estimateConverter
-                  : selectedEstimationCardSetValue
-                  : "exact"
-                  }}
-                </mat-chip>
-              </mat-chip-set>
-            </div>
-          </h3>
-        </mat-list-item>
-        <mat-list-item class="statistic-line" *ngIf="!statistics.consensus.isConsensus">
-          <h3 matLine class="statistic">
-            <div class="statistic-title">Average</div>
-            <mat-chip-set>
-              <mat-chip>
-                {{
-                statistics.average
+      <h3 matLine class="statistic">
+        <div class="statistic-title">Average</div>
+        <mat-chip-set>
+          <mat-chip>
+            {{
+              statistics.average
                 | number : "1.0-1"
-                | estimateConverter
-                : selectedEstimationCardSetValue
-                : "rounded"
-                }}
-              </mat-chip>
-            </mat-chip-set>
-          </h3>
-        </mat-list-item>
-        <mat-list-item class="statistic-line">
-          <h3 matLine class="statistic">
-            <div class="statistic-title">Highest</div>
-            <mat-chip-set>
-              <mat-chip class="voter">
-                {{ statistics.highestVote.voter }}
-              </mat-chip>
-              <mat-chip>
-                {{
-                statistics.highestVote.value
+                | estimateConverter : selectedEstimationCardSetValue : "rounded"
+            }}
+          </mat-chip>
+        </mat-chip-set>
+      </h3>
+    </mat-list-item>
+    <mat-list-item class="statistic-line">
+      <h3 matLine class="statistic">
+        <div class="statistic-title">Highest</div>
+        <mat-chip-set>
+          <mat-chip class="voter">
+            {{ statistics.highestVote.voter }}
+          </mat-chip>
+          <mat-chip>
+            {{
+              statistics.highestVote.value
                 | estimateConverter : selectedEstimationCardSetValue : "exact"
-                }}
-              </mat-chip>
-            </mat-chip-set>
-          </h3>
-        </mat-list-item>
-        <mat-list-item class="statistic-line">
-          <h3 matLine class="statistic">
-            <div class="statistic-title">Lowest</div>
-            <mat-chip-set>
-              <mat-chip class="voter">
-                {{ statistics.lowestVote.voter }}
-              </mat-chip>
-              <mat-chip>
-                {{
-                statistics.lowestVote.value
+            }}
+          </mat-chip>
+        </mat-chip-set>
+      </h3>
+    </mat-list-item>
+    <mat-list-item class="statistic-line">
+      <h3 matLine class="statistic">
+        <div class="statistic-title">Lowest</div>
+        <mat-chip-set>
+          <mat-chip class="voter">
+            {{ statistics.lowestVote.voter }}
+          </mat-chip>
+          <mat-chip>
+            {{
+              statistics.lowestVote.value
                 | estimateConverter : selectedEstimationCardSetValue : "exact"
-                }}
-              </mat-chip>
-            </mat-chip-set>
-          </h3>
-        </mat-list-item>
-      }
-    </ng-container>
-  </mat-list>
+            }}
+          </mat-chip>
+        </mat-chip-set>
+      </h3>
+    </mat-list-item>
+    }
+  </ng-container>
+</mat-list>
 }
 <h3 matSubheader class="subheader">Votes</h3>
 <div class="votes">
   @for (member of members; track member.id) {
-    <div
-      class="vote-container"
+  <div class="vote-container">
+    <div class="vote-avatar">
+      @if (member.avatarUrl) {
+      <img
+        [src]="member.avatarUrl"
+        class="vote-avatar-image"
+        alt="A user's avatar"
+      />
+      } @if (!member.avatarUrl) {
+      <div class="vote-avatar-text">
+        {{ member.name?.charAt(0) }}
+      </div>
+      } @if ( member.id === currentUserId &&
+      member.avatarUrl?.includes('avatars.dicebear.com') ) {
+      <div
+        class="avatar-warning"
+        matTooltip="Please select a new avatar, previous selections no longer work due to an unforeseen API change. Sorry! 😞"
       >
-      <div class="vote-avatar">
-        @if (member.avatarUrl) {
-          <img
-            [src]="member.avatarUrl"
-            class="vote-avatar-image"
-            alt="A user's avatar"
-            />
-        }
-        @if (!member.avatarUrl) {
-          <div class="vote-avatar-text">
-            {{ member.name?.charAt(0) }}
-          </div>
-        }
-        @if (
-          member.id === currentUserId &&
-          member.avatarUrl?.includes('avatars.dicebear.com')
-          ) {
-          <div
-            class="avatar-warning"
-            matTooltip="Please select a new avatar, previous selections no longer work due to an unforeseen API change. Sorry! 😞"
-            >
-            <mat-icon>warning</mat-icon>
-          </div>
-        }
-        @if (showMemberControls) {
-          @if (
-            member.id !== currentUserId && room.createdById === currentUserId
-            ) {
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="memberMenu"
-              [matMenuTriggerData]="{ member }"
-              class="member-options-button"
-              matTooltip="Member options"
-              >
-              <mat-icon>settings</mat-icon>
-            </button>
-          }
-          @if (member.id === currentUserId) {
-            <button
-              mat-icon-button
-              class="member-options-button"
-              (click)="openAvatarSelectorModal(member.id)"
-              matTooltip="Change my avatar"
-              >
-              <mat-icon>edit</mat-icon>
-            </button>
-          }
-        }
+        <mat-icon>warning</mat-icon>
       </div>
-      <span class="member-name">
-        {{ member.name }}
-        @if (userProfiles[member.id]) {
-          <mat-icon
-            class="verified-icon"
-            [matTooltip]="
-            member.name +
-            ' is verified. Get your blue checkmark by signing up for a permanent account.'
-            "
-            >verified</mat-icon
-            >
-          }
-        </span>
-        @if (member.type === MemberType.ESTIMATOR) {
-          @if (
-            (room?.rounds)[currentRound].estimates[member.id] === null &&
-            (room?.rounds)[currentRound].show_results
-            ) {
-            <div
-              class="vote vote-pass"
-              matTooltip="Passed"
-              >
-              <mat-icon>question_mark</mat-icon>
-            </div>
-          }
-          @if (
-            (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
-            (room?.rounds)[currentRound].estimates[member.id] !== null &&
-            (room?.rounds)[currentRound].show_results
-            ) {
-            <div
-              class="vote vote-value"
-              >
-              {{
-              (room?.rounds)[currentRound].estimates[member.id]
-              | estimateConverter : selectedEstimationCardSetValue : "exact"
-              }}
-            </div>
-          }
-          @if (
-            (room?.rounds)[currentRound].estimates[member.id] === undefined &&
-            (room?.rounds)[currentRound].show_results
-            ) {
-            <div
-              class="vote vote-none"
-              matTooltip="No vote cast - maybe next time?"
-              >
-              <mat-icon>bedtime</mat-icon>
-            </div>
-          }
-          @if (
-            (room?.rounds)[currentRound].estimates[member.id] === undefined &&
-            !(room?.rounds)[currentRound].show_results
-            ) {
-            <div
-              class="vote vote-waiting"
-              matTooltip="Waiting to vote"
-              >
-              <mat-icon class="hourglass">hourglass_bottom</mat-icon>
-            </div>
-          }
-          @if (
-            (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
-            !(room?.rounds)[currentRound].show_results
-            ) {
-            <div
-              class="vote vote-voted"
-              matTooltip="Voted"
-              >
-              <mat-icon>checked</mat-icon>
-            </div>
-          }
-        }
-        @if (member.type === MemberType.OBSERVER) {
-          <div
-            class="vote vote-observer"
-            matTooltip="Observing this estimation"
-            >
-            <mat-icon>visibility</mat-icon>
-          </div>
-        }
-      </div>
+      } @if (showMemberControls) { @if ( member.id !== currentUserId &&
+      room.createdById === currentUserId ) {
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="memberMenu"
+        [matMenuTriggerData]="{ member }"
+        class="member-options-button"
+        matTooltip="Member options"
+      >
+        <mat-icon>settings</mat-icon>
+      </button>
+      } @if (member.id === currentUserId) {
+      <button
+        mat-icon-button
+        class="member-options-button"
+        (click)="openAvatarSelectorModal(member.id)"
+        matTooltip="Change my avatar"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      } }
+    </div>
+    <span class="member-name">
+      {{ member.name }}
+      @if (userProfiles[member.id]) {
+      <mat-icon
+        class="verified-icon"
+        [matTooltip]="
+          member.name +
+          ' is verified. Get your blue checkmark by signing up for a permanent account.'
+        "
+        >verified</mat-icon
+      >
+      }
+    </span>
+    @if (member.type === MemberType.ESTIMATOR) { @if (
+    (room?.rounds)[currentRound].estimates[member.id] === null &&
+    (room?.rounds)[currentRound].show_results ) {
+    <div class="vote vote-pass" matTooltip="Passed">
+      <mat-icon>question_mark</mat-icon>
+    </div>
+    } @if ( (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
+    (room?.rounds)[currentRound].estimates[member.id] !== null &&
+    (room?.rounds)[currentRound].show_results ) {
+    <div class="vote vote-value">
+      {{
+        (room?.rounds)[currentRound].estimates[member.id]
+          | estimateConverter : selectedEstimationCardSetValue : "exact"
+      }}
+    </div>
+    } @if ( (room?.rounds)[currentRound].estimates[member.id] === undefined &&
+    (room?.rounds)[currentRound].show_results ) {
+    <div class="vote vote-none" matTooltip="No vote cast - maybe next time?">
+      <mat-icon>bedtime</mat-icon>
+    </div>
+    } @if ( (room?.rounds)[currentRound].estimates[member.id] === undefined &&
+    !(room?.rounds)[currentRound].show_results ) {
+    <div class="vote vote-waiting" matTooltip="Waiting to vote">
+      <mat-icon class="hourglass">hourglass_bottom</mat-icon>
+    </div>
+    } @if ( (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
+    !(room?.rounds)[currentRound].show_results ) {
+    <div class="vote vote-voted" matTooltip="Voted">
+      <mat-icon>checked</mat-icon>
+    </div>
+    } } @if (member.type === MemberType.OBSERVER) {
+    <div class="vote vote-observer" matTooltip="Observing this estimation">
+      <mat-icon>visibility</mat-icon>
+    </div>
     }
   </div>
-  <mat-menu #memberMenu="matMenu">
-    <ng-template matMenuContent let-member="member">
+  }
+</div>
+<mat-menu #memberMenu="matMenu">
+  <ng-template matMenuContent let-member="member">
+    <button
+      mat-menu-item
+      (click)="removeMember(member)"
+      matTooltip="Removes the member from the room, but keeps their historical votes. They can rejoin anytime."
+      matTooltipPosition="above"
+    >
+      <mat-icon>person_remove</mat-icon> Remove from room
+    </button>
+    <mat-divider />
+    <span
+      [matTooltip]="
+        !organization
+          ? 'You have no organization'
+          : !userProfiles[member.id]
+          ? 'Anonymous users can not be added to an organization'
+          : organization.memberIds.includes(member.id)
+          ? 'Already a member'
+          : ''
+      "
+    >
       <button
         mat-menu-item
-        (click)="removeMember(member)"
-        matTooltip="Removes the member from the room, but keeps their historical votes. They can rejoin anytime."
-        matTooltipPosition="above"
-        >
-        <mat-icon>person_remove</mat-icon> Remove from room
-      </button>
-      <mat-divider />
-      <span
-        [matTooltip]="
-        !organization
-        ? 'You have no organization'
-        : !userProfiles[member.id]
-        ? 'Anonymous users can not be added to an organization'
-        : organization.memberIds.includes(member.id)
-        ? 'Already a member'
-        : ''
-        "
-        >
-        <button
-          mat-menu-item
-          [disabled]="
+        [disabled]="
           !organization ||
           organization.memberIds.includes(member.id) ||
           organization.createdById !== currentUserId ||
           !userProfiles[member.id]
-          "
-          (click)="addToOrganization(member.id)"
-          >
-          <mat-icon>group_add</mat-icon> Add to my organization
-        </button>
-      </span>
-    </ng-template>
-  </mat-menu>
-  
+        "
+        (click)="addToOrganization(member.id)"
+      >
+        <mat-icon>group_add</mat-icon> Add to my organization
+      </button>
+    </span>
+  </ng-template>
+</mat-menu>

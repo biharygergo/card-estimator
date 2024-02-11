@@ -101,6 +101,10 @@ export class PermissionsService {
     return this.hasPermission(RoomPermissionId.CAN_SET_TIMER);
   }
 
+  canOverrideMajorityVote(): Observable<boolean> {
+    return this.hasPermission(RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE);
+  }
+
   hasPremiumAccess(): Observable<boolean> {
     return this.isPremiumSubscriber;
   }

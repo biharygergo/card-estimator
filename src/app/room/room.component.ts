@@ -82,6 +82,7 @@ import { ThemeService } from '../services/theme.service';
 import { RoomDataService } from './room-data.service';
 import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
+import { createRoundStatistics } from '../services/serializer.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 

@@ -96,7 +96,7 @@ export class VelocityComponent implements OnInit, OnDestroy {
     const cards = exportData.rows
       .reverse()
       .map((row) => {
-        return row.mostPopularVote;
+        return row.mostPopularVoteOrOverride;
       })
       .filter((card) => !!card);
 

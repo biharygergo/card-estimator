@@ -198,6 +198,15 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       'schedule',
       () => this.saveRoomConfiguration(RoomPermissionId.CAN_SET_TIMER)
     ),
+    [RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE]:
+      createChipOptionForPermission(
+        RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE,
+        'gavel',
+        () =>
+          this.saveRoomConfiguration(
+            RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE
+          )
+      ),
   };
 
   permissionForms = Object.values(this.permissionConfiguration);
@@ -268,10 +277,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   user$ = this.authService.user;
 
-  hasConfigurationAccess$ = combineLatest([
-    this.room$,
-    this.user$,
-  ]).pipe(
+  hasConfigurationAccess$ = combineLatest([this.room$, this.user$]).pipe(
     map(([room, user]) => {
       return room.createdById === user.uid && !user.isAnonymous;
     }),
@@ -364,6 +370,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       this.errorMessage.next(e.message);
     } finally {
       this.isBusy.next(false);
+      this.toastService.showMessage('Permissions updated')
     }
     this.analyticsService.logClickedSavePermissions(updatedPermission);
   }

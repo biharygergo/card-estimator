@@ -6,6 +6,7 @@
       <button
         mat-raised-button
         class="estimator-button"
+        [id]="'override-vote-button-' + item.key"
         (click)="setOverride(item.key)"
         [color]="
           +item.key === viewModel.majorityOverride

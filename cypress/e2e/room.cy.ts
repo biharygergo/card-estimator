@@ -134,6 +134,31 @@ describe('Inside the room', () => {
     cy.contains('Topic of Round 3').should('be.visible');
   });
 
+  it('can override majority vote', () => {
+    cy.get('#new-round-button').click();
+    cy.contains('3').click();
+    cy.contains('Reveal votes').click();
+
+    cy.get('#override-majority-vote-button').click();
+
+    cy.contains('Override majority vote').should('exist');
+    cy.contains('Clear override').should('be.disabled');
+
+    cy.get('#override-vote-button-2').click();
+    cy.contains('Clear override').should('be.enabled');
+
+    cy.contains('Close').click();
+    
+    cy.get('#majority-vote-chip').should('contain', '2');
+
+    cy.get('#override-majority-vote-button').click();
+    cy.contains('Clear override').click();
+    cy.contains('Close').click();
+
+    cy.get('#majority-vote-chip').should('contain', '3');
+
+  });
+
   it('can leave the room', () => {
     cy.get('#room-options-button').click();
 
@@ -143,4 +168,6 @@ describe('Inside the room', () => {
 
     cy.contains('Create a new room').should('be.visible');
   });
+
+  
 });

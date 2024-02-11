@@ -30,6 +30,7 @@
             <mat-chip
               [highlighted]="room?.rounds?.[currentRound]?.majorityOverride != null"
               color="accent"
+              id="majority-vote-chip"
             >
               @if (permissionsService.canOverrideMajorityVote() | async) {
               <mat-icon
@@ -38,6 +39,7 @@
                 (click)="openMajorityVoteOverrideModal()"
                 (keydown.enter)="openMajorityVoteOverrideModal()"
                 matTooltip="Override majority vote"
+                id="override-majority-vote-button"
                 >edit</mat-icon
               >
               }

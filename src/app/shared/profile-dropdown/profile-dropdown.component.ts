@@ -120,7 +120,7 @@ export class ProfileDropdownComponent implements OnInit {
   }
 
   openInBrowser() {
-    const currentUrl = window.location.href;
+    const currentUrl = window.location.origin + window.location.pathname;
     this.linkService.openUrl(currentUrl);
   }
 }

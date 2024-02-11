@@ -2,7 +2,7 @@ import * as sgMail from "@sendgrid/mail";
 import {Client as SendGridClient} from "@sendgrid/client";
 import RequestOptions from "@sendgrid/helpers/classes/request";
 
-export function sendEmail(params: {
+export interface EmailProps {
   emailTitle: string;
   emailBody: string;
   subject: string;
@@ -10,7 +10,8 @@ export function sendEmail(params: {
   to: string;
   buttonUrl: string;
   buttonLabel: string;
-}) {
+}
+export function sendEmail(params: EmailProps) {
   if (!process.env.SENDGRID_API_KEY) {
     console.error("No API key found!");
     return;

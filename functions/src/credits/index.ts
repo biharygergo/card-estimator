@@ -3,6 +3,8 @@ import {Credit, BundleName, CreditBundle, BundleWithCredits} from "../types";
 import * as moment from "moment";
 import {getAuth} from "firebase-admin/auth";
 import {isPremiumSubscriber} from "../shared/customClaims";
+import {sendEmail} from "../email";
+import {ALMOST_OUT_OF_CREDITS, OUT_OF_CREDITS} from "./emails";
 
 const CREDITS_COLLECTION = "credits";
 const BUNDLES_COLLECTION = "bundles";
@@ -103,6 +105,16 @@ export async function updateCreditUsage(
     userId: string,
     roomId: string
 ) {
+  const user = await getAuth().getUser(userId);
+  if (user.email) {
+    const creditCountBefore = (await getValidCredits(userId)).length;
+    if (creditCountBefore === 2) {
+      await sendEmail({...ALMOST_OUT_OF_CREDITS, to: user.email});
+    }
+    if (creditCountBefore === 1) {
+      await sendEmail({...OUT_OF_CREDITS, to: user.email});
+    }
+  }
   return getFirestore()
       .doc(`userDetails/${userId}/${CREDITS_COLLECTION}/${creditId}`)
       .update({usedForRoomId: roomId});

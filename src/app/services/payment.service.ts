@@ -188,7 +188,7 @@ export class PaymentService {
       cancel_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=cancel`,
       mode: 'subscription',
       success_url: `${window.location.origin}${window.location.pathname}?subscriptionResult=success`,
-      trial_from_plan: true,
+      trial_from_plan: false,
     });
 
     return new Promise((resolve, rejet) => {

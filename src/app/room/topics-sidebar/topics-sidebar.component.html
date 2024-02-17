@@ -137,7 +137,7 @@
                 {{ round.topic }}
               </h3>
               <mat-expansion-panel
-                class="flat-accordion"
+                class="flat-accordion mat-elevation-z"
                 (click)="$event.stopPropagation()"
                 #detailsPanel
                 >
@@ -160,7 +160,7 @@
                       "
                       >
                     </app-round-results>
-                    <h3 matSubheader>Notes</h3>
+                    <h3 matSubheader class="notes-subheader">Notes</h3>
                     <div class="note-wrapper">
                       <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
                     </div>

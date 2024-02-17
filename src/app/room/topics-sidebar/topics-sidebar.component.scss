@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-top: 0;
 }
 
 .sidenav-header {
@@ -20,7 +21,6 @@
 }
 
 .sidenav-actions {
-  background: var(--light-background-color);
   padding: 0.5rem;
   padding-bottom: 0;
   display: flex;
@@ -43,7 +43,6 @@
 
 .add-round-button {
   width: 100%;
-  background-color: var(--main-color);
 
   &:disabled {
     color: white;
@@ -161,4 +160,10 @@
 .round-history-container.cdk-drop-list-dragging
   .topic-card:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.notes-subheader {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }

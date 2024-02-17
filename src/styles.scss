@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@use "@angular/material" as mat;
+@use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 @import "./app/common.scss";
 
 :root {
@@ -26,13 +27,12 @@
   --light-background: white;
 }
 
-$my-primary: mat.define-palette(mat.$indigo-palette, 500);
-$my-primary-dark: mat.define-palette(mat.$indigo-palette, 400);
+/* $my-primary: matx.define-palette(matx.$m3-blue-palette, 500);
+$my-primary-dark: matx.define-palette(matx.$m3-blue-palette, 400);
 
-$my-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
-$my-accent-dark: mat.define-palette(mat.$orange-palette, A200, A100, A400);
+$my-accent: matx.define-palette(matx.$m3-orange-palette, A200, A100, A400);
 
-$my-theme: mat.define-light-theme(
+$my-theme: matx.define-light-theme(
   (
     color: (
       primary: $my-primary,
@@ -41,17 +41,64 @@ $my-theme: mat.define-light-theme(
   )
 );
 
-$my-dark-theme: mat.define-dark-theme(
+$my-dark-theme: matx.define-dark-theme(
   (
     color: (
       primary: $my-primary-dark,
       accent: $my-accent-dark,
     ),
   )
-);
+); */
+
+$m3-dark-theme: matx.define-theme((
+  color: (
+    theme-type: dark,
+    primary: matx.$m3-azure-palette,
+    tertiary: matx.$m3-orange-palette,
+  )
+));
+
+$m3-light-theme: matx.define-theme((
+  color: (
+    primary: matx.$m3-azure-palette,
+    tertiary: matx.$m3-orange-palette,
+    )
+));
 
 @include mat.core();
-@include mat.all-component-themes($my-theme);
+
+.default-theme {
+  @include mat.all-component-colors($m3-light-theme);
+}
+
+.dark-theme {
+  @include mat.all-component-colors($m3-dark-theme);
+  --background-dark: black;
+  --main-dark-color: black;
+  --main-color: #141218;
+  --light-background: #1f1f1f;
+  --light-background-color: #1f1f1f;
+  --on-light-background-color: #3d3d3d;
+  --on-light-background-color-2: #2c2c2c;
+  --on-light-background-color-3: #1f1f1f;
+  --blue-background-color: #1f1f1f;
+  --on-light-background-color-4: black;
+  --on-light-background-color-5: #3d3d3d;
+  --text-on-white: #efefef;
+  --title-on-dark: #efefef;
+  --subtitle-on-dark: white;
+  --paragraph-on-premium: white;
+  --ad-background: var(--mdc-dialog-container-color);
+
+  &.running-in-teams {
+    --background-dark: #1f1f1f;
+  }
+
+  &.running-in-zoom {
+    --background-dark: #242424;
+    --main-color: #242424;
+  }
+}
 
 * {
   box-sizing: border-box;
@@ -61,41 +108,14 @@ html,
 body {
   height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  @include mat.all-component-themes($m3-light-theme);
+
 }
 
 body {
   margin: 0;
   background: var(--background-dark);
   transition: background 200ms linear;
-
-  &.dark {
-    @include mat.all-component-colors($my-dark-theme);
-    --background-dark: black;
-    --main-dark-color: black;
-    --main-color: #1f1f1f;
-    --light-background: #1f1f1f;
-    --light-background-color: #1f1f1f;
-    --on-light-background-color: #3d3d3d;
-    --on-light-background-color-2: #1f1f1f;
-    --on-light-background-color-3: #1f1f1f;
-    --blue-background-color: #1f1f1f;
-    --on-light-background-color-4: black;
-    --on-light-background-color-5: #3d3d3d;
-    --text-on-white: #efefef;
-    --title-on-dark: #efefef;
-    --subtitle-on-dark: white;
-    --paragraph-on-premium: white;
-    --ad-background: #3d3d3d;
-
-    &.running-in-teams {
-      --background-dark: #1f1f1f;
-    }
-
-    &.running-in-zoom {
-      --background-dark: #242424;
-      --main-color: #242424;
-    }
-  }
 }
 
 .mat-mdc-menu-panel {
@@ -244,6 +264,9 @@ body {
 
 .responsive-label-button {
   @media screen and (max-width: 500px) {
+    --mat-outlined-button-icon-offset: 0;
+    --mat-filled-button-icon-offset: 0;
+
     .mdc-button__label {
       display: none;
     }
@@ -253,6 +276,9 @@ body {
   }
 
   &.forced {
+    --mat-outlined-button-icon-offset: 0;
+    --mat-filled-button-icon-offset: 0;
+
     .mdc-button__label {
       display: none;
     }
@@ -368,6 +394,7 @@ body {
 
 .full-screen-modal {
   border-radius: 0;
+  --mdc-dialog-container-shape: 0;
 }
 
 .snackbar-error {
@@ -441,8 +468,16 @@ body {
     font-size: 1.3rem;
     font-weight: 400;
     will-change: transform;
-    transition: transform 0.2s 50ms ease-in-out;
+    transition: transform 0.2s 50ms ease-in-out, background 100ms linear;
     margin: 0 0.3rem;
+    --mdc-protected-button-container-shape: 8px;
+    // --mdc-protected-button-label-text-color: black;
+
+    &.selected {
+      --mdc-protected-button-container-color: var(--mdc-filled-button-container-color);
+      --mdc-protected-button-label-text-color: var(--mdc-filled-button-label-text-color);
+    }
+
     @media screen and (max-width: 800px) {
       margin: initial;
       min-width: 50px;
@@ -456,8 +491,8 @@ body {
       opacity: 0.8;
       color: #efefef;
 
-      &.mat-accent {
-        background-color: var(--accent-color);
+      &.selected {
+        --mdc-protected-button-disabled-container-color: var(--mdc-filled-button-container-color);
       }
     }
 
@@ -465,4 +500,8 @@ body {
       transform: translate3d(2px, -10px, 0px) rotate(-5deg);
     }
   }
+}
+
+.mat-mdc-menu-panel {
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
 }

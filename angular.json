@@ -32,7 +32,6 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/robots.txt", "src/assets"],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": ["node_modules/marked/marked.min.js"],
@@ -166,7 +165,6 @@
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": []

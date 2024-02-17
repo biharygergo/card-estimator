@@ -33,7 +33,7 @@
 
 .controls {
   flex: 1 0 40%;
-  min-width: 200px;
+  min-width: 210px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -67,4 +67,8 @@
     align-items: center;
     justify-content: center;
     padding: 8px 4px;
+}
+
+#timer-progress-bar.almost-done {
+  --mdc-linear-progress-active-indicator-color: var(--accent-color);
 }

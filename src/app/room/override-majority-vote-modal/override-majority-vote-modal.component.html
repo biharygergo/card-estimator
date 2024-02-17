@@ -8,13 +8,8 @@
         class="estimator-button"
         [id]="'override-vote-button-' + item.key"
         (click)="setOverride(item.key)"
-        [color]="
-          +item.key === viewModel.majorityOverride
-            ? 'accent'
-            : +item.key === viewModel.majority
-            ? 'primary'
-            : ''
-        "
+        [class.majority-override]="+item.key === viewModel.majorityOverride"
+        [class.majority]="+item.key === viewModel.majority"
       >
         {{ item.value }}
       </button>

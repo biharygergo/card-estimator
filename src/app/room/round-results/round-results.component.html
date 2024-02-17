@@ -29,7 +29,7 @@
             }
             <mat-chip
               [highlighted]="room?.rounds?.[currentRound]?.majorityOverride != null"
-              color="accent"
+              [class.overridden]="room?.rounds?.[currentRound]?.majorityOverride != null"
               id="majority-vote-chip"
             >
               @if (permissionsService.canOverrideMajorityVote() | async) {

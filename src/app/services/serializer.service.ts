@@ -16,6 +16,7 @@ export type ExportedDataRow = {
     [id: string]: string;
   };
   mostPopularVote: string;
+  mostPopularVoteKey: string;
   mostPopularVoteOverride?: string;
   mostPopularVoteOrOverride: string;
   average: string;
@@ -55,6 +56,7 @@ export function createRoundStatistics(
     (estimate) => estimate !== null
   );
   let mostPopularVoteCard = '';
+  let mostPopularVoteKey = '';
 
   if (estimateValues.length) {
     const votesCount: { [estimateKey: string]: number } = estimateValues.reduce(
@@ -73,6 +75,7 @@ export function createRoundStatistics(
     mostPopularVoteCard = converter
       .transform(mostPopularVoteEntry[0], cardSet, 'exact')
       .toString();
+    mostPopularVoteKey = mostPopularVoteEntry[0];
   }
 
   const average = estimateValues.length
@@ -91,6 +94,7 @@ export function createRoundStatistics(
       average === undefined
         ? ''
         : converter.transform(average, cardSet, 'rounded').toString(),
+    mostPopularVoteKey,
     mostPopularVote: mostPopularVoteCard,
     mostPopularVoteOverride,
     mostPopularVoteOrOverride: mostPopularVoteOverride ?? mostPopularVoteCard,

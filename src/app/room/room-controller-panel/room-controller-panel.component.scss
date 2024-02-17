@@ -9,9 +9,6 @@
   button {
     height: 50px;
     flex: 1 0 100%;
-    &:disabled {
-      background-color: lightgray;
-    }
   }
 }
 

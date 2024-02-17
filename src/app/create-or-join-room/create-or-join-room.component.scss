@@ -23,7 +23,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
 .terms {
   padding-top: 16px;
-
+  color: var(--mat-card-subtitle-text-color);
   a {
     color: var(--title-on-dark);
   }
@@ -101,7 +101,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 .logo {
   width: 70px;
   height: 70px;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
     rgba(5, 18, 37, 0.24) 0px 0px 8px;
   &.main-logo {
@@ -197,4 +197,9 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
 .create-room-loading {
   margin-top: 1rem;
+}
+
+.card-subheader {
+  color: var(--mat-card-subtitle-text-color);
+  margin-top: 0;
 }

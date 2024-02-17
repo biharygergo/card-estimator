@@ -4,7 +4,7 @@
       <mat-progress-bar
         mode="determinate"
         [value]="progressValue"
-        [color]="durationLeft < 10 ? 'accent' : 'primary'"
+        [class.almost-done]="durationLeft < 10"
         id="timer-progress-bar"
       ></mat-progress-bar>
       <span class="time-left">

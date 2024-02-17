@@ -17,22 +17,12 @@
 }
 
 .role-option {
-  background: transparent;
-  border: 1px solid;
-  // --mdc-chip-label-text-color: black !important;
-  // --mdc-chip-with-icon-selected-icon-color: black !important;
   font-weight: 500;
 
   &.mat-mdc-chip-selected {
-    --mdc-chip-label-text-color: black !important;
-    --mdc-chip-with-icon-selected-icon-color: black !important;
-    --mdc-chip-elevated-disabled-container-color: #d4e3c4 !important;
-    background: #d4e3c4 !important;
-    border: none !important;
   }
 
   &.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
-    opacity: 0.6;
   }
 }
 
@@ -40,6 +30,11 @@
   width: 100%;
 }
 
+.member-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 // TODO: Move this to a shared stylesheet
 .member {
   display: flex !important;
@@ -48,6 +43,7 @@
   align-items: center;
   margin-bottom: 0 !important;
   flex-wrap: wrap;
+  margin-top: 0;
 }
 
 .member-name {

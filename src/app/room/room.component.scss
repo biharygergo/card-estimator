@@ -28,7 +28,6 @@
 
 .topics-sidenav {
   width: min(90%, 450px);
-  background: var(--light-background-color);
 }
 
 .room-container {
@@ -112,8 +111,9 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 0;
+    margin: 0;
     overflow-wrap: break-word;
+    font-size: 1.3rem;
 
     button {
       flex-shrink: 0;

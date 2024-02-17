@@ -4,8 +4,8 @@ import { ConfigService } from './config.service';
 import { map } from 'rxjs/operators';
 
 export enum Theme {
-  DARK = 'dark',
-  DEFAULT = 'default',
+  DARK = 'dark-theme',
+  DEFAULT = 'default-theme',
 }
 
 @Injectable({

@@ -49,6 +49,7 @@
     font-size: 0.9rem;
     margin-bottom: 0;
     font-weight: 500;
+    margin-top: 0;
 
     &.standalone {
       margin-bottom: 0.5rem;
@@ -58,8 +59,8 @@
   .rectangular-badge {
     background: #e1e2ec;
     border-radius: 4px;
-    padding: 0rem 0.5rem;
-    font-size: 0.7rem;
+    padding: 0.1rem 0.6rem;
+    font-size: 0.8rem;
   }
 
   .rich-topic-buttons {

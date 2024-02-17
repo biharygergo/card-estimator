@@ -22,6 +22,7 @@ mat-chip-set {
   mat-chip {
     &.consensus {
       background: var(--accent-color);
+      --mdc-chip-outline-color: var(--accent-color);
 
       strong {
         color: white;
@@ -29,8 +30,8 @@ mat-chip-set {
     }
 
     &.voter {
-      background: #d9e2ff;
-      --mdc-chip-label-text-color: black;
+      background: var(--mdc-chip-elevated-selected-container-color);
+    --mdc-chip-label-text-color: var(--mdc-chip-elevated-selected-text-color);
     }
 
     &.vote {
@@ -41,7 +42,10 @@ mat-chip-set {
 }
 
 .subheader {
+  margin-top: 0;
   font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
 mat-list-item.statistic-line {
@@ -57,6 +61,9 @@ mat-list-item.statistic-line {
   padding: 4px;
   flex-wrap: wrap;
   margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
 
   .statistic-title {
     display: flex;
@@ -149,7 +156,6 @@ mat-list-item.statistic-line {
       }
 
       .member-options-button {
-
         ::ng-deep {
           mat-icon {
             height: 20px;
@@ -253,4 +259,11 @@ mat-list-item.statistic-line {
       color: #345ca8;
     }
   }
+}
+
+#majority-vote-chip.overridden {
+  background: var(--accent-color);
+  --mdc-chip-label-text-color: black;
+  --mdc-chip-with-trailing-icon-trailing-icon-color: black;
+  --mdc-chip-outline-color: var(--accent-color);
 }

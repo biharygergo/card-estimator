@@ -26,7 +26,7 @@
               mat-raised-button
               class="estimator-button"
               (click)="setEstimate(item.key)"
-              [color]="+item.key === currentEstimate && 'accent'"
+              [class.selected]="+item.key === currentEstimate"
               [disabled]="
               !(permissionsService.canVote() | async) ||
               (room?.rounds)[currentRound]?.show_results
@@ -42,7 +42,7 @@
               mat-raised-button
               class="estimator-button pass-option-button"
               (click)="setWildcard()"
-              [color]="currentEstimate === null && 'accent'"
+              [class.selected]="currentEstimate === null"
               [disabled]="
               !(permissionsService.canVote() | async) ||
               (room?.rounds)[currentRound]?.show_results

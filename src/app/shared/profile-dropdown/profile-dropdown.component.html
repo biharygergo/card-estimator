@@ -54,12 +54,12 @@
       <mat-icon>public</mat-icon>
       <span>Open in browser</span>
     </button>
-    } @if (themeService.currentTheme === 'dark') {
+    } @if (themeService.currentTheme === 'dark-theme') {
     <button mat-menu-item (click)="toggleDarkMode()">
       <mat-icon>light_mode</mat-icon>
       <span>Light mode</span>
     </button>
-    } @if (themeService.currentTheme === 'default') {
+    } @if (themeService.currentTheme === 'default-theme') {
     <button mat-menu-item (click)="toggleDarkMode()">
       <mat-icon>dark_mode</mat-icon>
       <span>Dark mode</span>

@@ -34,7 +34,7 @@
     padding: 3rem 0;
     z-index: 2;
 
-    a {
+    a:not(.start-planning-btn) {
       color: white;
     }
 
@@ -42,7 +42,7 @@
       font-size: 2rem;
       line-height: 2.8rem;
       font-weight: bold;
-      margin-bottom: 0;
+      margin: 0;
     }
 
     .header-description {
@@ -50,51 +50,16 @@
       line-height: 1.2rem;
       font-weight: 500;
       margin-bottom: 0.5rem;
+      margin-top: 0;
     }
 
     .start-planning-btn {
       padding: 0.5rem 3rem;
       height: 50px;
       font-size: 1rem;
-      color: #345ca8;
+      --mdc-filled-button-container-color: white;
+      --mdc-filled-button-label-text-color: var(--main-dark-color);
       margin-bottom: 16px;
-    }
-
-    .integrations {
-      ul {
-        list-style-type: none;
-        padding-inline-start: 0;
-        display: flex;
-        align-items: center;
-
-        li {
-          &:not(:first-child) {
-            margin-left: 0.7rem;
-          }
-
-          img:not(.browsers) {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-          }
-
-          .browsers {
-            height: 35px;
-            width: 120px;
-            object-fit: contain;
-          }
-
-          .browsers-button {
-            height: unset;
-            padding: 0.5rem 1rem;
-            border-color: #4d7dc0;
-            .mdc-button__label {
-              display: flex;
-              align-items: center;
-            }
-          }
-        }
-      }
     }
 
     .used-by {
@@ -129,6 +94,11 @@
       left: 50%;
       width: 65%;
     }
+  }
+
+  .header-meta {
+    font-size: 0.9rem;
+    margin-top: 0;
   }
 
   @media screen and (max-width: 800px) {
@@ -303,6 +273,7 @@
           font-weight: bold;
           position: relative;
           z-index: 1;
+          margin-top: 0;
         }
 
         img {
@@ -418,6 +389,9 @@
     display: flex;
     justify-content: center;
     color: #bfc6dc;
+    --mdc-tab-indicator-active-indicator-color: white;
+    --mat-tab-header-active-focus-indicator-color: white;
+    
     .mdc-tab {
       .mdc-tab__text-label {
         color: #bfc6dc;

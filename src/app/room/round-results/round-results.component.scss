@@ -31,7 +31,10 @@ mat-chip-set {
 
     &.voter {
       background: var(--mdc-chip-elevated-selected-container-color);
-    --mdc-chip-label-text-color: var(--mdc-chip-elevated-selected-text-color);
+      --mdc-chip-label-text-color: var(--mdc-chip-elevated-selected-text-color);
+      --mdc-chip-outline-color: var(
+        --mdc-chip-elevated-selected-container-color
+      );
     }
 
     &.vote {

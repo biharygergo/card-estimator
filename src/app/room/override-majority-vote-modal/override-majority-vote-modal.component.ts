@@ -73,12 +73,12 @@ export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
             this.dialogData.roundId,
             room
           );
-          const majority = stats.mostPopularVote;
+          const majority = stats.mostPopularVoteKey;
           const majorityOverride =
             room.rounds[this.dialogData.roundId]?.majorityOverride === undefined
               ? null
               : room.rounds[this.dialogData.roundId]?.majorityOverride;
-
+          
           return {
             majority: majority ? +majority : undefined,
             majorityOverride,

@@ -99,6 +99,7 @@ main {
   font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;
+  margin-top: 0;
 }
 
 .title {
@@ -106,6 +107,7 @@ main {
   font-weight: 700;
   font-size: 1.5rem;
   line-height: 2.3rem;
+  margin-top: 0;
 
   &.small {
     max-width: 500px;

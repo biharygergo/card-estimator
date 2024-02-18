@@ -88,9 +88,6 @@ export class RoomResolver {
           error instanceof NotLoggedInError ||
           error?.code === 'permission-denied'
         ) {
-          this.showMessage(
-            'You have not joined this room before. Join as an estimator or observer now!'
-          );
           const roomId = route.paramMap.get('roomId');
           this.router.navigate(['join'], { queryParams: { roomId, error: 1 } });
         } else {

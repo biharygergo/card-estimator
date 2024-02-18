@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { summaryModalCreator } from '../summary-modal/summary-modal.component';
 import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-topics-sidebar',
@@ -25,7 +26,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class TopicsSidebarComponent implements OnInit {
   @Input() room: Room;
-  @Input({required: true}) room$: Observable<Room>;
+  @Input({ required: true }) room$: Observable<Room>;
   @Input() rounds: Round[];
   @Input() currentRound: number;
   @Input() roundStatistics: RoundStatistics[];
@@ -44,6 +45,7 @@ export class TopicsSidebarComponent implements OnInit {
     private estimatorService: EstimatorService,
     private readonly dialog: MatDialog,
     public readonly permissionsService: PermissionsService,
+    private readonly confirmDialogService: ConfirmDialogService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -54,9 +56,16 @@ export class TopicsSidebarComponent implements OnInit {
     this.serializer.exportRoomAsCsv(this.room);
   }
 
-  revoteRound(roundNumber: number) {
+  async revoteRound(roundNumber: number) {
     this.analytics.logClickedReVote();
-    this.estimatorService.setActiveRound(this.room, roundNumber, true);
+    if (
+      await this.confirmDialogService.openConfirmationDialog({
+        title: 'Are you sure?',
+        content: 'This will clear all votes cast in this round.',
+      })
+    ) {
+      this.estimatorService.setActiveRound(this.room, roundNumber, true);
+    }
   }
 
   addRound() {
@@ -67,8 +76,15 @@ export class TopicsSidebarComponent implements OnInit {
     }, 100);
   }
 
-  deleteRound(roundNumber: number) {
-    this.estimatorService.removeRound(this.room, roundNumber);
+  async deleteRound(roundNumber: number) {
+    if (
+      await this.confirmDialogService.openConfirmationDialog({
+        title: 'Are you sure?',
+        content: 'This will delete this round and all associated votes',
+      })
+    ) {
+      this.estimatorService.removeRound(this.room, roundNumber);
+    }
   }
 
   cancelAddingRound() {

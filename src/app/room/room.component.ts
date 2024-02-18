@@ -330,6 +330,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.openFeedbackSnackbar();
+
+
     this.roomDataService.onPermissionsUpdated$
       .pipe(takeUntil(this.destroy))
       .subscribe(([_permissions, room]) => {
@@ -505,6 +508,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.snackBar
         .openFromComponent(StarRatingComponent, {
           horizontalPosition: 'right',
+          panelClass: 'feedback-panel'
         })
         .onAction()
         .pipe(takeUntil(this.destroy))

@@ -4,6 +4,7 @@
   padding: 0.5rem;
   gap: 0.5rem;
   width: 400px;
+  color: var(--mat-card-subtitle-text-color);
 
   @media only screen and (max-width: 500px) {
     width: unset;

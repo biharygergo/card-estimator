@@ -14,6 +14,12 @@
       plan. When you love using the app, easily top up your credits or go
       unlimited. No hidden fees, no surprises.
     </p>
+    <div class="currency-selector">
+      <mat-button-toggle-group aria-label="Currency" [formControl]="currencyControl">
+        <mat-button-toggle value="usd">USD</mat-button-toggle>
+        <mat-button-toggle value="eur">EUR</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
     <mat-tab-group class="plan-selector">
       <mat-tab label="Pay-as-you-go">
         <div class="options-wrapper">
@@ -39,7 +45,7 @@
               {{ plan.description }}
             </p>
             <div class="plan-price">
-              <span class="price-amount">€{{ plan.priceEuro }}</span>
+              <span class="price-amount">{{currencyControl.value === 'eur' ? '€' : '$'}}{{ plan.priceEuro }}</span>
               <span class="price-description">{{ plan.priceDescription }}</span>
             </div>
             <button
@@ -80,8 +86,8 @@
               personal customer support. No ads.
             </p>
             <div class="plan-price">
-              <span class="price-amount">€15</span>
-              <span class="price-description">billed monthly or 150€/year</span>
+              <span class="price-amount">{{currencyControl.value === 'eur' ? '€' : '$'}}15</span>
+              <span class="price-description">billed monthly or 150{{currencyControl.value === 'eur' ? '€' : '$'}}/year</span>
             </div>
             <button
               mat-flat-button

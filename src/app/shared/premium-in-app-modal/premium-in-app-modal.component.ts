@@ -33,6 +33,7 @@ export class PremiumInAppModalComponent {
     this.isRedirecting = true;
     try {
       await this.paymentService.startSubscriptionToPremium(
+        'eur',
         environment.powerUserPromoCode
       );
     } catch (e) {

@@ -10,6 +10,8 @@ import { BundleName } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
@@ -103,7 +105,9 @@ const PLANS: PurchaseOption[] = [
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    NgOptimizedImage
+    MatButtonToggleModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
   ],
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss',
@@ -115,7 +119,7 @@ export class PricingTableComponent {
   isLoadingStripe = false;
   isLoadingStripeForBundle: string;
   isPremium$ = this.paymentService.isPremiumSubscriber();
-
+  currencyControl = new FormControl<'eur'|'usd'>('usd', {nonNullable: true});
   constructor(
     private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
@@ -126,12 +130,12 @@ export class PricingTableComponent {
   async buyBundle(bundleName: BundleName) {
     this.isLoadingStripeForBundle = bundleName;
     // this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
-    await this.paymentService.buyBundle(bundleName);
+    await this.paymentService.buyBundle(bundleName, this.currencyControl.value);
   }
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
-    await this.paymentService.startSubscriptionToPremium();
+    await this.paymentService.startSubscriptionToPremium(this.currencyControl.value);
   }
 }

@@ -13,8 +13,12 @@ export const environment = {
   recaptcha3SiteKey: '6Lf5e-weAAAAAIkZ1MWmXR9xxHkv2jPQda325CRm',
   useEmulators: false,
   premiumPriceId: 'price_1MkYV6CG1hllVHncXLgIFXLK',
+  premiumPriceIdUsd: 'price_1Ol6WDCG1hllVHnchXIcnKRk',
   powerUserPromoCode: 'promo_1O436TCG1hllVHncuVzCCRoD',
   smallBundlePriceId: 'price_1OMHDkCG1hllVHncXUhbbxLw',
+  smallBundlePriceIdUsd: 'price_1Ol6PcCG1hllVHnc1NcrFD40',
   largeBundlePriceId: 'price_1OMHEACG1hllVHncfpLi6Azq',
+  largeBundlePriceIdUsd: 'price_1Ol6UUCG1hllVHncNq1yCyDe',
   megaBundlePriceId: 'price_1OMHErCG1hllVHncExHhvwEg',
+  megaBundlePriceIdUsd: 'price_1Ol6UtCG1hllVHncjHx0qQF4',
 };

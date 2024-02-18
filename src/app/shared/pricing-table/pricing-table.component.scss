@@ -50,7 +50,7 @@
   padding: 3rem;
   justify-content: center;
 
-  @include extraSmallScreen {
+  @include smallScreen {
     flex-direction: column;
     padding: 1rem;
     padding-top: 2rem;
@@ -62,7 +62,7 @@
     flex: 1 0;
     max-width: 200px;
 
-    @include extraSmallScreen() {
+    @include smallScreen() {
       flex-direction: row;
       max-width: unset;
       flex-wrap: wrap;
@@ -70,7 +70,7 @@
     }
 
     .plan-image-and-title {
-      @include extraSmallScreen() {
+      @include smallScreen() {
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -93,7 +93,7 @@
         object-fit: cover;
       }
 
-      @include extraSmallScreen {
+      @include smallScreen {
         width: 50px;
         height: 50px;
         flex-shrink: 0;
@@ -199,4 +199,13 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
+}
+
+.currency-selector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  mat-button-toggle {
+    min-width: 100px;
+  }
 }

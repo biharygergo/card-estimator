@@ -51,19 +51,25 @@ export class PaymentService {
     private readonly confirmService: ConfirmDialogService
   ) {}
 
-  private getPriceIdForBundle(bundleName: BundleName) {
+  private getPriceIdForBundle(bundleName: BundleName, currency: 'eur' | 'usd') {
     switch (bundleName) {
       case BundleName.SMALL_BUNDLE:
-        return environment.smallBundlePriceId;
+        return currency === 'eur'
+          ? environment.smallBundlePriceId
+          : environment.smallBundlePriceIdUsd;
       case BundleName.LARGE_BUNDLE:
-        return environment.largeBundlePriceId;
+        return currency === 'eur'
+          ? environment.largeBundlePriceId
+          : environment.largeBundlePriceIdUsd;
       case BundleName.MEGA_BUNDLE:
-        return environment.megaBundlePriceId;
+        return currency === 'eur'
+          ? environment.megaBundlePriceId
+          : environment.megaBundlePriceIdUsd;
       default:
         throw new Error(`No price id for ${bundleName}.`);
     }
   }
-  async buyBundle(bundleName: BundleName) {
+  async buyBundle(bundleName: BundleName, currency: 'eur' | 'usd') {
     const passes = await this.checkPrerequisites(
       'Before you buy a bundle, please log in or create a permanent account',
       'Purchasing a bundle requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the purchase flow.'
@@ -80,7 +86,7 @@ export class PaymentService {
     );
 
     const sessionRef = await addDoc(checkoutSessionsCollection, {
-      price: this.getPriceIdForBundle(bundleName),
+      price: this.getPriceIdForBundle(bundleName, currency),
       automatic_tax: true,
       allow_promotion_codes: true,
       tax_id_collection: true,
@@ -163,7 +169,10 @@ export class PaymentService {
     return true;
   }
 
-  async startSubscriptionToPremium(promotionCode?: string) {
+  async startSubscriptionToPremium(
+    currency: 'usd' | 'eur',
+    promotionCode?: string
+  ) {
     const passes = await this.checkPrerequisites(
       'Before you subscribe to Premium, please log in or create a permanent account',
       'Signing up for a Premium subscription requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the signup flow.'
@@ -181,7 +190,10 @@ export class PaymentService {
     );
 
     const sessionRef = await addDoc(checkoutSessionsCollection, {
-      price: environment.premiumPriceId, // Premium plan
+      price:
+        currency === 'eur'
+          ? environment.premiumPriceId
+          : environment.premiumPriceIdUsd, // Premium plan
       automatic_tax: true,
       allow_promotion_codes: true,
       tax_id_collection: true,
@@ -316,7 +328,8 @@ export class PaymentService {
 
     const availableCredits = credits.filter(
       (c) =>
-        !c.usedForRoomId && (!c.expiresAt || c.expiresAt.toDate().getTime() > Date.now())
+        !c.usedForRoomId &&
+        (!c.expiresAt || c.expiresAt.toDate().getTime() > Date.now())
     );
 
     return { credits, bundles, availableCredits };

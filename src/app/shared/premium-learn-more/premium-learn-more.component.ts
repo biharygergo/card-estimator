@@ -39,7 +39,7 @@ export class PremiumLearnMoreComponent {
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
-    await this.paymentService.startSubscriptionToPremium(this.promotionCodeFromParams);
+    await this.paymentService.startSubscriptionToPremium('eur', this.promotionCodeFromParams);
   }
 
   getQuote() {

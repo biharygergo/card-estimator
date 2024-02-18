@@ -330,9 +330,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.openFeedbackSnackbar();
-
-
     this.roomDataService.onPermissionsUpdated$
       .pipe(takeUntil(this.destroy))
       .subscribe(([_permissions, room]) => {

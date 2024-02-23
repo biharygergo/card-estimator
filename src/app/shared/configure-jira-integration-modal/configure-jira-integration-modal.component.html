@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Configure integration</h2>
+<mat-dialog-content>
+  <p>
+    We'll automatically try to determine the field where story points should be
+    saved. If the default one does not fit, you can set a different field below.
+    Make sure the custom field is numeric.
+  </p>
+  <mat-form-field class="custom-field-control">
+    <mat-label>Custom field ID</mat-label>
+    <input
+      matInput
+      [formControl]="customFieldIdControl"
+      placeholder="customfield_10040"
+    />
+    <mat-hint>Will reset to default if left empty</mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button (click)="onSave()">Save</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</mat-dialog-actions>

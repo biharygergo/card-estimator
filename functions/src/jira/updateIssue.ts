@@ -39,7 +39,10 @@ export async function updateIssue(request: CallableRequest) {
         (field) => field.name === "Story Points"
     )?.id;
 
-    fieldId = nextGenStoryPointsFieldId ?? classicStoryPointsFieldId;
+    fieldId =
+      activeResource.storyPointsCustomFieldId ||
+      nextGenStoryPointsFieldId ||
+      classicStoryPointsFieldId;
 
     const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${updateRequest.issueId}`;
     const requestData = {
@@ -65,7 +68,7 @@ export async function updateIssue(request: CallableRequest) {
       if (JSON.stringify(errors).includes("appropriate screen")) {
         throw new functions.https.HttpsError(
             "not-found",
-            `The 'Story points' (id: ${fieldId}) field can not be set. Make sure it is added to the 'Edit issue' screen in your JIRA project. Read more: https://support.atlassian.com/jira-cloud-administration/docs/add-a-custom-field-to-a-screen/`
+            `The 'Story points' or custom field (id: ${fieldId}) can not be set. Is it added to the 'Edit issue' screen in your JIRA project? https://support.atlassian.com/jira-cloud-administration/docs/add-a-custom-field-to-a-screen/`
         );
       } else {
         throw new functions.https.HttpsError(

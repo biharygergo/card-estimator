@@ -16,13 +16,13 @@
           </button>
         }
         <div
-          matTooltip="Save story points to Jira"
+          matTooltip="Save majority vote to Jira"
           >
           @if (!enableEditing) {
             <button
               (click)="saveEstimateToJira()"
               mat-icon-button
-              aria-label="Save story points to Jira"
+              aria-label="Save majority vote to Jira"
               [disabled]="isSavingToJira"
               >
               <mat-icon>publish</mat-icon>

@@ -340,6 +340,7 @@ export type JiraResource = {
   scopes: string[];
   avatarUrl: string;
   active?: boolean;
+  storyPointsCustomFieldId?: string;
 };
 
 export type JiraIntegration = {

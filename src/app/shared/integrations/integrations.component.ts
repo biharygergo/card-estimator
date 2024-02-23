@@ -5,6 +5,8 @@ import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { JiraIntegration, JiraResource } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { configureJiraModalCreator } from '../configure-jira-integration-modal/configure-jira-integration-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export const integrationsModalCreator =
   (): ModalCreator<IntegrationsComponent> => [
@@ -30,7 +32,8 @@ export class IntegrationsComponent {
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly jiraService: JiraService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly dialog: MatDialog
   ) {}
 
   onJiraProjectSelected(resource: JiraResource) {
@@ -51,6 +54,10 @@ export class IntegrationsComponent {
           `${resource.url} has been set as the active project`
         );
       });
+  }
+
+  configureJiraResource(resource: JiraResource) {
+    this.dialog.open(...configureJiraModalCreator(resource));
   }
 
   onJiraProjectRemoveClicked(resource: JiraResource) {

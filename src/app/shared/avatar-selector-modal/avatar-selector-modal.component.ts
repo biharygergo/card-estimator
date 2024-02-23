@@ -24,6 +24,22 @@ import { groupBy } from 'lodash';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
+export function createModal<T>(
+  modalComponent: ComponentType<T>,
+  config: Partial<MatDialogConfig>
+): ModalCreator<T> {
+  return [
+    modalComponent,
+    {
+      width: '90%',
+      maxWidth: '600px',
+      maxHeight: '98vh',
+      panelClass: 'custom-dialog',
+      ...config,
+    },
+  ];
+}
+
 export interface AvatarDialogData {
   openAtTab?: 'profile' | 'avatar' | 'subscription';
 }

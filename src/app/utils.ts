@@ -43,6 +43,13 @@ export const isRunningInTeams = () => {
   );
 };
 
+export const isRunningInMeet = () => {
+  return (
+    typeof window !== 'undefined' &&
+    (window.location.search.includes('s=meet') || Cookies.get('runningInMeet'))
+  );
+};
+
 export const createHash = (str: string, seed = 0): string => {
   let h1 = 0xdeadbeef ^ seed,
     h2 = 0x41c6ce57 ^ seed;

@@ -1,16 +1,23 @@
 import { NgModule, InjectionToken } from '@angular/core';
-import { isRunningInWebex, isRunningInTeams, isRunningInZoom } from './utils';
+import {
+  isRunningInWebex,
+  isRunningInTeams,
+  isRunningInZoom,
+  isRunningInMeet,
+} from './utils';
 import { Platform } from './types';
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
 
 function getPlatform(): Platform {
   if (isRunningInZoom()) {
-    return 'zoom'
+    return 'zoom';
   } else if (isRunningInWebex()) {
     return 'webex';
   } else if (isRunningInTeams()) {
     return 'teams';
+  } else if (isRunningInMeet()) {
+    return 'meet';
   }
 
   return 'web';

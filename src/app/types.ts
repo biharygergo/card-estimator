@@ -73,7 +73,7 @@ export enum MemberStatus {
   REMOVED_FROM_ROOM = 'REMOVED_FROM_ROOM',
 }
 
-export type Platform = 'zoom' | 'webex' | 'teams' | 'web';
+export type Platform = 'zoom' | 'webex' | 'teams' | 'meet' | 'web';
 
 export interface Member {
   id: string;

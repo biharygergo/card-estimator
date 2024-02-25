@@ -224,6 +224,6 @@ export class RoomDataService {
     duration?: number | null;
   }) {
     this.toastService.showMessage(message);
-    this.router.navigate(['join']);
+    this.router.navigate(['join'], {queryParamsHandling: 'preserve'});
   }
 }

@@ -31,7 +31,7 @@ export class RoomResolver {
     private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private readonly permissionsService: PermissionsService,
+    private readonly permissionsService: PermissionsService
   ) {}
   resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(
@@ -82,18 +82,27 @@ export class RoomResolver {
           this.showMessage(
             'Room not found. Please check the room ID or create a new room.'
           );
-          this.router.navigate(['join'], { queryParams: { error: 1 } });
+          this.router.navigate(['join'], {
+            queryParams: { error: 1 },
+            queryParamsHandling: 'preserve',
+          });
         } else if (
           error instanceof MemberNotFoundError ||
           error instanceof NotLoggedInError ||
           error?.code === 'permission-denied'
         ) {
           const roomId = route.paramMap.get('roomId');
-          this.router.navigate(['join'], { queryParams: { roomId, error: 1 } });
+          this.router.navigate(['join'], {
+            queryParams: { roomId, error: 1 },
+            queryParamsHandling: 'preserve',
+          });
         } else {
           console.error(error);
           this.showMessage('Unable to join this room. Please try again later.');
-          this.router.navigate(['/'], { queryParams: { error: 1 } });
+          this.router.navigate(['/'], {
+            queryParams: { error: 1 },
+            queryParamsHandling: 'preserve',
+          });
         }
         return of(null);
       })

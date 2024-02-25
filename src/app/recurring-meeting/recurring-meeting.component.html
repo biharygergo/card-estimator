@@ -66,6 +66,7 @@
                   <a
                     mat-button
                     [routerLink]="'/room/' + state.roomId"
+                    queryParamsHandling="preserve"
                     >Join existing room</a
                     >
                   }
@@ -90,6 +91,7 @@
                     mat-flat-button
                     color="primary"
                     [routerLink]="'/room/' + state.roomId"
+                    queryParamsHandling="preserve"
                     >Continue to room</a
                     >
                   }

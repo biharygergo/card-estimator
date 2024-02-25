@@ -177,14 +177,13 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   async leaveRoom() {
     this.analytics.logClickedLeaveRoom();
     if (
-      this.config.runningIn === 'zoom' ||
-      (await this.confirmService.openConfirmationDialog({
+      await this.confirmService.openConfirmationDialog({
         title: 'Are you sure you want to leave early?',
         content:
           'Your votes will be saved and you can always rejoin from the "Previous sessions" page. See you soon!',
         positiveText: 'Leave room',
         negativeText: 'Cancel',
-      }))
+      })
     ) {
       if (this.estimatorService.activeMember) {
         await this.estimatorService.updateMemberStatus(
@@ -193,7 +192,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
           MemberStatus.LEFT_ROOM
         );
       }
-      this.router.navigate(['join']);
+      this.router.navigate(['join'], { queryParamsHandling: 'preserve' });
     }
   }
 

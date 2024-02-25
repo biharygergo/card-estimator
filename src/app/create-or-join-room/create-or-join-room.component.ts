@@ -4,7 +4,7 @@ import {
   EstimatorService,
   RoomNotFoundError,
 } from '../services/estimator.service';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule, Params } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Member,
@@ -319,6 +319,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (this.config.runningIn === 'meet') {
+      this.configService.setSessionCookie('runningInMeet', '1');
+    }
+
     this.onJoinRoomClicked
       .pipe(
         tap(() => {
@@ -355,7 +359,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       )
       .subscribe((success) => {
         if (success) {
-          this.router.navigate(['room', this.roomId.value]);
+          this.navigateToRoom(this.roomId.value)
         }
       });
 
@@ -442,7 +446,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.shouldAutoNavigateToRecentRoomInTeams$
       .pipe(takeUntil(this.destroy))
       .subscribe((room) => {
-        this.rejoinRoom(room.roomId);
+        this.navigateToRoom(room.roomId);
         this.snackBar.open(
           "You've been automatically redirected to your last room in Teams",
           undefined,
@@ -477,8 +481,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  rejoinRoom(roomId: string) {
-    this.router.navigate(['room', roomId]);
+  navigateToRoom(roomId: string, queryParams?: Params) {
+    this.router.navigate(['room', roomId], {queryParams, queryParamsHandling: 'preserve'});
   }
 
   showUnableToJoinRoom() {
@@ -507,7 +511,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     );
 
     this.analytics.logClickedCreateNewRoom();
-    return this.router.navigate(['room', room.roomId]);
+    return this.navigateToRoom(room.roomId);
   }
 
   onNameBlur() {

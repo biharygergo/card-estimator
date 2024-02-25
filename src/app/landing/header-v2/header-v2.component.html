@@ -1,5 +1,11 @@
 <nav [ngClass]="{ open: isOpen }">
   <div class="header-container">
+    @if(isEmbeddedApp) {
+    <button mat-flat-button (click)="goBack()">
+      <mat-icon>chevron_left</mat-icon>Back
+    </button>
+
+    } @if(!isEmbeddedApp) {
     <a routerLink="/" (click)="closeMenu()">
       <div class="logo-container">
         <picture>
@@ -59,6 +65,12 @@
               Microsoft Teams
             </div>
           </a>
+          <a [disabled]="true" mat-menu-item>
+            <div class="centered-menu-item" routerLinkActive="active">
+              <img class="integration-logo" src="/assets/meet_logo.png" />
+              Google Meet (coming soon)
+            </div>
+          </a>
           <a routerLink="/webex" mat-menu-item>
             <div class="centered-menu-item" routerLinkActive="active">
               <img class="integration-logo" src="/assets/webex_logo.png" />
@@ -94,5 +106,6 @@
     >
       <mat-icon>menu</mat-icon>
     </button>
+    }
   </div>
 </nav>

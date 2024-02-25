@@ -83,6 +83,7 @@ import { RoomDataService } from './room-data.service';
 import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 import { createRoundStatistics } from '../services/serializer.service';
+import { MeetApiService } from '../services/meet-api.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 
@@ -257,6 +258,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private zoomService: ZoomApiService,
     private readonly webexService: WebexApiService,
     private readonly teamsService: TeamsService,
+    private readonly meetService: MeetApiService,
     public readonly permissionsService: PermissionsService,
     public readonly paymentService: PaymentService,
     @Inject(APP_CONFIG) public config: AppConfig,
@@ -282,6 +284,9 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.config.runningIn === 'teams') {
       this.teamsService.configureApp();
     }
+    if (this.config.runningIn === 'meet') {
+      this.meetService.configureApp();
+    }
 
     this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
       this.room = room;
@@ -290,7 +295,10 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.activeMember$.subscribe((member) => {
       if (member?.status === MemberStatus.REMOVED_FROM_ROOM) {
-        this.router.navigate(['join'], { queryParams: { reason: 'removed' } });
+        this.router.navigate(['join'], {
+          queryParams: { reason: 'removed' },
+          queryParamsHandling: 'preserve',
+        });
       } else if (member?.type === MemberType.OBSERVER) {
         this.joinAsObserver();
       }
@@ -392,31 +400,28 @@ export class RoomComponent implements OnInit, OnDestroy {
           .subscribe();
       });
 
-    this.creditsAlert$
-      .pipe(takeUntil(this.destroy))
-      .subscribe((credits) => {
-        let message = '';
-        if (credits === 1) {
-          message =
-            'You have just 1 credit remaining. Top up your credits now!';
-        } else if (credits === 0) {
-          message =
-            'You ran out of credits. Top up your credits before your next planning session!';
-        }
+    this.creditsAlert$.pipe(takeUntil(this.destroy)).subscribe((credits) => {
+      let message = '';
+      if (credits === 1) {
+        message = 'You have just 1 credit remaining. Top up your credits now!';
+      } else if (credits === 0) {
+        message =
+          'You ran out of credits. Top up your credits before your next planning session!';
+      }
 
-        const ref = this.toastService.showMessage(
-          message,
-          10000,
-          'info',
-          'Top up credits'
-        );
-        ref
-          .onAction()
-          .pipe(take(1))
-          .subscribe(() => {
-            this.dialog.open(...pricingModalCreator());
-          });
-      });
+      const ref = this.toastService.showMessage(
+        message,
+        10000,
+        'info',
+        'Top up credits'
+      );
+      ref
+        .onAction()
+        .pipe(take(1))
+        .subscribe(() => {
+          this.dialog.open(...pricingModalCreator());
+        });
+    });
   }
 
   ngAfterViewInit() {
@@ -482,6 +487,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.router.navigate(['join'], {
             queryParams: { roomId: this.room.roomId },
+            queryParamsHandling: 'preserve',
           });
         });
     }
@@ -505,7 +511,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.snackBar
         .openFromComponent(StarRatingComponent, {
           horizontalPosition: 'right',
-          panelClass: 'feedback-panel'
+          panelClass: 'feedback-panel',
         })
         .onAction()
         .pipe(takeUntil(this.destroy))
@@ -695,7 +701,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.room.roomId
       );
       message = shareSessionStarted
-        ? 'All ready, click the "Open for all" button below!'
+        ? 'All ready, click the "Open for all" button below! ⬇️'
         : 'Join link copied to clipboard for non-Webex participants.';
       if (!shareSessionStarted) {
         this.clipboard.copy(roomUrl);
@@ -716,6 +722,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       const link = await this.teamsService.getDeepLink(this.room.roomId);
 
       this.clipboard.copy(link);
+    } else if (this.config.runningIn === 'meet') {
+      await this.meetService.inviteAllParticipants(this.room.roomId);
+      message =
+        'Ready to start activity. Click the "Start activity" button below to share this room with others in the meeting. ⬇️';
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';

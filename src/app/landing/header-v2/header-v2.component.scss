@@ -114,10 +114,10 @@ nav {
   }
 
   @media screen and (max-width: 800px) {
-    .logo-container {
+    a .logo-container {
       img {
-        height: 30px;
-        width: 30px;
+        height: 24px;
+        width: 24px;
       }
       span {
         font-size: 1rem;
@@ -145,20 +145,20 @@ nav {
     ul {
       flex-direction: column;
       justify-content: center;
-      height: 450px;
+      height: 350px;
       width: 100%;
       position: absolute;
-      top: -500px;
+      top: -400px;
       left: 0px;
       right: 0px;
       padding: 0;
       padding-top: 1rem;
       z-index: -1;
       background: white;
-      transition: top 300ms linear, opacity 400ms ease-in-out;
+      transition: top 200ms ease-out, opacity 400ms ease-in-out;
       li {
         margin-right: 0;
-        margin-bottom: 32px;
+        margin-bottom: 16px;
       }
     }
   }

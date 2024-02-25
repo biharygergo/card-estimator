@@ -73,7 +73,7 @@ export enum MemberStatus {
   REMOVED_FROM_ROOM = 'REMOVED_FROM_ROOM',
 }
 
-export type Platform = 'zoom' | 'webex' | 'teams' | 'web';
+export type Platform = 'zoom' | 'webex' | 'teams' | 'meet' | 'web';
 
 export interface Member {
   id: string;
@@ -415,7 +415,7 @@ export type RecurringMeetingLinkCreatedRoom = {
 
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   if (isNumericCardSet(cardSet)) {
-    return value;
+    return Math.round(value * 100) / 100;
   }
 
   const roundedValue = Math.round(value);

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { MeetSidePanelClient } from 'src/types';
 
 @Injectable({
@@ -14,11 +15,9 @@ export class MeetApiService {
   async configureApp() {
     await this.loadScript();
     const session = await window.meet.addon.createAddonSession({
-      cloudProjectNumber: '615966905854', // TODO: Use environment variable for this
+      cloudProjectNumber: environment.cloudProjectNumber,
     });
-    console.log('Successfully constructed the add-on session.');
     this.sidePanelClient = await session.createSidePanelClient();
-    console.log('Successfully constructed side panel client.');
   }
 
   async inviteAllParticipants(roomId: string) {

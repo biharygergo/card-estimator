@@ -6,7 +6,31 @@
   </p>
   <div class="tab-section">
     <div class="integrations-list">
-      @if (['zoom', 'web'].includes(config.runningIn)) {
+      @if (['teams', 'web'].includes(config.runningIn)) {
+      <div class="integration">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/teams_logo.png" />
+              <h4>Teams</h4>
+            </div>
+            <p>Use Planning Poker directly in the Teams app.</p>
+          </div>
+          <div class="actions">
+            <a
+              mat-flat-button
+              color="primary"
+              [disabled]="config.runningIn === 'teams'"
+              href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {{ config.runningIn === "teams" ? "Installed" : "Install" }}
+            </a>
+          </div>
+        </div>
+      </div>
+      } @if (['zoom', 'web'].includes(config.runningIn)) {
       <div class="integration">
         <div class="integration-main">
           <div class="details">
@@ -54,26 +78,25 @@
           </div>
         </div>
       </div>
-      } @if (['teams', 'web'].includes(config.runningIn)) {
+      } @if (['meets', 'web'].includes(config.runningIn)) {
       <div class="integration">
         <div class="integration-main">
           <div class="details">
             <div class="title">
-              <img class="integration-logo" src="/assets/teams_logo.png" />
-              <h4>Teams</h4>
+              <img class="integration-logo" src="/assets/meet_logo.png" />
+              <h4>Google Meet</h4>
             </div>
-            <p>Use Planning Poker directly in the Teams app.</p>
+            <p>Use Planning Poker directly in the Google Meet app.</p>
           </div>
           <div class="actions">
             <a
               mat-flat-button
               color="primary"
-              [disabled]="config.runningIn === 'teams'"
-              href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
+              [disabled]="true || config.runningIn === 'meet'"
               target="_blank"
               rel="noreferrer"
             >
-              {{ config.runningIn === "teams" ? "Installed" : "Install" }}
+              {{ config.runningIn === "meet" ? "Installed" : "Coming soon" }}
             </a>
           </div>
         </div>

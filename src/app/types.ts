@@ -415,7 +415,7 @@ export type RecurringMeetingLinkCreatedRoom = {
 
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   if (isNumericCardSet(cardSet)) {
-    return value;
+    return Math.round(value * 100) / 100;
   }
 
   const roundedValue = Math.round(value);

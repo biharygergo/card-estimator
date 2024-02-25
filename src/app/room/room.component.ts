@@ -487,7 +487,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.router.navigate(['join'], {
             queryParams: { roomId: this.room.roomId },
-            queryParamsHandling: 'preserve'
+            queryParamsHandling: 'preserve',
           });
         });
     }
@@ -701,7 +701,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.room.roomId
       );
       message = shareSessionStarted
-        ? 'All ready, click the "Open for all" button below!'
+        ? 'All ready, click the "Open for all" button below! ⬇️'
         : 'Join link copied to clipboard for non-Webex participants.';
       if (!shareSessionStarted) {
         this.clipboard.copy(roomUrl);
@@ -723,15 +723,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
       this.clipboard.copy(link);
     } else if (this.config.runningIn === 'meet') {
-      const shareSessionStarted = await this.meetService.inviteAllParticipants(
-        this.room.roomId
-      );
-      message = shareSessionStarted
-        ? 'Invitation sent to meeting participants'
-        : 'Join link copied to clipboard for non-Webex participants.';
-      if (!shareSessionStarted) {
-        this.clipboard.copy(roomUrl);
-      }
+      await this.meetService.inviteAllParticipants(this.room.roomId);
+      message =
+        'Ready to start activity. Click the "Start activity" button below to share this room with others in the meeting. ⬇️';
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';

@@ -27,29 +27,6 @@
   --light-background: white;
 }
 
-/* $my-primary: matx.define-palette(matx.$m3-blue-palette, 500);
-$my-primary-dark: matx.define-palette(matx.$m3-blue-palette, 400);
-
-$my-accent: matx.define-palette(matx.$m3-orange-palette, A200, A100, A400);
-
-$my-theme: matx.define-light-theme(
-  (
-    color: (
-      primary: $my-primary,
-      accent: $my-accent,
-    ),
-  )
-);
-
-$my-dark-theme: matx.define-dark-theme(
-  (
-    color: (
-      primary: $my-primary-dark,
-      accent: $my-accent-dark,
-    ),
-  )
-); */
-
 $m3-dark-theme: matx.define-theme((
   color: (
     theme-type: dark,

@@ -1,5 +1,11 @@
 <nav [ngClass]="{ open: isOpen }">
   <div class="header-container">
+    @if(isEmbeddedApp) {
+    <button mat-flat-button (click)="goBack()">
+      <mat-icon>chevron_left</mat-icon>Back
+    </button>
+
+    } @if(!isEmbeddedApp) {
     <a routerLink="/" (click)="closeMenu()">
       <div class="logo-container">
         <picture>
@@ -100,5 +106,6 @@
     >
       <mat-icon>menu</mat-icon>
     </button>
+    }
   </div>
 </nav>

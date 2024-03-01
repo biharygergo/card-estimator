@@ -89,7 +89,7 @@ export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
       );
       this.dialogRef.close({ joined: true });
       this.router.navigate(['room', this.dialogData.roomId], {
-        queryParamsHandling: 'preserve',
+        queryParamsHandling: 'merge',
       });
     } catch (e) {
       console.error(e);

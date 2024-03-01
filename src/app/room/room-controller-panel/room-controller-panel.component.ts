@@ -192,7 +192,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
           MemberStatus.LEFT_ROOM
         );
       }
-      this.router.navigate(['join'], { queryParamsHandling: 'preserve' });
+      this.router.navigate(['join'], { queryParamsHandling: 'merge' });
     }
   }
 

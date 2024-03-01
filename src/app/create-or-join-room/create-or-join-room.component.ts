@@ -482,7 +482,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   }
 
   navigateToRoom(roomId: string, queryParams?: Params) {
-    this.router.navigate(['room', roomId], {queryParams, queryParamsHandling: 'preserve'});
+    this.router.navigate(['room', roomId], {queryParams, queryParamsHandling: 'merge'});
   }
 
   showUnableToJoinRoom() {

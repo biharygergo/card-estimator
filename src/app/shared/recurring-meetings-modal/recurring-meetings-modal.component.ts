@@ -166,7 +166,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
 
   redirectToHistory(link: RecurringMeetingLink) {
     this.router.navigate(['recurringMeeting', link.id], {
-      queryParamsHandling: 'preserve',
+      queryParamsHandling: 'merge',
     });
     this.dialogRef.close();
   }

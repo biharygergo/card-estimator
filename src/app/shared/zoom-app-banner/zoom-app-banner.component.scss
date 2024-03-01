@@ -28,7 +28,7 @@
     flex-direction: column;
     gap: 8px;
     align-items: center;
-
+    color: var(--mat-card-subtitle-text-color);
     h4 {
       font-weight: 500;
 
@@ -38,7 +38,6 @@
       }
 
       .webex {
-        color: #2d2d2d;
         font-weight: 1000;
       }
 
@@ -68,15 +67,18 @@ mat-card-actions {
 
 .zoom-button {
   width: 100%;
+  --mdc-filled-button-label-text-color: white;
   --mdc-filled-button-container-color: #4185fe;
 }
 
 .webex-button {
   width: 100%;
+  --mdc-filled-button-label-text-color: white;
   --mdc-filled-button-container-color: #2d2d2d;
 }
 
 .teams-button {
   width: 100%;
+  --mdc-filled-button-label-text-color: white;
   --mdc-filled-button-container-color: #464eb8;
 }

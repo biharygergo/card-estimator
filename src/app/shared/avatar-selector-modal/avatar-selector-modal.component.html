@@ -314,10 +314,12 @@
       Close
     </button>
     @if (selectedTabIndex === 0 && user) {
-    <button mat-button color="warn" (click)="signOut()">
-      <mat-icon>logout</mat-icon>
-      Sign out {{ user?.isAnonymous ? "& delete account" : "" }}
-    </button>
+    @if (!user.isAnonymous) {
+      <button mat-button color="warn" (click)="signOut()">
+        <mat-icon>logout</mat-icon>
+        Sign out
+      </button>
+    }
     } @if (selectedTabIndex === 2) {
     <button mat-button (click)="randomizeAvatars()" color="primary">
       <mat-icon>shuffle</mat-icon>

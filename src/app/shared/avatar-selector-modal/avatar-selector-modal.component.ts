@@ -21,6 +21,10 @@ import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
 import * as moment from 'moment';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { groupBy } from 'lodash';
+import {
+  SignUpOrLoginIntent,
+  signUpOrLoginDialogCreator,
+} from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -342,6 +346,14 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   signOut() {
     this.auth.signOut();
     this.dialogRef.close();
+  }
+
+  linkAccount() {
+    this.dialog.open(
+      ...signUpOrLoginDialogCreator({
+        intent: SignUpOrLoginIntent.LINK_ACCOUNT,
+      })
+    );
   }
 
   async redirectToCustomerPortal() {

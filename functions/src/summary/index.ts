@@ -1,16 +1,29 @@
 import {getAuth} from "firebase-admin/auth";
 import {Timestamp, getFirestore} from "firebase-admin/firestore";
-import {Configuration, OpenAIApi} from "openai";
 import {isPremiumSubscriber} from "../shared/customClaims";
 import {getChatGptUsageThisMonth, saveMeteredUsage} from "../usage";
 import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
+import {VertexAI} from "@google-cloud/vertexai";
 
-const configuration = new Configuration({
-  organization: "org-wBmr0xodAPTosU3YBSBxqufh",
-  apiKey: process.env.OPENAI_API_KEY,
+const cloudProjectName = process.env.GCLOUD_PROJECT;
+const location = "us-central1";
+
+// Initialize Vertex with your Cloud project and location
+const vertexAi = new VertexAI({
+  project: cloudProjectName ?? "card-estimator",
+  location,
 });
+const model = "gemini-1.0-pro-001";
 
-const openai = new OpenAIApi(configuration);
+// Instantiate the models
+const generativeModel = vertexAi.preview.getGenerativeModel({
+  model: model,
+  generation_config: {
+    max_output_tokens: 2048,
+    temperature: 0.5,
+    top_p: 1,
+  },
+});
 
 const USAGE_LIMIT = 100;
 
@@ -55,28 +68,37 @@ export async function createSummary(request: CallableRequest) {
   }
 
   const systemPrompt = `
-  You are the helpful SCRUM Master of an agile development team. Given the below csv export of a planning meeting, write a summary to send to the team via chat. 
+  You are the helpful SCRUM Master of an agile development team. Given the below CSV export of a planning meeting, write a summary to send to the team via chat. 
  
-The csv contains votes for each discussed topic for each team member as well as the Average and Majority columns. The topic names are either "Topic of Round #X" where X is the round (1, 2, etc.) or they can be custom topic names for what was discussed in the meeting.   The votes are numbers, a low number means a more straightforward task and a higher number means a more difficult task. Members know of this scale, you don't need to explain this to them. 
+The CSV contains votes for each discussed topic for each team member and the Average, Majority, and Notes columns. The topic names are either "Topic of Round #X" where X is the round (1, 2, etc.) or they can be custom topic names for what was discussed in the meeting.   The votes are numbers, a low number means a more straightforward task and a higher number means a more difficult task. Members know of this scale, you don't need to explain this to them. 
 
-Try to mention something about each round, but keep a natural tone, no need to include too many numbers. The summary should be in a friendly, but formal work tone, and it should be around 150 words long. It should be structured in at least two paragraphs.
+Try to mention something about each round, but keep a natural tone, there is no need to include too many numbers. The summary should be in a friendly, but formal work tone, and it should be around 150 words long (it should not be shorter!). It should be structured in at least two paragraphs.
 
-Finish with a motivating sentence for the upcoming sprint to keep the team energized. You can even quote someone famous.
+Finish with a motivating sentence for the upcoming sprint to energize the team. You can even quote someone famous.
+
+The CSV file is:
+
 `;
 
-  const response = await openai.createChatCompletion({
-    model: "gpt-4",
-    messages: [
-      {role: "system", content: systemPrompt},
-      {role: "user", content: request.data.csvSummary},
+  const req = {
+    contents: [
+      {
+        role: "user",
+        parts: [
+          {
+            text: systemPrompt + request.data.csvSummary,
+          },
+        ],
+      },
     ],
-    max_tokens: 800,
-  });
+  };
 
-  let summaryText = response.data.choices?.[0].message?.content ?? "";
-  while (summaryText.startsWith("\n")) {
-    summaryText = summaryText.slice(1).trimStart();
-  }
+  const response = await generativeModel.generateContent(req);
+
+  console.log(response);
+
+  const summaryText =
+    response.response.candidates?.[0].content?.parts?.[0]?.text ?? "";
 
   const summaryData: RoomSummary = {
     summary: summaryText,

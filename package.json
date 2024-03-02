@@ -47,7 +47,7 @@
     "@stripe/firestore-stripe-payments": "^0.0.6",
     "@zoom/appssdk": "^0.16.11",
     "express": "^4.15.2",
-    "firebase": "^10.7.2",
+    "firebase": "^10.8.1",
     "firebase-admin": "^11.11.1",
     "jira2md": "^3.0.1",
     "js-cookie": "^3.0.1",

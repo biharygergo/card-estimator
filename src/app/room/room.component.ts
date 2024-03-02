@@ -238,7 +238,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.permissionsService.hasPremiumAccess(),
   ]).pipe(
     filter(([credits, isPremium]) => credits.length <= 1 && !isPremium),
-    map(([credits]) => credits.length)
+    map(([credits]) => credits.length),
+    distinctUntilChanged()
   );
 
   readonly MemberType = MemberType;

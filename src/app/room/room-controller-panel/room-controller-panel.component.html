@@ -144,6 +144,16 @@
         </button>
         <button
           mat-stroked-button
+          id="manage-rounds-button"
+          class="responsive-label-button forced"
+          matTooltip="Manage rounds"
+          (click)="sidebarTriggered.emit()"
+          >
+          <mat-icon>list</mat-icon>
+          Rounds
+        </button>
+        <button
+          mat-stroked-button
           matTooltip="Minimize control panel"
           (click)="expandClicked.emit()"
           class="responsive-label-button forced"

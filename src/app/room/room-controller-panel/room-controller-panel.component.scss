@@ -26,6 +26,12 @@
   .pass-option-label {
     padding-left: 4px;
     font-size: 16px;
+    white-space: normal;
+    font-family: var(--mat-menu-item-label-text-font);
+    line-height: var(--mat-menu-item-label-text-line-height);
+    font-size: var(--mat-menu-item-label-text-size);
+    letter-spacing: var(--mat-menu-item-label-text-tracking);
+    font-weight: var(--mat-menu-item-label-text-weight)
   }
 }
 

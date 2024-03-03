@@ -28,7 +28,6 @@ import {
   take,
   takeUntil,
   tap,
-  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
@@ -42,7 +41,6 @@ import {
   Round,
   RoundStatistics,
   UserProfileMap,
-  Credit,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
@@ -82,11 +80,11 @@ import { ThemeService } from '../services/theme.service';
 import { RoomDataService } from './room-data.service';
 import { introducingNewPricingModalCreator } from '../shared/introducing-new-pricing-modal/introducing-new-pricing-modal.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
-import { createRoundStatistics } from '../services/serializer.service';
 import { MeetApiService } from '../services/meet-api.service';
+import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
-
+const ROOM_SIZE_LIMIT = 100;
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -267,7 +265,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly breakpointObserver: BreakpointObserver,
     private readonly themeService: ThemeService,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
+    private readonly confirmDialogService: ConfirmDialogService
   ) {}
 
   ngOnInit(): void {
@@ -423,6 +422,12 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.dialog.open(...pricingModalCreator());
         });
     });
+
+    this.roomDataService.onRoomRoundCountUpdated$
+      .pipe(filter((count) => count >= ROOM_SIZE_LIMIT))
+      .subscribe(() => {
+        this.showRoomLimitReachedDialog();
+      });
   }
 
   ngAfterViewInit() {
@@ -737,5 +742,20 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   viewCredits() {
     this.dialog.open(...avatarModalCreator({ openAtTab: 'subscription' }));
+  }
+
+  async showRoomLimitReachedDialog() {
+    const confirmed = await this.confirmDialogService.openConfirmationDialog({
+      title: '🤯 Room size limit reached',
+      content:
+        "Looks like you've created a room bigger than our server's imagination. Please start a new session, unless you enjoy staring at this error message appear often.",
+      disableClose: true,
+      positiveText: 'Go to Create/Join page',
+      negativeText: 'Close',
+    });
+
+    if (confirmed) {
+      this.router.navigate(['/create'], { queryParamsHandling: 'merge' });
+    }
   }
 }

@@ -7,27 +7,29 @@ export interface ConfirmDialogData {
   content: string;
   positiveText: string;
   negativeText: string;
+  removeNegativeOption?: boolean;
+  disableClose?: boolean;
 }
 
-export const confirmDialogCreator = (data: ConfirmDialogData): ModalCreator<ConfirmDialogComponent> => [
+export const confirmDialogCreator = (
+  data: ConfirmDialogData
+): ModalCreator<ConfirmDialogComponent> => [
   ConfirmDialogComponent,
   {
     id: 'confirmModal',
     width: '90%',
     maxWidth: '400px',
     data,
-    panelClass: 'custom-dialog'
+    panelClass: 'custom-dialog',
+    disableClose: data.disableClose,
   },
 ];
 
 @Component({
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.scss']
+  styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent {
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
-  ) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData) {}
 }

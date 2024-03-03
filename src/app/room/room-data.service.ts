@@ -33,6 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { roomAuthenticationModalCreator } from '../shared/room-authentication-modal/room-authentication-modal.component';
 import { ToastService } from '../services/toast.service';
+import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 
 @Injectable({
   providedIn: 'root',
@@ -150,6 +151,11 @@ export class RoomDataService {
     withLatestFrom(this.room$)
   );
 
+  onRoomRoundCountUpdated$ = this.room$.pipe(
+    map((room) => Object.keys(room.rounds).length),
+    distinctUntilChanged()
+  );
+
   roomSubscription: Subscription;
 
   constructor(
@@ -157,7 +163,8 @@ export class RoomDataService {
     private readonly authService: AuthService,
     private readonly dialog: MatDialog,
     private readonly router: Router,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly confirmDialogService: ConfirmDialogService
   ) {}
 
   loadRoom(roomId: string, startWithRoom?: Room) {
@@ -224,6 +231,6 @@ export class RoomDataService {
     duration?: number | null;
   }) {
     this.toastService.showMessage(message);
-    this.router.navigate(['join'], {queryParamsHandling: 'merge'});
+    this.router.navigate(['join'], { queryParamsHandling: 'merge' });
   }
 }

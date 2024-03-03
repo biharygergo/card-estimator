@@ -4,5 +4,7 @@
 </div>
 <div mat-dialog-actions>
   <button mat-flat-button color="primary" [mat-dialog-close]="true">{{ data.positiveText }}</button>
-  <button mat-button [mat-dialog-close]="false">{{ data.negativeText }}</button>
+  @if (!data.removeNegativeOption) {
+    <button mat-button [mat-dialog-close]="false">{{ data.negativeText }}</button>
+  }
 </div>

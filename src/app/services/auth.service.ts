@@ -4,9 +4,11 @@ import {
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
+  updateEmail,
   user,
 } from '@angular/fire/auth';
 import {
@@ -282,6 +284,13 @@ export class AuthService {
     ).catch((error) => {
       console.error('Error while updating userDetails: ', error);
     });
+  }
+
+  async updateCurrentUserEmail(email: string, password: string) {
+    const user = await this.getUser();
+    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+    await updateEmail(user, email);
+    await this.updateUserDetails(user.uid, {email});
   }
 
   setSessionCookie(value: string) {

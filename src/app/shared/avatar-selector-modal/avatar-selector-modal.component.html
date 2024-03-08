@@ -13,7 +13,7 @@
       <mat-tab label="Profile">
         <div class="tab-content">
           <div class="tab-section">
-            <anonymous-user-banner bannerStyle="gray"></anonymous-user-banner>
+            <anonymous-user-banner bannerStyle="gray" />
             <div class="profile-overview">
               <div class="profile-image">
                 <div class="avatar">
@@ -31,24 +31,20 @@
                 </div>
               </div>
               <div class="profile-details">
-                <mat-form-field class="name" appearance="outline">
-                  <mat-label>Account type</mat-label>
-                  <input
-                    matInput
-                    [formControl]="accountTypeForm"
-                    id="account-type-input"
-                  />
-                </mat-form-field>
                 @if (emailControl.value) {
-                <mat-form-field class="name" appearance="outline">
-                  <mat-label>E-mail</mat-label>
-                  <input
-                    matInput
-                    [formControl]="emailControl"
-                    id="email-input"
-                  />
-                </mat-form-field>
-                }
+                <div class="data-item profile">
+                  <strong>E-mail</strong>
+                  <span id="user-email">{{ emailControl.value }}</span>
+                </div>
+                @if(isUserSignedInWithEmail$ | async) {
+                <button
+                  mat-stroked-button
+                  class="change-email-button"
+                  (click)="openManageEmailModal()"
+                >
+                  Change e-mail
+                </button>
+                } }
                 <mat-form-field class="name" appearance="outline">
                   <mat-label>Your name</mat-label>
                   <input
@@ -59,7 +55,7 @@
                   />
                 </mat-form-field>
                 <button
-                  mat-flat-button
+                  mat-stroked-button
                   color="primary"
                   [disabled]="!isNameUpdated || (isSavingUser | async)"
                   (click)="onClickUpdateUserName.next()"
@@ -313,14 +309,12 @@
       <mat-icon>close</mat-icon>
       Close
     </button>
-    @if (selectedTabIndex === 0 && user) {
-    @if (!user.isAnonymous) {
-      <button mat-button color="warn" (click)="signOut()">
-        <mat-icon>logout</mat-icon>
-        Sign out
-      </button>
-    }
-    } @if (selectedTabIndex === 2) {
+    @if (selectedTabIndex === 0 && user) { @if (!user.isAnonymous) {
+    <button mat-button color="warn" (click)="signOut()">
+      <mat-icon>logout</mat-icon>
+      Sign out
+    </button>
+    } } @if (selectedTabIndex === 2) {
     <button mat-button (click)="randomizeAvatars()" color="primary">
       <mat-icon>shuffle</mat-icon>
       Generate new avatars

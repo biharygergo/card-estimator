@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Change e-mail</h2>
+<mat-dialog-content>
+  <p>
+    Updating your email here will affect your login credentials and where we can
+    reach you with notifications.
+  </p>
+  <mat-form-field
+    class="custom-field-control"
+    appearance="outline"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>New e-mail</mat-label>
+    <input
+      matInput
+      [formControl]="emailControl"
+      placeholder="amazing.engineer@you.com"
+    />
+  </mat-form-field>
+  <p>To update your e-mail, you'll need to verify your current password:</p>
+  <mat-form-field
+    class="custom-field-control"
+    appearance="outline"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Current password</mat-label>
+    <input matInput type="password" [formControl]="passwordControl" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    mat-flat-button
+    (click)="updateEmail()"
+    [disabled]="!(isSubmitEnabled | async)"
+  >
+    Save
+  </button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</mat-dialog-actions>

@@ -1,8 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { User } from 'firebase/auth';
+import { EmailAuthProvider, User } from 'firebase/auth';
 import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
 import {
@@ -25,6 +32,7 @@ import {
   SignUpOrLoginIntent,
   signUpOrLoginDialogCreator,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { manageEmailModalCreator } from '../manage-email-modal/manage-email-modal.component';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -184,6 +192,14 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       .join(',')
   );
   user: User | undefined;
+
+  isUserSignedInWithEmail$ = this.auth.user.pipe(
+    map(
+      (user) => user?.providerData?.[0]?.providerId === EmailAuthProvider.PROVIDER_ID
+    ),
+    distinctUntilChanged()
+  );
+  readonly emailAuthProviderId = EmailAuthProvider.PROVIDER_ID;
   readonly isSavingUser = new BehaviorSubject<boolean>(false);
   readonly onClickUpdateUserName = new Subject<void>();
   destroy = new Subject<void>();
@@ -365,5 +381,9 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   openLearnMore() {
     this.analytics.logClickedLearnMorePremium('profile');
     this.dialog.open(...pricingModalCreator());
+  }
+
+  openManageEmailModal() {
+    this.dialog.open(...manageEmailModalCreator());
   }
 }

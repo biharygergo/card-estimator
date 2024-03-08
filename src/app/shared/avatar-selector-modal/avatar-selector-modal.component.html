@@ -34,7 +34,7 @@
                 @if (emailControl.value) {
                 <div class="data-item profile">
                   <strong>E-mail</strong>
-                  <span>{{ emailControl.value }}</span>
+                  <span id="user-email">{{ emailControl.value }}</span>
                 </div>
                 @if(isUserSignedInWithEmail$ | async) {
                 <button

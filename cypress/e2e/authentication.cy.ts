@@ -30,7 +30,7 @@ describe('Authentication', () => {
     // Modal disappears
     cy.get('#sign-up-modal').should('not.exist');
 
-    cy.get('#account-type-input').should('have.value', 'Permanent');
+    cy.get('#user-email').should('contain', testEmail);
   });
 
   it('can sign back in', () => {

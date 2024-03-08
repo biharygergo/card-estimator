@@ -56,13 +56,20 @@ export class ManageEmailModalComponent implements OnInit, OnDestroy {
     this.emailControl.valueChanges,
   ]).pipe(map(([userEmail, enteredEmail]) => userEmail !== enteredEmail));
 
+  isSubmitEnabled = combineLatest([
+    this.emailControl.statusChanges,
+    this.passwordControl.statusChanges,
+    this.isEmailDifferent,
+  ]).pipe(
+    map(
+      ([emailStatus, passwordStatus, isDifferent]) =>
+        emailStatus === 'VALID' && passwordStatus === 'VALID' && isDifferent
+    )
+  );
+
   destroy = new Subject<void>();
 
-  ngOnInit(): void {
-    this.userEmail$.pipe(takeUntil(this.destroy)).subscribe((email) => {
-      this.emailControl.setValue(email);
-    });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.destroy.next();

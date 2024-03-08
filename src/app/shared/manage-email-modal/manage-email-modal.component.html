@@ -30,7 +30,7 @@
   <button
     mat-flat-button
     (click)="updateEmail()"
-    [disabled]="!emailControl.valid || !passwordControl.valid || !(isEmailDifferent | async)"
+    [disabled]="!(isSubmitEnabled | async)"
   >
     Save
   </button>

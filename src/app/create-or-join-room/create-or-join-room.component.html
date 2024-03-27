@@ -158,7 +158,7 @@
   <span class="other">You could also: </span>
   <div class="links">
     @if ((pageMode | async) === PageMode.JOIN) {
-    <a mat-flat-button routerLink="/create" queryParamsHandling="preserve"
+    <a mat-flat-button routerLink="/create"
       ><mat-icon>add</mat-icon>Create a new room</a
     >
     <button
@@ -170,7 +170,7 @@
       Join a different room
     </button>
     } @if ((pageMode | async) === PageMode.CREATE) {
-    <a mat-flat-button routerLink="/join" queryParamsHandling="preserve">
+    <a mat-flat-button routerLink="/join">
       <mat-icon>login</mat-icon>
       Join an existing room</a
     >
@@ -235,10 +235,8 @@
 <ng-template #terms>
   <div class="terms">
     <small
-      >By using this app you accept the
-      <a routerLink="/terms" queryParamsHandling="preserve">Terms</a> and the
-      <a routerLink="/privacy" queryParamsHandling="preserve">Privacy Policy</a
-      >.</small
+      >By using this app you accept the <a routerLink="/terms">Terms</a> and the
+      <a routerLink="/privacy">Privacy Policy</a>.</small
     >
   </div>
 </ng-template>

@@ -33,7 +33,7 @@
       <mat-icon>extension</mat-icon>
       <span>Integrations</span>
     </button>
-    <a mat-menu-item routerLink="/history" queryParamsHandling="preserve">
+    <a mat-menu-item routerLink="/history">
       <mat-icon>history</mat-icon>
       <span>Previous sessions</span>
     </a>
@@ -43,7 +43,7 @@
       <span>Buy credits</span>
     </button>
     @if(currentRoomId$ | async) {
-    <a mat-menu-item routerLink="/join" queryParamsHandling="preserve">
+    <a mat-menu-item routerLink="/join">
       <mat-icon>home</mat-icon>
       <span>Home</span>
     </a>

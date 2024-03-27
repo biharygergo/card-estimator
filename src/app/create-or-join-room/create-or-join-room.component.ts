@@ -69,6 +69,7 @@ import { NavigationService } from '../services/navigation.service';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 import { ToastService } from '../services/toast.service';
+import { MeetApiService } from '../services/meet-api.service';
 
 enum PageMode {
   CREATE = 'create',
@@ -280,6 +281,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly recurringMeetingService: RecurringMeetingLinkService,
     private readonly configService: ConfigService,
     private readonly teamsService: TeamsService,
+    private readonly meetService: MeetApiService,
     private readonly navigationService: NavigationService,
     private readonly toastService: ToastService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
@@ -321,6 +323,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     if (this.config.runningIn === 'meet') {
       this.configService.setSessionCookie('runningInMeet', '1');
+      this.meetService.configureApp();
     }
 
     this.onJoinRoomClicked
@@ -482,7 +485,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   }
 
   navigateToRoom(roomId: string, queryParams?: Params) {
-    this.router.navigate(['room', roomId], {queryParams, queryParamsHandling: 'merge'});
+    this.router.navigate(['room', roomId], {queryParams});
   }
 
   showUnableToJoinRoom() {
@@ -525,7 +528,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   clearRoomIdParam() {
     this.router.navigate([], {
       queryParams: { roomId: null },
-      queryParamsHandling: 'merge',
+  ,
     });
   }
 }

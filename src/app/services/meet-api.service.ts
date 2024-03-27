@@ -1,23 +1,28 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { MeetSidePanelClient } from 'src/types';
+import { AddonSession, MeetSidePanelClient } from 'src/types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetApiService {
   loadedScript = false;
+  loadedSession = false;
 
   sidePanelClient: MeetSidePanelClient = undefined;
+  session: AddonSession = undefined;
 
   constructor() {}
 
   async configureApp() {
     await this.loadScript();
-    const session = await window.meet.addon.createAddonSession({
-      cloudProjectNumber: environment.cloudProjectNumber,
-    });
-    this.sidePanelClient = await session.createSidePanelClient();
+    if (!this.loadedSession) {
+      this.session = await window.meet.addon.createAddonSession({
+        cloudProjectNumber: environment.cloudProjectNumber,
+      });
+      this.sidePanelClient = await this.session.createSidePanelClient();
+      this.loadedSession = true;
+    }
   }
 
   async inviteAllParticipants(roomId: string) {

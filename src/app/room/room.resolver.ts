@@ -84,7 +84,6 @@ export class RoomResolver {
           );
           this.router.navigate(['join'], {
             queryParams: { error: 1 },
-            queryParamsHandling: 'merge',
           });
         } else if (
           error instanceof MemberNotFoundError ||
@@ -94,14 +93,12 @@ export class RoomResolver {
           const roomId = route.paramMap.get('roomId');
           this.router.navigate(['join'], {
             queryParams: { roomId, error: 1 },
-            queryParamsHandling: 'merge',
           });
         } else {
           console.error(error);
           this.showMessage('Unable to join this room. Please try again later.');
           this.router.navigate(['/'], {
             queryParams: { error: 1 },
-            queryParamsHandling: 'merge',
           });
         }
         return of(null);

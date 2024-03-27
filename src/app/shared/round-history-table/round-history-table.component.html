@@ -17,11 +17,9 @@
   <ng-container matColumnDef="roomId">
     <mat-header-cell *matHeaderCellDef>Room</mat-header-cell>
     <mat-cell *matCellDef="let round" class="round-id-cell"
-      ><a
-        [routerLink]="['/room', round.roomId]"
-        queryParamsHandling="preserve"
-        >{{ round.roomId }}</a
-      ></mat-cell
+      ><a [routerLink]="['/room', round.roomId]">{{
+        round.roomId
+      }}</a></mat-cell
     >
   </ng-container>
   <ng-container matColumnDef="startedAt">

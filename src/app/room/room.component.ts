@@ -297,7 +297,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       if (member?.status === MemberStatus.REMOVED_FROM_ROOM) {
         this.router.navigate(['join'], {
           queryParams: { reason: 'removed' },
-          queryParamsHandling: 'merge',
         });
       } else if (member?.type === MemberType.OBSERVER) {
         this.joinAsObserver();
@@ -493,7 +492,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.router.navigate(['join'], {
             queryParams: { roomId: this.room.roomId },
-            queryParamsHandling: 'merge',
           });
         });
     }
@@ -755,7 +753,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
     if (confirmed) {
-      this.router.navigate(['/create'], { queryParamsHandling: 'merge' });
+      this.router.navigate(['/create']);
     }
   }
 }

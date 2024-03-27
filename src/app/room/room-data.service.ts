@@ -231,6 +231,6 @@ export class RoomDataService {
     duration?: number | null;
   }) {
     this.toastService.showMessage(message);
-    this.router.navigate(['join'], { queryParamsHandling: 'merge' });
+    this.router.navigate(['join'], {});
   }
 }

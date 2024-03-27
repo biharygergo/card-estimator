@@ -1,5 +1,5 @@
-@if ( (room?.rounds)[currentRound].show_results && roundStatistics[currentRound]
-) {
+@if ( (room?.rounds)[currentRound]?.show_results &&
+roundStatistics[currentRound] ) {
 <mat-list>
   <ng-container>
     @if (roundStatistics[currentRound]; as statistics) {

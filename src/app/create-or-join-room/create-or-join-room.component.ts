@@ -528,7 +528,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   clearRoomIdParam() {
     this.router.navigate([], {
       queryParams: { roomId: null },
-  ,
     });
   }
 }

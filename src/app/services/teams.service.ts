@@ -72,7 +72,7 @@ export class TeamsService {
 
       microsoftTeams.meeting.getAppContentStageSharingCapabilities(
         (err, result) => {
-          if (result.doesAppHaveSharePermission) {
+          if (result?.doesAppHaveSharePermission) {
             const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
             microsoftTeams.meeting.shareAppContentToStage((err, result) => {
               if (result) {

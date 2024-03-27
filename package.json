@@ -46,7 +46,7 @@
     "@sentry/tracing": "^7.48.0",
     "@stripe/firestore-stripe-payments": "^0.0.6",
     "@zoom/appssdk": "^0.16.11",
-    "express": "^4.15.2",
+    "express": "^4.19.2",
     "firebase": "^10.9.0",
     "firebase-admin": "^11.11.1",
     "jira2md": "^3.0.1",

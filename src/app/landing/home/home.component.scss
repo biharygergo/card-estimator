@@ -391,7 +391,7 @@
     color: #bfc6dc;
     --mdc-tab-indicator-active-indicator-color: white;
     --mat-tab-header-active-focus-indicator-color: white;
-    
+
     .mdc-tab {
       .mdc-tab__text-label {
         color: #bfc6dc;
@@ -569,4 +569,17 @@
       }
     }
   }
+}
+
+.loading-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }

@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +31,9 @@ export class HomeComponent implements OnInit {
     'amazon',
   ];
   logos = this.companies.map((company) => `${company}_logo`);
+  isOnLandingPage = inject(ActivatedRoute).url.pipe(
+    map((segments) => segments.length === 0)
+  );
 
   constructor() {}
 

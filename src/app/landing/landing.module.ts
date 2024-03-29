@@ -29,6 +29,7 @@ import { WebexComponent } from './webex/webex.component';
 import { TeamsComponent } from './teams/teams.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const routes: Routes = [
   {
@@ -160,6 +161,7 @@ const routes: Routes = [
     MatDialogModule,
     MatMenuModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
     ZoomAppBannerComponent,
     NgOptimizedImage,
     PageHeaderComponent,

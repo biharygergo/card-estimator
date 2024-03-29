@@ -4,6 +4,14 @@
 it now!</span
 >
 </div> -->
+@if(!(isOnLandingPage | async)) {
+<div class="loading-wrapper">
+  <mat-progress-spinner
+    mode="indeterminate"
+    [diameter]="50"
+  />
+</div>
+}
 <section class="hero-header-section">
   <div class="hero-header">
     <div class="header-intro">

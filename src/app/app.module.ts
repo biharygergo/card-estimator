@@ -22,9 +22,6 @@ import {
   ScreenTrackingService,
 } from '@angular/fire/analytics';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-
-import { getFunctions } from 'firebase/functions';
-
 import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
 import { RoomLoadingComponent } from './room-loading/room-loading.component';
@@ -33,6 +30,7 @@ import { AppConfigModule } from './app-config.module';
 import {
   connectFunctionsEmulator,
   provideFunctions,
+  getFunctions
 } from '@angular/fire/functions';
 import {
   connectStorageEmulator,

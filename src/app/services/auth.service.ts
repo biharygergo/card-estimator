@@ -20,7 +20,8 @@ import {
   updateProfile,
   User,
   UserInfo,
-} from 'firebase/auth';
+  GoogleAuthProvider
+} from '@angular/fire/auth';
 import {
   doc,
   docData,
@@ -46,7 +47,6 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { GoogleAuthProvider } from 'firebase/auth';
 import {
   UserDetails,
   UserPreference,

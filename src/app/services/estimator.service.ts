@@ -38,7 +38,7 @@ import {
   setDoc,
   Timestamp,
   updateDoc,
-} from 'firebase/firestore';
+} from '@angular/fire/firestore';
 import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
@@ -258,11 +258,7 @@ export class EstimatorService {
     });
   }
 
-  setMajorityOverride(
-    roomId: string,
-    roundId: number,
-    cardKey: number | null
-  ) {
+  setMajorityOverride(roomId: string, roundId: number, cardKey: number | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       [`rounds.${roundId}.majorityOverride`]: cardKey,
     });

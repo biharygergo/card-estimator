@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Timestamp } from 'firebase/firestore';
+import { CollectionReference, Timestamp } from '@angular/fire/firestore';
 import { Observable, Subject, filter, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import {

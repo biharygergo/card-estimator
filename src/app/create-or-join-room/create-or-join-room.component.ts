@@ -40,7 +40,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { User } from 'firebase/auth';
+import { User } from '@angular/fire/auth';
 import { AppConfig, AppConfigModule, APP_CONFIG } from '../app-config.module';
 import {
   delayedFadeAnimation,

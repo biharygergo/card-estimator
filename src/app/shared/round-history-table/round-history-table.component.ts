@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FieldValue, Timestamp } from 'firebase/firestore';
+import { FieldValue, Timestamp } from '@angular/fire/firestore';
 import {
   BehaviorSubject,
   Observable,

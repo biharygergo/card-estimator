@@ -7,6 +7,9 @@ import {
   Firestore,
   query,
   where,
+  collection,
+  CollectionReference,
+  Timestamp,
 } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +17,6 @@ import {
   StripePayments,
   Subscription,
 } from '@stripe/firestore-stripe-payments';
-import { collection, CollectionReference, Timestamp } from 'firebase/firestore';
 import { Observable, of, switchMap, map, firstValueFrom } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import {

@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from '@angular/fire/firestore';
 import { BehaviorSubject, map, pipe, switchMap, timer } from 'rxjs';
 import { CardSetValue, Round } from './types';
 import Cookies from 'js-cookie';

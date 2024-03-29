@@ -6,8 +6,7 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { serverTimestamp } from '@angular/fire/firestore';
-import { Timestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from '@angular/fire/firestore';
 import { isEqual } from 'lodash';
 import {
   distinctUntilChanged,

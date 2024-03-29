@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { EmailAuthProvider, User } from 'firebase/auth';
+import { EmailAuthProvider, User } from '@angular/fire/auth';
 import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import {

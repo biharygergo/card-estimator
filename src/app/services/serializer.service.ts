@@ -5,7 +5,7 @@ import {
 } from './../pipes/estimate-converter.pipe';
 import { Member, MemberStatus, MemberType, Room, Round } from './../types';
 import { getHumanReadableElapsedTime } from './../utils';
-import { FieldValue } from 'firebase/firestore';
+import { FieldValue } from '@angular/fire/firestore';
 
 const CSV_HEADERS_BEFORE_NAMES = ['Round'];
 const CSV_HEADERS_AFTER_NAMES = ['Average', 'Majority', 'Notes'];

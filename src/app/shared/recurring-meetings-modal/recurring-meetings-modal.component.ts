@@ -25,7 +25,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router } from '@angular/router';
 import { DialogRef } from '@angular/cdk/dialog';
-import { User } from 'firebase/auth';
+import { User } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-recurring-meetings-modal',

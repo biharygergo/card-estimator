@@ -101,7 +101,7 @@ export function createRoundStatistics(
     duration: getHumanReadableElapsedTime(round),
     startedAt: round.started_at,
     topic: round.topic,
-    notes: `"${round.notes?.note}"` || '',
+    notes: round.notes?.note || '',
   };
 
   return result;
@@ -130,24 +130,26 @@ export class SerializerService {
   constructor() {}
 
   getRoomAsCsv(room: Room): string {
+    const padWithQuotes = (data?: string) => (data ? `"${data}"` : '');
+
     const exportData = new ExportData(room);
     const members = Object.values(exportData.members);
     const headerRow = [...CSV_HEADERS_BEFORE_NAMES]
-      .concat(members.map((m) => m.name))
+      .concat(members.map((m) => padWithQuotes(m.name)))
       .concat(CSV_HEADERS_AFTER_NAMES);
 
     let csvContent = '';
     csvContent += headerRow.join(',') + '\n';
 
     exportData.rows.forEach((row) => {
-      const content = [row.topic];
+      const content = [padWithQuotes(row.topic)];
 
       members.forEach((member) => {
-        content.push(row.estimates[member.id]);
+        content.push(padWithQuotes(row.estimates[member.id]));
       });
-      content.push(row.average);
-      content.push(row.mostPopularVoteOrOverride);
-      content.push(row.notes);
+      content.push(padWithQuotes(row.average));
+      content.push(padWithQuotes(row.mostPopularVoteOrOverride));
+      content.push(padWithQuotes(row.notes));
 
       csvContent += content.join(',') + '\n';
     });

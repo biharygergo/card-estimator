@@ -106,7 +106,7 @@ export class RoundHistoryTableComponent
             startedAt: statRow.startedAt || Timestamp.now(),
             majority: statRow.mostPopularVoteOrOverride || '-',
             average: statRow.average || '-',
-            notes: statRow.notes.slice(1, -1) || '-',
+            notes: statRow.notes || '-',
           })
         );
       });

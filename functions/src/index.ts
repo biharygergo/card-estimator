@@ -49,6 +49,8 @@ import {updateIssue} from "./jira/updateIssue";
 import {onTeamsGoogleAuthResult, startTeamsGoogleAuth} from "./ms-teams";
 import {createRoom} from "./room/new-room";
 import {assignCreditsAsNeeded, getAllCreditBundles} from "./credits";
+import {onLinearAuthorizationReceived, startLinearAuthFlow} from "./linear/oauth";
+import {searchLinear} from "./linear/search";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -191,6 +193,18 @@ exports.queryJiraIssues = onCall({cors: true}, async (request) =>
 );
 
 exports.updateIssue = onCall({cors: true}, async (req) => updateIssue(req));
+
+exports.startLinearAuth = onRequest({cors: true}, async (req, res) => {
+  cookieParser()(req, res, () => startLinearAuthFlow(req, res));
+});
+
+exports.onLinearAuthResponse = onRequest({cors: true}, async (req, res) => {
+  cookieParser()(req, res, () => onLinearAuthorizationReceived(req, res));
+});
+
+exports.queryLinearIssues = onCall({cors: true}, async (request) =>
+  searchLinear(request)
+);
 
 exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
   const redirectTo = req.query.redirectTo;

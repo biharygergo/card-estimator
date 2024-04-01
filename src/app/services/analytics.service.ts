@@ -341,4 +341,8 @@ export class AnalyticsService {
   logSharedToStage() {
     this.logEventInternal('shared_room_to_meeting_stage');
   }
+
+  logClickedLinearAuth() {
+    this.logEventInternal('clicked_start_linear_auth');
+  }
 }

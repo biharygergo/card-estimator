@@ -1,10 +1,11 @@
-import { Issuer, Client, generators, TokenSet } from 'openid-client';
-import * as functions from 'firebase-functions';
-import { getFirestore } from 'firebase-admin/firestore';
-import { isRunningInDevMode } from '../config';
+import {Issuer, Client, generators, TokenSet} from "openid-client";
+import * as functions from "firebase-functions";
+import {getFirestore} from "firebase-admin/firestore";
+import {isRunningInDevMode} from "../config";
+import {LinearIntegration} from "../types";
 
 export class LinearOauthClient {
-  openIdHost = 'https://linear.app/oauth/authorize';
+  openIdHost = "https://linear.app/oauth";
   issuer: Issuer | undefined;
   client: Client | undefined;
   config: { clientId: string; clientSecret: string; redirectUri: string };
@@ -12,38 +13,42 @@ export class LinearOauthClient {
   constructor() {
     const config = {
       clientId:
-        (isRunningInDevMode()
-          ? process.env.LINEAR_CLIENT_ID_DEV
-          : process.env.LINEAR_CLIENT_ID) || '',
+        (isRunningInDevMode() ?
+          process.env.LINEAR_CLIENT_ID_DEV :
+          process.env.LINEAR_CLIENT_ID) || "",
       clientSecret:
-        (isRunningInDevMode()
-          ? process.env.LINEAR_CLIENT_SECRET_DEV
-          : process.env.LINEAR_CLIENT_SECRET) || '',
+        (isRunningInDevMode() ?
+          process.env.LINEAR_CLIENT_SECRET_DEV :
+          process.env.LINEAR_CLIENT_SECRET) || "",
       redirectUri:
-        (isRunningInDevMode()
-          ? process.env.LINEAR_REDIRECT_URI_DEV
-          : process.env.LINEAR_REDIRECT_URI) || '',
+        (isRunningInDevMode() ?
+          process.env.LINEAR_REDIRECT_URI_DEV :
+          process.env.LINEAR_REDIRECT_URI) || "",
     };
 
     if (!config.clientId || !config.clientSecret || !config.redirectUri) {
-      throw new Error('Linear secrets not configured');
+      throw new Error("Linear secrets not configured");
     }
     this.config = config;
   }
 
   async initializeClient() {
-    this.issuer = await Issuer.discover(this.openIdHost);
+    this.issuer = new Issuer({
+      issuer: "linear",
+      authorization_endpoint: "https://linear.app/oauth/authorize",
+      token_endpoint: "https://api.linear.app/oauth/token",
+    });
     this.client = new this.issuer.Client({
       client_id: this.config.clientId,
       client_secret: this.config.clientSecret,
       redirect_uri: [this.config.redirectUri],
-      response_type: ['code'],
+      response_type: ["code"],
     });
   }
 
   authorize(): string {
     if (!this.client) {
-      throw new Error('Please call initialize() first.');
+      throw new Error("Please call initialize() first.");
     }
 
     const codeVerifier = generators.codeVerifier();
@@ -51,10 +56,10 @@ export class LinearOauthClient {
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
     return this.client.authorizationUrl({
-      scope: 'read write',
+      scope: "read write",
       state: codeChallenge,
-      prompt: 'consent',
-      response_type: 'code',
+      prompt: "consent",
+      response_type: "code",
       redirect_uri: this.config.redirectUri,
     });
   }
@@ -76,17 +81,16 @@ export class LinearOauthClient {
 
 export async function getActiveLinearIntegration(userId: string): Promise<{
   linearIntegration: LinearIntegration;
-  activeResource: LinearResource;
   tokenSet: TokenSet;
 }> {
   const linearIntegrationRef = await getFirestore()
-    .doc(`userDetails/${userId}/integrations/linear`)
-    .get();
+      .doc(`userDetails/${userId}/integrations/linear`)
+      .get();
 
   if (!linearIntegrationRef.exists) {
     throw new functions.https.HttpsError(
-      'not-found',
-      'Linear integration not found'
+        "not-found",
+        "Linear integration not found"
     );
   }
 
@@ -111,16 +115,5 @@ export async function getActiveLinearIntegration(userId: string): Promise<{
     tokenSet = updatedToken;
   }
 
-  const activeResource: LinearResource =
-    linearIntegration.linearResources.find((integration) => integration.active) ||
-    linearIntegration.jiraResources?.[0];
-
-  if (!activeResource) {
-    throw new functions.https.HttpsError(
-      'not-found',
-      'No active Linear integration found'
-    );
-  }
-
-  return { linearIntegration, activeResource, tokenSet };
+  return {linearIntegration, tokenSet};
 }

@@ -3,8 +3,11 @@ import {getActiveJiraIntegration} from "./client";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
 import {CallableRequest} from "firebase-functions/v2/https";
+import {RichTopic} from "../types";
 
-export async function searchJira(request: CallableRequest) {
+export async function searchJira(
+    request: CallableRequest
+): Promise<RichTopic[]> {
   const query = request.data.search;
   const userId = request.auth?.uid;
   if (!userId) {
@@ -38,15 +41,18 @@ export async function searchJira(request: CallableRequest) {
         })
         .then((response) => response.data);
 
-    return results.issues.map((issue: any) => ({
-      summary: issue.fields.summary,
-      description: issue.fields.description,
-      status: issue.fields.status?.name,
-      assignee: issue.fields.assignee?.displayName,
-      id: issue.id,
-      key: issue.key,
-      url: `${activeResource.url}/browse/${issue.key}`,
-    }));
+    return results.issues.map(
+        (issue: any): RichTopic => ({
+          summary: issue.fields.summary,
+          description: issue.fields.description,
+          status: issue.fields.status?.name,
+          assignee: issue.fields.assignee?.displayName,
+          id: issue.id,
+          key: issue.key,
+          url: `${activeResource.url}/browse/${issue.key}`,
+          provider: "jira",
+        })
+    );
   } catch (error) {
     captureError(error);
     console.error(error);

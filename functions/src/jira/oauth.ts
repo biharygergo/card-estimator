@@ -3,7 +3,7 @@ import {getAuth} from "firebase-admin/auth";
 import {Timestamp, getFirestore} from "firebase-admin/firestore";
 import axios from "axios";
 import {JiraClient} from "./client";
-import {JiraIntegration, JiraResource} from "./types";
+import {JiraIntegration, JiraResource, UserPreference} from "../types";
 import {getSessionVariable} from "../zoom/routes";
 import {getHost} from "../config";
 import {captureError} from "../shared/errors";
@@ -75,6 +75,12 @@ export async function onJiraAuthorizationReceived(
     };
 
     await collection.doc("jira").set(integration);
+    const updatedPreference: Partial<UserPreference> = {
+      selectedIssueIntegrationProvider: "jira",
+    };
+    await firestore
+        .doc(`userPreferences/${userId}`)
+        .set(updatedPreference, {merge: true});
 
     res.status(200).redirect(getHost(req) + "/integration/success");
   } catch (e: any) {

@@ -86,6 +86,16 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/startLinearAuth",
+          "function": "startLinearAuth",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onLinearAuthResponse",
+          "function": "onLinearAuthResponse",
+          "region": "us-central1"
+        },
+        {
           "source": "/api/safeRedirect",
           "function": "safeRedirect",
           "region": "us-central1"

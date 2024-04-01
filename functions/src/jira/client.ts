@@ -1,7 +1,7 @@
 import {Issuer, Client, generators, TokenSet} from "openid-client";
 import * as functions from "firebase-functions";
 import {getFirestore} from "firebase-admin/firestore";
-import {JiraIntegration, JiraResource} from "./types";
+import {JiraIntegration, JiraResource} from "../types";
 
 export class JiraClient {
   openIdHost = "https://auth.atlassian.com";

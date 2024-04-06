@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
@@ -165,6 +166,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   );
   destroy = new Subject<void>();
+  menuOpen = signal(false);
 
   constructor(
     private readonly jiraService: JiraService,

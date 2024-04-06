@@ -37,7 +37,8 @@
   align-items: center;
   gap: 8px;
 
-  img, mat-icon {
+  img,
+  mat-icon {
     height: 16px !important;
     width: 16px !important;
     margin-right: 0 !important;
@@ -84,4 +85,13 @@
   gap: 0.5rem;
   align-items: center;
   margin-right: 0.5rem;
+}
+
+.import-menu-button {
+  mat-icon {
+    transition: transform 200ms ease-in-out;
+    &.rotated {
+      transform: rotate(180deg);
+    }
+  }
 }

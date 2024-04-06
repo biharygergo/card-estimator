@@ -103,8 +103,11 @@
     mat-stroked-button
     color="primary"
     [matMenuTriggerFor]="integrationsMenu"
+    (menuOpened)="menuOpen.set(true)"
+    (menuClosed)="menuOpen.set(false)"
+    class="import-menu-button"
   >
-    <mat-icon>expand_more</mat-icon>
+    <mat-icon [class.rotated]="menuOpen()">expand_more</mat-icon>
     Import
   </button>
   <mat-menu #integrationsMenu="matMenu">

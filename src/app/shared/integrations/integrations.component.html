@@ -154,6 +154,30 @@
           }
         </div>
       </div>
+      <div class="integration">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/linear.png" />
+              <h4>Linear</h4>
+            </div>
+            <p>
+              Select tickets from your recent history and search right from the
+              topic editor.
+            </p>
+          </div>
+          <div class="actions">
+            <button mat-flat-button color="primary" (click)="startLinearAuth()">
+              {{ (linearIntegration$ | async) ? "Reconnect" : "Connect" }}
+            </button>
+          </div>
+        </div>
+        <div class="integration-preferences">
+          @if (linearIntegration$ | async) {
+            <button mat-button (click)="removeLinearIntegration()">Remove</button>
+          }
+        </div>
+      </div>
     </div>
   </div>
 </div>

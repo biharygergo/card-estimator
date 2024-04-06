@@ -1,5 +1,13 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { catchError, first, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  first,
+  Observable,
+  of,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { AppConfig, APP_CONFIG } from 'src/app/app-config.module';
 import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -7,6 +15,7 @@ import { JiraIntegration, JiraResource } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { configureJiraModalCreator } from '../configure-jira-integration-modal/configure-jira-integration-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LinearService } from 'src/app/services/linear.service';
 
 export const integrationsModalCreator =
   (): ModalCreator<IntegrationsComponent> => [
@@ -27,11 +36,15 @@ export const integrationsModalCreator =
   encapsulation: ViewEncapsulation.None,
 })
 export class IntegrationsComponent {
-  jiraIntegration$: Observable<JiraIntegration> =
-    this.jiraService.getIntegration();
+  jiraIntegration$: Observable<JiraIntegration> = this.jiraService
+    .getIntegration()
+    .pipe(shareReplay(1));
+  linearIntegration$ = this.linearService.getIntegration().pipe(shareReplay(1));
+
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly jiraService: JiraService,
+    private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly dialog: MatDialog
   ) {}
@@ -102,5 +115,13 @@ export class IntegrationsComponent {
 
   startJiraAuth() {
     this.jiraService.startJiraAuthFlow();
+  }
+
+  startLinearAuth() {
+    this.linearService.startLinearAuthFlow();
+  }
+
+  removeLinearIntegration() {
+    this.linearService.removeLinearIntegration().subscribe();
   }
 }

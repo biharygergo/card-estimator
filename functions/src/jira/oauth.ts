@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import {getAuth} from "firebase-admin/auth";
-import {Timestamp, getFirestore} from "firebase-admin/firestore";
+import {Timestamp, WriteResult, getFirestore} from "firebase-admin/firestore";
 import axios from "axios";
 import {JiraClient} from "./client";
 import {JiraIntegration, JiraResource, UserPreference} from "../types";
@@ -75,18 +75,30 @@ export async function onJiraAuthorizationReceived(
     };
 
     await collection.doc("jira").set(integration);
-    const updatedPreference: Partial<UserPreference> = {
-      selectedIssueIntegrationProvider: "jira",
-    };
-    await firestore
-        .doc(`userPreferences/${userId}`)
-        .set(updatedPreference, {merge: true});
+    saveJiraPreferenceForUser(userId);
 
     res.status(200).redirect(getHost(req) + "/integration/success");
   } catch (e: any) {
-    res.status(500).json({message: "Oh-oh, an error occured during Jira setup. " + e?.message});
+    res
+        .status(500)
+        .json({
+          message: "Oh-oh, an error occured during Jira setup. " + e?.message,
+        });
     captureError(e);
   }
+}
+
+export function saveJiraPreferenceForUser(
+    userId: string
+): Promise<WriteResult> {
+  const updatedPreference: Partial<UserPreference> = {
+    selectedIssueIntegrationProvider: "jira",
+  };
+  const firestore = getFirestore();
+
+  return firestore
+      .doc(`userPreferences/${userId}`)
+      .set(updatedPreference, {merge: true});
 }
 
 export async function getUserId(

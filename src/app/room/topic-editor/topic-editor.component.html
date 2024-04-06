@@ -116,15 +116,17 @@
       (click)="startJiraAuth.next()"
       [disabled]="
         (jiraIntegration$ | async) &&
-        (selectedIssueIntegrationProvider$ | async) === 'jira'
+        ['jira', undefined].includes(selectedIssueIntegrationProvider$ | async)
       "
     >
       <span class="button-with-custom-icon">
         <img src="/assets/jira.png" />
         {{
           (jiraIntegration$ | async) === undefined
-            ? "Jira - Click to connect"
-            : (selectedIssueIntegrationProvider$ | async) === "jira"
+            ? "Connect to Jira"
+            : ["jira", undefined].includes(
+                selectedIssueIntegrationProvider$ | async
+              )
             ? "Connected to Jira"
             : "Switch to Jira"
         }}
@@ -142,7 +144,7 @@
         <img src="/assets/linear.png" />
         {{
           (linearIntegration$ | async) === undefined
-            ? "Linear - Click to connect"
+            ? "Connect to Linear"
             : (selectedIssueIntegrationProvider$ | async) === "linear"
             ? "Connected to Linear"
             : "Switch to Linear"

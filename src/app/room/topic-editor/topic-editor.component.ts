@@ -180,7 +180,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => this.topicInput.nativeElement.focus());
+    this.focusTopicInput();
 
     this.roomTopic
       .pipe(takeUntil(this.destroy))
@@ -205,7 +205,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.startJiraAuth
       .pipe(withLatestFrom(this.jiraIntegration$), takeUntil(this.destroy))
-      .subscribe((integration) => {
+      .subscribe(([, integration]) => {
         if (!integration) {
           this.analyticsService.logClickedStartJiraAuth();
           this.jiraService.startJiraAuthFlow();
@@ -216,11 +216,12 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
             })
             .subscribe();
         }
+        this.focusTopicInput();
       });
 
     this.startLinearAuth
       .pipe(withLatestFrom(this.linearIntegration$), takeUntil(this.destroy))
-      .subscribe((integration) => {
+      .subscribe(([, integration]) => {
         if (!integration) {
           this.analyticsService.logClickedLinearAuth();
           this.linearService.startLinearAuthFlow();
@@ -231,6 +232,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
             })
             .subscribe();
         }
+        this.focusTopicInput();
       });
   }
 
@@ -248,6 +250,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  focusTopicInput() {
+    setTimeout(() => this.topicInput.nativeElement.focus());
   }
 
   topicBlur() {

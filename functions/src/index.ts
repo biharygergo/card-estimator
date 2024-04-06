@@ -197,9 +197,9 @@ exports.queryJiraIssues = onCall({cors: true}, async (request) =>
 );
 
 exports.updateIssue = onCall({cors: true}, async (req) =>
-  (req.data.updateRequest as IssueUpdateRequestData).provider === "jira" ?
-    updateIssue(req) :
-    updateLinearIssue(req)
+  (req.data.updateRequest as IssueUpdateRequestData).provider === "linear" ?
+    updateLinearIssue(req) :
+    updateIssue(req)
 );
 
 exports.startLinearAuth = onRequest({cors: true}, async (req, res) => {

@@ -108,8 +108,9 @@
               color="primary"
               class="select-plan"
               (click)="subscribeToPremium()"
+              [disabled]="isLoadingStripe"
             >
-              Subscribe
+              {{ isLoadingStripe ? "Redirecting to Stripe..." : "Subscribe" }}
             </button>
           </div>
         </div>

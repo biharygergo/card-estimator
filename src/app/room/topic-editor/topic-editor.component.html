@@ -5,7 +5,7 @@
     subscriptSizing="dynamic"
   >
     <input
-      placeholder="Write a short description of the topic or search/select a ticket"
+      placeholder="Write a short description of the topic or search/select a ticket from an integration"
       [formControl]="roundTopic"
       cdkFocusInitial
       autofocus
@@ -105,7 +105,7 @@
     [matMenuTriggerFor]="integrationsMenu"
   >
     <mat-icon>expand_more</mat-icon>
-    Integrations
+    Import
   </button>
   <mat-menu #integrationsMenu="matMenu">
     <button
@@ -117,7 +117,7 @@
       "
     >
       <span class="button-with-custom-icon">
-        <img class="jira-icon" src="/assets/jira.png" />
+        <img src="/assets/jira.png" />
         {{
           (jiraIntegration$ | async) === undefined
             ? "Jira - Click to connect"
@@ -136,7 +136,7 @@
       "
     >
       <span class="button-with-custom-icon">
-        <img class="jira-icon" src="/assets/linear.png" />
+        <img src="/assets/linear.png" />
         {{
           (linearIntegration$ | async) === undefined
             ? "Linear - Click to connect"
@@ -144,6 +144,17 @@
             ? "Connected to Linear"
             : "Switch to Linear"
         }}
+      </span>
+    </button>
+    <mat-divider />
+    <button
+      mat-menu-item
+      (click)="openBatchAddModal()"
+      [disabled]="!(permissionsService.canCreateRounds() | async)"
+    >
+      <span class="button-with-custom-icon">
+        <mat-icon>library_add</mat-icon>
+        Batch add rounds
       </span>
     </button>
   </mat-menu>

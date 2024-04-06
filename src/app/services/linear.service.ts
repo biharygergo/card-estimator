@@ -118,7 +118,7 @@ export class LinearService {
     );
   }
 
-  /* updateIssue(updateRequest?: {
+  updateIssue(updateRequest?: {
     issueId: string;
     storyPoints: number;
   }): Observable<{ success: boolean }> {
@@ -126,9 +126,9 @@ export class LinearService {
       httpsCallable(
         this.functions,
         'updateIssue'
-      )({ updateRequest }).then(
+      )({ updateRequest: {...updateRequest, provider: 'linear'} }).then(
         (response) => response.data as { success: boolean }
       )
     );
-  } */
+  }
 }

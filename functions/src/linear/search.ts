@@ -22,18 +22,22 @@ export async function searchLinear(
 
     const issues = await client.client.rawRequest(
         `
-        query fetchIssues($filter: IssueFilter, first: 10) {
-            title
-            description
-            state {
-                name
+        query fetchIssues($filter: IssueFilter) {
+            issues(filter: $filter, first: 10) {
+                nodes {
+                    title
+                    description
+                    state {
+                        name
+                    }
+                    assignee {
+                        displayName
+                    }
+                    id
+                    identifier
+                    url
+                }
             }
-            assignee {
-                displayName
-            }
-            id
-            identifier
-            url
         }
     `,
       query ?
@@ -48,8 +52,8 @@ export async function searchLinear(
         {}
     );
 
-    const richTopics = await Promise.all(
-        (issues.data as any).nodes.map(async (issue: any): Promise<RichTopic> => {
+    const richTopics = (issues.data as any)?.issues?.nodes?.map(
+        (issue: any): RichTopic => {
           return {
             summary: issue.title,
             description: issue.description || "",
@@ -60,7 +64,7 @@ export async function searchLinear(
             url: issue.url,
             provider: "linear",
           };
-        })
+        }
     );
 
     return richTopics;

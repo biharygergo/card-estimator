@@ -25,6 +25,7 @@ import {
   shareReplay,
   Subject,
   switchMap,
+  take,
   takeUntil,
   tap,
   withLatestFrom,
@@ -36,6 +37,10 @@ import * as Sentry from '@sentry/angular-ivy';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { LinearService } from 'src/app/services/linear.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
+import { RoomDataService } from '../room-data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 export interface TopicEditorInputOutput {
   topic: string;
@@ -63,7 +68,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedRichTopic: RichTopic | undefined | null;
 
   debouncedTopic$: Observable<string> = this.roundTopic.valueChanges.pipe(
-    debounceTime(300),
+    debounceTime(500),
     map((topic) => this.displayFn(topic))
   );
 
@@ -166,7 +171,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly authService: AuthService,
-    private readonly analyticsService: AnalyticsService
+    private readonly analyticsService: AnalyticsService,
+    private readonly roomDataService: RoomDataService,
+    private readonly dialog: MatDialog,
+    public readonly permissionsService: PermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -275,5 +283,11 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       10000,
       'error'
     );
+  }
+
+  openBatchAddModal() {
+    this.roomDataService.room$.pipe(take(1)).subscribe((room) => {
+      this.dialog.open(...batchAddModalCreator({ room }));
+    });
   }
 }

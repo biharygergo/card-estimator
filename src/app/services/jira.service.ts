@@ -145,7 +145,7 @@ export class JiraService {
       httpsCallable(
         this.functions,
         'updateIssue'
-      )({ updateRequest }).then(
+      )({ updateRequest: {...updateRequest, provider: 'jira'} }).then(
         (response) => response.data as { success: boolean }
       )
     );

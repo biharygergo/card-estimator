@@ -50,6 +50,7 @@ $m3-light-theme: matx.define-theme((
 
 .dark-theme {
   @include mat.all-component-colors($m3-dark-theme);
+  --mdc-outlined-card-container-color: #2a2929;
   --background-dark: black;
   --main-dark-color: black;
   --main-color: #141218;

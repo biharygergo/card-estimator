@@ -45,12 +45,16 @@ import {searchJira} from "./jira/search";
 import {captureError} from "./shared/errors";
 import {createSummary} from "./summary";
 import {onRoomCreated} from "./room/created";
-import {updateIssue} from "./jira/updateIssue";
+import {IssueUpdateRequestData, updateIssue} from "./jira/updateIssue";
 import {onTeamsGoogleAuthResult, startTeamsGoogleAuth} from "./ms-teams";
 import {createRoom} from "./room/new-room";
 import {assignCreditsAsNeeded, getAllCreditBundles} from "./credits";
-import {onLinearAuthorizationReceived, startLinearAuthFlow} from "./linear/oauth";
+import {
+  onLinearAuthorizationReceived,
+  startLinearAuthFlow,
+} from "./linear/oauth";
 import {searchLinear} from "./linear/search";
+import {updateLinearIssue} from "./linear/updateIssue";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -192,7 +196,11 @@ exports.queryJiraIssues = onCall({cors: true}, async (request) =>
   searchJira(request)
 );
 
-exports.updateIssue = onCall({cors: true}, async (req) => updateIssue(req));
+exports.updateIssue = onCall({cors: true}, async (req) =>
+  (req.data.updateRequest as IssueUpdateRequestData).provider === "jira" ?
+    updateIssue(req) :
+    updateLinearIssue(req)
+);
 
 exports.startLinearAuth = onRequest({cors: true}, async (req, res) => {
   cookieParser()(req, res, () => startLinearAuthFlow(req, res));
@@ -232,17 +240,20 @@ exports.onTeamsGoogleAuthResult = onRequest(
 );
 
 exports.createRoom = onCall({cors: true}, createRoom);
-exports.getAllCreditsAndAssignWelcome = onCall({cors: true}, async (request) => {
-  if (!request.auth?.uid) {
-    throw new HttpsError(
-        "unauthenticated",
-        "You need to be authenticated to fetch credits."
-    );
-  }
-  await assignCreditsAsNeeded(request.auth.uid);
+exports.getAllCreditsAndAssignWelcome = onCall(
+    {cors: true},
+    async (request) => {
+      if (!request.auth?.uid) {
+        throw new HttpsError(
+            "unauthenticated",
+            "You need to be authenticated to fetch credits."
+        );
+      }
+      await assignCreditsAsNeeded(request.auth.uid);
 
-  return getAllCreditBundles(request.auth.uid);
-});
+      return getAllCreditBundles(request.auth.uid);
+    }
+);
 
 exports.onUserPaymentCreated = onDocumentCreated(
     "customers/{customerId}/payments/{paymentId}",

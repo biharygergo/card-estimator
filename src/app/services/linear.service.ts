@@ -57,7 +57,7 @@ export class LinearService {
     }
 
     const idToken = await this.authService.refreshIdToken();
-    this.authService.clearSessionCookie();
+    this.authService.setSessionCookie(idToken);
 
     if (this.config.runningIn === 'zoom') {
       await this.zoomService.openUrl(

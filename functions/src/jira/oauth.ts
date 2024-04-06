@@ -79,11 +79,9 @@ export async function onJiraAuthorizationReceived(
 
     res.status(200).redirect(getHost(req) + "/integration/success");
   } catch (e: any) {
-    res
-        .status(500)
-        .json({
-          message: "Oh-oh, an error occured during Jira setup. " + e?.message,
-        });
+    res.status(500).json({
+      message: "Oh-oh, an error occured during Jira setup. " + e?.message,
+    });
     captureError(e);
   }
 }
@@ -106,9 +104,9 @@ export async function getUserId(
     res: functions.Response
 ): Promise<string | false> {
   const tokenId =
+    (req.query.token as string | undefined) ??
     getSessionVariable(req, res, false) ??
-    req.get("Authorization")?.split("Bearer ")[1] ??
-    (req.query.token as string | undefined);
+    req.get("Authorization")?.split("Bearer ")[1];
   if (!tokenId) {
     console.error("ID token not found");
     return false;

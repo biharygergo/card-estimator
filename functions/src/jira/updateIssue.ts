@@ -4,13 +4,14 @@ import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
 import {CallableRequest} from "firebase-functions/v2/https";
 
-interface JiraUpdateRequestData {
+export interface IssueUpdateRequestData {
   issueId: string;
   storyPoints: number;
+  provider: "jira" | "linear"
 }
 
 export async function updateIssue(request: CallableRequest) {
-  const updateRequest = request.data.updateRequest as JiraUpdateRequestData;
+  const updateRequest = request.data.updateRequest as IssueUpdateRequestData;
   const userId = request.auth?.uid;
   if (!userId) {
     throw new Error("Not signed in");

@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
@@ -21,16 +22,26 @@ import {
   map,
   Observable,
   of,
+  share,
+  shareReplay,
   Subject,
   switchMap,
+  take,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { JiraIssue, RichTopic } from 'src/app/types';
 import * as Sentry from '@sentry/angular-ivy';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { LinearService } from 'src/app/services/linear.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
+import { RoomDataService } from '../room-data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 export interface TopicEditorInputOutput {
   topic: string;
@@ -51,33 +62,67 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('topicInput') topicInput: ElementRef;
 
-  roundTopic = new FormControl<string | JiraIssue>('', { nonNullable: true });
+  roundTopic = new FormControl<string | RichTopic>('', { nonNullable: true });
   isSearching: boolean = false;
   isFetchingRecents: boolean = false;
 
   selectedRichTopic: RichTopic | undefined | null;
 
   debouncedTopic$: Observable<string> = this.roundTopic.valueChanges.pipe(
-    debounceTime(300),
+    debounceTime(500),
     map((topic) => this.displayFn(topic))
   );
 
   startJiraAuth = new Subject<void>();
+  startLinearAuth = new Subject<void>();
 
   jiraIntegration$ = this.jiraService.getIntegration();
-  jiraIssues$ = new BehaviorSubject<{
-    recent: JiraIssue[];
-    search: JiraIssue[];
+  linearIntegration$ = this.linearService.getIntegration();
+
+  selectedIssueIntegrationProvider$ = this.authService.getUserPreference().pipe(
+    map((pref) => pref?.selectedIssueIntegrationProvider),
+    shareReplay(1)
+  );
+
+  activeIntegration$ = combineLatest([
+    this.jiraIntegration$,
+    this.linearIntegration$,
+    this.selectedIssueIntegrationProvider$,
+  ]).pipe(
+    map(
+      ([
+        jiraIntegration,
+        linearIntegration,
+        selectedIssueIntegrationProvider,
+      ]) => {
+        if (
+          selectedIssueIntegrationProvider === 'linear' &&
+          linearIntegration
+        ) {
+          return { integration: linearIntegration, provider: 'linear' };
+        } else {
+          // Default to Jira even if setAsActiveIntegration is not set on it (optional)
+          return { integration: jiraIntegration, provider: 'jira' };
+        }
+      }
+    )
+  );
+
+  issuesFromIntegration$ = new BehaviorSubject<{
+    recent: RichTopic[];
+    search: RichTopic[];
   }>({ recent: [], search: [] });
 
-  recentJiraIssues$: Observable<JiraIssue[]> = this.jiraIntegration$.pipe(
-    switchMap((integration) => {
+  recentIssues$: Observable<RichTopic[]> = this.activeIntegration$.pipe(
+    switchMap(({ integration, provider }) => {
       if (!integration) {
         return of([]);
       }
 
       this.isFetchingRecents = true;
-      return this.jiraService.getIssues().pipe(
+      const service =
+        provider === 'linear' ? this.linearService : this.jiraService;
+      return service.getIssues().pipe(
         tap(() => {
           this.isFetchingRecents = false;
         }),
@@ -89,12 +134,12 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   );
 
-  jiraIssuesFromQuery$: Observable<JiraIssue[]> = combineLatest([
-    this.jiraIntegration$,
+  issuesFromQuery$: Observable<RichTopic[]> = combineLatest([
+    this.activeIntegration$,
     this.debouncedTopic$,
   ]).pipe(
-    switchMap(([jiraIntegration, query]) => {
-      if (!jiraIntegration) {
+    switchMap(([{ integration, provider }, query]) => {
+      if (!integration) {
         return of([]);
       }
 
@@ -107,7 +152,9 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       this.isSearching = true;
-      return this.jiraService.getIssues(query).pipe(
+      const service =
+        provider === 'linear' ? this.linearService : this.jiraService;
+      return service.getIssues(query).pipe(
         catchError((error) => {
           this.showJiraError(error);
           return of([]);
@@ -119,15 +166,21 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   );
   destroy = new Subject<void>();
+  menuOpen = signal(false);
 
   constructor(
     private readonly jiraService: JiraService,
+    private readonly linearService: LinearService,
     private readonly toastService: ToastService,
-    private readonly analyticsService: AnalyticsService
+    private readonly authService: AuthService,
+    private readonly analyticsService: AnalyticsService,
+    private readonly roomDataService: RoomDataService,
+    private readonly dialog: MatDialog,
+    public readonly permissionsService: PermissionsService
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => this.topicInput.nativeElement.focus());
+    this.focusTopicInput();
 
     this.roomTopic
       .pipe(takeUntil(this.destroy))
@@ -136,28 +189,51 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRichTopic = richTopic;
       });
 
-    this.jiraIssuesFromQuery$
-      .pipe(takeUntil(this.destroy))
-      .subscribe((issues) => {
-        this.jiraIssues$.next({
-          search: issues,
-          recent: this.jiraIssues$.value.recent,
-        });
+    this.issuesFromQuery$.pipe(takeUntil(this.destroy)).subscribe((issues) => {
+      this.issuesFromIntegration$.next({
+        search: issues,
+        recent: this.issuesFromIntegration$.value.recent,
       });
-
-    this.recentJiraIssues$
-      .pipe(takeUntil(this.destroy))
-      .subscribe((recents) => {
-        this.jiraIssues$.next({
-          recent: recents,
-          search: this.jiraIssues$.value.search,
-        });
-      });
-
-    this.startJiraAuth.pipe(takeUntil(this.destroy)).subscribe((issues) => {
-      this.analyticsService.logClickedStartJiraAuth();
-      this.jiraService.startJiraAuthFlow();
     });
+
+    this.recentIssues$.pipe(takeUntil(this.destroy)).subscribe((recents) => {
+      this.issuesFromIntegration$.next({
+        recent: recents,
+        search: this.issuesFromIntegration$.value.search,
+      });
+    });
+
+    this.startJiraAuth
+      .pipe(withLatestFrom(this.jiraIntegration$), takeUntil(this.destroy))
+      .subscribe(([, integration]) => {
+        if (!integration) {
+          this.analyticsService.logClickedStartJiraAuth();
+          this.jiraService.startJiraAuthFlow();
+        } else {
+          this.authService
+            .updateUserPreference({
+              selectedIssueIntegrationProvider: 'jira',
+            })
+            .subscribe();
+        }
+        this.focusTopicInput();
+      });
+
+    this.startLinearAuth
+      .pipe(withLatestFrom(this.linearIntegration$), takeUntil(this.destroy))
+      .subscribe(([, integration]) => {
+        if (!integration) {
+          this.analyticsService.logClickedLinearAuth();
+          this.linearService.startLinearAuthFlow();
+        } else {
+          this.authService
+            .updateUserPreference({
+              selectedIssueIntegrationProvider: 'linear',
+            })
+            .subscribe();
+        }
+        this.focusTopicInput();
+      });
   }
 
   ngAfterViewInit() {
@@ -176,6 +252,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy.complete();
   }
 
+  focusTopicInput() {
+    setTimeout(() => this.topicInput.nativeElement.focus());
+  }
+
   topicBlur() {
     this.topicUpdated.next({
       topic: this.displayFn(this.roundTopic.value),
@@ -183,20 +263,20 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  displayFn(issue: JiraIssue | string) {
+  displayFn(issue: RichTopic | string) {
     if (typeof issue === 'string') {
       return issue;
     }
     return `${issue.key}: ${issue.summary}`;
   }
 
-  issueSelected(issue: JiraIssue) {
+  issueSelected(issue: RichTopic) {
     this.selectedRichTopic = {
       description: issue.description,
       summary: issue.summary,
       key: issue.key,
       url: issue.url,
-      provider: 'jira',
+      provider: issue.provider,
       assignee: issue.assignee,
       status: issue.status,
     };
@@ -207,9 +287,15 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     console.error(e);
     Sentry.captureException(e);
     this.toastService.showMessage(
-      `Could not fetch issues from Jira. Please try again or reconnect from the Integrations menu. ${e.message}`,
+      `Could not fetch issues from provider. Please try again or reconnect from the Integrations menu. ${e.message}`,
       10000,
       'error'
     );
+  }
+
+  openBatchAddModal() {
+    this.roomDataService.room$.pipe(take(1)).subscribe((room) => {
+      this.dialog.open(...batchAddModalCreator({ room }));
+    });
   }
 }

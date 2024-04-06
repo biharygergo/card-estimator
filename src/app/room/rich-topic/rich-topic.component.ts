@@ -23,6 +23,7 @@ import { finalize } from 'rxjs/operators';
 import { EstimateConverterPipe } from 'src/app/pipes/estimate-converter.pipe';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import * as jira2md from 'jira2md';
+import { LinearService } from 'src/app/services/linear.service';
 
 @Component({
   selector: 'app-rich-topic',
@@ -46,6 +47,7 @@ export class RichTopicComponent implements OnChanges {
     private readonly zoomService: ZoomApiService,
     private readonly analyticsService: AnalyticsService,
     private readonly jiraService: JiraService,
+    private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly permissionService: PermissionsService
   ) {}
@@ -58,7 +60,10 @@ export class RichTopicComponent implements OnChanges {
         | undefined;
 
       if (newTopic?.description) {
-        this.cleanedMarkdown = jira2md.to_markdown(newTopic.description);
+        this.cleanedMarkdown =
+          newTopic.provider === 'jira'
+            ? jira2md.to_markdown(newTopic.description)
+            : newTopic.description;
       } else {
         this.cleanedMarkdown = '';
       }
@@ -90,15 +95,21 @@ export class RichTopicComponent implements OnChanges {
       );
       return;
     }
+    const providerName =
+      this.richTopic?.provider === 'linear' ? 'Linear' : 'Jira';
+    const providerService =
+      this.richTopic?.provider === 'linear'
+        ? this.linearService
+        : this.jiraService;
 
     if (!isNumericCardSet(this.selectedEstimationCardSetValue)) {
       this.toastService.showMessage(
-        'Jira only supports numeric story points. Please choose a different card set.'
+        `${providerName} only supports numeric story points. Please choose a different card set.`
       );
       return;
     }
 
-    this.toastService.showMessage('Saving to Jira, hold tight...');
+    this.toastService.showMessage(`Saving to ${providerName}, hold tight...`);
 
     this.isSavingToJira = true;
     const convertedMajority = +new EstimateConverterPipe().transform(
@@ -107,7 +118,7 @@ export class RichTopicComponent implements OnChanges {
       'exact'
     );
 
-    this.jiraService
+    providerService
       .updateIssue({
         issueId: this.richTopic.key,
         storyPoints: convertedMajority,
@@ -120,11 +131,11 @@ export class RichTopicComponent implements OnChanges {
       .subscribe((result) => {
         if (result.success) {
           this.toastService.showMessage(
-            'Awesome! Majority vote is saved to Jira.'
+            `Awesome! Majority vote is saved to ${providerName}.`
           );
         } else {
           this.toastService.showMessage(
-            'Oh-oh, something went wrong while uploading to Jira.'
+            `Oh-oh, something went wrong while uploading to ${providerName}.`
           );
         }
       });

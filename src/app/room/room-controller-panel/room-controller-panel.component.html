@@ -35,7 +35,7 @@
             (newRoundButtonCooldownState$ | async).includes('cooldown') ||
             isEditingTopic
             "
-            class="new-round-button"
+            class="new-round-button main-button"
             id="new-round-button"
             >
             @if ((newRoundButtonCooldownState$ | async) === 'cooldown') {
@@ -67,6 +67,7 @@
             !(permissionsService.canCreateRounds() | async) || isEditingTopic
             "
             id="next-round-button"
+            class="main-button"
             >
             <div class="center-icon-button">
               <mat-icon>navigate_next</mat-icon>
@@ -84,6 +85,7 @@
             !(permissionsService.canRevealResults() | async)
             "
             id="reveal-results-button"
+            class="main-button"
             >
             <div class="center-icon-button">
               <mat-icon>visibility</mat-icon>

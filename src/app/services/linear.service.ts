@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import {
   deleteDoc,
@@ -16,27 +15,26 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { JiraIntegration, JiraIssue, JiraResource, RichTopic } from '../types';
+import { LinearIntegration, RichTopic } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class JiraService {
+export class LinearService {
   API_URL = `${window.location.origin}/api`;
   constructor(
     private readonly firestore: Firestore,
     private readonly authService: AuthService,
     private readonly functions: Functions,
-    private readonly http: HttpClient,
     private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
-  async startJiraAuthFlow() {
-    const apiUrl = `${this.API_URL}/startJiraAuth`;
+  async startLinearAuthFlow() {
+    const apiUrl = `${this.API_URL}/startLinearAuth`;
     let user = await this.authService.getUser();
 
     if (!user || user?.isAnonymous) {
@@ -46,7 +44,7 @@ export class JiraService {
             ? SignUpOrLoginIntent.LINK_ACCOUNT
             : SignUpOrLoginIntent.SIGN_IN,
           titleOverride:
-            'Create a free Planning Poker account to integrate with Jira',
+            'Create a free Planning Poker account to integrate with Linear',
         })
       );
 
@@ -77,42 +75,25 @@ export class JiraService {
     window.open(apiUrl, '_blank');
   }
 
-  getIntegration(): Observable<JiraIntegration|undefined> {
+  getIntegration(): Observable<LinearIntegration | undefined> {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
 
-        const jiraDoc = docData<JiraIntegration>(
+        const linearDoc = docData<LinearIntegration>(
           doc(
             this.firestore,
-            `userDetails/${user.uid}/integrations/jira`
-          ) as DocumentReference<JiraIntegration>
+            `userDetails/${user.uid}/integrations/linear`
+          ) as DocumentReference<LinearIntegration>
         );
-        return jiraDoc;
+        return linearDoc;
       })
     );
   }
 
-  updateJiraResourceList(resourceList: JiraResource[]) {
-    return this.authService.user.pipe(
-      switchMap((user) => {
-        if (!user || user.isAnonymous) {
-          return of(undefined);
-        }
-
-        return from(
-          updateDoc(
-            doc(this.firestore, `userDetails/${user.uid}/integrations/jira`),
-            { jiraResources: resourceList }
-          )
-        );
-      })
-    );
-  }
-
-  removeJiraIntegration() {
+  removeLinearIntegration() {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user || user.isAnonymous) {
@@ -121,7 +102,7 @@ export class JiraService {
 
         return from(
           deleteDoc(
-            doc(this.firestore, `userDetails/${user.uid}/integrations/jira`)
+            doc(this.firestore, `userDetails/${user.uid}/integrations/linear`)
           )
         );
       })
@@ -132,7 +113,7 @@ export class JiraService {
     return from(
       httpsCallable(
         this.functions,
-        'queryJiraIssues'
+        'queryLinearIssues'
       )({ search: query }).then((response) => response.data as RichTopic[])
     );
   }
@@ -145,7 +126,7 @@ export class JiraService {
       httpsCallable(
         this.functions,
         'updateIssue'
-      )({ updateRequest: {...updateRequest, provider: 'jira'} }).then(
+      )({ updateRequest: {...updateRequest, provider: 'linear'} }).then(
         (response) => response.data as { success: boolean }
       )
     );

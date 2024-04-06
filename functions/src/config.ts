@@ -19,13 +19,14 @@ export function getHost(req: functions.Request) {
   return `${protocol}${host}`;
 }
 
-export function isRunningInDevMode(req: functions.Request) {
-  const host = req.headers["x-forwarded-host"] as string;
+export function isRunningInDevMode(req?: functions.Request) {
+  const host = req?.headers["x-forwarded-host"] as string | undefined;
   const isDev =
     process.env.FUNCTIONS_EMULATOR === "true" ||
-    host.includes("localhost") ||
-    host.includes("staging.planningpoker.live") ||
-    host.includes("test.planningpoker.live") ||
-    host.includes("ngrok");
+    process.env.GCLOUD_PROJECT !== "card-estimator";
+  host?.includes("localhost") ||
+    host?.includes("staging.planningpoker.live") ||
+    host?.includes("test.planningpoker.live") ||
+    host?.includes("ngrok");
   return isDev;
 }

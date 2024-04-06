@@ -1,36 +1,48 @@
 import {Issuer, Client, generators, TokenSet} from "openid-client";
 import * as functions from "firebase-functions";
 import {getFirestore} from "firebase-admin/firestore";
-import {JiraIntegration, JiraResource} from "../types";
+import {isRunningInDevMode} from "../config";
+import {LinearIntegration} from "../types";
 
-export class JiraClient {
-  openIdHost = "https://auth.atlassian.com";
+export class LinearOauthClient {
+  openIdHost = "https://linear.app/oauth";
   issuer: Issuer | undefined;
   client: Client | undefined;
   config: { clientId: string; clientSecret: string; redirectUri: string };
 
   constructor() {
     const config = {
-      clientId: process.env.JIRA_CLIENT_ID || "",
-      clientSecret: process.env.JIRA_CLIENT_SECRET || "",
-      redirectUri: process.env.JIRA_REDIRECT_URI || "",
+      clientId:
+        (isRunningInDevMode() ?
+          process.env.LINEAR_CLIENT_ID_DEV :
+          process.env.LINEAR_CLIENT_ID) || "",
+      clientSecret:
+        (isRunningInDevMode() ?
+          process.env.LINEAR_CLIENT_SECRET_DEV :
+          process.env.LINEAR_CLIENT_SECRET) || "",
+      redirectUri:
+        (isRunningInDevMode() ?
+          process.env.LINEAR_REDIRECT_URI_DEV :
+          process.env.LINEAR_REDIRECT_URI) || "",
     };
 
     if (!config.clientId || !config.clientSecret || !config.redirectUri) {
-      throw new Error("JIRA secrets not configured");
+      throw new Error("Linear secrets not configured");
     }
     this.config = config;
   }
 
   async initializeClient() {
-    this.issuer = await Issuer.discover(this.openIdHost);
+    this.issuer = new Issuer({
+      issuer: "linear",
+      authorization_endpoint: "https://linear.app/oauth/authorize",
+      token_endpoint: "https://api.linear.app/oauth/token",
+    });
     this.client = new this.issuer.Client({
       client_id: this.config.clientId,
       client_secret: this.config.clientSecret,
-      redirect_uris: [this.config.redirectUri],
-      response_types: ["code"],
-      // id_token_signed_response_alg (default "RS256")
-      // token_endpoint_auth_method (default "client_secret_basic")
+      redirect_uri: [this.config.redirectUri],
+      response_type: ["code"],
     });
   }
 
@@ -44,9 +56,7 @@ export class JiraClient {
     const codeChallenge = generators.codeChallenge(codeVerifier);
 
     return this.client.authorizationUrl({
-      scope:
-        "read:jira-work write:issue:jira write:comment:jira write:issue.vote:jira offline_access",
-      audience: "api.atlassian.com",
+      scope: "read write",
       state: codeChallenge,
       prompt: "consent",
       response_type: "code",
@@ -69,32 +79,35 @@ export class JiraClient {
   }
 }
 
-export async function getActiveJiraIntegration(userId: string): Promise<{jiraIntegration: JiraIntegration, activeResource: JiraResource, tokenSet: TokenSet}> {
-  const jiraIntegrationRef = await getFirestore()
-      .doc(`userDetails/${userId}/integrations/jira`)
+export async function getActiveLinearIntegration(userId: string): Promise<{
+  linearIntegration: LinearIntegration;
+  tokenSet: TokenSet;
+}> {
+  const linearIntegrationRef = await getFirestore()
+      .doc(`userDetails/${userId}/integrations/linear`)
       .get();
 
-  if (!jiraIntegrationRef.exists) {
+  if (!linearIntegrationRef.exists) {
     throw new functions.https.HttpsError(
         "not-found",
-        "Jira integration not found"
+        "Linear integration not found"
     );
   }
 
-  const jiraIntegration = jiraIntegrationRef.data() as JiraIntegration;
+  const linearIntegration = linearIntegrationRef.data() as LinearIntegration;
 
   let tokenSet = new TokenSet({
-    access_token: jiraIntegration.accessToken,
-    refresh_token: jiraIntegration.refreshToken,
-    expires_at: jiraIntegration.expiresAt,
+    access_token: linearIntegration.accessToken,
+    refresh_token: linearIntegration.refreshToken,
+    expires_at: linearIntegration.expiresAt,
   });
 
   if (tokenSet.expired()) {
-    const client = new JiraClient();
+    const client = new LinearOauthClient();
     await client.initializeClient();
 
     const updatedToken = await client.refreshToken(tokenSet.refresh_token!);
-    await jiraIntegrationRef.ref.update({
+    await linearIntegrationRef.ref.update({
       accessToken: updatedToken.access_token,
       refreshToken: updatedToken.refresh_token,
       expiresAt: updatedToken.expires_at,
@@ -102,16 +115,5 @@ export async function getActiveJiraIntegration(userId: string): Promise<{jiraInt
     tokenSet = updatedToken;
   }
 
-  const activeResource: JiraResource =
-    jiraIntegration.jiraResources.find((integration) => integration.active) ||
-    jiraIntegration.jiraResources?.[0];
-
-  if (!activeResource) {
-    throw new functions.https.HttpsError(
-        "not-found",
-        "No active Jira integration found"
-    );
-  }
-
-  return {jiraIntegration, activeResource, tokenSet};
+  return {linearIntegration, tokenSet};
 }

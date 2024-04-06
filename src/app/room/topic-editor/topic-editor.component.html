@@ -3,9 +3,9 @@
     class="topic-control"
     appearance="outline"
     subscriptSizing="dynamic"
-    >
+  >
     <input
-      placeholder="Write a short description of the topic or search/select a JIRA ticket"
+      placeholder="Write a short description of the topic or search/select a ticket from an integration"
       [formControl]="roundTopic"
       cdkFocusInitial
       autofocus
@@ -15,22 +15,18 @@
       [matAutocomplete]="auto"
       (keyup.escape)="canceled.next(true)"
       #topicInput
-      />
+    />
     <span class="input-suffix" matSuffix>
       @if (isSearching || isFetchingRecents) {
-        <mat-spinner
-          diameter="20"
-          class="jira-loading"
-          matTooltip="Connecting to Jira"
-        ></mat-spinner>
-      }
-      @if (roundTopic.value) {
-        <button
-          mat-icon-button
-          (click)="roundTopic.reset()"
-          >
-          <mat-icon>close</mat-icon>
-        </button>
+      <mat-spinner
+        diameter="20"
+        class="jira-loading"
+        matTooltip="Connecting to provider"
+      ></mat-spinner>
+      } @if (roundTopic.value) {
+      <button mat-icon-button (click)="roundTopic.reset()">
+        <mat-icon>close</mat-icon>
+      </button>
       }
     </span>
     <mat-autocomplete
@@ -38,88 +34,145 @@
       [displayWith]="displayFn"
       (optionSelected)="issueSelected($event.option.value)"
       class="issue-autocomplete"
+    >
+      @if (issuesFromIntegration$ | async; as issuesFromIntegration) {
+      @if(issuesFromIntegration.search.length ||
+      issuesFromIntegration.recent.length) {
+      <mat-optgroup
+        ><span class="group-label help-label"
+          >Search for tickets by typing in the field above</span
+        ></mat-optgroup
       >
-      @if (jiraIssues$ | async; as jiraIssues) {
-        @if(jiraIssues.search.length || jiraIssues.recent.length) {
-          <mat-optgroup
-            ><span class="group-label help-label"
-              >Search for tickets by typing in the field above</span
-            ></mat-optgroup
-          >
-        }
-        @if (jiraIssues.search.length) {
-          <mat-optgroup>
-            <span class="group-label"
-            ><mat-icon>search</mat-icon>Search results</span
-            >
-            @for (issue of jiraIssues.search; track issue.id) {
-              <mat-option
-                [value]="issue"
-                class="issue-autocomplete-item"
-                >
-                <span class="issue-autocomplete-label">
-                  <img class="jira-icon" src="/assets/jira.png" />
-                  <span class="issue-autocomplete-item-text"
-                    >{{ issue.key }}: {{ issue.summary }}</span
-                    >
-                  </span>
-                </mat-option>
-              }
-            </mat-optgroup>
-          }
-          @if (jiraIssues.recent.length) {
-            <mat-optgroup>
-              <span class="group-label"
-              ><mat-icon>history</mat-icon>Recent tickets</span
-              >
-              @for (issue of jiraIssues.recent; track issue.id) {
-                <mat-option
-                  [value]="issue"
-                  class="issue-autocomplete-item"
-                  >
-                  <span class="issue-autocomplete-label">
-                    <img class="jira-icon" src="/assets/jira.png" />
-                    <span class="issue-autocomplete-item-text"
-                      >{{ issue.key }}: {{ issue.summary }}</span
-                      >
-                    </span>
-                  </mat-option>
-                }
-              </mat-optgroup>
-            }
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-    </div>
-    <app-rich-topic
-      [richTopic]="selectedRichTopic"
-      [enableEditing]="true"
-      (deleted)="selectedRichTopic = null"
-    ></app-rich-topic>
-    <div class="buttons">
-      <button
-        matSuffix
-        mat-stroked-button
-        color="primary"
-        (click)="startJiraAuth.next()"
-        [disabled]="(jiraIntegration$ | async) !== undefined"
+      } @if (issuesFromIntegration.search.length) {
+      <mat-optgroup>
+        <span class="group-label"
+          ><mat-icon>search</mat-icon>Search results</span
         >
-        <span class="button-with-custom-icon">
-          <img class="jira-icon" src="/assets/jira.png" />
-          {{ (jiraIntegration$ | async) === undefined ? 'Connect to Jira' : 'Connected to Jira'}}
-        </span>
-      </button>
-      <div class="nested-buttons">
-        <button matSuffix mat-button (click)="canceled.next(true)">Cancel</button>
-        <button
-          matSuffix
-          mat-flat-button
-          color="primary"
-          (click)="topicBlur()"
-          [disabled]="!roundTopic.value"
-          >
-          Save
-        </button>
-      </div>
-    </div>
-    
+        @for (issue of issuesFromIntegration.search; track issue.id) {
+        <mat-option [value]="issue" class="issue-autocomplete-item">
+          <span class="issue-autocomplete-label">
+            <img
+              class="jira-icon"
+              [src]="
+                issue.provider === 'jira'
+                  ? '/assets/jira.png'
+                  : '/assets/linear.png'
+              "
+            />
+            <span class="issue-autocomplete-item-text"
+              >{{ issue.key }}: {{ issue.summary }}</span
+            >
+          </span>
+        </mat-option>
+        }
+      </mat-optgroup>
+      } @if (issuesFromIntegration.recent.length) {
+      <mat-optgroup>
+        <span class="group-label"
+          ><mat-icon>history</mat-icon>Recent tickets</span
+        >
+        @for (issue of issuesFromIntegration.recent; track issue.id) {
+        <mat-option [value]="issue" class="issue-autocomplete-item">
+          <span class="issue-autocomplete-label">
+            <img
+              class="jira-icon"
+              [src]="
+                issue.provider === 'jira'
+                  ? '/assets/jira.png'
+                  : '/assets/linear.png'
+              "
+            />
+            <span class="issue-autocomplete-item-text"
+              >{{ issue.key }}: {{ issue.summary }}</span
+            >
+          </span>
+        </mat-option>
+        }
+      </mat-optgroup>
+      } }
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<app-rich-topic
+  [richTopic]="selectedRichTopic"
+  [enableEditing]="true"
+  (deleted)="selectedRichTopic = null"
+></app-rich-topic>
+<div class="buttons">
+  <button
+    mat-stroked-button
+    color="primary"
+    [matMenuTriggerFor]="integrationsMenu"
+    (menuOpened)="menuOpen.set(true)"
+    (menuClosed)="menuOpen.set(false)"
+    class="import-menu-button"
+  >
+    <mat-icon [class.rotated]="menuOpen()">expand_more</mat-icon>
+    Import
+  </button>
+  <mat-menu #integrationsMenu="matMenu">
+    <button
+      mat-menu-item
+      (click)="startJiraAuth.next()"
+      [disabled]="
+        (jiraIntegration$ | async) &&
+        ['jira', undefined].includes(selectedIssueIntegrationProvider$ | async)
+      "
+    >
+      <span class="button-with-custom-icon">
+        <img src="/assets/jira.png" />
+        {{
+          (jiraIntegration$ | async) === undefined
+            ? "Connect to Jira"
+            : ["jira", undefined].includes(
+                selectedIssueIntegrationProvider$ | async
+              )
+            ? "Connected to Jira"
+            : "Switch to Jira"
+        }}
+      </span>
+    </button>
+    <button
+      mat-menu-item
+      (click)="startLinearAuth.next()"
+      [disabled]="
+        (linearIntegration$ | async) &&
+        (selectedIssueIntegrationProvider$ | async) === 'linear'
+      "
+    >
+      <span class="button-with-custom-icon">
+        <img src="/assets/linear.png" />
+        {{
+          (linearIntegration$ | async) === undefined
+            ? "Connect to Linear"
+            : (selectedIssueIntegrationProvider$ | async) === "linear"
+            ? "Connected to Linear"
+            : "Switch to Linear"
+        }}
+      </span>
+    </button>
+    <mat-divider />
+    <button
+      mat-menu-item
+      (click)="openBatchAddModal()"
+      [disabled]="!(permissionsService.canCreateRounds() | async)"
+    >
+      <span class="button-with-custom-icon">
+        <mat-icon>library_add</mat-icon>
+        Batch add rounds
+      </span>
+    </button>
+  </mat-menu>
+
+  <div class="nested-buttons">
+    <button mat-button (click)="canceled.next(true)">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="topicBlur()"
+      [disabled]="!roundTopic.value"
+    >
+      Save
+    </button>
+  </div>
+</div>

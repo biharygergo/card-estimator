@@ -324,13 +324,14 @@ export interface JiraIssue {
 }
 
 export interface RichTopic {
-  provider: 'jira';
+  provider: 'jira' | 'linear';
   description: string;
   summary: string;
   status?: string;
   assignee?: string;
   key: string;
   url: string;
+  id?: string;
 }
 
 export type JiraResource = {
@@ -351,6 +352,15 @@ export type JiraIntegration = {
   expiresAt: number;
   id: string;
   jiraResources: JiraResource[];
+};
+
+export type LinearIntegration = {
+  provider: 'linear';
+  createdAt: FieldValue;
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: number;
+  id: string;
 };
 
 export interface RoomSummary {
@@ -443,6 +453,7 @@ export interface UserPreference {
   feedbackFormLastShown?: FieldValue;
   updatedPricingModalShown?: boolean;
   aloneInRoomModalShown?: boolean;
+  selectedIssueIntegrationProvider?: 'jira' | 'linear';
 }
 
 export interface Credit {

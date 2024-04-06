@@ -16,6 +16,7 @@
   "main": "lib/functions/src/index.js",
   "dependencies": {
     "@google-cloud/vertexai": "^0.5.0",
+    "@linear/sdk": "^19.3.0",
     "@sendgrid/client": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
     "@sentry/node": "^7.46.0",

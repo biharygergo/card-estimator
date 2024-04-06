@@ -51,20 +51,6 @@ export const fadeOutDownAnimation = trigger('fadeOutDownAnimation', [
   ]),
 ]);
 
-export const bounceAnimation = trigger('bounceAnimation', [
-  transition(':increment', [
-    query(':self', [
-      style({ transform: 'scale(1)' }),
-      stagger(50, [
-        animate('80ms ease-out', style({ transform: 'scale(1.08)' })),
-        animate('80ms ease-out', style({ transform: 'scale(0.95)' })),
-        animate('80ms ease-out', style({ transform: 'scale(1.04)' })),
-        animate('80ms ease-out', style({ transform: 'scale(1)' })),
-      ]),
-    ]),
-  ]),
-]);
-
 export const staggerFadeAnimation = trigger('staggerFadeAnimation', [
   transition('* => *', [
     // each time the binding value changes

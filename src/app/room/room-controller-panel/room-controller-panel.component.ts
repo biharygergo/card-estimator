@@ -32,11 +32,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CardDeckService } from 'src/app/services/card-deck.service';
 import { AddCardDeckModalComponent } from '../add-card-deck-modal/add-card-deck-modal.component';
-import {
-  bounceAnimation,
-  delayedFadeAnimation,
-  fadeAnimation,
-} from 'src/app/shared/animations';
+import { delayedFadeAnimation, fadeAnimation } from 'src/app/shared/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RoomDataService } from '../room-data.service';
 import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
@@ -47,7 +43,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
   selector: 'planning-poker-room-controller-panel',
   templateUrl: './room-controller-panel.component.html',
   styleUrls: ['./room-controller-panel.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation, bounceAnimation],
+  animations: [fadeAnimation, delayedFadeAnimation],
 })
 export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   @Input({ required: true }) room: Room;

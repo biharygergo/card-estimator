@@ -11,15 +11,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   combineLatest,
+  delay,
   distinctUntilChanged,
   filter,
   first,
   from,
   interval,
   map,
+  merge,
   Observable,
   of as observableOf,
   of,
+  pairwise,
   share,
   shareReplay,
   startWith,
@@ -28,6 +31,7 @@ import {
   take,
   takeUntil,
   tap,
+  timeInterval,
 } from 'rxjs';
 import {
   CardSet,
@@ -65,11 +69,7 @@ import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash-es';
 import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
 import { WebexApiService } from '../services/webex-api.service';
-import {
-  delayedFadeAnimation,
-  fadeAnimation,
-  bounceAnimation,
-} from '../shared/animations';
+import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
 import { TeamsService } from '../services/teams.service';
 import { PaymentService } from '../services/payment.service';
 import { Timestamp } from '@angular/fire/firestore';
@@ -85,11 +85,12 @@ import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.se
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
+const TOPIC_ANIMATION_SLIDE_DURATION_MS = 200;
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation, bounceAnimation],
+  animations: [fadeAnimation, delayedFadeAnimation],
 })
 export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenavContainer, { read: ElementRef })
@@ -137,6 +138,60 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   roundNumber$: Observable<number> =
     this.roomDataService.currentRoundNumber$.pipe(takeUntil(this.destroy));
+
+  topicWithAnimation$: Observable<{
+    animationClass: string;
+    topicName: string;
+  }> = combineLatest([
+    this.room$,
+    this.roomDataService.currentRoundNumber$,
+  ]).pipe(
+    startWith([undefined, undefined]),
+    map(([room, roundNumber]) => ({
+      roundNumber,
+      topicName: room?.rounds?.[roundNumber]?.topic,
+    })),
+    distinctUntilChanged(isEqual),
+    pairwise(),
+    timeInterval(),
+    switchMap(({ value: [previous, current], interval }) => {
+      /** No animation if:
+       * - the current round is not pairwise: initial load
+       * - the round number did not change, only the topic: topic edited
+       * - the emission happened during an ongoing animation: reduce flickering
+       */
+      if (
+        previous.roundNumber === undefined ||
+        previous.roundNumber === current.roundNumber ||
+        interval < 2 * TOPIC_ANIMATION_SLIDE_DURATION_MS
+      ) {
+        return of({ animationClass: 'initial', topicName: current.topicName });
+      }
+      return merge(
+        of(
+          current.roundNumber > previous.roundNumber
+            ? {
+                animationClass: 'round-increase',
+                topicName: previous.topicName,
+              }
+            : {
+                animationClass: 'round-decrease',
+                topicName: previous.topicName,
+              }
+        ),
+        of({
+          animationClass:
+            current.roundNumber > previous.roundNumber
+              ? 'appear-below'
+              : 'appear-above',
+          topicName: current.topicName,
+        }).pipe(delay(TOPIC_ANIMATION_SLIDE_DURATION_MS)),
+        of({ animationClass: 'initial', topicName: current.topicName }).pipe(
+          delay(2 * TOPIC_ANIMATION_SLIDE_DURATION_MS)
+        )
+      );
+    })
+  );
 
   sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
     first(),

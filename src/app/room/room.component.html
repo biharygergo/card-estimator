@@ -43,10 +43,13 @@
           <div>
             <mat-card-content>
               @if (!isEditingTopic) {
-              <h2>
-                <span [@bounceAnimation]="currentRound">{{
-                  room?.rounds[currentRound]?.topic
-                }}</span>
+              <h2 class="topic-title">
+                @if (topicWithAnimation$ | async; as topicWithAnimation) {
+                <span [class]="topicWithAnimation.animationClass">
+                  {{ topicWithAnimation.topicName }}
+                </span>
+                }
+
                 <button
                   mat-stroked-button
                   [disabled]="!(permissionsService.canEditTopic() | async)"

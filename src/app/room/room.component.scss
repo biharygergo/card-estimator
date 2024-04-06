@@ -202,7 +202,7 @@
   }
   to {
     opacity: 0;
-    transform: translateY(-150%);
+    transform: translateY(-100%);
   }
 }
 
@@ -213,7 +213,7 @@
   }
   to {
     opacity: 0;
-    transform: translateY(150%);
+    transform: translateY(100%);
   }
 }
 
@@ -221,7 +221,7 @@
 @keyframes appearBelowAnimation {
   from {
     opacity: 0;
-    transform: translateY(150%);
+    transform: translateY(100%);
   }
   to {
     opacity: 1;
@@ -232,7 +232,7 @@
 @keyframes appearAboveAnimation {
   from {
     opacity: 0;
-    transform: translateY(-150%);
+    transform: translateY(-100%);
   }
   to {
     opacity: 1;

@@ -86,17 +86,19 @@ export class RichTopicComponent implements OnChanges {
   }
 
   saveEstimateToJira() {
+    const providerName =
+      this.richTopic?.provider === 'linear' ? 'Linear' : 'Jira';
+
     if (
       !this.selectedEstimationCardSetValue ||
       !this.roundStatistics?.consensus
     ) {
       this.toastService.showMessage(
-        'No votes cast yet. Vote before uploading results to Jira.'
+        `No votes cast yet. Vote before uploading results to ${providerName}.`
       );
       return;
     }
-    const providerName =
-      this.richTopic?.provider === 'linear' ? 'Linear' : 'Jira';
+
     const providerService =
       this.richTopic?.provider === 'linear'
         ? this.linearService

@@ -23,3 +23,4 @@
 /knowledge-base/how-to-estimate-jira-issues-with-planning-poker
 /knowledge-base/how-to-use-planning-poker-in-zoom
 /knowledge-base/installing-planning-poker-microsoft-teams-guide
+/knowledge-base/estimate-linear-issues-planning-poker-live

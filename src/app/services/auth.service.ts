@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Auth,
+  OAuthProvider,
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
@@ -20,7 +21,7 @@ import {
   updateProfile,
   User,
   UserInfo,
-  GoogleAuthProvider
+  GoogleAuthProvider,
 } from '@angular/fire/auth';
 import {
   doc,
@@ -169,6 +170,41 @@ export class AuthService {
     });
   }
 
+  async signInWithMicrosoft(accessToken?: string) {
+    const provider = this.createMicrosoftProvider();
+    const userCredential = accessToken
+      ? await signInWithCredential(
+          this.auth,
+          new OAuthProvider('microsoft.com').credential({ accessToken })
+        )
+      : await signInWithPopup(this.auth, provider);
+
+    const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
+
+    await this.handleSignInResult({ isNewUser });
+    this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  async linkAccountWithMicrosoft(accessToken?: string) {
+    const provider = this.createMicrosoftProvider();
+
+    const userCredential = accessToken
+      ? await linkWithCredential(
+          this.auth.currentUser,
+          new OAuthProvider('microsoft.com').credential({ accessToken })
+        )
+      : await linkWithPopup(this.auth.currentUser, provider);
+
+    await this.handleSignInResult({ isNewUser: true });
+    this.snackbar.open(`Your account is now set up, awesome!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
   async signInWithEmailAndPassword(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(
       this.auth,
@@ -244,6 +280,11 @@ export class AuthService {
     return provider;
   }
 
+  private createMicrosoftProvider() {
+    const provider = new OAuthProvider('microsoft.com');
+    return provider;
+  }
+
   async unlinkGoogleAccount() {
     const provider = new GoogleAuthProvider();
     await unlink(this.auth.currentUser, provider.providerId);
@@ -288,13 +329,16 @@ export class AuthService {
 
   async updateCurrentUserEmail(email: string, password: string) {
     const user = await this.getUser();
-    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+    await reauthenticateWithCredential(
+      user,
+      EmailAuthProvider.credential(user.email, password)
+    );
     await updateEmail(user, email);
-    await this.updateUserDetails(user.uid, {email});
+    await this.updateUserDetails(user.uid, { email });
   }
 
   setSessionCookie(value: string) {
-    Cookies.set('__session', value, {secure: true});
+    Cookies.set('__session', value, { secure: true });
   }
 
   getSessionCookie(): string | ParsedSessionCookie | undefined {

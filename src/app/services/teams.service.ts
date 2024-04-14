@@ -126,6 +126,11 @@ export class TeamsService {
     return token;
   }
 
+  async getMicrosoftAuthToken(): Promise<string> {
+    const token = await microsoftTeams.authentication.getAuthToken();
+    return token;
+  }
+
   notifySuccess(token: string) {
     microsoftTeams.authentication.notifySuccess(token);
   }

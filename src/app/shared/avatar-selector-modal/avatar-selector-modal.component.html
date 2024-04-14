@@ -79,6 +79,12 @@
                 </div>
                 <div class="content">
                   @if(creditBundles$ | async; as creditsAndBundles) {
+                  @if(subscription$ | async; as subscription) {
+                  <h3 class="title">Premium plan</h3>
+                  <div class="credit-status">
+                    <span>Unlimited credits available</span>
+                  </div>
+                  } @else {
                   <h3 class="title">Pay as you go</h3>
                   <div class="credit-status">
                     <span
@@ -95,6 +101,10 @@
                         | date
                     }}.
                   </p>
+                  }
+                  <p class="next-credit">
+                    Next free credit on {{ nextMonthStart | date }}
+                  </p>
                   } } @else {
                   <div class="loading-spinner-container">
                     <mat-progress-spinner
@@ -103,9 +113,6 @@
                     />
                   </div>
                   }
-                  <p class="next-credit">
-                    Next free credit on {{ nextMonthStart | date }}
-                  </p>
                 </div>
               </div>
               <div class="actions"></div>

@@ -6,6 +6,7 @@ import {
   catchError,
   distinctUntilChanged,
   map,
+  shareReplay,
   switchMap,
   takeUntil,
   tap,
@@ -195,7 +196,8 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   isUserSignedInWithEmail$ = this.auth.user.pipe(
     map(
-      (user) => user?.providerData?.[0]?.providerId === EmailAuthProvider.PROVIDER_ID
+      (user) =>
+        user?.providerData?.[0]?.providerId === EmailAuthProvider.PROVIDER_ID
     ),
     distinctUntilChanged()
   );
@@ -208,8 +210,9 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   accountTypeForm = new UntypedFormControl({ value: '', disabled: true });
   emailControl = new FormControl<string>({ value: '', disabled: true });
 
-  subscription$: Observable<StripeSubscription> =
-    this.paymentsService.getSubscription();
+  subscription$: Observable<StripeSubscription> = this.paymentsService
+    .getSubscription()
+    .pipe(shareReplay(1));
 
   activePlan$ = this.subscription$.pipe(
     map((subscription) => subscription?.items?.[0]?.plan)

@@ -49,8 +49,27 @@
       font-size: 1rem;
       line-height: 1.2rem;
       font-weight: 500;
+      margin-bottom: 0rem;
+      margin-top: 0;
+    }
+
+    .header-rating {
+      font-size: 0.9rem;
       margin-bottom: 0.5rem;
       margin-top: 0;
+
+      .star-rating-inline {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      mat-icon {
+        display: inline-block;
+        font-size: 0.9rem;
+        height: 0.9rem;
+        width: 0.9rem;
+        margin-right: 0.2rem;
+      }
     }
 
     .start-planning-btn {
@@ -391,7 +410,7 @@
     color: #bfc6dc;
     --mdc-tab-indicator-active-indicator-color: white;
     --mat-tab-header-active-focus-indicator-color: white;
-    
+
     .mdc-tab {
       .mdc-tab__text-label {
         color: #bfc6dc;

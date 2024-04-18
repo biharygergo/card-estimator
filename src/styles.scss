@@ -434,15 +434,14 @@ body {
 
 .estimator-button-container {
   flex: 1;
-  flex-grow: 0;
   display: flex;
   max-height: 130px;
+  aspect-ratio: 2/3;
   text-overflow: clip;
   margin: 0.3rem;
 
   button {
     flex: 1;
-    aspect-ratio: 2/3;
     height: 100%;
     font-size: 1.3rem;
     font-weight: 400;

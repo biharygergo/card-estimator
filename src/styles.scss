@@ -436,14 +436,14 @@ body {
   flex: 1;
   flex-grow: 0;
   display: flex;
-  max-height: 130px;
   text-overflow: clip;
   margin: 0.3rem;
 
   button {
     flex: 1;
-    aspect-ratio: 2/3;
     height: 100%;
+    min-width: 70px;
+    min-height: 120px;
     font-size: 1.3rem;
     font-weight: 400;
     will-change: transform;
@@ -463,7 +463,6 @@ body {
       min-height: 80px;
       padding: 0.4rem;
       font-size: 1.1rem;
-      aspect-ratio: unset;
     }
 
     &:disabled {

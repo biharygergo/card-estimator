@@ -142,4 +142,8 @@ export class TopicsSidebarComponent implements OnInit {
   roundIdentity(index: number, item: Round) {
     return item.id;
   }
+
+  toggleReveal(roundNumber: number, reveal: boolean) {
+    this.estimatorService.setShowResults(this.room, roundNumber, reveal);
+  }
 }

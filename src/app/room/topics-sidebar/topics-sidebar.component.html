@@ -114,6 +114,16 @@
             <mat-icon>clear_all</mat-icon>
             Clear votes
           </button>
+          <button
+            mat-menu-item
+            (click)="toggleReveal(roundNumber, !round.show_results)"
+            [disabled]="!(permissionsService.canRevealResults() | async)"
+          >
+            <mat-icon>{{
+              round.show_results ? "visibility_off" : "visibility"
+            }}</mat-icon>
+            {{ round.show_results ? "Hide votes" : "Reveal votes" }}
+          </button>
           <mat-divider></mat-divider>
           <button
             mat-menu-item

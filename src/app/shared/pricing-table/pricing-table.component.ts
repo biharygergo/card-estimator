@@ -129,13 +129,13 @@ export class PricingTableComponent {
 
   async buyBundle(bundleName: BundleName) {
     this.isLoadingStripeForBundle = bundleName;
-    // this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
+    this.analyticsService.logClickedBuyBundle('pricing_table');
     await this.paymentService.buyBundle(bundleName, this.currencyControl.value);
   }
 
   async subscribeToPremium() {
     this.isLoadingStripe = true;
-    this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
+    this.analyticsService.logClickedSubscribeToPremium('pricing_table');
     await this.paymentService.startSubscriptionToPremium(this.currencyControl.value);
   }
 }

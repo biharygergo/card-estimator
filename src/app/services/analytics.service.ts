@@ -276,6 +276,12 @@ export class AnalyticsService {
     });
   }
 
+  logClickedBuyBundle(arg0: string) {
+    this.logEventInternal('clicked_buy_bundle', {
+      location: arg0,
+    });
+  }
+
   logClickedOpenOrganizationModal(arg0: string) {
     this.logEventInternal('clicked_open_organization_modal', {
       location: arg0,

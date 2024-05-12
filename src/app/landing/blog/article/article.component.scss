@@ -5,6 +5,7 @@ main {
 
   h1 {
     font-size: 2rem;
+    line-height: 2rem;
   }
 
   .author {
@@ -49,6 +50,10 @@ main {
 
 ::ng-deep markdown {
 
+  a {
+    color: var(--main-color)
+  }
+
   h1 {
     font-size: 1.4rem !important;
     font-weight: 700;
@@ -86,7 +91,7 @@ main {
     align-items: center;
     text-align: center;
 
-    img {
+    img, video {
       max-width: 80%;
       border-radius: 20px;
       margin-bottom: 0.2rem;

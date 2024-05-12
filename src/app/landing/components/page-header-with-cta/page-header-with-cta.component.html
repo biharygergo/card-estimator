@@ -1,0 +1,56 @@
+<div class="hero-header-section">
+  <div class="hero-header">
+    <div class="header-intro">
+      <h1>{{ config.title }}</h1>
+      <h2 class="header-description">
+        {{ config.description }}
+      </h2>
+      <p class="header-rating">
+        An agile favorite - rated
+        <span class="star-rating-inline"
+          >4.5 <mat-icon attr-alt="Stars">star</mat-icon
+          ><span class="cdk-visually-hidden">stars</span></span
+        >by 1000+ reviewers
+      </p>
+      <div>
+        @if(config.internalLink) {
+        <a
+          mat-flat-button
+          [routerLink]="config.internalLink"
+          class="start-planning-btn"
+        >
+          <mat-icon>{{ config.ctaIcon }}</mat-icon>
+          {{ config.ctaTitle }}
+        </a>
+        } @else if(config.externalLink) {
+        <a
+          mat-flat-button
+          [href]="config.externalLink"
+          class="start-planning-btn"
+        >
+          <mat-icon>{{ config.ctaIcon }}</mat-icon>
+          {{ config.ctaTitle }}
+        </a>
+        }
+
+        <p class="header-meta">
+          No sign-up required, open-source and used by thousands every week.
+          @if(config.showPlatforms) { Works in your browser & inside
+          <a routerLink="/zoom">Zoom</a>, <a routerLink="/teams">Teams</a> and
+          <a routerLink="/webex">Webex</a>. }
+        </p>
+      </div>
+    </div>
+    <div class="header-cards">
+      <img
+        ngSrc="header_cards_cut"
+        alt="Two cards with numbers"
+        priority
+        placeholder
+        width="1120"
+        height="699"
+        sizes="(max-width: 800px) 100vw, 60vw"
+      />
+    </div>
+  </div>
+</div>

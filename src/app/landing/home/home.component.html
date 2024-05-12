@@ -4,46 +4,16 @@
 it now!</span
 >
 </div> -->
-<section class="hero-header-section">
-  <div class="hero-header">
-    <div class="header-intro">
-      <h1>Real-Time Agile Estimation for Remote Scrum Teams</h1>
-      <h2 class="header-description">
-        Get accurate estimates for your next sprint with our intuitive planning
-        poker app.
-      </h2>
-      <p class="header-rating">
-        An agile favorite - rated
-        <span class="star-rating-inline"
-          >4.5 <mat-icon attr-alt="Stars">star</mat-icon
-          ><span class="cdk-visually-hidden">stars</span></span
-        >by 1000+ reviewers
-      </p>
-      <div>
-        <a mat-flat-button [routerLink]="'/create'" class="start-planning-btn">
-          <mat-icon>play_arrow</mat-icon>
-          Start planning
-        </a>
-        <p class="header-meta">
-          No sign-up required, open-source and used by thousands every week.
-          Works in your browser & inside <a routerLink="/zoom">Zoom</a>,
-          <a routerLink="/teams">Teams</a> and <a routerLink="/webex">Webex</a>.
-        </p>
-      </div>
-    </div>
-    <div class="header-cards">
-      <img
-        ngSrc="header_cards_cut"
-        alt="Two cards with numbers"
-        priority
-        placeholder
-        width="1120"
-        height="699"
-        sizes="(max-width: 800px) 100vw, 60vw"
-      />
-    </div>
-  </div>
-</section>
+<planning-poker-page-header-with-cta
+  [config]="{
+  title:'Real-Time Agile Estimation for Remote Scrum Teams',
+  description: 'Get accurate estimates for your next sprint with our intuitive planning poker app.',
+  internalLink: '/create',
+  ctaIcon: 'play_arrow',
+  ctaTitle: 'Start planning',
+  showPlatforms: true,
+}"
+/>
 <section class="used-by-section">
   <div class="used-by-content">
     <h2>Simplifies planning for agile teams around the world</h2>

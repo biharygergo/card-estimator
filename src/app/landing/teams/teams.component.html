@@ -1,29 +1,20 @@
-<app-page-header
-  title="Planning Poker for Microsoft Teams"
-  subtitle="Install our embedded app in your favorite video conferencing tool"
-></app-page-header>
+<planning-poker-page-header-with-cta
+  [config]="{
+  title:'Planning Poker for Microsoft Teams',
+  description: 'Get accurate estimates for your next sprint with our intuitive planning poker plugin for Microsoft Teams.',
+  externalLink: 'https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview',
+  ctaIcon: 'open_in_new',
+  ctaTitle: 'Download from AppSource',
+  showPlatforms: false,
+}"
+/>
 <main>
   <div>
     <section class="integration-hero">
       <div class="hero-header">
-        <h1 class="title">Planning Poker is now available within Teams!</h1>
-        <p class="details">
-          Use the Microsoft Teams integration to easily share planning poker
-          sessions with your team. <br />
-          You don't even need to leave your Teams meeting to have the same great
-          planning experience as before.
-        </p>
-        <div class="cta">
-          <a
-            mat-stroked-button
-            color="primary"
-            href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
-            class="white-button"
-          >
-            <mat-icon>open_in_new</mat-icon>
-            View in Store
-          </a>
-        </div>
+        <h1 class="title">
+          A complete planning poker app directly in Microsoft Teams
+        </h1>
       </div>
       <div class="hero-video">
         <video
@@ -44,7 +35,9 @@
     </section>
     <section>
       <div class="features-preview">
-        <h2 class="title features-title">Features for a smooth estimation session in Microsoft Teams</h2>
+        <h2 class="title features-title">
+          Features for a smooth estimation session in Microsoft Teams
+        </h2>
         <planning-poker-features-preview />
       </div>
       <div class="see-more-features">
@@ -59,7 +52,19 @@
       </div>
     </section>
     <section class="integration-hero">
-      <h2 class="title">How does it work?</h2>
+      <div>
+        <h2 class="title">How does it work?</h2>
+        <p class="details">
+          Check out the main steps to installing the app below or learn more in
+          our
+          <a
+            routerLink="/knowledge-base/installing-planning-poker-microsoft-teams-guide"
+            >knowledge base article</a
+          >
+          for setting up PlanningPoker.live in Teams.
+        </p>
+      </div>
+
       <div class="steps-container">
         <div class="instruction-image">
           <img
@@ -144,33 +149,32 @@
           </mat-tab>
         </mat-tab-group>
       </div>
-      <mat-divider></mat-divider>
-      <div class="integration-hero">
-        <div class="hero-header">
-          <h4 id="support" class="title">Getting Support and Reporting Bugs</h4>
-          <p class="details">
-            Are you stuck on a question or issue with the app? Check out the
-            <a routerLink="/faq">Frequently Asked Questions</a>, maybe your
-            query already has an answer.
-          </p>
-          <p class="details">
-            If you need additional support or have found a bug, please open a
-            ticket here
-            <a
-              href="https://github.com/biharygergo/card-estimator/issues"
-              rel="noopener"
-              >on GitHub</a
-            >
-            and our developers will try to help as fast as possible. We try
-            respond to tickets within 24 hours. If you need immediate
-            assistance, please contact us at
-            <a href="mailto:hello@planningpoker.live"
-              >hello&#64;planningpoker.live</a
-            >.
-          </p>
-        </div>
-      </div>
     </section>
+    <div class="integration-hero">
+      <div>
+        <h4 id="support" class="title">Getting Support and Reporting Bugs</h4>
+        <p class="details">
+          Are you stuck on a question or issue with the app? Check out the
+          <a routerLink="/faq">Frequently Asked Questions</a>, maybe your query
+          already has an answer.
+        </p>
+        <p class="details">
+          If you need additional support or have found a bug, please open a
+          ticket here
+          <a
+            href="https://github.com/biharygergo/card-estimator/issues"
+            rel="noopener"
+            >on GitHub</a
+          >
+          and our developers will try to help as fast as possible. We try
+          respond to tickets within 24 hours. If you need immediate assistance,
+          please contact us at
+          <a href="mailto:hello@planningpoker.live"
+            >hello&#64;planningpoker.live</a
+          >.
+        </p>
+      </div>
+    </div>
     <div class="banner-wrapper">
       <start-planning-cta></start-planning-cta>
     </div>

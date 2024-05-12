@@ -31,6 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { FeaturesItemsComponent } from './features/features-items/features-items.component';
 import { FeaturesPreviewComponent } from './features/features-preview/features-preview.component';
+import { PageHeaderWithCtaComponent } from './components/page-header-with-cta/page-header-with-cta.component';
 
 const routes: Routes = [
   {
@@ -147,6 +148,7 @@ const routes: Routes = [
     OrganizationInvitationComponent,
     WebexComponent,
     TeamsComponent,
+    PageHeaderWithCtaComponent
   ],
   imports: [
     CommonModule,

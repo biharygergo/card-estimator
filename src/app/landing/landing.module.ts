@@ -29,6 +29,7 @@ import { WebexComponent } from './webex/webex.component';
 import { TeamsComponent } from './teams/teams.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
+import { FeaturesItemsComponent } from './features/features-items/features-items.component';
 
 const routes: Routes = [
   {
@@ -132,6 +133,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     FeaturesComponent,
+    FeaturesItemsComponent,
     FaqComponent,
     FaqRowComponent,
     PrivacyComponent,

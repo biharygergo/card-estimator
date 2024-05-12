@@ -114,11 +114,16 @@ it now!</span
         />
       </div>
     </div>
-    <div class="see-more">
-      <a mat-stroked-button routerLink="/features"
-        >View all features <mat-icon>visibility</mat-icon></a
-      >
-    </div>
+  </div>
+  <div class="see-more-features">
+    <mat-expansion-panel class="see-more-panel">
+      <mat-expansion-panel-header class="see-more-panel-header">
+        <mat-panel-title class="see-more-panel-title"
+          >View all features</mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <planning-poker-features-items />
+    </mat-expansion-panel>
   </div>
 </section>
 <section class="demo-video-section">

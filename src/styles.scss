@@ -487,3 +487,42 @@ body {
 .feedback-panel {
   --mdc-snackbar-container-color: var(--mdc-dialog-container-color);
 }
+
+.see-more-features {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  --mat-expansion-container-background-color: none;
+
+  .see-more-panel {
+    box-shadow: none !important;
+  }
+
+  .see-more-panel-header {
+    max-width: 200px;
+    margin: 0 auto;
+    --mat-expansion-header-indicator-color: #bfc6dc;
+
+    .mat-expansion-indicator {
+      margin-top: -6px;
+    }
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0;
+  }
+
+  .see-more-panel-title {
+    color: #bfc6dc;
+  }
+}
+
+.see-more-features .highlight {
+  padding: 50px !important;
+  border-radius: 36px !important;
+}

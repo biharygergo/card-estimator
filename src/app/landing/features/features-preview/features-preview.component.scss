@@ -1,0 +1,63 @@
+.features-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  gap: 32px;
+  .feature-card {
+    height: 450px;
+    padding: 50px 40px;
+    color: #d9e2ff;
+    background: #18325d;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+
+    flex: 1 1 calc(40% - 32px);
+
+    &.wide {
+      flex: 1 1 calc(60% - 32px);
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      position: relative;
+      z-index: 1;
+      margin-top: 0;
+    }
+
+    img {
+      position: absolute;
+      object-fit: cover;
+      top: -1px;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    gap: 16px;
+
+    .feature-card {
+      height: 350px;
+      flex: 1 1 100%;
+
+      &.wide {
+        flex: 1 1 100%;
+      }
+    }
+  }
+}

@@ -30,6 +30,7 @@ import { TeamsComponent } from './teams/teams.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { FeaturesItemsComponent } from './features/features-items/features-items.component';
+import { FeaturesPreviewComponent } from './features/features-preview/features-preview.component';
 
 const routes: Routes = [
   {
@@ -134,6 +135,7 @@ const routes: Routes = [
   declarations: [
     FeaturesComponent,
     FeaturesItemsComponent,
+    FeaturesPreviewComponent,
     FaqComponent,
     FaqRowComponent,
     PrivacyComponent,

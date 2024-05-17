@@ -41,7 +41,7 @@
     "@angular/platform-server": "^17.2.1",
     "@angular/router": "^17.2.1",
     "@angular/ssr": "^17.2.0",
-    "@microsoft/teams-js": "^2.13.0",
+    "@microsoft/teams-js": "^2.23.0",
     "@sentry/angular-ivy": "^7.81.1",
     "@sentry/tracing": "^7.48.0",
     "@stripe/firestore-stripe-payments": "^0.0.6",

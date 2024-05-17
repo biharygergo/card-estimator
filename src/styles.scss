@@ -525,4 +525,8 @@ body {
 .see-more-features .highlight {
   padding: 50px !important;
   border-radius: 36px !important;
+
+  @media screen and (max-width: 800px) {
+    padding: 50px 16px !important
+  }
 }

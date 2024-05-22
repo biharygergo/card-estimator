@@ -94,21 +94,22 @@ export class RecurringMeetingLinkService {
   }
 
   addRecurringMeeting(
-    data: Omit<RecurringMeetingLink, 'id' | 'createdById' | 'createdAt'>
+    data: Omit<
+      RecurringMeetingLink,
+      'id' | 'createdById' | 'createdAt' | 'organizationId'
+    >
   ) {
     return combineLatest([
       this.authService.user,
-      this.organizationService.getMyOrganization(),
     ]).pipe(
       first(),
-      switchMap(([user, organization]) => {
-        if (!user || !organization) {
+      switchMap(([user]) => {
+        if (!user) {
           return of(undefined);
         }
 
         const recurringMeeting: RecurringMeetingLink = {
           ...data,
-          organizationId: organization.id,
           createdById: user.uid,
           createdAt: Timestamp.now(),
           id: this.createId(),
@@ -171,10 +172,10 @@ export class RecurringMeetingLinkService {
 
         return collectionData<RecurringMeetingLink>(q);
       }),
-      catchError(e => {
+      catchError((e) => {
         console.log('got error loading links', e);
         return of([]);
-      }),
+      })
     );
   }
 

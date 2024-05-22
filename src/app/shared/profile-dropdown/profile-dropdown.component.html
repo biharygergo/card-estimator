@@ -14,6 +14,14 @@
       <mat-icon>account_circle</mat-icon>
       <span>My account</span>
     </button>
+    <button mat-menu-item (click)="openOrganizationModal()">
+      <mat-icon>groups</mat-icon>
+      <span>My organization</span>
+    </button>
+    <button mat-menu-item (click)="openRecurringMeetingsModal()">
+      <mat-icon>event</mat-icon>
+      <span>My meeting links</span>
+    </button>
     } @else {
     <button
       mat-menu-item
@@ -22,11 +30,6 @@
     >
       <mat-icon>account_circle</mat-icon>
       <span>Sign in</span>
-    </button>
-    } @if (currentUser | async; as user) {
-    <button mat-menu-item (click)="openOrganizationModal()">
-      <mat-icon>groups</mat-icon>
-      <span>My organization</span>
     </button>
     }
     <button mat-menu-item (click)="openIntegrationsModal()">
@@ -42,7 +45,7 @@
       <mat-icon>toll</mat-icon>
       <span>Buy credits</span>
     </button>
-    @if(currentRoomId$ | async) {
+    @if(!(isOnJoinOrCreateScreen$ | async)) {
     <a mat-menu-item routerLink="/join">
       <mat-icon>home</mat-icon>
       <span>Home</span>

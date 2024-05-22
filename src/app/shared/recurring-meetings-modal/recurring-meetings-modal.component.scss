@@ -1,10 +1,12 @@
+@import "../../common.scss";
+
 .days-input {
   text-align: right;
 }
 
 .description {
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
 form {
@@ -23,6 +25,7 @@ form {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 8px 0;
   }
 
   a {
@@ -37,16 +40,17 @@ form {
 }
 
 .metadata {
-    p {
-        margin-bottom: 0.3rem;
-        font-size: 0.9rem;
-    }
+  p {
+    margin-bottom: 0rem;
+    margin-top: 4px;
+    font-size: 0.9rem;
+  }
 }
 
 .metadata-value {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .days-suffix {
-    padding-left: 8px;
+  padding-left: 8px;
 }

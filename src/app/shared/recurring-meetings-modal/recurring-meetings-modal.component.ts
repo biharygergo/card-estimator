@@ -26,6 +26,13 @@ import { ToastService } from 'src/app/services/toast.service';
 import { Router } from '@angular/router';
 import { DialogRef } from '@angular/cdk/dialog';
 import { User } from '@angular/fire/auth';
+import { createModal } from '../avatar-selector-modal/avatar-selector-modal.component';
+
+export const recurringMeetingsModalCreator = () =>
+  createModal(RecurringMeetingsModalComponent, {
+    id: 'recurringMeetingsModal',
+    data: {  },
+  });
 
 @Component({
   selector: 'app-recurring-meetings-modal',
@@ -51,7 +58,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       lastRoom: RecurringMeetingLinkCreatedRoom['createdAt'] | undefined;
     }[]
   > = this.recurringMeetingsService
-    .getMyOrganizationsRecurringMeetingLinks()
+    .getMyRecurringMeetingLinks()
     .pipe(
       switchMap((meetingLinks) => {
         return combineLatest(
@@ -72,9 +79,6 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       })
     );
 
-  myOrganization$: Observable<Organization | undefined> =
-    this.organizationService.getMyOrganization();
-
   user: User | undefined = undefined;
 
   isSavingMeeting = new BehaviorSubject<boolean>(false);
@@ -87,7 +91,6 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly organizationService: OrganizationService,
     private readonly recurringMeetingsService: RecurringMeetingLinkService,
     private readonly clipboard: Clipboard,
     private readonly toastService: ToastService,
@@ -113,7 +116,6 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
         name: this.newMeetingForm.value.name,
         frequencyDays: this.newMeetingForm.value.frequencyDays,
         isEnabled: true,
-        organizationId: 'TODO',
       })
       .pipe(
         first(),

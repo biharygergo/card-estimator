@@ -20,6 +20,7 @@ import { LinkService } from 'src/app/services/link.service';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
+import { recurringMeetingsModalCreator } from '../recurring-meetings-modal/recurring-meetings-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -29,8 +30,11 @@ import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 export class ProfileDropdownComponent implements OnInit {
   currentUser = this.auth.user;
 
-  currentRoomId$: Observable<string | null> = this.activeRoute.paramMap.pipe(
-    map((paramMap) => paramMap.get('roomId'))
+  isOnJoinOrCreateScreen$: Observable<boolean> = this.activeRoute.url.pipe(
+    map((url) => {
+      const paths = url.map((segment) => segment.path);
+      return paths.includes('join') || paths.includes('create');
+    })
   );
 
   constructor(
@@ -44,7 +48,7 @@ export class ProfileDropdownComponent implements OnInit {
     private readonly linkService: LinkService,
     public readonly permissionsService: PermissionsService,
     public readonly themeService: ThemeService,
-    public readonly paymentService: PaymentService,
+    public readonly paymentService: PaymentService
   ) {}
 
   ngOnInit(): void {}
@@ -122,5 +126,9 @@ export class ProfileDropdownComponent implements OnInit {
   openInBrowser() {
     const currentUrl = window.location.origin + window.location.pathname;
     this.linkService.openUrl(currentUrl);
+  }
+
+  openRecurringMeetingsModal() {
+    this.dialog.open(...recurringMeetingsModalCreator());
   }
 }

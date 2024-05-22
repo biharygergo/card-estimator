@@ -131,12 +131,13 @@ service cloud.firestore {
     }
 
     match /recurringMeetingLinks/{linkId} {
-      allow read: if request.auth.uid in getOrganization(resource.data.organizationId).data.memberIds;
+      allow get: if !('organizationId' in resource.data) || request.auth.uid in getOrganization(resource.data.organizationId).data.memberIds;
+      allow list: if request.auth.uid == resource.data.createdById;
       allow write: if request.auth.uid == request.resource.data.createdById;
       allow update: if request.auth.uid == resource.data.createdById;
 
       match /createdRooms/{roomId} {
-        allow read: if request.auth.uid in getOrganization(getRecurringMeeting(linkId).data.organizationId).data.memberIds;
+        allow read: if !('organizationId' in resource.data) || request.auth.uid in getOrganization(getRecurringMeeting(linkId).data.organizationId).data.memberIds;
         allow write: if false;
       }
     }

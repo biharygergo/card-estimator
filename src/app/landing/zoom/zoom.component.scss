@@ -27,7 +27,8 @@ main {
   font-weight: 700;
   font-size: 1.5rem;
   line-height: 2.3rem;
-
+  text-align: center;
+  
   &.small {
     max-width: 500px;
   }
@@ -160,5 +161,15 @@ main {
     &.visible {
       opacity: 1;
     }
+  }
+}
+
+.features-preview {
+  padding: 24px 24px 0 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .features-title {
+    margin-bottom: 3rem;
   }
 }

@@ -1,26 +1,20 @@
-<app-page-header title="Planning Poker for Zoom Meetings" subtitle="Install our embedded app in your favorite video conferencing tool"></app-page-header>
+<planning-poker-page-header-with-cta
+  [config]="{
+  title:'Planning Poker for Zoom Meetings',
+  description: 'Get accurate estimates for your next sprint with our intuitive planning poker plugin for Zoom Meetings.',
+  externalLink: 'https://marketplace.zoom.us/apps/nqabdP6JSI-uoVffd6A5Vg',
+  ctaIcon: 'open_in_new',
+  ctaTitle: 'Download from Zoom App Marketplace',
+  showPlatforms: false,
+}"
+/>
 <main>
   <div>
     <section class="integration-hero">
       <div class="hero-header">
-        <h1 class="title">Planning Poker is now available within Zoom!</h1>
-        <p class="details">
-          Use the Zoom integration to easily share planning poker sessions with
-          your team. <br />
-          You don't even need to leave your Zoom meeting to have the same great
-          planning experience as before.
-        </p>
-        <div class="cta">
-          <a
-            mat-stroked-button
-            color="primary"
-            href="https://planningpoker.live/api/installZoomApp"
-            class="white-button"
-          >
-            <mat-icon>download</mat-icon>
-            Install in Zoom
-          </a>
-        </div>
+        <h1 class="title">
+          The best planning poker experience in Zoom Meetings
+        </h1>
       </div>
       <div class="hero-video">
         <video
@@ -37,6 +31,24 @@
             type="video/mp4"
           />
         </video>
+      </div>
+    </section>
+    <section>
+      <div class="features-preview">
+        <h2 class="title features-title">
+          Features for a smooth estimation session in Zoom
+        </h2>
+        <planning-poker-features-preview />
+      </div>
+      <div class="see-more-features">
+        <mat-expansion-panel class="see-more-panel">
+          <mat-expansion-panel-header class="see-more-panel-header">
+            <mat-panel-title class="see-more-panel-title"
+              >View all features</mat-panel-title
+            >
+          </mat-expansion-panel-header>
+          <planning-poker-features-items />
+        </mat-expansion-panel>
       </div>
     </section>
     <section class="integration-hero">
@@ -116,7 +128,7 @@
       </div>
       <mat-divider></mat-divider>
       <div class="integration-hero">
-        <div class="hero-header">
+        <div>
           <h4 id="uninstall" class="title">Uninstalling the App</h4>
           <p class="details">
             If you wish to uninstall the App, go to the
@@ -126,9 +138,7 @@
             and click Uninstall next to "Planning Poker".
           </p>
         </div>
-      </div>
-      <div class="integration-hero">
-        <div class="hero-header">
+        <div>
           <h4 id="support" class="title">Getting Support and Reporting Bugs</h4>
           <p class="details">
             Are you stuck on a question or issue with the app? Check out the

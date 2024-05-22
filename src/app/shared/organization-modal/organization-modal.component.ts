@@ -26,7 +26,6 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { RecurringMeetingLinkService } from 'src/app/services/recurring-meeting-link.service';
 import { fadeAnimation } from '../animations';
 
 export const organizationModalCreator =
@@ -46,7 +45,6 @@ interface OrganizationChecklist {
     organizationCreated: boolean;
     logoUploaded: boolean;
     colleaguesInvited: boolean;
-    recurringMeetingCreated: boolean;
   };
   allCompleted: boolean;
 }
@@ -94,14 +92,12 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   checklist$: Observable<OrganizationChecklist> = combineLatest([
     this.organization$,
-    this.recurringMeetingsService.getMyOrganizationsRecurringMeetingLinks(),
   ]).pipe(
-    map(([organization, meetings]) => {
+    map(([organization]) => {
       const checklistItems = {
         organizationCreated: true,
         logoUploaded: !!organization?.logoUrl,
         colleaguesInvited: organization?.memberIds.length > 1,
-        recurringMeetingCreated: meetings.length > 0,
       };
       return {
         items: checklistItems,
@@ -135,7 +131,6 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     public readonly paymentsService: PaymentService,
     public readonly permissionsService: PermissionsService,
     private readonly analytics: AnalyticsService,
-    private readonly recurringMeetingsService: RecurringMeetingLinkService
   ) {}
 
   ngOnInit(): void {

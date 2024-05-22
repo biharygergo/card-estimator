@@ -6,15 +6,13 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Route, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppConfigModule } from '../app-config.module';
 import { SharedModule } from '../shared/shared.module';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import {
-  BehaviorSubject,
   Observable,
-  ReplaySubject,
   Subject,
   catchError,
   combineLatest,
@@ -22,9 +20,7 @@ import {
   of,
   switchMap,
   takeUntil,
-  tap,
 } from 'rxjs';
-import { EstimatorService } from '../services/estimator.service';
 import { AuthService } from '../services/auth.service';
 import { RecurringMeetingLink } from '../types';
 
@@ -81,7 +77,7 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
   ]).pipe(
     map(([roomId, meetingLink, user]) => {
       const userState =
-        meetingLink.createdById === user.uid ? 'creator' : 'member';
+        meetingLink.createdById === user?.uid ? 'creator' : 'member';
       return { roomId, userState, meetingLink, error: false };
     }),
     catchError((e) => {

@@ -411,7 +411,7 @@ export const CARD_SETS: { [cardSetKey in CardSet]: CardSetValue } = {
 export type RecurringMeetingLink = {
   id: string;
   createdById: string;
-  organizationId: string;
+  organizationId?: string;
   createdAt: FieldValue;
   isEnabled: boolean;
   frequencyDays: number;

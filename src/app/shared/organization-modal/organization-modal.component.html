@@ -177,7 +177,7 @@
           </div>
           }
           <h5 class="section-title">
-            <mat-icon>mail</mat-icon> Invite by email
+            <mat-icon>mail</mat-icon> Invite members by email
           </h5>
           <mat-form-field
             class="form-input invite-email"
@@ -186,43 +186,52 @@
           >
             <mat-chip-grid #chipGrid aria-label="Enter fruits">
               @for (email of emailFormValues; track email) {
-                <mat-chip-row
-                  (removed)="removeEmailFromForm(email)"
-                  [editable]="true"
-                  (edited)="editEmailInForm(email, $event)"
-                  [aria-description]="'press enter to edit ' + email">
-                  {{email}}
-                  <button matChipRemove [attr.aria-label]="'remove ' + email">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-row>
+              <mat-chip-row
+                (removed)="removeEmailFromForm(email)"
+                [editable]="true"
+                (edited)="editEmailInForm(email, $event)"
+                [aria-description]="'press enter to edit ' + email"
+              >
+                {{ email }}
+                <button matChipRemove [attr.aria-label]="'remove ' + email">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
               }
-              <input placeholder="colleague@company.com"
-                    [matChipInputFor]="chipGrid"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="addEmailToForm($event)"
-                    [disabled]="!isOrganizationCreator"/>
+              <input
+                placeholder="Add one or multiple emails separated by commas"
+                [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addEmailToForm($event)"
+                [disabled]="!isOrganizationCreator"
+              />
             </mat-chip-grid>
             <button
               mat-icon-button
               matSuffix
               (click)="inviteMember()"
               [attr.aria-label]="'Invite members'"
-              [disabled]="!invitationEmail.valid || !isOrganizationCreator"
+              [disabled]="!emailFormValues.length || !isOrganizationCreator"
               color="primary"
             >
               <mat-icon>send</mat-icon>
             </button>
+            @if(inviteProgress | async; as inviteProgress) {
+            <mat-hint>{{ inviteProgress }}</mat-hint>
+            }
           </mat-form-field>
           @if (invitations$ | async; as invitations) { @if (invitations.length)
           {
           <h5 class="section-title">
-            <mat-icon>send</mat-icon> Pending members
+            <mat-icon>send</mat-icon> Pending invites
           </h5>
           <mat-chip-listbox aria-label="Sent invitations">
             @for (invite of invitations; track invite) {
-            <mat-chip>
+            <mat-chip
+              [matTooltip]="invite.tooltip"
+              (removed)="removeInvite(invite)"
+            >
               <div class="invite-chip">
                 @if (invite.emailStatus === 'success') {
                 <mat-icon matTooltip="Invitation email sent">check</mat-icon>
@@ -237,6 +246,13 @@
                 }
                 {{ invite.invitationEmail }}
               </div>
+              <button
+                matChipRemove
+                aria-label="Cancel invite"
+                [matTooltip]="'Remove invitation'"
+              >
+                <mat-icon>cancel</mat-icon>
+              </button>
             </mat-chip>
             }
           </mat-chip-listbox>

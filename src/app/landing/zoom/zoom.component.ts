@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
@@ -13,6 +13,8 @@ export class ZoomComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
 
   selectedIndex = 0;
+  loadVideos = new BehaviorSubject(false);
+
   constructor(private readonly analytics: AnalyticsService) {}
 
   ngOnInit(): void {

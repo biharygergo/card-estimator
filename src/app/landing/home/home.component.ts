@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -29,8 +30,13 @@ export class HomeComponent implements OnInit {
     'amazon',
   ];
   logos = this.companies.map((company) => `${company}_logo`);
+  loadVideos = new BehaviorSubject<boolean>(false);
 
   constructor() {}
 
   ngOnInit(): void {}
+
+  viewAllFeaturesOpened() {
+    this.loadVideos.next(true);
+  }
 }

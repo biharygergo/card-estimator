@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-features',
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FeaturesComponent implements OnInit {
 
+  readonly of = of;
   constructor() { }
 
   ngOnInit(): void {

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-teams',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
 })
 export class TeamsComponent {
   selectedIndex = 0;
-
+  loadVideos = new BehaviorSubject(false);
 }

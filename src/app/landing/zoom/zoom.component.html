@@ -41,13 +41,13 @@
         <planning-poker-features-preview />
       </div>
       <div class="see-more-features">
-        <mat-expansion-panel class="see-more-panel">
+        <mat-expansion-panel class="see-more-panel" (opened)="loadVideos.next(true)">
           <mat-expansion-panel-header class="see-more-panel-header">
             <mat-panel-title class="see-more-panel-title"
               >View all features</mat-panel-title
             >
           </mat-expansion-panel-header>
-          <planning-poker-features-items />
+          <planning-poker-features-items [loadVideos]="loadVideos" />
         </mat-expansion-panel>
       </div>
     </section>

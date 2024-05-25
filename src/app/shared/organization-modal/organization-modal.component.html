@@ -184,17 +184,31 @@
             appearance="outline"
             subscriptSizing="dynamic"
           >
-            <input
-              matInput
-              [formControl]="invitationEmail"
-              placeholder="colleague@company.com"
-              [disabled]="!isOrganizationCreator"
-            />
+            <mat-chip-grid #chipGrid aria-label="Enter fruits">
+              @for (email of emailFormValues; track email) {
+                <mat-chip-row
+                  (removed)="removeEmailFromForm(email)"
+                  [editable]="true"
+                  (edited)="editEmailInForm(email, $event)"
+                  [aria-description]="'press enter to edit ' + email">
+                  {{email}}
+                  <button matChipRemove [attr.aria-label]="'remove ' + email">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+              <input placeholder="colleague@company.com"
+                    [matChipInputFor]="chipGrid"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addEmailToForm($event)"
+                    [disabled]="!isOrganizationCreator"/>
+            </mat-chip-grid>
             <button
               mat-icon-button
               matSuffix
               (click)="inviteMember()"
-              [attr.aria-label]="'Invite member'"
+              [attr.aria-label]="'Invite members'"
               [disabled]="!invitationEmail.valid || !isOrganizationCreator"
               color="primary"
             >

@@ -27,6 +27,8 @@ import {
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { fadeAnimation } from '../animations';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -120,9 +122,11 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.email,
   ]);
+  addOnBlur = false;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   isOrganizationCreator = false;
-
+  emailFormValues: string[] = [];
   constructor(
     private readonly organizationService: OrganizationService,
     public readonly authService: AuthService,
@@ -214,6 +218,9 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async inviteMember() {
+    this.emailFormValues.forEach(email => {
+      
+    });
     await this.organizationService.inviteMemberByEmail(
       this.organization.id,
       this.invitationEmail.value
@@ -237,5 +244,38 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
+  }
+
+  removeEmailFromForm(email: string) {
+    const index = this.emailFormValues.indexOf(email);
+
+    if (index >= 0) {
+      this.emailFormValues.splice(index, 1);
+    }
+  }
+
+  editEmailInForm(email: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeEmailFromForm(email);
+      return;
+    }
+
+    const index = this.emailFormValues.indexOf(email);
+    if (index >= 0) {
+      this.emailFormValues[index] = value;
+    }
+  }
+
+  addEmailToForm(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.emailFormValues.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
   }
 }

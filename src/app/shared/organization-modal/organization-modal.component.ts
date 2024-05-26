@@ -133,7 +133,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.email,
   ]);
-  addOnBlur = false;
+  addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   isOrganizationCreator = false;
@@ -302,7 +302,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     const value = (event.value || '').trim();
 
     if (value) {
-      const emails: string[] = value.split(',').map((email) => email.trim());
+      const emails: string[] = [...new Set(value.split(',').map((email) => email.trim()))];
       this.emailFormValues.push(...emails);
     }
 

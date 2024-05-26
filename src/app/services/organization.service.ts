@@ -16,6 +16,8 @@ import {
   collectionData,
   serverTimestamp,
   addDoc,
+  collectionSnapshots,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { InvitationData, Organization } from '../types';
 import { map, Observable, switchMap, of } from 'rxjs';
@@ -99,7 +101,14 @@ export class OrganizationService {
     ) as CollectionReference<InvitationData>;
     const q = query(collectionReference);
 
-    return collectionData<InvitationData>(q);
+    return collectionSnapshots<InvitationData>(q).pipe(
+      map((snapshots) => {
+        return snapshots.flatMap((snapshot) => ({
+          ...snapshot.data(),
+          id: snapshot.id,
+        }));
+      })
+    );
   }
 
   async inviteMemberByEmail(organizationId: string, email: string) {
@@ -122,6 +131,18 @@ export class OrganizationService {
         'memberInvitations'
       ),
       invitation
+    );
+  }
+
+  removeInvitation(organizationId: string, invitationId: string) {
+    deleteDoc(
+      doc(
+        this.firestore,
+        ORGANIZATION_COLLECTION,
+        organizationId,
+        'memberInvitations',
+        invitationId
+      )
     );
   }
 
@@ -154,10 +175,7 @@ export class OrganizationService {
         if (!user) {
           return of(undefined);
         }
-        const q = query(
-          ref,
-          where('memberIds', 'array-contains', user.uid)
-        );
+        const q = query(ref, where('memberIds', 'array-contains', user.uid));
 
         return collectionData<Organization>(q).pipe(
           map((orgs) => (orgs.length ? orgs[0] : undefined))

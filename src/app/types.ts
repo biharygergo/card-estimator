@@ -289,6 +289,7 @@ export const DEFAULT_ROOM_CONFIGURATION: RoomConfiguration = {
 };
 
 export type InvitationData = {
+  id?: string;
   invitedById: string;
   invitationEmail: string;
   organizationId: string;

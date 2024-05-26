@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { isEqual } from 'lodash-es';
 import {
+  BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
   map,
@@ -20,13 +21,15 @@ import { OrganizationService } from 'src/app/services/organization.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { Organization } from 'src/app/types';
+import { InvitationData, Organization } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { fadeAnimation } from '../animations';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -81,13 +84,23 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   invitations$ = this.organization$.pipe(
     switchMap((organization) => {
       if (!organization) {
-        return of([]);
+        return of({ invitations: [], organization });
       }
-       return this.organizationService.getInvitations(organization.id);
+      return this.organizationService
+        .getInvitations(organization.id)
+        .pipe(map((invitations) => ({ invitations, organization })));
     }),
-    map((invitations) =>
+    map(({ invitations }) =>
       invitations.filter((invite) => invite.status !== 'accepted')
     ),
+    map((invitations) =>
+      invitations.map((invite) => ({
+        ...invite,
+        tooltip: `Invite sent at: ${new Date(
+          invite.createdAt?.seconds * 1000
+        ).toLocaleString()}`,
+      }))
+    )
   );
 
   checklist$: Observable<OrganizationChecklist> = combineLatest([
@@ -120,8 +133,12 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.email,
   ]);
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   isOrganizationCreator = false;
+  emailFormValues: string[] = [];
+  readonly inviteProgress = new BehaviorSubject<string>('');
 
   constructor(
     private readonly organizationService: OrganizationService,
@@ -130,7 +147,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
     public readonly paymentsService: PaymentService,
     public readonly permissionsService: PermissionsService,
-    private readonly analytics: AnalyticsService,
+    private readonly analytics: AnalyticsService
   ) {}
 
   ngOnInit(): void {
@@ -214,15 +231,35 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async inviteMember() {
-    await this.organizationService.inviteMemberByEmail(
-      this.organization.id,
-      this.invitationEmail.value
-    );
+    let successCount = 0;
+    for (let i = 0; i < this.emailFormValues.length; i++) {
+      try {
+        const email = this.emailFormValues[i];
+        this.inviteProgress.next(
+          `[${i + 1}/${
+            this.emailFormValues.length
+          }]: Sending invite to ${email}`
+        );
+        await this.organizationService.inviteMemberByEmail(
+          this.organization.id,
+          email
+        );
+        successCount += 1;
+      } catch {
+        this.toastService.showMessage(
+          'Could not send invitation to: ' + this.emailFormValues[i],
+          5000,
+          'error'
+        );
+      }
+    }
 
     this.toastService.showMessage(
-      `Invitation sent to ${this.invitationEmail.value}`
+      `Invitation sent to ${successCount} colleagues`
     );
-    this.invitationEmail.reset();
+    this.emailFormValues = [];
+    this.inviteProgress.next('');
+
     this.analytics.logClickedInviteOrganizationMember();
   }
 
@@ -237,5 +274,43 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         intent: SignUpOrLoginIntent.LINK_ACCOUNT,
       })
     );
+  }
+
+  removeEmailFromForm(email: string) {
+    const index = this.emailFormValues.indexOf(email);
+
+    if (index >= 0) {
+      this.emailFormValues.splice(index, 1);
+    }
+  }
+
+  editEmailInForm(email: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeEmailFromForm(email);
+      return;
+    }
+
+    const index = this.emailFormValues.indexOf(email);
+    if (index >= 0) {
+      this.emailFormValues[index] = value;
+    }
+  }
+
+  addEmailToForm(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      const emails: string[] = [...new Set(value.split(',').map((email) => email.trim()))];
+      this.emailFormValues.push(...emails);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+  }
+
+  removeInvite(invite: InvitationData) {
+    this.organizationService.removeInvitation(this.organization.id, invite.id);
   }
 }

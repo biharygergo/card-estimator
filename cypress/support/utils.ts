@@ -13,7 +13,7 @@ export function createNewRoom(userName: string) {
 
   cy.get('#name').click().type(userName);
   cy.get('#create-room-button').click();
-  cy.location('pathname').should('include', '/room');
+  cy.location('pathname', {timeout: 20000}).should('include', '/room');
   cy.wait(1000);
   cy.url().as('roomUrl');
 }

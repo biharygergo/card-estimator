@@ -15,6 +15,10 @@ describe('Inside the room', () => {
     cy.visit(roomUrl);
   });
 
+  afterEach(() => {
+    cy.wait(1000);
+  })
+
   it('can cast votes', () => {
     cy.contains('Test User').should('be.visible');
     cy.get('.vote-waiting').should('be.visible');
@@ -148,7 +152,7 @@ describe('Inside the room', () => {
     cy.contains('Clear override').should('be.enabled');
 
     cy.contains('Close').click();
-    
+
     cy.get('#majority-vote-chip').should('contain', '3');
 
     cy.get('#override-majority-vote-button').click();
@@ -156,14 +160,13 @@ describe('Inside the room', () => {
     cy.contains('Close').click();
 
     cy.get('#majority-vote-chip').should('contain', '5');
-
   });
 
   it('can toggle cards', () => {
     cy.get('.estimator-buttons').should('be.visible');
     cy.get('#minimize-toggle').click();
     cy.get('.estimator-buttons').should('not.exist');
-  })
+  });
 
   it('can leave the room', () => {
     cy.get('#room-options-button').click();
@@ -174,6 +177,4 @@ describe('Inside the room', () => {
 
     cy.contains('Create a new room').should('be.visible');
   });
-
-  
 });

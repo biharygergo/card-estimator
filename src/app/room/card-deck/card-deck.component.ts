@@ -1,4 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  signal,
+} from '@angular/core';
 import { Subject, debounceTime, from, mergeMap, takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -22,6 +32,13 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   @Input() isObserver: boolean;
   @Input() estimationValues: { key: string; value: string }[];
   @Input() currentEstimate: number;
+
+  @ViewChildren('cardContainer')
+  cardContainers: QueryList<ElementRef<HTMLDivElement>>;
+
+  @ViewChild('cardDeck') cardDeckContainer: ElementRef<HTMLDivElement>;
+
+  isMinimized = signal(false);
 
   readonly reactions: ReactionOption[] = this.reactionsService.reactionsList;
 
@@ -74,6 +91,17 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   toggleReactions() {
     this.showReactions = !this.showReactions;
     this.analytics.logToggledReactions();
+  }
+
+  toggleMinimize() {
+    console.log(this.cardDeckContainer.nativeElement.offsetWidth)
+    if (!this.isMinimized()) {
+      this.cardDeckContainer.nativeElement.style.minWidth = `${this.cardDeckContainer.nativeElement.offsetWidth}px`;
+    } else {
+      this.cardDeckContainer.nativeElement.style.minWidth = '';
+    }
+
+    this.isMinimized.set(!this.isMinimized());
   }
 
   private async sendReaction(reactionId: string) {

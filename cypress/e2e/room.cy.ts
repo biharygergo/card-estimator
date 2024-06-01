@@ -136,7 +136,7 @@ describe('Inside the room', () => {
 
   it('can override majority vote', () => {
     cy.get('#new-round-button').click();
-    cy.contains('0.5').click();
+    cy.contains('5').click();
     cy.contains('Reveal votes').click();
 
     cy.get('#override-majority-vote-button').click();
@@ -155,9 +155,15 @@ describe('Inside the room', () => {
     cy.contains('Clear override').click();
     cy.contains('Close').click();
 
-    cy.get('#majority-vote-chip').should('contain', '0.5');
+    cy.get('#majority-vote-chip').should('contain', '5');
 
   });
+
+  it('can toggle cards', () => {
+    cy.get('.estimator-buttons').should('be.visible');
+    cy.get('#minimize-toggle').click();
+    cy.get('.estimator-buttons').should('not.exist');
+  })
 
   it('can leave the room', () => {
     cy.get('#room-options-button').click();

@@ -1,68 +1,77 @@
-<div class="card-deck">
+<div class="card-deck" #cardDeck>
   <div class="wrapper">
     @if (showReactions) {
-      <div class="reactions" @fadeAnimation>
-        <div class="reaction-buttons">
-          @for (reaction of reactions; track reaction.id; let i = $index) {
-            <button
-              mat-icon-button
-              (click)="onReaction.next(reaction.id)"
-              [matTooltip]="reaction.tooltip"
-              [id]="'reaction-button-' + i"
-              >
-              <img [src]="reaction.svg" [alt]="reaction.alt" />
-            </button>
-          }
-        </div>
+    <div class="reactions" @fadeAnimation>
+      <div class="reaction-buttons">
+        @for (reaction of reactions; track reaction.id; let i = $index) {
+        <button
+          mat-icon-button
+          (click)="onReaction.next(reaction.id)"
+          [matTooltip]="reaction.tooltip"
+          [id]="'reaction-button-' + i"
+        >
+          <img [src]="reaction.svg" [alt]="reaction.alt" />
+        </button>
+        }
       </div>
+    </div>
     }
     <div class="main-row">
+      @if(!isMinimized()) {
+
       <div class="estimator-buttons">
         @for (item of estimationValues; track item.key) {
-          <div
-            class="estimator-button-container"
-            >
-            <button
-              mat-raised-button
-              class="estimator-button"
-              (click)="setEstimate(item.key)"
-              [class.selected]="+item.key === currentEstimate"
-              [disabled]="
+        <div class="estimator-button-container">
+          <button
+            mat-raised-button
+            class="estimator-button"
+            (click)="setEstimate(item.key)"
+            [class.selected]="+item.key === currentEstimate"
+            [disabled]="
               !(permissionsService.canVote() | async) ||
               (room?.rounds)[currentRound]?.show_results
-              "
-              >
-              {{ item.value }}
-            </button>
-          </div>
-        }
-        @if (room?.showPassOption) {
-          <div class="estimator-button-container">
-            <button
-              mat-raised-button
-              class="estimator-button pass-option-button"
-              (click)="setWildcard()"
-              [class.selected]="currentEstimate === null"
-              [disabled]="
+            "
+          >
+            {{ item.value }}
+          </button>
+        </div>
+        } @if (room?.showPassOption) {
+        <div class="estimator-button-container">
+          <button
+            mat-raised-button
+            class="estimator-button pass-option-button"
+            (click)="setWildcard()"
+            [class.selected]="currentEstimate === null"
+            [disabled]="
               !(permissionsService.canVote() | async) ||
               (room?.rounds)[currentRound]?.show_results
-              "
-              id="pass-option-card"
-              >
-              ?
-            </button>
-          </div>
+            "
+            id="pass-option-card"
+          >
+            ?
+          </button>
+        </div>
         }
       </div>
-      <div class="control-buttons">
+      }
+      <div class="control-buttons" [class.minimized]="isMinimized()">
         <mat-button-toggle
           class="emoji-button"
           id="reactions-toggle"
           (change)="toggleReactions()"
           [checked]="showReactions"
           matTooltip="Toggle reactions bar"
-          >
+        >
           <mat-icon>mood</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle
+          class="emoji-button"
+          id="minimize-toggle"
+          (change)="toggleMinimize()"
+          [checked]="!isMinimized()"
+          matTooltip="Toggle cards"
+        >
+          <mat-icon>style</mat-icon>
         </mat-button-toggle>
       </div>
     </div>

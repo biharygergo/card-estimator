@@ -39,7 +39,6 @@
   display: flex;
   background: var(--main-dark-color);
   border-radius: 12px 12px 0 0;
-  padding: 1rem;
 
   @include extraSmallScreen {
     padding: 0.5rem;
@@ -57,11 +56,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   padding: 0.3rem;
+  padding-right: 1rem;
+  gap: 4px;
+
+  &.minimized {
+    flex-direction: row;
+  }
 
   @media (max-width: 800px) {
     margin-top: 0.5rem;
     margin-left: initial;
+    flex-direction: row;
+    padding: 0.3rem;
+
+    &.minimized {
+      margin-top: 0;
+    }
   }
 
   .emoji-button {
@@ -121,9 +133,13 @@
   justify-content: center;
   flex-wrap: nowrap;
   flex: 1;
+  padding: 1rem;
+  padding-right: 0;
+
 
   @media (max-width: 800px) {
     flex-wrap: wrap;
+    padding: 0.5rem;
   }
 }
 

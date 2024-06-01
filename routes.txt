@@ -25,3 +25,4 @@
 /knowledge-base/installing-planning-poker-microsoft-teams-guide
 /knowledge-base/estimate-linear-issues-planning-poker-live
 /knowledge-base/essential-scrum-master-tools
+/knowledge-base/common-mistakes-planning-poker

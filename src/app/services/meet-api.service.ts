@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AddonSession, MeetSidePanelClient } from 'src/types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class MeetApiService {
   loadedScript = false;
   loadedSession = false;

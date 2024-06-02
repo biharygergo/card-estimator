@@ -35,9 +35,7 @@ export type CorrectSubscription = Subscription & {
 };
 export type StripeSubscription = CorrectSubscription;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class PaymentService {
   payments: StripePayments;
   isSubscriptionDisabled = false;

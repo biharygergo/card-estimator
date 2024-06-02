@@ -12,9 +12,7 @@ import {
   Timestamp,
 } from '@angular/fire/firestore';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class MeteredUsageService {
   constructor(private firestore: Firestore, private authService: AuthService) {}
 

@@ -33,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 function checkMatchesFilter(row: TableRow, filter: string): boolean {
   return (
@@ -65,7 +66,8 @@ interface TableRow {
     MatPaginatorModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    RouterModule
+    RouterModule,
+    FirebaseModule
 ],
   providers: [CdkColumnDef],
   templateUrl: './round-history-table.component.html',

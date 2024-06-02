@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-integration-result',
@@ -7,7 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   styleUrls: ['./integration-result.component.scss'],
   standalone: true,
   imports: [
-    SharedModule
+    MatCardModule
 ]
 })
 export class IntegrationResultComponent {

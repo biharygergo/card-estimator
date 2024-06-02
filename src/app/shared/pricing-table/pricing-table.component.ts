@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
@@ -108,6 +109,7 @@ const PLANS: PurchaseOption[] = [
     MatButtonToggleModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    FirebaseModule
   ],
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss',

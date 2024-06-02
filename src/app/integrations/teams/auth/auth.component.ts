@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TeamsService } from 'src/app/services/teams.service';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, FirebaseModule],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
@@ -15,7 +16,7 @@ export class AuthComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
-    private readonly teamsService: TeamsService,
+    private readonly teamsService: TeamsService
   ) {}
 
   ngOnInit(): void {

@@ -19,6 +19,7 @@ import {
   createRoundStatistics,
 } from 'src/app/services/serializer.service';
 import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 export interface MajorityOverrideModalData {
   selectedCardSet: CardSetValue;
@@ -42,7 +43,13 @@ export const overrideMajorityVodeModalCreator = (
 @Component({
   selector: 'app-override-majority-vote-modal',
   standalone: true,
-  imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule],
+  imports: [
+    MatDialogModule,
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    FirebaseModule,
+  ],
   templateUrl: './override-majority-vote-modal.component.html',
   styleUrl: './override-majority-vote-modal.component.scss',
 })
@@ -78,7 +85,7 @@ export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
             room.rounds[this.dialogData.roundId]?.majorityOverride === undefined
               ? null
               : room.rounds[this.dialogData.roundId]?.majorityOverride;
-          
+
           return {
             majority: majority ? +majority : undefined,
             majorityOverride,

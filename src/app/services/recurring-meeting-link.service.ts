@@ -32,9 +32,7 @@ import {
 import { docData } from 'rxfire/firestore';
 import { OrganizationService } from './organization.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class RecurringMeetingLinkService {
   constructor(
     private firestore: Firestore,

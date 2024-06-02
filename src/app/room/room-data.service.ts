@@ -35,9 +35,7 @@ import { roomAuthenticationModalCreator } from '../shared/room-authentication-mo
 import { ToastService } from '../services/toast.service';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class RoomDataService {
   roomSubject = new BehaviorSubject<Room | undefined>(undefined);
   room$: Observable<Room> = this.roomSubject.pipe(filter((room) => !!room));

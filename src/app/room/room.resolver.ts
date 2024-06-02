@@ -22,9 +22,7 @@ import {
 import { PermissionsService } from '../services/permissions.service';
 import { MemberStatus, Room } from '../types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class RoomResolver {
   constructor(
     private estimatorService: EstimatorService,

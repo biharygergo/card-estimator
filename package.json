@@ -9,6 +9,7 @@
     "start:test": "ng serve --configuration test",
     "simulator": "firebase emulators:start",
     "build": "npm run prerender",
+    "build:stats": "ng build --stats-json",
     "build:test": "npm run prerender:test",
     "test": "ng test",
     "lint": "ng lint",

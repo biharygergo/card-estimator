@@ -9,9 +9,7 @@ type ZoomAuthenticationStatus =
   | 'unauthenticated'
   | 'authenticated';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ZoomApiService {
   constructor(@Inject(APP_CONFIG) public config: AppConfig) {}
 

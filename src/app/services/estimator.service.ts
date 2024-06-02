@@ -50,9 +50,7 @@ export class MemberNotFoundError extends Error {}
 export class RoomNotFoundError extends Error {}
 export class NotLoggedInError extends Error {}
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class EstimatorService {
   ROOMS_COLLECTION = 'rooms';
   INVITATIONS_COLLECTION = 'invitations';

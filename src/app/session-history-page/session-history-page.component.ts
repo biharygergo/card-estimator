@@ -3,13 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NavigationService } from '../services/navigation.service';
 import { SharedModule } from '../shared/shared.module';
+import { FirebaseModule } from '../firebase.module';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    SharedModule
+    SharedModule,
+    FirebaseModule,
 ],
   selector: 'app-session-history-page',
   templateUrl: './session-history-page.component.html',

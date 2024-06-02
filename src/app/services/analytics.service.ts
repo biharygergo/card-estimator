@@ -154,6 +154,12 @@ export class AnalyticsService {
     });
   }
 
+  logToggleAnonymousVote(enabled: boolean) {
+    this.logEventInternal('toggled_anonymous_vote', {
+      anonym_enabled: enabled,
+    });
+  }
+
   logClickedEditAvatar(source: 'profile_icon' | 'snackbar') {
     this.logEventInternal('clicked_edit_avatar', { source });
   }

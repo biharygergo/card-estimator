@@ -360,6 +360,20 @@
             ><span class="pass-option-label">Enable async voting</span></mat-checkbox
             >
           </div>
+          <div
+            mat-menu-item
+            role="menuitemcheckbox"
+            class="pass-option"
+            matTooltip="Anonymous voting hides members' names to reduce bias during discussions."
+            matTooltipPosition="left"
+            >
+            <mat-checkbox
+              (click)="toggleAnonymousVoting(); $event.stopPropagation()"
+              [checked]="room?.isAnonymousVotingEnabled"
+              class="menu-option-checkbox anonymous-vote-checkbox"
+            ><span class="pass-option-label">Enable anonymous voting</span></mat-checkbox
+            >
+          </div>
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
             <mat-icon>{{ isMuted ? "volume_mute" : "volume_up" }}</mat-icon>

@@ -96,6 +96,33 @@ export class RoomDataService {
     )
   );
 
+  activeMembersAnonymized$: Observable<
+    Array<Member & { isAnonymous: boolean }>
+  > = combineLatest([
+    this.room$.pipe(
+      map((room) => room.isAnonymousVotingEnabled),
+      distinctUntilChanged()
+    ),
+    this.activeMembers$,
+  ]).pipe(
+    map(([isAnonymous, members]) => {
+      if (!isAnonymous) {
+        return members.map((member) => ({ ...member, isAnonymous }));
+      }
+
+      return members
+        .map((member) => ({
+          ...member,
+          name: 'Anonymous User',
+          avatarUrl: '',
+          isAnonymous,
+        }))
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+    })
+  );
+
   activeMember$: Observable<Member> = combineLatest([
     this.room$.pipe(map((room) => room.members)),
     this.authService.user,

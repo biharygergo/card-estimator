@@ -396,6 +396,12 @@ export class EstimatorService {
     });
   }
 
+  toggleAnonymousVoting(roomId: string, isAnonymousVotingEnabled: boolean) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      isAnonymousVotingEnabled,
+    });
+  }
+
   // Keep this in sync with /functions
   createRound(
     members: Member[],

@@ -77,9 +77,11 @@ roundStatistics[currentRound] ) {
       <h3 matLine class="statistic">
         <div class="statistic-title">Highest</div>
         <mat-chip-set>
+          @if(!(isAnonymousVotingEnabled | async)){
           <mat-chip class="voter">
             {{ statistics.highestVote.voter }}
           </mat-chip>
+          }
           <mat-chip>
             {{
               statistics.highestVote.value
@@ -96,9 +98,11 @@ roundStatistics[currentRound] ) {
       <h3 matLine class="statistic">
         <div class="statistic-title">Lowest</div>
         <mat-chip-set>
+          @if(!(isAnonymousVotingEnabled | async)){
           <mat-chip class="voter">
             {{ statistics.lowestVote.voter }}
           </mat-chip>
+          }
           <mat-chip>
             {{
               statistics.lowestVote.value
@@ -114,7 +118,7 @@ roundStatistics[currentRound] ) {
 }
 <h3 matSubheader class="subheader">Votes</h3>
 <div class="votes">
-  @for (member of members; track member.id) {
+  @for (member of members | async; track member.id) {
   <div class="vote-container">
     <div class="vote-avatar">
       @if (member.avatarUrl) {
@@ -125,7 +129,7 @@ roundStatistics[currentRound] ) {
       />
       } @if (!member.avatarUrl) {
       <div class="vote-avatar-text">
-        {{ member.name?.charAt(0) }}
+        {{ member.isAnonymous ? "?" : member.name?.charAt(0) }}
       </div>
       } @if ( member.id === currentUserId &&
       member.avatarUrl?.includes('avatars.dicebear.com') ) {
@@ -157,7 +161,7 @@ roundStatistics[currentRound] ) {
       </button>
       } }
     </div>
-    <span class="member-name">
+    <span class="member-name" [class.blur]="member.isAnonymous">
       {{ member.name }}
       @if (userProfiles[member.id]) {
       <mat-icon

@@ -229,6 +229,14 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     );
   }
 
+  toggleAnonymousVoting() {
+    this.analytics.logToggleAnonymousVote(!this.room.isAsyncVotingEnabled);
+    this.estimatorService.toggleAnonymousVoting(
+      this.room.roomId,
+      !this.room.isAnonymousVotingEnabled
+    );
+  }
+
   openAddCardDeckModal() {
     if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
       this.analytics.logClickedSetCustomCards();

@@ -1,6 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EMPTY, Observable, of, Subject, takeUntil } from 'rxjs';
+import {
+  distinctUntilChanged,
+  EMPTY,
+  map,
+  Observable,
+  of,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { OrganizationService } from 'src/app/services/organization.service';
@@ -18,6 +26,7 @@ import {
 } from 'src/app/types';
 import { overrideMajorityVodeModalCreator } from '../override-majority-vote-modal/override-majority-vote-modal.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { RoomDataService } from '../room-data.service';
 
 @Component({
   selector: 'app-round-results',
@@ -27,7 +36,6 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 export class RoundResultsComponent implements OnInit, OnDestroy {
   @Input() room: Room;
   @Input() roundStatistics: RoundStatistics;
-  @Input() members: Member[];
   @Input() currentRound: number;
   @Input() selectedEstimationCardSetValue: CardSetValue;
   @Input() userProfiles$: Observable<UserProfileMap> = EMPTY;
@@ -43,6 +51,13 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   userProfiles: UserProfileMap = {};
   currentUserId: string | undefined;
 
+  isAnonymousVotingEnabled = this.roomDataService.room$.pipe(
+    map((room) => room.isAnonymousVotingEnabled),
+    distinctUntilChanged()
+  );
+
+  members = this.roomDataService.activeMembersAnonymized$;
+
   readonly MemberType = MemberType;
 
   constructor(
@@ -52,6 +67,7 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly organizationService: OrganizationService,
     public readonly permissionsService: PermissionsService,
+    private readonly roomDataService: RoomDataService
   ) {}
 
   ngOnInit() {
@@ -101,10 +117,12 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   }
 
   openMajorityVoteOverrideModal() {
-    this.dialog.open(...overrideMajorityVodeModalCreator({
-      roomId: this.room.roomId,
-      roundId: this.currentRound,
-      selectedCardSet: this.selectedEstimationCardSetValue
-    }))
+    this.dialog.open(
+      ...overrideMajorityVodeModalCreator({
+        roomId: this.room.roomId,
+        roundId: this.currentRound,
+        selectedCardSet: this.selectedEstimationCardSetValue,
+      })
+    );
   }
 }

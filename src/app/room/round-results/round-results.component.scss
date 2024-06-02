@@ -271,3 +271,7 @@ mat-list-item.statistic-line {
   --mdc-chip-with-trailing-icon-trailing-icon-color: black;
   --mdc-chip-outline-color: var(--accent-color);
 }
+
+.blur {
+  filter: blur(5px);
+}

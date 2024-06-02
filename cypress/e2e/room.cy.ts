@@ -17,7 +17,7 @@ describe('Inside the room', () => {
 
   afterEach(() => {
     cy.wait(1000);
-  })
+  });
 
   it('can cast votes', () => {
     cy.contains('Test User').should('be.visible');
@@ -136,6 +136,20 @@ describe('Inside the room', () => {
 
     cy.get('body').click(10, 10);
     cy.contains('Topic of Round 3').should('be.visible');
+  });
+
+  it('can use anonymous voting', () => {
+    cy.contains('Test User').should('be.visible');
+
+    cy.get('#room-options-button').click();
+    cy.get('.anonymous-vote-checkbox').click();
+
+    cy.get('body').click(10, 10);
+
+    cy.contains('Test User').should('not.exist');
+
+    cy.get('#room-options-button').click();
+    cy.get('.anonymous-vote-checkbox').click();
   });
 
   it('can override majority vote', () => {

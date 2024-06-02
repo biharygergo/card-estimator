@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  EstimatorService,
-  RoomNotFoundError,
-} from '../services/estimator.service';
+import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule, Params } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -223,8 +220,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     filter(
       (room) =>
         this.config.runningIn === 'teams' &&
-        (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 2 // 2 minutes
-        && !this.hideRecentlyLeftRoom
+        (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 2 && // 2 minutes
+        !this.hideRecentlyLeftRoom
     )
   );
 
@@ -362,7 +359,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       )
       .subscribe((success) => {
         if (success) {
-          this.navigateToRoom(this.roomId.value)
+          this.navigateToRoom(this.roomId.value);
         }
       });
 
@@ -485,7 +482,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   }
 
   navigateToRoom(roomId: string, queryParams?: Params) {
-    this.router.navigate(['room', roomId], {queryParams});
+    this.router.navigate(['room', roomId], { queryParams });
   }
 
   showUnableToJoinRoom() {

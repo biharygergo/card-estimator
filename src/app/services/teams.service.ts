@@ -4,9 +4,7 @@ import * as microsoftTeams from '@microsoft/teams-js';
 import { Theme, ThemeService } from './theme.service';
 import { PaymentService } from './payment.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TeamsService {
   isInitialized = false;
 

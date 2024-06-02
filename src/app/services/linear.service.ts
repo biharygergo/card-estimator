@@ -19,9 +19,7 @@ import { LinearIntegration, RichTopic } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class LinearService {
   API_URL = `${window.location.origin}/api`;
   constructor(

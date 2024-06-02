@@ -10,9 +10,7 @@ import {
 } from '../types';
 import { PaymentService } from './payment.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class PermissionsService {
   userPermissions = new BehaviorSubject<Partial<UserPermissions>>({});
   isPremiumSubscriber = new BehaviorSubject<boolean | null>(null);

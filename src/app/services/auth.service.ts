@@ -20,7 +20,7 @@ import {
   updateProfile,
   User,
   UserInfo,
-  GoogleAuthProvider
+  GoogleAuthProvider,
 } from '@angular/fire/auth';
 import {
   doc,
@@ -74,9 +74,7 @@ export type ParsedSessionCookie = {
   createdAt: FieldValue;
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
   public readonly user: Observable<User | null> = EMPTY;
 
@@ -288,13 +286,16 @@ export class AuthService {
 
   async updateCurrentUserEmail(email: string, password: string) {
     const user = await this.getUser();
-    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+    await reauthenticateWithCredential(
+      user,
+      EmailAuthProvider.credential(user.email, password)
+    );
     await updateEmail(user, email);
-    await this.updateUserDetails(user.uid, {email});
+    await this.updateUserDetails(user.uid, { email });
   }
 
   setSessionCookie(value: string) {
-    Cookies.set('__session', value, {secure: true});
+    Cookies.set('__session', value, { secure: true });
   }
 
   getSessionCookie(): string | ParsedSessionCookie | undefined {

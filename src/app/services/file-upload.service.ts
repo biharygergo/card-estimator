@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  FullMetadata,
   Storage,
   ref,
   uploadBytes,
   getDownloadURL,
 } from '@angular/fire/storage';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class FileUploadService {
   constructor(private readonly storageService: Storage) {}
 

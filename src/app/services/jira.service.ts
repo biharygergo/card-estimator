@@ -20,9 +20,7 @@ import { JiraIntegration, JiraIssue, JiraResource, RichTopic } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class JiraService {
   API_URL = `${window.location.origin}/api`;
   constructor(

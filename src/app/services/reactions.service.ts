@@ -81,9 +81,7 @@ const REACTIONS_MAP: { [id: string]: ReactionOption } = REACTIONS_LIST.reduce(
   {}
 );
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ReactionsService {
   reactionsList = REACTIONS_LIST;
   reactionsMap = REACTIONS_MAP;

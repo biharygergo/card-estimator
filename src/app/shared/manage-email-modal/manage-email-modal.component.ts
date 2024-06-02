@@ -16,6 +16,7 @@ import {
 } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ToastService } from 'src/app/services/toast.service';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 @Component({
   selector: 'app-manage-email-modal',
@@ -27,6 +28,7 @@ import { ToastService } from 'src/app/services/toast.service';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    FirebaseModule
   ],
   templateUrl: './manage-email-modal.component.html',
   styleUrl: './manage-email-modal.component.scss',

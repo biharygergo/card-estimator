@@ -70,6 +70,7 @@ import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 import { ToastService } from '../services/toast.service';
 import { MeetApiService } from '../services/meet-api.service';
+import { FirebaseModule } from '../firebase.module';
 
 enum PageMode {
   CREATE = 'create',
@@ -133,6 +134,7 @@ const LOADING_MESSAGES = [
     ZoomAppBannerComponent,
     AppConfigModule,
     CarbonAdComponent,
+    FirebaseModule,
   ],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',

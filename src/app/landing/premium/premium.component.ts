@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { PricingTableComponent } from 'src/app/shared/pricing-table/pricing-table.component';
 
 @Component({
   selector: 'app-premium',
@@ -7,7 +7,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   styleUrls: ['./premium.component.scss'],
   standalone: true,
   imports: [
-    SharedModule
+    PricingTableComponent
 ]
 })
 export class PremiumComponent {

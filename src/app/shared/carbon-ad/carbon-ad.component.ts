@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 interface ViewModel {
   showAds: boolean;
@@ -41,7 +42,13 @@ function createCarbonSrc(placement: 'landing' | 'app') {
 @Component({
   selector: 'app-carbon-ad',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    FirebaseModule,
+  ],
   templateUrl: './carbon-ad.component.html',
   styleUrls: ['./carbon-ad.component.scss'],
 })

@@ -23,6 +23,7 @@ import {
 } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { RecurringMeetingLink } from '../types';
+import { FirebaseModule } from '../firebase.module';
 
 type State = {
   roomId?: string;
@@ -39,7 +40,8 @@ type State = {
     RouterModule,
     SharedModule,
     ZoomAppBannerComponent,
-    AppConfigModule
+    AppConfigModule,
+    FirebaseModule,
 ],
   templateUrl: './recurring-meeting.component.html',
   styleUrls: ['./recurring-meeting.component.scss'],

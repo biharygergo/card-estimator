@@ -26,9 +26,7 @@ import { PaymentService } from './payment.service';
 
 const ORGANIZATION_COLLECTION = 'organizations';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class OrganizationService {
   constructor(
     private firestore: Firestore,

@@ -33,6 +33,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
 import { AnimationLoader, LottieCacheModule, LottieModule } from 'ngx-lottie';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
+import { FirebaseModule } from '../firebase.module';
 
 export function playerFactory() {
   return import(
@@ -105,6 +106,7 @@ const routes: Routes = [
       },
     }),
     RouterModule.forChild(routes),
+    FirebaseModule
   ],
   providers: [
     AnimationLoader,

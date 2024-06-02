@@ -48,6 +48,7 @@ import { RoundHistoryTableComponent } from './round-history-table/round-history-
 import { PremiumInAppModalComponent } from './premium-in-app-modal/premium-in-app-modal.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { PricingTableComponent } from './pricing-table/pricing-table.component';
+import { FirebaseModule } from '../firebase.module';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { PricingTableComponent } from './pricing-table/pricing-table.component';
     ConfirmDialogComponent,
   ],
   imports: [
+    FirebaseModule,
     CommonModule,
     RouterModule,
     MatCardModule,

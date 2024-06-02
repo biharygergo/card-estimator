@@ -26,9 +26,7 @@ export class UnauthorizedError extends Error {
   message = 'User must have a permanent premium account';
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class CardDeckService {
   constructor(
     private firestore: Firestore,

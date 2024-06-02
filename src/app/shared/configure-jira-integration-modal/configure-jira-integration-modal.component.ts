@@ -16,6 +16,7 @@ import { JiraService } from 'src/app/services/jira.service';
 import { of, switchMap, take, tap } from 'rxjs';
 import { ToastService } from 'src/app/services/toast.service';
 import { JiraResource } from 'src/app/types';
+import { FirebaseModule } from 'src/app/firebase.module';
 
 @Component({
   selector: 'app-configure-jira-integration-modal',
@@ -26,6 +27,7 @@ import { JiraResource } from 'src/app/types';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    FirebaseModule
   ],
   templateUrl: './configure-jira-integration-modal.component.html',
   styleUrl: './configure-jira-integration-modal.component.scss',

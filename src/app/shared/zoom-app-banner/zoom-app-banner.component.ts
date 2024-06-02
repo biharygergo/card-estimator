@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil, tap } from 'rxjs';
+import { FirebaseModule } from 'src/app/firebase.module';
 import {
   AnalyticsService,
   ZoomAppCtaLocation,
@@ -23,7 +24,8 @@ const ZOOM_APP_PROMO_SEEN_KEY = 'zoomAppPromoSeen';
     RouterModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    FirebaseModule
 ],
   selector: 'zoom-app-banner',
   templateUrl: './zoom-app-banner.component.html',

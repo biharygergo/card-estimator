@@ -163,7 +163,7 @@ roundStatistics[currentRound] ) {
     </div>
     <span class="member-name" [class.blur]="member.isAnonymous">
       {{ member.name }}
-      @if (userProfiles[member.id]) {
+      @if (userProfiles[member.id] && (isAnonymousVotingEnabled |async)) {
       <mat-icon
         class="verified-icon"
         [matTooltip]="

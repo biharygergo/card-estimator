@@ -67,7 +67,7 @@ export class OrganizationInvitationComponent implements OnInit, OnDestroy {
     }
 
     window.open(
-      `https://test.planningpoker.live/api/acceptOrganizationInvitation?invitationId=${this.invitationId}&organizationId=${this.organizationId}`
+      `${window.origin}/api/acceptOrganizationInvitation?invitationId=${this.invitationId}&organizationId=${this.organizationId}`
     );
   }
 }

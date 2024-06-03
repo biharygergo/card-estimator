@@ -44,7 +44,7 @@ export async function acceptInvitation(
   } catch {
     console.error("<User not found>");
     req.res?.redirect(
-        `${getHost(req)}/organizationInvitation?result=user-not-found`
+        `${getHost(req)}/organizationInvitation?result=user-not-found&invitationId=${invitationId}&organizationId=${organizationId}`
     );
     return;
   }

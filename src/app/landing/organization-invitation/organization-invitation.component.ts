@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import {
@@ -24,6 +24,11 @@ export class OrganizationInvitationComponent implements OnInit, OnDestroy {
   result: Observable<InvitationResult> = this.activatedRoute.queryParamMap.pipe(
     map((params) => params.get('result') as InvitationResult)
   );
+
+  invitationId: string | undefined =
+    this.activatedRoute.snapshot.queryParamMap.get('invitationId');
+  organizationId: string | undefined =
+    this.activatedRoute.snapshot.queryParamMap.get('organizationId');
 
   invitationResult: InvitationResult;
   destroy = new Subject<void>();
@@ -48,12 +53,21 @@ export class OrganizationInvitationComponent implements OnInit, OnDestroy {
   async openAuthModal() {
     const user = await this.authService.getUser();
 
-    this.dialog.open(
+    const dialogRef = this.dialog.open(
       ...signUpOrLoginDialogCreator({
-        intent: user?.isAnonymous
-          ? SignUpOrLoginIntent.LINK_ACCOUNT
-          : SignUpOrLoginIntent.SIGN_IN,
+        intent: SignUpOrLoginIntent.LINK_ACCOUNT
       })
+    );
+
+    await firstValueFrom(dialogRef.afterClosed());
+    const newUser = await this.authService.getUser();
+
+    if (!newUser || user?.isAnonymous) {
+      return;
+    }
+
+    window.open(
+      `https://test.planningpoker.live/api/acceptOrganizationInvitation?invitationId=${this.invitationId}&organizationId=${this.organizationId}`
     );
   }
 }

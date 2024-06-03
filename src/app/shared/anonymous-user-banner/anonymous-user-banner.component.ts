@@ -17,6 +17,7 @@ import {
 export class AnonymousUserBannerComponent implements OnInit {
   isBusy = new BehaviorSubject<boolean>(false);
   onSignUpClicked = new Subject<void>();
+  onSignInClicked = new Subject<void>();
   destroy = new Subject<void>();
 
   user = this.authService.user;
@@ -42,13 +43,18 @@ export class AnonymousUserBannerComponent implements OnInit {
               intent: SignUpOrLoginIntent.LINK_ACCOUNT,
             })
           );
-          this.analyticsService.logClickedSignUpWithGoogle(
-            this.bannerStyle === 'default' ? 'history' : 'profile-modal'
-          );
         }),
         takeUntil(this.destroy)
       )
       .subscribe();
+
+    this.onSignInClicked.pipe(takeUntil(this.destroy)).subscribe(() => {
+      this.dialog.open(
+        ...signUpOrLoginDialogCreator({
+          intent: SignUpOrLoginIntent.SIGN_IN,
+        })
+      );
+    });
   }
 
   hideBanner() {

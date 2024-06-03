@@ -55,7 +55,9 @@ export class OrganizationInvitationComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(
       ...signUpOrLoginDialogCreator({
-        intent: SignUpOrLoginIntent.LINK_ACCOUNT
+        intent: user
+          ? SignUpOrLoginIntent.LINK_ACCOUNT
+          : SignUpOrLoginIntent.CREATE_ACCOUNT,
       })
     );
 

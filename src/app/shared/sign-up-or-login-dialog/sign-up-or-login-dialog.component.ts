@@ -37,6 +37,7 @@ export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 export enum SignUpOrLoginIntent {
   LINK_ACCOUNT,
   SIGN_IN,
+  CREATE_ACCOUNT
 }
 
 export interface SignUpOrLoginDialogData {

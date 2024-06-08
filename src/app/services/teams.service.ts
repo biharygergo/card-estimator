@@ -60,6 +60,29 @@ export class TeamsService {
   }
 
   async shareAppContentToStage(roomId: string): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const canShareToStage = await this.canShareToStage();
+
+      if (!canShareToStage) {
+        resolve(false);
+        return;
+      }
+
+      const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
+      microsoftTeams.meeting.shareAppContentToStage((err, result) => {
+        if (result) {
+          resolve(true);
+        }
+
+        if (err) {
+          console.error(err);
+          resolve(false);
+        }
+      }, roomUrl);
+    });
+  }
+
+  async canShareToStage() {
     return new Promise((resolve) => {
       const frameContext = microsoftTeams.app.getFrameContext();
       const isInMeeting =
@@ -73,20 +96,12 @@ export class TeamsService {
       microsoftTeams.meeting.getAppContentStageSharingCapabilities(
         (err, result) => {
           if (result?.doesAppHaveSharePermission) {
-            const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
-            microsoftTeams.meeting.shareAppContentToStage((err, result) => {
-              if (result) {
-                resolve(true);
-              }
-
-              if (err) {
-                console.error(err);
-                resolve(false);
-              }
-            }, roomUrl);
-          } else {
-            resolve(false);
+            resolve(true);
+            return;
           }
+
+          resolve(false);
+          return;
         }
       );
     });

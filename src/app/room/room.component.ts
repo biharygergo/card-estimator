@@ -766,9 +766,29 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.clipboard.copy(roomUrl);
       }
     } else if (this.config.runningIn === 'teams') {
-      const isSharingToStage = await this.teamsService.shareAppContentToStage(
-        this.room.roomId
-      );
+      const canShareToStage = await this.teamsService.canShareToStage();
+
+      let shareMethod: 'stage' | 'copy' = 'copy';
+      let isSharingToStage = false;
+
+      if (canShareToStage) {
+        const shouldShareToStage =
+          await this.confirmDialogService.openConfirmationDialog({
+            title: 'Share to stage or copy link?',
+            content:
+              'You can either share the app to the meeting stage or copy the current room ID and send it to your colleagues yourself in chat. Which would you like to do?',
+            positiveText: 'Share to Meeting Stage',
+            negativeText: 'Copy room ID',
+          });
+        shareMethod = shouldShareToStage ? 'stage' : 'copy';
+      }
+
+      if (shareMethod === 'stage') {
+        isSharingToStage = await this.teamsService.shareAppContentToStage(
+          this.room.roomId
+        );
+      }
+
       if (isSharingToStage) {
         message =
           '🎉 Started sharing app to meeting stage for all meeting participants. You can close this side-panel.';

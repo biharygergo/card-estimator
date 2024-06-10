@@ -1,6 +1,6 @@
 .menu-button {
   color: var(--text-on-main) !important;
-  // border-color: rgba(255, 255, 255, 0.6) !important;
+  border-color: var(--secondary-text-on-main) !important;
 }
 
 .item-with-premium {
@@ -17,4 +17,10 @@
   padding-left: 16px;
   padding-top: 4px;
   padding-bottom: 4px;
+}
+
+.selected {
+  mat-icon {
+    color: var(--accent-color);
+  }
 }

@@ -76,7 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
       map((data) => !!data['supportsTheme']),
       distinctUntilChanged()
     ),
-    this.themeService.themeChanged.pipe(startWith(null)),
+    this.themeService.themeValue,
   ]);
 
   private readonly destroyed = new Subject<void>();
@@ -120,7 +120,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.onThemeShouldChange$
       .pipe(takeUntil(this.destroyed))
-      .subscribe(([supportsTheme]) => {
+      .subscribe(([supportsTheme, themeValue]) => {
         if (supportsTheme) {
           Object.values(Theme).forEach((theme) => {
             this.renderer.removeClass(this.document.body, theme);
@@ -128,12 +128,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
           this.renderer.addClass(
             this.document.body,
-            this.themeService.currentTheme
+            themeValue
           );
         } else {
           this.renderer.removeClass(
             this.document.body,
-            this.themeService.currentTheme
+            themeValue
           );
         }
       });

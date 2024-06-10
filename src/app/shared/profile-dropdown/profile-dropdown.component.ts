@@ -37,6 +37,9 @@ export class ProfileDropdownComponent implements OnInit {
     })
   );
 
+  currentTheme: Observable<Theme> = this.themeService.themeSetting;
+  readonly Theme = Theme;
+
   constructor(
     private auth: AuthService,
     private snackBar: MatSnackBar,
@@ -117,10 +120,16 @@ export class ProfileDropdownComponent implements OnInit {
     this.analytics.logClickedReportAnIssue('profile_icon');
   }
 
-  toggleDarkMode() {
-    this.themeService.setTheme(
-      this.themeService.currentTheme === Theme.DARK ? Theme.DEFAULT : Theme.DARK
-    );
+  setAutomaticTheme() {
+    this.themeService.setTheme(Theme.AUTOMATIC);
+  }
+
+  setLightTheme() {
+    this.themeService.setTheme(Theme.DEFAULT);
+  }
+
+  setDarkTheme() {
+    this.themeService.setTheme(Theme.DARK);
   }
 
   openInBrowser() {

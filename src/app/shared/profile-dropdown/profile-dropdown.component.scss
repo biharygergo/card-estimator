@@ -1,20 +1,20 @@
 .menu-button {
-    color: white !important;
-    border-color: rgba(255,255,255,0.6) !important;
+  color: var(--text-on-main) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .item-with-premium {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .dark-mode-toggle {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .version {
-    padding-left: 16px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+  padding-left: 16px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }

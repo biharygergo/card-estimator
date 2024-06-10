@@ -157,30 +157,6 @@
   }
 }
 
-.ad-explainer {
-  margin: 1rem 0.3rem;
-  margin-bottom: 0;
-  display: flex;
-  justify-content: flex-end;
-
-  span {
-    color: white;
-    font-size: 0.8rem;
-    cursor: pointer;
-    user-select: none;
-  }
-}
-
-.ad-container {
-  margin-top: 0.2rem;
-  min-height: 90px;
-
-  .mat-mdc-card {
-    height: 100%;
-    padding: 0;
-  }
-}
-
 .rounded-card {
   border: none;
 }

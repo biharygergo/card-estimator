@@ -100,7 +100,7 @@
 }
 
 .reaction-buttons {
-  background: var(--blue-background-color);
+  background: var(--highlight-background-color);
   border-radius: 12px;
   display: flex;
   flex-wrap: wrap;
@@ -144,5 +144,5 @@
 }
 
 .pass-option-button:not(.mat-accent) {
-  background-color: var(--blue-background-color);
+  background-color: var(--highlight-background-color);
 }

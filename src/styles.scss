@@ -9,12 +9,14 @@
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
   --on-light-background-color: #efefef;
-  --blue-background-color: #d9e2ff;
+  --highlight-background-color: #d9e2ff;
   --title-on-light: #001a43;
   --ad-background: #18325d;
 
   --light-blue: #d9e2ff;
   --text-on-white: #3f4759;
+  --text-on-main: white;
+
   --background-dark: #001a43;
   --light-background: white;
 }
@@ -49,7 +51,7 @@ $m3-light-theme: matx.define-theme((
   --light-background: #1f1f1f;
   --light-background-color: #1f1f1f;
   --on-light-background-color: #3d3d3d;
-  --blue-background-color: #1f1f1f;
+  --highlight-background-color: #1f1f1f;
   --text-on-white: #efefef;
   --title-on-light: #efefef;
   --ad-background: var(--mdc-dialog-container-color);
@@ -259,7 +261,7 @@ body {
   }
   .mat-mdc-tab-header {
     border-radius: 46px;
-    background-color: var(--blue-background-color) !important;
+    background-color: var(--highlight-background-color) !important;
     --mat-mdc-tab-header-with-background-foreground-color: #44474f;
   }
 
@@ -298,7 +300,7 @@ body {
 }
 
 .premium-banner {
-  background: var(--blue-background-color);
+  background: var(--highlight-background-color);
   border-radius: 18px;
   padding: 1rem;
   color: white;

@@ -6,23 +6,15 @@
 :root {
   --main-color: #1c4182;
   --main-dark-color: #001b55;
-  --main-light-color: #2a479b;
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
   --on-light-background-color: #efefef;
-  --on-light-background-color-2: #edf0ff;
-  --on-light-background-color-3: #efefef;
-  --on-light-background-color-4: #eef1fe;
-  --on-light-background-color-5: #ebeced;
   --blue-background-color: #d9e2ff;
-  --title-on-dark: #001a43;
-  --subtitle-on-dark: #575e71;
-  --paragraph-on-premium: #15448f;
+  --title-on-light: #001a43;
   --ad-background: #18325d;
 
   --light-blue: #d9e2ff;
   --text-on-white: #3f4759;
-  --text-on-gray: #44474f;
   --background-dark: #001a43;
   --light-background: white;
 }
@@ -57,15 +49,9 @@ $m3-light-theme: matx.define-theme((
   --light-background: #1f1f1f;
   --light-background-color: #1f1f1f;
   --on-light-background-color: #3d3d3d;
-  --on-light-background-color-2: #2c2c2c;
-  --on-light-background-color-3: #1f1f1f;
   --blue-background-color: #1f1f1f;
-  --on-light-background-color-4: black;
-  --on-light-background-color-5: #3d3d3d;
   --text-on-white: #efefef;
-  --title-on-dark: #efefef;
-  --subtitle-on-dark: white;
-  --paragraph-on-premium: white;
+  --title-on-light: #efefef;
   --ad-background: var(--mdc-dialog-container-color);
 
   &.running-in-teams {
@@ -273,7 +259,7 @@ body {
   }
   .mat-mdc-tab-header {
     border-radius: 46px;
-    background-color: var(--on-light-background-color-2) !important;
+    background-color: var(--blue-background-color) !important;
     --mat-mdc-tab-header-with-background-foreground-color: #44474f;
   }
 
@@ -283,7 +269,7 @@ body {
       font-weight: bold;
     }
     &.mdc-tab--active {
-      background-color: #d9e2ff !important;
+      background-color: #edf0ff !important;
       border-radius: 46px;
       .mdc-tab__text-label {
         color: #345ca8 !important;
@@ -312,7 +298,7 @@ body {
 }
 
 .premium-banner {
-  background: var(--on-light-background-color-2);
+  background: var(--blue-background-color);
   border-radius: 18px;
   padding: 1rem;
   color: white;
@@ -320,7 +306,7 @@ body {
   margin-bottom: 1rem;
 
   p {
-    color: var(--paragraph-on-premium);
+    color: var(--title-on-light);
   }
 
   .premium-banner-buttons {
@@ -339,7 +325,7 @@ body {
     align-items: center;
     margin-bottom: 0.2rem;
     font-size: 1rem;
-    color: var(--title-on-dark);
+    color: var(--title-on-light);
   }
 }
 

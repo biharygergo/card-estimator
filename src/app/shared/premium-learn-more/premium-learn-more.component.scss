@@ -14,7 +14,7 @@
 
   .title {
     font-weight: bold;
-    color: var(--title-on-dark);
+    color: var(--title-on-light);
 
     .modal & {
       margin-top: 2rem;
@@ -68,7 +68,7 @@
 
     .feature-details {
       h5 {
-        color: var(--title-on-dark);
+        color: var(--title-on-light);
         font-weight: bold;
         font-size: 1rem;
         margin-bottom: 6px;
@@ -82,12 +82,12 @@
   flex: 1 0 50%;
   padding: 1rem;
   flex-direction: column;
-  background-color: var(--on-light-background-color-4);
+  background-color: var(--blue-background-color);
   align-items: center;
   justify-content: center;
 
   h2 {
-    color: var(--title-on-dark);
+    color: var(--title-on-light);
   }
 
   .get-premium-card {
@@ -179,7 +179,7 @@
     .monthly-price {
       margin-bottom: 0;
       font-weight: 600;
-      color: var(--text-on-gray);
+      color: var(--text-on-white);
 
       .light {
         font-weight: 500;

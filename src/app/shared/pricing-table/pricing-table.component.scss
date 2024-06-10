@@ -19,7 +19,7 @@
   font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 2rem;
-  color: var(--title-on-dark)
+  color: var(--title-on-light)
 }
 
 .plan-selector {
@@ -103,7 +103,7 @@
     }
 
     .plan-title {
-      color: var(--title-on-dark);
+      color: var(--title-on-light);
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
@@ -119,14 +119,14 @@
       margin-top: auto;
       .price-amount {
         font-size: 2rem;
-        color: var(--subtitle-on-dark);
+        color: var(--text-on-white);
         font-weight: bold;
         display: block;
         margin-bottom: 4px;
       }
 
       .price-description {
-        color: var(--subtitle-on-dark);
+        color: var(--text-on-white);
         font-size: 0.8rem;
       }
     }
@@ -184,7 +184,7 @@
     }
 
     .feature-details {
-      color: var(--title-on-dark);
+      color: var(--title-on-light);
       h5 {
         font-weight: bold;
         font-size: 1rem;

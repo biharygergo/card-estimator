@@ -124,7 +124,7 @@ mat-list-item.statistic-line {
       justify-content: center;
       font-size: 26px;
       border-radius: 50%;
-      color: var(--background-dark);
+      color: var(--text-on-light-blue);
     }
 
     .member-options-button {
@@ -133,7 +133,7 @@ mat-list-item.statistic-line {
       top: 0;
       width: 100%;
       height: 100%;
-      background: var(--main-dark-color);
+      background: var(--main-dark-highlight-color);
       padding: 0;
       display: flex;
       align-items: center;
@@ -214,7 +214,7 @@ mat-list-item.statistic-line {
   }
 
   .vote {
-    background: var(--main-dark-color);
+    background: var(--main-dark-highlight-color);
     border-radius: 32px;
     padding: 0px 12px;
     font-size: 14px;

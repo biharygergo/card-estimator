@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
+@use "@angular/material" as mat;
+@use "@angular/material-experimental" as matx;
 @import "./app/common.scss";
 
 :root {
@@ -10,10 +10,14 @@
   --light-background-color: #f4f5f6;
   --on-light-background-color: #efefef;
   --highlight-background-color: #d9e2ff;
+  --main-dark-highlight-color: #001b55;
   --title-on-light: #001a43;
   --ad-background: #18325d;
 
+  --card-border-color: transparent;
+
   --light-blue: #d9e2ff;
+  --text-on-light-blue: #001a43;
   --text-on-white: #3f4759;
   --text-on-main: white;
 
@@ -21,25 +25,40 @@
   --light-background: white;
 }
 
-$m3-dark-theme: matx.define-theme((
-  color: (
-    theme-type: dark,
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-orange-palette,
+$m3-dark-theme: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-orange-palette,
+    ),
   )
-));
+);
 
-$m3-light-theme: matx.define-theme((
-  color: (
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-orange-palette,
-    )
-));
+$m3-light-theme: matx.define-theme(
+  (
+    color: (
+      primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-orange-palette,
+    ),
+  )
+);
 
 @include mat.core();
 
 .default-theme {
   @include mat.all-component-colors($m3-light-theme);
+
+  &.running-in-teams, &.running-in-zoom {
+    --background-dark: white;
+    --main-dark-color: var(--mdc-outlined-card-container-color);
+    --main-color: white;
+    --text-on-main: #3f4759;
+    --card-border-color: lightgray;
+
+    --ad-background: var(--mdc-outlined-card-container-color);
+
+  }
 }
 
 .dark-theme {
@@ -47,6 +66,7 @@ $m3-light-theme: matx.define-theme((
   --mdc-outlined-card-container-color: #2a2929;
   --background-dark: black;
   --main-dark-color: black;
+  --main-dark-highlight-color: black;
   --main-color: #141218;
   --light-background: #1f1f1f;
   --light-background-color: #1f1f1f;
@@ -59,9 +79,11 @@ $m3-light-theme: matx.define-theme((
   &.running-in-teams {
     --background-dark: #1f1f1f;
     --main-color: #1f1f1f;
+    --highlight-background-color: black;
   }
 
   &.running-in-zoom {
+    --mdc-outlined-card-container-color: #1d1d1d;
     --background-dark: #242424;
     --main-color: #242424;
   }
@@ -76,7 +98,6 @@ body {
   height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   @include mat.all-component-themes($m3-light-theme);
-
 }
 
 body {
@@ -419,7 +440,6 @@ body {
   color: var(--text-on-white);
 }
 
-
 .estimator-button-container {
   flex: 1;
   flex-grow: 0;
@@ -441,8 +461,12 @@ body {
     // --mdc-protected-button-label-text-color: black;
 
     &.selected {
-      --mdc-protected-button-container-color: var(--mdc-filled-button-container-color);
-      --mdc-protected-button-label-text-color: var(--mdc-filled-button-label-text-color);
+      --mdc-protected-button-container-color: var(
+        --mdc-filled-button-container-color
+      );
+      --mdc-protected-button-label-text-color: var(
+        --mdc-filled-button-label-text-color
+      );
     }
 
     @media screen and (max-width: 800px) {
@@ -458,7 +482,9 @@ body {
       color: #efefef;
 
       &.selected {
-        --mdc-protected-button-disabled-container-color: var(--mdc-filled-button-container-color);
+        --mdc-protected-button-disabled-container-color: var(
+          --mdc-filled-button-container-color
+        );
       }
     }
 
@@ -469,7 +495,8 @@ body {
 }
 
 .mat-mdc-menu-panel {
-  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
+    0 3px 14px 2px #0000001f;
 }
 
 .feedback-panel {
@@ -515,6 +542,6 @@ body {
   border-radius: 36px !important;
 
   @media screen and (max-width: 800px) {
-    padding: 50px 16px !important
+    padding: 50px 16px !important;
   }
 }

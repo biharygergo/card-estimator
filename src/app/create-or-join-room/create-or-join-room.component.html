@@ -209,7 +209,7 @@
 <ng-template #recent>
   @if ( !hideRecentlyLeftRoom && recentlyLeftRoom$ | async; as recentlyLeftRoom
   ) {
-  <mat-card class="recent-card action-card" @delayedFadeAnimation>
+  <mat-card class="recent-card action-card" @delayedFadeAnimation appearance="outlined">
     <mat-card-content>
       <p>
         Continue where you left off? <br />

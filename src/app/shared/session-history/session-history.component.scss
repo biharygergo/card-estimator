@@ -2,6 +2,7 @@
 
 .table-card {
   transition: height 200ms ease-out;
+  border-color: var(--card-border-color);
 }
 
 mat-card {

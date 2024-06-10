@@ -39,6 +39,7 @@
   display: flex;
   background: var(--main-dark-color);
   border-radius: 12px 12px 0 0;
+  border: 1px solid var(--card-border-color);
 
   @include extraSmallScreen {
     padding: 0.5rem;
@@ -79,7 +80,7 @@
   .emoji-button {
     color: var(--text-on-main);
     background: none;
-    border: none;
+    border-color: var(--card-border-color);
 
     &.mat-button-toggle-checked {
       background: var(--main-color);
@@ -135,7 +136,6 @@
   flex: 1;
   padding: 1rem;
   padding-right: 0;
-
 
   @media (max-width: 800px) {
     flex-wrap: wrap;

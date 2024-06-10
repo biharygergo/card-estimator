@@ -37,12 +37,15 @@ export class ThemeService {
     private readonly configService: ConfigService,
     private readonly mediaMatcher: MediaMatcher
   ) {
-    this.prefersDarkMatcher.addEventListener(
-      'change',
-      (event: MediaQueryListEvent) => {
-        this.systemTheme.next(event.matches ? 'dark' : 'light');
-      }
-    );
+    if(this.prefersDarkMatcher.addEventListener) {
+      this.prefersDarkMatcher.addEventListener(
+        'change',
+        (event: MediaQueryListEvent) => {
+          this.systemTheme.next(event.matches ? 'dark' : 'light');
+        }
+      );
+    }
+   
 
     const themeFromCookie = this.configService.getCookie('preferredTheme');
     if (

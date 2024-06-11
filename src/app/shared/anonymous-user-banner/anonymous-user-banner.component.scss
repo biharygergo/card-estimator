@@ -3,6 +3,7 @@
 .banner {
   display: flex;
   flex-direction: column;
+  border-color: var(--card-border-color);
 
   &.banner-info {
     color: var(--text-on-white);

@@ -485,7 +485,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.themeService.themeChanged
+    this.themeService.themeValue
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         const element = this.sidenavContent.nativeElement;

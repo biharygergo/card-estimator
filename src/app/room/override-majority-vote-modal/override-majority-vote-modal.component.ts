@@ -33,7 +33,7 @@ export const overrideMajorityVodeModalCreator = (
   {
     id: 'majorityOverrideModal',
     width: '90%',
-    maxWidth: '600px',
+    maxWidth: '700px',
     maxHeight: '98vh',
     panelClass: 'custom-dialog',
     data: params,

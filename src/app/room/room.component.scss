@@ -8,11 +8,6 @@
   right: 0;
 }
 
-.unlock-features-button {
-  --mdc-outlined-button-outline-color: white !important;
-  --mdc-outlined-button-label-text-color: white !important;
-}
-
 @keyframes backgroundTransition {
   100% {
     background: var(--main-color);
@@ -157,37 +152,13 @@
   }
 }
 
-.ad-explainer {
-  margin: 1rem 0.3rem;
-  margin-bottom: 0;
-  display: flex;
-  justify-content: flex-end;
-
-  span {
-    color: white;
-    font-size: 0.8rem;
-    cursor: pointer;
-    user-select: none;
-  }
-}
-
-.ad-container {
-  margin-top: 0.2rem;
-  min-height: 90px;
-
-  .mat-mdc-card {
-    height: 100%;
-    padding: 0;
-  }
-}
-
 .rounded-card {
-  border: none;
+  border-color: var(--card-border-color);
 }
 
 .credits-button {
-  color: white !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: var(--text-on-main) !important;
+  border-color: var(--secondary-text-on-main) !important;
 
   &.alert {
     border-color: var(--accent-color) !important;

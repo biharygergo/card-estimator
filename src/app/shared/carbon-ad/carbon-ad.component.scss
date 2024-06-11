@@ -23,7 +23,7 @@
     bottom: 0.2rem;
     right: 0.2rem;
     display: none !important;
-    --mdc-icon-button-icon-color: white;
+    --mdc-icon-button-icon-color: var(--text-on-main);
 
     .mat-mdc-button-touch-target {
       width: 30px !important;
@@ -44,6 +44,7 @@
     width: calc(130px + 2 * 0.7rem);
     padding: 0.5rem 0.7rem;
     border-radius: 20px 0 0 20px;
+    border: 1px solid var(--card-border-color);
     font-size: 12px;
     background: var(--ad-background);
     animation: fadeIn 200ms ease-in;
@@ -52,11 +53,11 @@
   #carbonads a {
     background-image: none;
     text-decoration: none;
-    color: white;
+    color: var(--text-on-main);
   }
 
   #carbonads a:hover {
-    color: white;
+    color: var(--text-on-main);
   }
 
   #carbonads .carbon-img {

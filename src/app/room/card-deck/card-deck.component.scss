@@ -39,6 +39,7 @@
   display: flex;
   background: var(--main-dark-color);
   border-radius: 12px 12px 0 0;
+  border: 1px solid var(--card-border-color);
 
   @include extraSmallScreen {
     padding: 0.5rem;
@@ -77,9 +78,9 @@
   }
 
   .emoji-button {
-    color: white;
+    color: var(--text-on-main);
     background: none;
-    border: none;
+    border-color: var(--card-border-color);
 
     &.mat-button-toggle-checked {
       background: var(--main-color);
@@ -100,7 +101,7 @@
 }
 
 .reaction-buttons {
-  background: var(--on-light-background-color-4);
+  background: var(--highlight-background-color);
   border-radius: 12px;
   display: flex;
   flex-wrap: wrap;
@@ -136,7 +137,6 @@
   padding: 1rem;
   padding-right: 0;
 
-
   @media (max-width: 800px) {
     flex-wrap: wrap;
     padding: 0.5rem;
@@ -144,5 +144,5 @@
 }
 
 .pass-option-button:not(.mat-accent) {
-  background-color: var(--blue-background-color);
+  background-color: var(--highlight-background-color);
 }

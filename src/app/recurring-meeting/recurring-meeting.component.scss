@@ -8,14 +8,14 @@
 }
 
 .loading-spinner-container {
-    color: white;
+    color: var(--text-on-main);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
     .spinner {
-        --mdc-circular-progress-active-indicator-color: white;
+        --mdc-circular-progress-active-indicator-color: var(--text-on-main);
         margin-bottom: 1rem;
     }
 }

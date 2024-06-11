@@ -24,12 +24,12 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   padding-top: 16px;
   color: var(--mat-card-subtitle-text-color);
   a {
-    color: var(--title-on-dark);
+    color: var(--title-on-light);
   }
 }
 
 .welcome-name-container {
-  color: white;
+  color: var(--text-on-main);
   margin-bottom: 1rem;
   text-align: center;
 
@@ -56,7 +56,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   transition: height 300ms 100ms ease-out;
   overflow: hidden;
   flex-shrink: 0;
-  border: none;
+  border-color: var(--card-border-color);
 
   .mat-mdc-card-content {
     display: flex;
@@ -84,7 +84,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
 .organization-logo-container {
   display: inline-flex;
-  color: white;
+  color: var(--text-on-main);
   align-items: center;
   justify-content: center;
   gap: 1rem;
@@ -135,7 +135,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   }
 }
 .other {
-  color: white;
+  color: var(--text-on-main);
   margin-bottom: 0.5rem;
   font-weight: 400;
 }
@@ -150,7 +150,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 }
 
 .sign-in-button {
-  color: white !important;
+  color: var(--text-on-main) !important;
 }
 
 .observer-info {

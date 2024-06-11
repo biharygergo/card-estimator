@@ -46,7 +46,7 @@
 }
 
 .rounded-card {
-  border: none;
+  border-color: var(--card-border-color);
 }
 
 .big-panel {
@@ -90,7 +90,7 @@
 
 .alert {
   padding: 0.5rem;
-  background: var(--blue-background-color);
+  background: var(--highlight-background-color);
   text-align: center;
   width: 100%;
   border-radius: 20px;

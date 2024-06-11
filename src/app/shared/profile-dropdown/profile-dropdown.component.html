@@ -57,17 +57,37 @@
       <mat-icon>public</mat-icon>
       <span>Open in browser</span>
     </button>
-    } @if (themeService.currentTheme === 'dark-theme') {
-    <button mat-menu-item (click)="toggleDarkMode()">
-      <mat-icon>light_mode</mat-icon>
-      <span>Light mode</span>
-    </button>
-    } @if (themeService.currentTheme === 'default-theme') {
-    <button mat-menu-item (click)="toggleDarkMode()">
-      <mat-icon>dark_mode</mat-icon>
-      <span>Dark mode</span>
-    </button>
     }
+    <button mat-menu-item [matMenuTriggerFor]="themeMenu">
+      <mat-icon>contrast</mat-icon>
+      <span>Theme</span>
+    </button>
+    <mat-menu #themeMenu="matMenu">
+      <button
+        mat-menu-item
+        (click)="setAutomaticTheme()"
+        [class.selected]="(currentTheme | async) === Theme.AUTOMATIC"
+      >
+        <mat-icon>schedule</mat-icon>
+        <span>Automatic</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="setLightTheme()"
+        [class.selected]="(currentTheme | async) === Theme.DEFAULT"
+      >
+        <mat-icon>light_mode</mat-icon>
+        <span>Light</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="setDarkTheme()"
+        [class.selected]="(currentTheme | async) === Theme.DARK"
+      >
+        <mat-icon>dark_mode</mat-icon>
+        <span>Dark</span>
+      </button>
+    </mat-menu>
     <button mat-menu-item (click)="reportAnIssue()">
       <mat-icon>bug_report</mat-icon>
       <span>Report an issue</span>

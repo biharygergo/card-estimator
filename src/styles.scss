@@ -1,51 +1,71 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
+@use "@angular/material" as mat;
+@use "@angular/material-experimental" as matx;
 @import "./app/common.scss";
 
 :root {
   --main-color: #1c4182;
   --main-dark-color: #001b55;
-  --main-light-color: #2a479b;
   --accent-color: #f5a115;
   --light-background-color: #f4f5f6;
   --on-light-background-color: #efefef;
-  --on-light-background-color-2: #edf0ff;
-  --on-light-background-color-3: #efefef;
-  --on-light-background-color-4: #eef1fe;
-  --on-light-background-color-5: #ebeced;
-  --blue-background-color: #d9e2ff;
-  --title-on-dark: #001a43;
-  --subtitle-on-dark: #575e71;
-  --paragraph-on-premium: #15448f;
+  --highlight-background-color: #d9e2ff;
+  --main-dark-highlight-color: #001b55;
+  --title-on-light: #001a43;
   --ad-background: #18325d;
 
+  --card-border-color: transparent;
+
   --light-blue: #d9e2ff;
+  --text-on-light-blue: #001a43;
+  --text-on-highlight: #001a43;
   --text-on-white: #3f4759;
-  --text-on-gray: #44474f;
+  --text-on-main: white;
+  --secondary-text-on-main: rgba(255, 255, 255, 0.5);
+
   --background-dark: #001a43;
   --light-background: white;
 }
 
-$m3-dark-theme: matx.define-theme((
-  color: (
-    theme-type: dark,
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-orange-palette,
+$m3-dark-theme: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-orange-palette,
+    ),
   )
-));
+);
 
-$m3-light-theme: matx.define-theme((
-  color: (
-    primary: matx.$m3-azure-palette,
-    tertiary: matx.$m3-orange-palette,
-    )
-));
+$m3-light-theme: matx.define-theme(
+  (
+    color: (
+      primary: matx.$m3-azure-palette,
+      tertiary: matx.$m3-orange-palette,
+    ),
+  )
+);
 
 @include mat.core();
 
 .default-theme {
   @include mat.all-component-colors($m3-light-theme);
+
+  &.running-in-teams, &.running-in-zoom {
+    --background-dark: white;
+    --main-dark-color: var(--mdc-outlined-card-container-color);
+    --main-color: white;
+    --text-on-main: #3f4759;
+    --card-border-color: lightgray;
+    --secondary-text-on-main: lightgray;
+    --ad-background: var(--mdc-outlined-card-container-color);
+  }
+
+  &.running-in-teams {
+    --background-dark: #f5f5f5;
+    --main-color: #f5f5f5;
+
+  }
 }
 
 .dark-theme {
@@ -53,27 +73,25 @@ $m3-light-theme: matx.define-theme((
   --mdc-outlined-card-container-color: #2a2929;
   --background-dark: black;
   --main-dark-color: black;
+  --main-dark-highlight-color: black;
   --main-color: #141218;
   --light-background: #1f1f1f;
   --light-background-color: #1f1f1f;
   --on-light-background-color: #3d3d3d;
-  --on-light-background-color-2: #2c2c2c;
-  --on-light-background-color-3: #1f1f1f;
-  --blue-background-color: #1f1f1f;
-  --on-light-background-color-4: black;
-  --on-light-background-color-5: #3d3d3d;
+  --highlight-background-color: #1f1f1f;
+  --text-on-highlight: #efefef;
   --text-on-white: #efefef;
-  --title-on-dark: #efefef;
-  --subtitle-on-dark: white;
-  --paragraph-on-premium: white;
+  --title-on-light: #efefef;
   --ad-background: var(--mdc-dialog-container-color);
 
   &.running-in-teams {
     --background-dark: #1f1f1f;
     --main-color: #1f1f1f;
+    --highlight-background-color: #151515;
   }
 
   &.running-in-zoom {
+    --mdc-outlined-card-container-color: #1d1d1d;
     --background-dark: #242424;
     --main-color: #242424;
   }
@@ -88,7 +106,6 @@ body {
   height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   @include mat.all-component-themes($m3-light-theme);
-
 }
 
 body {
@@ -273,7 +290,7 @@ body {
   }
   .mat-mdc-tab-header {
     border-radius: 46px;
-    background-color: var(--on-light-background-color-2) !important;
+    background-color: var(--highlight-background-color) !important;
     --mat-mdc-tab-header-with-background-foreground-color: #44474f;
   }
 
@@ -283,7 +300,7 @@ body {
       font-weight: bold;
     }
     &.mdc-tab--active {
-      background-color: #d9e2ff !important;
+      background-color: #edf0ff !important;
       border-radius: 46px;
       .mdc-tab__text-label {
         color: #345ca8 !important;
@@ -312,7 +329,7 @@ body {
 }
 
 .premium-banner {
-  background: var(--on-light-background-color-2);
+  background: var(--highlight-background-color);
   border-radius: 18px;
   padding: 1rem;
   color: white;
@@ -320,7 +337,7 @@ body {
   margin-bottom: 1rem;
 
   p {
-    color: var(--paragraph-on-premium);
+    color: var(--title-on-light);
   }
 
   .premium-banner-buttons {
@@ -339,7 +356,7 @@ body {
     align-items: center;
     margin-bottom: 0.2rem;
     font-size: 1rem;
-    color: var(--title-on-dark);
+    color: var(--title-on-light);
   }
 }
 
@@ -431,7 +448,6 @@ body {
   color: var(--text-on-white);
 }
 
-
 .estimator-button-container {
   flex: 1;
   flex-grow: 0;
@@ -453,8 +469,12 @@ body {
     // --mdc-protected-button-label-text-color: black;
 
     &.selected {
-      --mdc-protected-button-container-color: var(--mdc-filled-button-container-color);
-      --mdc-protected-button-label-text-color: var(--mdc-filled-button-label-text-color);
+      --mdc-protected-button-container-color: var(
+        --mdc-filled-button-container-color
+      );
+      --mdc-protected-button-label-text-color: var(
+        --mdc-filled-button-label-text-color
+      );
     }
 
     @media screen and (max-width: 800px) {
@@ -470,7 +490,9 @@ body {
       color: #efefef;
 
       &.selected {
-        --mdc-protected-button-disabled-container-color: var(--mdc-filled-button-container-color);
+        --mdc-protected-button-disabled-container-color: var(
+          --mdc-filled-button-container-color
+        );
       }
     }
 
@@ -481,7 +503,8 @@ body {
 }
 
 .mat-mdc-menu-panel {
-  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
+    0 3px 14px 2px #0000001f;
 }
 
 .feedback-panel {
@@ -527,6 +550,6 @@ body {
   border-radius: 36px !important;
 
   @media screen and (max-width: 800px) {
-    padding: 50px 16px !important
+    padding: 50px 16px !important;
   }
 }

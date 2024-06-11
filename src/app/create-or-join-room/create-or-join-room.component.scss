@@ -84,7 +84,7 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
 
 .organization-logo-container {
   display: inline-flex;
-  color: white;
+  color: var(--text-on-main);
   align-items: center;
   justify-content: center;
   gap: 1rem;

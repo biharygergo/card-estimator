@@ -8,11 +8,6 @@
   right: 0;
 }
 
-.unlock-features-button {
-  --mdc-outlined-button-outline-color: white !important;
-  --mdc-outlined-button-label-text-color: white !important;
-}
-
 @keyframes backgroundTransition {
   100% {
     background: var(--main-color);

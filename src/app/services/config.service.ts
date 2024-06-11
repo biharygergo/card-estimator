@@ -8,7 +8,7 @@ export class ConfigService {
   constructor() {}
 
   setCookie(key: string, value: string, expiresInDays: number = 365) {
-    Cookies.set(key, value, { expires: expiresInDays });
+    Cookies.set(key, value, { expires: expiresInDays, sameSite: 'None', secure: true });
   }
 
   setSessionCookie(key: string, value: string) {

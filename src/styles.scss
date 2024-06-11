@@ -57,8 +57,12 @@ $m3-light-theme: matx.define-theme(
     --text-on-main: #3f4759;
     --card-border-color: lightgray;
     --secondary-text-on-main: lightgray;
-
     --ad-background: var(--mdc-outlined-card-container-color);
+  }
+
+  &.running-in-teams {
+    --background-dark: #f5f5f5;
+    --main-color: #f5f5f5;
 
   }
 }
@@ -81,7 +85,7 @@ $m3-light-theme: matx.define-theme(
   &.running-in-teams {
     --background-dark: #1f1f1f;
     --main-color: #1f1f1f;
-    --highlight-background-color: black;
+    --highlight-background-color: #151515;
   }
 
   &.running-in-zoom {

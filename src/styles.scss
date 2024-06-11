@@ -18,6 +18,7 @@
 
   --light-blue: #d9e2ff;
   --text-on-light-blue: #001a43;
+  --text-on-highlight: #001a43;
   --text-on-white: #3f4759;
   --text-on-main: white;
   --secondary-text-on-main: rgba(255, 255, 255, 0.5);
@@ -78,6 +79,7 @@ $m3-light-theme: matx.define-theme(
   --light-background-color: #1f1f1f;
   --on-light-background-color: #3d3d3d;
   --highlight-background-color: #1f1f1f;
+  --text-on-highlight: #efefef;
   --text-on-white: #efefef;
   --title-on-light: #efefef;
   --ad-background: var(--mdc-dialog-container-color);

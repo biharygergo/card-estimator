@@ -7,7 +7,7 @@
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
   }
 
   padding: 2rem 2rem 0 2rem;
@@ -28,7 +28,7 @@
   .cta-content {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     flex: 1;
     padding-bottom: 2rem;
     padding-right: 2rem;

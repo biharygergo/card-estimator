@@ -15,6 +15,7 @@
   },
   "main": "lib/functions/src/index.js",
   "dependencies": {
+    "@google-cloud/bigquery": "^7.7.1",
     "@google-cloud/vertexai": "^0.5.0",
     "@linear/sdk": "^19.3.0",
     "@sendgrid/client": "^7.7.0",

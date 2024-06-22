@@ -1,4 +1,5 @@
 import {onRequest, onCall, HttpsError} from "firebase-functions/v2/https";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 import {
   onDocumentCreated,
   onDocumentUpdated,
@@ -55,6 +56,7 @@ import {
 } from "./linear/oauth";
 import {searchLinear} from "./linear/search";
 import {updateLinearIssue} from "./linear/updateIssue";
+import {updateRoomsTableInBigQuery} from "./room/bigquery";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -258,4 +260,13 @@ exports.getAllCreditsAndAssignWelcome = onCall(
 exports.onUserPaymentCreated = onDocumentCreated(
     "customers/{customerId}/payments/{paymentId}",
     onCustomerPaymentCreated
+);
+
+exports.updateRoomsTableInBigQuery = onSchedule(
+    {schedule: "every day 06:00", timeoutSeconds: 1000},
+    async () => {
+      console.log("Scheduled room update function triggered.");
+      await updateRoomsTableInBigQuery();
+      console.log("Room update completed.");
+    }
 );

@@ -1,10 +1,10 @@
 import * as bigquery from "@google-cloud/bigquery";
-import {initializeApp} from "firebase-admin/app";
+// import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
 import {Room} from "../types";
 
-initializeApp();
-getFirestore().settings({ignoreUndefinedProperties: true});
+// initializeApp();
+// getFirestore().settings({ignoreUndefinedProperties: true});
 
 const datasetId = "firestore_export";
 const tableId = "rooms_data";

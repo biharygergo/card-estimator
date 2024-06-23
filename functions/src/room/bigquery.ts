@@ -8,7 +8,7 @@ import {Room} from "../types";
 
 const datasetId = "firestore_export";
 const tableId = "rooms_data";
-const FIRESTORE_BATCH_SIZE = 5000;
+const FIRESTORE_BATCH_SIZE = 1000;
 
 const client = new bigquery.BigQuery();
 const dataset = client.dataset(datasetId);

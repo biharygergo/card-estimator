@@ -263,7 +263,7 @@ exports.onUserPaymentCreated = onDocumentCreated(
 );
 
 exports.updateRoomsTableInBigQuery = onSchedule(
-    {schedule: "every day 06:00", timeoutSeconds: 1000},
+    {schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB"},
     async () => {
       console.log("Scheduled room update function triggered.");
       await updateRoomsTableInBigQuery();

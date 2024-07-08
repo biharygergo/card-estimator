@@ -27,3 +27,4 @@
 /knowledge-base/essential-scrum-master-tools
 /knowledge-base/common-mistakes-planning-poker
 /knowledge-base/advanced-strategies-planning-poker-remote-teams
+/knowledge-base/planning-poker-guide-agile-estimation-techniques

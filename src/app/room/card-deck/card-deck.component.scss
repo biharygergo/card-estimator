@@ -143,6 +143,6 @@
   }
 }
 
-.pass-option-button:not(.mat-accent) {
+.pass-option-button:not(.mat-accent):not(.selected) {
   background-color: var(--highlight-background-color);
 }

@@ -19,7 +19,7 @@ export class FeaturesItemsComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     this.loadVideos.pipe(takeUntil(this.destroy)).subscribe((shouldLoad) => {
-      if (shouldLoad) {
+      if (shouldLoad && typeof window !== 'undefined') {
         const videoChildren = document.querySelectorAll('video');
         videoChildren.forEach(viewChild => {
           for (const source in viewChild.children) {

@@ -32,7 +32,6 @@
     "@angular/fire": "^17.0.1",
     "@angular/forms": "^18.1.1",
     "@angular/material": "^17.2.0",
-    "@angular/material-experimental": "^17.2.0",
     "@angular/platform-browser": "^18.1.1",
     "@angular/platform-browser-dynamic": "^18.1.1",
     "@angular/platform-server": "^18.1.1",

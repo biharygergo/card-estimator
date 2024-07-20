@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
@@ -21,11 +21,27 @@ import { Theme, ThemeService } from 'src/app/services/theme.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { recurringMeetingsModalCreator } from '../recurring-meetings-modal/recurring-meetings-modal.component';
+import { AsyncPipe } from '@angular/common';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-profile-dropdown',
-  templateUrl: './profile-dropdown.component.html',
-  styleUrls: ['./profile-dropdown.component.scss'],
+    selector: 'app-profile-dropdown',
+    templateUrl: './profile-dropdown.component.html',
+    styleUrls: ['./profile-dropdown.component.scss'],
+    standalone: true,
+    imports: [
+        MatButton,
+        MatMenuTrigger,
+        MatIcon,
+        MatMenu,
+        MatMenuItem,
+        RouterLink,
+        MatDivider,
+        AsyncPipe,
+    ],
 })
 export class ProfileDropdownComponent implements OnInit {
   currentUser = this.auth.user;

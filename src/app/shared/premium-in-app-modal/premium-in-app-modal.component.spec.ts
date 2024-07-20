@@ -8,8 +8,8 @@ describe('PremiumInAppModalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PremiumInAppModalComponent]
-    });
+    imports: [PremiumInAppModalComponent]
+});
     fixture = TestBed.createComponent(PremiumInAppModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

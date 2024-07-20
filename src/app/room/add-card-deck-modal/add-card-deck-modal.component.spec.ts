@@ -8,8 +8,8 @@ describe('AddCardDeckModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddCardDeckModalComponent ]
-    })
+    imports: [AddCardDeckModalComponent]
+})
     .compileComponents();
   });
 

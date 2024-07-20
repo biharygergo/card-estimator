@@ -44,80 +44,81 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideCloudinaryLoader } from '@angular/common';
 
 @NgModule({
-  declarations: [AppComponent, RoomLoadingComponent],
-  imports: [
-    AppRoutingModule,
-    AppConfigModule,
-    MatSnackBarModule,
-    MatMenuModule,
-    MatDialogModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => {
-      let firestore;
-
-      if (environment.useEmulators) {
-        const app = initializeApp(environment.firebase);
-        firestore = initializeFirestore(app, {
-          experimentalAutoDetectLongPolling: true,
-        });
-        connectFirestoreEmulator(firestore, 'localhost', 8080);
-      } else {
-        firestore = getFirestore();
-      }
-      return firestore;
-    }),
-    provideAuth(() => {
-      const auth = getAuth();
-      if (environment.useEmulators) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true,
-        });
-      }
-      return auth;
-    }),
-    provideAnalytics(() => {
-      const app = initializeApp(environment.firebase);
-      return initializeAnalytics(app, {
-        config: { cookie_flags: 'SameSite=None;Secure' },
-      });
-    }),
-    provideStorage(() => {
-      const storage = getStorage();
-      if (environment.useEmulators) {
-        connectStorageEmulator(storage, 'localhost', 9199);
-      }
-      return storage;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-      if (environment.useEmulators) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-      return functions;
-    }),
-  ],
-  providers: [
-    ScreenTrackingService,
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
-    },
-    {
-      provide: Sentry.TraceService,
-      deps: [Router],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
-    provideClientHydration(),
-    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent],
+    imports: [
+        AppRoutingModule,
+        AppConfigModule,
+        MatSnackBarModule,
+        MatMenuModule,
+        MatDialogModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        BrowserModule.withServerTransition({ appId: 'serverApp' }),
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideFirestore(() => {
+            let firestore;
+            if (environment.useEmulators) {
+                const app = initializeApp(environment.firebase);
+                firestore = initializeFirestore(app, {
+                    experimentalAutoDetectLongPolling: true,
+                });
+                connectFirestoreEmulator(firestore, 'localhost', 8080);
+            }
+            else {
+                firestore = getFirestore();
+            }
+            return firestore;
+        }),
+        provideAuth(() => {
+            const auth = getAuth();
+            if (environment.useEmulators) {
+                connectAuthEmulator(auth, 'http://localhost:9099', {
+                    disableWarnings: true,
+                });
+            }
+            return auth;
+        }),
+        provideAnalytics(() => {
+            const app = initializeApp(environment.firebase);
+            return initializeAnalytics(app, {
+                config: { cookie_flags: 'SameSite=None;Secure' },
+            });
+        }),
+        provideStorage(() => {
+            const storage = getStorage();
+            if (environment.useEmulators) {
+                connectStorageEmulator(storage, 'localhost', 9199);
+            }
+            return storage;
+        }),
+        provideFunctions(() => {
+            const functions = getFunctions();
+            if (environment.useEmulators) {
+                connectFunctionsEmulator(functions, 'localhost', 5001);
+            }
+            return functions;
+        }),
+        RoomLoadingComponent,
+    ],
+    providers: [
+        ScreenTrackingService,
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler,
+        },
+        {
+            provide: Sentry.TraceService,
+            deps: [Router],
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: () => () => { },
+            deps: [Sentry.TraceService],
+            multi: true,
+        },
+        provideClientHydration(),
+        provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,10 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialog,
-} from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import {
   catchError,
   debounceTime,
@@ -28,15 +24,38 @@ import {
 } from 'src/app/services/card-deck.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { PaymentService } from 'src/app/services/payment.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { NgClass } from '@angular/common';
+import { MatCard } from '@angular/material/card';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export type AddCardDeckModalData = {
   roomId: string;
 };
 
 @Component({
-  selector: 'app-add-card-deck-modal',
-  templateUrl: './add-card-deck-modal.component.html',
-  styleUrls: ['./add-card-deck-modal.component.scss'],
+    selector: 'app-add-card-deck-modal',
+    templateUrl: './add-card-deck-modal.component.html',
+    styleUrls: ['./add-card-deck-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatError,
+        MatCard,
+        NgClass,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+        MatIcon,
+    ],
 })
 export class AddCardDeckModalComponent implements OnInit {
   cardDeckForm = new FormGroup({

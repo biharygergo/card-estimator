@@ -1,7 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import {
   Observable,
   Subject,
@@ -15,6 +15,11 @@ import { EstimatorService } from 'src/app/services/estimator.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import { Room } from 'src/app/types';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 interface BatchAddTopicsModalData {
   room: Room;
@@ -39,9 +44,25 @@ function parseTopicsString(topicsInput: string) {
 }
 
 @Component({
-  selector: 'app-batch-add-topics-modal',
-  templateUrl: './batch-add-topics-modal.component.html',
-  styleUrls: ['./batch-add-topics-modal.component.scss'],
+    selector: 'app-batch-add-topics-modal',
+    templateUrl: './batch-add-topics-modal.component.html',
+    styleUrls: ['./batch-add-topics-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+        MatError,
+        MatDialogActions,
+        MatButton,
+        MatIcon,
+        MatDialogClose,
+        AsyncPipe,
+    ],
 })
 export class BatchAddTopicsModalComponent implements OnInit, OnDestroy {
   topics = new FormControl<string>('', {

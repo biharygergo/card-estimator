@@ -1,10 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import {
   BehaviorSubject,
   catchError,
@@ -31,6 +27,15 @@ import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.com
 import { TeamsService } from 'src/app/services/teams.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
+import { AsyncPipe } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ResizeMonitorDirective } from '../directives/resize-monitor.directive';
 
 export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 
@@ -59,9 +64,28 @@ export const signUpOrLoginDialogCreator = (
 ];
 
 @Component({
-  selector: 'app-sign-up-or-login-dialog',
-  templateUrl: './sign-up-or-login-dialog.component.html',
-  styleUrls: ['./sign-up-or-login-dialog.component.scss'],
+    selector: 'app-sign-up-or-login-dialog',
+    templateUrl: './sign-up-or-login-dialog.component.html',
+    styleUrls: ['./sign-up-or-login-dialog.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogContent,
+        ResizeMonitorDirective,
+        MatProgressSpinner,
+        MatButton,
+        MatIcon,
+        MatDivider,
+        MatTabGroup,
+        MatTab,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatSuffix,
+        MatError,
+        AsyncPipe,
+    ],
 })
 export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();

@@ -3,6 +3,9 @@ import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.com
 import { PaymentService } from 'src/app/services/payment.service';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { environment } from 'src/environments/environment';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 
 export const premiumInAppModalCreator =
   (): ModalCreator<PremiumInAppModalComponent> => [
@@ -16,9 +19,16 @@ export const premiumInAppModalCreator =
     },
   ];
 @Component({
-  selector: 'app-premium-in-app-modal',
-  templateUrl: './premium-in-app-modal.component.html',
-  styleUrls: ['./premium-in-app-modal.component.scss'],
+    selector: 'app-premium-in-app-modal',
+    templateUrl: './premium-in-app-modal.component.html',
+    styleUrls: ['./premium-in-app-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogContent,
+        MatIcon,
+        MatDialogActions,
+        MatButton,
+    ],
 })
 export class PremiumInAppModalComponent {
   isRedirecting = false;

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Article } from '../types';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   Observable,
   Subject,
@@ -12,11 +12,26 @@ import {
 } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { ArticlesService } from 'src/app/services/articles.service';
+import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component';
+import { StartPlanningCtaComponent } from '../../components/start-planning-cta/start-planning-cta.component';
+import { MarkdownComponent } from 'ngx-markdown';
+import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-article',
-  templateUrl: './article.component.html',
-  styleUrls: ['./article.component.scss'],
+    selector: 'app-article',
+    templateUrl: './article.component.html',
+    styleUrls: ['./article.component.scss'],
+    standalone: true,
+    imports: [
+        NgIf,
+        NgOptimizedImage,
+        MarkdownComponent,
+        StartPlanningCtaComponent,
+        RouterLink,
+        CarbonAdComponent,
+        AsyncPipe,
+        DatePipe,
+    ],
 })
 export class ArticleComponent {
   article: Observable<Article> = inject(ActivatedRoute).data.pipe(

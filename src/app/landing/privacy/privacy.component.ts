@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { PageHeaderComponent } from '../components/page-header/page-header.component';
 
 @Component({
-  selector: 'app-privacy',
-  templateUrl: './privacy.component.html',
-  styleUrls: ['./privacy.component.scss']
+    selector: 'app-privacy',
+    templateUrl: './privacy.component.html',
+    styleUrls: ['./privacy.component.scss'],
+    standalone: true,
+    imports: [PageHeaderComponent]
 })
 export class PrivacyComponent implements OnInit {
 

@@ -8,8 +8,8 @@ describe('StarRatingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StarRatingComponent ]
-    })
+    imports: [StarRatingComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(StarRatingComponent);

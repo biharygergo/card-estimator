@@ -4,6 +4,7 @@ import { AnimationOptions } from 'ngx-lottie/lib/symbols';
 import { Observable, Subject, delay, mergeMap, of, takeUntil } from 'rxjs';
 import { ReactionsService } from 'src/app/services/reactions.service';
 import { Member } from 'src/app/types';
+import { LottieComponent } from 'ngx-lottie';
 
 interface VisibleReaction {
   id: string;
@@ -13,9 +14,11 @@ interface VisibleReaction {
 }
 
 @Component({
-  selector: 'app-reactions-renderer',
-  templateUrl: './reactions-renderer.component.html',
-  styleUrls: ['./reactions-renderer.component.scss'],
+    selector: 'app-reactions-renderer',
+    templateUrl: './reactions-renderer.component.html',
+    styleUrls: ['./reactions-renderer.component.scss'],
+    standalone: true,
+    imports: [LottieComponent],
 })
 export class ReactionsRendererComponent implements OnInit, OnDestroy {
   @Input({ required: true }) members!: Observable<Member[]>;

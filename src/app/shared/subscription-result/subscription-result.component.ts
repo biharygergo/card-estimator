@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { SubscriptionResult } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { MatButton } from '@angular/material/button';
 
 export interface SubscriptionResultModalData {
   result: SubscriptionResult;
@@ -22,9 +23,17 @@ export const subscriptionResultModalCreator = (
 ];
 
 @Component({
-  selector: 'app-subscription-result',
-  templateUrl: './subscription-result.component.html',
-  styleUrls: ['./subscription-result.component.scss'],
+    selector: 'app-subscription-result',
+    templateUrl: './subscription-result.component.html',
+    styleUrls: ['./subscription-result.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+    ],
 })
 export class SubscriptionResultComponent {
   subscriptionResult: SubscriptionResult;

@@ -36,14 +36,40 @@ import { delayedFadeAnimation, fadeAnimation } from 'src/app/shared/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RoomDataService } from '../room-data.service';
 import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
 @Component({
-  selector: 'planning-poker-room-controller-panel',
-  templateUrl: './room-controller-panel.component.html',
-  styleUrls: ['./room-controller-panel.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation],
+    selector: 'planning-poker-room-controller-panel',
+    templateUrl: './room-controller-panel.component.html',
+    styleUrls: ['./room-controller-panel.component.scss'],
+    animations: [fadeAnimation, delayedFadeAnimation],
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardContent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        MatButton,
+        CountdownTimerComponent,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatDivider,
+        MatCheckbox,
+        NgClass,
+        AsyncPipe,
+    ],
 })
 export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   @Input({ required: true }) room: Room;

@@ -1,6 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { AnalyticsService } from './../../services/analytics.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 
 export type AloneInRoomData = {
   name: string;
@@ -8,9 +10,17 @@ export type AloneInRoomData = {
 };
 
 @Component({
-  selector: 'app-alone-in-room-modal',
-  templateUrl: './alone-in-room-modal.component.html',
-  styleUrls: ['./alone-in-room-modal.component.scss'],
+    selector: 'app-alone-in-room-modal',
+    templateUrl: './alone-in-room-modal.component.html',
+    styleUrls: ['./alone-in-room-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatButton,
+        MatIcon,
+    ],
 })
 export class AloneInRoomModalComponent {
   constructor(

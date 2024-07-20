@@ -1,10 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { MatAnchor } from '@angular/material/button';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
-  selector: 'planning-poker-features-items',
-  templateUrl: './features-items.component.html',
-  styleUrl: './features-items.component.scss'
+    selector: 'planning-poker-features-items',
+    templateUrl: './features-items.component.html',
+    styleUrl: './features-items.component.scss',
+    standalone: true,
+    imports: [NgOptimizedImage, MatAnchor, RouterLink, MatIcon]
 })
 export class FeaturesItemsComponent implements OnInit, OnDestroy {
   @Input({ required: true }) loadVideos: Observable<boolean>;

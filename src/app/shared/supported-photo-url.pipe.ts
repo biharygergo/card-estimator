@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'supportedPhotoUrl',
+    name: 'supportedPhotoUrl',
+    standalone: true,
 })
 export class SupportedPhotoUrlPipe implements PipeTransform {
   supportedAvatarDomains = ['dicebear.com'];

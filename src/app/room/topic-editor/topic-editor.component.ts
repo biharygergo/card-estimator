@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
   signal,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   BehaviorSubject,
   catchError,
@@ -42,6 +42,18 @@ import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics
 import { RoomDataService } from '../room-data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { AsyncPipe } from '@angular/common';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { RichTopicComponent } from '../rich-topic/rich-topic.component';
+import { MatOptgroup, MatOption } from '@angular/material/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
 
 export interface TopicEditorInputOutput {
   topic: string;
@@ -49,10 +61,33 @@ export interface TopicEditorInputOutput {
 }
 
 @Component({
-  selector: 'app-topic-editor',
-  templateUrl: './topic-editor.component.html',
-  styleUrls: ['./topic-editor.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-topic-editor',
+    templateUrl: './topic-editor.component.html',
+    styleUrls: ['./topic-editor.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatAutocompleteTrigger,
+        ReactiveFormsModule,
+        MatSuffix,
+        MatProgressSpinner,
+        MatTooltip,
+        MatIconButton,
+        MatIcon,
+        MatAutocomplete,
+        MatOptgroup,
+        MatOption,
+        RichTopicComponent,
+        MatButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatDivider,
+        AsyncPipe,
+    ],
 })
 export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() roomTopic: Observable<TopicEditorInputOutput>;

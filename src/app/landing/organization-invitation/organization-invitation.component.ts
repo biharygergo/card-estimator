@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
@@ -8,6 +8,8 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { MatCard, MatCardHeader, MatCardContent, MatCardActions } from '@angular/material/card';
 
 type InvitationResult =
   | 'success'
@@ -16,9 +18,19 @@ type InvitationResult =
   | 'user-not-found';
 
 @Component({
-  selector: 'app-organization-invitation',
-  templateUrl: './organization-invitation.component.html',
-  styleUrls: ['./organization-invitation.component.scss'],
+    selector: 'app-organization-invitation',
+    templateUrl: './organization-invitation.component.html',
+    styleUrls: ['./organization-invitation.component.scss'],
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatAnchor,
+        RouterLink,
+        MatButton,
+    ],
 })
 export class OrganizationInvitationComponent implements OnInit, OnDestroy {
   result: Observable<InvitationResult> = this.activatedRoute.queryParamMap.pipe(

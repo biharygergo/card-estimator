@@ -8,8 +8,8 @@ describe('RecurringMeetingsModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RecurringMeetingsModalComponent ]
-    })
+    imports: [RecurringMeetingsModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(RecurringMeetingsModalComponent);

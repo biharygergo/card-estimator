@@ -8,8 +8,8 @@ describe('SessionHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SessionHistoryComponent ]
-    })
+    imports: [SessionHistoryComponent]
+})
     .compileComponents();
   });
 

@@ -8,8 +8,8 @@ describe('PrivacyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PrivacyComponent ]
-    })
+    imports: [PrivacyComponent]
+})
     .compileComponents();
   });
 

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { isEqual } from 'lodash-es';
 import {
   BehaviorSubject,
@@ -29,7 +29,18 @@ import {
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { fadeAnimation } from '../animations';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { MatChipEditedEvent, MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput, MatChipListbox, MatChip } from '@angular/material/chips';
+import { AsyncPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { FileUploadDragDropComponent } from '../file-upload-drag-drop/file-upload-drag-drop.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatCard, MatCardContent } from '@angular/material/card';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -53,10 +64,43 @@ interface OrganizationChecklist {
 }
 
 @Component({
-  selector: 'app-organization-modal',
-  templateUrl: './organization-modal.component.html',
-  styleUrls: ['./organization-modal.component.scss'],
-  animations: [fadeAnimation],
+    selector: 'app-organization-modal',
+    templateUrl: './organization-modal.component.html',
+    styleUrls: ['./organization-modal.component.scss'],
+    animations: [fadeAnimation],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatCard,
+        MatCardContent,
+        MatIcon,
+        MatButton,
+        MatTabGroup,
+        MatTab,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatInput,
+        MatHint,
+        FileUploadDragDropComponent,
+        MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatChipGrid,
+        MatChipRow,
+        MatChipRemove,
+        MatChipInput,
+        MatSuffix,
+        MatChipListbox,
+        MatChip,
+        MatTooltip,
+        MatProgressSpinner,
+        MatDialogActions,
+        MatDialogClose,
+        AsyncPipe,
+    ],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
   organization$ = this.organizationService.getMyOrganization().pipe(

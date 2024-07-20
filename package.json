@@ -8,7 +8,7 @@
     "start:test:emulator:ssl": "ng serve --configuration test-emulator --ssl",
     "start:test": "ng serve --configuration test",
     "simulator": "firebase emulators:start",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "build:test": "ng build --configuration=test-production",
     "test": "ng test",
     "lint": "ng lint",

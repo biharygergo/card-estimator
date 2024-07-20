@@ -55,19 +55,27 @@ import {
   getSortedCardSetValues,
 } from '../utils';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
-import { MatSidenavContainer, MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
+import {
+  MatSidenavContainer,
+  MatSidenavContent,
+  MatSidenav,
+} from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash-es';
-import { TopicEditorInputOutput, TopicEditorComponent } from './topic-editor/topic-editor.component';
+import {
+  TopicEditorInputOutput,
+  TopicEditorComponent,
+} from './topic-editor/topic-editor.component';
 import { WebexApiService } from '../services/webex-api.service';
 import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
 import { TeamsService } from '../services/teams.service';
@@ -104,36 +112,36 @@ const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
 const TOPIC_ANIMATION_SLIDE_DURATION_MS = 200;
 @Component({
-    selector: 'app-room',
-    templateUrl: './room.component.html',
-    styleUrls: ['./room.component.scss'],
-    animations: [fadeAnimation, delayedFadeAnimation],
-    standalone: true,
-    imports: [
-        MatSidenavContainer,
-        MatSidenavContent,
-        ProfileDropdownComponent,
-        MatButton,
-        MatTooltip,
-        MatIcon,
-        MatCard,
-        ResizeMonitorDirective,
-        MatCardContent,
-        TopicEditorComponent,
-        RichTopicComponent,
-        NgTemplateOutlet,
-        RoundResultsComponent,
-        NotesFieldComponent,
-        CardDeckComponent,
-        GithubBadgeComponent,
-        ReactionsRendererComponent,
-        CarbonAdComponent,
-        MatSidenav,
-        TopicsSidebarComponent,
-        AnonymousUserBannerComponent,
-        RoomControllerPanelComponent,
-        AsyncPipe,
-    ],
+  selector: 'app-room',
+  templateUrl: './room.component.html',
+  styleUrls: ['./room.component.scss'],
+  animations: [fadeAnimation, delayedFadeAnimation],
+  standalone: true,
+  imports: [
+    MatSidenavContainer,
+    MatSidenavContent,
+    ProfileDropdownComponent,
+    MatButton,
+    MatTooltip,
+    MatIcon,
+    MatCard,
+    ResizeMonitorDirective,
+    MatCardContent,
+    TopicEditorComponent,
+    RichTopicComponent,
+    NgTemplateOutlet,
+    RoundResultsComponent,
+    NotesFieldComponent,
+    CardDeckComponent,
+    GithubBadgeComponent,
+    ReactionsRendererComponent,
+    CarbonAdComponent,
+    MatSidenav,
+    TopicsSidebarComponent,
+    AnonymousUserBannerComponent,
+    RoomControllerPanelComponent,
+    AsyncPipe,
+  ],
 })
 export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenavContainer, { read: ElementRef })
@@ -481,7 +489,16 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.heartbeat$
       .pipe(
-        switchMap(() => (this.room ? this.saveJoinedRoom() : of(undefined))),
+        switchMap(() =>
+          this.room
+            ? combineLatest([
+                this.saveJoinedRoom(),
+                this.estimatorService.updateCurrentUserMemberHeartbeat(
+                  this.room.roomId
+                ),
+              ])
+            : of(undefined)
+        ),
         takeUntil(this.destroy)
       )
       .subscribe();
@@ -528,16 +545,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.themeService.themeValue
-      .pipe(takeUntil(this.destroy))
-      .subscribe(() => {
-        const element = this.sidenavContent.nativeElement;
-        element.style.animation = 'none';
-        element.offsetHeight; /* trigger reflow */
-        setTimeout(() => {
-          element.style.animation = null;
-        }, 10);
-      });
+    this.themeService.themeValue.pipe(takeUntil(this.destroy)).subscribe(() => {
+      const element = this.sidenavContent.nativeElement;
+      element.style.animation = 'none';
+      element.offsetHeight; /* trigger reflow */
+      setTimeout(() => {
+        element.style.animation = null;
+      }, 10);
+    });
   }
 
   ngOnDestroy(): void {

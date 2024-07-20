@@ -1,12 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   distinctUntilChanged,
   EMPTY,
   map,
   Observable,
-  of,
+  startWith,
   Subject,
+  switchMap,
   takeUntil,
 } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -36,6 +37,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatChipSet, MatChip, MatChipAvatar, MatChipRemove } from '@angular/material/chips';
 import { MatList, MatListSubheaderCssMatStyler, MatListItem } from '@angular/material/list';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { isEqual } from 'lodash';
 
 @Component({
     selector: 'app-round-results',
@@ -88,6 +91,20 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   );
 
   members = this.roomDataService.activeMembersAnonymized$;
+  recentlyActiveMembers: Signal<{ [memberId: string]: boolean }> = toSignal(
+    this.roomDataService.room$.pipe(
+      map((room) => room.roomId),
+      distinctUntilChanged(),
+      switchMap((roomId) =>
+        this.estimatorService.getRecentlyActiveMemberIds(roomId)
+      ),
+      map((memberIds) =>
+        memberIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {})
+      ),
+      distinctUntilChanged(isEqual),
+      startWith({}),
+    )
+  );
 
   readonly MemberType = MemberType;
 

@@ -60,7 +60,7 @@ export interface Round {
 
 export interface Notes {
   note: string;
-  editedBy: Member | null;
+  editedBy: Pick<Member, 'id' | 'name'> | null;
 }
 
 export enum MemberType {
@@ -83,6 +83,15 @@ export interface Member {
   type: MemberType;
   status: MemberStatus;
   platform?: Platform;
+  lastActiveHeartbeat?: Timestamp;
+}
+
+export interface MemberStat {
+  lastHeartbeatAt: Timestamp
+}
+
+export interface MemberStats {
+  [memberId: string]: MemberStat;
 }
 
 export interface RoomData {

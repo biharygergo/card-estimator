@@ -43,7 +43,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   hasPermission: boolean = true;
 
   isCurrentUserEditing = false;
-  editedBy: Member | null;
+  editedBy: Pick<Member, 'id' | 'name'> | null;
 
   blurTimeout: number | undefined;
 

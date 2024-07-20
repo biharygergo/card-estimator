@@ -163,7 +163,15 @@ roundStatistics[currentRound] ) {
     </div>
     <span class="member-name" [class.blur]="member.isAnonymous">
       {{ member.name }}
-      @if (userProfiles[member.id] && !(isAnonymousVotingEnabled | async)) {
+      @if(!recentlyActiveMembers()[member.id]){
+      <mat-icon
+        class="verified-icon"
+        [matTooltip]="
+          member.name + ' has not been active in the last 5 minutes.'
+        "
+        >wifi_off</mat-icon
+      >
+      } @if (userProfiles[member.id] && !(isAnonymousVotingEnabled | async)) {
       <mat-icon
         class="verified-icon"
         [matTooltip]="

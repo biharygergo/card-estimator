@@ -12,8 +12,23 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
+import {
+  combineLatest,
+  firstValueFrom,
+  from,
+  interval,
+  Observable,
+  of,
+} from 'rxjs';
+import {
+  filter,
+  first,
+  map,
+  startWith,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   Room,
   Member,
@@ -29,6 +44,7 @@ import {
   RichTopic,
   RoomSummary,
   MemberType,
+  MemberStats,
 } from './../types';
 import {
   collection,
@@ -451,7 +467,8 @@ export class EstimatorService {
 
   setNoteEditor(room: Room, currentRound: number, member: Member | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      [`rounds.${currentRound}.notes.editedBy`]: member || null,
+      [`rounds.${currentRound}.notes.editedBy`]:
+        member ? { id: member.id, name: member.name } : null,
     });
   }
 
@@ -478,6 +495,47 @@ export class EstimatorService {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
     });
+  }
+
+  updateCurrentUserMemberHeartbeat(roomId: string) {
+    return setDoc(
+      doc(
+        this.firestore,
+        this.ROOMS_COLLECTION,
+        roomId,
+        'metadata',
+        'memberStatus'
+      ),
+      {
+        [this.activeMember.id]: { lastHeartbeatAt: Timestamp.now() },
+      },
+      { merge: true }
+    );
+  }
+
+  getRecentlyActiveMemberIds(roomId: string): Observable<string[]> {
+    return combineLatest([
+      docData<any>(
+        doc(
+          this.firestore,
+          this.ROOMS_COLLECTION,
+          roomId,
+          'metadata',
+          'memberStatus'
+        ) as DocumentReference<MemberStats>
+      ),
+      interval(60000).pipe(startWith(-1)),
+    ]).pipe(
+      map(([data, tick]: [MemberStats, number]) => {
+        const filtered = Object.entries(data)
+          .filter(
+            ([id, stats]) =>
+              stats.lastHeartbeatAt.seconds * 1000 > Date.now() - 1000 * 60 * 5
+          )
+          .map(([id]) => id);
+        return filtered;
+      })
+    );
   }
 
   saveInvitation(invitationId: string, roomId: string) {

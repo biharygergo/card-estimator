@@ -22,7 +22,10 @@ import {
   getFirestore,
 } from '@angular/fire/firestore';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import {
+  withInterceptorsFromDi,
+  provideHttpClient,
+} from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -53,8 +56,7 @@ export const appConfig: ApplicationConfig = {
       MatSnackBarModule,
       MatMenuModule,
       MatDialogModule,
-      BrowserModule.withServerTransition({ appId: 'serverApp' }),
-      
+      BrowserModule.withServerTransition({ appId: 'serverApp' })
     ),
     ScreenTrackingService,
     {
@@ -76,47 +78,47 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-      provideFirestore(() => {
-        let firestore;
-        if (environment.useEmulators) {
-          const app = initializeApp(environment.firebase);
-          firestore = initializeFirestore(app, {
-            experimentalAutoDetectLongPolling: true,
-          });
-          connectFirestoreEmulator(firestore, 'localhost', 8080);
-        } else {
-          firestore = getFirestore();
-        }
-        return firestore;
-      }),
-      provideAuth(() => {
-        const auth = getAuth();
-        if (environment.useEmulators) {
-          connectAuthEmulator(auth, 'http://localhost:9099', {
-            disableWarnings: true,
-          });
-        }
-        return auth;
-      }),
-      provideAnalytics(() => {
+    provideFirestore(() => {
+      let firestore;
+      if (environment.useEmulators) {
         const app = initializeApp(environment.firebase);
-        return initializeAnalytics(app, {
-          config: { cookie_flags: 'SameSite=None;Secure' },
+        firestore = initializeFirestore(app, {
+          experimentalAutoDetectLongPolling: true,
         });
-      }),
-      provideStorage(() => {
-        const storage = getStorage();
-        if (environment.useEmulators) {
-          connectStorageEmulator(storage, 'localhost', 9199);
-        }
-        return storage;
-      }),
-      provideFunctions(() => {
-        const functions = getFunctions();
-        if (environment.useEmulators) {
-          connectFunctionsEmulator(functions, 'localhost', 5001);
-        }
-        return functions;
-      })
+        connectFirestoreEmulator(firestore, 'localhost', 8080);
+      } else {
+        firestore = getFirestore();
+      }
+      return firestore;
+    }),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (environment.useEmulators) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true,
+        });
+      }
+      return auth;
+    }),
+    provideAnalytics(() => {
+      const app = initializeApp(environment.firebase);
+      return initializeAnalytics(app, {
+        config: { cookie_flags: 'SameSite=None;Secure' },
+      });
+    }),
+    provideStorage(() => {
+      const storage = getStorage();
+      if (environment.useEmulators) {
+        connectStorageEmulator(storage, 'localhost', 9199);
+      }
+      return storage;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+      if (environment.useEmulators) {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
+      return functions;
+    }),
   ],
 };

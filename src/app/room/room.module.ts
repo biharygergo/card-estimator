@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, provideCloudinaryLoader } from '@angular/common';
-
+import player from 'lottie-web';
 import { RouterModule, Routes } from '@angular/router';
 import { RoomComponent } from './room.component';
 import { RoomResolver } from './room.resolver';
@@ -31,14 +31,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
-import { AnimationLoader, provideCacheableAnimationLoader, provideLottieOptions } from 'ngx-lottie';
+import { AnimationLoader, provideLottieOptions } from 'ngx-lottie';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
-
-export function playerFactory() {
-  return import(
-    /* webpackChunkName: 'lottie-web' */ 'lottie-web/build/player/lottie_svg'
-  );
-}
 
 // function that returns `MarkedOptions` with renderer override
 export function markedOptionsFactory(): MarkedOptions {
@@ -106,9 +100,8 @@ const routes: Routes = [
         AnimationLoader,
         provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
         provideLottieOptions({
-          player: () => import('lottie-web'),
+          player: () => player,
         }),
-        provideCacheableAnimationLoader(),
     ],
 })
 export class RoomModule {}

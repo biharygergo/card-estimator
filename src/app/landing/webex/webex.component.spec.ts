@@ -8,8 +8,8 @@ describe('WebexComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WebexComponent]
-    });
+    imports: [WebexComponent]
+});
     fixture = TestBed.createComponent(WebexComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

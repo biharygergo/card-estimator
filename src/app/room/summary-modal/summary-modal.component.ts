@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import {
   BehaviorSubject,
   Observable,
@@ -29,6 +29,9 @@ import { SerializerService } from 'src/app/services/serializer.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import Typed from 'typed.js';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 
 export interface SummaryModalData {
   roomId: string;
@@ -53,9 +56,19 @@ export const summaryModalCreator = ({
 ];
 
 @Component({
-  selector: 'app-summary-modal',
-  templateUrl: './summary-modal.component.html',
-  styleUrls: ['./summary-modal.component.scss'],
+    selector: 'app-summary-modal',
+    templateUrl: './summary-modal.component.html',
+    styleUrls: ['./summary-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatButton,
+        MatIcon,
+        MatDialogActions,
+        MatDialogClose,
+        AsyncPipe,
+    ],
 })
 export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   typewriter: Typed;

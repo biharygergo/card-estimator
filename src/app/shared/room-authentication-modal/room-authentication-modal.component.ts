@@ -1,11 +1,17 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { AsyncPipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 
 const ROOM_AUTHENTICATION_MODAL = 'roomAuthenticationModal';
 
@@ -30,9 +36,25 @@ export const roomAuthenticationModalCreator = (
 type RequiredAuth = 'both' | 'password' | 'organization' | 'unknown';
 
 @Component({
-  selector: 'app-room-authentication-modal',
-  templateUrl: './room-authentication-modal.component.html',
-  styleUrls: ['./room-authentication-modal.component.scss'],
+    selector: 'app-room-authentication-modal',
+    templateUrl: './room-authentication-modal.component.html',
+    styleUrls: ['./room-authentication-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatIcon,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+        MatProgressSpinner,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+        AsyncPipe,
+    ],
 })
 export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
   roomPassword = new FormControl('', [Validators.required]);

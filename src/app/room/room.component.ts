@@ -55,7 +55,7 @@ import {
   getSortedCardSetValues,
 } from '../utils';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
-import { MatSidenavContainer } from '@angular/material/sidenav';
+import { MatSidenavContainer, MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from '../services/auth.service';
 import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selector-modal.component';
 import { AppConfig, APP_CONFIG } from '../app-config.module';
@@ -67,7 +67,7 @@ import {
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { PermissionsService } from '../services/permissions.service';
 import { isEqual } from 'lodash-es';
-import { TopicEditorInputOutput } from './topic-editor/topic-editor.component';
+import { TopicEditorInputOutput, TopicEditorComponent } from './topic-editor/topic-editor.component';
 import { WebexApiService } from '../services/webex-api.service';
 import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
 import { TeamsService } from '../services/teams.service';
@@ -82,15 +82,58 @@ import { introducingNewPricingModalCreator } from '../shared/introducing-new-pri
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 import { MeetApiService } from '../services/meet-api.service';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
+import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
+import { AnonymousUserBannerComponent } from '../shared/anonymous-user-banner/anonymous-user-banner.component';
+import { TopicsSidebarComponent } from './topics-sidebar/topics-sidebar.component';
+import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
+import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
+import { GithubBadgeComponent } from './github-badge/github-badge.component';
+import { CardDeckComponent } from './card-deck/card-deck.component';
+import { NotesFieldComponent } from './notes-field/notes-field.component';
+import { RoundResultsComponent } from './round-results/round-results.component';
+import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { RichTopicComponent } from './rich-topic/rich-topic.component';
+import { ResizeMonitorDirective } from '../shared/directives/resize-monitor.directive';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
 const TOPIC_ANIMATION_SLIDE_DURATION_MS = 200;
 @Component({
-  selector: 'app-room',
-  templateUrl: './room.component.html',
-  styleUrls: ['./room.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation],
+    selector: 'app-room',
+    templateUrl: './room.component.html',
+    styleUrls: ['./room.component.scss'],
+    animations: [fadeAnimation, delayedFadeAnimation],
+    standalone: true,
+    imports: [
+        MatSidenavContainer,
+        MatSidenavContent,
+        ProfileDropdownComponent,
+        MatButton,
+        MatTooltip,
+        MatIcon,
+        MatCard,
+        ResizeMonitorDirective,
+        MatCardContent,
+        TopicEditorComponent,
+        RichTopicComponent,
+        NgTemplateOutlet,
+        RoundResultsComponent,
+        NotesFieldComponent,
+        CardDeckComponent,
+        GithubBadgeComponent,
+        ReactionsRendererComponent,
+        CarbonAdComponent,
+        MatSidenav,
+        TopicsSidebarComponent,
+        AnonymousUserBannerComponent,
+        RoomControllerPanelComponent,
+        AsyncPipe,
+    ],
 })
 export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenavContainer, { read: ElementRef })

@@ -27,13 +27,22 @@ describe('Landing page', () => {
     cy.location('pathname').should('eq', '/pricing');
   })
 
+  it('can go to the Teams page', () => {
+    cy.wait(500);
+    cy.contains('Integrations').click();
+    cy.contains('Microsoft Teams').click();
+    cy.location('pathname').should('eq', '/teams');
+  })
+
   it('can go to the Zoom page', () => {
+    cy.wait(500);
     cy.contains('Integrations').click();
     cy.contains('Zoom Meetings').click();
     cy.location('pathname').should('eq', '/zoom');
   })
 
   it('can go to the Webex page', () => {
+    cy.wait(500);
     cy.contains('Integrations').click();
     cy.contains('Webex Meetings').click();
     cy.location('pathname').should('eq', '/webex');

@@ -20,6 +20,12 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { Room, Timer, TimerState } from 'src/app/types';
+import { AsyncPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 const INITIAL_TIMER_STATE = {
   initialCountdownLength: 30,
@@ -30,10 +36,20 @@ const INITIAL_TIMER_STATE = {
 };
 
 @Component({
-  selector: 'countdown-timer',
-  templateUrl: './countdown-timer.component.html',
-  styleUrls: ['./countdown-timer.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'countdown-timer',
+    templateUrl: './countdown-timer.component.html',
+    styleUrls: ['./countdown-timer.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        MatProgressBar,
+        MatButton,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        MatProgressSpinner,
+        AsyncPipe,
+    ],
 })
 export class CountdownTimerComponent implements OnInit, OnDestroy {
   @Input({ required: true }) room: Observable<Room>;

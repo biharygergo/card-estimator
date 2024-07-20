@@ -19,12 +19,26 @@ import {
 } from 'src/app/services/reactions.service';
 import { fadeAnimation } from 'src/app/shared/animations';
 import { Room } from 'src/app/types';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButtonToggle } from '@angular/material/button-toggle';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton, MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-card-deck',
-  templateUrl: './card-deck.component.html',
-  styleUrls: ['./card-deck.component.scss'],
-  animations: [fadeAnimation],
+    selector: 'app-card-deck',
+    templateUrl: './card-deck.component.html',
+    styleUrls: ['./card-deck.component.scss'],
+    animations: [fadeAnimation],
+    standalone: true,
+    imports: [
+        MatIconButton,
+        MatTooltip,
+        MatButton,
+        MatButtonToggle,
+        MatIcon,
+        AsyncPipe,
+    ],
 })
 export class CardDeckComponent implements OnInit, OnDestroy {
   @Input() room: Room;

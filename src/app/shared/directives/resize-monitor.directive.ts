@@ -16,7 +16,8 @@ export interface ResizeEventData {
 }
 
 @Directive({
-  selector: '[resizeMonitor]',
+    selector: '[resizeMonitor]',
+    standalone: true,
 })
 export class ResizeMonitorDirective implements OnInit, OnDestroy {
   @Input() verticalSpacing: number;

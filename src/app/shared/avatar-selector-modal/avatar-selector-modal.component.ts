@@ -13,20 +13,15 @@ import {
 } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
-import {
-  MatDialog,
-  MatDialogConfig,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { FormControl, UntypedFormControl } from '@angular/forms';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import { FormControl, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   PaymentService,
   StripeSubscription,
 } from 'src/app/services/payment.service';
 import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
-import * as moment from 'moment';
+import moment from 'moment';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { groupBy } from 'lodash';
 import {
@@ -34,6 +29,16 @@ import {
   signUpOrLoginDialogCreator,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { manageEmailModalCreator } from '../manage-email-modal/manage-email-modal.component';
+import { AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelActionRow } from '@angular/material/expansion';
+import { MatChip, MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { AnonymousUserBannerComponent } from '../anonymous-user-banner/anonymous-user-banner.component';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 export type ModalCreator<T> = [ComponentType<T>, MatDialogConfig];
 
@@ -159,9 +164,40 @@ interface SelectOption {
 export const AVATAR_SELECTOR_MODAL = 'avatar-selector-modal';
 const AVATAR_COUNT = 39;
 @Component({
-  selector: 'app-avatar-selector-modal',
-  templateUrl: './avatar-selector-modal.component.html',
-  styleUrls: ['./avatar-selector-modal.component.scss'],
+    selector: 'app-avatar-selector-modal',
+    templateUrl: './avatar-selector-modal.component.html',
+    styleUrls: ['./avatar-selector-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatTabGroup,
+        MatTab,
+        AnonymousUserBannerComponent,
+        MatButton,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIcon,
+        MatProgressSpinner,
+        MatChip,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        MatChipListbox,
+        MatChipOption,
+        MatExpansionPanelActionRow,
+        MatIconButton,
+        MatDialogActions,
+        MatDialogClose,
+        AsyncPipe,
+        UpperCasePipe,
+        TitleCasePipe,
+        DatePipe,
+    ],
 })
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   selectedTabIndex = { profile: 0, subscription: 1, avatar: 2 }[

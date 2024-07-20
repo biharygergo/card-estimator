@@ -8,11 +8,26 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { AsyncPipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
 
 @Component({
-  selector: 'anonymous-user-banner',
-  templateUrl: './anonymous-user-banner.component.html',
-  styleUrls: ['./anonymous-user-banner.component.scss'],
+    selector: 'anonymous-user-banner',
+    templateUrl: './anonymous-user-banner.component.html',
+    styleUrls: ['./anonymous-user-banner.component.scss'],
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardContent,
+        MatIcon,
+        MatCardActions,
+        MatButton,
+        MatTooltip,
+        AsyncPipe,
+    ],
 })
 export class AnonymousUserBannerComponent implements OnInit {
   isBusy = new BehaviorSubject<boolean>(false);

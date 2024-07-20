@@ -24,12 +24,23 @@ import { EstimateConverterPipe } from 'src/app/pipes/estimate-converter.pipe';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import * as jira2md from 'jira2md';
 import { LinearService } from 'src/app/services/linear.service';
+import { MarkdownComponent } from 'ngx-markdown';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-rich-topic',
-  templateUrl: './rich-topic.component.html',
-  styleUrls: ['./rich-topic.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-rich-topic',
+    templateUrl: './rich-topic.component.html',
+    styleUrls: ['./rich-topic.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        MarkdownComponent,
+    ],
 })
 export class RichTopicComponent implements OnChanges {
   @Input() richTopic: RichTopic | null | undefined;

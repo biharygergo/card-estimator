@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
-@use "@angular/material-experimental" as matx;
 @import "./app/common.scss";
 
 :root {
@@ -27,21 +26,21 @@
   --light-background: white;
 }
 
-$m3-dark-theme: matx.define-theme(
+$m3-dark-theme: mat.define-theme(
   (
     color: (
       theme-type: dark,
-      primary: matx.$m3-azure-palette,
-      tertiary: matx.$m3-orange-palette,
+      primary: mat.$azure-palette,
+      tertiary: mat.$orange-palette,
     ),
   )
 );
 
-$m3-light-theme: matx.define-theme(
+$m3-light-theme: mat.define-theme(
   (
     color: (
-      primary: matx.$m3-azure-palette,
-      tertiary: matx.$m3-orange-palette,
+      primary: mat.$azure-palette,
+      tertiary: mat.$orange-palette,
     ),
   )
 );
@@ -49,8 +48,6 @@ $m3-light-theme: matx.define-theme(
 @include mat.core();
 
 .default-theme {
-  @include mat.all-component-colors($m3-light-theme);
-
   &.running-in-teams, &.running-in-zoom {
     --background-dark: white;
     --main-dark-color: var(--mdc-outlined-card-container-color);

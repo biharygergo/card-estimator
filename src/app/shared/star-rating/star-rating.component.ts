@@ -1,13 +1,26 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { first } from 'rxjs';
 import { EstimatorService } from 'src/app/services/estimator.service';
+import { MatInput } from '@angular/material/input';
+import { MatFormField } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-star-rating',
-  templateUrl: './star-rating.component.html',
-  styleUrls: ['./star-rating.component.scss'],
+    selector: 'app-star-rating',
+    templateUrl: './star-rating.component.html',
+    styleUrls: ['./star-rating.component.scss'],
+    standalone: true,
+    imports: [
+        MatIcon,
+        MatButton,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class StarRatingComponent {
   rating = 0;

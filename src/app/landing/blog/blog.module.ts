@@ -35,19 +35,19 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ArticleComponent, ArticlesListComponent],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatChipsModule,
-    MatButtonModule,
-    RouterModule.forChild(routes),
-    MarkdownModule.forRoot(),
-    PageHeaderComponent,
-    NgOptimizedImage,
-    StartPlanningCtaComponent,
-    CarbonAdComponent,
-  ],
-  providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatChipsModule,
+        MatButtonModule,
+        RouterModule.forChild(routes),
+        MarkdownModule.forRoot(),
+        PageHeaderComponent,
+        NgOptimizedImage,
+        StartPlanningCtaComponent,
+        CarbonAdComponent,
+        ArticleComponent, ArticlesListComponent,
+    ],
+    providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })
 export class BlogModule {}

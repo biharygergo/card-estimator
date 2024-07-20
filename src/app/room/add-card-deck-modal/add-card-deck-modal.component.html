@@ -42,7 +42,7 @@
         </p>
       </form>
       <div class="preview-cards">
-        @for (card of cardPreview; track card; let i = $index) {
+        @for (card of cardPreview; track $index; let i = $index) {
           @if (i < CARD_DECK_IDEAL_SIZE || card !== undefined) {
             <mat-card
               class="preview-card"

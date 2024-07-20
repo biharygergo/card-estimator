@@ -11,6 +11,9 @@ import { getRoomCardSetValue } from 'src/app/pipes/estimate-converter.pipe';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { ExportData } from 'src/app/services/serializer.service';
 import { isNumericCardSet, Room } from 'src/app/types';
+import { AsyncPipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 interface Velocity {
   total: number | undefined;
@@ -18,9 +21,15 @@ interface Velocity {
 }
 
 @Component({
-  selector: 'app-velocity',
-  templateUrl: './velocity.component.html',
-  styleUrls: ['./velocity.component.scss'],
+    selector: 'app-velocity',
+    templateUrl: './velocity.component.html',
+    styleUrls: ['./velocity.component.scss'],
+    standalone: true,
+    imports: [
+        MatIcon,
+        MatTooltip,
+        AsyncPipe,
+    ],
 })
 export class VelocityComponent implements OnInit, OnDestroy {
   @Input({ required: true }) room: Observable<Room>;

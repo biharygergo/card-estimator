@@ -1,9 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   AuthIntent,
   AuthService,
@@ -20,6 +16,10 @@ import {
 } from 'rxjs';
 import { FirebaseError } from '@angular/fire/app';
 import { Router } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export const AUTH_PROGRESS_MODAL = 'auth-progress-modal';
 
@@ -54,9 +54,18 @@ enum AuthAction {
 }
 
 @Component({
-  selector: 'app-auth-progress-dialog',
-  templateUrl: './auth-progress-dialog.component.html',
-  styleUrls: ['./auth-progress-dialog.component.scss'],
+    selector: 'app-auth-progress-dialog',
+    templateUrl: './auth-progress-dialog.component.html',
+    styleUrls: ['./auth-progress-dialog.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogContent,
+        MatProgressSpinner,
+        MatIcon,
+        MatDialogActions,
+        MatButton,
+        AsyncPipe,
+    ],
 })
 export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   state = new BehaviorSubject<AuthProgressState>(AuthProgressState.IN_PROGRESS);

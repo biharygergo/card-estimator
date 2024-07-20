@@ -8,12 +8,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Meta, Title } from '@angular/platform-browser';
-import {
-  NavigationEnd,
-  ActivatedRoute,
-  Router,
-  ActivationEnd,
-} from '@angular/router';
+import { NavigationEnd, ActivatedRoute, Router, ActivationEnd, RouterOutlet } from '@angular/router';
 import {
   combineLatest,
   distinctUntilChanged,
@@ -32,9 +27,11 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit, OnDestroy {
   subscriptionResult$: Observable<SubscriptionResult> =

@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import {
   BehaviorSubject,
   combineLatest,
@@ -45,6 +45,17 @@ import {
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatDivider } from '@angular/material/divider';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatButton, MatIconButton } from '@angular/material/button';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -147,9 +158,37 @@ function createChipOptionForPermission(
 }
 
 @Component({
-  selector: 'app-room-configuration-modal',
-  templateUrl: './room-configuration-modal.component.html',
-  styleUrls: ['./room-configuration-modal.component.scss'],
+    selector: 'app-room-configuration-modal',
+    templateUrl: './room-configuration-modal.component.html',
+    styleUrls: ['./room-configuration-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatButton,
+        MatTabGroup,
+        MatTab,
+        MatTooltip,
+        MatSlideToggle,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        ReactiveFormsModule,
+        MatError,
+        MatIcon,
+        MatChipListbox,
+        MatChipOption,
+        MatDivider,
+        MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatDialogActions,
+        MatDialogClose,
+        AsyncPipe,
+        TitleCasePipe,
+    ],
 })
 export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   permissionConfiguration = {

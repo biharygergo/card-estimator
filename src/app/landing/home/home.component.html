@@ -19,7 +19,7 @@ it now!</span
     <h2>Simplifies planning for agile teams around the world</h2>
     <div class="logo-carousel">
       <ul class="logo-carousel-track">
-        @for (logo of logos; track logo; let i = $index) {
+        @for (logo of logos; track $index; let i = $index) {
         <li>
           <picture>
             <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />

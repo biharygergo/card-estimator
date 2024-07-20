@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FileHandle } from '../directives/drag-drop.directive';
+import { FileHandle, DragDropDirective } from '../directives/drag-drop.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'file-upload-drag-drop',
-  templateUrl: './file-upload-drag-drop.component.html',
-  styleUrls: ['./file-upload-drag-drop.component.scss'],
+    selector: 'file-upload-drag-drop',
+    templateUrl: './file-upload-drag-drop.component.html',
+    styleUrls: ['./file-upload-drag-drop.component.scss'],
+    standalone: true,
+    imports: [DragDropDirective, MatIcon],
 })
 export class FileUploadDragDropComponent {
   @Output() onFileDropped = new EventEmitter<File>();

@@ -9,7 +9,8 @@ import {
 } from '../types';
 
 @Pipe({
-  name: 'estimateConverter',
+    name: 'estimateConverter',
+    standalone: true,
 })
 export class EstimateConverterPipe implements PipeTransform {
   transform(

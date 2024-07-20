@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   debounceTime,
   map,
@@ -15,11 +15,24 @@ import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { Member, Room, Round } from 'src/app/types';
 import { RoomDataService } from '../room-data.service';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-notes-field',
-  templateUrl: './notes-field.component.html',
-  styleUrls: ['./notes-field.component.scss'],
+    selector: 'app-notes-field',
+    templateUrl: './notes-field.component.html',
+    styleUrls: ['./notes-field.component.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        CdkTextareaAutosize,
+        ReactiveFormsModule,
+        MatHint,
+    ],
 })
 export class NotesFieldComponent implements OnInit, OnDestroy {
   room: Room;

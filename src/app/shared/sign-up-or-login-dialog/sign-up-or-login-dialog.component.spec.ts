@@ -8,8 +8,8 @@ describe('SignUpOrLoginDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SignUpOrLoginDialogComponent ]
-    })
+    imports: [SignUpOrLoginDialogComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(SignUpOrLoginDialogComponent);

@@ -27,11 +27,42 @@ import {
 import { overrideMajorityVodeModalCreator } from '../override-majority-vote-modal/override-majority-vote-modal.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { RoomDataService } from '../room-data.service';
+import { EstimateConverterPipe } from '../../pipes/estimate-converter.pipe';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf, AsyncPipe, DecimalPipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatChipSet, MatChip, MatChipAvatar, MatChipRemove } from '@angular/material/chips';
+import { MatList, MatListSubheaderCssMatStyler, MatListItem } from '@angular/material/list';
 
 @Component({
-  selector: 'app-round-results',
-  templateUrl: './round-results.component.html',
-  styleUrls: ['./round-results.component.scss'],
+    selector: 'app-round-results',
+    templateUrl: './round-results.component.html',
+    styleUrls: ['./round-results.component.scss'],
+    standalone: true,
+    imports: [
+        MatList,
+        MatListSubheaderCssMatStyler,
+        MatListItem,
+        MatChipSet,
+        MatChip,
+        MatChipAvatar,
+        MatIcon,
+        MatChipRemove,
+        MatTooltip,
+        NgIf,
+        MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuContent,
+        MatMenuItem,
+        MatDivider,
+        AsyncPipe,
+        DecimalPipe,
+        EstimateConverterPipe,
+    ],
 })
 export class RoundResultsComponent implements OnInit, OnDestroy {
   @Input() room: Room;

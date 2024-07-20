@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, provideCloudinaryLoader } from '@angular/common';
-
+import player from 'lottie-web';
 import { RouterModule, Routes } from '@angular/router';
 import { RoomComponent } from './room.component';
 import { RoomResolver } from './room.resolver';
@@ -31,14 +31,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
-import { AnimationLoader, LottieCacheModule, LottieModule } from 'ngx-lottie';
+import { AnimationLoader, provideLottieOptions } from 'ngx-lottie';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
-
-export function playerFactory() {
-  return import(
-    /* webpackChunkName: 'lottie-web' */ 'lottie-web/build/player/lottie_svg'
-  );
-}
 
 // function that returns `MarkedOptions` with renderer override
 export function markedOptionsFactory(): MarkedOptions {
@@ -69,46 +63,45 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    RoomComponent,
-    AloneInRoomModalComponent,
-    GithubBadgeComponent,
-    NotesFieldComponent,
-    AddCardDeckModalComponent,
-    CardDeckComponent,
-    TopicsSidebarComponent,
-    AddOrUpdateTopicComponent,
-    CountdownTimerComponent,
-    VelocityComponent,
-    RoomConfigurationModalComponent,
-    TopicEditorComponent,
-    RichTopicComponent,
-    SummaryModalComponent,
-    BatchAddTopicsModalComponent,
-    RoomControllerPanelComponent,
-    ReactionsRendererComponent,
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MatSlideToggleModule,
-    MatAutocompleteModule,
-    MatButtonToggleModule,
-    DragDropModule,
-    CarbonAdComponent,
-    LottieModule.forRoot({ player: playerFactory }),
-    LottieCacheModule.forRoot(),
-    MarkdownModule.forRoot({
-      markedOptions: {
-        provide: MARKED_OPTIONS,
-        useFactory: markedOptionsFactory,
-      },
-    }),
-    RouterModule.forChild(routes),
-  ],
-  providers: [
-    AnimationLoader,
-    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
-  ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        MatSlideToggleModule,
+        MatAutocompleteModule,
+        MatButtonToggleModule,
+        DragDropModule,
+        CarbonAdComponent,
+        MarkdownModule.forRoot({
+            markedOptions: {
+                provide: MARKED_OPTIONS,
+                useFactory: markedOptionsFactory,
+            },
+        }),
+        RouterModule.forChild(routes),
+        RoomComponent,
+        AloneInRoomModalComponent,
+        GithubBadgeComponent,
+        NotesFieldComponent,
+        AddCardDeckModalComponent,
+        CardDeckComponent,
+        TopicsSidebarComponent,
+        AddOrUpdateTopicComponent,
+        CountdownTimerComponent,
+        VelocityComponent,
+        RoomConfigurationModalComponent,
+        TopicEditorComponent,
+        RichTopicComponent,
+        SummaryModalComponent,
+        BatchAddTopicsModalComponent,
+        RoomControllerPanelComponent,
+        ReactionsRendererComponent,
+    ],
+    providers: [
+        AnimationLoader,
+        provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
+        provideLottieOptions({
+          player: () => player,
+        }),
+    ],
 })
 export class RoomModule {}

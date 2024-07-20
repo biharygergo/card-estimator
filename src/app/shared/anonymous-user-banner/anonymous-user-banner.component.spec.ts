@@ -8,8 +8,8 @@ describe('AnonymousUserBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AnonymousUserBannerComponent ]
-    })
+    imports: [AnonymousUserBannerComponent]
+})
     .compileComponents();
   });
 

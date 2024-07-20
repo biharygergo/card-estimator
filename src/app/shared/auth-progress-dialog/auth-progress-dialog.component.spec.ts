@@ -8,8 +8,8 @@ describe('AuthProgressDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuthProgressDialogComponent ]
-    })
+    imports: [AuthProgressDialogComponent]
+})
     .compileComponents();
   });
 

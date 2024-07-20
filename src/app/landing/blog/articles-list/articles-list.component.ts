@@ -1,11 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { Article } from '../types';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component';
+import { NgOptimizedImage, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-articles-list',
-  templateUrl: './articles-list.component.html',
-  styleUrls: ['./articles-list.component.scss'],
+    selector: 'app-articles-list',
+    templateUrl: './articles-list.component.html',
+    styleUrls: ['./articles-list.component.scss'],
+    standalone: true,
+    imports: [
+        RouterLink,
+        NgOptimizedImage,
+        CarbonAdComponent,
+        DatePipe,
+    ],
 })
 export class ArticlesListComponent {
   articles: Article[] = inject(ActivatedRoute).snapshot.data.articles;

@@ -8,8 +8,8 @@ describe('ReactionsRendererComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReactionsRendererComponent]
-    });
+    imports: [ReactionsRendererComponent]
+});
     fixture = TestBed.createComponent(ReactionsRendererComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

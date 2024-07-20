@@ -8,8 +8,8 @@ describe('RoomConfigurationModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RoomConfigurationModalComponent ]
-    })
+    imports: [RoomConfigurationModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(RoomConfigurationModalComponent);

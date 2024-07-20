@@ -8,8 +8,8 @@ describe('IntegrationResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IntegrationResultComponent ]
-    })
+    imports: [IntegrationResultComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(IntegrationResultComponent);

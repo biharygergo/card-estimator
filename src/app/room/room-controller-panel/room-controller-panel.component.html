@@ -390,7 +390,7 @@
           </button>
         </mat-menu>
         <mat-menu #menu="matMenu">
-          @for (cardSet of estimationCardSets; track cardSet) {
+          @for (cardSet of estimationCardSets; track $index) {
             <button
               mat-menu-item
               (click)="setEstimationCardSet(cardSet)"
@@ -425,7 +425,7 @@
                 Saved card sets ({{ savedCardSets.length }})
               </button>
               <mat-menu #savedCardsMenu="matMenu">
-                @for (cardSet of savedCardSets; track cardSet) {
+                @for (cardSet of savedCardSets; track $index) {
                   <button
                     mat-menu-item
                     (click)="setEstimationCardSet(cardSet)"

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecurringMeetingLinkService } from 'src/app/services/recurring-meeting-link.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationService } from 'src/app/services/organization.service';
@@ -27,6 +27,13 @@ import { Router } from '@angular/router';
 import { DialogRef } from '@angular/cdk/dialog';
 import { User } from '@angular/fire/auth';
 import { createModal } from '../avatar-selector-modal/avatar-selector-modal.component';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 
 export const recurringMeetingsModalCreator = () =>
   createModal(RecurringMeetingsModalComponent, {
@@ -35,9 +42,31 @@ export const recurringMeetingsModalCreator = () =>
   });
 
 @Component({
-  selector: 'app-recurring-meetings-modal',
-  templateUrl: './recurring-meetings-modal.component.html',
-  styleUrls: ['./recurring-meetings-modal.component.scss'],
+    selector: 'app-recurring-meetings-modal',
+    templateUrl: './recurring-meetings-modal.component.html',
+    styleUrls: ['./recurring-meetings-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatPrefix,
+        MatSuffix,
+        MatButton,
+        MatIconButton,
+        MatMenuTrigger,
+        MatIcon,
+        MatMenu,
+        MatMenuItem,
+        MatDialogActions,
+        MatDialogClose,
+        AsyncPipe,
+        DatePipe,
+    ],
 })
 export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
   newMeetingForm = new FormGroup({

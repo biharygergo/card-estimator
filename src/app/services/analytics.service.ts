@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Analytics, logEvent } from '@angular/fire/analytics';
 import {
   CardSetOrCustom,
   RoomPermissionId,
   SubscriptionResult,
 } from '../types';
+import { isPlatformBrowser } from '@angular/common';
 
 export type ZoomAppCtaLocation =
   | 'detail_page'
@@ -14,11 +15,16 @@ export type ZoomAppCtaLocation =
   providedIn: 'root',
 })
 export class AnalyticsService {
-  constructor(private analytics: Analytics) {}
+  constructor(
+    private analytics: Analytics,
+    @Inject(PLATFORM_ID) private readonly platformId: Object
+  ) {}
 
   private logEventInternal(eventName: string, params?: any) {
     try {
-      logEvent(this.analytics, eventName, params);
+      if (isPlatformBrowser(this.platformId)) {
+        logEvent(this.analytics, eventName, params);
+      }
     } catch (e) {
       console.error('Failed to log event to Analytics', e);
     }

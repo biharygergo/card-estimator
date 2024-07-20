@@ -49,8 +49,6 @@ $m3-light-theme: matx.define-theme(
 @include mat.core();
 
 .default-theme {
-  @include mat.all-component-colors($m3-light-theme);
-
   &.running-in-teams, &.running-in-zoom {
     --background-dark: white;
     --main-dark-color: var(--mdc-outlined-card-container-color);

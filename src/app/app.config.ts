@@ -54,7 +54,28 @@ export const appConfig: ApplicationConfig = {
       MatMenuModule,
       MatDialogModule,
       BrowserModule.withServerTransition({ appId: 'serverApp' }),
-      provideFirebaseApp(() => initializeApp(environment.firebase)),
+      
+    ),
+    ScreenTrackingService,
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler,
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
+    provideClientHydration(),
+    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
+    provideAnimations(),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
       provideFirestore(() => {
         let firestore;
         if (environment.useEmulators) {
@@ -97,25 +118,5 @@ export const appConfig: ApplicationConfig = {
         }
         return functions;
       })
-    ),
-    ScreenTrackingService,
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
-    },
-    {
-      provide: Sentry.TraceService,
-      deps: [Router],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
-    provideClientHydration(),
-    provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
-    provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
   ],
 };

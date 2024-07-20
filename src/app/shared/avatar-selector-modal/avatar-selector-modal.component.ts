@@ -21,7 +21,7 @@ import {
   StripeSubscription,
 } from 'src/app/services/payment.service';
 import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
-import * as moment from 'moment';
+import moment from 'moment';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { groupBy } from 'lodash';
 import {

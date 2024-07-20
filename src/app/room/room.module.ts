@@ -31,7 +31,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
-import { AnimationLoader, LottieCacheModule, LottieModule } from 'ngx-lottie';
+import { AnimationLoader, provideCacheableAnimationLoader, provideLottieOptions } from 'ngx-lottie';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 
 export function playerFactory() {
@@ -77,8 +77,6 @@ const routes: Routes = [
         MatButtonToggleModule,
         DragDropModule,
         CarbonAdComponent,
-        LottieModule.forRoot({ player: playerFactory }),
-        LottieCacheModule.forRoot(),
         MarkdownModule.forRoot({
             markedOptions: {
                 provide: MARKED_OPTIONS,
@@ -107,6 +105,10 @@ const routes: Routes = [
     providers: [
         AnimationLoader,
         provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
+        provideLottieOptions({
+          player: () => import('lottie-web'),
+        }),
+        provideCacheableAnimationLoader(),
     ],
 })
 export class RoomModule {}

@@ -1,10 +1,9 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AnimationOptions } from 'ngx-lottie/lib/symbols';
 import { Observable, Subject, delay, mergeMap, of, takeUntil } from 'rxjs';
 import { ReactionsService } from 'src/app/services/reactions.service';
 import { Member } from 'src/app/types';
-import { LottieComponent } from 'ngx-lottie';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
 interface VisibleReaction {
   id: string;

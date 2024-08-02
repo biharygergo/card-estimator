@@ -376,8 +376,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const roomIdFromParams = this.route.snapshot.paramMap.get('roomId');
     this.roomDataService.loadRoom(
-      this.route.snapshot.paramMap.get('roomId'),
+      roomIdFromParams,
       this.route.snapshot.data.room
     );
 
@@ -391,7 +392,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.teamsService.configureApp();
     }
     if (this.config.runningIn === 'meet') {
-      this.meetService.configureApp();
+      this.meetService.configureApp(roomIdFromParams);
     }
 
     this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
@@ -862,7 +863,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     } else if (this.config.runningIn === 'meet') {
       await this.meetService.inviteAllParticipants(this.room.roomId);
       message =
-        'Ready to start activity. Click the "Start activity" button below to share this room with others in the meeting. ⬇️';
+        'Activity started, the app will open for everyone in the meeting. 🎉';
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';

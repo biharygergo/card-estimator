@@ -48,7 +48,7 @@ $m3-light-theme: mat.define-theme(
 @include mat.core();
 
 .default-theme {
-  &.running-in-teams, &.running-in-zoom {
+  &.running-in-teams, &.running-in-zoom, &.running-in-meet {
     --background-dark: white;
     --main-dark-color: var(--mdc-outlined-card-container-color);
     --main-color: white;

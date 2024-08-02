@@ -5,29 +5,30 @@
 /**
  * Represents that a failure event occurred before, during, or after a live
  * sharing activity.
- * FAILURE_EVENT_UNSPECIFIED: Failure event that's not specified in the
+ *
+ * - `FAILURE_EVENT_UNSPECIFIED`: Failure event that's not specified in the
  * predefined types.
  *
- * FAILURE_USER_INSUFFICIENT_TIER: Failure due to the user membership tier not
+ * - `FAILURE_USER_INSUFFICIENT_TIER`: Failure due to the user membership tier not
  * having sufficient privileges. For example, user not having a premium
  * membership for the Live Sharing Application.
  *
- * FAILURE_USER_UNKNOWN: Failure due to user sign-in or a related failure.
+ * - `FAILURE_USER_UNKNOWN`: Failure due to user sign-in or a related failure.
  *
- * FAILURE_USER_CANCELLED: Failure due to cancellation of the operation by the
+ * - `FAILURE_USER_CANCELLED`: Failure due to cancellation of the operation by the
  * user.
  *
- * FAILURE_USER_UNAUTHORIZED: Failure due to the user being in the wrong locale
+ * - `FAILURE_USER_UNAUTHORIZED`: Failure due to the user being in the wrong locale
  * or age group, etc., effectively being an unauthorized user for the live
  * sharing activity.
  *
- * FAILURE_APP_GENERIC_ERROR: Failure due to a generic error with the Live
+ * - `FAILURE_APP_GENERIC_ERROR`: Failure due to a generic error with the Live
  * Sharing Application.
  *
- * FAILURE_APP_NETWORK_CONNECTIVITY: Failure due to a network connectivity issue
+ * - `FAILURE_APP_NETWORK_CONNECTIVITY`: Failure due to a network connectivity issue
  * between the Live Sharing Application and its servers.
  *
- * FAILURE_APP_STARTUP: Failure due to an error in starting the Live Sharing
+ * - `FAILURE_APP_STARTUP`: Failure due to an error in starting the Live Sharing
  * Application.
  */
 export type LiveSharingFailureEventType =
@@ -237,14 +238,14 @@ export interface CoWatchingClient {
  */
 export interface AddonSessionOptions {
   /**
-   * The cloud project number of the add-on.
+   * The Google Cloud project number of the add-on.
    */
   cloudProjectNumber: string;
 }
 
 /**
- * The main entry point for accessing Meet add-on functionality. Available
- * globally under window.meet.addon.
+ * The main entry point for accessing Meet Add-on functionality. Available
+ * globally under `window.meet.addon`.
  */
 export interface MeetAddon {
   /**
@@ -260,6 +261,11 @@ export interface MeetAddon {
   createAddonSession: (options: AddonSessionOptions) => Promise<AddonSession>;
 }
 
+/** The structure of an error generated from the Meet Add-ons SDK. */
+interface MeetAddonError extends Error {
+  readonly errorType: ErrorType;
+}
+
 declare global {
   export interface Window {
     meet: {addon: MeetAddon};
@@ -270,34 +276,38 @@ declare global {
 // Original file: client.types.d.ts
 
 
+
 /**
  * Information about the meeting in which the add-on is running.
  */
 export interface MeetingInfo {
   /**
-   * The MeetingId for the current meeting, which can be used to retrieve
-   * meeting information from the Meet API. The MeetingId is a globally unique
+   * The `meetingId` for the current meeting. Can be used to retrieve
+   * meeting information from the Meet REST API. The `meetingId` is a globally unique
    * identifier for the meeting.
    */
   meetingId: string;
 }
 
 /**
- * The different places in Meet that the iframed add-on can be running in.
+ * The different places in Meet that the iframed add-on can be running in:
  *
- * SIDE_PANEL: The iframed add-on running in the Meet side panel.
- * MAIN_STAGE: The iframed add-on running as a tile in the Meet main stage.
+ * - `SIDE_PANEL`: The iframed add-on running in the Meet side panel.
+ *
+ * - `MAIN_STAGE`: The iframed add-on running as a tile in the Meet main stage.
  */
 export type FrameType = 'SIDE_PANEL' | 'MAIN_STAGE';
 
 /**
- * The reasons that the frame was opened.
+ * The different reasons why the frame was opened:
  *
- * OPEN_ADDON: The frame was opened because the addon was selected in the
+ * - `OPEN_ADDON`: The frame was opened because the add-on was selected in the
  * activities panel.
- * START_COLLABORATION: The frame was opened because the local user started a
+ *
+ * - `START_COLLABORATION`: The frame was opened because the local user started a
  * collaboration.
- * JOIN_COLLABORATION: The frame was opened because the user joined a
+ *
+ * - `JOIN_COLLABORATION`: The frame was opened because the user joined a
  * collaboration started by another user.
  */
 export type FrameOpenReason =
@@ -317,9 +327,29 @@ export interface FrameToFrameMessage {
   /**
    * The message payload. Value set by the add-on running in the frame specified
    * by the originator field.
+   * The length of this string must be less than 1,000,000 characters.
    */
   payload: string;
 }
+
+/**
+ * Possible error types for when interacting with the Meet Web Add-ons SDK
+ * throws an error.
+ */
+export type ErrorType =
+  | 'CoactivityIsOngoing'
+  | 'DestinationNotReady'
+  | 'InvalidCloudProjectNumber'
+  | 'InvalidCollaborationStartingState'
+  | 'MissingUrlParameter'
+  | 'NeedsMainStageContext'
+  | 'NeedsSidePanelContext'
+  | 'NotSupportedInStandalone'
+  | 'RequiresEapEnrollment'
+  | 'SizeLimitExceededCollaborationStartingState'
+  | 'SizeLimitExceededFrameToFrameMessage'
+  | 'UserNotInitiator'
+  | 'InternalError';
 
 /**
  * All of the callbacks that add-ons can attach to.
@@ -331,7 +361,7 @@ export interface AddonCallbacks {
    */
   readonly frameToFrameMessage?: (message: FrameToFrameMessage) => void;
   /**
-   * Callback that is triggered when the user initiates a collaboration in meet.
+   * Callback that's triggered when the user initiates a collaboration in Meet.
    */
   readonly userInitiatedCollaboration?: () => void;
 }
@@ -342,12 +372,14 @@ export interface AddonCallbacks {
  */
 export interface CollaborationStartingState {
   /**
-   * The URL that the main stage will open for users joining the collaboration.
+   * The URL that the main stage opens for users joining the collaboration.
+   * The length of this URL must be less than 512 characters.
    */
   mainStageUrl?: string;
 
   /**
-   * The URL that the side panel will open for users joining the collaboration.
+   * The URL that the side panel opens for users joining the collaboration.
+   * The length of this URL must be less than 512 characters.
    */
   sidePanelUrl?: string;
 
@@ -355,6 +387,7 @@ export interface CollaborationStartingState {
    * Data internal to the add-on that it can use to initialize itself. Useful
    * for communicating application-specific state to users joining the
    * collaboration that cannot be stored in the URLs.
+   * The length of this string must be less than 4,096 characters.
    */
   additionalData?: string;
 }
@@ -373,14 +406,14 @@ export interface MeetAddonClient {
    */
   getCollaborationStartingState(): Promise<CollaborationStartingState>;
   /**
-   * Sets or updates information about the initial state of the add-on that is
+   * Sets or updates information about the initial state of the add-on that's
    * used when the participant accepts the invitation to collaborate.
    */
   setCollaborationStartingState(
     collaborationStartingState: CollaborationStartingState,
   ): Promise<void>;
   /**
-   * Clears the information about the initial state of the add-on used in
+   * Clears the information about the initial state of the add-on used in the
    * collaboration.
    */
   clearCollaborationStartingState(): Promise<void>;
@@ -400,35 +433,50 @@ export interface MeetAddonClient {
    */
   getMeetPlatformInfo(): Promise<MeetPlatformInfo>;
   /**
-   * Retrieves what action caused the add-on frame to be opened.
+   * Retrieves the action causing the add-on frame to be opened.
    */
   getFrameOpenReason(): Promise<FrameOpenReason>;
 
   /** Retrieves the meeting's current recording status. */
   getCurrentMeetingRecordingStatus(): Promise<RecordingStatus>;
+
+  /**
+   * Starts a collaboration with the provided starting state of frames that the
+   * initiator and participants can use during the activity.
+   */
+  startCollaboration(
+    collaborationStartingState?: CollaborationStartingState,
+  ): Promise<void>;
+
+  /**
+   * Close the add-on that is running in the Meet iframe.
+   */
+  closeAddon(): Promise<void>;
 }
 
 /**
- * The MeetAddonClient for the side panel component of an add-on.
+ * The `MeetAddonClient` for the side panel component of an add-on.
  */
 export interface MeetSidePanelClient extends MeetAddonClient {
   /**
-   * Sends a message from the main stage add-on iframe to the side panel add-on
-   * iframe. The add-on running in the side panel iframe can react to this
+   * Sends a message from the side panel add-on iframe to the main stage add-on
+   * iframe. The add-on running in the main stage iframe can react to this
    * message using the {@link
    * https://developers.google.com/meet/add-ons/reference/websdk/addon_sdk.addoncallbacks.frametoframemessage
-   * | frameToFrameMessage} add-on callback (see {@link AddonCallbacks}).
+   * | frameToFrameMessage} add-on callback (see {@link
+   * https://developers.google.com/meet/add-ons/reference/websdk/addon_sdk.addoncallbacks
+   * | AddonCallbacks}).
    */
   notifyMainStage(payload: string): Promise<void>;
 }
 
 /**
- * The MeetAddonClient for the main stage component of an add-on.
+ * The `MeetAddonClient` for the main stage component of an add-on.
  */
 export interface MeetMainStageClient extends MeetAddonClient {
   /**
-   * Sends a message from the side panel add-on iframe to the main stage add-on
-   * iframe. The add-on running in the main stage iframe can react to this
+   * Sends a message from the main stage add-on iframe to the side panel add-on
+   * iframe. The add-on running in the side panel iframe can react to this
    * message using the {@link
    * https://developers.google.com/meet/add-ons/reference/websdk/addon_sdk.addoncallbacks.frametoframemessage
    * | frameToFrameMessage} add-on callback.
@@ -447,7 +495,7 @@ export interface MeetMainStageClient extends MeetAddonClient {
    */
   unloadSidePanel(): Promise<void>;
   /**
-   * Opens the side panel iframe with the iframe src set to the side panel
+   * Opens the side panel iframe with the iframe source set to the side panel
    * URL from the {@link
    * https://developers.google.com/meet/add-ons/guides/build-add-on#manifest |
    * add-on manifest}.
@@ -459,16 +507,20 @@ export interface MeetMainStageClient extends MeetAddonClient {
  * The AddonSession interface. Used to interact with Meet.
  */
 export interface AddonSession {
-  /** Creates a MainStageClient. */
+  /** Creates a `MainStageClient`. */
   createMainStageClient(): Promise<MeetMainStageClient>;
-  /** Creates a SidePanelClient. */
+  /** Creates a `SidePanelClient`. */
   createSidePanelClient(): Promise<MeetSidePanelClient>;
-  /** Creates a CoDoingClient. */
+  /** Creates a `CoDoingClient`. */
   createCoDoingClient(coDoingDelegate: CoDoingDelegate): Promise<CoDoingClient>;
-  /** Creates a CoWatchingClient. */
+  /** Creates a `CoWatchingClient`. */
   createCoWatchingClient(
     coWatchingDelegate: CoWatchingDelegate,
   ): Promise<CoWatchingClient>;
+  /** Creates a GuaranteedDeliveryClient */
+  createGuaranteedDeliveryClient(
+    guaranteedDeliveryDelegate: GuaranteedDeliveryClientDelegate,
+  ): Promise<MeetGuaranteedDeliveryClient>;
 }
 
 /**
@@ -479,6 +531,40 @@ export interface MeetPlatformInfo {
    * Whether the meeting is running on Meet Rooms hardware.
    */
   isMeetHardware: boolean;
+}
+
+
+// Original file: guaranteed_delivery_types.d.ts
+
+/**
+ * A temporary types files to hold the types until they can be
+ * added to the addon public types upon release.
+ */
+
+/**
+ * The client object that an add-on uses to subscribe to state change events
+ * from Meet web with guarantees about the reliability of the state.
+ */
+export interface MeetGuaranteedDeliveryClient {
+  disconnect(): void;
+}
+
+/**
+ * Host-provided set of callbacks required to instantiate a Guaranteed Delivery
+ * Client
+ */
+export interface GuaranteedDeliveryClientDelegate {
+  /**
+   * Callback that is triggered when Meet's recording status changes.
+   */
+  onRecordingStatusChanged(message: RecordingStatusChanged): Promise<boolean>;
+}
+
+/**
+ * Information about Meet's recording status
+ */
+export interface RecordingStatusChanged {
+  recordingStatus: RecordingStatus;
 }
 
 /** Current recording status for the meeting.  */

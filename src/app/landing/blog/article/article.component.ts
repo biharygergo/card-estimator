@@ -10,7 +10,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 import { ArticlesService } from 'src/app/services/articles.service';
 import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component';
 import { StartPlanningCtaComponent } from '../../components/start-planning-cta/start-planning-cta.component';
@@ -36,8 +36,12 @@ import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
 export class ArticleComponent {
   article: Observable<Article> = inject(ActivatedRoute).data.pipe(
     map((data) => data.article),
-    tap((article) => {
+    tap((article: Article) => {
       this.titleService.setTitle(`${article.title} - PlanningPoker.live`);
+      inject(Meta).updateTag({
+        name: 'description',
+        content: article.description,
+      });
     })
   );
   titleService = inject(Title);

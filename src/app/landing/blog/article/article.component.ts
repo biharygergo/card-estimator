@@ -34,11 +34,12 @@ import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
     ],
 })
 export class ArticleComponent {
+  private readonly metaService = inject(Meta);
   article: Observable<Article> = inject(ActivatedRoute).data.pipe(
     map((data) => data.article),
     tap((article: Article) => {
       this.titleService.setTitle(`${article.title} - PlanningPoker.live`);
-      inject(Meta).updateTag({
+      this.metaService.updateTag({
         name: 'description',
         content: article.description,
       });

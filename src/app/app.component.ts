@@ -62,6 +62,7 @@ export class AppComponent implements OnInit, OnDestroy {
         routeTitle,
         description,
         disablePostfix: route?.snapshot?.data['disablePostfix'],
+        noIndex: route?.snapshot?.data['noIndex'],
       };
     })
   );
@@ -95,7 +96,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.onTitleUpdated$
       .pipe(takeUntil(this.destroyed))
-      .subscribe(({ routeTitle, disablePostfix, description }) => {
+      .subscribe(({ routeTitle, disablePostfix, description, noIndex }) => {
         if (routeTitle) {
           this.titleService.setTitle(
             `${routeTitle}${disablePostfix ? '' : ' - Planning Poker'}`
@@ -106,6 +107,13 @@ export class AppComponent implements OnInit, OnDestroy {
             name: 'description',
             content: description,
           });
+        }
+
+        if (noIndex) {
+          this.metaService.updateTag({
+            name: 'robots',
+            content: 'noindex'
+          })
         }
       });
 

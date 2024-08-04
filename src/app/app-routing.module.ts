@@ -21,6 +21,7 @@ const routes: Routes = [
       description:
         'Join an existing room and estimate issues on PlanningPoker.live',
       supportsTheme: true,
+      noIndex: true,
     },
   },
   {
@@ -34,6 +35,7 @@ const routes: Routes = [
       description:
         'Create a new room and estimate issues on PlanningPoker.live',
       supportsTheme: true,
+      noIndex: true,
     },
   },
   {
@@ -47,12 +49,13 @@ const routes: Routes = [
       description:
         'Browser your previous sessions on PlanningPoker.live',
       supportsTheme: true,
+      noIndex: true,
     },
   },
   {
     path: 'room',
     component: RoomLoadingComponent,
-    data: { title: 'Loading room', supportsTheme: true },
+    data: { title: 'Loading room', supportsTheme: true, noIndex: true, },
     loadChildren: () => import('./room/room.module').then((m) => m.RoomModule),
   },
   {
@@ -61,7 +64,7 @@ const routes: Routes = [
       import('./recurring-meeting/recurring-meeting.component').then(
         (m) => m.RecurringMeetingComponent
       ),
-    data: { title: 'Recurring meeting lobby', supportsTheme: true },
+    data: { title: 'Recurring meeting lobby', supportsTheme: true, noIndex: true, },
   },
   {
     path: 'integrations/teams/configure',
@@ -69,7 +72,7 @@ const routes: Routes = [
       import('./integrations/teams/configure-tab/configure-tab.component').then(
         (mod) => mod.ConfigureTabComponent
       ),
-    data: { title: 'Configure Teams', supportsTheme: true },
+    data: { title: 'Configure Teams', supportsTheme: true, noIndex: true, },
   },
   {
     path: 'integrations/teams/auth',
@@ -77,7 +80,7 @@ const routes: Routes = [
       import('./integrations/teams/auth/auth.component').then(
         (mod) => mod.AuthComponent
       ),
-    data: { title: 'Authenticate', supportsTheme: true },
+    data: { title: 'Authenticate', supportsTheme: true, noIndex: true, },
   },
 ];
 

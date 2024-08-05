@@ -32,6 +32,7 @@ import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { FeaturesItemsComponent } from './features/features-items/features-items.component';
 import { FeaturesPreviewComponent } from './features/features-preview/features-preview.component';
 import { PageHeaderWithCtaComponent } from './components/page-header-with-cta/page-header-with-cta.component';
+import { MeetComponent } from './integrations/meet/meet.component';
 
 const routes: Routes = [
   {
@@ -100,6 +101,17 @@ const routes: Routes = [
     },
   },
   {
+    path: 'integrations/meet',
+    component: MeetComponent,
+    data: {
+      title: 'Planning Poker for Google Meet',
+      disablePostfix: true,
+      description:
+        'Install our integration for Google Meet, the simplest way to estimate stories.',
+      noIndex: true,
+    },
+  },
+  {
     path: 'organizationInvitation',
     component: OrganizationInvitationComponent,
     data: { title: 'Organization invitation' },
@@ -133,42 +145,42 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        ZoomAppBannerComponent,
-        PremiumComponent,
-        CarbonAdComponent,
-        MatCardModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatExpansionModule,
-        MatDividerModule,
-        MatIconModule,
-        MatTabsModule,
-        MatDialogModule,
-        MatMenuModule,
-        MatTooltipModule,
-        ZoomAppBannerComponent,
-        NgOptimizedImage,
-        PageHeaderComponent,
-        StartPlanningCtaComponent,
-        FeaturesComponent,
-        FeaturesItemsComponent,
-        FeaturesPreviewComponent,
-        FaqComponent,
-        FaqRowComponent,
-        PrivacyComponent,
-        TermsComponent,
-        ZoomComponent,
-        HomeComponent,
-        WrapperComponent,
-        HeaderV2Component,
-        OrganizationInvitationComponent,
-        WebexComponent,
-        TeamsComponent,
-        PageHeaderWithCtaComponent,
-    ],
-    providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    ZoomAppBannerComponent,
+    PremiumComponent,
+    CarbonAdComponent,
+    MatCardModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatExpansionModule,
+    MatDividerModule,
+    MatIconModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatMenuModule,
+    MatTooltipModule,
+    ZoomAppBannerComponent,
+    NgOptimizedImage,
+    PageHeaderComponent,
+    StartPlanningCtaComponent,
+    FeaturesComponent,
+    FeaturesItemsComponent,
+    FeaturesPreviewComponent,
+    FaqComponent,
+    FaqRowComponent,
+    PrivacyComponent,
+    TermsComponent,
+    ZoomComponent,
+    HomeComponent,
+    WrapperComponent,
+    HeaderV2Component,
+    OrganizationInvitationComponent,
+    WebexComponent,
+    TeamsComponent,
+    PageHeaderWithCtaComponent,
+  ],
+  providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })
 export class LandingModule {}

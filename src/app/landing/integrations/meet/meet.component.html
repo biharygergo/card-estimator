@@ -1,0 +1,167 @@
+<planning-poker-page-header-with-cta
+  [config]="{
+  title:'Planning Poker for Google Meet (coming soon)',
+  description: 'Get accurate estimates for your next sprint with our app made for Google Meet.',
+  externalLink: 'https://google.com',
+  ctaIcon: 'open_in_new',
+  ctaTitle: 'Add to Google Meet',
+  showPlatforms: false,
+}"
+/>
+<main>
+  <div>
+    <section class="integration-hero">
+      <div class="hero-header">
+        <h1 class="title">Fun and efficient agile planning in Google Meet</h1>
+      </div>
+      <div class="hero-video">
+        <video
+          #video
+          autoplay
+          loop
+          muted
+          playsinline
+          (canplay)="video.play()"
+          (loadedmetadata)="video.muted = true"
+        >
+          <source
+            src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Meet_Youtube_1_yzwz5p.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+    </section>
+    <section>
+      <div class="features-preview">
+        <h2 class="title features-title">
+          Feature-packed for smooth SCRUM poker in Google Meet
+        </h2>
+        <planning-poker-features-preview />
+      </div>
+      <div class="see-more-features">
+        <mat-expansion-panel
+          class="see-more-panel"
+          (opened)="loadVideos.next(true)"
+        >
+          <mat-expansion-panel-header class="see-more-panel-header">
+            <mat-panel-title class="see-more-panel-title"
+              >View all features</mat-panel-title
+            >
+          </mat-expansion-panel-header>
+          <planning-poker-features-items [loadVideos]="loadVideos" />
+        </mat-expansion-panel>
+      </div>
+    </section>
+    <section class="integration-hero">
+      <div>
+        <h2 class="title">How does it work?</h2>
+        <p class="details">
+          Check out the main steps to installing the app below or learn more in
+          our
+          <a routerLink="/">knowledge base article</a>
+          for setting up PlanningPoker.live in Meet.
+        </p>
+      </div>
+
+      <div class="steps-container">
+        <div class="instruction-image">
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_1.png"
+            alt="Store landing page for Planning Poker"
+            [class.visible]="selectedIndex === 0"
+          />
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_4.jpg"
+            alt="Apps screen inside Meet"
+            [class.visible]="selectedIndex === 1"
+          />
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_2.jpg"
+            alt="The app is running inside Meet"
+            [class.visible]="selectedIndex === 2"
+          />
+          <img
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_3.jpg"
+            alt="An ongoing planning session with participants in Meet"
+            [class.visible]="selectedIndex === 3"
+          />
+        </div>
+        <mat-tab-group
+          dynamicHeight
+          (selectedIndexChange)="selectedIndex = $event"
+        >
+          <mat-tab label="1. Open Workspace Marketplace and install"
+            ><div class="step-content">
+              <p>
+                To add the app to your Teams account, open
+                <a href="" target="_blank">the Marketplace</a>
+                and click the "Get it now" button. You might need to ask your
+                Workspace administrator to whitelist the app for use.
+              </p>
+            </div>
+          </mat-tab>
+          <mat-tab label="2. Open the app inside Meet"
+            ><div class="step-content">
+              <p>TODO</p>
+            </div>
+          </mat-tab>
+          <mat-tab label="3. Invite your colleagues in the meeting"
+            ><div class="step-content">
+              <p>
+                After you've created a planning poker session, just click
+                "Invite" and the app will open for everyone in the meeting.
+                Alternatively, you can share the room ID so others can join in
+                Meet or on other platforms.
+              </p>
+            </div>
+          </mat-tab>
+          <mat-tab label="4. Estimate projects together, in real-time"
+            ><div class="step-content">
+              <p>
+                Once you are all in the same meeting and the app is open for
+                everyone, you can start planning your project. Set a topic by
+                clicking "Edit topic" next to "Topic of Round #1" and decide
+                which card set you want to use.
+              </p>
+              <p>
+                Each member votes on their own, and once all votes are cast the
+                leader presses "Reveal Votes" to reveal all votes. To start the
+                next round, click "New Round" (or "Next Round", if you've set
+                the topics beforehand from the sidebar) The team continues this
+                process until all topics have been voted on.
+              </p>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </section>
+    <div class="integration-hero">
+      <div>
+        <h4 id="support" class="title">Getting Support and Reporting Bugs</h4>
+        <p class="details">
+          Are you stuck on a question or issue with the app? Check out the
+          <a routerLink="/faq">Frequently Asked Questions</a>, maybe your query
+          already has an answer.
+        </p>
+        <p class="details">
+          If you need additional support or have found a bug, please open a
+          ticket here
+          <a
+            href="https://github.com/biharygergo/card-estimator/issues"
+            rel="noopener"
+            >on GitHub</a
+          >
+          and our developers will try to help as fast as possible. We try
+          respond to tickets within 24 hours. If you need immediate assistance,
+          please contact us at
+          <a href="mailto:hello@planningpoker.live"
+            >hello&#64;planningpoker.live</a
+          >.
+        </p>
+      </div>
+    </div>
+    <div class="banner-wrapper">
+      <start-planning-cta></start-planning-cta>
+    </div>
+  </div>
+</main>

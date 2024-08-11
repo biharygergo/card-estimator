@@ -173,7 +173,7 @@ export class OrganizationService {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user) {
-          return of(undefined);
+          return of([]);
         }
         const q = query(ref, where('memberIds', 'array-contains', user.uid));
 
@@ -184,7 +184,11 @@ export class OrganizationService {
 
   getMyOrganization(): Observable<Organization | undefined> {
     return this.getMyOrganizations().pipe(
-      map((orgs) => (orgs.length ? orgs[0] : undefined))
+      map((orgs) => (orgs?.length ? orgs[0] : undefined))
     );
+  }
+
+  setSelectedOrganization(orgId: string) {
+    
   }
 }

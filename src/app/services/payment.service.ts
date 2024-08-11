@@ -114,9 +114,12 @@ export class PaymentService {
       },
     };
 
-    console.log(checkoutDoc);
     if (organizationId) {
       checkoutDoc.metadata['organizationId'] = organizationId;
+    }
+
+    if(creditCount) {
+      checkoutDoc.metadata['creditCount'] = creditCount;
     }
 
     const sessionRef = await addDoc(checkoutSessionsCollection, checkoutDoc);

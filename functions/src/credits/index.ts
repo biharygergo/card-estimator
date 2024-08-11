@@ -91,7 +91,7 @@ function getAllUserBundles(userId: string): Promise<CreditBundle[]> {
       );
 }
 
-function getAllOrganizationBundles(organizationId: string): Promise<CreditBundle[]> {
+export function getAllOrganizationBundles(organizationId: string): Promise<CreditBundle[]> {
   return getFirestore()
       .collection(`organizations/${organizationId}/${BUNDLES_COLLECTION}`)
       .orderBy("createdAt", "desc")

@@ -1,5 +1,9 @@
 <h1 mat-dialog-title class="dialog-title">My organization</h1>
 <div mat-dialog-content>
+  @if((organizations$ | async)?.length > 1) {
+    <planning-poker-organization-selector label="Select active organization" />
+  }
+
   @if (checklist$ | async; as checklist) { @if (organization &&
   !checklist.allCompleted) {
   <mat-card class="checklist-banner" appearance="outline" @fadeAnimation>

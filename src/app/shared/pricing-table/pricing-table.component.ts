@@ -148,7 +148,7 @@ export class PricingTableComponent implements OnInit {
     nonNullable: true,
   });
   creditTypeSelector = new FormControl<'personal' | 'organization'>(
-    'organization',
+    'personal',
     { nonNullable: true }
   );
 
@@ -164,7 +164,7 @@ export class PricingTableComponent implements OnInit {
   });
 
   currencyShortSymbol = this.currencyControl.valueChanges.pipe(
-    startWith('usd'),
+    startWith(() => this.currencyControl.value),
     map((currency) => (currency === 'usd' ? '$' : '€'))
   );
 

@@ -1,6 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatDialog,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { isEqual } from 'lodash-es';
 import {
   BehaviorSubject,
@@ -29,7 +41,16 @@ import {
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { fadeAnimation } from '../animations';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput, MatChipListbox, MatChip } from '@angular/material/chips';
+import {
+  MatChipEditedEvent,
+  MatChipInputEvent,
+  MatChipGrid,
+  MatChipRow,
+  MatChipRemove,
+  MatChipInput,
+  MatChipListbox,
+  MatChip,
+} from '@angular/material/chips';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -41,6 +62,7 @@ import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -64,43 +86,44 @@ interface OrganizationChecklist {
 }
 
 @Component({
-    selector: 'app-organization-modal',
-    templateUrl: './organization-modal.component.html',
-    styleUrls: ['./organization-modal.component.scss'],
-    animations: [fadeAnimation],
-    standalone: true,
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatCard,
-        MatCardContent,
-        MatIcon,
-        MatButton,
-        MatTabGroup,
-        MatTab,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormField,
-        MatInput,
-        MatHint,
-        FileUploadDragDropComponent,
-        MatIconButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatChipGrid,
-        MatChipRow,
-        MatChipRemove,
-        MatChipInput,
-        MatSuffix,
-        MatChipListbox,
-        MatChip,
-        MatTooltip,
-        MatProgressSpinner,
-        MatDialogActions,
-        MatDialogClose,
-        AsyncPipe,
-    ],
+  selector: 'app-organization-modal',
+  templateUrl: './organization-modal.component.html',
+  styleUrls: ['./organization-modal.component.scss'],
+  animations: [fadeAnimation],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatCard,
+    MatCardContent,
+    MatIcon,
+    MatButton,
+    MatTabGroup,
+    MatTab,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatHint,
+    FileUploadDragDropComponent,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatChipGrid,
+    MatChipRow,
+    MatChipRemove,
+    MatChipInput,
+    MatSuffix,
+    MatChipListbox,
+    MatChip,
+    MatTooltip,
+    MatProgressSpinner,
+    MatDialogActions,
+    MatDialogClose,
+    AsyncPipe,
+    OrganizationSelectorComponent,
+  ],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
   organization$ = this.organizationService.getMyOrganization().pipe(
@@ -162,6 +185,8 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       };
     })
   );
+
+  organizations$ = this.organizationService.getMyOrganizations();
 
   organization: Organization | null | undefined = null;
   showIntro = true;
@@ -346,7 +371,9 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     const value = (event.value || '').trim();
 
     if (value) {
-      const emails: string[] = [...new Set(value.split(',').map((email) => email.trim()))];
+      const emails: string[] = [
+        ...new Set(value.split(',').map((email) => email.trim())),
+      ];
       this.emailFormValues.push(...emails);
     }
 

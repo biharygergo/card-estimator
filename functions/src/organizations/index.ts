@@ -1,5 +1,6 @@
 import {getFirestore} from "firebase-admin/firestore";
 import {Organization} from "../types";
+import {getUserPreference} from "../shared/users";
 
 export async function getOrganizations(userId: string): Promise<Organization[]> {
   const orgs = await getFirestore()
@@ -12,6 +13,8 @@ export async function getOrganizations(userId: string): Promise<Organization[]> 
 
 export async function getCurrentOrganization(userId: string): Promise<Organization | undefined> {
   const orgs = await getOrganizations(userId);
+  const userPreference = await getUserPreference(userId);
 
-  return orgs.at(0);
+  const selectedOrg = orgs.find((org) => org.id === userPreference?.activeOrganizationId);
+  return selectedOrg ?? orgs.at(0);
 }

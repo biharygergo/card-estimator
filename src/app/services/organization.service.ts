@@ -20,7 +20,14 @@ import {
   deleteDoc,
 } from '@angular/fire/firestore';
 import { InvitationData, Organization } from '../types';
-import { map, Observable, switchMap, of } from 'rxjs';
+import {
+  map,
+  Observable,
+  switchMap,
+  of,
+  distinctUntilChanged,
+  combineLatest,
+} from 'rxjs';
 import { FileUploadService } from './file-upload.service';
 import { PaymentService } from './payment.service';
 
@@ -183,12 +190,23 @@ export class OrganizationService {
   }
 
   getMyOrganization(): Observable<Organization | undefined> {
-    return this.getMyOrganizations().pipe(
-      map((orgs) => (orgs?.length ? orgs[0] : undefined))
+    return combineLatest([
+      this.authService.getUserPreference().pipe(
+        map((pref) => pref?.activeOrganizationId),
+        distinctUntilChanged()
+      ),
+      this.getMyOrganizations(),
+    ]).pipe(
+      map(([activeOrgId, orgs]) => {
+        const selectedOrg = orgs.find((org) => org.id === activeOrgId);
+        return selectedOrg ?? orgs?.[0];
+      })
     );
   }
 
   setSelectedOrganization(orgId: string) {
-    
+    this.authService
+      .updateUserPreference({ activeOrganizationId: orgId })
+      .subscribe();
   }
 }

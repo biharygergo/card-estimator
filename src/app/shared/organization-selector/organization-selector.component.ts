@@ -54,7 +54,7 @@ export class OrganizationSelectorComponent
       )
       .subscribe((orgId) => {
         this.organizationService.setSelectedOrganization(orgId);
-        this.onChange(orgId);
+        this.onChange?.(orgId);
       });
 
     this.organizationService

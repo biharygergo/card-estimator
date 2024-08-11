@@ -465,6 +465,7 @@ export interface UserPreference {
   updatedPricingModalShown?: boolean;
   aloneInRoomModalShown?: boolean;
   selectedIssueIntegrationProvider?: 'jira' | 'linear';
+  activeOrganizationId?: string;
 }
 
 export interface Credit {

@@ -6,7 +6,6 @@ import {
   Round,
   RichTopic,
   SubscriptionMetadata,
-  Organization,
   Credit,
 } from "../../../src/app/types";
 import {
@@ -24,6 +23,7 @@ import {
   getCreditForNewRoom,
   updateCreditUsage,
 } from "../credits";
+import {getCurrentOrganization} from "../organizations";
 
 export async function createRoom(
     request: CallableRequest
@@ -89,7 +89,7 @@ export async function createRoom(
   await getFirestore().collection("rooms").doc(room.roomId).set(room);
 
   if (!isPremium) {
-    await updateCreditUsage(creditToUse!.id, userId, room.roomId);
+    await updateCreditUsage(creditToUse!, userId, room.roomId);
   }
 
   return {room, member};
@@ -141,14 +141,7 @@ async function getSubscriptionMetadata(
     credit: Credit | undefined
 ): Promise<SubscriptionMetadata> {
   const isPremium = await isPremiumSubscriber(userId);
-  const myOrgs = await getFirestore()
-      .collection("organizations")
-      .where("memberIds", "array-contains", userId)
-      .get();
-
-  const organization = myOrgs.docs.length ?
-    (myOrgs.docs[0].data() as Organization) :
-    undefined;
+  const organization = await getCurrentOrganization(userId);
 
   const subscriptionMetadata: SubscriptionMetadata = {
     createdWithPlan: isPremium ? "premium" : credit ? credit.isPaidCredit ? "paid-credit" : "credit" : "basic",

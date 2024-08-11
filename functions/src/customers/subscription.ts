@@ -5,7 +5,10 @@ import {
   Change,
 } from "firebase-functions/v2/firestore";
 import {BundleName} from "../types";
-import {createBundle} from "../credits";
+import {createBundle, createOrganizationCreditBundle} from "../credits";
+import Stripe from "stripe";
+import {getCurrentOrganization} from "../organizations";
+import {captureError} from "../shared/errors";
 
 export async function onCustomerPaymentCreated(
     snap: FirestoreEvent<QueryDocumentSnapshot | undefined>
@@ -16,14 +19,14 @@ export async function onCustomerPaymentCreated(
     throw Error("No user id available");
   }
 
-  const paymentData = snap.data?.data();
+  const paymentIntent = snap.data?.data() as Stripe.PaymentIntent | undefined;
 
-  if (paymentData?.status !== "succeeded") {
+  if (paymentIntent?.status !== "succeeded") {
     console.error("Not successful payment");
     return;
   }
 
-  const bundleName = snap.data?.data().metadata?.bundleName;
+  const bundleName = paymentIntent.metadata?.bundleName as BundleName;
 
   if (
     !bundleName ||
@@ -31,14 +34,43 @@ export async function onCustomerPaymentCreated(
       BundleName.LARGE_BUNDLE,
       BundleName.MEGA_BUNDLE,
       BundleName.SMALL_BUNDLE,
+      BundleName.ORGANIZATION_BUNDLE,
     ].includes(bundleName) === false
   ) {
     console.error("Unknown bundle name", bundleName);
     return;
   }
 
-  console.log(bundleName, userId, snap.data?.data().id);
-  await createBundle(bundleName, userId, snap.data?.data().id);
+  console.log(bundleName, userId, paymentIntent.id);
+
+  if (bundleName === BundleName.ORGANIZATION_BUNDLE) {
+    const lineItems = (paymentIntent as any)["items"] as Stripe.LineItem[];
+
+    const creditCount = lineItems
+        .map((item) => item.quantity ?? 0)
+        .reduce((a, b) => a + b, 0);
+    const currentOrganization = await getCurrentOrganization(userId);
+    const organizationId =
+      paymentIntent.metadata["organizationId"] ?? currentOrganization?.id;
+
+    if (!organizationId) {
+      captureError(
+          new Error(
+              `Organization could not be found after credit purchase! User ID: ${userId}, Payment ID: ${paymentIntent.id}`
+          )
+      );
+      return;
+    }
+
+    await createOrganizationCreditBundle(
+      organizationId!,
+      creditCount,
+      userId,
+      paymentIntent.id
+    );
+  } else {
+    await createBundle(bundleName, userId, paymentIntent.id);
+  }
 }
 
 export async function onCustomerSubscriptionCreated(

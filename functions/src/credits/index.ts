@@ -5,6 +5,7 @@ import {getAuth} from "firebase-admin/auth";
 import {isPremiumSubscriber} from "../shared/customClaims";
 import {sendEmail} from "../email";
 import {ALMOST_OUT_OF_CREDITS, OUT_OF_CREDITS} from "./emails";
+import {getCurrentOrganization} from "../organizations";
 
 const CREDITS_COLLECTION = "credits";
 const BUNDLES_COLLECTION = "bundles";
@@ -12,8 +13,16 @@ const BUNDLES_COLLECTION = "bundles";
 export async function getAllCreditBundles(
     userId: string
 ): Promise<{ credits: Credit[]; bundles: BundleWithCredits[] }> {
-  const allCredits = await getAllCredits(userId);
-  const allBundles = await getAllBundles(userId);
+  const allUserCredits = await getAllUserCredits(userId);
+  const organization = await getCurrentOrganization(userId);
+  const allOrganizationCredits = organization ?
+    await getAllOrganizationCredits(organization.id) :
+    [];
+  const allUserBundles = await getAllUserBundles(userId);
+  const allOrganizationBundles = organization ? await getAllOrganizationBundles(organization.id) : [];
+
+  const allCredits = [...allUserCredits, ...allOrganizationCredits];
+  const allBundles = [...allUserBundles, ...allOrganizationBundles];
 
   const bundles = allBundles.map((bundle) => ({
     ...bundle,
@@ -53,7 +62,7 @@ export async function assignCreditsAsNeeded(userId: string) {
   }
 }
 
-function getAllCredits(userId: string): Promise<Credit[]> {
+function getAllUserCredits(userId: string): Promise<Credit[]> {
   return getFirestore()
       .collection(`userDetails/${userId}/${CREDITS_COLLECTION}`)
       .orderBy("expiresAt", "asc")
@@ -63,7 +72,16 @@ function getAllCredits(userId: string): Promise<Credit[]> {
       );
 }
 
-function getAllBundles(userId: string): Promise<CreditBundle[]> {
+function getAllOrganizationCredits(organizationId: string): Promise<Credit[]> {
+  return getFirestore()
+      .collection(`organizations/${organizationId}/${CREDITS_COLLECTION}`)
+      .get()
+      .then((snapshot) =>
+        snapshot.docs.map((docSnapshot) => docSnapshot.data() as Credit)
+      );
+}
+
+function getAllUserBundles(userId: string): Promise<CreditBundle[]> {
   return getFirestore()
       .collection(`userDetails/${userId}/${BUNDLES_COLLECTION}`)
       .orderBy("createdAt", "desc")
@@ -73,10 +91,25 @@ function getAllBundles(userId: string): Promise<CreditBundle[]> {
       );
 }
 
-export async function getValidCredits(userId: string): Promise<Credit[]> {
-  const credits = await getAllCredits(userId);
+function getAllOrganizationBundles(organizationId: string): Promise<CreditBundle[]> {
+  return getFirestore()
+      .collection(`organizations/${organizationId}/${BUNDLES_COLLECTION}`)
+      .orderBy("createdAt", "desc")
+      .get()
+      .then((snapshot) =>
+        snapshot.docs.map((docSnapshot) => docSnapshot.data() as CreditBundle)
+      );
+}
 
-  return credits.filter(
+export async function getValidCredits(userId: string): Promise<Credit[]> {
+  const credits = await getAllUserCredits(userId);
+  const organization = await getCurrentOrganization(userId);
+
+  const organizationCredits = organization ?
+    await getAllOrganizationCredits(organization.id) :
+    [];
+
+  return [...credits, ...organizationCredits].filter(
       (credit) =>
         !credit.usedForRoomId &&
       (!credit.expiresAt ||
@@ -101,7 +134,7 @@ export async function getCreditForNewRoom(
 }
 
 export async function updateCreditUsage(
-    creditId: string,
+    credit: Credit,
     userId: string,
     roomId: string
 ) {
@@ -115,9 +148,12 @@ export async function updateCreditUsage(
       await sendEmail({...OUT_OF_CREDITS, to: user.email});
     }
   }
-  return getFirestore()
-      .doc(`userDetails/${userId}/${CREDITS_COLLECTION}/${creditId}`)
-      .update({usedForRoomId: roomId});
+
+  const creditPath = credit.organizationId ?
+    `organizations/${credit.organizationId}/${CREDITS_COLLECTION}/${credit.id}` :
+    `userDetails/${userId}/${CREDITS_COLLECTION}/${credit.id}`;
+
+  return getFirestore().doc(creditPath).update({usedForRoomId: roomId});
 }
 
 export async function hasReceivedWelcomeBundle(
@@ -207,6 +243,64 @@ export async function createCredits(
         return creditRef.set(credit);
       })
   );
+}
+
+export async function createOrganizationCreditBundle(
+    organizationId: string,
+    creditCount: number,
+    userId: string,
+    paymentId: string,
+    createdAt?: Date
+) {
+  const newBundleRef = await getFirestore()
+      .collection(`organizations/${organizationId}/${BUNDLES_COLLECTION}`)
+      .doc();
+
+  const creationTime = createdAt ?
+    Timestamp.fromDate(createdAt) :
+    (Timestamp.now() as any);
+
+  const bundle: CreditBundle = {
+    id: newBundleRef.id,
+    userId,
+    paymentId,
+    createdAt: creationTime,
+    name: BundleName.ORGANIZATION_BUNDLE,
+    displayName: `Organization credits - ${creditCount} pieces`,
+    creditCount,
+    expiresAt: null,
+  };
+
+  await newBundleRef.set(bundle);
+
+  await createOrganizationCredits(organizationId, bundle, creationTime);
+
+  return bundle;
+}
+
+export async function createOrganizationCredits(
+    organizationId: string,
+    bundle: CreditBundle,
+    createdAt: Timestamp
+) {
+  const batch = getFirestore().batch();
+  new Array(bundle.creditCount).fill("").forEach(() => {
+    const creditRef = getFirestore()
+        .collection(`organizations/${organizationId}/${CREDITS_COLLECTION}`)
+        .doc();
+    const credit: Credit = {
+      id: creditRef.id,
+      assignedToUserId: bundle.userId,
+      bundleId: bundle.id,
+      createdAt: createdAt as any,
+      organizationId,
+      expiresAt: null,
+      isPaidCredit: true,
+    };
+    batch.set(creditRef, credit);
+  });
+
+  await batch.commit();
 }
 
 function getCreditCountForBundle(bundleType: BundleName) {

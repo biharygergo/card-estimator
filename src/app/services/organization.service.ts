@@ -20,7 +20,14 @@ import {
   deleteDoc,
 } from '@angular/fire/firestore';
 import { InvitationData, Organization } from '../types';
-import { map, Observable, switchMap, of } from 'rxjs';
+import {
+  map,
+  Observable,
+  switchMap,
+  of,
+  distinctUntilChanged,
+  combineLatest,
+} from 'rxjs';
 import { FileUploadService } from './file-upload.service';
 import { PaymentService } from './payment.service';
 
@@ -164,7 +171,7 @@ export class OrganizationService {
     );
   }
 
-  getMyOrganization(): Observable<Organization | undefined> {
+  getMyOrganizations(): Observable<Organization[]> {
     const ref = collection(
       this.firestore,
       ORGANIZATION_COLLECTION
@@ -173,14 +180,33 @@ export class OrganizationService {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user) {
-          return of(undefined);
+          return of([]);
         }
         const q = query(ref, where('memberIds', 'array-contains', user.uid));
 
-        return collectionData<Organization>(q).pipe(
-          map((orgs) => (orgs.length ? orgs[0] : undefined))
-        );
+        return collectionData<Organization>(q).pipe();
       })
     );
+  }
+
+  getMyOrganization(): Observable<Organization | undefined> {
+    return combineLatest([
+      this.authService.getUserPreference().pipe(
+        map((pref) => pref?.activeOrganizationId),
+        distinctUntilChanged()
+      ),
+      this.getMyOrganizations(),
+    ]).pipe(
+      map(([activeOrgId, orgs]) => {
+        const selectedOrg = orgs.find((org) => org.id === activeOrgId);
+        return selectedOrg ?? orgs?.[0];
+      })
+    );
+  }
+
+  setSelectedOrganization(orgId: string) {
+    this.authService
+      .updateUserPreference({ activeOrganizationId: orgId })
+      .subscribe();
   }
 }

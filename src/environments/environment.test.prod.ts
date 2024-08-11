@@ -20,6 +20,8 @@ export const environment = {
     largeBundlePriceIdUsd: 'price_1Ol6SICG1hllVHnckSSOmarj',
     megaBundlePriceId: 'price_1OJHhaCG1hllVHncOsDUJ3Ae',
     megaBundlePriceIdUsd: 'price_1Ol6TKCG1hllVHncyhXvJZ1K',
+    orgBundlePriceId: 'price_1PmaW8CG1hllVHncND9hIWfd',
+    orgBundlePriceIdUsd: 'price_1PmaWYCG1hllVHnca39K5Xzg',
     cloudProjectNumber: '615966905854',
   };
   

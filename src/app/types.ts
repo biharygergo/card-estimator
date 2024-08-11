@@ -465,6 +465,7 @@ export interface UserPreference {
   updatedPricingModalShown?: boolean;
   aloneInRoomModalShown?: boolean;
   selectedIssueIntegrationProvider?: 'jira' | 'linear';
+  activeOrganizationId?: string;
 }
 
 export interface Credit {
@@ -475,6 +476,7 @@ export interface Credit {
   expiresAt: Timestamp | null;
   usedForRoomId?: string;
   isPaidCredit?: boolean;
+  organizationId?: string;
 }
 
 export interface CreditBundle {
@@ -499,6 +501,7 @@ export enum BundleName {
   LARGE_BUNDLE = 'LARGE_BUNDLE',
   MEGA_BUNDLE = 'MEGA_BUNDLE',
   MONTHLY_BUNDLE = 'MONTHLY_BUNDLE',
+  ORGANIZATION_BUNDLE = 'ORGANIZATION_BUNDLE'
 }
 
 export function getBundleTitle(bundleName: BundleName) {

@@ -13,19 +13,20 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleError(error: any): void {
     const chunkFailedMessage = /Loading chunk/;
     console.error('Received an error', error);
-
-    if (chunkFailedMessage.test(error.message)) {
+    const errorMessage = typeof error === 'string' ? error : error.message;
+  
+    if (chunkFailedMessage.test(errorMessage)) {
       this.showErrorToast(
         `There was an error while loading parts of the application. Please reload the page.`
       );
-    } else if (error.message?.includes('AppCheck')) {
+    } else if (errorMessage?.includes('AppCheck')) {
       this.showErrorToast(
         `We couldn't verify your identity with AppCheck and therefore your access was automatically blocked. ${error.code}`
       );
     } else if (
       (typeof error.code === 'string' &&
         error.code?.includes('network-request-failed')) ||
-      error.message?.includes('network-request-failed')
+      errorMessage?.includes('network-request-failed')
     ) {
       this.showErrorToast(
         'Network issue detected. Please check your connection and try again.'
@@ -37,10 +38,12 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   showErrorToast(error: any, message?: string) {
+    const errorMessage = typeof error === 'string' ? error : error.message;
+
     const toastMessage =
       message ??
       `An error occured, please try again or report this issue. ${
-        error.message ? `The error message is: ${error.message.slice(0, 150)}` : ''
+        errorMessage ? `The error message is: ${errorMessage.slice(0, 150)}` : ''
       }`;
 
     const snackbarRef = this.toastService.showMessage(

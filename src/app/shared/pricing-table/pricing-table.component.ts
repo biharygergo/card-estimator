@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, Inject, Input, OnInit, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,27 @@ import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.com
 import { MatDialogModule } from '@angular/material/dialog';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import {
+  combineLatest,
+  map,
+  shareReplay,
+  startWith,
+  take,
+  takeUntil,
+} from 'rxjs';
+import { OrganizationService } from 'src/app/services/organization.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 
 export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
@@ -106,26 +126,80 @@ const PLANS: PurchaseOption[] = [
     MatIconModule,
     MatDialogModule,
     MatButtonToggleModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCardModule,
+    MatTooltipModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    OrganizationSelectorComponent,
   ],
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss',
 })
-export class PricingTableComponent {
+export class PricingTableComponent implements OnInit {
   @Input({ required: true }) pageMode: 'modal' | 'page' = 'modal';
 
   readonly PLANS = PLANS;
   isLoadingStripe = false;
   isLoadingStripeForBundle: string;
   isPremium$ = this.paymentService.isPremiumSubscriber();
-  currencyControl = new FormControl<'eur'|'usd'>('usd', {nonNullable: true});
+  currencyControl = new FormControl<'eur' | 'usd'>('usd', {
+    nonNullable: true,
+  });
+  creditTypeSelector = new FormControl<'personal' | 'organization'>(
+    'personal',
+    { nonNullable: true }
+  );
+
+  purchaseForm = new FormGroup({
+    organizationId: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    creditCount: new FormControl<number>(150, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+
+  currencyShortSymbol = this.currencyControl.valueChanges.pipe(
+    startWith(() => this.currencyControl.value),
+    map((currency) => (currency === 'usd' ? '$' : '€'))
+  );
+
+  orgCreditAmountLabel$ = combineLatest([
+    this.currencyShortSymbol,
+    this.purchaseForm.controls.creditCount.valueChanges.pipe(startWith(150)),
+  ]).pipe(map(([currency, count]) => `1${currency} x ${count} credits`));
+
+  orgCreditTotalLabel$ = combineLatest([
+    this.currencyShortSymbol,
+    this.purchaseForm.controls.creditCount.valueChanges.pipe(startWith(150)),
+  ]).pipe(map(([currency, count]) => `${count}${currency}`));
+
+
+  selectedTabIndex = signal<number>(0);
+
+  BundleName = BundleName;
+
   constructor(
     private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
     private readonly linkService: LinkService,
-    @Inject(APP_CONFIG) public config: AppConfig,
+    private readonly destroyRef: DestroyRef,
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
+
+  ngOnInit() {
+    this.creditTypeSelector.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(creditType => {
+      if (creditType === 'organization') {
+        this.selectedTabIndex.set(0);
+        this.changeDetectorRef.markForCheck();
+      }
+    })
+  }
 
   async buyBundle(bundleName: BundleName) {
     this.isLoadingStripeForBundle = bundleName;
@@ -133,9 +207,30 @@ export class PricingTableComponent {
     await this.paymentService.buyBundle(bundleName, this.currencyControl.value);
   }
 
+  async buyOrganizationBundle() {
+    const formValue = this.purchaseForm.value;
+    if (
+      !formValue.organizationId ||
+      !formValue.creditCount
+    ) {
+      return;
+    }
+
+    this.isLoadingStripeForBundle = BundleName.ORGANIZATION_BUNDLE;
+    this.analyticsService.logClickedBuyBundle('pricing_table');
+    await this.paymentService.buyBundle(
+      BundleName.ORGANIZATION_BUNDLE,
+      this.currencyControl.value,
+      formValue.organizationId,
+      formValue.creditCount
+    );
+  }
+
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     this.analyticsService.logClickedSubscribeToPremium('pricing_table');
-    await this.paymentService.startSubscriptionToPremium(this.currencyControl.value);
+    await this.paymentService.startSubscriptionToPremium(
+      this.currencyControl.value
+    );
   }
 }

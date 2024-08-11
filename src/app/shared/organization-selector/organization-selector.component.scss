@@ -1,0 +1,11 @@
+@use "@angular/material" as mat;
+
+.org-selector {
+  @include mat.form-field-density(-3);
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+:host {
+  display: block;
+}

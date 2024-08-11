@@ -1,3 +1,4 @@
+@use "@angular/material" as mat;
 @import "../../common.scss";
 
 .page-wrapper {
@@ -19,7 +20,7 @@
   font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 2rem;
-  color: var(--title-on-light)
+  color: var(--title-on-light);
 }
 
 .plan-selector {
@@ -78,42 +79,6 @@
       }
     }
 
-    .image-wrapper {
-      aspect-ratio: 1/1;
-      background: var(--light-background-color);
-      border-radius: 24px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      @include smallScreen {
-        width: 50px;
-        height: 50px;
-        flex-shrink: 0;
-        margin-bottom: 0;
-        border-radius: 8px;
-      }
-    }
-
-    .plan-title {
-      color: var(--title-on-light);
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .plan-description {
-      color: #808ca1;
-      line-height: 1.5rem;
-      margin-bottom: 3rem;
-    }
-
     .plan-price {
       margin-bottom: 2rem;
       margin-top: auto;
@@ -135,6 +100,42 @@
       width: 100%;
     }
   }
+}
+
+.image-wrapper {
+  aspect-ratio: 1/1;
+  background: var(--light-background-color);
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include smallScreen {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    border-radius: 8px;
+  }
+}
+
+.plan-title {
+  color: var(--title-on-light);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.plan-description {
+  color: #808ca1;
+  line-height: 1.5rem;
+  margin-bottom: 3rem;
 }
 
 .features-list-container {
@@ -201,11 +202,77 @@
   left: 1rem;
 }
 
-.currency-selector {
-  display: flex;
-  justify-content: center;
+.pricing-configurator {
+  max-width: 500px;
+  margin: 0 auto;
   margin-bottom: 1rem;
-  mat-button-toggle {
-    min-width: 100px;
+
+  &-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+
+    @include mat.form-field-density(-5);
+
+    span {
+      margin: 8px 0;
+    }
+  }
+}
+
+.org-price-configurator {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 3rem;
+  &-content {
+    display: flex;
+
+    @include smallScreen() {
+      flex-direction: column;
+    }
+  }
+
+  &-image {
+    flex: 1;
+    padding: 1rem;
+
+    @include smallScreen() {
+      padding: 0;
+    }
+  }
+
+  &-config {
+    flex: 4;
+  }
+}
+
+.purchase-form {
+  @include mat.form-field-density(-3);
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .hint {
+    display: block;
+    color: #808ca1;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .summary {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid lightgrey;
+    margin: 2rem 0;
+    margin-bottom: 4px;
+    padding-bottom: 0.5rem;
+    .summary-total {
+      font-weight: 400;
+      font-size: 1.3rem;
+    }
   }
 }

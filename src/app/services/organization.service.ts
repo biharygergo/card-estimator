@@ -164,7 +164,7 @@ export class OrganizationService {
     );
   }
 
-  getMyOrganization(): Observable<Organization | undefined> {
+  getMyOrganizations(): Observable<Organization[]> {
     const ref = collection(
       this.firestore,
       ORGANIZATION_COLLECTION
@@ -177,10 +177,14 @@ export class OrganizationService {
         }
         const q = query(ref, where('memberIds', 'array-contains', user.uid));
 
-        return collectionData<Organization>(q).pipe(
-          map((orgs) => (orgs.length ? orgs[0] : undefined))
-        );
+        return collectionData<Organization>(q).pipe();
       })
+    );
+  }
+
+  getMyOrganization(): Observable<Organization | undefined> {
+    return this.getMyOrganizations().pipe(
+      map((orgs) => (orgs.length ? orgs[0] : undefined))
     );
   }
 }

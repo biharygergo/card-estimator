@@ -67,11 +67,20 @@ export class PaymentService {
         return currency === 'eur'
           ? environment.megaBundlePriceId
           : environment.megaBundlePriceIdUsd;
+      case BundleName.ORGANIZATION_BUNDLE:
+        return currency === 'eur'
+          ? environment.orgBundlePriceId
+          : environment.orgBundlePriceIdUsd;
       default:
         throw new Error(`No price id for ${bundleName}.`);
     }
   }
-  async buyBundle(bundleName: BundleName, currency: 'eur' | 'usd') {
+  async buyBundle(
+    bundleName: BundleName,
+    currency: 'eur' | 'usd',
+    organizationId?: string,
+    creditCount?: number
+  ) {
     const passes = await this.checkPrerequisites(
       'Before you buy a bundle, please log in or create a permanent account',
       'Purchasing a bundle requires you to open Planning Poker in your browser. You will now be redirected to planningpoker.live where you can finish the purchase flow.'
@@ -87,8 +96,13 @@ export class PaymentService {
       'checkout_sessions'
     );
 
-    const sessionRef = await addDoc(checkoutSessionsCollection, {
-      price: this.getPriceIdForBundle(bundleName, currency),
+    const checkoutDoc = {
+      line_items: [
+        {
+          price: this.getPriceIdForBundle(bundleName, currency),
+          quantity: creditCount ?? 1,
+        },
+      ],
       automatic_tax: true,
       allow_promotion_codes: true,
       tax_id_collection: true,
@@ -98,7 +112,14 @@ export class PaymentService {
       metadata: {
         bundleName,
       },
-    });
+    };
+
+    console.log(checkoutDoc);
+    if (organizationId) {
+      checkoutDoc.metadata['organizationId'] = organizationId;
+    }
+
+    const sessionRef = await addDoc(checkoutSessionsCollection, checkoutDoc);
 
     return new Promise((resolve, rejet) => {
       docData(sessionRef).subscribe((session) => {

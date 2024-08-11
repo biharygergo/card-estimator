@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, Inject, Input, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, Inject, Input, OnInit, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +31,7 @@ import {
 import { OrganizationService } from 'src/app/services/organization.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 
 export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
@@ -131,11 +132,12 @@ const PLANS: PurchaseOption[] = [
     MatTooltipModule,
     NgOptimizedImage,
     ReactiveFormsModule,
+    OrganizationSelectorComponent,
   ],
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss',
 })
-export class PricingTableComponent {
+export class PricingTableComponent implements OnInit {
   @Input({ required: true }) pageMode: 'modal' | 'page' = 'modal';
 
   readonly PLANS = PLANS;
@@ -176,9 +178,6 @@ export class PricingTableComponent {
     this.purchaseForm.controls.creditCount.valueChanges.pipe(startWith(150)),
   ]).pipe(map(([currency, count]) => `${count}${currency}`));
 
-  organizations$ = this.organizationService
-    .getMyOrganizations()
-    .pipe(shareReplay(1));
 
   selectedTabIndex = signal<number>(0);
 
@@ -188,20 +187,12 @@ export class PricingTableComponent {
     private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
     private readonly linkService: LinkService,
-    private readonly organizationService: OrganizationService,
     private readonly destroyRef: DestroyRef,
     private readonly changeDetectorRef: ChangeDetectorRef,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit() {
-    this.organizationService
-      .getMyOrganization()
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe((org) => {
-        this.purchaseForm.controls.organizationId.setValue(org.id ?? '');
-      });
-
     this.creditTypeSelector.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(creditType => {
       if (creditType === 'organization') {
         this.selectedTabIndex.set(0);

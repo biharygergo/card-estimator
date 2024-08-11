@@ -115,23 +115,12 @@
                   cost-effective team-wide planning.
                 </p>
                 <div class="purchase-form" [formGroup]="purchaseForm">
-                  <mat-form-field
-                    appearance="outline"
-                    subscriptSizing="dynamic"
-                  >
-                    <mat-label>Select your organization</mat-label>
-                    <mat-select formControlName="organizationId">
-                      @for(organization of organizations$ | async; track
-                      organization.id) {
-                      <mat-option [value]="organization.id">{{
-                        organization.name
-                      }}</mat-option>
-
-                      }
-                      <mat-option>Another org</mat-option>
-                    </mat-select>
-                    <mat-hint>Credits will be assigned to this org.</mat-hint>
-                  </mat-form-field>
+                  <planning-poker-organization-selector
+                    label="Select organization"
+                    hint="Credits will be assigned to this org."
+                    formControlName="organizationId"
+                    class="organization-selector"
+                  />
                   <mat-form-field
                     appearance="outline"
                     subscriptSizing="dynamic"

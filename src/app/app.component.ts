@@ -8,15 +8,23 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Meta, Title } from '@angular/platform-browser';
-import { NavigationEnd, ActivatedRoute, Router, ActivationEnd, RouterOutlet } from '@angular/router';
+import {
+  NavigationEnd,
+  ActivatedRoute,
+  Router,
+  ActivationEnd,
+  RouterOutlet,
+} from '@angular/router';
 import {
   combineLatest,
+  delay,
   distinctUntilChanged,
   filter,
   map,
   Observable,
   startWith,
   Subject,
+  take,
   takeUntil,
 } from 'rxjs';
 import { NavigationService } from './services/navigation.service';
@@ -27,11 +35,11 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: true,
-    imports: [RouterOutlet],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit, OnDestroy {
   subscriptionResult$: Observable<SubscriptionResult> =
@@ -112,15 +120,27 @@ export class AppComponent implements OnInit, OnDestroy {
         if (noIndex) {
           this.metaService.updateTag({
             name: 'robots',
-            content: 'noindex'
-          })
+            content: 'noindex',
+          });
         }
       });
 
     this.subscriptionResult$
-      .pipe(takeUntil(this.destroyed))
+      .pipe(delay(500), takeUntil(this.destroyed))
       .subscribe((result) => {
-        this.dialog.open(...subscriptionResultModalCreator({ result }));
+        const dialogRef = this.dialog.open(
+          ...subscriptionResultModalCreator({ result })
+        );
+        dialogRef
+          .afterClosed()
+          .pipe(take(1))
+          .subscribe(() => {
+            this.router.navigate([], {
+              relativeTo: this.activatedRoute,
+              queryParams: { subscriptionResult: undefined },
+              queryParamsHandling: 'merge',
+            });
+          });
       });
 
     this.onThemeShouldChange$
@@ -131,15 +151,9 @@ export class AppComponent implements OnInit, OnDestroy {
             this.renderer.removeClass(this.document.body, theme);
           });
 
-          this.renderer.addClass(
-            this.document.body,
-            themeValue
-          );
+          this.renderer.addClass(this.document.body, themeValue);
         } else {
-          this.renderer.removeClass(
-            this.document.body,
-            themeValue
-          );
+          this.renderer.removeClass(this.document.body, themeValue);
         }
       });
 

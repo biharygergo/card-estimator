@@ -13,7 +13,7 @@ export interface RoomAccessValue {
 }
 
 export function isAnonymousUser(userId: string): Promise<boolean> {
-  return getAuth().getUser(userId).then(user => !user.providerData?.length)
+  return getAuth().getUser(userId).then((user) => !user.providerData?.length);
 }
 
 export async function getCustomClaims(userId: string): Promise<CustomClaims> {

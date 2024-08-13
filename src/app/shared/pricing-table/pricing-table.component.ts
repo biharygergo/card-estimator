@@ -22,13 +22,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import {
   combineLatest,
+  defer,
   map,
-  shareReplay,
   startWith,
-  take,
-  takeUntil,
 } from 'rxjs';
-import { OrganizationService } from 'src/app/services/organization.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
@@ -163,10 +160,10 @@ export class PricingTableComponent implements OnInit {
     }),
   });
 
-  currencyShortSymbol = this.currencyControl.valueChanges.pipe(
-    startWith(() => this.currencyControl.value),
+  currencyShortSymbol = defer(() => this.currencyControl.valueChanges.pipe(
+    startWith(this.currencyControl.value),
     map((currency) => (currency === 'usd' ? '$' : '€'))
-  );
+  ));
 
   orgCreditAmountLabel$ = combineLatest([
     this.currencyShortSymbol,

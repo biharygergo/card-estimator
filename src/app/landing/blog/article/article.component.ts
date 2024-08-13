@@ -53,9 +53,6 @@ export class ArticleComponent {
     map(([articles, currentArticle]) =>
       articles
         .filter((article) => article.slug !== currentArticle.slug)
-        .map((value) => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value)
         .slice(0, 5)
     )
   );

@@ -12,6 +12,10 @@ export interface RoomAccessValue {
   roomId: string;
 }
 
+export function isAnonymousUser(userId: string): Promise<boolean> {
+  return getAuth().getUser(userId).then((user) => !user.providerData?.length);
+}
+
 export async function getCustomClaims(userId: string): Promise<CustomClaims> {
   const user = await getAuth().getUser(userId);
   const currentClaims: CustomClaims = user.customClaims || {};

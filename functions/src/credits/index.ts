@@ -2,7 +2,7 @@ import {Filter, Timestamp, getFirestore} from "firebase-admin/firestore";
 import {Credit, BundleName, CreditBundle, BundleWithCredits} from "../types";
 import * as moment from "moment";
 import {getAuth} from "firebase-admin/auth";
-import {isPremiumSubscriber} from "../shared/customClaims";
+import {isAnonymousUser, isPremiumSubscriber} from "../shared/customClaims";
 import {sendEmail} from "../email";
 import {ALMOST_OUT_OF_CREDITS, OUT_OF_CREDITS} from "./emails";
 import {getCurrentOrganization} from "../organizations";
@@ -51,7 +51,7 @@ export async function assignCreditsAsNeeded(userId: string) {
     );
   }
 
-  if (!(await hasReceivedMonthlyBundle(userId))) {
+  if (!(await isAnonymousUser(userId)) && !(await hasReceivedMonthlyBundle(userId))) {
     await createBundle(
         BundleName.MONTHLY_BUNDLE,
         userId,
@@ -334,7 +334,7 @@ function getBundleExpirationDate(
     case BundleName.WELCOME_BUNDLE_EXISTING_USER:
     case BundleName.MONTHLY_BUNDLE:
       return Timestamp.fromDate(
-          moment(creationDate.toDate()).add(3, "months").toDate()
+          moment(creationDate.toDate()).add(1, "months").toDate()
       );
     default:
       return null;

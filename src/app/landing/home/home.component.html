@@ -16,7 +16,7 @@ it now!</span
 />
 <section class="used-by-section">
   <div class="used-by-content">
-    <h2>Simplifies planning for agile teams around the world</h2>
+    <h3>Simplifies planning for agile teams around the world</h3>
     <div class="logo-carousel">
       <ul class="logo-carousel-track">
         @for (logo of logos; track $index; let i = $index) {
@@ -38,23 +38,26 @@ it now!</span
 </section>
 <section class="features-section">
   <div class="features-content">
-    <h2>Essential features for a smooth estimation session</h2>
+    <h3>Essential features for a smooth estimation session</h3>
     <planning-poker-features-preview />
   </div>
   <div class="see-more-features">
-    <mat-expansion-panel class="see-more-panel" (opened)="viewAllFeaturesOpened()">
+    <mat-expansion-panel
+      class="see-more-panel"
+      (opened)="viewAllFeaturesOpened()"
+    >
       <mat-expansion-panel-header class="see-more-panel-header">
         <mat-panel-title class="see-more-panel-title"
           >View all features</mat-panel-title
         >
       </mat-expansion-panel-header>
-      <planning-poker-features-items [loadVideos]="loadVideos"/>
+      <planning-poker-features-items [loadVideos]="loadVideos" />
     </mat-expansion-panel>
   </div>
 </section>
 <section class="demo-video-section">
   <div class="demo-video-section-content">
-    <h2>Get started in seconds and have the whole team involved</h2>
+    <h3>Get started in seconds and have the whole team involved</h3>
     <div class="video-container">
       <video
         #video
@@ -126,6 +129,36 @@ it now!</span
           </div>
         </mat-tab>
       </mat-tab-group>
+    </div>
+  </div>
+</section>
+<section class="knowledge-base-section">
+  <div class="knowledge-base-section-content">
+    <h3>Learn more about agile techniques & SCRUM poker</h3>
+    <div class="knowledge-base-articles">
+      @for(sample of knowledgeBaseSamples; track sample.slug) {
+      <article class="knowledge-base-articles-card">
+        <div class="knowledge-base-articles-card-image">
+          <img
+            [ngSrc]="sample.imageId"
+            placeholder
+            [alt]="sample.imageAlt"
+            fill
+            sizes="10wv"
+          />
+        </div>
+        <div class="knowledge-base-articles-card-content">
+          <h4>{{ sample.title }}</h4>
+          <p>{{ sample.description }}</p>
+          <a mat-stroked-button [routerLink]="'/knowledge-base/' + sample.slug"
+            >Read article</a
+          >
+        </div>
+      </article>
+      }
+      <a mat-stroked-button routerLink="/knowledge-base" class="view-all-button"
+        >View more articles in Knowledge Base</a
+      >
     </div>
   </div>
 </section>

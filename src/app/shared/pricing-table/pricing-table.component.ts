@@ -22,13 +22,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import {
   combineLatest,
+  defer,
   map,
-  shareReplay,
   startWith,
-  take,
-  takeUntil,
 } from 'rxjs';
-import { OrganizationService } from 'src/app/services/organization.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
@@ -67,7 +64,7 @@ const PLANS: PurchaseOption[] = [
     cloudinaryId: 'bundle_5',
     title: 'Welcome bundle',
     description:
-      'when you register and 1 free credit every month afterwards. Credits expire after two months & contains ads.',
+      'when you start and 1 free credit after registration every month. Starter credits expire after two months & contains ads.',
     creditAmount: 5,
     priceEuro: 0,
     priceDescription: 'assigned automatically',
@@ -163,10 +160,10 @@ export class PricingTableComponent implements OnInit {
     }),
   });
 
-  currencyShortSymbol = this.currencyControl.valueChanges.pipe(
-    startWith(() => this.currencyControl.value),
+  currencyShortSymbol = defer(() => this.currencyControl.valueChanges.pipe(
+    startWith(this.currencyControl.value),
     map((currency) => (currency === 'usd' ? '$' : '€'))
-  );
+  ));
 
   orgCreditAmountLabel$ = combineLatest([
     this.currencyShortSymbol,

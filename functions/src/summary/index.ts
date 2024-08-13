@@ -13,15 +13,15 @@ const vertexAi = new VertexAI({
   project: cloudProjectName ?? "card-estimator",
   location,
 });
-const model = "gemini-1.0-pro-001";
+const model = "gemini-1.5-flash-001";
 
 // Instantiate the models
 const generativeModel = vertexAi.preview.getGenerativeModel({
   model: model,
   generation_config: {
-    max_output_tokens: 2048,
+    max_output_tokens: 8192,
     temperature: 0.5,
-    top_p: 1,
+    top_p: 0.95,
   },
 });
 

@@ -8,7 +8,6 @@
   }
 }
 
-
 .used-by-section {
   padding-top: 5rem;
   background: var(--background-dark);
@@ -18,7 +17,7 @@
     max-width: 1000px;
     margin: 0 auto;
 
-    h2 {
+    h3 {
       color: #bfc6dc;
       text-align: center;
       margin-bottom: 4rem;
@@ -90,7 +89,7 @@
     max-width: 1000px;
     margin: 0 auto;
 
-    h2 {
+    h3 {
       color: #bfc6dc;
       text-align: center;
       margin-bottom: 4rem;
@@ -108,7 +107,7 @@
     max-width: 1200px;
     margin: 0 auto;
 
-    h2 {
+    h3 {
       color: #bfc6dc;
       text-align: center;
       margin-bottom: 4rem;
@@ -350,5 +349,74 @@
         order: 1;
       }
     }
+  }
+}
+
+.knowledge-base-section {
+  padding-top: 5rem;
+  background: var(--background-dark);
+
+  .knowledge-base-section-content {
+    padding: 24px 24px 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .knowledge-base-articles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .view-all-button {
+      color: #d9e2ff;
+    }
+  }
+
+  .knowledge-base-articles-card {
+    color: #d9e2ff;
+    background: #18325d;
+    border-radius: 20px;
+    display: flex;
+
+    max-width: calc(1000px - 48px);
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    overflow: hidden;
+
+    .knowledge-base-articles-card-image {
+      flex: 1 0 80px;
+      position: relative;
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .knowledge-base-articles-card-content {
+      flex: 5;
+      padding: 1rem;
+
+      h4 {
+        margin-top: 0;
+        font-size: 1.2rem;
+      }
+
+      p {
+        line-height: 1.2rem;
+      }
+
+      a {
+        margin-top: 1rem;
+        color: #d9e2ff;
+      }
+    }
+  }
+
+  h3 {
+    color: #bfc6dc;
+    text-align: center;
+    margin-bottom: 4rem;
+    font-size: 1.7rem;
   }
 }

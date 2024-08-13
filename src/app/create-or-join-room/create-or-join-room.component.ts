@@ -389,7 +389,9 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
                   });
               } else {
                 this.toastService.showMessage(
-                  `An error occured: ${e.message}. Please try again or report this is issue.`
+                  `An error occured: ${e.message}. Please try again or report this is issue.`,
+                  10000,
+                  'error'
                 );
                 console.error(e);
               }

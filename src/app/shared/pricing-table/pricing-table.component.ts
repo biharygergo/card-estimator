@@ -67,7 +67,7 @@ const PLANS: PurchaseOption[] = [
     cloudinaryId: 'bundle_5',
     title: 'Welcome bundle',
     description:
-      'when you register and 1 free credit every month afterwards. Credits expire after two months & contains ads.',
+      'when you start and 1 free credit after registration every month. Starter credits expire after two months & contains ads.',
     creditAmount: 5,
     priceEuro: 0,
     priceDescription: 'assigned automatically',

@@ -372,31 +372,52 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         switchMap((recurringMeetingId) =>
           from(this.createRoom(recurringMeetingId)).pipe(
             catchError((e) => {
-              if (e.details === 'error-no-credits') {
-                this.toastService
-                  .showMessage(
-                    '🤯 Oh-oh, it looks like you ran out of credits. Please top up your credits or wait for your next free monthly bundle to create new rooms.',
-                    10000,
-                    'error',
-                    'View my credits'
-                  )
-                  .onAction()
-                  .pipe()
-                  .subscribe(() => {
-                    this.dialog.open(
-                      ...avatarModalCreator({ openAtTab: 'subscription' })
+              return this.authService.user.pipe(
+                take(1),
+                switchMap((user) => {
+                  if (e.details === 'error-no-credits') {
+                    const isAnonymous = user.isAnonymous;
+                    const messagePart = isAnonymous
+                      ? 'Create a free permanent PlanningPoker.live account to get one free credit every month. Register now and try creating a room again.'
+                      : 'Please top up your credits or wait for your next free monthly bundle to create new rooms.';
+                    const actionMessage = isAnonymous
+                      ? 'Create an account'
+                      : 'View my credits';
+                    this.toastService
+                      .showMessage(
+                        '🤯 Oh-oh, it looks like you ran out of credits. ' +
+                          messagePart,
+                        10000,
+                        'error',
+                        actionMessage
+                      )
+                      .onAction()
+                      .pipe()
+                      .subscribe(() => {
+                        if (isAnonymous) {
+                          this.dialog.open(
+                            ...signUpOrLoginDialogCreator({
+                              intent: SignUpOrLoginIntent.LINK_ACCOUNT,
+                            })
+                          );
+                        } else {
+                          this.dialog.open(
+                            ...avatarModalCreator({ openAtTab: 'subscription' })
+                          );
+                        }
+                      });
+                  } else {
+                    this.toastService.showMessage(
+                      `An error occured: ${e.message}. Please try again or report this is issue.`,
+                      10000,
+                      'error'
                     );
-                  });
-              } else {
-                this.toastService.showMessage(
-                  `An error occured: ${e.message}. Please try again or report this is issue.`,
-                  10000,
-                  'error'
-                );
-                console.error(e);
-              }
-              this.isBusy.next(false);
-              return of({});
+                    console.error(e);
+                  }
+                  this.isBusy.next(false);
+                  return of({});
+                })
+              );
             })
           )
         ),

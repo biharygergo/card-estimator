@@ -32,6 +32,7 @@ import {
   takeUntil,
   tap,
   timeInterval,
+  withLatestFrom,
 } from 'rxjs';
 import {
   CardSet,
@@ -515,28 +516,34 @@ export class RoomComponent implements OnInit, OnDestroy {
           .subscribe();
       });
 
-    this.creditsAlert$.pipe(takeUntil(this.destroy)).subscribe((credits) => {
-      let message = '';
-      if (credits === 1) {
-        message = 'You have just 1 credit remaining. Top up your credits now!';
-      } else if (credits === 0) {
-        message =
-          'You ran out of credits. Top up your credits before your next planning session!';
-      }
+    this.creditsAlert$
+      .pipe(withLatestFrom(this.user$), takeUntil(this.destroy))
+      .subscribe(([credits, user]) => {
+        let message = '';
+        const creditMessage = user.isAnonymous
+          ? 'Get one free credit every month when you create a permanent account.'
+          : 'Top up your credits or choose our unlimited subscription.';
+        if (credits === 1) {
+          message =
+            'You have just 1 credit remaining. ' + creditMessage;
+        } else if (credits === 0) {
+          message =
+            'You ran out of credits. ' + creditMessage;
+        }
 
-      const ref = this.toastService.showMessage(
-        message,
-        10000,
-        'info',
-        'Top up credits'
-      );
-      ref
-        .onAction()
-        .pipe(take(1))
-        .subscribe(() => {
-          this.dialog.open(...pricingModalCreator());
-        });
-    });
+        const ref = this.toastService.showMessage(
+          message,
+          10000,
+          'info',
+          'Top up credits'
+        );
+        ref
+          .onAction()
+          .pipe(take(1))
+          .subscribe(() => {
+            this.dialog.open(...pricingModalCreator());
+          });
+      });
 
     this.roomDataService.onRoomRoundCountUpdated$
       .pipe(filter((count) => count >= ROOM_SIZE_LIMIT))

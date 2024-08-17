@@ -1,0 +1,15 @@
+.not-found-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background: var(--light-background-color);
+    text-align: center;
+    .not-found-image {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 24px;
+        margin: 1rem;
+    }
+}

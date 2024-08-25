@@ -5,6 +5,7 @@ import {
   Inject,
   Input,
   OnInit,
+  Optional,
   signal,
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
@@ -195,11 +196,11 @@ export class PricingTableComponent implements OnInit {
     private readonly destroyRef: DestroyRef,
     private readonly changeDetectorRef: ChangeDetectorRef,
     @Inject(APP_CONFIG) public config: AppConfig,
-    @Inject(MAT_DIALOG_DATA) private readonly dialogData: PricingDialogData,
+    @Optional() @Inject(MAT_DIALOG_DATA) private readonly dialogData: PricingDialogData,
   ) {}
 
   ngOnInit() {
-    if (this.dialogData.selectedTab) {
+    if (this.dialogData?.selectedTab) {
       switch (this.dialogData.selectedTab) {
         case 'credits': 
           this.selectedTabIndex.set(0);

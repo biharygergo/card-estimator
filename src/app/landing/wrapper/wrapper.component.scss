@@ -10,15 +10,40 @@
 .footer {
   padding: 2rem 1rem;
 
-  .links {
+  .link-columns {
     display: flex;
-    gap: 1rem;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 3rem;
 
-    a {
-      color: #d9e2ff;
-      text-decoration: none;
+    @media screen and (max-width: 500px) {
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .link-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 100px;
+
+      @media screen and (max-width: 500px) {
+        flex-basis: 100%;
+        text-align: center;
+        max-width: unset;
+
+      }
+
+      .link-column-title {
+        font-weight: bold;
+        color: #d9e2ff;
+      }
+
+      a {
+        color: #d9e2ff;
+        text-decoration: none;
+        font-size: 13px;
+      }
     }
   }
 }

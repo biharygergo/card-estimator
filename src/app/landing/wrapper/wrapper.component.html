@@ -1,14 +1,45 @@
 <planning-poker-landing-header></planning-poker-landing-header>
 <div class="content">
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 <div class="footer">
-    <div class="links">
-        <a routerLink="/terms">Terms</a>
-        <a routerLink="/privacy">Privacy</a>
-        <a routerLink="/faq">FAQ</a>
-        <a href="https://github.com/biharygergo/card-estimator">Github</a>
-        <a routerLink="/knowledge-base">Knowledge base</a>
+  <div class="link-columns">
+    <div class="logo-column">
+      <img
+        ngSrc="Logo_Outline"
+        placeholder
+        alt="Planning Poker black and white logo"
+        width="50"
+        height="50"
+      />
     </div>
+    <div class="link-column">
+      <span class="link-column-title">Integrations</span>
+      <a routerLink="/teams">Microsoft Teams</a>
+      <a routerLink="/zoom">Zoom Meetings</a>
+      <a routerLink="/webex">Cisco Webex</a>
+      <a routerLink="/features" fragment="jira">Jira</a>
+      <a routerLink="/features" fragment="linear">Linear</a>
+    </div>
+
+    <div class="link-column">
+      <span class="link-column-title">Articles</span>
+      <a routerLink="/faq">FAQ</a>
+      <a routerLink="/knowledge-base">Knowledge base</a>
+      <a
+        routerLink="/knowledge-base/planning-poker-guide-agile-estimation-techniques"
+        >The Definitive Guide to Planning Poker</a
+      >
+      <a routerLink="/knowledge-base/essential-scrum-master-tools"
+        >5 Essential Scrum Master Tools</a
+      >
+    </div>
+    <div class="link-column">
+      <span class="link-column-title">Policies</span>
+      <a routerLink="/terms">Terms</a>
+      <a routerLink="/privacy">Privacy</a>
+      <a href="https://github.com/biharygergo/card-estimator">Github</a>
+    </div>
+  </div>
 </div>
 <zoom-app-banner bannerLocation="banner_landing"></zoom-app-banner>

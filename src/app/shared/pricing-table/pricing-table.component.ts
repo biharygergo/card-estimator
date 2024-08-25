@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, DestroyRef, Inject, Input, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  Inject,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,7 +16,7 @@ import { LinkService } from 'src/app/services/link.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { BundleName } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
@@ -20,17 +28,15 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
-import {
-  combineLatest,
-  defer,
-  map,
-  startWith,
-} from 'rxjs';
+import { combineLatest, defer, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
+interface PricingDialogData {
+  selectedTab?: 'credits' | 'premium' | 'org-credits';
+}
 
-export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
+export const pricingModalCreator = (config: PricingDialogData = {}): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
   {
     id: 'pricingModal',
@@ -38,6 +44,7 @@ export const pricingModalCreator = (): ModalCreator<PricingTableComponent> => [
     maxHeight: '100vh',
     width: '100%',
     panelClass: 'full-screen-modal',
+    data: config
   },
 ];
 
@@ -160,10 +167,12 @@ export class PricingTableComponent implements OnInit {
     }),
   });
 
-  currencyShortSymbol = defer(() => this.currencyControl.valueChanges.pipe(
-    startWith(this.currencyControl.value),
-    map((currency) => (currency === 'usd' ? '$' : '€'))
-  ));
+  currencyShortSymbol = defer(() =>
+    this.currencyControl.valueChanges.pipe(
+      startWith(this.currencyControl.value),
+      map((currency) => (currency === 'usd' ? '$' : '€'))
+    )
+  );
 
   orgCreditAmountLabel$ = combineLatest([
     this.currencyShortSymbol,
@@ -175,7 +184,6 @@ export class PricingTableComponent implements OnInit {
     this.purchaseForm.controls.creditCount.valueChanges.pipe(startWith(150)),
   ]).pipe(map(([currency, count]) => `${count}${currency}`));
 
-
   selectedTabIndex = signal<number>(0);
 
   BundleName = BundleName;
@@ -186,16 +194,32 @@ export class PricingTableComponent implements OnInit {
     private readonly linkService: LinkService,
     private readonly destroyRef: DestroyRef,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    @Inject(APP_CONFIG) public config: AppConfig
+    @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(MAT_DIALOG_DATA) private readonly dialogData: PricingDialogData,
   ) {}
 
   ngOnInit() {
-    this.creditTypeSelector.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(creditType => {
-      if (creditType === 'organization') {
-        this.selectedTabIndex.set(0);
-        this.changeDetectorRef.markForCheck();
+    if (this.dialogData.selectedTab) {
+      switch (this.dialogData.selectedTab) {
+        case 'credits': 
+          this.selectedTabIndex.set(0);
+          break;
+        case 'premium':
+          this.selectedTabIndex.set(1);
+          break;
+        case 'org-credits':
+          this.creditTypeSelector.setValue('organization');
+          break;
       }
-    })
+    }
+    this.creditTypeSelector.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((creditType) => {
+        if (creditType === 'organization') {
+          this.selectedTabIndex.set(0);
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   async buyBundle(bundleName: BundleName) {
@@ -206,10 +230,7 @@ export class PricingTableComponent implements OnInit {
 
   async buyOrganizationBundle() {
     const formValue = this.purchaseForm.value;
-    if (
-      !formValue.organizationId ||
-      !formValue.creditCount
-    ) {
+    if (!formValue.organizationId || !formValue.creditCount) {
       return;
     }
 

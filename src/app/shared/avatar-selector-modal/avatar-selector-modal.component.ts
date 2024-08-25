@@ -422,6 +422,12 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     this.dialog.open(...pricingModalCreator());
   }
 
+  openPremiumModal() {
+    this.analytics.logClickedLearnMorePremium('profile');
+    this.dialog.open(...pricingModalCreator({selectedTab: 'premium'}));
+
+  }
+
   openManageEmailModal() {
     this.dialog.open(...manageEmailModalCreator());
   }

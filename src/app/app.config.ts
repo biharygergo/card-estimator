@@ -19,12 +19,12 @@ import {
   provideFirestore,
   initializeFirestore,
   connectFirestoreEmulator,
-  getFirestore,
 } from '@angular/fire/firestore';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import {
   withInterceptorsFromDi,
   provideHttpClient,
+  withFetch,
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -36,7 +36,6 @@ import { provideCloudinaryLoader } from '@angular/common';
 import {
   provideClientHydration,
   BrowserModule,
-  bootstrapApplication,
 } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { GlobalErrorHandler } from './error-handler';
@@ -56,7 +55,7 @@ export const appConfig: ApplicationConfig = {
       MatSnackBarModule,
       MatMenuModule,
       MatDialogModule,
-      BrowserModule.withServerTransition({ appId: 'serverApp' })
+      BrowserModule
     ),
     ScreenTrackingService,
     {
@@ -76,18 +75,16 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withFetch()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
-      let firestore;
+      const app = initializeApp(environment.firebase);
+      const firestore = initializeFirestore(app, {
+        experimentalAutoDetectLongPolling: true,
+      });
       if (environment.useEmulators) {
-        const app = initializeApp(environment.firebase);
-        firestore = initializeFirestore(app, {
-          experimentalAutoDetectLongPolling: true,
-        });
         connectFirestoreEmulator(firestore, 'localhost', 8080);
       } else {
-        firestore = getFirestore();
       }
       return firestore;
     }),

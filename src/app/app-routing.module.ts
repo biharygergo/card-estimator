@@ -91,7 +91,7 @@ const routes: Routes = [
       import('./landing/not-found/not-found.component').then(
         (mod) => mod.NotFoundComponent
       ),
-    data: { title: 'Page not found', supportsTheme: true, noIndex: true },
+    data: { title: 'Page not found', supportsTheme: false, noIndex: true },
   },
 ];
 

@@ -103,8 +103,12 @@
                   </p>
                   }
                   <p class="next-credit">
-                    Next free credit on {{ nextMonthStart | date }}
+                    @if (!user.isAnonymous) { Next free credit on
+                    {{ nextMonthStart | date }}
+                    } @else { Get one free credit every month by signing up for
+                    an account! }
                   </p>
+
                   } } @else {
                   <div class="loading-spinner-container">
                     <mat-progress-spinner
@@ -191,7 +195,7 @@
               mat-stroked-button
               color="primary"
               class="learn-more-button"
-              (click)="openLearnMore()"
+              (click)="openPremiumModal()"
               [disabled]="paymentsService.isSubscriptionDisabled"
             >
               {{

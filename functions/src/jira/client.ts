@@ -90,16 +90,24 @@ export async function getActiveJiraIntegration(userId: string): Promise<{jiraInt
   });
 
   if (tokenSet.expired()) {
-    const client = new JiraClient();
-    await client.initializeClient();
+    try {
+      const client = new JiraClient();
+      await client.initializeClient();
 
-    const updatedToken = await client.refreshToken(tokenSet.refresh_token!);
-    await jiraIntegrationRef.ref.update({
-      accessToken: updatedToken.access_token,
-      refreshToken: updatedToken.refresh_token,
-      expiresAt: updatedToken.expires_at,
-    });
-    tokenSet = updatedToken;
+      const updatedToken = await client.refreshToken(tokenSet.refresh_token!);
+      await jiraIntegrationRef.ref.update({
+        accessToken: updatedToken.access_token,
+        refreshToken: updatedToken.refresh_token,
+        expiresAt: updatedToken.expires_at,
+      });
+      tokenSet = updatedToken;
+    } catch (e: any) {
+      if (e.message?.includes("refresh_token is invalid")) {
+        throw new Error("Your refresh token is invalid. Please reconnect JIRA from the Integrations menu.");
+      }
+
+      throw e;
+    }
   }
 
   const activeResource: JiraResource =

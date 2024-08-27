@@ -11,7 +11,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   ) {}
 
   handleError(error: any): void {
-    const chunkFailedMessage = /Loading chunk/;
+    const chunkFailedMessage = /Failed to fetch dynamically imported module/;
     console.error('Received an error', error);
     const errorMessage = typeof error === 'string' ? error : error.message;
   
@@ -23,6 +23,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.showErrorToast(
         `We couldn't verify your identity with AppCheck and therefore your access was automatically blocked. ${error.code}`
       );
+      return;
     } else if (
       (typeof error.code === 'string' &&
         error.code?.includes('network-request-failed')) ||
@@ -31,6 +32,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.showErrorToast(
         'Network issue detected. Please check your connection and try again.'
       );
+      return;
     } else {
       this.showErrorToast(error);
     }

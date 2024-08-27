@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {getActiveJiraIntegration} from "./client";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
@@ -54,6 +54,9 @@ export async function searchJira(
         })
     );
   } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 400) {
+      return [];
+    }
     captureError(error);
     console.error(error);
     throw new functions.https.HttpsError(

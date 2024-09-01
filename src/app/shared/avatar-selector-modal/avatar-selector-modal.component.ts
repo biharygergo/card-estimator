@@ -13,8 +13,22 @@ import {
 } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
-import { FormControl, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MatDialog,
+  MatDialogConfig,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
+import {
+  FormControl,
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   PaymentService,
@@ -29,9 +43,24 @@ import {
   signUpOrLoginDialogCreator,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { manageEmailModalCreator } from '../manage-email-modal/manage-email-modal.component';
-import { AsyncPipe, UpperCasePipe, TitleCasePipe, DatePipe } from '@angular/common';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelActionRow } from '@angular/material/expansion';
-import { MatChip, MatChipListbox, MatChipOption } from '@angular/material/chips';
+import {
+  AsyncPipe,
+  UpperCasePipe,
+  TitleCasePipe,
+  DatePipe,
+} from '@angular/common';
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelActionRow,
+} from '@angular/material/expansion';
+import {
+  MatChip,
+  MatChipListbox,
+  MatChipOption,
+} from '@angular/material/chips';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -88,6 +117,7 @@ const createAvatars = (
   facialHair: string,
   hair: string,
   skinTone: string,
+  hairColor: string,
   seed?: string
 ): Avatar[] => {
   const avatars: Avatar[] = [];
@@ -106,7 +136,7 @@ const createAvatars = (
       name: `Avatar ${i + 1}`,
       url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${
         seed ?? ''
-      }${i}&style=circle&backgroundColor=ffffff&mouth=default,smile&eyebrows=default,defaultNatural,flatNatural,raisedExcited,raisedExcitedNatural&eyes=default,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}`,
+      }${i}&style=circle&backgroundColor=ffffff&mouth=default,smile&eyebrows=default,defaultNatural,flatNatural,raisedExcited,raisedExcitedNatural&eyes=default,eyeRoll,happy,hearts,side,squint,surprised,wink,winkWacky&top=${hair}&skinColor=${skinTone}&hairColor=${hairColor}`,
     });
   }
   return avatars;
@@ -144,6 +174,28 @@ const skinToneOptions: SelectOption[] = [
   'ffdbb4',
 ].map((colorCode) => ({ value: colorCode, label: colorCode }));
 
+const hairColorOptions: SelectOption[] = [
+  // Natural Hair Colors
+  "2c1b18",
+  "4a312c",
+  "724133",
+  "a55728",
+  "b58143",
+  "c93305",
+  "d6b370",
+  "e8e1e1",
+  "ecdcbf",
+  "f59797",
+  "ffffff",
+
+  "800080", // Purple
+  "0000ff", // Blue
+  "ff00ff", // Pink
+  "008000", // Green
+  "008080", // Teal
+  "ffa500", // Orange
+].map((colorCode) => ({ value: colorCode, label: colorCode }));
+
 const facialHairOptions: SelectOption[] = [
   {
     label: 'None',
@@ -164,40 +216,40 @@ interface SelectOption {
 export const AVATAR_SELECTOR_MODAL = 'avatar-selector-modal';
 const AVATAR_COUNT = 39;
 @Component({
-    selector: 'app-avatar-selector-modal',
-    templateUrl: './avatar-selector-modal.component.html',
-    styleUrls: ['./avatar-selector-modal.component.scss'],
-    standalone: true,
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatTabGroup,
-        MatTab,
-        AnonymousUserBannerComponent,
-        MatButton,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        FormsModule,
-        ReactiveFormsModule,
-        MatIcon,
-        MatProgressSpinner,
-        MatChip,
-        MatAccordion,
-        MatExpansionPanel,
-        MatExpansionPanelHeader,
-        MatExpansionPanelTitle,
-        MatChipListbox,
-        MatChipOption,
-        MatExpansionPanelActionRow,
-        MatIconButton,
-        MatDialogActions,
-        MatDialogClose,
-        AsyncPipe,
-        UpperCasePipe,
-        TitleCasePipe,
-        DatePipe,
-    ],
+  selector: 'app-avatar-selector-modal',
+  templateUrl: './avatar-selector-modal.component.html',
+  styleUrls: ['./avatar-selector-modal.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatTabGroup,
+    MatTab,
+    AnonymousUserBannerComponent,
+    MatButton,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIcon,
+    MatProgressSpinner,
+    MatChip,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatChipListbox,
+    MatChipOption,
+    MatExpansionPanelActionRow,
+    MatIconButton,
+    MatDialogActions,
+    MatDialogClose,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe,
+  ],
 })
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   selectedTabIndex = { profile: 0, subscription: 1, avatar: 2 }[
@@ -207,6 +259,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   facialHairOptions: SelectOption[] = facialHairOptions;
   hairOptions: SelectOption[] = hairOptions;
   skinToneOptions: SelectOption[] = skinToneOptions;
+  hairColorOptions: SelectOption[] = hairColorOptions;
 
   selectedFacialHairOption = facialHairOptions[1].value;
   selectedHairOptions = hairOptions.reduce((acc, curr) => {
@@ -215,6 +268,10 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   }, {});
   selectedSkinToneOptions = skinToneOptions.reduce((acc, curr) => {
     acc[curr.value] = true;
+    return acc;
+  }, {});
+  selectedHairColorOptions = hairColorOptions.reduce((acc, curr, index) => {
+    acc[curr.value] =  index <= 10 ? true : false;
     return acc;
   }, {});
 
@@ -226,6 +283,9 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       .join(','),
     Object.keys(this.selectedSkinToneOptions)
       .filter((key) => this.selectedSkinToneOptions[key])
+      .join(','),
+    Object.keys(this.selectedHairColorOptions)
+      .filter((key) => this.selectedHairColorOptions[key])
       .join(',')
   );
   user: User | undefined;
@@ -382,6 +442,9 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       Object.keys(this.selectedSkinToneOptions)
         .filter((key) => this.selectedSkinToneOptions[key])
         .join(','),
+      Object.keys(this.selectedHairColorOptions)
+        .filter((key) => this.selectedHairColorOptions[key])
+        .join(','),
       Math.random().toString()
     );
     this.analytics.logClickedRandomizeAvatars();
@@ -424,8 +487,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   openPremiumModal() {
     this.analytics.logClickedLearnMorePremium('profile');
-    this.dialog.open(...pricingModalCreator({selectedTab: 'premium'}));
-
+    this.dialog.open(...pricingModalCreator({ selectedTab: 'premium' }));
   }
 
   openManageEmailModal() {

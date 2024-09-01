@@ -165,8 +165,7 @@
                 <strong>{{
                   subscription.cancel_at_period_end
                     ? "Ends at"
-                    : "Next
-                          payment at"
+                    : "Next payment at"
                 }}</strong>
                 <span>{{
                   subscription.current_period_end.toMillis() | date : "medium"
@@ -245,6 +244,27 @@
                           !selectedHairOptions[option.value]
                       "
                       >{{ option.label }}</mat-chip-option
+                    >
+                    }
+                  </mat-chip-listbox>
+                  <span>Hair color</span>
+                  <mat-chip-listbox
+                    aria-label="Hair color options"
+                    class="chip-selector"
+                    multiple
+                    selectable
+                  >
+                    @for (option of hairColorOptions; track option) {
+                    <mat-chip-option
+                      [selected]="
+                        selectedHairColorOptions[option.value] === true
+                      "
+                      (click)="
+                        selectedHairColorOptions[option.value] =
+                          !selectedHairColorOptions[option.value]
+                      "
+                      [style.backgroundColor]="'#' + option.value"
+                      >#{{ option.label }}</mat-chip-option
                     >
                     }
                   </mat-chip-listbox>

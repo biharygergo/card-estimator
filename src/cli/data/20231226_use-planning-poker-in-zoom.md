@@ -14,8 +14,8 @@ As remote work continues to evolve, the need for effective collaboration tools b
 
 ### Integrating PlanningPoker.live with Zoom
 
-**Step 1: Visit [planningpoker.live/zoom](https://planningpoker.live/zoom)**
-   - Start by navigating to planningpoker.live/zoom in your preferred web browser.
+**Step 1: Visit [planningpoker.live/integrations/zoom](https://planningpoker.live/integrations/zoom)**
+   - Start by navigating to planningpoker.live/integrations/zoom in your preferred web browser.
 
 **Step 2: Authorize the App and Install the Extension**
    - Click the "Install in Zoom" link on the Planning Poker Zoom integration page.

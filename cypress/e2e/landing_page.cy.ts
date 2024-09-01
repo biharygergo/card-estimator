@@ -31,20 +31,20 @@ describe('Landing page', () => {
     cy.wait(500);
     cy.contains('Integrations').click();
     cy.contains('Microsoft Teams').click();
-    cy.location('pathname').should('eq', '/teams');
+    cy.location('pathname').should('eq', '/integrations/teams');
   })
 
   it('can go to the Zoom page', () => {
     cy.wait(500);
     cy.contains('Integrations').click();
     cy.contains('Zoom Meetings').click();
-    cy.location('pathname').should('eq', '/zoom');
+    cy.location('pathname').should('eq', '/integrations/zoom');
   })
 
   it('can go to the Webex page', () => {
     cy.wait(500);
     cy.contains('Integrations').click();
     cy.contains('Webex Meetings').click();
-    cy.location('pathname').should('eq', '/webex');
+    cy.location('pathname').should('eq', '/integrations/webex');
   })
 });

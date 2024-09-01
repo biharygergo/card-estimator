@@ -171,6 +171,33 @@
             }
           ]
         }
+      ],
+      "redirects": [
+        {
+          "source": "/zoom",
+          "destination": "/integrations/zoom",
+          "type": 301
+        },
+        {
+          "source": "/teams",
+          "destination": "/integrations/teams",
+          "type": 301
+        },
+        {
+          "source": "/webex",
+          "destination": "/integrations/webex",
+          "type": 301
+        },
+        {
+          "source": "/terms",
+          "destination": "/policies/terms",
+          "type": 301
+        },
+        {
+          "source": "/privacy",
+          "destination": "/policies/privacy",
+          "type": 301
+        }
       ]
     }
   ],

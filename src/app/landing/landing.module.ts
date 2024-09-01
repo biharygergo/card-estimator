@@ -61,17 +61,17 @@ const routes: Routes = [
     },
   },
   {
-    path: 'privacy',
+    path: 'policies/privacy',
     component: PrivacyComponent,
     data: { title: 'Privacy Policy' },
   },
   {
-    path: 'terms',
+    path: 'policies/terms',
     component: TermsComponent,
     data: { title: 'Terms and Conditions' },
   },
   {
-    path: 'zoom',
+    path: 'integrations/zoom',
     component: ZoomComponent,
     data: {
       title: 'Planning Poker for Zoom Meetings',
@@ -81,7 +81,7 @@ const routes: Routes = [
     },
   },
   {
-    path: 'webex',
+    path: 'integrations/webex',
     component: WebexComponent,
     data: {
       title: 'Planning Poker for Webex Meetings',
@@ -91,7 +91,7 @@ const routes: Routes = [
     },
   },
   {
-    path: 'teams',
+    path: 'integrations/teams',
     component: TeamsComponent,
     data: {
       title: 'Planning Poker for Microsoft Teams',

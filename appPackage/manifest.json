@@ -7,8 +7,8 @@
     "developer": {
         "name": "Gergely Bihary E.V.",
         "websiteUrl": "${{TAB_ENDPOINT}}",
-        "privacyUrl": "${{TAB_ENDPOINT}}/privacy",
-        "termsOfUseUrl": "${{TAB_ENDPOINT}}/terms"
+        "privacyUrl": "${{TAB_ENDPOINT}}/policies/privacy",
+        "termsOfUseUrl": "${{TAB_ENDPOINT}}/policies/terms"
     },
     "icons": {
         "color": "color.png",

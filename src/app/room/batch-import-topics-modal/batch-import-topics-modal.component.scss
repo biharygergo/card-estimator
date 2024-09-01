@@ -1,0 +1,26 @@
+.issue-search {
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.results {
+  .issue-box {
+    display: flex;
+    align-items: center;
+    background: var(--highlight-background-color);
+    border-radius: 8px;
+    padding: 0.5rem 0.25rem;
+    margin-bottom: 4px;
+  }
+}
+
+.selected-issues-text {
+  color: var(--mat-card-subtitle-text-color);
+  margin-right: auto;
+}
+
+.spinner {
+  margin: 2rem auto;
+}

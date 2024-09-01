@@ -1,32 +1,78 @@
 <h1 mat-dialog-title class="dialog-title">Batch import</h1>
 <div mat-dialog-content>
   <p class="disclaimer">
-    Import multiple rounds from your selected task management solution.
+    Import multiple issues from your selected task management solution. You can
+    adjust the order of voting from the issues sidebar after importing.
   </p>
   <div class="tab-content">
     <div class="tab-section">
-        <div class="issue-search">
-            <mat-form-field>
-                <mat-label>Search issues</mat-label>
-            </mat-form-field>
-        </div>
-        <div class="results">
-            @for(issue of searchedIssues(); track issue.id) {
-                <div class="issue-box">
-                    {{ issue.title }}
-                </div>
-            }
-            @for(issue of recentIssues(); track issue.id) {
-                <div class="issue-box">
-                    {{ issue.title }}
-                </div>
-            }
-            @for(issue of selectedIssues(); track issue.id) {
-                <div class="issue-box">
-                    {{ issue.title }}
-                </div>
-            }
-        </div>
+      <div class="issue-search" [formGroup]="searchForm">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <input
+            matInput
+            placeholder="Enter issue filter"
+            formControlName="query"
+          />
+          <mat-label>Filter</mat-label>
+        </mat-form-field>
+      </div>
+      <button mat-flat-button (click)="onSubmitSearch.next()">Search</button>
+      <button
+        mat-button
+        (click)="onClearSearch.next()"
+        [disabled]="!isSearchShown()"
+      >
+        Clear
+      </button>
+    </div>
+    <div class="tab-section">
+      <div class="results">
+        <mat-chip-option
+          [selected]="isOnlySelectedToggled()"
+          (selectionChange)="
+            isOnlySelectedToggled.set(!isOnlySelectedToggled())
+          "
+          >Show selected issues</mat-chip-option
+        >
+
+        @if(isLoading()) {
+        <mat-progress-spinner
+          mode="indeterminate"
+          [diameter]="30"
+          class="spinner"
+        />
+        } @else {
+        <h4>{{ visibleIssues().label }}</h4>
+        @for(issue of visibleIssues().issues; track issue.id) {
+        <ng-container *ngTemplateOutlet="issueTemplate; context: { issue }" />
+        } @empty {
+        <p>{{ visibleIssues().empty }}</p>
+        } }
+        <ng-template #issueTemplate let-issue="issue">
+          <div class="issue-box">
+            <div class="issue-box--checkmark">
+              <mat-checkbox
+                [checked]="selectedIssueIdsMap[issue.id]"
+                (change)="toggleSelectedIssue(issue)"
+              />
+            </div>
+            {{ issue.summary }}
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>
+<mat-dialog-actions>
+  <span class="selected-issues-text">
+    {{ selectedIssues().length | i18nPlural : issuesPlural }}
+  </span>
+  <button mat-button matDialogClose cdkFocusInitial>Cancel</button>
+  <button
+    mat-flat-button
+    cdkFocusInitial
+    [disabled]="selectedIssues().length === 0"
+  >
+    Import
+  </button>
+</mat-dialog-actions>

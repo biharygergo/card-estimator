@@ -114,19 +114,14 @@
     <button
       mat-menu-item
       (click)="startJiraAuth.next()"
-      [disabled]="
-        (jiraIntegration$ | async) &&
-        ['jira', undefined].includes(selectedIssueIntegrationProvider$ | async)
-      "
+      [disabled]="(activeIntegration$ | async)?.name === 'jira'"
     >
       <span class="button-with-custom-icon">
         <img src="/assets/jira.png" />
         {{
-          (jiraIntegration$ | async) === undefined
+          (connectedIntegrations$ | async)?.jira === false
             ? "Connect to Jira"
-            : ["jira", undefined].includes(
-                selectedIssueIntegrationProvider$ | async
-              )
+            : (activeIntegration$ | async)?.name === 'jira'
             ? "Connected to Jira"
             : "Switch to Jira"
         }}
@@ -135,17 +130,14 @@
     <button
       mat-menu-item
       (click)="startLinearAuth.next()"
-      [disabled]="
-        (linearIntegration$ | async) &&
-        (selectedIssueIntegrationProvider$ | async) === 'linear'
-      "
+      [disabled]="(activeIntegration$ | async)?.name === 'linear'"
     >
       <span class="button-with-custom-icon">
         <img src="/assets/linear.png" />
         {{
-          (linearIntegration$ | async) === undefined
+          (connectedIntegrations$ | async)?.linear === false
             ? "Connect to Linear"
-            : (selectedIssueIntegrationProvider$ | async) === "linear"
+            : (activeIntegration$ | async)?.name === 'linear'
             ? "Connected to Linear"
             : "Switch to Linear"
         }}

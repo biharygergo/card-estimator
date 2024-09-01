@@ -1,0 +1,32 @@
+<h1 mat-dialog-title class="dialog-title">Batch import</h1>
+<div mat-dialog-content>
+  <p class="disclaimer">
+    Import multiple rounds from your selected task management solution.
+  </p>
+  <div class="tab-content">
+    <div class="tab-section">
+        <div class="issue-search">
+            <mat-form-field>
+                <mat-label>Search issues</mat-label>
+            </mat-form-field>
+        </div>
+        <div class="results">
+            @for(issue of searchedIssues(); track issue.id) {
+                <div class="issue-box">
+                    {{ issue.title }}
+                </div>
+            }
+            @for(issue of recentIssues(); track issue.id) {
+                <div class="issue-box">
+                    {{ issue.title }}
+                </div>
+            }
+            @for(issue of selectedIssues(); track issue.id) {
+                <div class="issue-box">
+                    {{ issue.title }}
+                </div>
+            }
+        </div>
+    </div>
+  </div>
+</div>

@@ -340,7 +340,7 @@
       <mat-icon>close</mat-icon>
       Close
     </button>
-    @if (selectedTabIndex === 0 && user) { @if (!user.isAnonymous) {
+    @if (selectedTabIndex === 0 && user) { @if (!user?.isAnonymous) {
     <button mat-button color="warn" (click)="signOut()">
       <mat-icon>logout</mat-icon>
       Sign out

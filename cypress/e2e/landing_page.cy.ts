@@ -8,8 +8,10 @@ describe('Landing page', () => {
   });
 
   it('opens the landing page', () => {
-    cy.get('h1')
-      .should('contain.text', 'Real-Time Agile Estimation for Remote Scrum Teams');
+    cy.get('h1').should(
+      'contain.text',
+      'Real-Time Agile Estimation for Remote Scrum Teams'
+    );
   });
 
   it('can navigate to the /create page', () => {
@@ -20,31 +22,31 @@ describe('Landing page', () => {
   it('can go to the Features page', () => {
     cy.contains('Features').click();
     cy.location('pathname').should('eq', '/features');
-  })
+  });
 
   it('can go to the Pricing page', () => {
     cy.contains('Pricing').click();
     cy.location('pathname').should('eq', '/pricing');
-  })
+  });
 
   it('can go to the Teams page', () => {
     cy.wait(500);
     cy.contains('Integrations').click();
-    cy.contains('Microsoft Teams').click();
+    cy.get('#header-teams-link').click();
     cy.location('pathname').should('eq', '/integrations/teams');
-  })
+  });
 
   it('can go to the Zoom page', () => {
     cy.wait(500);
     cy.contains('Integrations').click();
-    cy.contains('Zoom Meetings').click();
+    cy.get('#header-zoom-link').click();
     cy.location('pathname').should('eq', '/integrations/zoom');
-  })
+  });
 
   it('can go to the Webex page', () => {
     cy.wait(500);
     cy.contains('Integrations').click();
-    cy.contains('Webex Meetings').click();
+    cy.get('#header-webex-link').click();
     cy.location('pathname').should('eq', '/integrations/webex');
-  })
+  });
 });

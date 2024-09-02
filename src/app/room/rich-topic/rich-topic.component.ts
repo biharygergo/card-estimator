@@ -47,6 +47,7 @@ export class RichTopicComponent implements OnChanges {
   @Input() enableEditing: boolean = false;
   @Input() roundStatistics?: RoundStatistics;
   @Input() selectedEstimationCardSetValue?: CardSetValue;
+  @Input() hideUploadButton?: boolean;
 
   @Output() deleted = new EventEmitter();
 

@@ -121,7 +121,7 @@
         {{
           (connectedIntegrations$ | async)?.jira === false
             ? "Connect to Jira"
-            : (activeIntegration$ | async)?.name === 'jira'
+            : (activeIntegration$ | async)?.name === "jira"
             ? "Connected to Jira"
             : "Switch to Jira"
         }}
@@ -137,10 +137,23 @@
         {{
           (connectedIntegrations$ | async)?.linear === false
             ? "Connect to Linear"
-            : (activeIntegration$ | async)?.name === 'linear'
+            : (activeIntegration$ | async)?.name === "linear"
             ? "Connected to Linear"
             : "Switch to Linear"
         }}
+      </span>
+    </button>
+    <button
+      mat-menu-item
+      (click)="openBatchImportModal()"
+      [disabled]="
+        !(permissionsService.canCreateRounds() | async) ||
+        (activeIntegration$ | async) === undefined
+      "
+    >
+      <span class="button-with-custom-icon">
+        <mat-icon>cloud_download</mat-icon>
+        Batch import issues
       </span>
     </button>
     <mat-divider />

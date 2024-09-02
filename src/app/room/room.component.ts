@@ -108,7 +108,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
-import { batchImportTopicsModalCreator } from './batch-import-topics-modal/batch-import-topics-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
@@ -396,8 +395,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.config.runningIn === 'meet') {
       this.meetService.configureApp(roomIdFromParams);
     }
-
-    this.dialog.open(...batchImportTopicsModalCreator())
   
     this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
       this.room = room;

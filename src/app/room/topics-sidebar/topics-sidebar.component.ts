@@ -16,14 +16,23 @@ import { TopicEditorInputOutput } from '../topic-editor/topic-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import { summaryModalCreator } from '../summary-modal/summary-modal.component';
 import { batchAddModalCreator } from '../batch-add-topics-modal/batch-add-topics-modal.component';
-import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  CdkDropList,
+  CdkDrag,
+  CdkDragHandle,
+} from '@angular/cdk/drag-drop';
 import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 import { AsyncPipe } from '@angular/common';
 import { AddOrUpdateTopicComponent } from './add-or-update-topic/add-or-update-topic.component';
 import { MatListSubheaderCssMatStyler } from '@angular/material/list';
 import { RoundResultsComponent } from '../round-results/round-results.component';
 import { RichTopicComponent } from '../rich-topic/rich-topic.component';
-import { MatExpansionPanel, MatExpansionPanelContent } from '@angular/material/expansion';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelContent,
+} from '@angular/material/expansion';
 import { MatDivider } from '@angular/material/divider';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -31,35 +40,36 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { VelocityComponent } from '../velocity/velocity.component';
+import { batchImportTopicsModalCreator } from '../batch-import-topics-modal/batch-import-topics-modal.component';
 
 @Component({
-    selector: 'app-topics-sidebar',
-    templateUrl: './topics-sidebar.component.html',
-    styleUrls: ['./topics-sidebar.component.scss'],
-    standalone: true,
-    imports: [
-        VelocityComponent,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        CdkDropList,
-        MatCard,
-        CdkDrag,
-        MatCardContent,
-        CdkDragHandle,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDivider,
-        MatExpansionPanel,
-        MatExpansionPanelContent,
-        RichTopicComponent,
-        RoundResultsComponent,
-        MatListSubheaderCssMatStyler,
-        AddOrUpdateTopicComponent,
-        MatButton,
-        AsyncPipe,
-    ],
+  selector: 'app-topics-sidebar',
+  templateUrl: './topics-sidebar.component.html',
+  styleUrls: ['./topics-sidebar.component.scss'],
+  standalone: true,
+  imports: [
+    VelocityComponent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    CdkDropList,
+    MatCard,
+    CdkDrag,
+    MatCardContent,
+    CdkDragHandle,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    MatExpansionPanel,
+    MatExpansionPanelContent,
+    RichTopicComponent,
+    RoundResultsComponent,
+    MatListSubheaderCssMatStyler,
+    AddOrUpdateTopicComponent,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class TopicsSidebarComponent implements OnInit {
   @Input() room: Room;
@@ -174,6 +184,10 @@ export class TopicsSidebarComponent implements OnInit {
 
   openBatchAddModal() {
     this.dialog.open(...batchAddModalCreator({ room: this.room }));
+  }
+
+  openBatchImportModal() {
+    this.dialog.open(...batchImportTopicsModalCreator());
   }
 
   roundIdentity(index: number, item: Round) {

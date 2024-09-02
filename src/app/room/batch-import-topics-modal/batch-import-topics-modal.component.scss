@@ -7,12 +7,27 @@
 
 .results {
   .issue-box {
-    display: flex;
-    align-items: center;
-    background: var(--highlight-background-color);
-    border-radius: 8px;
-    padding: 0.5rem 0.25rem;
-    margin-bottom: 4px;
+    width: 100%;
+    --mat-expansion-header-expanded-state-height: 50px;
+
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 8px;
+    }
+
+    &--panel {
+      margin-bottom: 0.5rem;
+    }
+
+    &--panel-header {
+      padding: 0px 8px;
+      padding-right: 20px;
+    }
+
+    &--content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
   }
 }
 
@@ -23,4 +38,40 @@
 
 .spinner {
   margin: 2rem auto;
+}
+
+.cdk-drag-preview {
+  border-radius: 16px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+
+  .issue-box--content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .issue-box--panel-header {
+    padding: 0px 8px;
+    padding-right: 20px;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .issue-container:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.issue-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80%;
+  overflow: hidden;
 }

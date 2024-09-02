@@ -24,7 +24,7 @@
       </button>
       }
       <div matTooltip="Upload majority vote">
-        @if (!enableEditing) {
+        @if (!enableEditing && !hideUploadButton) {
         <button
           (click)="saveEstimateToJira()"
           mat-icon-button

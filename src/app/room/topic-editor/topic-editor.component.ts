@@ -55,6 +55,7 @@ import {
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
 import { IssueIntegrationService } from 'src/app/services/issue-integration.service';
+import { batchImportTopicsModalCreator } from '../batch-import-topics-modal/batch-import-topics-modal.component';
 
 export interface TopicEditorInputOutput {
   topic: string;
@@ -118,7 +119,8 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   );
 
   activeIntegration$ = this.issueIntegrationService.getActiveIntegration();
-  connectedIntegrations$ = this.issueIntegrationService.getConnectedIntegrations();
+  connectedIntegrations$ =
+    this.issueIntegrationService.getConnectedIntegrations();
 
   issuesFromIntegration$ = new BehaviorSubject<{
     recent: RichTopic[];
@@ -204,7 +206,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     this.startLinearAuth
-      .pipe(withLatestFrom(this.connectedIntegrations$), takeUntil(this.destroy))
+      .pipe(
+        withLatestFrom(this.connectedIntegrations$),
+        takeUntil(this.destroy)
+      )
       .subscribe(([, connectedIntegrations]) => {
         if (!connectedIntegrations.linear) {
           this.analyticsService.logClickedLinearAuth();
@@ -272,5 +277,9 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.roomDataService.room$.pipe(take(1)).subscribe((room) => {
       this.dialog.open(...batchAddModalCreator({ room }));
     });
+  }
+
+  openBatchImportModal() {
+    this.dialog.open(...batchImportTopicsModalCreator());
   }
 }

@@ -6,13 +6,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { map, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
 import { IssueIntegrationService } from 'src/app/services/issue-integration.service';
 import { createModal } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import { RichTopic } from 'src/app/types';
+import { RichTopicComponent } from '../rich-topic/rich-topic.component';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { RoomDataService } from '../room-data.service';
+import { EstimatorService } from 'src/app/services/estimator.service';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-batch-import-topics-modal',
@@ -25,14 +35,23 @@ import { RichTopic } from 'src/app/types';
     MatCheckboxModule,
     MatButtonModule,
     MatChipsModule,
+    MatExpansionModule,
+    DragDropModule,
     I18nPluralPipe,
     NgTemplateOutlet,
     MatProgressSpinnerModule,
+    RichTopicComponent,
   ],
   templateUrl: './batch-import-topics-modal.component.html',
   styleUrl: './batch-import-topics-modal.component.scss',
 })
 export class BatchImportTopicsModalComponent implements OnInit {
+  readonly hasActiveIntegration = toSignal(
+    this.issueIntegrationService
+      .getActiveIntegration()
+      .pipe(map((integration) => integration !== undefined))
+  );
+
   readonly searchedIssues = signal<RichTopic[]>([]);
   readonly recentIssues = toSignal(
     this.issueIntegrationService.getRecentIssues(),
@@ -50,11 +69,13 @@ export class BatchImportTopicsModalComponent implements OnInit {
   );
   readonly isSearchShown = signal<boolean>(false);
   readonly isOnlySelectedToggled = signal<boolean>(false);
+  readonly isSubmitting = signal<boolean>(false);
 
   readonly visibleIssues = computed(() => {
     if (this.isOnlySelectedToggled()) {
       return {
         label: 'Selected issues',
+        subtitle: 'You can drag issues to adjust import order',
         empty: 'None selected',
         issues: this.selectedIssues(),
       };
@@ -87,16 +108,20 @@ export class BatchImportTopicsModalComponent implements OnInit {
 
   readonly selectedIssueIdsMap = computed(() =>
     this.selectedIssues().reduce(
-      (acc, curr) => ({ ...acc, [curr.id]: true }),
+      (acc, curr) => ({ ...acc, [curr.key]: true }),
       {}
     )
   );
 
   readonly onSubmitSearch = new Subject<void>();
   readonly onClearSearch = new Subject<void>();
+  readonly onSubmitImport = new Subject<void>();
 
   constructor(
     private readonly issueIntegrationService: IssueIntegrationService,
+    private readonly dialogRef: DialogRef,
+    private readonly roomDataService: RoomDataService,
+    private readonly estimatorService: EstimatorService,
     private readonly destroyRef: DestroyRef
   ) {}
 
@@ -125,20 +150,43 @@ export class BatchImportTopicsModalComponent implements OnInit {
         this.searchForm.reset();
         this.searchedIssues.set([]);
       });
+
+    this.onSubmitImport
+      .pipe(
+        tap(() => this.isSubmitting.set(true)),
+        withLatestFrom(this.roomDataService.room$),
+        switchMap(([, room]) => {
+          return this.estimatorService.batchImportTopics(
+            room,
+            this.selectedIssues()
+          );
+        }),
+        tap(() => this.isSubmitting.set(false)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
   }
 
   toggleSelectedIssue(richTopic: RichTopic) {
     if (
       this.selectedIssues()
-        .map((i) => i.id)
-        .includes(richTopic.id)
+        .map((i) => i.key)
+        .includes(richTopic.key)
     ) {
       this.selectedIssues.set(
-        this.selectedIssues().filter((i) => i.id !== richTopic.id)
+        this.selectedIssues().filter((i) => i.key !== richTopic.key)
       );
     } else {
       this.selectedIssues.set([...this.selectedIssues(), richTopic]);
     }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    const arrayToMove = [...this.selectedIssues()];
+    moveItemInArray(arrayToMove, event.previousIndex, event.currentIndex);
+    this.selectedIssues.set(arrayToMove);
   }
 }
 

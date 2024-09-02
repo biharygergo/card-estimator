@@ -143,21 +143,25 @@
         }}
       </span>
     </button>
+    <mat-divider />
     <button
       mat-menu-item
       (click)="openBatchImportModal()"
       [disabled]="!(permissionsService.canCreateRounds() | async)"
+      matTooltip="Import multiple issues from Jira or Linear"
+      matTooltipPosition="right"
     >
       <span class="button-with-custom-icon">
         <mat-icon>cloud_download</mat-icon>
         Batch import issues
       </span>
     </button>
-    <mat-divider />
     <button
       mat-menu-item
       (click)="openBatchAddModal()"
       [disabled]="!(permissionsService.canCreateRounds() | async)"
+      matTooltip="Manually add multiple issues"
+      matTooltipPosition="right"
     >
       <span class="button-with-custom-icon">
         <mat-icon>library_add</mat-icon>

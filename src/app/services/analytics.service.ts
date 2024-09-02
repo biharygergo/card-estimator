@@ -363,4 +363,16 @@ export class AnalyticsService {
   logClickedLinearAuth() {
     this.logEventInternal('clicked_start_linear_auth');
   }
+
+  logClickedBatchImportTopicsModal() {
+    this.logEventInternal('clicked_open_batch_import_modal');
+  }
+
+  logClickedBatchImportIssue() {
+    this.logEventInternal('clicked_batch_import_issue');
+  }
+
+  logClickedImportBatchIssues() {
+    this.logEventInternal('clicked_import_batch_issues');
+  }
 }

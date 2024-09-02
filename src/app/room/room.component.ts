@@ -395,7 +395,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.config.runningIn === 'meet') {
       this.meetService.configureApp(roomIdFromParams);
     }
-
+  
     this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
       this.room = room;
       this.rounds = Object.values(room.rounds);

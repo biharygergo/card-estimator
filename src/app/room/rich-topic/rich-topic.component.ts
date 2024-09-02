@@ -22,7 +22,7 @@ import {
 import { finalize } from 'rxjs/operators';
 import { EstimateConverterPipe } from 'src/app/pipes/estimate-converter.pipe';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import * as jira2md from 'jira2md';
+import jira2md from 'jira2md';
 import { LinearService } from 'src/app/services/linear.service';
 import { MarkdownComponent } from 'ngx-markdown';
 import { MatIcon } from '@angular/material/icon';
@@ -47,6 +47,7 @@ export class RichTopicComponent implements OnChanges {
   @Input() enableEditing: boolean = false;
   @Input() roundStatistics?: RoundStatistics;
   @Input() selectedEstimationCardSetValue?: CardSetValue;
+  @Input() hideUploadButton?: boolean;
 
   @Output() deleted = new EventEmitter();
 

@@ -11,6 +11,13 @@
   </button>
   <button
     mat-icon-button
+    (click)="openBatchImportModal()"
+    matTooltip="Batch import issues from Jira or Linear"
+  >
+    <mat-icon>cloud_download</mat-icon>
+  </button>
+  <button
+    mat-icon-button
     (click)="openBatchAddModal()"
     matTooltip="Batch add multiple topics"
   >

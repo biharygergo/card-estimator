@@ -14,15 +14,12 @@ import {
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   BehaviorSubject,
-  catchError,
-  combineLatest,
   debounceTime,
   filter,
   fromEvent,
   map,
   Observable,
   of,
-  share,
   shareReplay,
   Subject,
   switchMap,
@@ -33,7 +30,7 @@ import {
 } from 'rxjs';
 import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { JiraIssue, RichTopic } from 'src/app/types';
+import { RichTopic } from 'src/app/types';
 import * as Sentry from '@sentry/angular-ivy';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { LinearService } from 'src/app/services/linear.service';
@@ -51,9 +48,14 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteTrigger,
+  MatAutocomplete,
+} from '@angular/material/autocomplete';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { IssueIntegrationService } from 'src/app/services/issue-integration.service';
+import { batchImportTopicsModalCreator } from '../batch-import-topics-modal/batch-import-topics-modal.component';
 
 export interface TopicEditorInputOutput {
   topic: string;
@@ -61,33 +63,33 @@ export interface TopicEditorInputOutput {
 }
 
 @Component({
-    selector: 'app-topic-editor',
-    templateUrl: './topic-editor.component.html',
-    styleUrls: ['./topic-editor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [
-        MatFormField,
-        MatInput,
-        FormsModule,
-        MatAutocompleteTrigger,
-        ReactiveFormsModule,
-        MatSuffix,
-        MatProgressSpinner,
-        MatTooltip,
-        MatIconButton,
-        MatIcon,
-        MatAutocomplete,
-        MatOptgroup,
-        MatOption,
-        RichTopicComponent,
-        MatButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDivider,
-        AsyncPipe,
-    ],
+  selector: 'app-topic-editor',
+  templateUrl: './topic-editor.component.html',
+  styleUrls: ['./topic-editor.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatInput,
+    FormsModule,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatSuffix,
+    MatProgressSpinner,
+    MatTooltip,
+    MatIconButton,
+    MatIcon,
+    MatAutocomplete,
+    MatOptgroup,
+    MatOption,
+    RichTopicComponent,
+    MatButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    AsyncPipe,
+  ],
 })
 export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() roomTopic: Observable<TopicEditorInputOutput>;
@@ -111,95 +113,40 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   startJiraAuth = new Subject<void>();
   startLinearAuth = new Subject<void>();
 
-  jiraIntegration$ = this.jiraService.getIntegration();
-  linearIntegration$ = this.linearService.getIntegration();
-
   selectedIssueIntegrationProvider$ = this.authService.getUserPreference().pipe(
     map((pref) => pref?.selectedIssueIntegrationProvider),
     shareReplay(1)
   );
 
-  activeIntegration$ = combineLatest([
-    this.jiraIntegration$,
-    this.linearIntegration$,
-    this.selectedIssueIntegrationProvider$,
-  ]).pipe(
-    map(
-      ([
-        jiraIntegration,
-        linearIntegration,
-        selectedIssueIntegrationProvider,
-      ]) => {
-        if (
-          selectedIssueIntegrationProvider === 'linear' &&
-          linearIntegration
-        ) {
-          return { integration: linearIntegration, provider: 'linear' };
-        } else {
-          // Default to Jira even if setAsActiveIntegration is not set on it (optional)
-          return { integration: jiraIntegration, provider: 'jira' };
-        }
-      }
-    )
-  );
+  activeIntegration$ = this.issueIntegrationService.getActiveIntegration();
+  connectedIntegrations$ =
+    this.issueIntegrationService.getConnectedIntegrations();
 
   issuesFromIntegration$ = new BehaviorSubject<{
     recent: RichTopic[];
     search: RichTopic[];
   }>({ recent: [], search: [] });
 
-  recentIssues$: Observable<RichTopic[]> = this.activeIntegration$.pipe(
-    switchMap(({ integration, provider }) => {
-      if (!integration) {
-        return of([]);
-      }
-
+  recentIssues$: Observable<RichTopic[]> = of([]).pipe(
+    tap(() => {
       this.isFetchingRecents = true;
-      const service =
-        provider === 'linear' ? this.linearService : this.jiraService;
-      return service.getIssues().pipe(
-        tap(() => {
-          this.isFetchingRecents = false;
-        }),
-        catchError((e) => {
-          this.showJiraError(e);
-          return of([]);
-        })
-      );
-    })
+    }),
+    switchMap(() => this.issueIntegrationService.getRecentIssues()),
+    tap(() => (this.isFetchingRecents = false))
   );
 
-  issuesFromQuery$: Observable<RichTopic[]> = combineLatest([
-    this.activeIntegration$,
-    this.debouncedTopic$,
-  ]).pipe(
-    switchMap(([{ integration, provider }, query]) => {
-      if (!integration) {
-        return of([]);
-      }
-
-      if (!query) {
-        return of([]);
-      }
-
-      if (query.includes('Topic of Round ')) {
-        return of([]);
-      }
-
+  issuesFromQuery$: Observable<RichTopic[]> = this.debouncedTopic$.pipe(
+    tap(() => {
       this.isSearching = true;
-      const service =
-        provider === 'linear' ? this.linearService : this.jiraService;
-      return service.getIssues(query).pipe(
-        catchError((error) => {
-          this.showJiraError(error);
-          return of([]);
-        })
-      );
+    }),
+    switchMap((query) => {
+      return this.issueIntegrationService.searchIssues(query);
     }),
     tap(() => {
       this.isSearching = false;
     })
   );
+
   destroy = new Subject<void>();
   menuOpen = signal(false);
 
@@ -211,7 +158,8 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly analyticsService: AnalyticsService,
     private readonly roomDataService: RoomDataService,
     private readonly dialog: MatDialog,
-    public readonly permissionsService: PermissionsService
+    public readonly permissionsService: PermissionsService,
+    private readonly issueIntegrationService: IssueIntegrationService
   ) {}
 
   ngOnInit(): void {
@@ -239,9 +187,12 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.startJiraAuth
-      .pipe(withLatestFrom(this.jiraIntegration$), takeUntil(this.destroy))
-      .subscribe(([, integration]) => {
-        if (!integration) {
+      .pipe(
+        withLatestFrom(this.connectedIntegrations$),
+        takeUntil(this.destroy)
+      )
+      .subscribe(([, connectedIntegrations]) => {
+        if (!connectedIntegrations.jira) {
           this.analyticsService.logClickedStartJiraAuth();
           this.jiraService.startJiraAuthFlow();
         } else {
@@ -255,9 +206,12 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     this.startLinearAuth
-      .pipe(withLatestFrom(this.linearIntegration$), takeUntil(this.destroy))
-      .subscribe(([, integration]) => {
-        if (!integration) {
+      .pipe(
+        withLatestFrom(this.connectedIntegrations$),
+        takeUntil(this.destroy)
+      )
+      .subscribe(([, connectedIntegrations]) => {
+        if (!connectedIntegrations.linear) {
           this.analyticsService.logClickedLinearAuth();
           this.linearService.startLinearAuthFlow();
         } else {
@@ -306,6 +260,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   issueSelected(issue: RichTopic) {
+    console.log(issue);
     this.selectedRichTopic = {
       description: issue.description,
       summary: issue.summary,
@@ -318,19 +273,14 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.analyticsService.logSelectedJiraIssueFromDropdown();
   }
 
-  showJiraError(e: any) {
-    console.error(e);
-    Sentry.captureException(e);
-    this.toastService.showMessage(
-      `Could not fetch issues from provider. Please try again or reconnect from the Integrations menu. ${e.message}`,
-      10000,
-      'error'
-    );
-  }
-
   openBatchAddModal() {
     this.roomDataService.room$.pipe(take(1)).subscribe((room) => {
       this.dialog.open(...batchAddModalCreator({ room }));
     });
+  }
+
+  openBatchImportModal() {
+    this.analyticsService.logClickedBatchImportTopicsModal();
+    this.dialog.open(...batchImportTopicsModalCreator());
   }
 }

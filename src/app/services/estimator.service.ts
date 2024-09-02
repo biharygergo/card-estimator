@@ -340,6 +340,21 @@ export class EstimatorService {
     return this.updateRoom(room.roomId, { rounds: room.rounds });
   }
 
+  batchImportTopics(room: Room, topics: RichTopic[]) {
+    topics.forEach((topic) => {
+      const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
+
+      room.rounds[nextRoundId] = this.createRound(
+        room.members,
+        nextRoundNumber,
+        topic.summary,
+        topic
+      );
+    });
+
+    return this.updateRoom(room.roomId, { rounds: room.rounds });
+  }
+
   setActiveRound(room: Room, roundId: number, shouldRevote: boolean) {
     room.currentRound = roundId;
     if (shouldRevote) {
@@ -467,8 +482,9 @@ export class EstimatorService {
 
   setNoteEditor(room: Room, currentRound: number, member: Member | null) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
-      [`rounds.${currentRound}.notes.editedBy`]:
-        member ? { id: member.id, name: member.name } : null,
+      [`rounds.${currentRound}.notes.editedBy`]: member
+        ? { id: member.id, name: member.name }
+        : null,
     });
   }
 

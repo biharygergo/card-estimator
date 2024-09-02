@@ -187,6 +187,7 @@ export class TopicsSidebarComponent implements OnInit {
   }
 
   openBatchImportModal() {
+    this.analytics.logClickedBatchImportTopicsModal();
     this.dialog.open(...batchImportTopicsModalCreator());
   }
 

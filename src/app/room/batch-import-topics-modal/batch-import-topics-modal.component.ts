@@ -23,6 +23,8 @@ import {
 import { RoomDataService } from '../room-data.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { DialogRef } from '@angular/cdk/dialog';
+import { ToastService } from 'src/app/services/toast.service';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-batch-import-topics-modal',
@@ -122,7 +124,9 @@ export class BatchImportTopicsModalComponent implements OnInit {
     private readonly dialogRef: DialogRef,
     private readonly roomDataService: RoomDataService,
     private readonly estimatorService: EstimatorService,
-    private readonly destroyRef: DestroyRef
+    private readonly destroyRef: DestroyRef,
+    private readonly toastService: ToastService,
+    private readonly analytics: AnalyticsService
   ) {}
 
   ngOnInit() {
@@ -156,6 +160,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
         tap(() => this.isSubmitting.set(true)),
         withLatestFrom(this.roomDataService.room$),
         switchMap(([, room]) => {
+          this.analytics.logClickedImportBatchIssues();
           return this.estimatorService.batchImportTopics(
             room,
             this.selectedIssues()
@@ -165,11 +170,15 @@ export class BatchImportTopicsModalComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
+        this.toastService.showMessage(
+          'Issues imported - you can find them in the topics sidebar.'
+        );
         this.dialogRef.close();
       });
   }
 
   toggleSelectedIssue(richTopic: RichTopic) {
+    this.analytics.logClickedBatchImportIssue();
     if (
       this.selectedIssues()
         .map((i) => i.key)
@@ -187,6 +196,18 @@ export class BatchImportTopicsModalComponent implements OnInit {
     const arrayToMove = [...this.selectedIssues()];
     moveItemInArray(arrayToMove, event.previousIndex, event.currentIndex);
     this.selectedIssues.set(arrayToMove);
+  }
+
+  startProviderAuth(provider: 'jira' | 'linear') {
+    if (provider === 'jira') {
+      this.analytics.logClickedStartJiraAuth();
+    }
+
+    if (provider === 'linear') {
+      this.analytics.logClickedLinearAuth();
+    }
+
+    this.issueIntegrationService.startAuth(provider);
   }
 }
 

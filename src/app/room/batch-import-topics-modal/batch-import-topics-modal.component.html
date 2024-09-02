@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <p class="disclaimer">
     Import multiple issues from your selected task management solution. Toggle
-    the selection to adjust the order of issues when voting.
+    the selection to adjust the order of imported issues.
   </p>
   <div class="tab-content">
     @if(hasActiveIntegration()) {
@@ -12,7 +12,7 @@
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <input
             matInput
-            placeholder="Enter issue filter"
+            placeholder="Filter issues by title or details"
             formControlName="query"
           />
           <mat-label>Filter</mat-label>
@@ -67,7 +67,9 @@
                         (click)="$event.stopPropagation()"
                       />
                     </div>
-                    <span class="issue-title">{{ issue.summary }}</span>
+                    <span class="issue-title"
+                      >{{ issue.key }}: {{ issue.summary }}</span
+                    >
                   </div>
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
@@ -88,10 +90,18 @@
     </div>
     } @else {
     <div class="tab-section">
-      <p>Connect your account with Jira or Linear to import issues.</p>
+      <p>
+        To start, link your account to Jira or Linear. Then, choose the issues
+        you want to vote on and save your estimates back to your preferred task
+        management tool.
+      </p>
       <div class="cta-buttons">
-        <button mat-button>Connect to Jira</button>
-        <button mat-button>Connect to Linear</button>
+        <button mat-button (click)="startProviderAuth('jira')">
+          Connect to Jira
+        </button>
+        <button mat-button (click)="startProviderAuth('linear')">
+          Connect to Linear
+        </button>
       </div>
     </div>
     }

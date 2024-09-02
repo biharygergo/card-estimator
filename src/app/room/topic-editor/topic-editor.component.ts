@@ -280,6 +280,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openBatchImportModal() {
+    this.analyticsService.logClickedBatchImportTopicsModal();
     this.dialog.open(...batchImportTopicsModalCreator());
   }
 }

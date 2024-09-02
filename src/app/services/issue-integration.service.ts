@@ -129,13 +129,23 @@ export class IssueIntegrationService {
     return this.getActiveIntegration().pipe(
       switchMap((integration) => {
         if (!integration) {
-          of([]);
+          return of([]);
         }
 
         return integration.service.getIssues();
       }),
       catchError((e) => this.handleError(e))
     );
+  }
+
+  startAuth(provider: 'jira' | 'linear') {
+    if (provider === 'jira') {
+      return this.jiraService.startJiraAuthFlow();
+    } else if (provider === 'linear') {
+      return this.linearService.startLinearAuthFlow();
+    }
+
+    throw new Error('Unknown provider');
   }
 
   private handleError(e: any) {

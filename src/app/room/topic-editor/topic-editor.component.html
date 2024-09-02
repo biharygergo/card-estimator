@@ -146,10 +146,7 @@
     <button
       mat-menu-item
       (click)="openBatchImportModal()"
-      [disabled]="
-        !(permissionsService.canCreateRounds() | async) ||
-        (activeIntegration$ | async) === undefined
-      "
+      [disabled]="!(permissionsService.canCreateRounds() | async)"
     >
       <span class="button-with-custom-icon">
         <mat-icon>cloud_download</mat-icon>

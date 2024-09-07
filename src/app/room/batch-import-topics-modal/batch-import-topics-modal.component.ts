@@ -1,5 +1,12 @@
-import { I18nPluralPipe, NgTemplateOutlet } from '@angular/common';
-import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
+import { I18nPluralPipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  OnInit,
+  Signal,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +17,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { map, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import {
+  catchError,
+  map,
+  Subject,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 import { IssueIntegrationService } from 'src/app/services/issue-integration.service';
 import { createModal } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import { RichTopic } from 'src/app/types';
@@ -25,7 +40,95 @@ import { EstimatorService } from 'src/app/services/estimator.service';
 import { DialogRef } from '@angular/cdk/dialog';
 import { ToastService } from 'src/app/services/toast.service';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
+interface FilterField {
+  label: string;
+  fieldName: string;
+  comparator: 'is' | 'contains';
+  values?: Array<{ label: string; fieldName: string }>;
+  convertToNumber?: boolean;
+  placeholder?: string;
+}
+const LINEAR_FILTER_FIELDS: FilterField[] = [
+  {
+    label: 'ID',
+    fieldName: 'number',
+    comparator: 'is',
+    convertToNumber: true,
+    placeholder: 'Enter key number',
+  },
+  {
+    label: 'Title',
+    fieldName: 'title',
+    comparator: 'contains',
+  },
+  {
+    label: 'Description',
+    fieldName: 'description',
+    comparator: 'contains',
+  },
+  {
+    label: 'Project',
+    fieldName: 'project.name',
+    comparator: 'contains',
+  },
+  {
+    label: 'Cycle',
+    fieldName: 'cycle.name',
+    comparator: 'contains',
+  },
+  {
+    label: 'Status',
+    fieldName: 'state.name',
+    comparator: 'contains',
+  },
+];
+
+const JIRA_FILTER_FIELDS: FilterField[] = [
+  {
+    label: 'Key',
+    fieldName: 'issueKey',
+    comparator: 'is',
+  },
+  {
+    label: 'Title',
+    fieldName: 'summary',
+    comparator: 'contains',
+  },
+  {
+    label: 'Description',
+    fieldName: 'description',
+    comparator: 'contains',
+  },
+  {
+    label: 'Project',
+    fieldName: 'project',
+    comparator: 'is',
+  },
+  {
+    label: 'Sprint',
+    fieldName: 'sprint',
+    comparator: 'is',
+  },
+  {
+    label: 'Epic/parent',
+    fieldName: 'parent',
+    comparator: 'is',
+  },
+  {
+    label: 'Status',
+    fieldName: 'status',
+    comparator: 'is',
+  },
+];
+
+interface FilterChip {
+  id: string;
+  filter: FilterField;
+  valueControl: FormControl<string>;
+}
 @Component({
   selector: 'app-batch-import-topics-modal',
   standalone: true,
@@ -43,15 +146,19 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
     NgTemplateOutlet,
     MatProgressSpinnerModule,
     RichTopicComponent,
+    MatMenuModule,
+    MatIconModule,
   ],
   templateUrl: './batch-import-topics-modal.component.html',
   styleUrl: './batch-import-topics-modal.component.scss',
 })
 export class BatchImportTopicsModalComponent implements OnInit {
-  readonly hasActiveIntegration = toSignal(
-    this.issueIntegrationService
-      .getActiveIntegration()
-      .pipe(map((integration) => integration !== undefined))
+  readonly activeIntegration = toSignal(
+    this.issueIntegrationService.getActiveIntegration()
+  );
+
+  readonly hasActiveIntegration = computed(
+    () => this.activeIntegration() !== undefined
   );
 
   readonly searchedIssues = signal<RichTopic[]>([]);
@@ -88,6 +195,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
         label: 'Search results',
         empty: 'No results',
         issues: this.searchedIssues(),
+        showSelectAll: true,
       };
     }
 
@@ -95,6 +203,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
       label: 'Recent issues',
       empty: 'No recent issues',
       issues: this.recentIssues(),
+      showSelectAll: true,
     };
   });
 
@@ -119,6 +228,17 @@ export class BatchImportTopicsModalComponent implements OnInit {
   readonly onClearSearch = new Subject<void>();
   readonly onSubmitImport = new Subject<void>();
 
+  readonly issueFilters: Signal<FilterField[]> = computed(() => {
+    if (this.activeIntegration() === undefined) {
+      return [];
+    }
+
+    return this.activeIntegration().name === 'jira'
+      ? JIRA_FILTER_FIELDS
+      : LINEAR_FILTER_FIELDS;
+  });
+  readonly filterChips = signal<FilterChip[]>([]);
+
   constructor(
     private readonly issueIntegrationService: IssueIntegrationService,
     private readonly dialogRef: DialogRef,
@@ -126,7 +246,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
     private readonly estimatorService: EstimatorService,
     private readonly destroyRef: DestroyRef,
     private readonly toastService: ToastService,
-    private readonly analytics: AnalyticsService
+    private readonly analytics: AnalyticsService,
   ) {}
 
   ngOnInit() {
@@ -135,13 +255,38 @@ export class BatchImportTopicsModalComponent implements OnInit {
         tap(() => this.isLoadingSearch.set(true)),
         switchMap(() => {
           const { query } = this.searchForm.value;
-          return this.issueIntegrationService.searchIssues(query).pipe(take(1));
+          const filters = this.filterChips().map((chip) => {
+            const filterValue = chip.filter.convertToNumber
+              ? Number(chip.valueControl.value)
+              : chip.valueControl.value;
+
+            if (
+              chip.filter.convertToNumber &&
+              chip.valueControl.value !== '' &&
+              isNaN(filterValue as number)
+            ) {
+              throw new Error('Please enter a number only for ID');
+            }
+
+            return {
+              fieldName: chip.filter.fieldName,
+              value: filterValue,
+              comparator: chip.filter.comparator,
+            };
+          });
+          return this.issueIntegrationService
+            .searchIssues(query, filters)
+            .pipe(take(1));
         }),
         tap(() => {
           this.isSearchShown.set(true);
           this.isLoadingSearch.set(false);
         }),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
+        catchError((e) => {
+          this.isLoadingSearch.set(false);
+          throw e;
+        })
       )
       .subscribe((issues) => {
         this.searchedIssues.set(issues);
@@ -153,6 +298,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
         this.isSearchShown.set(false);
         this.searchForm.reset();
         this.searchedIssues.set([]);
+        this.filterChips.set([]);
       });
 
     this.onSubmitImport
@@ -208,6 +354,26 @@ export class BatchImportTopicsModalComponent implements OnInit {
     }
 
     this.issueIntegrationService.startAuth(provider);
+  }
+
+  addFilterChip(filterField: FilterField) {
+    this.filterChips.set([
+      ...this.filterChips(),
+      {
+        id: Date.now().toString(),
+        filter: filterField,
+        valueControl: new FormControl<string>(''),
+      },
+    ]);
+  }
+
+  selectAll() {
+    const allIssues = [
+      ...this.selectedIssues(),
+      ...this.visibleIssues().issues,
+    ];
+
+    this.selectedIssues.set([...new Set(allIssues)]);
   }
 }
 

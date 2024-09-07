@@ -87,7 +87,7 @@ export interface Member {
 }
 
 export interface MemberStat {
-  lastHeartbeatAt: Timestamp
+  lastHeartbeatAt: Timestamp;
 }
 
 export interface MemberStats {
@@ -501,7 +501,7 @@ export enum BundleName {
   LARGE_BUNDLE = 'LARGE_BUNDLE',
   MEGA_BUNDLE = 'MEGA_BUNDLE',
   MONTHLY_BUNDLE = 'MONTHLY_BUNDLE',
-  ORGANIZATION_BUNDLE = 'ORGANIZATION_BUNDLE'
+  ORGANIZATION_BUNDLE = 'ORGANIZATION_BUNDLE',
 }
 
 export function getBundleTitle(bundleName: BundleName) {
@@ -519,4 +519,10 @@ export function getBundleTitle(bundleName: BundleName) {
     default:
       return bundleName;
   }
+}
+
+export interface IssueApiFilter {
+  fieldName: string;
+  value: string | number;
+  comparator: 'contains' | 'is';
 }

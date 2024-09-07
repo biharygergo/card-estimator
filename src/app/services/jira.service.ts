@@ -16,7 +16,7 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { JiraIntegration, JiraIssue, JiraResource, RichTopic } from '../types';
+import { IssueApiFilter, JiraIntegration, JiraIssue, JiraResource, RichTopic } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
@@ -128,12 +128,12 @@ export class JiraService {
     );
   }
 
-  getIssues(query?: string): Observable<RichTopic[]> {
+  getIssues(query?: string, filters?: IssueApiFilter[]): Observable<RichTopic[]> {
     return from(
       httpsCallable(
         this.functions,
         'queryJiraIssues'
-      )({ search: query }).then((response) => response.data as RichTopic[])
+      )({ search: query, filters }).then((response) => response.data as RichTopic[])
     );
   }
 

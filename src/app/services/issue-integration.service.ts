@@ -14,13 +14,18 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { RichTopic } from '../types';
+import { RichTopic, IssueApiFilter } from '../types';
 import { ToastService } from './toast.service';
 import * as Sentry from '@sentry/angular-ivy';
 
 interface IntegrationProvider {
   name: 'jira' | 'linear';
-  service: { getIssues: (query?: string) => Observable<RichTopic[]> };
+  service: {
+    getIssues: (
+      query?: string,
+      filters?: IssueApiFilter[]
+    ) => Observable<RichTopic[]>;
+  };
 }
 
 @Injectable({
@@ -104,14 +109,17 @@ export class IssueIntegrationService {
     );
   }
 
-  searchIssues(query: string): Observable<RichTopic[]> {
+  searchIssues(
+    query: string,
+    filters?: IssueApiFilter[]
+  ): Observable<RichTopic[]> {
     return this.getActiveIntegration().pipe(
       switchMap((integration) => {
         if (!integration) {
           return of([]);
         }
 
-        if (!query) {
+        if (!query && !filters) {
           return of([]);
         }
 
@@ -119,7 +127,7 @@ export class IssueIntegrationService {
           return of([]);
         }
 
-        return integration.service.getIssues(query);
+        return integration.service.getIssues(query, filters);
       }),
       catchError((e) => this.handleError(e))
     );

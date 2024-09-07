@@ -8,22 +8,52 @@
     @if(hasActiveIntegration()) {
 
     <div class="tab-section">
-      <div class="issue-search" [formGroup]="searchForm">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
-          <input
-            matInput
-            placeholder="Filter issues by title or details"
-            formControlName="query"
-          />
-          <mat-label>Filter</mat-label>
-        </mat-form-field>
+      <div class="issue-search">
+        <div class="filter-chips-container">
+          <button mat-button color="primary" [matMenuTriggerFor]="menu">
+            <mat-icon>filter_list</mat-icon>
+            Add filter
+          </button>
+          <mat-menu #menu="matMenu">
+            @for(filter of issueFilters(); track filter.fieldName) {
+            <button mat-menu-item (click)="addFilterChip(filter)">
+              {{ filter.label }}
+            </button>
+            }
+          </mat-menu>
+          @for(filterChip of filterChips(); track filterChip.id) {
+          <div class="filter-chip">
+            <div class="filter-chip__label">
+              {{ filterChip.filter.label }}
+            </div>
+            <div class="filter-chip__comparator">
+              {{ filterChip.filter.comparator }}
+            </div>
+            <div class="filter-chip__input">
+              <input
+                [formControl]="filterChip.valueControl"
+                [placeholder]="filterChip.filter.placeholder || 'Set filter'"
+              />
+            </div>
+          </div>
+          }
+        </div>
       </div>
-      <button mat-stroked-button (click)="onSubmitSearch.next()">Search</button>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="onSubmitSearch.next()"
+        [disabled]="!filterChips().length"
+      >
+        <mat-icon>search</mat-icon>
+        Search
+      </button>
       <button
         mat-button
         (click)="onClearSearch.next()"
-        [disabled]="!isSearchShown()"
+        [disabled]="!filterChips().length"
       >
+        <mat-icon>close</mat-icon>
         Clear
       </button>
     </div>
@@ -47,6 +77,8 @@
         <h4>{{ visibleIssues().label }}</h4>
         @if(visibleIssues().subtitle) {
         <p>{{ visibleIssues().subtitle }}</p>
+        } @if(visibleIssues().showSelectAll) {
+        <button mat-button (click)="selectAll()">Select all</button>
         }
 
         <div
@@ -62,7 +94,7 @@
                   <div class="issue-box--content">
                     <div class="issue-box--checkmark">
                       <mat-checkbox
-                        [checked]="selectedIssueIdsMap[issue.key]"
+                        [checked]="selectedIssueIdsMap()[issue.key]"
                         (change)="toggleSelectedIssue(issue)"
                         (click)="$event.stopPropagation()"
                       />

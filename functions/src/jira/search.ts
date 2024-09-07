@@ -3,12 +3,24 @@ import {getActiveJiraIntegration} from "./client";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
 import {CallableRequest} from "firebase-functions/v2/https";
-import {RichTopic} from "../types";
+import {IssueApiFilter, RichTopic} from "../types";
+
+function createComplexFilterString(filters: IssueApiFilter[]): string {
+  return filters
+      .map((filter) => {
+        return `${filter.fieldName} ${filter.comparator === "is" ? "=" : "~"} ${
+          filter.value
+        }`;
+      })
+      .join(" ");
+}
 
 export async function searchJira(
     request: CallableRequest
 ): Promise<RichTopic[]> {
   const query = request.data.search;
+  const filters = request.data.filters as IssueApiFilter[] | undefined;
+
   const userId = request.auth?.uid;
   if (!userId) {
     throw new Error("Not signed in");
@@ -28,8 +40,12 @@ export async function searchJira(
 
     const keyPart = matches?.[0] ? ` OR key = ${matches[0]}` : "";
 
-    const searchFilter = filteredQuery ?
-      `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
+    const isFetchingRecents = !query && !filters;
+
+    const searchFilter = !isFetchingRecents ?
+      filters ?
+        createComplexFilterString(filters) :
+        `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
       "issue in issueHistory()";
     const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
 

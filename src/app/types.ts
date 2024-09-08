@@ -526,3 +526,8 @@ export interface IssueApiFilter {
   value: string | number;
   comparator: 'contains' | 'is';
 }
+
+export interface IssuesSearchApiResult {
+  issues: RichTopic[];
+  nextPage?: number | string;
+}

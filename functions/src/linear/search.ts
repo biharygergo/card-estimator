@@ -2,7 +2,7 @@ import {getActiveLinearIntegration} from "./client";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
 import {CallableRequest} from "firebase-functions/v2/https";
-import {RichTopic, IssueApiFilter} from "../types";
+import {RichTopic, IssueApiFilter, IssuesSearchApiResult} from "../types";
 import {LinearClient} from "@linear/sdk";
 
 function createNestedFilter(filters: IssueApiFilter[]): any {
@@ -40,9 +40,10 @@ function extractLinearKeyNumber(key: string): number | null {
 
 export async function searchLinear(
     request: CallableRequest
-): Promise<RichTopic[]> {
+): Promise<IssuesSearchApiResult> {
   const query = request.data.search;
   const filters = request.data.filters as IssueApiFilter[] | undefined;
+  const after = request.data.after as string | undefined;
 
   const keyMatch = extractLinearKeyNumber(query ?? "");
 
@@ -63,20 +64,24 @@ export async function searchLinear(
 
     const issues = await client.client.rawRequest(
         `
-        query fetchIssues($filter: IssueFilter) {
-            issues(filter: $filter, first: 10) {
+        query fetchIssues($filter: IssueFilter, $after: String) {
+            issues(filter: $filter, first: 10, after: $after) {
                 nodes {
-                    title
-                    description
-                    state {
-                        name
-                    }
-                    assignee {
-                        displayName
-                    }
-                    id
-                    identifier
-                    url
+                  title
+                  description
+                  state {
+                      name
+                  }
+                  assignee {
+                      displayName
+                  }
+                  id
+                  identifier
+                  url
+                }
+                pageInfo {
+                  hasNextPage
+                  endCursor
                 }
             }
         }
@@ -95,6 +100,7 @@ export async function searchLinear(
         } :
         {
           filter: complexFilter,
+          after: after?.toString(),
         }
     );
 
@@ -113,7 +119,10 @@ export async function searchLinear(
         }
     );
 
-    return richTopics;
+    const pageInfo = (issues.data as any)?.issues?.pageInfo;
+    const nextPage = pageInfo?.hasNextPage ? pageInfo?.endCursor : undefined;
+
+    return {issues: richTopics, nextPage};
   } catch (error) {
     captureError(error);
     console.error(error);

@@ -140,7 +140,9 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isSearching = true;
     }),
     switchMap((query) => {
-      return this.issueIntegrationService.searchIssues(query);
+      return this.issueIntegrationService
+        .searchIssues(query)
+        .pipe(map((r) => r.issues));
     }),
     tap(() => {
       this.isSearching = false;

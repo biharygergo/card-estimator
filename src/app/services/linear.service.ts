@@ -15,7 +15,7 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { IssueApiFilter, LinearIntegration, RichTopic } from '../types';
+import { IssueApiFilter, IssuesSearchApiResult, LinearIntegration, RichTopic } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
@@ -111,13 +111,16 @@ export class LinearService {
 
   getIssues(
     query?: string,
-    filters?: IssueApiFilter[]
-  ): Observable<RichTopic[]> {
+    filters?: IssueApiFilter[],
+    after?: string
+  ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
         this.functions,
         'queryLinearIssues'
-      )({ search: query, filters }).then((response) => response.data as RichTopic[])
+      )({ search: query, filters, after }).then(
+        (response) => response.data as IssuesSearchApiResult
+      )
     );
   }
 

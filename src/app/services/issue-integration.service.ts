@@ -14,7 +14,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { RichTopic, IssueApiFilter } from '../types';
+import { RichTopic, IssueApiFilter, IssuesSearchApiResult } from '../types';
 import { ToastService } from './toast.service';
 import * as Sentry from '@sentry/angular-ivy';
 
@@ -23,8 +23,9 @@ interface IntegrationProvider {
   service: {
     getIssues: (
       query?: string,
-      filters?: IssueApiFilter[]
-    ) => Observable<RichTopic[]>;
+      filters?: IssueApiFilter[],
+      after?: number | string
+    ) => Observable<IssuesSearchApiResult>;
   };
 }
 
@@ -111,23 +112,26 @@ export class IssueIntegrationService {
 
   searchIssues(
     query: string,
-    filters?: IssueApiFilter[]
-  ): Observable<RichTopic[]> {
+    filters?: IssueApiFilter[],
+    after?: number | string
+  ): Observable<IssuesSearchApiResult> {
     return this.getActiveIntegration().pipe(
       switchMap((integration) => {
         if (!integration) {
-          return of([]);
+          return of({ issues: [] });
         }
 
         if (!query && !filters) {
-          return of([]);
+          return of({ issues: [] });
         }
 
         if (query.includes('Topic of Round ')) {
-          return of([]);
+          return of({ issues: [] });
         }
 
-        return integration.service.getIssues(query, filters);
+        return integration.service
+          .getIssues(query, filters, after)
+          .pipe(tap((result) => console.log({ result })));
       }),
       catchError((e) => this.handleError(e))
     );
@@ -140,9 +144,11 @@ export class IssueIntegrationService {
           return of([]);
         }
 
-        return integration.service.getIssues();
+        return integration.service
+          .getIssues()
+          .pipe(map((result) => result.issues));
       }),
-      catchError((e) => this.handleError(e))
+      catchError((e) => this.handleError(e).pipe(map((r) => r.issues)))
     );
   }
 
@@ -164,6 +170,6 @@ export class IssueIntegrationService {
       10000,
       'error'
     );
-    return of([]);
+    return of({ issues: [] });
   }
 }

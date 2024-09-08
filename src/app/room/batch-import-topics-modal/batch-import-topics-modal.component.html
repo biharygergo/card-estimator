@@ -1,8 +1,8 @@
 <h1 mat-dialog-title class="dialog-title">Batch import</h1>
 <div mat-dialog-content>
   <p class="disclaimer">
-    Import multiple issues from your selected task management solution. Toggle
-    the selection to adjust the order of imported issues.
+    Import multiple issues from your selected task management solution. Set up
+    complex filters to batch import all issues from your next sprint or cycle.
   </p>
   <div class="tab-content">
     @if(hasActiveIntegration()) {
@@ -33,6 +33,8 @@
               <input
                 [formControl]="filterChip.valueControl"
                 [placeholder]="filterChip.filter.placeholder || 'Set filter'"
+                (keyup.enter)="onSubmitSearch.next()"
+                #filterChipInput
               />
             </div>
           </div>
@@ -117,7 +119,13 @@
           <p>{{ visibleIssues().empty }}</p>
           }
         </div>
-        }
+
+        @if(nextPage()) {
+        <button mat-button (click)="onLoadMore.next()" class="load-more-button">
+          <mat-icon>add</mat-icon>
+          Load more
+        </button>
+        } }
       </div>
     </div>
     } @else {

@@ -3,9 +3,12 @@ import {
   Component,
   computed,
   DestroyRef,
+  ElementRef,
   OnInit,
+  QueryList,
   Signal,
   signal,
+  ViewChildren,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -57,7 +60,7 @@ const LINEAR_FILTER_FIELDS: FilterField[] = [
     fieldName: 'number',
     comparator: 'is',
     convertToNumber: true,
-    placeholder: 'Enter key number',
+    placeholder: 'Enter number only',
   },
   {
     label: 'Title',
@@ -162,6 +165,8 @@ export class BatchImportTopicsModalComponent implements OnInit {
   );
 
   readonly searchedIssues = signal<RichTopic[]>([]);
+  readonly nextPage = signal<number | string | undefined>(undefined);
+
   readonly recentIssues = toSignal(
     this.issueIntegrationService.getRecentIssues(),
     { initialValue: undefined }
@@ -225,6 +230,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
   );
 
   readonly onSubmitSearch = new Subject<void>();
+  readonly onLoadMore = new Subject<void>();
   readonly onClearSearch = new Subject<void>();
   readonly onSubmitImport = new Subject<void>();
 
@@ -238,6 +244,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
       : LINEAR_FILTER_FIELDS;
   });
   readonly filterChips = signal<FilterChip[]>([]);
+  @ViewChildren('filterChipInput') filterChipElements: QueryList<ElementRef>;
 
   constructor(
     private readonly issueIntegrationService: IssueIntegrationService,
@@ -246,7 +253,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
     private readonly estimatorService: EstimatorService,
     private readonly destroyRef: DestroyRef,
     private readonly toastService: ToastService,
-    private readonly analytics: AnalyticsService,
+    private readonly analytics: AnalyticsService
   ) {}
 
   ngOnInit() {
@@ -254,29 +261,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
       .pipe(
         tap(() => this.isLoadingSearch.set(true)),
         switchMap(() => {
-          const { query } = this.searchForm.value;
-          const filters = this.filterChips().map((chip) => {
-            const filterValue = chip.filter.convertToNumber
-              ? Number(chip.valueControl.value)
-              : chip.valueControl.value;
-
-            if (
-              chip.filter.convertToNumber &&
-              chip.valueControl.value !== '' &&
-              isNaN(filterValue as number)
-            ) {
-              throw new Error('Please enter a number only for ID');
-            }
-
-            return {
-              fieldName: chip.filter.fieldName,
-              value: filterValue,
-              comparator: chip.filter.comparator,
-            };
-          });
-          return this.issueIntegrationService
-            .searchIssues(query, filters)
-            .pipe(take(1));
+          return this.searchIssues();
         }),
         tap(() => {
           this.isSearchShown.set(true);
@@ -288,17 +273,39 @@ export class BatchImportTopicsModalComponent implements OnInit {
           throw e;
         })
       )
-      .subscribe((issues) => {
-        this.searchedIssues.set(issues);
+      .subscribe((result) => {
+        this.nextPage.set(result.nextPage);
+        this.searchedIssues.set(result.issues);
+      });
+
+    this.onLoadMore
+      .pipe(
+        tap(() => this.isLoadingSearch.set(true)),
+        switchMap(() => {
+          return this.searchIssues(this.nextPage());
+        }),
+        tap(() => {
+          this.isSearchShown.set(true);
+          this.isLoadingSearch.set(false);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+        catchError((e) => {
+          this.isLoadingSearch.set(false);
+          throw e;
+        })
+      )
+      .subscribe((result) => {
+        this.nextPage.set(result.nextPage);
+        this.searchedIssues.set([...this.searchedIssues(), ...result.issues]);
       });
 
     this.onClearSearch
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.isSearchShown.set(false);
-        this.searchForm.reset();
         this.searchedIssues.set([]);
         this.filterChips.set([]);
+        this.nextPage.set(undefined);
       });
 
     this.onSubmitImport
@@ -365,6 +372,9 @@ export class BatchImportTopicsModalComponent implements OnInit {
         valueControl: new FormControl<string>(''),
       },
     ]);
+    setTimeout(() => {
+      this.filterChipElements.last.nativeElement.focus();
+    });
   }
 
   selectAll() {
@@ -374,6 +384,32 @@ export class BatchImportTopicsModalComponent implements OnInit {
     ];
 
     this.selectedIssues.set([...new Set(allIssues)]);
+  }
+
+  private searchIssues(nextPage?: number | string) {
+    const { query } = this.searchForm.value;
+    const filters = this.filterChips().map((chip) => {
+      const filterValue = chip.filter.convertToNumber
+        ? Number(chip.valueControl.value)
+        : chip.valueControl.value;
+
+      if (
+        chip.filter.convertToNumber &&
+        chip.valueControl.value !== '' &&
+        isNaN(filterValue as number)
+      ) {
+        throw new Error('Please enter a number only for ID');
+      }
+
+      return {
+        fieldName: chip.filter.fieldName,
+        value: filterValue,
+        comparator: chip.filter.comparator,
+      };
+    });
+    return this.issueIntegrationService
+      .searchIssues(query, filters, nextPage)
+      .pipe(take(1));
   }
 }
 

@@ -14,13 +14,19 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { RichTopic } from '../types';
+import { RichTopic, IssueApiFilter, IssuesSearchApiResult } from '../types';
 import { ToastService } from './toast.service';
 import * as Sentry from '@sentry/angular-ivy';
 
 interface IntegrationProvider {
   name: 'jira' | 'linear';
-  service: { getIssues: (query?: string) => Observable<RichTopic[]> };
+  service: {
+    getIssues: (
+      query?: string,
+      filters?: IssueApiFilter[],
+      after?: number | string
+    ) => Observable<IssuesSearchApiResult>;
+  };
 }
 
 @Injectable({
@@ -104,22 +110,28 @@ export class IssueIntegrationService {
     );
   }
 
-  searchIssues(query: string): Observable<RichTopic[]> {
+  searchIssues(
+    query: string,
+    filters?: IssueApiFilter[],
+    after?: number | string
+  ): Observable<IssuesSearchApiResult> {
     return this.getActiveIntegration().pipe(
       switchMap((integration) => {
         if (!integration) {
-          return of([]);
+          return of({ issues: [] });
         }
 
-        if (!query) {
-          return of([]);
+        if (!query && !filters) {
+          return of({ issues: [] });
         }
 
         if (query.includes('Topic of Round ')) {
-          return of([]);
+          return of({ issues: [] });
         }
 
-        return integration.service.getIssues(query);
+        return integration.service
+          .getIssues(query, filters, after)
+          .pipe(tap((result) => console.log({ result })));
       }),
       catchError((e) => this.handleError(e))
     );
@@ -132,9 +144,11 @@ export class IssueIntegrationService {
           return of([]);
         }
 
-        return integration.service.getIssues();
+        return integration.service
+          .getIssues()
+          .pipe(map((result) => result.issues));
       }),
-      catchError((e) => this.handleError(e))
+      catchError((e) => this.handleError(e).pipe(map((r) => r.issues)))
     );
   }
 
@@ -156,6 +170,6 @@ export class IssueIntegrationService {
       10000,
       'error'
     );
-    return of([]);
+    return of({ issues: [] });
   }
 }

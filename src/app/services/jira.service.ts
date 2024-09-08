@@ -16,7 +16,14 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { JiraIntegration, JiraIssue, JiraResource, RichTopic } from '../types';
+import {
+  IssueApiFilter,
+  IssuesSearchApiResult,
+  JiraIntegration,
+  JiraIssue,
+  JiraResource,
+  RichTopic,
+} from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
@@ -77,7 +84,7 @@ export class JiraService {
     window.open(apiUrl, '_blank');
   }
 
-  getIntegration(): Observable<JiraIntegration|undefined> {
+  getIntegration(): Observable<JiraIntegration | undefined> {
     return this.authService.user.pipe(
       switchMap((user) => {
         if (!user || user.isAnonymous) {
@@ -128,12 +135,18 @@ export class JiraService {
     );
   }
 
-  getIssues(query?: string): Observable<RichTopic[]> {
+  getIssues(
+    query?: string,
+    filters?: IssueApiFilter[],
+    after?: number
+  ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
         this.functions,
         'queryJiraIssues'
-      )({ search: query }).then((response) => response.data as RichTopic[])
+      )({ search: query, filters, after }).then(
+        (response) => response.data as IssuesSearchApiResult
+      )
     );
   }
 
@@ -145,7 +158,7 @@ export class JiraService {
       httpsCallable(
         this.functions,
         'updateIssue'
-      )({ updateRequest: {...updateRequest, provider: 'jira'} }).then(
+      )({ updateRequest: { ...updateRequest, provider: 'jira' } }).then(
         (response) => response.data as { success: boolean }
       )
     );

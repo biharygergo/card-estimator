@@ -3,12 +3,25 @@ import {getActiveJiraIntegration} from "./client";
 import * as functions from "firebase-functions";
 import {captureError} from "../shared/errors";
 import {CallableRequest} from "firebase-functions/v2/https";
-import {RichTopic} from "../types";
+import {IssueApiFilter, RichTopic} from "../types";
+
+function createComplexFilterString(filters: IssueApiFilter[]): string {
+  return filters
+      .map((filter) => {
+        return `${filter.fieldName} ${filter.comparator === "is" ? "=" : "~"} ${
+          filter.value
+        }`;
+      })
+      .join(" ");
+}
 
 export async function searchJira(
     request: CallableRequest
-): Promise<RichTopic[]> {
+): Promise<{ issues: RichTopic[]; nextPage?: number }> {
   const query = request.data.search;
+  const filters = request.data.filters as IssueApiFilter[] | undefined;
+  const after = request.data.after as number | undefined;
+
   const userId = request.auth?.uid;
   if (!userId) {
     throw new Error("Not signed in");
@@ -28,10 +41,16 @@ export async function searchJira(
 
     const keyPart = matches?.[0] ? ` OR key = ${matches[0]}` : "";
 
-    const searchFilter = filteredQuery ?
-      `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
+    const isFetchingRecents = !query && !filters;
+
+    const searchFilter = !isFetchingRecents ?
+      filters ?
+        createComplexFilterString(filters) :
+        `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
       "issue in issueHistory()";
-    const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=50&fields=summary,description,status,assignee,id,key`;
+    const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=10&fields=summary,description,status,assignee,id,key${
+      after ? `&startAt=${after}` : ""
+    }`;
 
     const results = await axios
         .get(resourceEndpoint, {
@@ -41,21 +60,27 @@ export async function searchJira(
         })
         .then((response) => response.data);
 
-    return results.issues.map(
-        (issue: any): RichTopic => ({
-          summary: issue.fields.summary,
-          description: issue.fields.description,
-          status: issue.fields.status?.name,
-          assignee: issue.fields.assignee?.displayName,
-          id: issue.id,
-          key: issue.key,
-          url: `${activeResource.url}/browse/${issue.key}`,
-          provider: "jira",
-        })
-    );
+    const hasMore = results.startAt + results.maxResults < results.total;
+    const nextPage = hasMore ? results.startAt + results.maxResults : undefined;
+
+    return {
+      issues: results.issues.map(
+          (issue: any): RichTopic => ({
+            summary: issue.fields.summary,
+            description: issue.fields.description,
+            status: issue.fields.status?.name,
+            assignee: issue.fields.assignee?.displayName,
+            id: issue.id,
+            key: issue.key,
+            url: `${activeResource.url}/browse/${issue.key}`,
+            provider: "jira",
+          })
+      ),
+      nextPage,
+    };
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 400) {
-      return [];
+      return {issues: []};
     }
     captureError(error);
     console.error(error);

@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .issue-search {
   mat-form-field {
     width: 100%;
@@ -74,4 +76,65 @@
   white-space: nowrap;
   max-width: 80%;
   overflow: hidden;
+}
+
+.filter-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  .filter-chip {
+    display: flex;
+    background: var(--mdc-chip-elevated-selected-container-color);
+    border: 1px solid var(--mdc-chip-elevated-selected-container-color);
+    border-radius: 24px;
+    overflow: hidden;
+
+    &__label {
+      font-weight: 500;
+      padding: 8px 16px;
+      text-align: center;
+      border-right: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    &__comparator {
+      font-weight: 500;
+      padding: 8px;
+      text-align: center;
+      border-right: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    &__input {
+      input {
+        width: 130px;
+        border-top-right-radius: 24px;
+        border-bottom-right-radius: 24px;
+        padding: 8px;
+        height: 100%;
+        border: none;
+        background: var(--mdc-chip-elevated-selected-container-color);
+        color: var(--mdc-chip-selected-label-text-color);
+      }
+    }
+
+    @include extraSmallScreen {
+      &__label {
+        padding: 4px 8px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 12px;
+      }
+
+      &__comparator, &__input input {
+        padding: 4px;
+        font-size: 12px;
+      }
+    } 
+  }
+}
+
+.load-more-button {
+  display: block;
+  margin: 0.5rem auto;
 }

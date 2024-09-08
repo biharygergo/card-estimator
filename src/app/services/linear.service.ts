@@ -15,7 +15,7 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { LinearIntegration, RichTopic } from '../types';
+import { IssueApiFilter, IssuesSearchApiResult, LinearIntegration, RichTopic } from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
@@ -109,12 +109,18 @@ export class LinearService {
     );
   }
 
-  getIssues(query?: string): Observable<RichTopic[]> {
+  getIssues(
+    query?: string,
+    filters?: IssueApiFilter[],
+    after?: string
+  ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
         this.functions,
         'queryLinearIssues'
-      )({ search: query }).then((response) => response.data as RichTopic[])
+      )({ search: query, filters, after }).then(
+        (response) => response.data as IssuesSearchApiResult
+      )
     );
   }
 
@@ -126,7 +132,7 @@ export class LinearService {
       httpsCallable(
         this.functions,
         'updateIssue'
-      )({ updateRequest: {...updateRequest, provider: 'linear'} }).then(
+      )({ updateRequest: { ...updateRequest, provider: 'linear' } }).then(
         (response) => response.data as { success: boolean }
       )
     );

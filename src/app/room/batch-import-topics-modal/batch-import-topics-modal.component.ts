@@ -78,6 +78,11 @@ const LINEAR_FILTER_FIELDS: FilterField[] = [
     comparator: 'contains',
   },
   {
+    label: 'Team',
+    fieldName: 'team.name',
+    comparator: 'contains',
+  },
+  {
     label: 'Cycle',
     fieldName: 'cycle.name',
     comparator: 'contains',

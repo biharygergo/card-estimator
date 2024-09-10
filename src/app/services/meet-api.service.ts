@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { AddonSession, MeetSidePanelClient } from 'src/types';
+import {
+  AddonSession,
+  meet,
+  MeetSidePanelClient,
+} from '@googleworkspace/meet-addons/meet.addons';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +16,11 @@ export class MeetApiService {
   sidePanelClient: MeetSidePanelClient = undefined;
   session: AddonSession = undefined;
 
-  constructor() { }
+  constructor() {}
 
   async configureApp(roomId?: string) {
-    await this.loadScript();
     if (!this.loadedSession) {
-      this.session = await window.meet.addon.createAddonSession({
+      this.session = await meet.addon.createAddonSession({
         cloudProjectNumber: environment.cloudProjectNumber,
       });
       this.sidePanelClient = await this.session.createSidePanelClient();
@@ -30,38 +33,16 @@ export class MeetApiService {
 
   async setCollaborationStartingState(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=meet&roomId=${roomId}`;
-    await this.sidePanelClient.setCollaborationStartingState({
-      sidePanelUrl: joinUrl
+    await this.sidePanelClient.setActivityStartingState({
+      sidePanelUrl: joinUrl,
     });
   }
 
   async inviteAllParticipants(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=meet&roomId=${roomId}`;
-    await this.sidePanelClient.startCollaboration({
+    await this.sidePanelClient.startActivity({
       sidePanelUrl: joinUrl,
     });
     return true;
-  }
-
-  loadScript() {
-    return new Promise((resolve, reject) => {
-      if (this.loadedScript) {
-        resolve(true);
-      } else {
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src =
-          'https://www.gstatic.com/meetjs/addons/0.8.0/meet.addons.js';
-
-        script.onload = () => {
-          this.loadedScript = true;
-          resolve(true);
-        };
-
-        script.onerror = (error: any) => reject(error);
-
-        document.getElementsByTagName('head')[0].appendChild(script);
-      }
-    });
   }
 }

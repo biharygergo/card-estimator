@@ -192,6 +192,20 @@ export class PaymentService {
       return false;
     }
 
+    if (this.config.runningIn === 'meet') {
+      if (
+        await this.confirmService.openConfirmationDialog({
+          title: 'Finish on planningpoker.live',
+          content: embeddedAppModalContent,
+          positiveText: 'Sounds good',
+          negativeText: 'Cancel',
+        })
+      ) {
+        window.open(`${window.location.origin}/join?flow=premium`, '_blank');
+      }
+      return false;
+    }
+
     return true;
   }
 

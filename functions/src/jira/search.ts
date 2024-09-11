@@ -48,7 +48,7 @@ export async function searchJira(
         createComplexFilterString(filters) :
         `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
       "issue in issueHistory()";
-    const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=10&fields=summary,description,status,assignee,id,key${
+    const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=25&fields=summary,description,status,assignee,id,key${
       after ? `&startAt=${after}` : ""
     }`;
 

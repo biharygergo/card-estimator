@@ -65,7 +65,7 @@ export async function searchLinear(
     const issues = await client.client.rawRequest(
         `
         query fetchIssues($filter: IssueFilter, $after: String) {
-            issues(filter: $filter, first: 10, after: $after) {
+            issues(filter: $filter, first: 25, after: $after) {
                 nodes {
                   title
                   description

@@ -93,6 +93,11 @@ $m3-light-theme: mat.define-theme(
     --background-dark: #242424;
     --main-color: #242424;
   }
+
+  &.running-in-meet {
+    --background-dark: #202124;
+    --main-color: #202124;
+  }
 }
 
 * {

@@ -51,6 +51,7 @@ export class MeetApiService {
       if (e.message?.includes('activity is ongoing')) {
         return false;
       }
+      throw e;
     }
 
     return true;

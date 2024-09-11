@@ -395,7 +395,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.config.runningIn === 'meet') {
       this.meetService.configureApp(roomIdFromParams);
     }
-  
+
     this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
       this.room = room;
       this.rounds = Object.values(room.rounds);
@@ -524,11 +524,9 @@ export class RoomComponent implements OnInit, OnDestroy {
           ? 'Get one free credit every month when you create a permanent account.'
           : 'Top up your credits or choose our unlimited subscription.';
         if (credits === 1) {
-          message =
-            'You have just 1 credit remaining. ' + creditMessage;
+          message = 'You have just 1 credit remaining. ' + creditMessage;
         } else if (credits === 0) {
-          message =
-            'You ran out of credits. ' + creditMessage;
+          message = 'You ran out of credits. ' + creditMessage;
         }
 
         const ref = this.toastService.showMessage(
@@ -868,9 +866,12 @@ export class RoomComponent implements OnInit, OnDestroy {
 
       this.clipboard.copy(link);
     } else if (this.config.runningIn === 'meet') {
-      await this.meetService.inviteAllParticipants(this.room.roomId);
-      message =
-        'Activity started, the app will open for everyone in the meeting. 🎉';
+      const success = await this.meetService.inviteAllParticipants(
+        this.room.roomId
+      );
+      message = success
+        ? 'Activity started, the app will open for everyone in the meeting. 🎉'
+        : 'An activity is already ongoing.';
     } else {
       this.clipboard.copy(roomUrl);
       message = 'Join link copied to clipboard.';

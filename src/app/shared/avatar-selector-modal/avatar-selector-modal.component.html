@@ -103,7 +103,7 @@
                   </p>
                   }
                   <p class="next-credit">
-                    @if (!user.isAnonymous) { Next free credit on
+                    @if (!user?.isAnonymous) { Next free credit on
                     {{ nextMonthStart | date }}
                     } @else { Get one free credit every month by signing up for
                     an account! }

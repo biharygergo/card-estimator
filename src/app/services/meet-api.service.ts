@@ -32,17 +32,27 @@ export class MeetApiService {
   }
 
   async setCollaborationStartingState(roomId: string) {
-    const joinUrl = `${window.location.origin}/join?s=meet&roomId=${roomId}`;
-    await this.sidePanelClient.setActivityStartingState({
-      sidePanelUrl: joinUrl,
-    });
+    const startingState = await this.sidePanelClient.getActivityStartingState();
+    if (!startingState.sidePanelUrl) {
+      const joinUrl = `${window.location.origin}/join?s=meet&roomId=${roomId}`;
+      await this.sidePanelClient.setActivityStartingState({
+        sidePanelUrl: joinUrl,
+      });
+    }
   }
 
   async inviteAllParticipants(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=meet&roomId=${roomId}`;
-    await this.sidePanelClient.startActivity({
-      sidePanelUrl: joinUrl,
-    });
+    try {
+      await this.sidePanelClient.startActivity({
+        sidePanelUrl: joinUrl,
+      });
+    } catch (e) {
+      if (e.message?.includes('activity is ongoing')) {
+        return false;
+      }
+    }
+
     return true;
   }
 }

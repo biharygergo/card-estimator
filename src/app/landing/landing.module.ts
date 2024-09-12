@@ -108,7 +108,6 @@ const routes: Routes = [
       disablePostfix: true,
       description:
         'Install our integration for Google Meet, the simplest way to estimate stories.',
-      noIndex: true,
     },
   },
   {

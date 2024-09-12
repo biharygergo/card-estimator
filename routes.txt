@@ -1,13 +1,14 @@
 /
 /faq
 /features
-/terms
-/privacy
+/policies/terms
+/policies/privacy
 /join
 /create
 /room
 /integrations/zoom
 /integrations/webex
+/integrations/meet
 /integrations/teams
 /history
 /premium

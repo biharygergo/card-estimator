@@ -128,7 +128,7 @@ Key Features & Benefits for Scrum Masters:
 
 - Data-Driven Insights: Track estimation history and identify patterns.
 
-- Seamless Integrations: Connect with Jira and Linear to import tasks directly from your backlog. Plan in your video meetings with integrations for Zoom, Teams and Webex.
+- Seamless Integrations: Connect with Jira and Linear to import tasks directly from your backlog. Plan in your video meetings with integrations for Zoom, Teams, Meet and Webex.
 
 - Easy to get started: Start planning in a couple of clicks.
 

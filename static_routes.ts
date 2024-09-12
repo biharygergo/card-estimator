@@ -9,6 +9,7 @@ export const routes = [
   '/room',
   '/integrations/zoom',
   '/integrations/webex',
+  '/integrations/meet',
   '/integrations/teams',
   '/history',
   '/premium',

@@ -37,6 +37,11 @@
         font-weight: 1000;
       }
 
+      .meet {
+        color: #05ac47;
+        font-weight: 1000;
+      }
+
       .webex {
         font-weight: 1000;
       }
@@ -69,6 +74,12 @@ mat-card-actions {
   width: 100%;
   --mdc-filled-button-label-text-color: white;
   --mdc-filled-button-container-color: #4185fe;
+}
+
+.meet-button {
+  width: 100%;
+  --mdc-filled-button-label-text-color: white;
+  --mdc-filled-button-container-color: #05ac47;
 }
 
 .webex-button {

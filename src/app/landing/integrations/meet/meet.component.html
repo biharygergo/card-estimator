@@ -1,8 +1,8 @@
 <planning-poker-page-header-with-cta
   [config]="{
-  title:'Planning Poker for Google Meet™ (coming soon)',
+  title:'Planning Poker for Google Meet™',
   description: 'Get accurate estimates for your next sprint with our app made for Google Meet™.',
-  externalLink: 'https://google.com',
+  externalLink: 'https://workspace.google.com/marketplace/app/planningpokerlive/417578634660',
   ctaIcon: 'open_in_new',
   ctaTitle: 'Add to Google Meet™',
   showPlatforms: false,
@@ -66,23 +66,39 @@
       <div class="steps-container">
         <div class="instruction-image">
           <img
-            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_1.png"
-            alt="Store landing page for Planning Poker"
+            ngSrc="Meet_store"
+            alt="Marketplace landing page for PlanningPoker.live"
+            placeholder
+            width="2940"
+            height="1594"
+            sizes="(max-width: 800px) 100vw, 60vw"
             [class.visible]="selectedIndex === 0"
           />
           <img
-            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_4.jpg"
-            alt="Apps screen inside Meet™"
+            ngSrc="Meet_3"
+            alt="PlanningPoker.live running inside Meets"
+            placeholder
+            width="1920"
+            height="1080"
+            sizes="(max-width: 800px) 100vw, 60vw"
             [class.visible]="selectedIndex === 1"
           />
           <img
-            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_2.jpg"
-            alt="The app is running inside Meet™"
+            ngSrc="Meet_2"
+            alt="Select custom card sets"
+            placeholder
+            width="1920"
+            height="1080"
+            sizes="(max-width: 800px) 100vw, 60vw"
             [class.visible]="selectedIndex === 2"
           />
           <img
-            src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Meet_3.jpg"
+            ngSrc="Meet_1"
             alt="An ongoing planning session with participants in Meet™"
+            placeholder
+            width="1920"
+            height="1080"
+            sizes="(max-width: 800px) 100vw, 60vw"
             [class.visible]="selectedIndex === 3"
           />
         </div>
@@ -93,16 +109,24 @@
           <mat-tab label="1. Open Workspace Marketplace and install"
             ><div class="step-content">
               <p>
-                To add the app to your Teams account, open
-                <a href="" target="_blank">the Marketplace</a>
-                and click the "Get it now" button. You might need to ask your
+                To add the app to Google Meet, open
+                <a
+                  href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
+                  target="_blank"
+                  >the Marketplace</a
+                >
+                and click the "Install" button. You might need to ask your
                 Workspace administrator to whitelist the app for use.
               </p>
             </div>
           </mat-tab>
           <mat-tab label="2. Open the app inside Meet™"
             ><div class="step-content">
-              <p>TODO</p>
+              <p>
+                Once the app is installed, click on the "Apps" icon in the
+                bottom right corner of the Meet window. The apps side-panel will
+                appear where you can select PlanningPoker.live from the list.
+              </p>
             </div>
           </mat-tab>
           <mat-tab label="3. Invite your colleagues in the meeting"

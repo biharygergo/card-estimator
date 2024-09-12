@@ -11,6 +11,7 @@ import { StartPlanningCtaComponent } from '../../components/start-planning-cta/s
 import { FeaturesItemsComponent } from '../../features/features-items/features-items.component';
 import { FeaturesPreviewComponent } from '../../features/features-preview/features-preview.component';
 import { BehaviorSubject } from 'rxjs';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-meet',
@@ -26,6 +27,7 @@ import { BehaviorSubject } from 'rxjs';
     MatTabGroup,
     MatTab,
     StartPlanningCtaComponent,
+    NgOptimizedImage,
   ],
   templateUrl: './meet.component.html',
   styleUrl: '../../teams/teams.component.scss',

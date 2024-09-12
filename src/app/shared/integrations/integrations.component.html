@@ -92,11 +92,12 @@
             <a
               mat-flat-button
               color="primary"
-              [disabled]="true || config.runningIn === 'meet'"
+              [disabled]="config.runningIn === 'meet'"
+              href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
               target="_blank"
               rel="noreferrer"
             >
-              {{ config.runningIn === "meet" ? "Installed" : "Coming soon" }}
+              {{ config.runningIn === "meet" ? "Installed" : "Install" }}
             </a>
           </div>
         </div>
@@ -174,7 +175,7 @@
         </div>
         <div class="integration-preferences">
           @if (linearIntegration$ | async) {
-            <button mat-button (click)="removeLinearIntegration()">Remove</button>
+          <button mat-button (click)="removeLinearIntegration()">Remove</button>
           }
         </div>
       </div>

@@ -1,22 +1,22 @@
 @if (!isZoomBannerHidden) {
-  <mat-card appearance="outlined" class="banner-card">
-    <button
-      mat-icon-button
-      class="close-icon-button"
-      aria-label="Close"
-      (click)="onCloseClicked.next()"
-      >
-      <mat-icon>close</mat-icon>
-    </button>
-    <mat-card-content>
-      <img
-        src="assets/zoom_webex_announcement.png"
-        alt="The logo of Planning Poker with Zoom & Webex"
-        />
-      <div class="banner-text">
-        <h4>
+<mat-card appearance="outlined" class="banner-card">
+  <button
+    mat-icon-button
+    class="close-icon-button"
+    aria-label="Close"
+    (click)="onCloseClicked.next()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-card-content>
+    <img
+      src="assets/zoom_webex_announcement.png"
+      alt="The logo of Planning Poker with Zoom & Webex"
+    />
+    <div class="banner-text">
+      <h4>
         Use Planning Poker embedded in your <span class="zoom">Zoom</span>,
-        <span class="teams">Teams</span> or
+        <span class="meet">Meet</span>, <span class="teams">Teams</span> or
         <span class="webex">Webex</span> meeting
       </h4>
       <p>
@@ -34,32 +34,42 @@
       target="_blank"
       rel="noreferrer"
       class="zoom-button"
-      >
+    >
       <mat-icon>open_in_new</mat-icon>
       Install in Zoom</a
-      >
-      <a
-        mat-flat-button
-        color="primary"
-        href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
-        target="_blank"
-        rel="noreferrer"
-        class="teams-button"
-        >
-        <mat-icon>open_in_new</mat-icon>
-        Install in Teams</a
-        >
-        <a
-          mat-flat-button
-          href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
-          target="_blank"
-          color="primary"
-          class="webex-button"
-          >
-          <mat-icon>open_in_new</mat-icon>
-          Install in Webex</a
-          >
-        </mat-card-actions>
-      </mat-card>
-    }
-    
+    >
+    <a
+      mat-flat-button
+      color="primary"
+      href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
+      target="_blank"
+      rel="noreferrer"
+      class="teams-button"
+    >
+      <mat-icon>open_in_new</mat-icon>
+      Install in Teams</a
+    >
+    <a
+      mat-flat-button
+      color="primary"
+      href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
+      target="_blank"
+      rel="noreferrer"
+      class="meet-button"
+    >
+      <mat-icon>open_in_new</mat-icon>
+      Install in Meet</a
+    >
+    <a
+      mat-flat-button
+      href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
+      target="_blank"
+      color="primary"
+      class="webex-button"
+    >
+      <mat-icon>open_in_new</mat-icon>
+      Install in Webex</a
+    >
+  </mat-card-actions>
+</mat-card>
+}

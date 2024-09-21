@@ -14,6 +14,7 @@ export interface OAuthState {
   platform: Platform;
   returnToPath?: string;
   authIntent: AuthIntent;
+  isDev?: boolean;
   [otherKeys: string]: any;
 }
 

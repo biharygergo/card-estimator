@@ -27,6 +27,7 @@ export function isRunningInDevMode(req?: functions.Request) {
   host?.includes("localhost") ||
     host?.includes("staging.planningpoker.live") ||
     host?.includes("test.planningpoker.live") ||
-    host?.includes("ngrok");
+    host?.includes("ngrok") ||
+    req?.query.isDev === "true";
   return isDev;
 }

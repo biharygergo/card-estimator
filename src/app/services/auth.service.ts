@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
@@ -56,6 +56,7 @@ import {
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
+import { APP_CONFIG, AppConfig } from '../app-config.module';
 
 export const PROFILES_COLLECTION = 'userProfiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
@@ -86,7 +87,8 @@ export class AuthService {
   constructor(
     private auth: Auth,
     private firestore: Firestore,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {
     this.user = user(this.auth).pipe();
   }
@@ -129,9 +131,9 @@ export class AuthService {
   }
 
   getApiAuthUrl(authIntent: AuthIntent, returnToPath?: string): string {
-    return `${window.origin}/api/startGoogleAuth?intent=${authIntent}${
+    return `${window.origin}/api/startOAuth?intent=${authIntent}${
       returnToPath ? `&returnPath=${encodeURIComponent(returnToPath)}` : ''
-    }`;
+    }&platform=${this.config.runningIn}&provider=google`;
   }
 
   async signInWithGoogle(idToken?: string) {

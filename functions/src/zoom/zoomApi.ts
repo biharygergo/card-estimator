@@ -67,6 +67,7 @@ function tokenRequest(params: any, isDev: boolean) {
       .then(({data}) => Promise.resolve(data))
       .catch((error) => {
         console.error("Axios error", error.response.data);
+        console.error(error.response);
         return Promise.reject(error.response.data);
       });
 }

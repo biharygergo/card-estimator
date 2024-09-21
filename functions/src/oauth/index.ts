@@ -1,5 +1,11 @@
 import * as functions from "firebase-functions";
-import {getAuthIntent, getReturnToPath, OAuthState} from "./types";
+import {
+  getAuthIntent,
+  getReturnToPath,
+  OAuthHandler,
+  OAuthProvider,
+  OAuthState,
+} from "./types";
 import {getHost, isRunningInDevMode} from "../config";
 import {GoogleOAuthHandler} from "./google";
 import {Platform} from "../types";
@@ -8,26 +14,37 @@ import {AUTH_SESSIONS} from "../shared/collections";
 import {
   getDeeplink,
   getInstallURL,
+  getToken,
   setSessionVariable,
 } from "../zoom/zoomApi";
 import {getSessionVariable} from "../zoom/routes";
 
-function getZoomAccessCodeRedirectUrl(
-    req: functions.Request,
-    res: functions.Response,
-    authIntent: string,
-    returnToPath?: string
-) {
+function getZoomAccessCodeRedirectUrl(req: functions.Request) {
   const isDev = isRunningInDevMode(req);
-  const returnUrl = `${getHost(req)}/api/startOauth?intent=${authIntent}${
-    returnToPath ? `&returnPath=${returnToPath}` : ""
-  }`;
-  const {url, verifier} = getInstallURL(isDev, req, returnUrl);
-  setSessionVariable(res, verifier);
-  return url.href;
+  const queryString = [
+    ...Object.entries(req.query),
+    Object.keys(req.query).includes("isDev") ? [undefined, undefined] : ["isDev", isDev ? "true" : "false"],
+  ]
+      .filter((entry): entry is [string, string] => !!entry[0] && entry[0] !== "code")
+      .sort(([key1], [key2]) => key1.localeCompare(key2))
+      .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
+      )
+      .join("&");
+  const returnUrl = `${getHost(req)}/api/startOAuth?${queryString}`;
+
+  return returnUrl;
 }
 
-export function startOAuth(req: functions.Request, res: functions.Response) {
+const HANDLERS: { [provider in OAuthProvider]: OAuthHandler } = {
+  [OAuthProvider.GOOGLE]: new GoogleOAuthHandler(),
+};
+
+export async function startOAuth(
+    req: functions.Request,
+    res: functions.Response
+) {
   const oauthRedirectMethod = req.query.oauthRedirectMethod as
     | string
     | undefined;
@@ -37,10 +54,31 @@ export function startOAuth(req: functions.Request, res: functions.Response) {
   const isDev = isRunningInDevMode(req);
   const platform = req.query.platform as Platform;
   const code = req.query.code as string | undefined;
+  const provider = req.query.provider as OAuthProvider | undefined;
 
-  if (platform === "zoom" && !code) {
-    const url = getZoomAccessCodeRedirectUrl(req, res, authIntent, returnToPath);
-    return res.redirect(url);
+  if (!provider || !Object.values(OAuthProvider).includes(provider)) {
+    throw new Error("Invalid or missing provider");
+  }
+
+  if (platform === "zoom") {
+    if (!code) {
+      const returnUrl = getZoomAccessCodeRedirectUrl(req);
+      const {url, verifier} = getInstallURL(isDev, req, returnUrl);
+      setSessionVariable(res, verifier);
+      res.redirect(url.href);
+      return;
+    }
+
+    const verifier = getSessionVariable(req, res);
+    const {access_token: accessToken} = await getToken(
+        code,
+        verifier,
+        isDev,
+        req,
+        getZoomAccessCodeRedirectUrl(req)
+    );
+
+    setSessionVariable(res, accessToken);
   }
 
   const oAuthState: OAuthState = {
@@ -52,7 +90,7 @@ export function startOAuth(req: functions.Request, res: functions.Response) {
     authIntent,
   };
 
-  const redirectUrl = new GoogleOAuthHandler().startOauthFlow(req, oAuthState);
+  const redirectUrl = HANDLERS[provider].startOauthFlow(req, oAuthState);
 
   res.redirect(redirectUrl);
 }
@@ -61,18 +99,34 @@ export async function onOAuthResult(
     req: functions.Request,
     res: functions.Response
 ) {
-  const state: OAuthState = JSON.parse(decodeURIComponent(req.query.state as string));
-  const idToken = await new GoogleOAuthHandler().onAuthSuccess(req);
+  const state: OAuthState = JSON.parse(
+      decodeURIComponent(req.query.state as string)
+  );
+  const provider = req.path.split("/").pop() as OAuthProvider;
+
+  const idToken = await HANDLERS[provider].onAuthSuccess(req);
+
+  if (req.method === "OPTIONS") {
+    console.log("OPTIONS request");
+    res.json({});
+    return;
+  }
+
+  if (!provider || !Object.values(OAuthProvider).includes(provider)) {
+    throw new Error("Invalid or missing provider");
+  }
 
   if (state.platform === "teams") {
     if (state.oauthRedirectMethod === "deeplink") {
-      return res.redirect(
+      res.redirect(
           `msteams://teams.microsoft.com/l/auth-callback?authId=${state.authId}&result=${idToken}`
       );
+      return;
     } else {
       // continue redirecting to a web-page that will call notifySuccess() – usually this method is used in Teams-Web
       const deepLink = `https://planningpoker.live/integrations/teams/auth?token=${idToken}`;
-      return res.redirect(deepLink);
+      res.redirect(deepLink);
+      return;
     }
   }
 
@@ -82,6 +136,7 @@ export async function onOAuthResult(
       createdAt: Timestamp.now(),
       authIntent: state.authIntent,
       returnToPath: state.returnToPath,
+      provider,
     };
 
     // Save idToken into temporary storage
@@ -98,7 +153,8 @@ export async function onOAuthResult(
       session: sessionId,
     });
 
-    return res.redirect(deeplink);
+    res.redirect(deeplink);
+    return;
   }
 
   throw new Error("Unsupported platform");

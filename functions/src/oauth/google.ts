@@ -4,7 +4,8 @@ import * as functions from "firebase-functions";
 import {getHost, isRunningInDevMode} from "../config";
 
 function getCredentials(req: functions.Request, isDev?: boolean) {
-  return (isDev ?? isRunningInDevMode(req)) ?
+  console.log("dev creds", isDev || isRunningInDevMode(req));
+  return (isDev || isRunningInDevMode(req)) ?
     {
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID_DEV,
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET_DEV,
@@ -20,7 +21,7 @@ export class GoogleOAuthHandler extends OAuthHandler {
     const googleOAuthEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
     const params = {
       response_type: "code",
-      client_id: getCredentials(req).clientId,
+      client_id: getCredentials(req, state.isDev).clientId,
       scope: "openid profile email",
       state: JSON.stringify(state),
       redirect_uri: `${getHost(req)}/api/onOAuthResult/google`,
@@ -38,7 +39,9 @@ export class GoogleOAuthHandler extends OAuthHandler {
 
   async onAuthSuccess(req: functions.Request): Promise<string> {
     const code = req.query.code;
-    const state: OAuthState = JSON.parse(decodeURIComponent(req.query.state as string));
+    const state: OAuthState = JSON.parse(
+        decodeURIComponent(req.query.state as string)
+    );
 
     if (!code) {
       throw new Error("No auth code was provided");

@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
+  OAuthProvider,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithCredential,
@@ -130,10 +131,45 @@ export class AuthService {
     this.auth.signOut();
   }
 
-  getApiAuthUrl(authIntent: AuthIntent, returnToPath?: string): string {
+  getApiAuthUrl(authIntent: AuthIntent, provider: string, returnToPath?: string): string {
     return `${window.origin}/api/startOAuth?intent=${authIntent}${
       returnToPath ? `&returnPath=${encodeURIComponent(returnToPath)}` : ''
-    }&platform=${this.config.runningIn}&provider=google`;
+    }&platform=${this.config.runningIn}&provider=${provider}`;
+  }
+
+  async signInWithMicrosoft(accessToken?: string) {
+    const provider = this.createMicrosoftOpenIdProvider();
+    const userCredential = accessToken
+      ? await signInWithCredential(
+          this.auth,
+          provider.credential({ idToken: accessToken })
+        )
+      : await signInWithPopup(this.auth, provider);
+
+    const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
+
+    await this.handleSignInResult({ isNewUser });
+    this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  async linkAccountWithMicrosoft(accessToken?: string) {
+    const provider = this.createMicrosoftOpenIdProvider();
+
+    const userCredential = accessToken
+      ? await linkWithCredential(
+          this.auth.currentUser,
+          provider.credential({ idToken: accessToken })
+        )
+      : await linkWithPopup(this.auth.currentUser, provider);
+
+    await this.handleSignInResult({ isNewUser: true });
+    this.snackbar.open(`Your account is now set up, awesome!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
   }
 
   async signInWithGoogle(idToken?: string) {
@@ -243,6 +279,14 @@ export class AuthService {
     const provider = new GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/userinfo.email');
     provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+    return provider;
+  }
+
+  private createMicrosoftOpenIdProvider() {
+    const provider = new OAuthProvider('oidc.microsoft');
+    provider.addScope('openid');
+    provider.addScope('profile');
+    provider.addScope('email');
     return provider;
   }
 

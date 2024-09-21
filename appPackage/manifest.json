@@ -1,64 +1,60 @@
 {
-    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
-    "manifestVersion": "1.16",
-    "version": "1.0.6",
-    "id": "${{TEAMS_APP_ID}}",
-    "packageName": "com.microsoft.teams.extension",
-    "developer": {
-        "name": "Gergely Bihary E.V.",
-        "websiteUrl": "${{TAB_ENDPOINT}}",
-        "privacyUrl": "${{TAB_ENDPOINT}}/policies/privacy",
-        "termsOfUseUrl": "${{TAB_ENDPOINT}}/policies/terms"
-    },
-    "icons": {
-        "color": "color.png",
-        "outline": "outline.png"
-    },
-    "name": {
-        "short": "PlanningPoker.live",
-        "full": "PlanningPoker.live"
-    },
-    "description": {
-        "short": "Run SCRUM planning meetings with ease inside Microsoft Teams!",
-        "full": "To get started, install this app in Teams and create a new planning session. A free PlanningPoker.live account will automatically be created for you. You can also use your Google account or e-mail address to sign in to an existing account with us.\n\nThis app is free to use with monthly free credits. If you require more credits, you can learn more about our packages at [https://planningpoker.live/pricing](https://planningpoker.live/pricing).\n\nMain features:\n\n*   Create voting rooms and collaborate with colleagues\n*   Find consensus and discuss edge cases\n*   Connect to JIRA & Linear\n*   Customize card sets, save results\n\nPlanning projects is difficult, especially when you are working remotely. During a planning meeting, teams estimate projects/cards while sitting around a table and showing hands-on the count of three. This worked well before the pandemic, but it's not so efficient in the remote world. This app moves the planning meeting into your Teams window, allowing you to vote and find consensus easily.\n\nThis app allows users to use AI to summarize their planning meetings. The AI will analyze the results of each voting round and give a useful summary that can then be copied and shared with the team. If the AI generated content is inappropriate, please let us know at [info@planningpoker.live](mailto:info@planningpoker.live]."
-    },
-    "accentColor": "#FFFFFF",
-    "bots": [],
-    "composeExtensions": [],
-    "configurableTabs": [
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.16",
+  "version": "1.0.6",
+  "id": "${{TEAMS_APP_ID}}",
+  "packageName": "com.microsoft.teams.extension",
+  "developer": {
+    "name": "Gergely Bihary E.V.",
+    "websiteUrl": "${{TAB_ENDPOINT}}",
+    "privacyUrl": "${{TAB_ENDPOINT}}/policies/privacy",
+    "termsOfUseUrl": "${{TAB_ENDPOINT}}/policies/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "PlanningPoker.live",
+    "full": "PlanningPoker.live"
+  },
+  "description": {
+    "short": "Run SCRUM planning meetings with ease inside Microsoft Teams!",
+    "full": "To get started, install this app in Teams and create a new planning session. A free PlanningPoker.live account will automatically be created for you. You can also use your Google account or e-mail address to sign in to an existing account with us.\n\nThis app is free to use with monthly free credits. If you require more credits, you can learn more about our packages at [https://planningpoker.live/pricing](https://planningpoker.live/pricing).\n\nMain features:\n\n*   Create voting rooms and collaborate with colleagues\n*   Find consensus and discuss edge cases\n*   Connect to JIRA & Linear\n*   Customize card sets, save results\n\nPlanning projects is difficult, especially when you are working remotely. During a planning meeting, teams estimate projects/cards while sitting around a table and showing hands-on the count of three. This worked well before the pandemic, but it's not so efficient in the remote world. This app moves the planning meeting into your Teams window, allowing you to vote and find consensus easily.\n\nThis app allows users to use AI to summarize their planning meetings. The AI will analyze the results of each voting round and give a useful summary that can then be copied and shared with the team. If the AI generated content is inappropriate, please let us know at [info@planningpoker.live](mailto:info@planningpoker.live]."
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [],
+  "composeExtensions": [],
+  "configurableTabs": [
+    {
+      "configurationUrl": "${{TAB_ENDPOINT}}/integrations/teams/configure",
+      "canUpdateConfiguration": true,
+      "scopes": ["team", "groupchat"],
+      "context": [
+        "channelTab",
+        "privateChatTab",
+        "meetingChatTab",
+        "meetingDetailsTab",
+        "meetingSidePanel",
+        "meetingStage"
+      ]
+    }
+  ],
+  "authorization": {
+    "permissions": {
+      "resourceSpecific": [
         {
-            "configurationUrl": "${{TAB_ENDPOINT}}/integrations/teams/configure",
-            "canUpdateConfiguration": true,
-            "scopes": [
-                "team",
-                "groupchat"
-              ],
-              "context": [
-                "channelTab",
-                "privateChatTab",
-                "meetingChatTab",
-                "meetingDetailsTab",
-                "meetingSidePanel",
-                "meetingStage"
-              ]
+          "name": "MeetingStage.Write.Chat",
+          "type": "Delegated"
         }
-    ],
-    "authorization": {
-        "permissions": {
-            "resourceSpecific": [
-            {
-                "name": "MeetingStage.Write.Chat",
-                "type": "Delegated"
-            }
-            ]
-        }
-    },
-    "staticTabs": [],
-    "permissions": [
-        "identity",
-        "messageTeamMembers"
-    ],
-    "validDomains": [
-        "${{TAB_DOMAIN}}"
-    ]
+      ]
+    }
+  },
+  "staticTabs": [],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["${{TAB_DOMAIN}}"],
+  "webApplicationInfo": {
+    "id": "bc1d064b-f3c1-4d5e-a219-b17847c2ac17",
+    "resource": "api://test.planningpoker.live/bc1d064b-f3c1-4d5e-a219-b17847c2ac17"
+  }
 }

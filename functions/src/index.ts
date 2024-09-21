@@ -58,6 +58,7 @@ import {
 import {searchLinear} from "./linear/search";
 import {updateLinearIssue} from "./linear/updateIssue";
 import {updateRoomsTableInBigQuery} from "./room/bigquery";
+import {onOAuthResult, startOAuth} from "./oauth";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
@@ -239,6 +240,17 @@ exports.onTeamsGoogleAuthResult = onRequest(
     {cors: true},
     async (req, res) => {
       cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
+    }
+);
+
+exports.startOAuth = onRequest({cors: true}, async (req, res) => {
+  cookieParser()(req, res, () => startOAuth(req, res));
+});
+
+exports.onOAuthResult = onRequest(
+    {cors: true},
+    async (req, res) => {
+      cookieParser()(req, res, () => onOAuthResult(req, res));
     }
 );
 

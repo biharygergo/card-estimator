@@ -111,7 +111,7 @@ export async function onTeamsGoogleAuthResult(
       );
     } else {
       // continue redirecting to a web-page that will call notifySuccess() – usually this method is used in Teams-Web
-      const deepLink = `https://test.planningpoker.live/integrations/teams/auth?token=${idToken}`;
+      const deepLink = `https://planningpoker.live/integrations/teams/auth?token=${idToken}`;
       return res.redirect(deepLink);
     }
   } catch (error) {

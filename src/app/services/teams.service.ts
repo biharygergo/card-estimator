@@ -137,10 +137,9 @@ export class TeamsService {
 
     const apiUrl = `${
       window.location.origin
-    }/api/startTeamsGoogleAuth?oauthRedirectMethod={oauthRedirectMethod}&authId={authId}&redirectTo=${encodeURIComponent(
+    }/api/startOAuth?oauthRedirectMethod={oauthRedirectMethod}&authId={authId}&redirectTo=${encodeURIComponent(
       returnTo
-    )}`;
-    microsoftTeams.authentication;
+    )}&platform=teams&provider=google`;
     const token = await microsoftTeams.authentication.authenticate({
       url: apiUrl,
       isExternal: true,

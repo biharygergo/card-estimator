@@ -277,7 +277,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   private linkAccountWithGoogle(): Observable<void | {}> {
     let signInPromise: Promise<void>;
     if (this.config.runningIn === 'zoom') {
-      signInPromise = this.linkAccountWithGoogleInZoom();
+      signInPromise = this.linkAccountWithProviderInZoom('google');
     } else if (this.config.runningIn === 'teams') {
       const returnTo = this.route.snapshot.url.join('/');
       signInPromise = this.teamsService
@@ -325,7 +325,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return of(false);
   }
 
-  private async linkAccountWithGoogleInZoom(): Promise<void> {
+  private async linkAccountWithProviderInZoom(provider: string): Promise<void> {
     this.dialog.open(
       ...authProgressDialogCreator({
         initialState: AuthProgressState.IN_PROGRESS,
@@ -335,7 +335,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     await this.zoomApiService.openUrl(
       this.authService.getApiAuthUrl(
         AuthIntent.LINK_ACCOUNT,
-        'google',
+        provider,
         // this.activatedRoute.snapshot.toString()
       ),
       true
@@ -348,7 +348,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   private signInWithGoogle(): Observable<boolean> {
     let signInPromise: Promise<any>;
     if (this.config.runningIn === 'zoom') {
-      signInPromise = this.signInWithGoogleInZoom();
+      signInPromise = this.signInWithProviderInZoom('google');
     } else if (this.config.runningIn === 'teams') {
       const returnTo = this.route.snapshot.url.join('/');
       signInPromise = this.teamsService
@@ -374,7 +374,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return this.authService.signInWithGoogle();
   }
 
-  private signInWithGoogleInZoom() {
+  private signInWithProviderInZoom(provider: string) {
     this.dialog.open(
       ...authProgressDialogCreator({
         initialState: AuthProgressState.IN_PROGRESS,
@@ -382,7 +382,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
       })
     );
     return this.zoomApiService.openUrl(
-      this.authService.getApiAuthUrl(AuthIntent.SIGN_IN, 'google'),
+      this.authService.getApiAuthUrl(AuthIntent.SIGN_IN, provider),
       true
     );
   }
@@ -395,7 +395,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   private linkAccountWithMicrosoft(): Observable<void | {}> {
     let signInPromise: Promise<void>;
     if (this.config.runningIn === 'zoom') {
-      signInPromise = this.linkAccountWithMicrosoftInZoom();
+      signInPromise = this.linkAccountWithProviderInZoom('microsoft');
     } else if (this.config.runningIn === 'teams') {
       signInPromise = this.teamsService
         .getMicrosoftAuthToken()
@@ -414,30 +414,10 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     );
   }
 
-  private async linkAccountWithMicrosoftInZoom(): Promise<void> {
-    return new Promise((reject) => reject());
-    /* this.dialog.open(
-      ...authProgressDialogCreator({
-        initialState: AuthProgressState.IN_PROGRESS,
-        startAccountSetupOnOpen: false,
-      })
-    );
-    await this.zoomApiService.openUrl(
-      this.authService.getApiAuthUrl(
-        AuthIntent.LINK_ACCOUNT
-        // this.activatedRoute.snapshot.toString()
-      ),
-      true
-    ); */
-
-    // This promise never resolves, as the app will be reloaded on Auth success
-    // return new Promise(() => {});
-  }
-
   private signInWithMicrosoft(): Observable<boolean> {
     let signInPromise: Promise<any>;
     if (this.config.runningIn === 'zoom') {
-      signInPromise = this.signInWithMicrosoftInZoom();
+      signInPromise = this.signInWithProviderInZoom('microsoft');
     } else if (this.config.runningIn === 'teams') {
       signInPromise = this.teamsService
         .getMicrosoftAuthToken()
@@ -455,19 +435,6 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
       catchError((error) => {
         return this.handleAccountError(error);
       })
-    );
-  }
-
-  private signInWithMicrosoftInZoom() {
-    this.dialog.open(
-      ...authProgressDialogCreator({
-        initialState: AuthProgressState.IN_PROGRESS,
-        startAccountSetupOnOpen: false,
-      })
-    );
-    return this.zoomApiService.openUrl(
-      this.authService.getApiAuthUrl(AuthIntent.SIGN_IN, 'microsoft'),
-      true
     );
   }
 }

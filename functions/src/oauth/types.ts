@@ -8,6 +8,7 @@ export enum AuthIntent {
 
 export enum OAuthProvider {
   GOOGLE = "google",
+  MICROSOFT = "microsoft",
 }
 
 export interface OAuthState {

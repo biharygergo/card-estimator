@@ -74,6 +74,7 @@ export type ParsedSessionCookie = {
   returnToPath?: string;
   idToken: string;
   createdAt: FieldValue;
+  provider: string;
 };
 
 @Injectable({

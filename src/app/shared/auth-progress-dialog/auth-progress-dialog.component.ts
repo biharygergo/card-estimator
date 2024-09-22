@@ -1,5 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import {
   AuthIntent,
   AuthService,
@@ -54,18 +60,18 @@ enum AuthAction {
 }
 
 @Component({
-    selector: 'app-auth-progress-dialog',
-    templateUrl: './auth-progress-dialog.component.html',
-    styleUrls: ['./auth-progress-dialog.component.scss'],
-    standalone: true,
-    imports: [
-        MatDialogContent,
-        MatProgressSpinner,
-        MatIcon,
-        MatDialogActions,
-        MatButton,
-        AsyncPipe,
-    ],
+  selector: 'app-auth-progress-dialog',
+  templateUrl: './auth-progress-dialog.component.html',
+  styleUrls: ['./auth-progress-dialog.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogContent,
+    MatProgressSpinner,
+    MatIcon,
+    MatDialogActions,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   state = new BehaviorSubject<AuthProgressState>(AuthProgressState.IN_PROGRESS);
@@ -103,7 +109,7 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     public dialogRef: MatDialogRef<AuthProgressDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData,
+    @Inject(MAT_DIALOG_DATA) private readonly dialogData: AuthProgressDialogData
   ) {
     this.state.next(dialogData.initialState);
   }
@@ -147,11 +153,27 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
 
     try {
       if (authAction === AuthAction.LINK_ACCOUNT) {
-        await this.authService.linkAccountWithGoogle(
-          this.sessionCookie.idToken
-        );
+        if (this.sessionCookie.provider === 'google') {
+          await this.authService.linkAccountWithGoogle(
+            this.sessionCookie.idToken
+          );
+        } else if (this.sessionCookie.provider === 'microsoft') {
+          await this.authService.linkAccountWithMicrosoft(
+            this.sessionCookie.idToken
+          );
+        } else {
+          throw new Error('Unknown provider');
+        }
       } else if (authAction === AuthAction.SIGN_IN) {
-        await this.authService.signInWithGoogle(this.sessionCookie.idToken);
+        if (this.sessionCookie.provider === 'google') {
+          await this.authService.signInWithGoogle(this.sessionCookie.idToken);
+        } else if (this.sessionCookie.provider === 'microsoft') {
+          await this.authService.signInWithMicrosoft(
+            this.sessionCookie.idToken
+          );
+        } else {
+          throw new Error('Unknown provider');
+        }
       }
       this.authFinished = true;
       this.state.next(AuthProgressState.SUCCESS);

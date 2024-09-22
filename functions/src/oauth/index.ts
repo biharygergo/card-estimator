@@ -18,6 +18,7 @@ import {
   setSessionVariable,
 } from "../zoom/zoomApi";
 import {getSessionVariable} from "../zoom/routes";
+import {MicrosoftOAuthHandler} from "./microsoft";
 
 function getZoomAccessCodeRedirectUrl(req: functions.Request) {
   const isDev = isRunningInDevMode(req);
@@ -39,6 +40,7 @@ function getZoomAccessCodeRedirectUrl(req: functions.Request) {
 
 const HANDLERS: { [provider in OAuthProvider]: OAuthHandler } = {
   [OAuthProvider.GOOGLE]: new GoogleOAuthHandler(),
+  [OAuthProvider.MICROSOFT]: new MicrosoftOAuthHandler(),
 };
 
 export async function startOAuth(
@@ -105,12 +107,6 @@ export async function onOAuthResult(
   const provider = req.path.split("/").pop() as OAuthProvider;
 
   const idToken = await HANDLERS[provider].onAuthSuccess(req);
-
-  if (req.method === "OPTIONS") {
-    console.log("OPTIONS request");
-    res.json({});
-    return;
-  }
 
   if (!provider || !Object.values(OAuthProvider).includes(provider)) {
     throw new Error("Invalid or missing provider");

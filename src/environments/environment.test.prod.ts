@@ -2,7 +2,7 @@ export const environment = {
     production: true,
     firebase: {
       apiKey: 'AIzaSyCeLm1QDx4B95QAS8t6FqaskkY7oTrwLu4',
-      authDomain: 'planning-poker-test-dc808.firebaseapp.com',
+      authDomain: 'test.planningpoker.live',
       projectId: 'planning-poker-test-dc808',
       storageBucket: 'planning-poker-test-dc808.appspot.com',
       messagingSenderId: '615966905854',

@@ -18,7 +18,7 @@ function getCredentials(req: functions.Request, isDev?: boolean) {
 
 class MicrosoftOAuthClient {
   openIdHost =
-    "https://login.microsoftonline.com/920f866f-c4e9-4a96-bfbe-2123e7cebae7/oauth2/v2.0";
+    "https://login.microsoftonline.com/common/oauth2/v2.0";
   issuer: Issuer;
   client: Client;
   config: { clientId: string; clientSecret: string };
@@ -33,7 +33,7 @@ class MicrosoftOAuthClient {
 
     this.issuer = new Issuer({
       issuer:
-        "https://login.microsoftonline.com/920f866f-c4e9-4a96-bfbe-2123e7cebae7/v2.0",
+        "https://login.microsoftonline.com/common/v2.0",
       authorization_endpoint: this.openIdHost + "/authorize",
       token_endpoint: this.openIdHost + "/token",
     });
@@ -90,7 +90,7 @@ export class MicrosoftOAuthHandler extends OAuthHandler {
 
     const options = {
       method: "POST",
-      url: "https://login.microsoftonline.com/920f866f-c4e9-4a96-bfbe-2123e7cebae7/oauth2/v2.0/token",
+      url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       data: `code=${code}&client_id=${
         getCredentials(req, state.isDev).clientId

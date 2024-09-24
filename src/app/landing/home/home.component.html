@@ -1,19 +1,15 @@
-<!-- <div class="banner-heading">
-<span
-><strong>NEW:</strong> Our Microsoft Teams integration has arrived. Install
-it now!</span
->
-</div> -->
-<planning-poker-page-header-with-cta
-  [config]="{
+<div class="banner-heading">
+  <span>We are live on ProductHunt! Check out our <a href="https://www.producthunt.com/posts/planningpoker-live-for-google-meet"
+      target="_blank">launch</a>. 🚀</span>
+</div>
+<planning-poker-page-header-with-cta [config]="{
   title:'Real-Time Agile Estimation for Remote Scrum Teams',
   description: 'Get accurate estimates for your next sprint with our intuitive planning poker app.',
   internalLink: '/create',
   ctaIcon: 'play_arrow',
   ctaTitle: 'Start planning',
   showPlatforms: true,
-}"
-/>
+}" />
 <section class="used-by-section">
   <div class="used-by-content">
     <h3>Simplifies planning for agile teams around the world</h3>
@@ -24,11 +20,8 @@ it now!</span
           <picture>
             <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
             <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
-            <img
-              src="/assets/logos/{{ logo }}.png"
-              alt="Logo of {{ companies[i] }}"
-              [loading]="i < 5 ? 'eager' : 'lazy'"
-            />
+            <img src="/assets/logos/{{ logo }}.png" alt="Logo of {{ companies[i] }}"
+              [loading]="i < 5 ? 'eager' : 'lazy'" />
           </picture>
         </li>
         }
@@ -42,14 +35,9 @@ it now!</span
     <planning-poker-features-preview />
   </div>
   <div class="see-more-features">
-    <mat-expansion-panel
-      class="see-more-panel"
-      (opened)="viewAllFeaturesOpened()"
-    >
+    <mat-expansion-panel class="see-more-panel" (opened)="viewAllFeaturesOpened()">
       <mat-expansion-panel-header class="see-more-panel-header">
-        <mat-panel-title class="see-more-panel-title"
-          >View all features</mat-panel-title
-        >
+        <mat-panel-title class="see-more-panel-title">View all features</mat-panel-title>
       </mat-expansion-panel-header>
       <planning-poker-features-items [loadVideos]="loadVideos" />
     </mat-expansion-panel>
@@ -59,39 +47,20 @@ it now!</span
   <div class="demo-video-section-content">
     <h3>Get started in seconds and have the whole team involved</h3>
     <div class="video-container">
-      <video
-        #video
-        loop
-        muted
-        preload="none"
-        (loadedmetadata)="video.muted = true"
-        [controls]="!video.paused"
-        poster="/assets/video_poster.webp"
-      >
-        <source
-          src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
-          type="video/mp4"
-        />
+      <video #video loop muted preload="none" (loadedmetadata)="video.muted = true" [controls]="!video.paused"
+        poster="/assets/video_poster.webp">
+        <source src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4" type="video/mp4" />
       </video>
-      <div
-        class="start-video-overlay"
-        [class.hidden]="!video.paused"
-        (click)="video.play()"
-      >
-        <button
-          mat-fab
-          color="primary"
-          aria-label="Play demo video"
-          (click)="video.play()"
-        >
+      <div class="start-video-overlay" [class.hidden]="!video.paused" (click)="video.play()">
+        <button mat-fab color="primary" aria-label="Play demo video" (click)="video.play()">
           <mat-icon>play_arrow</mat-icon>
         </button>
       </div>
     </div>
     <div class="steps-container">
       <mat-tab-group dynamicHeight>
-        <mat-tab label="Get ready"
-          ><div class="step-content">
+        <mat-tab label="Get ready">
+          <div class="step-content">
             <p>
               The team lead or SCRUM Master prepares the agenda for the meeting
               and selects items from the backlog. A planning session takes about
@@ -99,16 +68,16 @@ it now!</span
             </p>
           </div>
         </mat-tab>
-        <mat-tab label="Create room & invite others"
-          ><div class="step-content">
+        <mat-tab label="Create room & invite others">
+          <div class="step-content">
             <p>
               First, the leader creates a room on planningpoker.live then they
               copy the invitation link and send it to the team to join.
             </p>
           </div>
         </mat-tab>
-        <mat-tab label="Set cards & manage rounds"
-          ><div class="step-content">
+        <mat-tab label="Set cards & manage rounds">
+          <div class="step-content">
             <p>
               Discuss tickets on the spot or create the agenda beforehand using
               the topic sidebar. Use the default card set, Fibonacci or create a
@@ -118,8 +87,8 @@ it now!</span
             </p>
           </div>
         </mat-tab>
-        <mat-tab label="Vote & find consensus"
-          ><div class="step-content">
+        <mat-tab label="Vote & find consensus">
+          <div class="step-content">
             <p>
               During the game, each team member votes on the active topic and
               the leader reveals the results. The group discusses the result and
@@ -139,26 +108,17 @@ it now!</span
       @for(sample of knowledgeBaseSamples; track sample.slug) {
       <article class="knowledge-base-articles-card">
         <div class="knowledge-base-articles-card-image">
-          <img
-            [ngSrc]="sample.imageId"
-            placeholder
-            [alt]="sample.imageAlt"
-            fill
-            sizes="10wv"
-          />
+          <img [ngSrc]="sample.imageId" placeholder [alt]="sample.imageAlt" fill sizes="10wv" />
         </div>
         <div class="knowledge-base-articles-card-content">
           <h4>{{ sample.title }}</h4>
           <p>{{ sample.description }}</p>
-          <a mat-stroked-button [routerLink]="'/knowledge-base/' + sample.slug"
-            >Read article</a
-          >
+          <a mat-stroked-button [routerLink]="'/knowledge-base/' + sample.slug">Read article</a>
         </div>
       </article>
       }
-      <a mat-stroked-button routerLink="/knowledge-base" class="view-all-button"
-        >View more articles in Knowledge Base</a
-      >
+      <a mat-stroked-button routerLink="/knowledge-base" class="view-all-button">View more articles in Knowledge
+        Base</a>
     </div>
   </div>
 </section>
@@ -211,12 +171,7 @@ it now!</span
           </mat-expansion-panel-header>
           <p>
             This is a free,
-            <a
-              href="https://github.com/biharygergo/card-estimator"
-              rel="noopener"
-              target="_blank"
-              >open-source</a
-            >
+            <a href="https://github.com/biharygergo/card-estimator" rel="noopener" target="_blank">open-source</a>
             application developed as a hobby project. It is running on Google
             Cloud servers hosted in the EU. The app is free to use with monthly
             credits that can be refilled if you use the app often.
@@ -224,60 +179,35 @@ it now!</span
           <p>
             If you have any issues, concerns, feature ideas or you'd just like
             to send someone an email, please message us at
-            <a href="mailto:info@planningpoker.live"
-              >info&#64;planningpoker.live</a
-            >.
+            <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a>.
           </p>
         </mat-expansion-panel>
       </mat-accordion>
       <div class="made-by">
         <p>Developed & Designed by:</p>
         <div class="authors">
-          <a
-            class="made-by-box"
-            href="https://gergelybihary.com"
-            rel="noopener"
-            target="_blank"
-          >
+          <a class="made-by-box" href="https://gergelybihary.com" rel="noopener" target="_blank">
             <picture>
               <source srcset="/assets/gergely-bihary.webp" type="image/webp" />
               <source srcset="/assets/gergely-bihary.jpeg" type="image/jpeg" />
-              <img
-                src="/assets/gergely-bihary.jpeg"
-                alt="A profile picture of Gergely Bihary"
-                loading="lazy"
-              />
+              <img src="/assets/gergely-bihary.jpeg" alt="A profile picture of Gergely Bihary" loading="lazy" />
             </picture>
-            Gergely Bihary</a
-          >
-          <a
-            class="made-by-box"
-            href="https://www.kristofnagy.com/"
-            rel="noopener"
-            target="_blank"
-          >
+            Gergely Bihary
+          </a>
+          <a class="made-by-box" href="https://www.kristofnagy.com/" rel="noopener" target="_blank">
             <picture>
               <source srcset="/assets/kristof_nagy.webp" type="image/webp" />
               <source srcset="/assets/kristof_nagy.jpeg" type="image/jpeg" />
-              <img
-                src="/assets/kristof_nagy.jpeg"
-                alt="A profile picture of Kristóf Nagy"
-                loading="lazy"
-              />
+              <img src="/assets/kristof_nagy.jpeg" alt="A profile picture of Kristóf Nagy" loading="lazy" />
             </picture>
-            Kristóf Nagy</a
-          >
+            Kristóf Nagy
+          </a>
         </div>
       </div>
     </div>
     <div class="about-section-right">
-      <img
-        ngSrc="meeting_table"
-        placeholder
-        alt="People having a meeting around a table"
-        fill
-        sizes="(max-width: 800px) 100vw, 50vw"
-      />
+      <img ngSrc="meeting_table" placeholder alt="People having a meeting around a table" fill
+        sizes="(max-width: 800px) 100vw, 50vw" />
     </div>
   </div>
 </section>

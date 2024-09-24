@@ -3,6 +3,10 @@
   color: white;
   text-align: center;
 
+  a {
+    color: white;
+  }
+
   @media screen and (max-width: 800px) {
     padding-top: 0.8rem;
   }

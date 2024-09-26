@@ -6,6 +6,7 @@ import {
   Timestamp,
   collection,
   collectionData,
+  deleteDoc,
   doc,
   setDoc,
 } from '@angular/fire/firestore';
@@ -61,6 +62,22 @@ export class CardDeckService {
               `userDetails/${user.uid}/cardSets/${savedCardSet.id}`
             ),
             savedCardSet
+          )
+        );
+      })
+    );
+  }
+
+  deleteCardDeck(id: string) {
+    return this.authService.user.pipe(
+      first(),
+      switchMap((user) => {
+        if (!user) {
+          return throwError(() => new UnauthorizedError());
+        }
+        return from(
+          deleteDoc(
+            doc(this.firestore, `userDetails/${user.uid}/cardSets/${id}`)
           )
         );
       })

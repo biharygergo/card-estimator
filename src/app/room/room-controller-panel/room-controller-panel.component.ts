@@ -45,6 +45,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { ToastService } from 'src/app/services/toast.service';
 
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
@@ -122,7 +123,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     private readonly cardDeckService: CardDeckService,
     private readonly breakpointObserver: BreakpointObserver,
     private readonly roomDataService: RoomDataService,
-    private readonly confirmService: ConfirmDialogService
+    private readonly confirmService: ConfirmDialogService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit() {
@@ -279,6 +281,20 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(() => {});
     }
+  }
+
+  async deleteSavedCardSet(cardSetId: string) {
+    if (await this.confirmService.openConfirmationDialog({
+      title: 'Are you sure you want to delete this card set?',
+      content: 'The card set will be removed from your saved sets and cannot be recovered.',
+      positiveText: 'Delete',
+      negativeText: 'Cancel',
+    })) {
+      this.cardDeckService.deleteCardDeck(cardSetId).subscribe(() => {
+        this.toastService.showMessage('Card set deleted');
+      });
+    }
+    
   }
 
   async updateMemberType(newType: MemberType) {

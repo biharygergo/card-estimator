@@ -39,8 +39,8 @@
   font-size: 0.8rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 4px;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .mat-mdc-menu-item.selected {

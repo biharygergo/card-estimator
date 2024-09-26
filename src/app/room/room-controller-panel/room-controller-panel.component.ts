@@ -286,7 +286,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   async deleteSavedCardSet(cardSetId: string) {
     if (await this.confirmService.openConfirmationDialog({
       title: 'Are you sure you want to delete this card set?',
-      content: 'The card set will be removed from your saved sets and cannot be recovered.',
+      content: 'The set will be removed from your saved sets but it will be kept in rooms where it is selected.',
       positiveText: 'Delete',
       negativeText: 'Cancel',
     })) {

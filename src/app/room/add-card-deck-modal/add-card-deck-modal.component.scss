@@ -55,3 +55,18 @@
 .hint {
   font-size: 0.8rem;
 }
+
+.numeric-forms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 150px;
+  }
+}
+
+.numeric-description {
+  font-size: 0.8rem;
+}

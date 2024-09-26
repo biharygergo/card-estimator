@@ -42,7 +42,7 @@
             : ''
             "
             >
-            @for (card of velocity.cards; track card; let i = $index) {
+            @for (card of velocity.cards; track $index; let i = $index) {
               <div
                 class="card"
                 [class.hidden]="!isCardsExpanded && i > 2"

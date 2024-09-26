@@ -149,7 +149,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   sidenav: MatSidenavContainer;
   @ViewChild('sidenavContent', { read: ElementRef, static: true })
   sidenavContent: ElementRef;
-
   destroy = new Subject<void>();
 
   room: Room;

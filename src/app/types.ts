@@ -434,13 +434,29 @@ export type RecurringMeetingLinkCreatedRoom = {
   roomId: string;
 };
 
+function findNearestNumber(numbers: number[], target: number): number {
+  let nearestNumber = numbers[0];
+  let nearestDifference = Math.abs(numbers[0] - target);
+
+  for (let i = 1; i < numbers.length; i++) {
+    const currentDifference = Math.abs(numbers[i] - target);
+    if (currentDifference < nearestDifference) {
+      nearestNumber = numbers[i];
+      nearestDifference = currentDifference;
+    }
+  }
+
+  return nearestNumber;
+}
+
 export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   if (isNumericCardSet(cardSet)) {
     return Math.round(value * 100) / 100;
   }
 
   const roundedValue = Math.round(value);
-  return cardSet.values[roundedValue] ?? '-';
+  const nearestValueToRounded = findNearestNumber(Object.keys(cardSet.values).map(Number), roundedValue);
+  return cardSet.values[roundedValue] ?? cardSet.values[nearestValueToRounded] ?? '-';
 }
 
 export function isNumeric(str: any) {

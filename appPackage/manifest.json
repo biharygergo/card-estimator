@@ -54,7 +54,7 @@
   "permissions": ["identity", "messageTeamMembers"],
   "validDomains": ["${{TAB_DOMAIN}}"],
   "webApplicationInfo": {
-    "id": "bc1d064b-f3c1-4d5e-a219-b17847c2ac17",
-    "resource": "api://test.planningpoker.live/bc1d064b-f3c1-4d5e-a219-b17847c2ac17"
+    "id": "${{MICROSOFT_OAUTH_CLIENT_ID}}",
+    "resource": "${{MICROSOFT_OAUTH_CLIENT_RESOURCE}}"
   }
 }

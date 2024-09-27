@@ -32,6 +32,9 @@
     font-size: var(--mat-menu-item-label-text-size);
     letter-spacing: var(--mat-menu-item-label-text-tracking);
     font-weight: var(--mat-menu-item-label-text-weight);
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
@@ -114,15 +117,14 @@
   }
 }
 
+.menu-item-icon {
+  --mat-menu-item-icon-size: 16px !important;
+  font-size: 16px !important;
+  margin: 0;
+  margin-bottom: 2px;
+}
 .menu-item-action-button {
   --mdc-icon-button-state-layer-size: 22px !important;
-  --mat-menu-item-icon-size: 16px !important;
-  mat-icon {
-    font-size: 16px !important;
-    margin: 0;
-    margin-bottom: 2px;
-  }
-
   ::ng-deep .mat-mdc-button-touch-target {
     width: 22px;
     height: 22px;

@@ -310,33 +310,33 @@
     <span>Security and permissions</span>
   </button>
   <mat-divider />
-  <div
-    mat-menu-item
-    role="menuitemcheckbox"
-    class="pass-option"
-    matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
-    matTooltipPosition="left"
-  >
+  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
     <mat-checkbox
       (click)="toggleAsyncVoting(); $event.stopPropagation()"
       [checked]="room?.isAsyncVotingEnabled"
       class="menu-option-checkbox async-vote-checkbox"
-      ><span class="pass-option-label">Enable async voting</span></mat-checkbox
+      ><span class="pass-option-label"
+        >Enable async voting
+        <mat-icon
+          matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
+          class="menu-item-icon"
+          >help</mat-icon
+        ></span
+      ></mat-checkbox
     >
   </div>
-  <div
-    mat-menu-item
-    role="menuitemcheckbox"
-    class="pass-option"
-    matTooltip="Anonymous voting hides members' names to reduce bias during discussions."
-    matTooltipPosition="left"
-  >
+  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
     <mat-checkbox
       (click)="toggleAnonymousVoting(); $event.stopPropagation()"
       [checked]="room?.isAnonymousVotingEnabled"
       class="menu-option-checkbox anonymous-vote-checkbox"
       ><span class="pass-option-label"
-        >Enable anonymous voting</span
+        >Enable anonymous voting
+        <mat-icon
+          matTooltip="Anonymous voting hides members' names to reduce bias during discussions."
+          class="menu-item-icon"
+          >help</mat-icon
+        ></span
       ></mat-checkbox
     >
   </div>
@@ -401,7 +401,7 @@
           class="menu-item-action-button delete-card-set-button"
           (click)="deleteSavedCardSet(cardSet.id); $event.stopPropagation()"
         >
-          <mat-icon>delete</mat-icon>
+          <mat-icon class="menu-item-icon">delete</mat-icon>
         </button>
       </span>
     </button>

@@ -38,6 +38,7 @@ import {
 import {onOrganizationUpdated} from "./organizations/protection";
 import {
   onCustomerPaymentCreated,
+  onCustomerPaymentUpdated,
   onCustomerSubscriptionCreated,
   onCustomerSubscriptionUpdated,
 } from "./customers/subscription";
@@ -260,6 +261,11 @@ exports.getAllCreditsAndAssignWelcome = onCall(
 exports.onUserPaymentCreated = onDocumentCreated(
     "customers/{customerId}/payments/{paymentId}",
     onCustomerPaymentCreated
+);
+
+exports.onUserPaymentUpdated = onDocumentUpdated(
+    "customers/{customerId}/payments/{paymentId}",
+    onCustomerPaymentUpdated
 );
 
 exports.updateRoomsTableInBigQuery = onSchedule(

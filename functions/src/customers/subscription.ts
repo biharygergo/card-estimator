@@ -24,6 +24,35 @@ export async function onCustomerPaymentCreated(
 
   const paymentIntent = snap.data?.data() as Stripe.PaymentIntent | undefined;
 
+  await handlePaymentIntentForBundle(paymentIntent, userId);
+}
+
+export async function onCustomerPaymentUpdated(
+    change: FirestoreEvent<Change<QueryDocumentSnapshot> | undefined>
+) {
+  const paymentIntentBefore = change.data?.before?.data() as Stripe.PaymentIntent | undefined;
+  const paymentIntent = change.data?.after?.data() as Stripe.PaymentIntent | undefined;
+  const userId = change.data?.after?.ref.parent.parent?.id;
+
+  if (!paymentIntent) {
+    console.error("No payment intent found");
+    return;
+  }
+
+  if (!userId) {
+    console.error("No user id found");
+    return;
+  }
+
+  if (!(paymentIntentBefore?.status !== "succeeded" && paymentIntent.status === "succeeded")) {
+    console.error("Payment intent not updated to succeeded");
+    return;
+  }
+
+  await handlePaymentIntentForBundle(paymentIntent, userId);
+}
+
+async function handlePaymentIntentForBundle(paymentIntent: Stripe.PaymentIntent | undefined, userId: string) {
   if (paymentIntent?.status !== "succeeded") {
     console.error("Not successful payment");
     return;

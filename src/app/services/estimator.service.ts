@@ -461,8 +461,9 @@ export class EstimatorService {
   }
 
   private revoteRound(round: Round): Round {
+    const {majorityOverride, ...rest} = round;
     return {
-      ...round,
+      ...rest,
       started_at: Timestamp.now(),
       finished_at: null,
       estimates: {},

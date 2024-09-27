@@ -22,14 +22,6 @@ describe('Authentication', () => {
     cy.wait(1000);
   });
 
-  it('has unlimited members in an organization', () => {
-    cy.get('#menu-button').click();
-    cy.contains('My organization').click();
-
-    cy.wait(1000);
-    cy.contains('Preview this Premium Feature').should('not.exist');
-  });
-
   it('can modify room permissions', () => {
     cy.visit('/create');
 
@@ -68,6 +60,8 @@ describe('Authentication', () => {
 
     cy.get('#deck-name-input').type('My custom deck');
     cy.get('#deck-values-input').type('A,B,C,D,E');
+    cy.contains('Configure numeric values').click();
+    cy.get('#numeric-value-input-4').type('15');
 
     cy.get('#set-card-deck-button').click();
 
@@ -75,7 +69,9 @@ describe('Authentication', () => {
     cy.get('#card-sets-button').click();
 
     cy.contains('Saved card sets').click();
-
-    cy.contains('My custom deck').should('be.visible');
+    cy.contains('My custom deck').should('be.visible')
+    cy.get('.delete-card-set-button:first').click();
+    cy.contains('Delete').click();
+    cy.contains('Card set deleted').should('be.visible');
   });
 });

@@ -31,12 +31,19 @@
     line-height: var(--mat-menu-item-label-text-line-height);
     font-size: var(--mat-menu-item-label-text-size);
     letter-spacing: var(--mat-menu-item-label-text-tracking);
-    font-weight: var(--mat-menu-item-label-text-weight)
+    font-weight: var(--mat-menu-item-label-text-weight);
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
 .card-set-title {
   font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .mat-mdc-menu-item.selected {
@@ -107,5 +114,19 @@
     &:disabled {
       background-color: unset;
     }
+  }
+}
+
+.menu-item-icon {
+  --mat-menu-item-icon-size: 16px !important;
+  font-size: 16px !important;
+  margin: 0;
+  margin-bottom: 2px;
+}
+.menu-item-action-button {
+  --mdc-icon-button-state-layer-size: 22px !important;
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 22px;
+    height: 22px;
   }
 }

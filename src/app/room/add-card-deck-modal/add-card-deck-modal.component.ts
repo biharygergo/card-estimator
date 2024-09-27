@@ -1,10 +1,31 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import {
   catchError,
   debounceTime,
   from,
+  map,
   of,
   switchMap,
   throwError,
@@ -26,36 +47,41 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { MatCard } from '@angular/material/card';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ToastService } from 'src/app/services/toast.service';
 
 export type AddCardDeckModalData = {
   roomId: string;
 };
 
 @Component({
-    selector: 'app-add-card-deck-modal',
-    templateUrl: './add-card-deck-modal.component.html',
-    styleUrls: ['./add-card-deck-modal.component.scss'],
-    standalone: true,
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        MatError,
-        MatCard,
-        NgClass,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatIcon,
-    ],
+  selector: 'app-add-card-deck-modal',
+  templateUrl: './add-card-deck-modal.component.html',
+  styleUrls: ['./add-card-deck-modal.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatCard,
+    NgClass,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatIcon,
+    AsyncPipe,
+    MatExpansionModule,
+  ],
 })
 export class AddCardDeckModalComponent implements OnInit {
   cardDeckForm = new FormGroup({
@@ -65,6 +91,52 @@ export class AddCardDeckModalComponent implements OnInit {
       cardDeckValidator(),
     ]),
   });
+
+  readonly numericCardValuesFormGroup = new FormGroup<{
+    [cardLabel: string]: FormControl<number>;
+  }>({}, [
+    (
+      control: AbstractControl<{ [cardLabel: string]: number }>
+    ): ValidationErrors | null => {
+      const values = Object.values(control.value);
+
+      const isAnyDuplicated = new Set(values).size !== values.length;
+      if (isAnyDuplicated) {
+        return { duplicated: true };
+      }
+
+      const isAllLargerThanPrevious = values.every((value, index) => {
+        if (index === 0) {
+          return true;
+        }
+        return value > values[index - 1];
+      });
+
+      if (!isAllLargerThanPrevious) {
+        return { notAscending: true };
+      }
+
+      return null;
+    },
+  ]);
+
+  readonly isAllNumeric = toSignal(
+    this.cardDeckForm.controls.cardDeckValues.valueChanges.pipe(
+      map((formValue) => {
+        return convertInputToCards(formValue).every((value) =>
+          isNumeric(value)
+        );
+      })
+    )
+  );
+
+  readonly cardLabels = toSignal(
+    this.cardDeckForm.get('cardDeckValues').valueChanges.pipe(
+      debounceTime(50),
+      map((value) => convertInputToCards(value).slice(0, MAX_CARD_DECK_SIZE))
+    ),
+    { initialValue: [] }
+  );
 
   cardPreview: string[] = new Array(MAX_CARD_DECK_SIZE).fill(undefined);
 
@@ -79,7 +151,8 @@ export class AddCardDeckModalComponent implements OnInit {
     private readonly dialog: MatDialog,
     public readonly permissionService: PermissionsService,
     public readonly paymentsService: PaymentService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -88,8 +161,23 @@ export class AddCardDeckModalComponent implements OnInit {
       .valueChanges.pipe(debounceTime(50))
       .subscribe((value) => {
         const cards = convertInputToCards(value);
+        const isAllNumeric = cards.every((value) => isNumeric(value));
+
+        Object.keys(this.numericCardValuesFormGroup.controls).forEach((key) =>
+          this.numericCardValuesFormGroup.removeControl(key)
+        );
+
         for (let i = 0; i < MAX_CARD_DECK_SIZE; i++) {
-          this.cardPreview[i] = cards[i] ?? undefined;
+          const cardLabel = cards[i];
+          this.cardPreview[i] = cardLabel ?? undefined;
+          if (cardLabel) {
+            this.numericCardValuesFormGroup.setControl(
+              cardLabel,
+              new FormControl<number>(isAllNumeric ? +cardLabel : i, [
+                Validators.required,
+              ])
+            );
+          }
         }
       });
   }
@@ -107,7 +195,7 @@ export class AddCardDeckModalComponent implements OnInit {
         if (isAllNumeric) {
           acc[+curr] = curr;
         } else {
-          acc[index + 1] = curr;
+          acc[this.numericCardValuesFormGroup.value[curr]] = curr;
         }
         return acc;
       }, {}),

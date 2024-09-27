@@ -17,10 +17,8 @@ import {
   CardSetValue,
   RichTopic,
   RoundStatistics,
-  isNumericCardSet,
 } from 'src/app/types';
 import { finalize } from 'rxjs/operators';
-import { EstimateConverterPipe } from 'src/app/pipes/estimate-converter.pipe';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import jira2md from 'jira2md';
 import { LinearService } from 'src/app/services/linear.service';
@@ -116,21 +114,10 @@ export class RichTopicComponent implements OnChanges {
         ? this.linearService
         : this.jiraService;
 
-    if (!isNumericCardSet(this.selectedEstimationCardSetValue)) {
-      this.toastService.showMessage(
-        `${providerName} only supports numeric story points. Please choose a different card set.`
-      );
-      return;
-    }
-
     this.toastService.showMessage(`Saving to ${providerName}, hold tight...`);
 
     this.isSavingToJira = true;
-    const convertedMajority = +new EstimateConverterPipe().transform(
-      this.roundStatistics.consensus.value,
-      this.selectedEstimationCardSetValue,
-      'exact'
-    );
+    const convertedMajority = this.roundStatistics.consensus.value
 
     providerService
       .updateIssue({

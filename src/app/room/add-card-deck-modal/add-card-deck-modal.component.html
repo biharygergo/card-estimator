@@ -49,11 +49,12 @@
             <p class="numeric-description">
               Customize the default numeric values for each card. Each number
               has to be unique and larger than the previous one. Numeric values
-              are used when saving estimates and calculating velocity.
+              are used when saving estimates and calculating velocity. If you
+              modify the cards above, customization will be reset.
             </p>
             <div class="numeric-forms">
               @for (card of cardLabels(); track card;) {
-              @if(numericCardValues()[card]) {
+              @if(numericCardValuesFormGroup.controls[card]) {
               <mat-form-field
                 appearance="outline"
                 subscriptSizing="dynamic"
@@ -63,11 +64,17 @@
                 <input
                   type="number"
                   matInput
-                  [formControl]="numericCardValues()[card]"
+                  [formControl]="numericCardValuesFormGroup.controls[card]"
                 />
               </mat-form-field>
               } }
             </div>
+            @if(numericCardValuesFormGroup.errors?.['duplicated']) {
+            <mat-error> All numeric values must be unique. </mat-error>
+            } @if(numericCardValuesFormGroup.errors?.['notAscending']) {
+
+            <mat-error> Numeric values must be in ascending order. </mat-error>
+            }
           </mat-expansion-panel>
         </mat-accordion>
 
@@ -94,7 +101,7 @@
     <button
       mat-flat-button
       color="primary"
-      [disabled]="!cardDeckForm.valid"
+      [disabled]="!cardDeckForm.valid || !numericCardValuesFormGroup.valid"
       (click)="onSaveClick()"
       id="set-card-deck-button"
     >

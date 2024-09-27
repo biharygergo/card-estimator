@@ -2,9 +2,6 @@ import {
   Component,
   Inject,
   OnInit,
-  signal,
-  Signal,
-  WritableSignal,
 } from '@angular/core';
 import {
   FormControl,
@@ -12,7 +9,8 @@ import {
   Validators,
   FormsModule,
   ReactiveFormsModule,
-  FormArray,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import {
   MatDialogRef,
@@ -94,9 +92,33 @@ export class AddCardDeckModalComponent implements OnInit {
     ]),
   });
 
-  numericCardValues: WritableSignal<{
+  readonly numericCardValuesFormGroup = new FormGroup<{
     [cardLabel: string]: FormControl<number>;
-  }> = signal({});
+  }>({}, [
+    (
+      control: AbstractControl<{ [cardLabel: string]: number }>
+    ): ValidationErrors | null => {
+      const values = Object.values(control.value);
+
+      const isAnyDuplicated = new Set(values).size !== values.length;
+      if (isAnyDuplicated) {
+        return { duplicated: true };
+      }
+
+      const isAllLargerThanPrevious = values.every((value, index) => {
+        if (index === 0) {
+          return true;
+        }
+        return value > values[index - 1];
+      });
+
+      if (!isAllLargerThanPrevious) {
+        return { notAscending: true };
+      }
+
+      return null;
+    },
+  ]);
 
   readonly isAllNumeric = toSignal(
     this.cardDeckForm.controls.cardDeckValues.valueChanges.pipe(
@@ -140,53 +162,24 @@ export class AddCardDeckModalComponent implements OnInit {
       .subscribe((value) => {
         const cards = convertInputToCards(value);
         const isAllNumeric = cards.every((value) => isNumeric(value));
-        const newNumericValues: { [cardLabel: string]: FormControl<number> } =
-          {};
+
+        Object.keys(this.numericCardValuesFormGroup.controls).forEach((key) =>
+          this.numericCardValuesFormGroup.removeControl(key)
+        );
 
         for (let i = 0; i < MAX_CARD_DECK_SIZE; i++) {
           const cardLabel = cards[i];
           this.cardPreview[i] = cardLabel ?? undefined;
           if (cardLabel) {
-            newNumericValues[cardLabel] = new FormControl<number>(
-              isAllNumeric ? +cardLabel : i,
-              [Validators.required]
+            this.numericCardValuesFormGroup.setControl(
+              cardLabel,
+              new FormControl<number>(isAllNumeric ? +cardLabel : i, [
+                Validators.required,
+              ])
             );
           }
-          
         }
-
-        this.numericCardValues.set(newNumericValues);
       });
-  }
-
-  validateCustomNumericValues(): boolean {
-    const numericValues = this.numericCardValues();
-    const values = Object.values(numericValues);
-
-    const isAnyInvalid = values.some((control) => control.invalid);
-    if (isAnyInvalid) {
-      this.toastService.showMessage('All numeric card fields are required.', 5000, 'error');
-      return false;
-    }
-    const isAnyDuplicated = new Set(values.map((control) => control.value)).size !== values.length;
-    if (isAnyDuplicated) {
-      this.toastService.showMessage('Some values are duplicated in the numeric card configuration.', 5000, 'error');
-      return false;
-    }
-
-    const isAllLargerThanPrevious = values.every((control, index) => {
-      if (index === 0) {
-        return true;
-      }
-      return control.value > values[index - 1].value;
-    });
-
-    if (!isAllLargerThanPrevious) {
-      this.toastService.showMessage('Numeric card values must be in ascending order.', 5000, 'error');
-      return false;
-    }
-
-    return true;
   }
 
   onSaveClick() {
@@ -195,12 +188,6 @@ export class AddCardDeckModalComponent implements OnInit {
     );
 
     const isAllNumeric = cards.every((value) => isNumeric(value));
-    if (!isAllNumeric) {
-      const isValid = this.validateCustomNumericValues();
-      if (!isValid) {
-        return;
-      }
-    }
 
     const customDeck: CardSetValue = {
       title: this.cardDeckForm.value['cardDeckName'],
@@ -208,7 +195,7 @@ export class AddCardDeckModalComponent implements OnInit {
         if (isAllNumeric) {
           acc[+curr] = curr;
         } else {
-          acc[this.numericCardValues()[curr].value] = curr;
+          acc[this.numericCardValuesFormGroup.value[curr]] = curr;
         }
         return acc;
       }, {}),

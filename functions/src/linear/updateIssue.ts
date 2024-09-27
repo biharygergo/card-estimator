@@ -28,7 +28,7 @@ export async function updateLinearIssue(request: CallableRequest) {
 
     throw new functions.https.HttpsError(
         "not-found",
-        "Unknown error occured while connecting to Linear"
+        `Unknown error occured while connecting to Linear: ${(error as any).message}`
     );
   }
 }

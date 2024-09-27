@@ -52,9 +52,13 @@
               are used when saving estimates and calculating velocity.
             </p>
             <div class="numeric-forms">
-              @for (card of cardLabels(); track card) {
+              @for (card of cardLabels(); track card;) {
               @if(numericCardValues()[card]) {
-              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-form-field
+                appearance="outline"
+                subscriptSizing="dynamic"
+                [id]="'numeric-value-input-' + $index"
+              >
                 <mat-label>Numeric value of: {{ card }}</mat-label>
                 <input
                   type="number"

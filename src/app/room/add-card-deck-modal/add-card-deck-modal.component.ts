@@ -170,7 +170,7 @@ export class AddCardDeckModalComponent implements OnInit {
     }
     const isAnyDuplicated = new Set(values.map((control) => control.value)).size !== values.length;
     if (isAnyDuplicated) {
-      this.toastService.showMessage('Duplicated values are not allowed in numeric card values.', 5000, 'error');
+      this.toastService.showMessage('Some values are duplicated in the numeric card configuration.', 5000, 'error');
       return false;
     }
 

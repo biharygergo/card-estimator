@@ -5,7 +5,7 @@ import {getHost, isRunningInDevMode} from "../config";
 
 function getCredentials(req: functions.Request, isDev?: boolean) {
   console.log("dev creds", isDev || isRunningInDevMode(req));
-  return (isDev || isRunningInDevMode(req)) ?
+  return isDev || isRunningInDevMode(req) ?
     {
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID_DEV,
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET_DEV,
@@ -28,12 +28,13 @@ export class GoogleOAuthHandler extends OAuthHandler {
     };
 
     const searchParams = new URLSearchParams();
-    Object.entries(params).forEach(([key, value]) => {
-      searchParams.set(key, value as string);
-    });
+    Object.entries(params)
+        .filter(([key]) => key !== "code")
+        .forEach(([key, value]) => {
+          searchParams.set(key, value as string);
+        });
 
     const redirectUrl = googleOAuthEndpoint + "?" + searchParams.toString();
-
     return redirectUrl;
   }
 
@@ -71,7 +72,6 @@ export class GoogleOAuthHandler extends OAuthHandler {
             return response.data;
           })
           .catch((err: any) => {
-            console.error(err);
             console.log(err.response.data);
             throw new Error("Google access token request failed");
           });

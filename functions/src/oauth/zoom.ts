@@ -1,0 +1,68 @@
+import {OAuthHandler} from "./types";
+import * as functions from "firebase-functions";
+import {getHost, isRunningInDevMode} from "../config";
+import {captureError} from "../shared/errors";
+import {getSessionVariable} from "../zoom/routes";
+import {getToken} from "../zoom/zoomApi";
+
+export function getZoomAccessCodeRedirectUrl(req: functions.Request) {
+  const isDev = isRunningInDevMode(req);
+  const queryString = [
+    ...Object.entries(req.query),
+    Object.keys(req.query).includes("isDev") ?
+      [undefined, undefined] :
+      ["isDev", isDev ? "true" : "false"],
+  ]
+      .filter(
+          (entry): entry is [string, string] => !!entry[0] && entry[0] !== "code"
+      )
+      .sort(([key1], [key2]) => key1.localeCompare(key2))
+      .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
+      )
+      .join("&");
+  const returnUrl = `${getHost(req)}/api/onOAuthResult/zoom?${queryString}`;
+
+  return returnUrl;
+}
+
+export class ZoomOAuthHandler extends OAuthHandler {
+  startOauthFlow(): string {
+    throw new Error("Method not implemented.");
+  }
+
+  async onAuthSuccess(
+      req: functions.Request,
+      res: functions.Response
+  ): Promise<string> {
+    const code = req.query.code;
+    let verifier: string | undefined;
+    try {
+      verifier = getSessionVariable(req, res, false);
+    } catch (err) {
+      captureError(err);
+      console.error("Error while parsing session cookie: ", err);
+    }
+    const isDev = isRunningInDevMode(req);
+
+    if (!code) {
+      throw new Error("No auth code was provided");
+    }
+    try {
+      // get Access Token from Zoom
+      const {access_token: accessToken} = await getToken(
+        code as string,
+        verifier,
+        isDev,
+        req,
+        getZoomAccessCodeRedirectUrl(req)
+      );
+
+      return accessToken;
+    } catch (err) {
+      console.error("error fetching access token from zoom", err);
+      throw err;
+    }
+  }
+}

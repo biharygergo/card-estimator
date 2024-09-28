@@ -9,6 +9,7 @@ export enum AuthIntent {
 export enum OAuthProvider {
   GOOGLE = "google",
   MICROSOFT = "microsoft",
+  ZOOM = "zoom",
 }
 
 export interface OAuthState {
@@ -24,7 +25,7 @@ export abstract class OAuthHandler {
     req: functions.Request,
     state: OAuthState
   ): string;
-  abstract onAuthSuccess(req: functions.Request): Promise<string>;
+  abstract onAuthSuccess(req: functions.Request, res?: functions.Response): Promise<string>;
 }
 
 export function getAuthIntent(req: functions.Request): AuthIntent {

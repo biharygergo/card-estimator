@@ -126,7 +126,10 @@ export async function getToken(
 export function getDeeplink(token: string, action?: any) {
   return apiRequest("POST", "/zoomapp/deeplink", token, {
     action: JSON.stringify(action),
-  }).then((data) => Promise.resolve(data.deeplink));
+  }).then((data) => Promise.resolve(data.deeplink)).catch((error) => {
+    console.error("Error fetching deeplink", error, error?.response?.data);
+    throw error;
+  });
 }
 
 export const setSessionVariable = (

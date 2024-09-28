@@ -21,7 +21,7 @@ import {
   updateProfile,
   User,
   UserInfo,
-  GoogleAuthProvider
+  GoogleAuthProvider,
 } from '@angular/fire/auth';
 import {
   doc,
@@ -58,6 +58,7 @@ import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 export const PROFILES_COLLECTION = 'userProfiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
@@ -77,6 +78,15 @@ export type ParsedSessionCookie = {
   provider: string;
 };
 
+function validateIdToken(idToken?: string) {
+  if (!idToken) return;
+
+  if (!jwtDecode<JwtPayload & { email?: string }>(idToken).email) {
+    throw new Error(
+      'This account does not have an email address associated with it. Please select a different account.'
+    );
+  }
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -132,19 +142,22 @@ export class AuthService {
     this.auth.signOut();
   }
 
-  getApiAuthUrl(authIntent: AuthIntent, provider: string, returnToPath?: string): string {
+  getApiAuthUrl(
+    authIntent: AuthIntent,
+    provider: string,
+    returnToPath?: string
+  ): string {
     return `${window.origin}/api/startOAuth?intent=${authIntent}${
       returnToPath ? `&returnPath=${encodeURIComponent(returnToPath)}` : ''
     }&platform=${this.config.runningIn}&provider=${provider}`;
   }
 
-  async signInWithMicrosoft(accessToken?: string) {
+  async signInWithMicrosoft(idToken?: string) {
+    validateIdToken(idToken);
+
     const provider = this.createMicrosoftOpenIdProvider();
-    const userCredential = accessToken
-      ? await signInWithCredential(
-          this.auth,
-          provider.credential({ idToken: accessToken })
-        )
+    const userCredential = idToken
+      ? await signInWithCredential(this.auth, provider.credential({ idToken }))
       : await signInWithPopup(this.auth, provider);
 
     const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
@@ -156,13 +169,14 @@ export class AuthService {
     });
   }
 
-  async linkAccountWithMicrosoft(accessToken?: string) {
-    const provider = this.createMicrosoftOpenIdProvider();
+  async linkAccountWithMicrosoft(idToken?: string) {
+    validateIdToken(idToken);
 
-    const userCredential = accessToken
+    const provider = this.createMicrosoftOpenIdProvider();
+    const userCredential = idToken
       ? await linkWithCredential(
           this.auth.currentUser,
-          provider.credential({ idToken: accessToken })
+          provider.credential({ idToken })
         )
       : await linkWithPopup(this.auth.currentUser, provider);
 
@@ -335,13 +349,16 @@ export class AuthService {
 
   async updateCurrentUserEmail(email: string, password: string) {
     const user = await this.getUser();
-    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+    await reauthenticateWithCredential(
+      user,
+      EmailAuthProvider.credential(user.email, password)
+    );
     await updateEmail(user, email);
-    await this.updateUserDetails(user.uid, {email});
+    await this.updateUserDetails(user.uid, { email });
   }
 
   setSessionCookie(value: string) {
-    Cookies.set('__session', value, {secure: true});
+    Cookies.set('__session', value, { secure: true });
   }
 
   getSessionCookie(): string | ParsedSessionCookie | undefined {

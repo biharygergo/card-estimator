@@ -125,10 +125,10 @@
               mat-flat-button
               color="primary"
               (click)="openLearnMore()"
-              [disabled]="paymentsService.isSubscriptionDisabled"
+              [disabled]="paymentsService.isSubscriptionDisabled()"
             >
               {{
-                paymentsService.isSubscriptionDisabled
+                paymentsService.isSubscriptionDisabled()
                   ? "Not available on Teams mobile"
                   : "Buy more credits"
               }}
@@ -195,10 +195,10 @@
               color="primary"
               class="learn-more-button"
               (click)="openPremiumModal()"
-              [disabled]="paymentsService.isSubscriptionDisabled"
+              [disabled]="paymentsService.isSubscriptionDisabled()"
             >
               {{
-                paymentsService.isSubscriptionDisabled
+                paymentsService.isSubscriptionDisabled()
                   ? "Not available on Teams mobile"
                   : "Subscribe to Premium"
               }}

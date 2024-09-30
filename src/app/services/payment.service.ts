@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {
   addDoc,
@@ -40,7 +40,7 @@ export type StripeSubscription = CorrectSubscription;
 })
 export class PaymentService {
   payments: StripePayments;
-  isSubscriptionDisabled = false;
+  isSubscriptionDisabled = signal<boolean>(false);
 
   constructor(
     readonly app: FirebaseApp,

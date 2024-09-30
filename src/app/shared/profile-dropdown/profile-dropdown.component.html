@@ -41,11 +41,12 @@
       <span>Previous sessions</span>
     </a>
     <mat-divider></mat-divider>
+    @if (!paymentService.isSubscriptionDisabled()) {
     <button mat-menu-item (click)="openPricingModal()">
       <mat-icon>toll</mat-icon>
       <span>Buy credits</span>
     </button>
-    @if(!(isOnJoinOrCreateScreen$ | async)) {
+    } @if(!(isOnJoinOrCreateScreen$ | async)) {
     <a mat-menu-item routerLink="/join">
       <mat-icon>home</mat-icon>
       <span>Home</span>

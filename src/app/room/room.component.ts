@@ -532,7 +532,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           message,
           10000,
           'info',
-          'Top up credits'
+          this.paymentService.isSubscriptionDisabled() ? undefined : 'Top up credits'
         );
         ref
           .onAction()

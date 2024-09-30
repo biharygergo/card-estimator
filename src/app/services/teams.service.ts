@@ -25,7 +25,7 @@ export class TeamsService {
       if (
         ['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)
       ) {
-        this.paymentService.isSubscriptionDisabled = true;
+        this.paymentService.isSubscriptionDisabled.set(true);
       }
 
       if (frameContext === 'sidePanel' || frameContext === 'meetingStage') {
@@ -111,10 +111,18 @@ export class TeamsService {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
     const context = await microsoftTeams.app.getContext();
     const isRunningInMeeting = !!context.meeting?.id;
-    const linkContext = `{"chatId":"${context.chat?.id}","contextType":"chat","subEntityId":"${roomId}"}`;
-    const deepLink = `https://teams.microsoft.com/l/entity/609fe794-87f9-4045-9ca7-0f79cc734930/create_a_room?webUrl=${joinUrl}&context=${linkContext}&openInMeeting=${
-      isRunningInMeeting ? 'true' : 'false'
-    }`;
+    const linkContext = {
+      subEntityId: roomId,
+    };
+    if (context.chat?.id) {
+      linkContext['chatId'] = context.chat.id;
+      linkContext['contextType'] = 'chat';
+    } else if (context?.channel?.id) {
+      linkContext['channelId'] = context.channel.id;
+    }
+    const deepLink = `https://teams.microsoft.com/l/entity/609fe794-87f9-4045-9ca7-0f79cc734930/create_a_room?webUrl=${joinUrl}&context=${encodeURIComponent(
+      JSON.stringify(linkContext)
+    )}`;
 
     return deepLink;
   }

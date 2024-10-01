@@ -21,7 +21,7 @@
             <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
             <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
             <img src="/assets/logos/{{ logo }}.png" alt="Logo of {{ companies[i] }}"
-              [loading]="i < 5 ? 'eager' : 'lazy'" />
+              loading="lazy" />
           </picture>
         </li>
         }

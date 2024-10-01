@@ -56,6 +56,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { RoomDataService } from '../room-data.service';
 const ROOM_CONFIGURATION_MODAL = 'roomConfigurationModal';
 
 export interface RoomConfigurationModalData {
@@ -258,9 +259,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   isSavingPassword = false;
   errorMessage = new Subject<string>();
 
-  room$ = this.estimatorService
-    .getRoomById(this.dialogData.roomId)
-    .pipe(takeUntil(this.destroy), share());
+  room$ = this.roomDataService.room$;
 
   onConfigurationChanged$: Observable<RoomConfiguration> = this.room$.pipe(
     map((room) => room.configuration),
@@ -331,6 +330,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly estimatorService: EstimatorService,
+    private readonly roomDataService: RoomDataService,
     private readonly permissionsService: PermissionsService,
     private readonly toastService: ToastService,
     private dialog: MatDialog,

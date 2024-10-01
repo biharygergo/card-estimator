@@ -21,6 +21,7 @@ import {
   of,
 } from 'rxjs';
 import {
+  catchError,
   filter,
   first,
   map,
@@ -551,7 +552,8 @@ export class EstimatorService {
           )
           .map(([id]) => id);
         return filtered;
-      })
+      }),
+      catchError(() => of([]))
     );
   }
 
@@ -682,7 +684,7 @@ export class EstimatorService {
         'metadata',
         'passwordProtection'
       ) as DocumentReference<any>
-    ).pipe(map((data) => !!data?.value));
+    ).pipe(map((data) => !!data?.value), catchError(() => of(false)));
   }
 
   async togglePasswordProtection(roomId: string, isEnabled: boolean) {

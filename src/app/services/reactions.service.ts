@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionReference, Timestamp } from '@angular/fire/firestore';
-import { Observable, Subject, filter, map } from 'rxjs';
+import { NEVER, Observable, Subject, catchError, filter, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import {
   Firestore,
@@ -121,6 +121,7 @@ export class ReactionsService {
     return sortedChanges(q, { events: ['added'] }).pipe(
       filter((changes) => !!changes.length),
       map((documentChange) => documentChange.pop().doc.data()),
+      catchError(() => NEVER)
     );
   }
 

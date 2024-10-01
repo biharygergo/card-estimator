@@ -203,8 +203,7 @@ export class RoomDataService {
       .getRoomById(roomId)
       .pipe(
         catchError((error) => {
-          this.onRoomUpdateError(error);
-          return EMPTY;
+          return this.onRoomUpdateError(error);
         })
       )
       .subscribe((room) => {

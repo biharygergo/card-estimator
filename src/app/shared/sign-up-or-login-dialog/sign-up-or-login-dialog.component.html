@@ -71,6 +71,7 @@
                 : "Sign in with Google"
             }}
           </button>
+          @if (config.runningIn !== 'teams') {
           <button
             mat-stroked-button
             color="primary"
@@ -96,6 +97,7 @@
                 : "Sign in with Microsoft"
             }}
           </button>
+          }
         </div>
       </div>
       <mat-divider></mat-divider>

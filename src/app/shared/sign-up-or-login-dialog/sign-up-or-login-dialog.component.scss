@@ -26,6 +26,7 @@
     padding: 1rem;
     background: #ffb4ab;
     color: #690005;
+    word-break: break-all;
   }
 
   .social {
@@ -130,4 +131,11 @@
 
 #create-account-button {
   margin-bottom: 0.5rem;
+}
+
+.social-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }

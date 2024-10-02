@@ -111,6 +111,16 @@
           "region": "us-central1"
         },
         {
+          "source": "/api/startOAuth",
+          "function": "startOAuth",
+          "region": "us-central1"
+        },
+        {
+          "source": "/api/onOAuthResult/:provider",
+          "function": "onOAuthResult",
+          "region": "us-central1"
+        },
+        {
           "source": "/zoomverify/verifyzoom",
           "destination": "/assets/verifyzoom.html"
         },

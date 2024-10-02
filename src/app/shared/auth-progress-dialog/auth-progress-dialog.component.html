@@ -3,7 +3,7 @@
     <div class="content-container">
       @if (state === AuthProgressState.IN_PROGRESS) {
         <mat-spinner diameter="40"></mat-spinner>
-        <p>Waiting for authentication with Zoom and Google to finish.</p>
+        <p>Waiting for authentication with Zoom and the selected provider to finish.</p>
       }
       @if (state === AuthProgressState.SUCCESS) {
         <mat-icon color="success">check</mat-icon>

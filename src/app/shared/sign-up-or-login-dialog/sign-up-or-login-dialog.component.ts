@@ -91,6 +91,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();
   onCreateAccountClicked = new Subject<void>();
   onSignInClicked = new Subject<void>();
+  onSignUpWithMicrosoftClicked = new Subject<void>();
 
   screen: 'signIn' | 'signUp' = 'signUp';
 
@@ -154,6 +155,28 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         }),
         tap(() =>
           this.analyticsService.logClickedSignUpWithGoogle('sign-in-dialog')
+        ),
+        takeUntil(this.destroy)
+      )
+      .subscribe((success) => {
+        if (success) {
+          this.dialogRef.close();
+        }
+      });
+
+      this.onSignUpWithMicrosoftClicked
+      .pipe(
+        switchMap(() => {
+          this.isBusy.next(true);
+          this.errorMessage$.next('');
+          if (this.intent === SignUpOrLoginIntent.LINK_ACCOUNT) {
+            return this.linkAccountWithMicrosoft();
+          } else {
+            return this.signInWithMicrosoft();
+          }
+        }),
+        tap(() =>
+          {}// this.analyticsService.logClickedSignUpWithMicrosoft('sign-in-dialog')
         ),
         takeUntil(this.destroy)
       )
@@ -254,7 +277,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   private linkAccountWithGoogle(): Observable<void | {}> {
     let signInPromise: Promise<void>;
     if (this.config.runningIn === 'zoom') {
-      signInPromise = this.linkAccountWithGoogleInZoom();
+      signInPromise = this.linkAccountWithProviderInZoom('google');
     } else if (this.config.runningIn === 'teams') {
       const returnTo = this.route.snapshot.url.join('/');
       signInPromise = this.teamsService
@@ -302,7 +325,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return of(false);
   }
 
-  private async linkAccountWithGoogleInZoom(): Promise<void> {
+  private async linkAccountWithProviderInZoom(provider: string): Promise<void> {
     this.dialog.open(
       ...authProgressDialogCreator({
         initialState: AuthProgressState.IN_PROGRESS,
@@ -311,7 +334,8 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     );
     await this.zoomApiService.openUrl(
       this.authService.getApiAuthUrl(
-        AuthIntent.LINK_ACCOUNT
+        AuthIntent.LINK_ACCOUNT,
+        provider,
         // this.activatedRoute.snapshot.toString()
       ),
       true
@@ -324,7 +348,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   private signInWithGoogle(): Observable<boolean> {
     let signInPromise: Promise<any>;
     if (this.config.runningIn === 'zoom') {
-      signInPromise = this.signInWithGoogleInZoom();
+      signInPromise = this.signInWithProviderInZoom('google');
     } else if (this.config.runningIn === 'teams') {
       const returnTo = this.route.snapshot.url.join('/');
       signInPromise = this.teamsService
@@ -350,7 +374,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return this.authService.signInWithGoogle();
   }
 
-  private signInWithGoogleInZoom() {
+  private signInWithProviderInZoom(provider: string) {
     this.dialog.open(
       ...authProgressDialogCreator({
         initialState: AuthProgressState.IN_PROGRESS,
@@ -358,7 +382,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
       })
     );
     return this.zoomApiService.openUrl(
-      this.authService.getApiAuthUrl(AuthIntent.SIGN_IN),
+      this.authService.getApiAuthUrl(AuthIntent.SIGN_IN, provider),
       true
     );
   }
@@ -366,5 +390,51 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  private linkAccountWithMicrosoft(): Observable<void | {}> {
+    let signInPromise: Promise<void>;
+    if (this.config.runningIn === 'zoom') {
+      signInPromise = this.linkAccountWithProviderInZoom('microsoft');
+    } else if (this.config.runningIn === 'teams') {
+      signInPromise = this.teamsService
+        .getMicrosoftAuthToken()
+        .then((token) => {
+          return this.authService.linkAccountWithMicrosoft(token);
+        });
+    } else {
+      signInPromise = this.authService.linkAccountWithMicrosoft();
+    }
+    return from(signInPromise).pipe(
+      tap(() => {
+        this.isBusy.next(false);
+      }),
+      map(() => true),
+      catchError((error) => this.handleAccountError(error))
+    );
+  }
+
+  private signInWithMicrosoft(): Observable<boolean> {
+    let signInPromise: Promise<any>;
+    if (this.config.runningIn === 'zoom') {
+      signInPromise = this.signInWithProviderInZoom('microsoft');
+    } else if (this.config.runningIn === 'teams') {
+      signInPromise = this.teamsService
+        .getMicrosoftAuthToken()
+        .then((token) => {
+          return this.authService.signInWithMicrosoft(token);
+        });
+    } else {
+      signInPromise = this.authService.signInWithMicrosoft();
+    }
+    return from(signInPromise).pipe(
+      tap(() => {
+        this.isBusy.next(false);
+      }),
+      map(() => true),
+      catchError((error) => {
+        return this.handleAccountError(error);
+      })
+    );
   }
 }

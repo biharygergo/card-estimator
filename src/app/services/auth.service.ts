@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   linkWithCredential,
+  OAuthProvider,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithCredential,
@@ -20,7 +21,7 @@ import {
   updateProfile,
   User,
   UserInfo,
-  GoogleAuthProvider
+  GoogleAuthProvider,
 } from '@angular/fire/auth';
 import {
   doc,
@@ -56,6 +57,8 @@ import {
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
+import { APP_CONFIG, AppConfig } from '../app-config.module';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 export const PROFILES_COLLECTION = 'userProfiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
@@ -72,8 +75,18 @@ export type ParsedSessionCookie = {
   returnToPath?: string;
   idToken: string;
   createdAt: FieldValue;
+  provider: string;
 };
 
+function validateIdToken(idToken?: string) {
+  if (!idToken) return;
+
+  if (!jwtDecode<JwtPayload & { email?: string }>(idToken).email) {
+    throw new Error(
+      'This account does not have an email address associated with it. Please select a different account.'
+    );
+  }
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -86,7 +99,8 @@ export class AuthService {
   constructor(
     private auth: Auth,
     private firestore: Firestore,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {
     this.user = user(this.auth).pipe();
   }
@@ -128,10 +142,49 @@ export class AuthService {
     this.auth.signOut();
   }
 
-  getApiAuthUrl(authIntent: AuthIntent, returnToPath?: string): string {
-    return `${window.origin}/api/startGoogleAuth?intent=${authIntent}${
+  getApiAuthUrl(
+    authIntent: AuthIntent,
+    provider: string,
+    returnToPath?: string
+  ): string {
+    return `${window.origin}/api/startOAuth?intent=${authIntent}${
       returnToPath ? `&returnPath=${encodeURIComponent(returnToPath)}` : ''
-    }`;
+    }&platform=${this.config.runningIn}&provider=${provider}`;
+  }
+
+  async signInWithMicrosoft(idToken?: string) {
+    validateIdToken(idToken);
+
+    const provider = this.createMicrosoftOpenIdProvider();
+    const userCredential = idToken
+      ? await signInWithCredential(this.auth, provider.credential({ idToken }))
+      : await signInWithPopup(this.auth, provider);
+
+    const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
+
+    await this.handleSignInResult({ isNewUser });
+    this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  async linkAccountWithMicrosoft(idToken?: string) {
+    validateIdToken(idToken);
+
+    const provider = this.createMicrosoftOpenIdProvider();
+    const userCredential = idToken
+      ? await linkWithCredential(
+          this.auth.currentUser,
+          provider.credential({ idToken })
+        )
+      : await linkWithPopup(this.auth.currentUser, provider);
+
+    await this.handleSignInResult({ isNewUser: true });
+    this.snackbar.open(`Your account is now set up, awesome!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
   }
 
   async signInWithGoogle(idToken?: string) {
@@ -244,6 +297,14 @@ export class AuthService {
     return provider;
   }
 
+  private createMicrosoftOpenIdProvider() {
+    const provider = new OAuthProvider('oidc.microsoft');
+    provider.addScope('openid');
+    provider.addScope('profile');
+    provider.addScope('email');
+    return provider;
+  }
+
   async unlinkGoogleAccount() {
     const provider = new GoogleAuthProvider();
     await unlink(this.auth.currentUser, provider.providerId);
@@ -288,13 +349,16 @@ export class AuthService {
 
   async updateCurrentUserEmail(email: string, password: string) {
     const user = await this.getUser();
-    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+    await reauthenticateWithCredential(
+      user,
+      EmailAuthProvider.credential(user.email, password)
+    );
     await updateEmail(user, email);
-    await this.updateUserDetails(user.uid, {email});
+    await this.updateUserDetails(user.uid, { email });
   }
 
   setSessionCookie(value: string) {
-    Cookies.set('__session', value, {secure: true});
+    Cookies.set('__session', value, { secure: true });
   }
 
   getSessionCookie(): string | ParsedSessionCookie | undefined {

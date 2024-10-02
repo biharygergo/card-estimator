@@ -58,6 +58,7 @@ export const zoomHome = async (
           await getFirestore().collection(AUTH_SESSIONS).doc(sessionId).get()
         ).data();
         setSessionVariable(res, JSON.stringify(sessionData));
+        await getFirestore().collection(AUTH_SESSIONS).doc(sessionId).delete();
       }
 
       const path = roomId ? `/join?roomId=${roomId}&s=zoom` : "/create?s=zoom";

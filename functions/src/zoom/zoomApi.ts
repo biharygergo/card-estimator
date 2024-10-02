@@ -67,6 +67,7 @@ function tokenRequest(params: any, isDev: boolean) {
       .then(({data}) => Promise.resolve(data))
       .catch((error) => {
         console.error("Axios error", error.response.data);
+        console.error(error.response);
         return Promise.reject(error.response.data);
       });
 }
@@ -125,7 +126,10 @@ export async function getToken(
 export function getDeeplink(token: string, action?: any) {
   return apiRequest("POST", "/zoomapp/deeplink", token, {
     action: JSON.stringify(action),
-  }).then((data) => Promise.resolve(data.deeplink));
+  }).then((data) => Promise.resolve(data.deeplink)).catch((error) => {
+    console.error("Error fetching deeplink", error, error?.response?.data);
+    throw error;
+  });
 }
 
 export const setSessionVariable = (

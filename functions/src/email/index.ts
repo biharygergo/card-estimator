@@ -63,6 +63,7 @@ export async function addContact(props: { email: string; name: string }) {
           last_name: props.name.split(" ").slice(1).join(" "),
         },
       ],
+      list_ids: ["f06f5f99-d5d3-481a-be9f-5c28651b72bc"],
     },
   };
 

@@ -13,14 +13,14 @@ const vertexAi = new VertexAI({
   project: cloudProjectName ?? "card-estimator",
   location,
 });
-const model = "gemini-1.5-flash-001";
+const model = "gemini-1.5-flash-002";
 
 // Instantiate the models
 const generativeModel = vertexAi.preview.getGenerativeModel({
   model: model,
   generation_config: {
     max_output_tokens: 8192,
-    temperature: 0.5,
+    temperature: 1.3,
     top_p: 0.95,
   },
 });
@@ -68,16 +68,19 @@ export async function createSummary(request: CallableRequest) {
   }
 
   const systemPrompt = `
-  You are the helpful SCRUM Master of an agile development team. Given the below CSV export of a planning meeting, write a summary to send to the team via chat. 
- 
-The CSV contains votes for each discussed topic for each team member and the Average, Majority, and Notes columns. The topic names are either "Topic of Round #X" where X is the round (1, 2, etc.) or they can be custom topic names for what was discussed in the meeting.   The votes are numbers, a low number means a more straightforward task and a higher number means a more difficult task. Members know of this scale, you don't need to explain this to them. 
+You are the SCRUM Master for an agile development team. Your task is to summarize the key outcomes of a planning meeting based on the provided CSV data.  The CSV contains voting results for each discussed topic, along with average, majority, and notes columns.  The team members used a numerical voting scale where lower numbers indicate simpler tasks and higher numbers represent more complex ones. The team could also use a T-Shirt sizing scale where each size represents the complexity of an issue.
 
-Try to mention something about each round, but keep a natural tone, there is no need to include too many numbers. The summary should be in a friendly, but formal work tone, and it should be around 150 words long (it should not be shorter!). It should be structured in at least two paragraphs.
+Please write a summary of the meeting to be sent to the team via chat.  The summary should be approximately 300 words long, structured in at least two paragraphs, and maintain a friendly yet formal tone.
 
-Finish with a motivating sentence for the upcoming sprint to energize the team. You can even quote someone famous.
+**Instructions:**
 
-The CSV file is:
+1. Parse the CSV data and extract the relevant information for each round/topic.
+2. Summarize the discussions for each round, mentioning any significant disagreements or points of interest from the notes.  Be sure to explicitly state the majority vote for each topic and tailor your summary to reflect the voting results. For example, instead of saying \"The team generally agreed that Topic A was relatively straightforward,\" say \"The majority of the team voted [majority vote] for Topic A, indicating that it is relatively straightforward.\"
+3. Conclude the summary with a motivational sentence to energize the team for the upcoming sprint.  You can include a relevant quote from a famous figure if appropriate.
 
+**CSV Data:**
+
+${request.data.csvSummary}
 `;
 
   const req = {
@@ -86,7 +89,7 @@ The CSV file is:
         role: "user",
         parts: [
           {
-            text: systemPrompt + request.data.csvSummary,
+            text: systemPrompt,
           },
         ],
       },

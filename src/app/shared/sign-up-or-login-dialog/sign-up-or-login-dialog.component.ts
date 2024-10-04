@@ -397,8 +397,10 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     if (this.config.runningIn === 'zoom') {
       signInPromise = this.linkAccountWithProviderInZoom('microsoft');
     } else if (this.config.runningIn === 'teams') {
+      const returnTo = this.route.snapshot.url.join('/');
+
       signInPromise = this.teamsService
-        .getMicrosoftAuthToken()
+        .getMicrosoftAuthToken(returnTo)
         .then((token) => {
           return this.authService.linkAccountWithMicrosoft(token);
         });
@@ -419,8 +421,10 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     if (this.config.runningIn === 'zoom') {
       signInPromise = this.signInWithProviderInZoom('microsoft');
     } else if (this.config.runningIn === 'teams') {
+      const returnTo = this.route.snapshot.url.join('/');
+
       signInPromise = this.teamsService
-        .getMicrosoftAuthToken()
+        .getMicrosoftAuthToken(returnTo)
         .then((token) => {
           return this.authService.signInWithMicrosoft(token);
         });

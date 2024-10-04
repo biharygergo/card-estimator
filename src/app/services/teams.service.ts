@@ -152,8 +152,19 @@ export class TeamsService {
     microsoftTeams.authentication.notifySuccess(token);
   }
 
-  async getMicrosoftAuthToken(): Promise<string> {
-    const token = await microsoftTeams.authentication.getAuthToken();
+  async getMicrosoftAuthToken(returnTo: string): Promise<string> {
+    await this.configureApp();
+
+    const apiUrl = `${
+      window.location.origin
+    }/api/startOAuth?oauthRedirectMethod={oauthRedirectMethod}&authId={authId}&redirectTo=${encodeURIComponent(
+      returnTo
+    )}&platform=teams&provider=microsoft`;
+    const token = await microsoftTeams.authentication.authenticate({
+      url: apiUrl,
+      isExternal: true,
+    });
+
     return token;
   }
 }

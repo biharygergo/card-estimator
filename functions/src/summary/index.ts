@@ -67,6 +67,15 @@ export async function createSummary(request: CallableRequest) {
     );
   }
 
+  const existingSummaries = await summariesCollection
+      .get()
+      .then((snapshot) =>
+        snapshot.docs
+            .map((doc) => doc.data() as RoomSummary)
+            .map((summary) => summary.summary)
+            .join(",")
+      );
+
   const systemPrompt = `
 You are the SCRUM Master for an agile development team. Your task is to summarize the key outcomes of a planning meeting based on the provided CSV data.  The CSV contains voting results for each discussed topic, along with average, majority, and notes columns.  The team members used a numerical voting scale where lower numbers indicate simpler tasks and higher numbers represent more complex ones. The team could also use a T-Shirt sizing scale where each size represents the complexity of an issue.
 
@@ -75,8 +84,9 @@ Please write a summary of the meeting to be sent to the team via chat.  The summ
 **Instructions:**
 
 1. Parse the CSV data and extract the relevant information for each round/topic.
-2. Summarize the discussions for each round, mentioning any significant disagreements or points of interest from the notes.  Be sure to explicitly state the majority vote for each topic and tailor your summary to reflect the voting results. For example, instead of saying \"The team generally agreed that Topic A was relatively straightforward,\" say \"The majority of the team voted [majority vote] for Topic A, indicating that it is relatively straightforward.\"
+2. Summarize the discussions for each round, mentioning any significant disagreements or points of interest from the notes.  Be sure to explicitly state the majority vote for each topic and tailor your summary to reflect the voting results. For example, instead of saying "The team generally agreed that Topic A was relatively straightforward" say "The majority of the team voted [majority vote] for Topic A, indicating that it is relatively straightforward."
 3. Conclude the summary with a motivational sentence to energize the team for the upcoming sprint.  You can include a relevant quote from a famous figure if appropriate.
+4. Make sure your response is different from the previous summaries to provide a fresh perspective or a new motivational quote. ${existingSummaries.length ? `Your previous summaries were: ${existingSummaries}` : ""}
 
 **CSV Data:**
 
@@ -97,8 +107,6 @@ ${request.data.csvSummary}
   };
 
   const response = await generativeModel.generateContent(req);
-
-  console.log(response);
 
   const summaryText =
     response.response.candidates?.[0].content?.parts?.[0]?.text ?? "";

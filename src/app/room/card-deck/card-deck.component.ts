@@ -105,7 +105,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   }
 
   toggleReactions() {
-    this.showReactions.set(!this.showReactions);
+    this.showReactions.set(!this.showReactions());
     this.analytics.logToggledReactions();
   }
 

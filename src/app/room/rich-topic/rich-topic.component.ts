@@ -1,15 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
+  computed,
   EventEmitter,
   Inject,
   input,
-  Input,
-  OnChanges,
   Output,
   signal,
-  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
@@ -17,11 +14,7 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
-import {
-  CardSetValue,
-  RichTopic,
-  RoundStatistics,
-} from 'src/app/types';
+import { CardSetValue, RichTopic, RoundStatistics } from 'src/app/types';
 import { finalize } from 'rxjs/operators';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import jira2md from 'jira2md';
@@ -32,20 +25,15 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-rich-topic',
-    templateUrl: './rich-topic.component.html',
-    styleUrls: ['./rich-topic.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        MarkdownComponent,
-    ],
+  selector: 'app-rich-topic',
+  templateUrl: './rich-topic.component.html',
+  styleUrls: ['./rich-topic.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconButton, MatTooltip, MatIcon, MarkdownComponent],
 })
-export class RichTopicComponent  {
+export class RichTopicComponent {
   richTopic = input.required<RichTopic | null | undefined>();
   enableEditing = input<boolean>(false);
   roundStatistics = input<RoundStatistics | undefined>();
@@ -54,7 +42,15 @@ export class RichTopicComponent  {
 
   @Output() deleted = new EventEmitter();
 
-  cleanedMarkdown = signal<string>('');
+  cleanedMarkdown = computed<string>(() => {
+    const newTopic = this.richTopic();
+    if (newTopic?.description) {
+      return newTopic.provider === 'jira'
+        ? jira2md.to_markdown(newTopic.description)
+        : newTopic.description;
+    }
+    return '';
+  });
   isSavingToJira = signal<boolean>(false);
 
   constructor(
@@ -65,19 +61,7 @@ export class RichTopicComponent  {
     private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly permissionService: PermissionsService
-  ) {
-    effect(() => {
-      const newTopic = this.richTopic();
-      if (newTopic?.description) {
-        this.cleanedMarkdown =
-          newTopic.provider === 'jira'
-            ? jira2md.to_markdown(newTopic.description)
-            : newTopic.description;
-      } else {
-        this.cleanedMarkdown.set('');
-      }
-    })
-  }
+  ) {}
 
   openRemoteTopic() {
     this.analyticsService.logClickedViewOnJiraButton();
@@ -116,7 +100,7 @@ export class RichTopicComponent  {
     this.toastService.showMessage(`Saving to ${providerName}, hold tight...`);
 
     this.isSavingToJira.set(true);
-    const convertedMajority = this.roundStatistics().consensus.value
+    const convertedMajority = this.roundStatistics().consensus.value;
 
     providerService
       .updateIssue({

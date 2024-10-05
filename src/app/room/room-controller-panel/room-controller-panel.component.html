@@ -114,7 +114,7 @@
       </h4>
     </div>
     <div class="card-footer-actions">
-      <countdown-timer [room]="room$" [minimized]="false"/>
+      <countdown-timer [room]="room$()" [minimized]="false"/>
     </div>
     <div class="card-footer-actions align-right">
       <button
@@ -176,13 +176,13 @@
       <mat-icon @fadeAnimation>add</mat-icon>
       }
     </button>
-    } @if (currentRound() < rounds.length - 1 && !room().isAsyncVotingEnabled) {
+    } @if (currentRound() < rounds().length - 1 && !room().isAsyncVotingEnabled) {
     <button
       mat-icon-button
       color="primary"
       (click)="nextRound()"
       [disabled]="
-        !(permissionsService.canCreateRounds() | async) || isEditingTopic
+        !(permissionsService.canCreateRounds() | async) || isEditingTopic()
       "
       matTooltip="Go to next round"
       [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
@@ -219,7 +219,7 @@
       mat-icon-button
       matTooltip="View next round"
       (click)="changeLocalRound(1)"
-      [disabled]="localActiveRound.value === rounds.length - 1"
+      [disabled]="localActiveRound.value === rounds().length - 1"
       color="primary"
     >
       <mat-icon>chevron_right</mat-icon>
@@ -239,7 +239,7 @@
       <mat-icon @fadeAnimation>checkmark</mat-icon>
       }
     </button>
-    <countdown-timer [room]="room$" [minimized]="true"/>
+    <countdown-timer [room]="room$()" [minimized]="true"/>
     <button
       mat-icon-button
       [matMenuTriggerFor]="roomSettingsMenu"

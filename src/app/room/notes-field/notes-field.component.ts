@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   debounceTime,
@@ -54,7 +54,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     private readonly permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private auth: AuthService,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
   ) {}
 
   ngOnInit(): void {
@@ -137,15 +137,15 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     if (currentRound) {
       this.editedBy.set(currentRound.notes?.editedBy);
       this.isNoteDisabled.set(
-        (this.editedBy && this.editedBy().id !== this.auth.getUid()) ||
-        !this.hasPermission);
+        (this.editedBy() && this.editedBy().id !== this.auth.getUid()) ||
+        !this.hasPermission());
 
-      this.isNoteDisabled
+      this.isNoteDisabled()
         ? this.noteValue.disable({ emitEvent: false })
         : this.noteValue.enable({ emitEvent: false });
 
       if (
-        this.isNoteDisabled ||
+        this.isNoteDisabled() ||
         this.noteValue.value === null ||
         this.cachedRound() !== activeRoundNumber
       ) {

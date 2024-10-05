@@ -65,7 +65,7 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
               path: reactionFromDict.lottie,
             },
             userName:
-              this.membersMap[reaction.userId]?.name || 'Unknown member',
+              this.membersMap()[reaction.userId]?.name || 'Unknown member',
             leftPosition: `${this.randomInteger(5, 95)}%`,
           };
           this.visibleReactions.set([

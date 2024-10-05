@@ -571,7 +571,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   toggleControlPane() {
-    this.isControlPaneExpanded.set(!this.isControlPaneExpanded);
+    this.isControlPaneExpanded.set(!this.isControlPaneExpanded());
     this.isControlPaneExpansionSetByUser = true;
   }
 

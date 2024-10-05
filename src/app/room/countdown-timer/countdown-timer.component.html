@@ -9,10 +9,10 @@
       ></mat-progress-bar>
       <span class="time-left">
         @if (timer().state === TimerState.INIT) {
-          {{ durationLeft }} second timer
+          {{ durationLeft() }} second timer
         }
         @if (timer().state !== TimerState.INIT && durationLeft() > 0) {
-          {{ durationLeft }} seconds remaining
+          {{ durationLeft() }} seconds remaining
         }
         @if (timer().state !== TimerState.INIT && durationLeft() === 0) {
           Time is up!
@@ -114,7 +114,7 @@
           >
           @if (durationLeft() > -1) {
             <span class="duration-left">{{
-              durationLeft
+              durationLeft()
             }}</span>
           }
           <mat-icon class="pause-icon">pause</mat-icon>

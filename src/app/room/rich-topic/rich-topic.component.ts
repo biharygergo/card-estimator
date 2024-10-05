@@ -1,10 +1,14 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  effect,
   EventEmitter,
   Inject,
+  input,
   Input,
   OnChanges,
   Output,
+  signal,
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
@@ -32,6 +36,7 @@ import { MatIconButton } from '@angular/material/button';
     templateUrl: './rich-topic.component.html',
     styleUrls: ['./rich-topic.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
         MatIconButton,
@@ -40,17 +45,17 @@ import { MatIconButton } from '@angular/material/button';
         MarkdownComponent,
     ],
 })
-export class RichTopicComponent implements OnChanges {
-  @Input() richTopic: RichTopic | null | undefined;
-  @Input() enableEditing: boolean = false;
-  @Input() roundStatistics?: RoundStatistics;
-  @Input() selectedEstimationCardSetValue?: CardSetValue;
-  @Input() hideUploadButton?: boolean;
+export class RichTopicComponent  {
+  richTopic = input.required<RichTopic | null | undefined>();
+  enableEditing = input<boolean>(false);
+  roundStatistics = input<RoundStatistics | undefined>();
+  selectedEstimationCardSetValue = input<CardSetValue | undefined>();
+  hideUploadButton = input<boolean | undefined>();
 
   @Output() deleted = new EventEmitter();
 
-  cleanedMarkdown = '';
-  isSavingToJira = false;
+  cleanedMarkdown = signal<string>('');
+  isSavingToJira = signal<boolean>(false);
 
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
@@ -60,48 +65,42 @@ export class RichTopicComponent implements OnChanges {
     private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly permissionService: PermissionsService
-  ) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['richTopic']) {
-      const newTopic = changes['richTopic'].currentValue as
-        | RichTopic
-        | null
-        | undefined;
-
+  ) {
+    effect(() => {
+      const newTopic = this.richTopic();
       if (newTopic?.description) {
         this.cleanedMarkdown =
           newTopic.provider === 'jira'
             ? jira2md.to_markdown(newTopic.description)
             : newTopic.description;
       } else {
-        this.cleanedMarkdown = '';
+        this.cleanedMarkdown.set('');
       }
-    }
+    })
   }
 
   openRemoteTopic() {
     this.analyticsService.logClickedViewOnJiraButton();
-    if (this.richTopic) {
+    if (this.richTopic()) {
       if (this.config.runningIn === 'zoom') {
         this.zoomService.openUrl(
           `${window.origin}/api/safeRedirect?redirectTo=${encodeURIComponent(
-            this.richTopic.url
+            this.richTopic().url
           )}`
         );
       } else {
-        window.open(this.richTopic.url, '_blank');
+        window.open(this.richTopic().url, '_blank');
       }
     }
   }
 
   saveEstimateToJira() {
     const providerName =
-      this.richTopic?.provider === 'linear' ? 'Linear' : 'Jira';
+      this.richTopic()?.provider === 'linear' ? 'Linear' : 'Jira';
 
     if (
-      !this.selectedEstimationCardSetValue ||
-      !this.roundStatistics?.consensus
+      !this.selectedEstimationCardSetValue() ||
+      !this.roundStatistics()?.consensus
     ) {
       this.toastService.showMessage(
         `No votes cast yet. Vote before uploading results to ${providerName}.`
@@ -110,23 +109,23 @@ export class RichTopicComponent implements OnChanges {
     }
 
     const providerService =
-      this.richTopic?.provider === 'linear'
+      this.richTopic()?.provider === 'linear'
         ? this.linearService
         : this.jiraService;
 
     this.toastService.showMessage(`Saving to ${providerName}, hold tight...`);
 
-    this.isSavingToJira = true;
-    const convertedMajority = this.roundStatistics.consensus.value
+    this.isSavingToJira.set(true);
+    const convertedMajority = this.roundStatistics().consensus.value
 
     providerService
       .updateIssue({
-        issueId: this.richTopic.key,
+        issueId: this.richTopic().key,
         storyPoints: convertedMajority,
       })
       .pipe(
         finalize(() => {
-          this.isSavingToJira = false;
+          this.isSavingToJira.set(false);
         })
       )
       .subscribe((result) => {

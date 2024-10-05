@@ -1,4 +1,4 @@
-@for (reaction of visibleReactions; track reaction.id) {
+@for (reaction of visibleReactions(); track reaction.id) {
   <div
     class="reaction-wrapper"
     [style.left]="reaction.leftPosition"

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, Input, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   distinctUntilChanged,
@@ -45,6 +45,7 @@ import { isEqual } from 'lodash';
     templateUrl: './round-results.component.html',
     styleUrls: ['./round-results.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatList,
         MatListSubheaderCssMatStyler,
@@ -68,22 +69,22 @@ import { isEqual } from 'lodash';
     ],
 })
 export class RoundResultsComponent implements OnInit, OnDestroy {
-  @Input() room: Room;
-  @Input() roundStatistics: RoundStatistics;
-  @Input() currentRound: number;
-  @Input() selectedEstimationCardSetValue: CardSetValue;
-  @Input() userProfiles$: Observable<UserProfileMap> = EMPTY;
-  @Input() showMemberControls: boolean = false;
+  room = input.required<Room>();
+  roundStatistics = input.required<RoundStatistics>();
+  currentRound = input.required<number>();
+  selectedEstimationCardSetValue = input.required<CardSetValue>();
+  userProfiles$ = input<Observable<UserProfileMap>>(EMPTY);
+  showMemberControls = input<boolean>(false);
 
   organization$: Observable<Organization | undefined> =
     this.organizationService.getMyOrganization();
-  organization: Organization | undefined;
+  organization = signal<Organization | undefined>(undefined);
 
   destroyed = new Subject<void>();
   onRevoteClicked = new Subject<void>();
 
-  userProfiles: UserProfileMap = {};
-  currentUserId: string | undefined;
+  userProfiles = signal<UserProfileMap>({});
+  currentUserId = signal<string | undefined>(undefined);
 
   isAnonymousVotingEnabled = this.roomDataService.room$.pipe(
     map((room) => room.isAnonymousVotingEnabled),
@@ -119,20 +120,20 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userProfiles$.pipe(takeUntil(this.destroyed)).subscribe((profiles) => {
-      this.userProfiles = profiles;
+    this.userProfiles$().pipe(takeUntil(this.destroyed)).subscribe((profiles) => {
+      this.userProfiles.set(profiles);
     });
 
     this.organization$
       .pipe(takeUntil(this.destroyed))
-      .subscribe((org) => (this.organization = org));
+      .subscribe((org) => (this.organization.set(org)));
 
     this.authService.user
       .pipe(takeUntil(this.destroyed))
-      .subscribe((user) => (this.currentUserId = user?.uid));
+      .subscribe((user) => (this.currentUserId.set(user?.uid)));
 
     this.onRevoteClicked.pipe(takeUntil(this.destroyed)).subscribe(() => {
-      this.estimatorService.setActiveRound(this.room, this.currentRound, true);
+      this.estimatorService.setActiveRound(this.room(), this.currentRound(), true);
     });
   }
 
@@ -142,13 +143,13 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   }
 
   openAvatarSelectorModal(userId: string) {
-    if (userId !== this.currentUserId) return;
+    if (userId !== this.currentUserId()) return;
     this.dialog.open(...avatarModalCreator({ openAtTab: 'avatar' }));
   }
 
   async removeMember(member: Member) {
     await this.estimatorService.updateMemberStatus(
-      this.room.roomId,
+      this.room().roomId,
       member,
       MemberStatus.REMOVED_FROM_ROOM
     );
@@ -156,7 +157,7 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   }
 
   async addToOrganization(memberId: string) {
-    await this.organizationService.addMember(this.organization.id, memberId);
+    await this.organizationService.addMember(this.organization().id, memberId);
     this.toastService.showMessage('Added to organization!');
   }
 
@@ -167,9 +168,9 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   openMajorityVoteOverrideModal() {
     this.dialog.open(
       ...overrideMajorityVodeModalCreator({
-        roomId: this.room.roomId,
-        roundId: this.currentRound,
-        selectedCardSet: this.selectedEstimationCardSetValue,
+        roomId: this.room().roomId,
+        roundId: this.currentRound(),
+        selectedCardSet: this.selectedEstimationCardSetValue(),
       })
     );
   }

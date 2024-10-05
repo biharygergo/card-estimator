@@ -2,7 +2,7 @@
   <mat-sidenav-content class="sidenav-content" #sidenavContent>
     <div class="navbar">
       <div class="navbar-left">
-        <app-profile-dropdown class="profile-dropdown"></app-profile-dropdown>
+        <app-profile-dropdown class="profile-dropdown" />
       </div>
       <div class="navbar-right">
         @if(!(permissionsService.isPremiumSubscriber | async) && (isRoomCreator$
@@ -42,7 +42,7 @@
         >
           <div>
             <mat-card-content>
-              @if (!isEditingTopic) {
+              @if (!isEditingTopic()) {
               <h2 class="topic-title">
                 @if (topicWithAnimation$ | async; as topicWithAnimation) {
                 <span [class]="topicWithAnimation.animationClass">
@@ -59,20 +59,20 @@
                   Edit topic
                 </button>
               </h2>
-              } @if (isEditingTopic) {
+              } @if (isEditingTopic()) {
               <app-topic-editor
                 [roomTopic]="roomTopic$"
                 (topicUpdated)="topicBlur($event)"
-                (canceled)="isEditingTopic = false"
-              ></app-topic-editor>
-              } @if (!isEditingTopic) {
+                (canceled)="isEditingTopic.set(false)"
+              />
+              } @if (!isEditingTopic()) {
               <app-rich-topic
                 [richTopic]="(roomTopic$ | async)?.richTopic"
-                [roundStatistics]="roundStatistics?.[currentRound]"
+                [roundStatistics]="roundStatistics()?.[currentRound()]"
                 [selectedEstimationCardSetValue]="
-                  selectedEstimationCardSetValue
+                  selectedEstimationCardSetValue()
                 "
-              ></app-rich-topic>
+              />
               }
             </mat-card-content>
           </div>
@@ -89,11 +89,11 @@
           <div>
             <mat-card-content>
               <app-round-results
-                [room]="room"
-                [roundStatistics]="roundStatistics"
-                [currentRound]="currentRound"
+                [room]="room()"
+                [roundStatistics]="roundStatistics()"
+                [currentRound]="currentRound()"
                 [selectedEstimationCardSetValue]="
-                  selectedEstimationCardSetValue
+                  selectedEstimationCardSetValue()
                 "
                 [userProfiles$]="userProfiles$"
                 [showMemberControls]="true"
@@ -109,41 +109,39 @@
         }
       </div>
       <app-card-deck
-        [room]="room"
-        [currentRound]="currentRound"
-        [isObserver]="isObserver"
-        [estimationValues]="estimationValues"
-        [currentEstimate]="currentEstimate"
+        [room]="room()"
+        [currentRound]="currentRound()"
+        [estimationValues]="estimationValues()"
+        [currentEstimate]="currentEstimate()"
       ></app-card-deck>
       @if ((isSmallScreen$ | async)?.matches === false) {
       <ng-container *ngTemplateOutlet="controlPanel" />
       } @if ((isSmallScreen$ | async)?.matches === true) {
       <ng-container *ngTemplateOutlet="anonymousBanner" />
       } @if (config.runningIn === 'web') {
-      <app-github-badge></app-github-badge>
+      <app-github-badge />
       }
     </div>
-    @if (room) {
-    <app-reactions-renderer [members]="members$" [roomId]="room?.roomId" />
-    } @if (room) {
+    @if (room()) {
+    <app-reactions-renderer [members]="members$" [roomId]="room().roomId" />
     <app-carbon-ad
       placement="app"
       [isPremiumRoom]="
-        room?.subscriptionMetadata?.createdWithPlan === 'premium' ||
-        room?.subscriptionMetadata?.createdWithPlan === 'paid-credit'
+        room().subscriptionMetadata?.createdWithPlan === 'premium' ||
+        room().subscriptionMetadata?.createdWithPlan === 'paid-credit'
       "
     />
     }
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
     <app-topics-sidebar
-      [room]="room"
+      [room]="room()"
       [room$]="room$"
-      [rounds]="rounds"
-      [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
-      [currentRound]="currentRound"
-      [roundStatistics]="roundStatistics"
-    ></app-topics-sidebar>
+      [rounds]="rounds()"
+      [selectedEstimationCardSetValue]="selectedEstimationCardSetValue()"
+      [currentRound]="currentRound()"
+      [roundStatistics]="roundStatistics()"
+    />
   </mat-sidenav>
 </mat-sidenav-container>
 <ng-template #anonymousBanner>
@@ -152,22 +150,22 @@
     [hideable]="true"
     class="anonymous-user-banner"
     @fadeAnimation
-  ></anonymous-user-banner>
+  />
   }
 </ng-template>
 <ng-template #controlPanel>
-  <div class="estimate-container" [class.minimized]="!isControlPaneExpanded">
+  <div class="estimate-container" [class.minimized]="!isControlPaneExpanded()">
     <planning-poker-room-controller-panel
-      [room]="room"
+      [room]="room()"
       [room$]="room$"
       [activeMember$]="activeMember$"
-      [rounds]="rounds"
-      [currentRound]="currentRound"
-      [isEditingTopic]="isEditingTopic"
-      [isMuted]="isMuted"
-      [estimationCardSets]="estimationCardSets"
-      [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
-      [isExpanded]="isControlPaneExpanded"
+      [rounds]="rounds()"
+      [currentRound]="currentRound()"
+      [isEditingTopic]="isEditingTopic()"
+      [isMuted]="isMuted()"
+      [estimationCardSets]="estimationCardSets()"
+      [selectedEstimationCardSetValue]="selectedEstimationCardSetValue()"
+      [isExpanded]="isControlPaneExpanded()"
       (sidebarTriggered)="sidenav.open()"
       (muteClicked)="toggleMute()"
       (inviteClicked)="copyRoomId()"

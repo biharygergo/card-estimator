@@ -1,8 +1,8 @@
-@if ( (room?.rounds)[currentRound]?.show_results &&
-roundStatistics[currentRound] ) {
+@if ( (room()?.rounds)[currentRound()]?.show_results &&
+roundStatistics()[currentRound()] ) {
 <mat-list>
   <ng-container>
-    @if (roundStatistics[currentRound]; as statistics) {
+    @if (roundStatistics()[currentRound()]; as statistics) {
     <h3 matSubheader class="subheader">Statistics</h3>
     <mat-list-item class="statistic-line">
       <h3 matLine class="statistic">
@@ -28,8 +28,8 @@ roundStatistics[currentRound] ) {
             </mat-chip>
             }
             <mat-chip
-              [highlighted]="room?.rounds?.[currentRound]?.majorityOverride != null"
-              [class.overridden]="room?.rounds?.[currentRound]?.majorityOverride != null"
+              [highlighted]="room()?.rounds?.[currentRound()]?.majorityOverride != null"
+              [class.overridden]="room()?.rounds?.[currentRound()]?.majorityOverride != null"
               id="majority-vote-chip"
             >
               @if (permissionsService.canOverrideMajorityVote() | async) {
@@ -45,8 +45,8 @@ roundStatistics[currentRound] ) {
               }
 
               {{
-                (room?.rounds?.[currentRound]?.majorityOverride == null ? statistics.consensus.value : room?.rounds?.[currentRound]?.majorityOverride)
-                  | estimateConverter : selectedEstimationCardSetValue : "exact"
+                (room()?.rounds?.[currentRound()]?.majorityOverride == null ? statistics.consensus.value : room()?.rounds?.[currentRound()]?.majorityOverride)
+                  | estimateConverter : selectedEstimationCardSetValue() : "exact"
               }}
             </mat-chip>
           </mat-chip-set>
@@ -64,7 +64,7 @@ roundStatistics[currentRound] ) {
             {{
               statistics.average
                 | number : "1.0-1"
-                | estimateConverter : selectedEstimationCardSetValue : "rounded"
+                | estimateConverter : selectedEstimationCardSetValue() : "rounded"
             }}
           </mat-chip>
         </mat-chip-set>
@@ -85,7 +85,7 @@ roundStatistics[currentRound] ) {
           <mat-chip>
             {{
               statistics.highestVote.value
-                | estimateConverter : selectedEstimationCardSetValue : "exact"
+                | estimateConverter : selectedEstimationCardSetValue() : "exact"
             }}
           </mat-chip>
         </mat-chip-set>
@@ -106,7 +106,7 @@ roundStatistics[currentRound] ) {
           <mat-chip>
             {{
               statistics.lowestVote.value
-                | estimateConverter : selectedEstimationCardSetValue : "exact"
+                | estimateConverter : selectedEstimationCardSetValue() : "exact"
             }}
           </mat-chip>
         </mat-chip-set>
@@ -131,7 +131,7 @@ roundStatistics[currentRound] ) {
       <div class="vote-avatar-text">
         {{ member.isAnonymous ? "?" : member.name?.charAt(0) }}
       </div>
-      } @if ( member.id === currentUserId &&
+      } @if ( member.id === currentUserId() &&
       member.avatarUrl?.includes('avatars.dicebear.com') ) {
       <div
         class="avatar-warning"
@@ -139,8 +139,8 @@ roundStatistics[currentRound] ) {
       >
         <mat-icon>warning</mat-icon>
       </div>
-      } @if (showMemberControls) { @if ( member.id !== currentUserId &&
-      room.createdById === currentUserId ) {
+      } @if (showMemberControls()) { @if ( member.id !== currentUserId() &&
+      room().createdById === currentUserId() ) {
       <button
         mat-icon-button
         [matMenuTriggerFor]="memberMenu"
@@ -150,7 +150,7 @@ roundStatistics[currentRound] ) {
       >
         <mat-icon>settings</mat-icon>
       </button>
-      } @if (member.id === currentUserId) {
+      } @if (member.id === currentUserId()) {
       <button
         mat-icon-button
         class="member-options-button"
@@ -171,7 +171,7 @@ roundStatistics[currentRound] ) {
         "
         >wifi_off</mat-icon
       >
-      } @if (userProfiles[member.id] && !(isAnonymousVotingEnabled | async)) {
+      } @if (userProfiles()[member.id] && !(isAnonymousVotingEnabled | async)) {
       <mat-icon
         class="verified-icon"
         [matTooltip]="
@@ -183,32 +183,32 @@ roundStatistics[currentRound] ) {
       }
     </span>
     @if (member.type === MemberType.ESTIMATOR) { @if (
-    (room?.rounds)[currentRound].estimates[member.id] === null &&
-    (room?.rounds)[currentRound].show_results ) {
+    (room()?.rounds)[currentRound()].estimates[member.id] === null &&
+    (room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-pass" matTooltip="Passed">
       <mat-icon>question_mark</mat-icon>
     </div>
-    } @if ( (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
-    (room?.rounds)[currentRound].estimates[member.id] !== null &&
-    (room?.rounds)[currentRound].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] !== undefined &&
+    (room()?.rounds)[currentRound()].estimates[member.id] !== null &&
+    (room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-value">
       {{
-        (room?.rounds)[currentRound].estimates[member.id]
-          | estimateConverter : selectedEstimationCardSetValue : "exact"
+        (room()?.rounds)[currentRound()].estimates[member.id]
+          | estimateConverter : selectedEstimationCardSetValue() : "exact"
       }}
     </div>
-    } @if ( (room?.rounds)[currentRound].estimates[member.id] === undefined &&
-    (room?.rounds)[currentRound].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] === undefined &&
+    (room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-none" matTooltip="No vote cast - maybe next time?">
       <mat-icon>bedtime</mat-icon>
     </div>
-    } @if ( (room?.rounds)[currentRound].estimates[member.id] === undefined &&
-    !(room?.rounds)[currentRound].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] === undefined &&
+    !(room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-waiting" matTooltip="Waiting to vote">
       <mat-icon class="hourglass">hourglass_bottom</mat-icon>
     </div>
-    } @if ( (room?.rounds)[currentRound].estimates[member.id] !== undefined &&
-    !(room?.rounds)[currentRound].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] !== undefined &&
+    !(room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-voted" matTooltip="Voted">
       <mat-icon>checked</mat-icon>
     </div>
@@ -235,9 +235,9 @@ roundStatistics[currentRound] ) {
       [matTooltip]="
         !organization
           ? 'You have no organization'
-          : !userProfiles[member.id]
+          : !userProfiles()[member.id]
           ? 'Anonymous users can not be added to an organization'
-          : organization.memberIds.includes(member.id)
+          : organization().memberIds.includes(member.id)
           ? 'Already a member'
           : ''
       "
@@ -245,10 +245,10 @@ roundStatistics[currentRound] ) {
       <button
         mat-menu-item
         [disabled]="
-          !organization ||
-          organization.memberIds.includes(member.id) ||
-          organization.createdById !== currentUserId ||
-          !userProfiles[member.id]
+          !organization() ||
+          organization().memberIds.includes(member.id) ||
+          organization().createdById !== currentUserId() ||
+          !userProfiles()[member.id]
         "
         (click)="addToOrganization(member.id)"
       >

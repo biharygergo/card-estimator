@@ -17,7 +17,7 @@
       #topicInput
     />
     <span class="input-suffix" matSuffix>
-      @if (isSearching || isFetchingRecents) {
+      @if (isSearching() || isFetchingRecents()) {
       <mat-spinner
         diameter="20"
         class="jira-loading"
@@ -94,9 +94,9 @@
   </mat-form-field>
 </div>
 <app-rich-topic
-  [richTopic]="selectedRichTopic"
+  [richTopic]="selectedRichTopic()"
   [enableEditing]="true"
-  (deleted)="selectedRichTopic = null"
+  (deleted)="selectedRichTopic.set(null)"
 ></app-rich-topic>
 <div class="buttons">
   <button

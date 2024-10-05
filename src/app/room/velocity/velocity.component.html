@@ -3,57 +3,49 @@
     class="info"
     matTooltip="Velocity is the sum of the majority vote on rounds where the results have been revealed. Velocity trend is compared to your last session created before the current one. Velocity calculation works with numbered card sets only."
     >info</mat-icon
+  >
+  @if (velocity$ | async; as velocity) {
+  <div class="summary">
+    @if (velocity.total !== undefined) {
+    <h1>{{ velocity.total }}</h1>
+    <h3>velocity</h3>
+    @if (previousSessionVelocity$ | async; as previousSessionVelocity) {
+    <small>
+      <mat-icon class="trend-icon">{{
+        previousSessionVelocity.changePercent >= 0
+          ? "trending_up"
+          : "trending_down"
+      }}</mat-icon>
+      {{ previousSessionVelocity.changePercent }}% from last session</small
     >
-    @if (velocity$ | async; as velocity) {
-      <div class="summary">
-        @if (velocity.total !== undefined) {
-          <h1>{{ velocity.total }}</h1>
-          <h3>velocity</h3>
-          @if (previousSessionVelocity$ | async; as previousSessionVelocity) {
-            <small
-              >
-              <mat-icon class="trend-icon">{{
-                previousSessionVelocity.changePercent >= 0
-                ? "trending_up"
-                : "trending_down"
-              }}</mat-icon>
-              {{ previousSessionVelocity.changePercent }}% from last session</small
-              >
-            }
-          } @else {
-            The selected card set can not be used for velocity measurement yet.
-          }
-        </div>
-        @if (velocity.cards.length) {
-          <div
-            class="cards"
-            (click)="
-            velocity.cards.length > 3
-            ? (isCardsExpanded = !isCardsExpanded)
-            : (isCardsExpanded = false)
-            "
-            [class.expanded]="isCardsExpanded"
-            [class.expandable]="velocity.cards.length > 3"
-            [matTooltip]="
-            velocity.cards.length > 3
-            ? isCardsExpanded
-            ? 'Hide all cards'
-            : 'Show all cards'
-            : ''
-            "
-            >
-            @for (card of velocity.cards; track $index; let i = $index) {
-              <div
-                class="card"
-                [class.hidden]="!isCardsExpanded && i > 2"
-                >
-                {{ card }}
-              </div>
-            }
-          </div>
-        } @else {
-          <span>No revealed votes yet.</span>
-        }
-      }
+    } } @else { The selected card set can not be used for velocity measurement
+    yet. }
+  </div>
+  @if (velocity.cards.length) {
+  <div
+    class="cards"
+    (click)="
+      velocity.cards.length > 3
+        ? isCardsExpanded.set(!isCardsExpanded())
+        : isCardsExpanded.set(false)
+    "
+    [class.expanded]="isCardsExpanded()"
+    [class.expandable]="velocity.cards.length > 3"
+    [matTooltip]="
+      velocity.cards.length > 3
+        ? isCardsExpanded()
+          ? 'Hide all cards'
+          : 'Show all cards'
+        : ''
+    "
+  >
+    @for (card of velocity.cards; track $index; let i = $index) {
+    <div class="card" [class.hidden]="!isCardsExpanded() && i > 2">
+      {{ card }}
     </div>
-    
+    }
+  </div>
+  } @else {
+  <span>No revealed votes yet.</span>
+  } }
+</div>

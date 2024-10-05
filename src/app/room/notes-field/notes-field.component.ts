@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   debounceTime,
@@ -23,6 +23,7 @@ import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
     selector: 'app-notes-field',
     templateUrl: './notes-field.component.html',
     styleUrls: ['./notes-field.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
         FormsModule,
@@ -35,17 +36,17 @@ import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
     ],
 })
 export class NotesFieldComponent implements OnInit, OnDestroy {
-  room: Room;
+  room = signal<Room | undefined>(undefined);
 
-  cachedRound: number;
+  cachedRound = signal<number | undefined>(undefined);
   noteValue = new FormControl<string>('');
-  isNoteDisabled: boolean;
-  hasPermission: boolean = true;
+  isNoteDisabled = signal<boolean>(false);
+  hasPermission = signal<boolean>(true);
 
-  isCurrentUserEditing = false;
-  editedBy: Pick<Member, 'id' | 'name'> | null;
+  isCurrentUserEditing = signal<boolean>(false);
+  editedBy = signal<Pick<Member, 'id' | 'name'> | null | undefined>(undefined);
 
-  blurTimeout: number | undefined;
+  blurTimeout = signal<number | undefined>(undefined);
 
   destroy = new Subject<void>();
   constructor(
@@ -53,7 +54,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     private readonly permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private auth: AuthService,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +67,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
       .subscribe(([value, currentRound]) => {
         this.estimatorService.setNote(
           value,
-          this.room,
+          this.room(),
           currentRound,
           this.estimatorService.activeMember
         );
@@ -76,7 +77,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
       .canTakeNotes()
       .pipe(takeUntil(this.destroy))
       .subscribe((canTakeNotes) => {
-        this.hasPermission = canTakeNotes;
+        this.hasPermission.set(canTakeNotes);
         !canTakeNotes
           ? this.noteValue.disable({ emitEvent: false })
           : this.noteValue.enable({ emitEvent: false });
@@ -85,7 +86,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     this.roomDataService.room$
       .pipe(takeUntil(this.destroy))
       .subscribe((room) => {
-        this.room = room;
+        this.room.set(room);
       });
 
     combineLatest([
@@ -104,13 +105,13 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   }
 
   onNoteFocus() {
-    this.isCurrentUserEditing = true;
+    this.isCurrentUserEditing.set(true);
 
     return this.roomDataService.currentRoundNumber$
       .pipe(first())
       .subscribe((currentRound) => {
         this.estimatorService.setNoteEditor(
-          this.room,
+          this.room(),
           currentRound,
           this.estimatorService.activeMember
         );
@@ -120,40 +121,40 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
 
   onNoteBlur() {
     (document.activeElement as HTMLTextAreaElement)?.blur();
-    clearTimeout(this.blurTimeout);
-    this.isCurrentUserEditing = false;
+    clearTimeout(this.blurTimeout());
+    this.isCurrentUserEditing.set(false);
 
     return this.roomDataService.currentRoundNumber$
       .pipe(first())
       .subscribe((currentRound) => {
-        this.blurTimeout = window.setTimeout(() => {
-          this.estimatorService.setNoteEditor(this.room, currentRound, null);
-        }, 500);
+        this.blurTimeout.set(window.setTimeout(() => {
+          this.estimatorService.setNoteEditor(this.room(), currentRound, null);
+        }, 500));
       });
   }
 
   onRoomUpdated(currentRound: Round, activeRoundNumber: number) {
     if (currentRound) {
-      this.editedBy = currentRound.notes?.editedBy;
-      this.isNoteDisabled =
-        (this.editedBy && this.editedBy.id !== this.auth.getUid()) ||
-        !this.hasPermission;
+      this.editedBy.set(currentRound.notes?.editedBy);
+      this.isNoteDisabled.set(
+        (this.editedBy() && this.editedBy().id !== this.auth.getUid()) ||
+        !this.hasPermission());
 
-      this.isNoteDisabled
+      this.isNoteDisabled()
         ? this.noteValue.disable({ emitEvent: false })
         : this.noteValue.enable({ emitEvent: false });
 
       if (
-        this.isNoteDisabled ||
+        this.isNoteDisabled() ||
         this.noteValue.value === null ||
-        this.cachedRound !== activeRoundNumber
+        this.cachedRound() !== activeRoundNumber
       ) {
         this.noteValue.setValue(currentRound.notes?.note || '', {
           emitEvent: false,
         });
 
-        if (this.cachedRound !== activeRoundNumber) {
-          this.cachedRound = activeRoundNumber;
+        if (this.cachedRound() !== activeRoundNumber) {
+          this.cachedRound.set(activeRoundNumber);
         }
       }
     }

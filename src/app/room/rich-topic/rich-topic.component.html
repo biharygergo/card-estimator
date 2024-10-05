@@ -1,19 +1,19 @@
-@if (richTopic) {
+@if (richTopic()) {
 <div class="rich-topic">
   <div class="rich-topic-header">
     <h4 class="summary">
       <img
         class="jira-icon-header"
         [src]="
-          richTopic.provider === 'jira'
+          richTopic().provider === 'jira'
             ? '/assets/jira.png'
             : '/assets/linear.png'
         "
       />
-      {{ richTopic.key }}: {{ richTopic.summary }}
+      {{ richTopic().key }}: {{ richTopic().summary }}
     </h4>
     <div class="header-buttons">
-      @if (enableEditing) {
+      @if (enableEditing()) {
       <button
         (click)="deleted.next(true)"
         mat-icon-button
@@ -24,12 +24,12 @@
       </button>
       }
       <div matTooltip="Upload majority vote">
-        @if (!enableEditing && !hideUploadButton) {
+        @if (!enableEditing() && !hideUploadButton()) {
         <button
           (click)="saveEstimateToJira()"
           mat-icon-button
           aria-label="Upload majority vote"
-          [disabled]="isSavingToJira"
+          [disabled]="isSavingToJira()"
         >
           <mat-icon>publish</mat-icon>
         </button>
@@ -48,15 +48,15 @@
   <div class="rich-topic-body">
     <div class="info-block">
       <h5 class="info-block-title">Status</h5>
-      <span class="rectangular-badge">{{ richTopic.status ?? "N/A" }}</span>
+      <span class="rectangular-badge">{{ richTopic().status ?? "N/A" }}</span>
     </div>
     <div class="info-block">
       <h5 class="info-block-title">Assignee</h5>
-      <span class="rectangular-badge">{{ richTopic.assignee ?? "N/A" }}</span>
+      <span class="rectangular-badge">{{ richTopic().assignee ?? "N/A" }}</span>
     </div>
     <h5 class="info-block-title standalone">Description</h5>
     <div class="markdown-content">
-      <markdown [data]="cleanedMarkdown ?? 'No description available'">
+      <markdown [data]="cleanedMarkdown() ?? 'No description available'">
       </markdown>
     </div>
   </div>

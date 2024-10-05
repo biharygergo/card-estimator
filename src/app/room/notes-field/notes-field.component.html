@@ -11,14 +11,10 @@
       cdkTextareaAutosize
       id="notes-field"
     ></textarea>
-    @if (isNoteDisabled && editedBy) {
-      <mat-hint
-        >{{ editedBy?.name || "Nobody" }} is taking notes</mat-hint
-        >
-      }
-      @if (isCurrentUserEditing) {
-        <mat-hint>Your notes are shared with everyone in the room</mat-hint>
-      }
-    </mat-form-field>
-  </form>
-  
+    @if (isNoteDisabled() && editedBy()) {
+    <mat-hint>{{ editedBy()?.name || "Nobody" }} is taking notes</mat-hint>
+    } @if (isCurrentUserEditing()) {
+    <mat-hint>Your notes are shared with everyone in the room</mat-hint>
+    }
+  </mat-form-field>
+</form>

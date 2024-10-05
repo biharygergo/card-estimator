@@ -1,5 +1,13 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Observable, Subject, delay, mergeMap, of, takeUntil } from 'rxjs';
 import { ReactionsService } from 'src/app/services/reactions.service';
 import { Member } from 'src/app/types';
@@ -13,38 +21,39 @@ interface VisibleReaction {
 }
 
 @Component({
-    selector: 'app-reactions-renderer',
-    templateUrl: './reactions-renderer.component.html',
-    styleUrls: ['./reactions-renderer.component.scss'],
-    standalone: true,
-    imports: [LottieComponent],
+  selector: 'app-reactions-renderer',
+  templateUrl: './reactions-renderer.component.html',
+  styleUrls: ['./reactions-renderer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [LottieComponent],
 })
 export class ReactionsRendererComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) members!: Observable<Member[]>;
-  @Input({ required: true }) roomId!: string;
+  members = input.required<Observable<Member[]>>();
+  roomId = input.required<string>();
 
-  visibleReactions: VisibleReaction[] = [];
-  membersMap: { [userId: string]: Member };
-  counter = 0;
+  visibleReactions = signal<VisibleReaction[]>([]);
+  membersMap = signal<{ [userId: string]: Member }>({});
+  counter = signal<number>(0);
 
   destroy = new Subject<void>();
 
   constructor(
     private readonly reactionsService: ReactionsService,
     private readonly liveAnnouncer: LiveAnnouncer,
-    private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.members.pipe(takeUntil(this.destroy)).subscribe((members) => {
-      this.membersMap = members.reduce(
-        (acc, curr) => ({ ...acc, [curr.id]: curr }),
-        {}
-      );
-    });
+    this.members()
+      .pipe(takeUntil(this.destroy))
+      .subscribe((members) => {
+        this.membersMap.set(
+          members.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {})
+        );
+      });
 
     this.reactionsService
-      .getReactionsStream(this.roomId)
+      .getReactionsStream(this.roomId())
       .pipe(
         mergeMap((reaction) => {
           const reactionFromDict =
@@ -55,25 +64,28 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
               path: reactionFromDict.lottie,
             },
             userName:
-              this.membersMap[reaction.userId]?.name || 'Unknown member',
+              this.membersMap()[reaction.userId]?.name || 'Unknown member',
             leftPosition: `${this.randomInteger(5, 95)}%`,
           };
-          this.visibleReactions.push(visibleReaction);
+          this.visibleReactions.set([
+            ...this.visibleReactions(),
+            visibleReaction,
+          ]);
           this.liveAnnouncer.announce(
             `New reaction "${reactionFromDict.alt}" from ${visibleReaction.userName}`
           );
 
-          this.counter += 1;
-          this.changeDetectorRef.detectChanges();
+          this.counter.set(this.counter() + 1);
           return of(visibleReaction).pipe(delay(4000));
         }),
         takeUntil(this.destroy)
       )
       .subscribe((reactionToRemove) => {
-        this.visibleReactions = this.visibleReactions.filter(
-          (reaction) => reaction.id !== reactionToRemove.id
+        this.visibleReactions.set(
+          this.visibleReactions().filter(
+            (reaction) => reaction.id !== reactionToRemove.id
+          )
         );
-        this.changeDetectorRef.detectChanges();
       });
   }
 

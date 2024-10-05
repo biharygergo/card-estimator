@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -7,6 +8,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  input,
   signal,
 } from '@angular/core';
 import { Subject, debounceTime, from, mergeMap, takeUntil } from 'rxjs';
@@ -31,6 +33,7 @@ import { MatIconButton, MatButton } from '@angular/material/button';
     styleUrls: ['./card-deck.component.scss'],
     animations: [fadeAnimation],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIconButton,
         MatTooltip,
@@ -41,11 +44,10 @@ import { MatIconButton, MatButton } from '@angular/material/button';
     ],
 })
 export class CardDeckComponent implements OnInit, OnDestroy {
-  @Input() room: Room;
-  @Input() currentRound: number;
-  @Input() isObserver: boolean;
-  @Input() estimationValues: { key: string; value: string }[];
-  @Input() currentEstimate: number;
+  room = input.required<Room>();
+  currentRound = input.required<number>();
+  estimationValues = input.required<{ key: string; value: string }[]>();
+  currentEstimate = input.required<number>();
 
   @ViewChildren('cardContainer')
   cardContainers: QueryList<ElementRef<HTMLDivElement>>;
@@ -58,14 +60,14 @@ export class CardDeckComponent implements OnInit, OnDestroy {
 
   onReaction = new Subject<string>();
 
-  showReactions = true;
+  showReactions = signal<boolean>(true);
   onDestroy = new Subject<void>();
 
   constructor(
     private analytics: AnalyticsService,
     private estimatorService: EstimatorService,
     public permissionsService: PermissionsService,
-    private readonly reactionsService: ReactionsService
+    private readonly reactionsService: ReactionsService,
   ) {}
 
   ngOnInit(): void {
@@ -86,8 +88,8 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   setEstimate(amount: string) {
     this.analytics.logClickedVoteOption();
     this.estimatorService.setEstimate(
-      this.room,
-      this.currentRound,
+      this.room(),
+      this.currentRound(),
       +amount,
       this.estimatorService.activeMember.id
     );
@@ -95,15 +97,15 @@ export class CardDeckComponent implements OnInit, OnDestroy {
 
   setWildcard() {
     this.estimatorService.setEstimate(
-      this.room,
-      this.currentRound,
+      this.room(),
+      this.currentRound(),
       null,
       this.estimatorService.activeMember.id
     );
   }
 
   toggleReactions() {
-    this.showReactions = !this.showReactions;
+    this.showReactions.set(!this.showReactions());
     this.analytics.logToggledReactions();
   }
 
@@ -119,7 +121,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   }
 
   private async sendReaction(reactionId: string) {
-    await this.reactionsService.sendReaction(reactionId, this.room.roomId);
+    await this.reactionsService.sendReaction(reactionId, this.room().roomId);
     this.analytics.logClickedReaction(reactionId);
   }
 }

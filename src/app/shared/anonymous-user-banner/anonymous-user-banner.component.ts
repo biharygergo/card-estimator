@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
@@ -40,7 +40,7 @@ export class AnonymousUserBannerComponent implements OnInit {
   @Input() bannerStyle: 'default' | 'gray' = 'default';
 
   @Input() hideable: boolean;
-  isHidden: boolean = false;
+  isHidden = signal<boolean>(false);
 
   constructor(
     private readonly authService: AuthService,
@@ -73,6 +73,6 @@ export class AnonymousUserBannerComponent implements OnInit {
   }
 
   hideBanner() {
-    this.isHidden = true;
+    this.isHidden.set(true);
   }
 }

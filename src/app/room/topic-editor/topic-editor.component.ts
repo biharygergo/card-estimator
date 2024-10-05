@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,6 +10,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  input,
   signal,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -67,6 +69,7 @@ export interface TopicEditorInputOutput {
   templateUrl: './topic-editor.component.html',
   styleUrls: ['./topic-editor.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     MatFormField,
@@ -92,7 +95,7 @@ export interface TopicEditorInputOutput {
   ],
 })
 export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() roomTopic: Observable<TopicEditorInputOutput>;
+  roomTopic = input.required<Observable<TopicEditorInputOutput>>();
 
   @Output() topicUpdated = new EventEmitter<TopicEditorInputOutput>();
   @Output() canceled = new EventEmitter();
@@ -100,10 +103,10 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('topicInput') topicInput: ElementRef;
 
   roundTopic = new FormControl<string | RichTopic>('', { nonNullable: true });
-  isSearching: boolean = false;
-  isFetchingRecents: boolean = false;
+  isSearching = signal(false);
+  isFetchingRecents = signal(false);
 
-  selectedRichTopic: RichTopic | undefined | null;
+  selectedRichTopic = signal<RichTopic | undefined | null>(undefined);
 
   debouncedTopic$: Observable<string> = this.roundTopic.valueChanges.pipe(
     debounceTime(500),
@@ -129,15 +132,15 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   recentIssues$: Observable<RichTopic[]> = of([]).pipe(
     tap(() => {
-      this.isFetchingRecents = true;
+      this.isFetchingRecents.set(true);
     }),
     switchMap(() => this.issueIntegrationService.getRecentIssues()),
-    tap(() => (this.isFetchingRecents = false))
+    tap(() => (this.isFetchingRecents.set(false)))
   );
 
   issuesFromQuery$: Observable<RichTopic[]> = this.debouncedTopic$.pipe(
     tap(() => {
-      this.isSearching = true;
+      this.isSearching.set(true);
     }),
     switchMap((query) => {
       return this.issueIntegrationService
@@ -145,7 +148,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
         .pipe(map((r) => r.issues));
     }),
     tap(() => {
-      this.isSearching = false;
+      this.isSearching.set(false);
     })
   );
 
@@ -167,11 +170,11 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.focusTopicInput();
 
-    this.roomTopic
+    this.roomTopic()
       .pipe(takeUntil(this.destroy))
       .subscribe(({ topic, richTopic }) => {
         this.roundTopic.setValue(topic);
-        this.selectedRichTopic = richTopic;
+        this.selectedRichTopic.set(richTopic);
       });
 
     this.issuesFromQuery$.pipe(takeUntil(this.destroy)).subscribe((issues) => {
@@ -250,7 +253,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   topicBlur() {
     this.topicUpdated.next({
       topic: this.displayFn(this.roundTopic.value),
-      richTopic: this.selectedRichTopic,
+      richTopic: this.selectedRichTopic(),
     });
   }
 
@@ -263,7 +266,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   issueSelected(issue: RichTopic) {
     console.log(issue);
-    this.selectedRichTopic = {
+    this.selectedRichTopic.set({
       description: issue.description,
       summary: issue.summary,
       key: issue.key,
@@ -271,7 +274,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       provider: issue.provider,
       assignee: issue.assignee,
       status: issue.status,
-    };
+    });
     this.analyticsService.logSelectedJiraIssueFromDropdown();
   }
 

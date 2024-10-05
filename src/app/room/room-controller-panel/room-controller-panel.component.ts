@@ -1,11 +1,14 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Inject,
+  input,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  signal,
 } from '@angular/core';
 import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
@@ -54,6 +57,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
     templateUrl: './room-controller-panel.component.html',
     styleUrls: ['./room-controller-panel.component.scss'],
     animations: [fadeAnimation, delayedFadeAnimation],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
         MatCard,
@@ -73,16 +77,16 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
     ],
 })
 export class RoomControllerPanelComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) room: Room;
-  @Input({ required: true }) room$: Observable<Room>;
-  @Input({ required: true }) activeMember$: Observable<Member>;
-  @Input({ required: true }) rounds: Round[];
-  @Input({ required: true }) currentRound: number;
-  @Input({ required: true }) isEditingTopic: boolean;
-  @Input({ required: true }) isMuted: boolean;
-  @Input({ required: true }) estimationCardSets: CardSetValue[];
-  @Input({ required: true }) selectedEstimationCardSetValue: CardSetValue;
-  @Input({ required: true }) isExpanded: boolean;
+  room = input.required<Room>();
+  room$ = input.required<Observable<Room>>();
+  activeMember$ = input.required<Observable<Member>>();
+  rounds = input.required<Round[]>();
+  currentRound = input.required<number>();
+  isEditingTopic = input.required<boolean>();
+  isMuted = input.required<boolean>();
+  estimationCardSets = input.required<CardSetValue[]>();
+  selectedEstimationCardSetValue = input.required<CardSetValue>();
+  isExpanded = input.required<boolean>();
 
   @Output() sidebarTriggered = new EventEmitter<void>();
   @Output() muteClicked = new EventEmitter<void>();
@@ -95,13 +99,13 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     .getMyCardDecks()
     .pipe(takeUntil(this.destroy));
 
-  savedCardSets: SavedCardSetValue[] = [];
+  savedCardSets = signal<SavedCardSetValue[]>([]);
 
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
     map((result) => result.matches),
-    tap((isSmallScreen) => (this.isSmallScreen = isSmallScreen))
+    tap((isSmallScreen) => (this.isSmallScreen.set(isSmallScreen)))
   );
-  isSmallScreen: boolean = false;
+  isSmallScreen = signal<boolean>(false);
 
   readonly localActiveRound = this.roomDataService.localActiveRound;
 
@@ -146,7 +150,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
     this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
     this.savedCardSets$.subscribe(
-      (cardSets) => (this.savedCardSets = cardSets)
+      (cardSets) => (this.savedCardSets.set(cardSets))
     );
   }
 
@@ -154,15 +158,15 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   newRound() {
     this.analytics.logClickedNewRound();
-    this.estimatorService.newRound(this.room);
+    this.estimatorService.newRound(this.room());
   }
 
   nextRound() {
     this.analytics.logClickedNextRound();
 
     this.estimatorService.setActiveRound(
-      this.room,
-      this.currentRound + 1,
+      this.room(),
+      this.currentRound() + 1,
       false
     );
   }
@@ -172,10 +176,10 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       Math.max(
         0,
         (this.roomDataService.localActiveRound.value ??
-          this.room.currentRound ??
+          this.room().currentRound ??
           0) + diff
       ),
-      Object.keys(this.room.rounds).length - 1
+      Object.keys(this.room().rounds).length - 1
     );
 
     this.roomDataService.localActiveRound.next(nextRound);
@@ -184,7 +188,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   showResults() {
     this.analytics.logClickedShowResults();
-    this.estimatorService.setShowResults(this.room, this.currentRound, true);
+    this.estimatorService.setShowResults(this.room(), this.currentRound(), true);
   }
 
   clickedUnitsButton() {
@@ -194,7 +198,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   openRoomConfigurationModal() {
     this.analytics.logClickedOpenRoomConfigurationModal();
     this.dialog.open(
-      ...roomConfigurationModalCreator({ roomId: this.room.roomId })
+      ...roomConfigurationModalCreator({ roomId: this.room().roomId })
     );
   }
 
@@ -211,7 +215,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     ) {
       if (this.estimatorService.activeMember) {
         await this.estimatorService.updateMemberStatus(
-          this.room.roomId,
+          this.room().roomId,
           this.estimatorService.activeMember,
           MemberStatus.LEFT_ROOM
         );
@@ -224,11 +228,11 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     this.analytics.logSelectedCardSet(cardSet.key);
     if (cardSet.key === CustomCardSet) {
       this.estimatorService.setRoomCustomCardSetValue(
-        this.room.roomId,
+        this.room().roomId,
         cardSet
       );
     } else {
-      this.estimatorService.setRoomCardSet(this.room.roomId, cardSet.key);
+      this.estimatorService.setRoomCardSet(this.room().roomId, cardSet.key);
     }
   }
 
@@ -242,26 +246,26 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   }
 
   toggleShowPassOption() {
-    this.analytics.logTogglePassOption(!this.room.showPassOption);
+    this.analytics.logTogglePassOption(!this.room().showPassOption);
     this.estimatorService.toggleShowPassOption(
-      this.room.roomId,
-      !this.room.showPassOption
+      this.room().roomId,
+      !this.room().showPassOption
     );
   }
 
   toggleAsyncVoting() {
-    this.analytics.logToggleAsyncVote(!this.room.isAsyncVotingEnabled);
+    this.analytics.logToggleAsyncVote(!this.room().isAsyncVotingEnabled);
     this.estimatorService.toggleAsyncVoting(
-      this.room.roomId,
-      !this.room.isAsyncVotingEnabled
+      this.room().roomId,
+      !this.room().isAsyncVotingEnabled
     );
   }
 
   toggleAnonymousVoting() {
-    this.analytics.logToggleAnonymousVote(!this.room.isAsyncVotingEnabled);
+    this.analytics.logToggleAnonymousVote(!this.room().isAsyncVotingEnabled);
     this.estimatorService.toggleAnonymousVoting(
-      this.room.roomId,
-      !this.room.isAnonymousVotingEnabled
+      this.room().roomId,
+      !this.room().isAnonymousVotingEnabled
     );
   }
 
@@ -275,7 +279,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
         disableClose: false,
         panelClass: 'custom-dialog',
         data: {
-          roomId: this.room.roomId,
+          roomId: this.room().roomId,
         },
       });
 
@@ -299,13 +303,13 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   async updateMemberType(newType: MemberType) {
     await this.estimatorService.updateMemberType(
-      this.room.roomId,
+      this.room().roomId,
       this.estimatorService.activeMember,
       newType
     );
 
     this.permissionsService.initializePermissions(
-      this.room,
+      this.room(),
       this.estimatorService.activeMember.id
     );
   }

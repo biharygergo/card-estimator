@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   combineLatest,
   first,
@@ -25,6 +25,7 @@ interface Velocity {
     templateUrl: './velocity.component.html',
     styleUrls: ['./velocity.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIcon,
         MatTooltip,
@@ -32,10 +33,10 @@ interface Velocity {
     ],
 })
 export class VelocityComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) room: Observable<Room>;
-  @Input() roomId!: string;
+  room = input.required<Observable<Room>>();
+  roomId = input.required<string>();
 
-  isCardsExpanded = false;
+  isCardsExpanded = signal<boolean>(false);
 
   velocity$: Observable<Velocity | undefined>;
   previousSessionVelocity$: Observable<
@@ -49,7 +50,7 @@ export class VelocityComponent implements OnInit, OnDestroy {
   constructor(private readonly estimatorService: EstimatorService) {}
 
   ngOnInit() {
-    this.velocity$ = this.room.pipe(map(this.calculateVelocity));
+    this.velocity$ = this.room().pipe(map(this.calculateVelocity));
 
     this.previousSessions$ = this.estimatorService
       .getPreviousSessions()
@@ -75,7 +76,7 @@ export class VelocityComponent implements OnInit, OnDestroy {
     sessions: Room[]
   ) {
     const oneBeforeCurrentIndex =
-      sessions.findIndex((room) => room.roomId === this.roomId) + 1;
+      sessions.findIndex((room) => room.roomId === this.roomId()) + 1;
     if (oneBeforeCurrentIndex > sessions.length) {
       return undefined;
     }

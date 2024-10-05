@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, input, Input, OnInit, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
@@ -47,6 +47,7 @@ import { batchImportTopicsModalCreator } from '../batch-import-topics-modal/batc
   templateUrl: './topics-sidebar.component.html',
   styleUrls: ['./topics-sidebar.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     VelocityComponent,
     MatIconButton,
@@ -72,18 +73,18 @@ import { batchImportTopicsModalCreator } from '../batch-import-topics-modal/batc
   ],
 })
 export class TopicsSidebarComponent implements OnInit {
-  @Input() room: Room;
+  room = input.required<Room>();
   @Input({ required: true }) room$: Observable<Room>;
-  @Input() rounds: Round[];
-  @Input() currentRound: number;
-  @Input() roundStatistics: RoundStatistics[];
-  @Input() selectedEstimationCardSetValue: CardSetValue | undefined;
+  rounds = input.required<Round[]>();
+  currentRound = input.required<number>();
+  roundStatistics = input.required<RoundStatistics[]>();
+  selectedEstimationCardSetValue = input<CardSetValue | undefined>(undefined);
 
-  isAddingRound = false;
+  isAddingRound = signal<boolean>(false);
   editedRound = new BehaviorSubject<
     { round: Round; roundIndex: number } | undefined
   >(undefined);
-  showActiveRound = true;
+  showActiveRound = signal<boolean>(true);
 
   readonly MemberType = MemberType;
   constructor(
@@ -100,7 +101,7 @@ export class TopicsSidebarComponent implements OnInit {
 
   downloadAsCsv() {
     this.analytics.logClickedDownloadResults();
-    this.serializer.exportRoomAsCsv(this.room);
+    this.serializer.exportRoomAsCsv(this.room());
   }
 
   async revoteRound(roundNumber: number) {
@@ -111,12 +112,12 @@ export class TopicsSidebarComponent implements OnInit {
         content: 'This will clear all votes cast in this round.',
       })
     ) {
-      this.estimatorService.setActiveRound(this.room, roundNumber, true);
+      this.estimatorService.setActiveRound(this.room(), roundNumber, true);
     }
   }
 
   addRound() {
-    this.isAddingRound = true;
+    this.isAddingRound.set(true);
     window.setTimeout(() => {
       const drawer = document.querySelector('.mat-drawer-inner-container');
       drawer?.scrollTo({ top: drawer?.scrollHeight, behavior: 'smooth' });
@@ -130,18 +131,18 @@ export class TopicsSidebarComponent implements OnInit {
         content: 'This will delete this round and all associated votes',
       })
     ) {
-      this.estimatorService.removeRound(this.room, roundNumber);
+      this.estimatorService.removeRound(this.room(), roundNumber);
     }
   }
 
   cancelAddingRound() {
-    this.isAddingRound = false;
+    this.isAddingRound.set(false);
   }
 
   async updateRoundConfirmed(props: TopicEditorInputOutput) {
     if (this.editedRound.value) {
       await this.estimatorService.setTopic(
-        this.room,
+        this.room(),
         this.editedRound.value.roundIndex,
         props.topic,
         props.richTopic
@@ -152,38 +153,39 @@ export class TopicsSidebarComponent implements OnInit {
 
   async addRoundConfirmed(props: TopicEditorInputOutput) {
     await this.estimatorService.addRound(
-      this.room,
+      this.room(),
       props.topic,
       props.richTopic
     );
     this.analytics.logClickedAddRoundConfirmed();
-    this.isAddingRound = false;
+    this.isAddingRound.set(false);
   }
 
   setActiveRound(roundNumber: number) {
     this.analytics.logClickedSetActiveRound();
-    this.estimatorService.setActiveRound(this.room, roundNumber, false);
+    this.estimatorService.setActiveRound(this.room(), roundNumber, false);
   }
 
   async drop(event: CdkDragDrop<string[]>) {
-    this.showActiveRound = this.currentRound !== event.previousIndex;
-    const activeRoundId = this.room.rounds[this.currentRound].id;
-    moveItemInArray(this.rounds, event.previousIndex, event.currentIndex);
+    this.showActiveRound.set(this.currentRound() !== event.previousIndex);
+    const activeRoundId = this.room().rounds[this.currentRound()].id;
+    const mutableRounds = [...this.rounds()];
+    moveItemInArray(mutableRounds, event.previousIndex, event.currentIndex);
     await this.estimatorService.setRounds(
-      this.room,
-      this.rounds,
+      this.room(),
+      mutableRounds,
       activeRoundId
     );
-    this.showActiveRound = true;
+    this.showActiveRound.set(true);
   }
 
   openSummaryModal() {
-    this.dialog.open(...summaryModalCreator({ roomId: this.room.roomId }));
+    this.dialog.open(...summaryModalCreator({ roomId: this.room().roomId }));
     this.analytics.logClickedSummarize();
   }
 
   openBatchAddModal() {
-    this.dialog.open(...batchAddModalCreator({ room: this.room }));
+    this.dialog.open(...batchAddModalCreator({ room: this.room() }));
   }
 
   openBatchImportModal() {
@@ -196,6 +198,6 @@ export class TopicsSidebarComponent implements OnInit {
   }
 
   toggleReveal(roundNumber: number, reveal: boolean) {
-    this.estimatorService.setShowResults(this.room, roundNumber, reveal);
+    this.estimatorService.setShowResults(this.room(), roundNumber, reveal);
   }
 }

@@ -1,5 +1,5 @@
-@if (!!room?.roomId) {
-<app-velocity [room]="room$" [roomId]="room?.roomId"></app-velocity>
+@if (!!room()?.roomId) {
+<app-velocity [room]="room$" [roomId]="room()?.roomId" />
 }
 <div class="sidenav-actions">
   <button
@@ -35,7 +35,7 @@
       aria-label="Download results as .csv"
       (click)="downloadAsCsv()"
       [disabled]="
-        rounds.length <= 1 ||
+        rounds().length <= 1 ||
         config.runningIn === 'zoom' ||
         !(permissionsService.canDownloadResults() | async)
       "
@@ -49,7 +49,7 @@
   cdkDropList
   (cdkDropListDropped)="drop($event)"
 >
-  @for ( round of rounds; track round.id; let roundNumber = $index) { @if
+  @for ( round of rounds(); track round.id; let roundNumber = $index) { @if
   ((editedRound | async)?.round.id !== round.id) {
   <mat-card
     appearance="outlined"
@@ -76,7 +76,7 @@
               round.show_results ? "visibility" : "visibility_off"
             }}</mat-icon
           >
-          @if (roundNumber === currentRound && showActiveRound) {
+          @if (roundNumber === currentRound() && showActiveRound()) {
           <mat-icon class="active-round" matTooltip="Active round"
             >play_arrow</mat-icon
           >
@@ -95,9 +95,9 @@
             aria-label="Set selected round as active"
             (click)="setActiveRound(roundNumber)"
             [disabled]="
-              roundNumber === currentRound ||
+              roundNumber === currentRound() ||
               !(permissionsService.canCreateRounds() | async) ||
-              room.isAsyncVotingEnabled
+              room().isAsyncVotingEnabled
             "
           >
             <mat-icon>play_arrow</mat-icon>
@@ -138,8 +138,8 @@
             (click)="deleteRound(roundNumber)"
             [disabled]="
               !(permissionsService.canEditTopic() | async) ||
-              (roundNumber === 0 && rounds.length === 1) ||
-              room.isAsyncVotingEnabled
+              (roundNumber === 0 && rounds().length === 1) ||
+              room().isAsyncVotingEnabled
             "
           >
             <mat-icon>delete</mat-icon>
@@ -147,7 +147,7 @@
           </button>
         </mat-menu>
       </div>
-      <h3 class="round-title" [class.active]="roundNumber === currentRound">
+      <h3 class="round-title" [class.active]="roundNumber === currentRound()">
         {{ round.topic }}
       </h3>
       <mat-expansion-panel
@@ -161,19 +161,21 @@
             <div class="rich-topic-wrapper">
               <app-rich-topic
                 [richTopic]="round.richTopic"
-                [roundStatistics]="roundStatistics?.[roundNumber]"
+                [roundStatistics]="roundStatistics()?.[roundNumber]"
                 [selectedEstimationCardSetValue]="
-                  selectedEstimationCardSetValue
+                  selectedEstimationCardSetValue()
                 "
               />
             </div>
             }
 
             <app-round-results
-              [room]="room"
-              [roundStatistics]="roundStatistics"
+              [room]="room()"
+              [roundStatistics]="roundStatistics()"
               [currentRound]="roundNumber"
-              [selectedEstimationCardSetValue]="selectedEstimationCardSetValue"
+              [selectedEstimationCardSetValue]="
+                selectedEstimationCardSetValue()
+              "
             >
             </app-round-results>
             <h3 matSubheader class="notes-subheader">Notes</h3>
@@ -199,7 +201,7 @@
   </div>
   } } }
   <div class="add-round-container">
-    @if (!isAddingRound) {
+    @if (!isAddingRound()) {
     <button
       mat-flat-button
       color="primary"
@@ -210,14 +212,13 @@
       <mat-icon>add</mat-icon>
       Add round
     </button>
-    } @if (isAddingRound) {
+    } @if (isAddingRound()) {
     <add-or-update-topic
       [topicInput]="{ topic: '' }"
-      [roundNumber]="rounds.length + 1"
+      [roundNumber]="rounds().length + 1"
       (onSaveOrUpdate)="addRoundConfirmed($event)"
       (onCancel)="cancelAddingRound()"
-    >
-    </add-or-update-topic>
+    />
     }
   </div>
 </div>

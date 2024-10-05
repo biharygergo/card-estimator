@@ -18,6 +18,7 @@ import {
   BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
+  filter,
   from,
   map,
   Observable,
@@ -52,6 +53,7 @@ import {
   MatChipInput,
   MatChipListbox,
   MatChip,
+  MatChipSet,
 } from '@angular/material/chips';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -127,6 +129,7 @@ interface OrganizationChecklist {
     MatDialogActions,
     MatDialogClose,
     MatProgressBar,
+    MatChipSet,
     AsyncPipe,
     OrganizationSelectorComponent,
   ],
@@ -216,11 +219,17 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   readonly inviteProgress = new BehaviorSubject<string>('');
 
   protected readonly organizationCredits = toSignal(
-    from(this.paymentsService.getAndAssignCreditBundles()).pipe(
-      withLatestFrom(this.organization$),
-      map(([{ credits }, org]) => {
+    combineLatest([
+      from(this.paymentsService.getAndAssignCreditBundles()),
+      this.organization$.pipe(
+        map((org) => org?.id),
+        filter((orgId) => !!orgId),
+        distinctUntilChanged()
+      ),
+    ]).pipe(
+      map(([{ credits }, orgId]) => {
         const organizationCredits = credits.filter(
-          (credit) => credit.organizationId === org.id
+          (credit) => credit.organizationId === orgId
         );
 
         const total = organizationCredits.length;

@@ -176,3 +176,10 @@ planning-poker-organization-selector {
     display: block;
   }
 }
+
+.credits-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}

@@ -3,7 +3,7 @@
   @if((organizations$ | async)?.length > 1) {
   <planning-poker-organization-selector label="Select active organization" />
   } @if (checklist$ | async; as checklist) { @if (organization &&
-  !checklist.allCompleted) {
+  !checklist.allCompleted && isOrganizationCreator) {
   <mat-card class="checklist-banner" appearance="outline" @fadeAnimation>
     <mat-card-content class="checklist">
       <h3>Just a few more steps to get the most out of your organization:</h3>
@@ -59,7 +59,8 @@
       Let's set it up!
     </button>
   </div>
-  } @if (organization || !showIntro) {
+  } @if (organization || !showIntro) { @if(isOrganizationCreator) {
+
   <mat-tab-group
     class="custom-tab-group"
     mat-align-tabs="center"
@@ -308,7 +309,42 @@
       </div>
     </mat-tab>
   </mat-tab-group>
-  } } @else {
+  } @else {
+  <div class="tab-content">
+    <div class="tab-section">
+      <h5 class="section-title">
+        <mat-icon>apartment</mat-icon> {{ organization?.name }}
+      </h5>
+      <p>
+        You are a member of this organization. You can view the organization's
+        details, join rooms created for this org & use the organization's
+        credits.
+      </p>
+      <p>
+        Members:
+        <mat-chip-set>
+          @for(member of members$ | async; track member.id) {
+          <mat-chip>
+            {{ member.displayName }}
+          </mat-chip>
+          }
+        </mat-chip-set>
+      </p>
+      <p class="credits-text">
+        Organization credits: @if (organizationCredits()) {
+        <strong
+          >{{ organizationCredits()?.available }} out of
+          {{ organizationCredits()?.total }}</strong
+        >
+        <button mat-button (click)="purchaseCredits()">Buy credits</button>
+
+        } @else {
+        <mat-spinner diameter="30"></mat-spinner>
+        }
+      </p>
+    </div>
+  </div>
+  } } } @else {
   <div class="loading">
     <mat-progress-spinner
       mode="indeterminate"

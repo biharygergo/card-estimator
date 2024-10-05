@@ -5,6 +5,8 @@ import {
   ElementRef,
   OnDestroy,
   Inject,
+  ChangeDetectionStrategy,
+  signal,
 } from '@angular/core';
 import { EstimatorService } from '../services/estimator.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,6 +48,7 @@ import {
   Round,
   RoundStatistics,
   UserProfileMap,
+  CardSetValue,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
@@ -118,6 +121,7 @@ const TOPIC_ANIMATION_SLIDE_DURATION_MS = 200;
   styleUrls: ['./room.component.scss'],
   animations: [fadeAnimation, delayedFadeAnimation],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatSidenavContainer,
     MatSidenavContent,
@@ -151,24 +155,24 @@ export class RoomComponent implements OnInit, OnDestroy {
   sidenavContent: ElementRef;
   destroy = new Subject<void>();
 
-  room: Room;
-  rounds: Round[] = [];
-  currentRound = undefined;
-  currentEstimate: number;
+  room = signal<Room | undefined>(undefined);
+  rounds = signal<Round[]>([]);
+  protected readonly currentRound = signal<number | undefined>(undefined);
+  protected readonly currentEstimate = signal<number | undefined>(undefined);
 
-  estimationCardSets = Object.values(CARD_SETS);
-  selectedEstimationCardSetValue = CARD_SETS[CardSet.DEFAULT];
-  estimationValues = getSortedCardSetValues(
-    this.selectedEstimationCardSetValue
-  );
+  estimationCardSets = signal<CardSetValue[]>(Object.values(CARD_SETS));
+  selectedEstimationCardSetValue = signal<CardSetValue>(CARD_SETS[CardSet.DEFAULT]);
+  estimationValues = signal<{ key: string; value: string }[]>(getSortedCardSetValues(
+    this.selectedEstimationCardSetValue()
+  ));
 
-  isEditingTopic = false;
-  isObserver = false;
-  isMuted = true;
+  isEditingTopic = signal<boolean>(false);
+  isObserver = signal<boolean>(false);
+  isMuted = signal<boolean>(true);
   shouldShowAloneInRoom = false;
   isAloneInRoomHidden = false;
-  roundStatistics: RoundStatistics[] = [];
-  isControlPaneExpanded = true;
+  roundStatistics = signal<RoundStatistics[]>([]);
+  isControlPaneExpanded = signal<boolean>(true);
   isControlPaneExpansionSetByUser = false;
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
 
@@ -396,8 +400,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
-      this.room = room;
-      this.rounds = Object.values(room.rounds);
+      this.room.set(room);
+      this.rounds.set(Object.values(room.rounds));
     });
 
     this.activeMember$.subscribe((member) => {
@@ -411,7 +415,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
     this.roundNumber$.pipe(takeUntil(this.destroy)).subscribe((roundNumber) => {
-      this.currentRound = roundNumber;
+      this.currentRound.set(roundNumber);
       this.playNotificationSound();
       this.reCalculateStatistics();
     });
@@ -420,8 +424,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe((estimates) => {
         if (this.estimatorService.activeMember) {
-          this.currentEstimate =
-            estimates[this.estimatorService.activeMember.id];
+          this.currentEstimate.set(estimates[this.estimatorService.activeMember.id]);
           this.reCalculateStatistics();
         }
       });
@@ -435,7 +438,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.roomDataService.onNameUpdated$
       .pipe(takeUntil(this.destroy))
       .subscribe((name) =>
-        this.estimatorService.updateCurrentUserMemberName(this.room, name)
+        this.estimatorService.updateCurrentUserMemberName(this.room(), name)
       );
 
     this.showFeedbackForm$.subscribe((shouldShow) => {
@@ -457,7 +460,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe((shouldExapnd) => {
         if (this.isControlPaneExpansionSetByUser) return;
-        this.isControlPaneExpanded = shouldExapnd;
+        this.isControlPaneExpanded.set(shouldExapnd);
       });
 
     this.shouldOpenAloneInRoomModal$
@@ -474,7 +477,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         tap((photoURL: string) => {
           this.estimatorService.updateCurrentUserMemberAvatar(
-            this.room,
+            this.room(),
             photoURL
           );
         }),
@@ -491,11 +494,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.heartbeat$
       .pipe(
         switchMap(() =>
-          this.room
+          this.room()
             ? combineLatest([
                 this.saveJoinedRoom(),
                 this.estimatorService.updateCurrentUserMemberHeartbeat(
-                  this.room.roomId
+                  this.room().roomId
                 ),
               ])
             : of(undefined)
@@ -568,38 +571,38 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   toggleControlPane() {
-    this.isControlPaneExpanded = !this.isControlPaneExpanded;
+    this.isControlPaneExpanded.set(!this.isControlPaneExpanded);
     this.isControlPaneExpansionSetByUser = true;
   }
 
   private saveJoinedRoom(): Observable<any> {
     return this.authService.updateUserPreference({
       lastJoinedRoom: {
-        roomId: this.room.roomId,
+        roomId: this.room().roomId,
         heartbeatAt: Timestamp.now(),
       },
     });
   }
 
   private updateSelectedCardSets() {
-    this.selectedEstimationCardSetValue = getRoomCardSetValue(this.room);
-    this.estimationValues = getSortedCardSetValues(
-      this.selectedEstimationCardSetValue
-    );
+    this.selectedEstimationCardSetValue.set(getRoomCardSetValue(this.room()));
+    this.estimationValues.set(getSortedCardSetValues(
+      this.selectedEstimationCardSetValue()
+    ));
 
     if (
-      this.selectedEstimationCardSetValue.key === 'CUSTOM' ||
-      !!this.room.customCardSetValue
+      this.selectedEstimationCardSetValue().key === 'CUSTOM' ||
+      !!this.room().customCardSetValue
     ) {
-      this.estimationCardSets = [
+      this.estimationCardSets.set([
         ...Object.values(CARD_SETS),
-        this.room.customCardSetValue,
-      ];
+        this.room().customCardSetValue,
+      ]);
     }
   }
 
   private joinAsObserver() {
-    if (!this.isObserver) {
+    if (!this.isObserver()) {
       this.snackBar
         .open(
           'You are currently observing this estimation.',
@@ -609,17 +612,17 @@ export class RoomComponent implements OnInit, OnDestroy {
         .onAction()
         .subscribe(() => {
           this.router.navigate(['join'], {
-            queryParams: { roomId: this.room.roomId },
+            queryParams: { roomId: this.room().roomId },
           });
         });
     }
-    this.isObserver = true;
+    this.isObserver.set(true);
   }
 
   private showOrHideAloneInRoomModal() {
     this.shouldShowAloneInRoom =
-      this.room.members.length <= 1 &&
-      (this.currentRound > 0 || this.currentEstimate !== undefined) &&
+      this.room().members.length <= 1 &&
+      (this.currentRound() > 0 || this.currentEstimate() !== undefined) &&
       !this.isAloneInRoomHidden;
     if (this.shouldShowAloneInRoom) {
       this.openAloneInRoomModal();
@@ -693,7 +696,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   playNotificationSound() {
-    if (!this.isMuted) {
+    if (!this.isMuted()) {
       const audio = new Audio();
       audio.src = '../../assets/notification.mp3';
       audio.load();
@@ -702,10 +705,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   async topicBlur(event: TopicEditorInputOutput) {
-    this.isEditingTopic = false;
+    this.isEditingTopic.set(false);
     await this.estimatorService.setTopic(
-      this.room,
-      this.currentRound,
+      this.room(),
+      this.currentRound(),
       event.topic,
       event.richTopic
     );
@@ -718,7 +721,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         map((hasPermission) => {
           if (hasPermission) {
             this.analytics.logClickedTopicName();
-            this.isEditingTopic = true;
+            this.isEditingTopic.set(true);
           }
         }),
         first()
@@ -727,23 +730,23 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   reCalculateStatistics() {
-    if (this.room?.rounds) {
+    if (this.room()?.rounds) {
       const statistics: RoundStatistics[] = [
-        ...Object.values(this.room.rounds).map((round) =>
+        ...Object.values(this.room().rounds).map((round) =>
           this.calculateRoundStatistics(round)
         ),
       ];
-      this.roundStatistics = statistics;
+      this.roundStatistics.set(statistics);
     }
   }
 
   calculateRoundStatistics(round: Round) {
     const elapsed = getHumanReadableElapsedTime(round);
     const estimates = Object.keys(round.estimates)
-      .filter((member) => this.room.members.map((m) => m.id).includes(member))
+      .filter((member) => this.room().members.map((m) => m.id).includes(member))
       .map((member) => ({
         value: round.estimates[member],
-        voter: this.room.members.find((m) => m.id === member)?.name,
+        voter: this.room().members.find((m) => m.id === member)?.name,
       }))
       .filter((e) => e.value !== null)
       .sort((a, b) => a.value - b.value);
@@ -783,10 +786,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   toggleMute() {
-    this.isMuted
+    this.isMuted()
       ? this.analytics.logClickedEnableSound()
       : this.analytics.logClickedDisableSound();
-    this.isMuted = !this.isMuted;
+    this.isMuted.set(!this.isMuted);
   }
 
   onCreateAccountClicked() {
@@ -804,15 +807,15 @@ export class RoomComponent implements OnInit, OnDestroy {
     let duration = 3000;
 
     const host = window.origin || 'https://card-estimator.web.app';
-    const roomUrl = `${host}/join?roomId=${this.room.roomId}`;
+    const roomUrl = `${host}/join?roomId=${this.room().roomId}`;
     if (this.config.runningIn === 'zoom') {
       try {
         const { invitationUUID } = await this.zoomService.inviteAllParticipants(
-          this.room.roomId
+          this.room().roomId
         );
         await this.estimatorService.saveInvitation(
           invitationUUID,
-          this.room.roomId
+          this.room().roomId
         );
         message = 'Invitation sent to all participants!';
       } catch {
@@ -820,7 +823,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     } else if (this.config.runningIn === 'webex') {
       const shareSessionStarted = await this.webexService.inviteAllParticipants(
-        this.room.roomId
+        this.room().roomId
       );
       message = shareSessionStarted
         ? 'All ready, click the "Open for all" button below! ⬇️'
@@ -848,7 +851,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
       if (shareMethod === 'stage') {
         isSharingToStage = await this.teamsService.shareAppContentToStage(
-          this.room.roomId
+          this.room().roomId
         );
       }
 
@@ -861,12 +864,12 @@ export class RoomComponent implements OnInit, OnDestroy {
         message =
           'Join link copied, share it in the chat so others can join this room.';
       }
-      const link = await this.teamsService.getDeepLink(this.room.roomId);
+      const link = await this.teamsService.getDeepLink(this.room().roomId);
 
       this.clipboard.copy(link);
     } else if (this.config.runningIn === 'meet') {
       const success = await this.meetService.inviteAllParticipants(
-        this.room.roomId
+        this.room().roomId
       );
       message = success
         ? 'Activity started, the app will open for everyone in the meeting. 🎉'

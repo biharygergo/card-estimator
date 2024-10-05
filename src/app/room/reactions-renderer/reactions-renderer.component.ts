@@ -41,7 +41,6 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
   constructor(
     private readonly reactionsService: ReactionsService,
     private readonly liveAnnouncer: LiveAnnouncer,
-    private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -77,7 +76,6 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
           );
 
           this.counter.set(this.counter() + 1);
-          this.changeDetectorRef.detectChanges();
           return of(visibleReaction).pipe(delay(4000));
         }),
         takeUntil(this.destroy)
@@ -88,7 +86,6 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
             (reaction) => reaction.id !== reactionToRemove.id
           )
         );
-        this.changeDetectorRef.detectChanges();
       });
   }
 

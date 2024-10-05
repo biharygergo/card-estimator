@@ -2,47 +2,51 @@
 <app-velocity [room]="room$" [roomId]="room()?.roomId" />
 }
 <div class="sidenav-actions">
-  <button
-    mat-icon-button
-    (click)="openSummaryModal()"
-    matTooltip="Generate an AI summary"
-  >
-    <mat-icon>auto_fix_normal</mat-icon>
+  <button mat-button [matMenuTriggerFor]="importExportMenu">
+    <mat-icon>arrow_drop_down</mat-icon>
+    Import/export
   </button>
-  <button
-    mat-icon-button
-    (click)="openBatchImportModal()"
-    matTooltip="Batch import issues from Jira or Linear"
-  >
-    <mat-icon>cloud_download</mat-icon>
-  </button>
-  <button
-    mat-icon-button
-    (click)="openBatchAddModal()"
-    matTooltip="Batch add multiple topics"
-  >
-    <mat-icon>library_add</mat-icon>
-  </button>
-  <div
-    [matTooltip]="
-      config.runningIn === 'zoom'
-        ? 'Downloading results is only available on the web version of the app.'
-        : 'Download results in .csv'
-    "
-  >
-    <button
-      mat-icon-button
-      aria-label="Download results as .csv"
-      (click)="downloadAsCsv()"
-      [disabled]="
-        rounds().length <= 1 ||
-        config.runningIn === 'zoom' ||
-        !(permissionsService.canDownloadResults() | async)
+  <mat-menu #importExportMenu="matMenu">
+    <button mat-menu-item (click)="openBatchAddModal()">
+      <div class="menu-item-label-container">
+        <mat-icon>library_add</mat-icon>
+        Batch add rounds
+      </div>
+    </button>
+    <button mat-menu-item (click)="openBatchImportModal()">
+      <div class="menu-item-label-container">
+        <mat-icon>cloud_download</mat-icon>
+        Batch import issues
+      </div>
+    </button>
+    <div
+      [matTooltip]="
+        config.runningIn === 'zoom'
+          ? 'Downloading results is only available on the web version of the app.'
+          : ''
       "
     >
-      <mat-icon>download_for_offline</mat-icon>
-    </button>
-  </div>
+      <button
+        mat-menu-item
+        aria-label="Download results as .csv"
+        (click)="downloadAsCsv()"
+        [disabled]="
+          rounds().length <= 1 ||
+          config.runningIn === 'zoom' ||
+          !(permissionsService.canDownloadResults() | async)
+        "
+      >
+        <div class="menu-item-label-container">
+          <mat-icon>download_for_offline</mat-icon>
+          Download as .csv
+        </div>
+      </button>
+    </div>
+  </mat-menu>
+  <button mat-button (click)="openSummaryModal()">
+    <mat-icon>auto_fix_normal</mat-icon>
+    Summarize
+  </button>
 </div>
 <div
   class="round-history-container"

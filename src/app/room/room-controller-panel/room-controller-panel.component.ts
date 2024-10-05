@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Inject,
@@ -56,6 +57,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
     templateUrl: './room-controller-panel.component.html',
     styleUrls: ['./room-controller-panel.component.scss'],
     animations: [fadeAnimation, delayedFadeAnimation],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
         MatCard,

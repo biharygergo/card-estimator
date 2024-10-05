@@ -18,6 +18,7 @@ import {
   BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
+  from,
   map,
   Observable,
   of,
@@ -26,6 +27,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -63,6 +65,9 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -121,6 +126,7 @@ interface OrganizationChecklist {
     MatProgressSpinner,
     MatDialogActions,
     MatDialogClose,
+    MatProgressBar,
     AsyncPipe,
     OrganizationSelectorComponent,
   ],
@@ -208,6 +214,25 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   isOrganizationCreator = false;
   emailFormValues: string[] = [];
   readonly inviteProgress = new BehaviorSubject<string>('');
+
+  protected readonly organizationCredits = toSignal(
+    from(this.paymentsService.getAndAssignCreditBundles()).pipe(
+      withLatestFrom(this.organization$),
+      map(([{ credits }, org]) => {
+        const organizationCredits = credits.filter(
+          (credit) => credit.organizationId === org.id
+        );
+
+        const total = organizationCredits.length;
+        const available = organizationCredits.filter(
+          (credit) => !credit.usedForRoomId
+        ).length;
+        const used = total - available;
+
+        return { total, available, used };
+      })
+    )
+  );
 
   constructor(
     private readonly organizationService: OrganizationService,
@@ -383,5 +408,9 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   removeInvite(invite: InvitationData) {
     this.organizationService.removeInvitation(this.organization.id, invite.id);
+  }
+
+  purchaseCredits() {
+    this.dialog.open(...pricingModalCreator({ selectedTab: 'org-credits' }));
   }
 }

@@ -331,6 +331,8 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       }
     >;
     availableCredits: Credit[];
+    availablePersonalCredits: Credit[];
+    availableOrgCredits: Credit[];
     nextBatchExpiring?: Credit[];
   }> = from(this.paymentsService.getAndAssignCreditBundles()).pipe(
     map((creditsAndBundles) => {
@@ -345,8 +347,12 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
         )
       ).sort((a, b) => Number(b[0]) - Number(a[0]))?.[0]?.[1];
 
+      const availableOrgCredits = availableCredits.filter(c => !!c.organizationId);
+      const availablePersonalCredits = availableCredits.filter(c => !c.organizationId);
       return {
         availableCredits,
+        availableOrgCredits,
+        availablePersonalCredits,
         nextBatchExpiring,
         credits: credits.map((credit) => ({
           ...credit,

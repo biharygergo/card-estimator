@@ -1,10 +1,8 @@
 <h1 mat-dialog-title class="dialog-title">My organization</h1>
 <div mat-dialog-content>
   @if((organizations$ | async)?.length > 1) {
-    <planning-poker-organization-selector label="Select active organization" />
-  }
-
-  @if (checklist$ | async; as checklist) { @if (organization &&
+  <planning-poker-organization-selector label="Select active organization" />
+  } @if (checklist$ | async; as checklist) { @if (organization &&
   !checklist.allCompleted) {
   <mat-card class="checklist-banner" appearance="outline" @fadeAnimation>
     <mat-card-content class="checklist">
@@ -262,6 +260,50 @@
             }
           </mat-chip-listbox>
           } }
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Credits">
+      <div class="tab-content">
+        <div class="tab-section">
+          <h5 class="section-title">
+            <mat-icon>toll</mat-icon> Your org's credits
+          </h5>
+          <p>
+            Organization credits can be used by all members of your
+            organization. This allows flexible, usage-based pricing for larger
+            teams without the hassle of individual subscriptions.
+          </p>
+          @if(organizationCredits()) {
+          <div class="credits-container">
+            @if(organizationCredits().total === 0) {
+            <span>You have not purchased any organization credits.</span> }
+            @else {
+            <mat-progress-bar
+              mode="determinate"
+              [value]="
+                (organizationCredits().available /
+                  organizationCredits().total) *
+                100
+              "
+            />
+            <span class="credits-progress-text">
+              {{ organizationCredits().available }} credits available out of
+              {{ organizationCredits().total }}.
+            </span>
+            }
+            <button
+              class="credits-buy-button"
+              mat-flat-button
+              color="primary"
+              (click)="purchaseCredits()"
+            >
+              Purchase credits
+            </button>
+          </div>
+          } @else {
+          <mat-spinner diameter="30"></mat-spinner>
+          }
         </div>
       </div>
     </mat-tab>

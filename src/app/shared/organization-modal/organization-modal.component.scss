@@ -162,3 +162,17 @@ planning-poker-organization-selector {
   border-radius: 18px;
   box-shadow: none;
 }
+
+.credits-container {
+  margin: 1rem 0;
+
+  .credits-progress-text {
+    display: block;
+    margin: 0.5rem;
+  }
+
+  .credits-buy-button {
+    margin-top: 1rem;
+    display: block;
+  }
+}

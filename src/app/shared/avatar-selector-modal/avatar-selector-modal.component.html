@@ -88,8 +88,18 @@
                   <h3 class="title">Pay as you go</h3>
                   <div class="credit-status">
                     <span
-                      >{{ creditsAndBundles.availableCredits.length }} credits
-                      available</span
+                      >{{
+                        creditsAndBundles.availablePersonalCredits.length
+                      }}
+                      personal credits available</span
+                    >
+                  </div>
+                  <div class="credit-status">
+                    <span
+                      >{{
+                        creditsAndBundles.availableOrgCredits.length
+                      }}
+                      organization credits available</span
                     >
                   </div>
                   @if(creditsAndBundles.nextBatchExpiring?.length) {

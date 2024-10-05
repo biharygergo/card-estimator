@@ -1,27 +1,27 @@
-@if (!minimized && timer) {
+@if (!minimized() && timer()) {
   <div class="timer-container">
     <div class="progress">
       <mat-progress-bar
         mode="determinate"
-        [value]="progressValue"
-        [class.almost-done]="durationLeft < 10"
+        [value]="progressValue()"
+        [class.almost-done]="durationLeft() < 10"
         id="timer-progress-bar"
       ></mat-progress-bar>
       <span class="time-left">
-        @if (timer.state === TimerState.INIT) {
+        @if (timer().state === TimerState.INIT) {
           {{ durationLeft }} second timer
         }
-        @if (timer.state !== TimerState.INIT && durationLeft > 0) {
+        @if (timer().state !== TimerState.INIT && durationLeft() > 0) {
           {{ durationLeft }} seconds remaining
         }
-        @if (timer.state !== TimerState.INIT && durationLeft === 0) {
+        @if (timer().state !== TimerState.INIT && durationLeft() === 0) {
           Time is up!
           }</span
           >
         </div>
         <div class="controls">
           @if (
-            timer.state === TimerState.INIT || timer.state === TimerState.ACTIVE
+            timer().state === TimerState.INIT || timer().state === TimerState.ACTIVE
             ) {
             <button
               mat-stroked-button
@@ -33,7 +33,7 @@
               30s
             </button>
           }
-          @if (timer.state === TimerState.STOPPED) {
+          @if (timer().state === TimerState.STOPPED) {
             <button
               mat-stroked-button
               [disabled]="!(permissionsService.canSetTimer() | async)"
@@ -45,13 +45,13 @@
             </button>
           }
           @if (
-            timer.state === TimerState.INIT || timer.state === TimerState.STOPPED
+            timer().state === TimerState.INIT || timer().state === TimerState.STOPPED
             ) {
             <button
               mat-stroked-button
               (click)="startTimer(true)"
               [disabled]="
-              durationLeft === 0 || !(permissionsService.canSetTimer() | async)
+              durationLeft() === 0 || !(permissionsService.canSetTimer() | async)
               "
               id="start-button"
               >
@@ -59,7 +59,7 @@
               Start
             </button>
           }
-          @if (timer.state === TimerState.ACTIVE) {
+          @if (timer().state === TimerState.ACTIVE) {
             <button
               mat-stroked-button
               [disabled]="!(permissionsService.canSetTimer() | async)"
@@ -73,46 +73,46 @@
         </div>
       </div>
     }
-    @if (minimized && timer) {
-      @if (timer.state === TimerState.STOPPED && durationLeft === 0) {
+    @if (minimized() && timer()) {
+      @if (timer().state === TimerState.STOPPED && durationLeft() === 0) {
         <button
           mat-icon-button
           [disabled]="!(permissionsService.canSetTimer() | async)"
           (click)="resetTimer(true)"
           id="reset-button"
           matTooltip="Reset timer"
-          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
           >
           <mat-icon>restart_alt</mat-icon>
         </button>
       }
       @if (
-        timer.state === TimerState.INIT ||
-        (timer.state === TimerState.STOPPED && durationLeft !== 0)
+        timer().state === TimerState.INIT ||
+        (timer().state === TimerState.STOPPED && durationLeft() !== 0)
         ) {
         <button
           mat-icon-button
           (click)="startTimer(true)"
           [disabled]="
-          durationLeft === 0 || !(permissionsService.canSetTimer() | async)
+          durationLeft() === 0 || !(permissionsService.canSetTimer() | async)
           "
           id="start-button"
           matTooltip="Start timer"
-          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
           >
           <mat-icon>play_arrow</mat-icon>
         </button>
       }
-      @if (timer.state === TimerState.ACTIVE) {
+      @if (timer().state === TimerState.ACTIVE) {
         <button
           mat-icon-button
           [disabled]="!(permissionsService.canSetTimer() | async)"
           (click)="stopTimer(true)"
           class="mini-pause-button"
           matTooltip="Pause timer"
-          [matTooltipPosition]="isSmallScreen ? 'below' : 'left'"
+          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
           >
-          @if (durationLeft > -1) {
+          @if (durationLeft() > -1) {
             <span class="duration-left">{{
               durationLeft
             }}</span>
@@ -121,7 +121,7 @@
         </button>
       }
     }
-    @if (!timer) {
+    @if (!timer()) {
       <div class="loading">
         <mat-spinner diameter="20" />
       </div>

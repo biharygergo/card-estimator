@@ -1,9 +1,12 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
+  ChangeDetectionStrategy,
   Component,
+  input,
   Input,
   OnDestroy,
   OnInit,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 import { serverTimestamp, Timestamp } from '@angular/fire/firestore';
@@ -36,38 +39,39 @@ const INITIAL_TIMER_STATE = {
 };
 
 @Component({
-    selector: 'countdown-timer',
-    templateUrl: './countdown-timer.component.html',
-    styleUrls: ['./countdown-timer.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [
-        MatProgressBar,
-        MatButton,
-        MatIcon,
-        MatIconButton,
-        MatTooltip,
-        MatProgressSpinner,
-        AsyncPipe,
-    ],
+  selector: 'countdown-timer',
+  templateUrl: './countdown-timer.component.html',
+  styleUrls: ['./countdown-timer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    MatProgressBar,
+    MatButton,
+    MatIcon,
+    MatIconButton,
+    MatTooltip,
+    MatProgressSpinner,
+    AsyncPipe,
+  ],
 })
 export class CountdownTimerComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) room: Observable<Room>;
-  @Input() minimized: boolean;
+  room = input.required<Observable<Room>>();
+  minimized = input.required<boolean>();
 
-  _room: Room;
+  _room = signal<Room | undefined>(undefined);
 
-  timer: Timer | undefined;
-  durationLeft: number | undefined;
-  progressValue = 100;
+  timer = signal<Timer | undefined>(undefined);
+  durationLeft = signal<number | undefined>(undefined);
+  progressValue = signal<number>(100);
 
-  intervalHandle: number | undefined;
+  intervalHandle = signal<number | undefined>(undefined);
 
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
     map((result) => result.matches),
-    tap((isSmallScreen) => (this.isSmallScreen = isSmallScreen))
+    tap((isSmallScreen) => this.isSmallScreen.set(isSmallScreen))
   );
-  isSmallScreen: boolean = false;
+  isSmallScreen = signal<boolean>(false);
 
   private readonly destroy = new Subject<void>();
   readonly TimerState = TimerState;
@@ -79,27 +83,30 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.room
+    this.room()
       .pipe(
         tap((room) => {
-          this._room = room;
+          this._room.set(room);
         }),
         map((room) => room.timer),
         distinctUntilChanged(isEqual),
         takeUntil(this.destroy)
       )
       .subscribe((timer: Timer | undefined) => {
-        this.timer = timer ?? INITIAL_TIMER_STATE;
-        this.durationLeft = Math.max(0, this.calculateRemaininingSeconds());
-        if (this.durationLeft === 0) {
+        this.timer.set(timer ?? INITIAL_TIMER_STATE);
+        this.durationLeft.set(Math.max(0, this.calculateRemaininingSeconds()));
+        if (this.durationLeft() === 0) {
           this.stopTimer(false);
         }
 
-        if (this.timer.state === TimerState.ACTIVE && this.timer.startedAt) {
+        if (
+          this.timer().state === TimerState.ACTIVE &&
+          this.timer().startedAt
+        ) {
           this.startTimer(false);
-        } else if (this.timer.state === TimerState.STOPPED) {
+        } else if (this.timer().state === TimerState.STOPPED) {
           this.stopTimer(false);
-        } else if (this.timer.state === TimerState.INIT) {
+        } else if (this.timer().state === TimerState.INIT) {
           this.resetTimer(false);
         }
 
@@ -115,11 +122,11 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   }
 
   calculateRemaininingSeconds() {
-    let remainingSeconds = this.timer.countdownLength;
-    if (this.timer.startedAt) {
-      const startedAt = (this.timer.startedAt as Timestamp).seconds * 1000;
+    let remainingSeconds = this.timer().countdownLength;
+    if (this.timer().startedAt) {
+      const startedAt = (this.timer().startedAt as Timestamp).seconds * 1000;
       remainingSeconds = Math.round(
-        (startedAt + this.timer.countdownLength * 1000 - Date.now()) / 1000
+        (startedAt + this.timer().countdownLength * 1000 - Date.now()) / 1000
       );
     }
 
@@ -127,75 +134,92 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   }
 
   updateTimer(timer: Timer) {
-    return this.estimatorService.setTimer(this._room, timer);
+    return this.estimatorService.setTimer(this._room(), timer);
+  }
+
+  private updateTimerInternal(update: Partial<Timer>) {
+    return this.timer.set({ ...this.timer(), ...update });
   }
 
   addSeconds() {
-    this.timer.countdownLength += 30;
-    this.timer.extraSecondsAdded += 30;
-    this.durationLeft += 30;
+    this.updateTimerInternal({
+      extraSecondsAdded: this.timer().extraSecondsAdded + 30,
+      countdownLength: this.timer().countdownLength + 30,
+    });
+    this.durationLeft.set(this.durationLeft() + 30);
 
-    this.updateTimer(this.timer);
+    this.updateTimer(this.timer());
   }
 
   startTimer(updateOthers: boolean) {
-    if (this.timer.state !== TimerState.ACTIVE) {
-      this.timer.state = TimerState.ACTIVE;
-      this.timer.startedAt = serverTimestamp();
-      this.timer.countdownLength = this.durationLeft;
+    if (this.timer().state !== TimerState.ACTIVE) {
+      this.updateTimerInternal({
+        state: TimerState.ACTIVE,
+        startedAt: serverTimestamp(),
+        countdownLength: this.durationLeft(),
+      });
 
       if (updateOthers) {
-        this.updateTimer(this.timer);
+        this.updateTimer(this.timer());
         this.analyitics.logClickedStartTimer();
       }
     }
 
-    window.clearInterval(this.intervalHandle);
+    window.clearInterval(this.intervalHandle());
 
-    this.intervalHandle = window.setInterval(() => {
-      const remaining = this.durationLeft - 1;
-      this.durationLeft = Math.max(0, remaining);
-      this.calculateProgress();
+    this.intervalHandle.set(
+      window.setInterval(() => {
+        const remaining = this.durationLeft() - 1;
+        this.durationLeft.set(Math.max(0, remaining));
+        this.calculateProgress();
 
-      if (this.durationLeft === 0) {
-        this.stopTimer(false);
-      }
-    }, 1000);
+        if (this.durationLeft() === 0) {
+          this.stopTimer(false);
+        }
+      }, 1000)
+    );
   }
 
   calculateProgress() {
-    this.progressValue = Math.round(
-      (this.durationLeft /
-        (this.timer.initialCountdownLength + this.timer.extraSecondsAdded)) *
-        100
+    this.progressValue.set(
+      Math.round(
+        (this.durationLeft() /
+          (this.timer().initialCountdownLength +
+            this.timer().extraSecondsAdded)) *
+          100
+      )
     );
   }
 
   stopTimer(updateOthers: boolean) {
-    window.clearInterval(this.intervalHandle);
-    this.timer.startedAt = null;
-    this.timer.state = TimerState.STOPPED;
-    this.timer.countdownLength = this.durationLeft;
+    window.clearInterval(this.intervalHandle());
+    this.updateTimerInternal({
+      state: TimerState.STOPPED,
+      startedAt: null,
+      countdownLength: this.durationLeft(),
+    });
 
     if (updateOthers) {
-      this.updateTimer(this.timer);
+      this.updateTimer(this.timer());
       this.analyitics.logClickedStopTimer();
     }
   }
 
   resetTimer(updateOthers: boolean) {
-    window.clearInterval(this.intervalHandle);
+    window.clearInterval(this.intervalHandle());
 
     if (updateOthers) {
-      this.durationLeft = this.timer.initialCountdownLength;
-      this.timer.startedAt = null;
-      this.timer.countdownLength = this.timer.initialCountdownLength;
-      this.timer.extraSecondsAdded = 0;
-      this.timer.state = TimerState.INIT;
+      this.durationLeft.set(this.timer().initialCountdownLength);
+      this.updateTimerInternal({
+        state: TimerState.INIT,
+        startedAt: null,
+        countdownLength: this.timer().initialCountdownLength,
+        extraSecondsAdded: 0,
+      });
 
       this.calculateProgress();
 
-      this.updateTimer(this.timer);
+      this.updateTimer(this.timer());
       this.analyitics.logClickedResetTimer();
     }
   }

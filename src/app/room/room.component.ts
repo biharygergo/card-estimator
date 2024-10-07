@@ -319,7 +319,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     first()
   );
 
-  heartbeat$: Observable<number> = interval(90000).pipe(startWith(-1));
+  heartbeat$: Observable<number> = interval(4 * 60 * 1000).pipe(startWith(-1));
 
   isRoomCreator$ = this.roomDataService.isRoomCreator$;
 

@@ -237,7 +237,7 @@ roundStatistics()[currentRound()] ) {
           ? 'You have no organization'
           : !userProfiles()[member.id]
           ? 'Anonymous users can not be added to an organization'
-          : organization().memberIds.includes(member.id)
+          : organization()?.memberIds?.includes(member.id)
           ? 'Already a member'
           : ''
       "

@@ -65,6 +65,9 @@
   }
   <ng-container *ngTemplateOutlet="recent" />
   <ng-container *ngTemplateOutlet="links"></ng-container>
+  @if (config.runningIn === 'web') {
+  <zoom-app-banner bannerLocation="banner_join" />
+  }
 </div>
 <ng-template #create>
   @if (vm | async; as viewModel) { @if (!(isBusy | async)) {
@@ -150,8 +153,6 @@
       [diameter]="30"
     ></mat-progress-spinner>
   </mat-card-content>
-  } @if (config.runningIn === 'web') {
-  <zoom-app-banner bannerLocation="banner_join"></zoom-app-banner>
   }
 </ng-template>
 <ng-template #links>
@@ -209,7 +210,11 @@
 <ng-template #recent>
   @if ( !hideRecentlyLeftRoom && recentlyLeftRoom$ | async; as recentlyLeftRoom
   ) {
-  <mat-card class="recent-card action-card" @delayedFadeAnimation appearance="outlined">
+  <mat-card
+    class="recent-card action-card"
+    @delayedFadeAnimation
+    appearance="outlined"
+  >
     <mat-card-content>
       <p>
         Continue where you left off? <br />
@@ -235,7 +240,8 @@
 <ng-template #terms>
   <div class="terms">
     <small
-      >By using this app you accept the <a routerLink="/policies/terms">Terms</a> and the
+      >By using this app you accept the
+      <a routerLink="/policies/terms">Terms</a> and the
       <a routerLink="/policies/privacy">Privacy Policy</a>.</small
     >
   </div>

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ZoomAppBannerComponent } from '../../shared/zoom-app-banner/zoom-app-banner.component';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { HeaderV2Component } from '../header-v2/header-v2.component';
 import { NgOptimizedImage } from '@angular/common';
@@ -13,7 +12,6 @@ import { NgOptimizedImage } from '@angular/common';
     HeaderV2Component,
     RouterOutlet,
     RouterLink,
-    ZoomAppBannerComponent,
     NgOptimizedImage,
   ],
 })

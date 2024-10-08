@@ -1,95 +1,102 @@
-.banner-card {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  transition: transform 150ms ease-in-out, opacity 150ms ease-in-out;
-  transform-origin: bottom right;
-  width: 400px;
-  z-index: 12;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 16px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+.mat-mdc-dialog-content {
+  padding: 0 !important;
+  transition: height 200ms ease-out;
+  max-height: 80vh;
+}
 
-  transform: translateX(150%);
-  opacity: 0;
+.content {
+  display: flex;
+  padding: 0;
 
-  animation: slideInRight 500ms ease-in-out 150ms;
-  animation-fill-mode: forwards;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
+}
 
-  .close-icon-button {
-    position: absolute;
-    top: 4px;
-    right: 4px;
+.main-panel {
+  flex: 3 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 2rem;
+
+  .title {
+    text-align: center;
+    font-size: 24px;
+    color: var(--mat-card-subtitle-text-color);
+
   }
 
-  mat-card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
+  .description {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 3rem;
     color: var(--mat-card-subtitle-text-color);
-    h4 {
-      font-weight: 500;
+  }
 
-      .zoom {
-        color: #2d8cff;
-        font-weight: 1000;
-      }
+  @media only screen and (max-width: 600px) {
+    order: 1;
+  }
+}
 
-      .meet {
-        color: #05ac47;
-        font-weight: 1000;
-      }
+.side-panel {
+  flex: 2 1 0;
+  position: relative;
+  background: #33477C;
+  padding: 2rem 1rem;
 
-      .webex {
-        font-weight: 1000;
-      }
+  .background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom;
+  }
 
-      .teams {
-        color: #464eb8;
-        font-weight: 1000;
-      }
+  .branding {
+    z-index: 1;
+    position: relative;
+    padding: 2rem 1rem;
+    color: white;
+
+    img {
+      height: 40px;
+      width: 40px;
+      border-radius: 8px;
+      box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+        rgba(5, 18, 37, 0.24) 0px 0px 8px;
     }
   }
 
-  img {
-    height: 100px;
-    width: 100%;
-    margin: 0 auto;
-    object-fit: contain;
-  }
+  @media only screen and (max-width: 600px) {
+    order: 0;
+    min-height: 150px;
 
-  @media screen and (max-width: 600px) {
-    display: none;
+    .branding {
+      display: none;
+    }
   }
 }
 
-mat-card-actions {
-  gap: 0.5rem;
+.install-buttons {
+  display: flex;
   flex-direction: column;
-}
+  gap: 0.5rem;
 
-.zoom-button {
-  width: 100%;
-  --mdc-filled-button-label-text-color: white;
-  --mdc-filled-button-container-color: #4185fe;
-}
+  .install-button {
+    .install-button-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
 
-.meet-button {
-  width: 100%;
-  --mdc-filled-button-label-text-color: white;
-  --mdc-filled-button-container-color: #05ac47;
-}
-
-.webex-button {
-  width: 100%;
-  --mdc-filled-button-label-text-color: white;
-  --mdc-filled-button-container-color: #2d2d2d;
-}
-
-.teams-button {
-  width: 100%;
-  --mdc-filled-button-label-text-color: white;
-  --mdc-filled-button-container-color: #464eb8;
+      .integration-logo {
+        height: 24px;
+        width: 24px;
+        object-fit: contain;
+      }
+    }
+  }
 }

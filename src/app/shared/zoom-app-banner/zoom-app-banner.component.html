@@ -1,76 +1,57 @@
-@if (!isZoomBannerHidden) {
-<mat-card appearance="outlined" class="banner-card">
-  <button
-    mat-icon-button
-    class="close-icon-button"
-    aria-label="Close"
-    (click)="onCloseClicked.next()"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-  <mat-card-content>
-    <img
-      src="assets/zoom_webex_announcement.png"
-      alt="The logo of Planning Poker with Zoom & Webex"
-      loading="lazy"
-    />
-    <div class="banner-text">
-      <h4>
-        Use Planning Poker embedded in your <span class="zoom">Zoom</span>,
-        <span class="meet">Meet</span>, <span class="teams">Teams</span> or
-        <span class="webex">Webex</span> meeting
-      </h4>
-      <p>
-        Streamline your workflow with our app! Say goodbye to switching between
-        video meetings and planning apps. Easily cast your vote in the sidebar,
-        collaborate with colleagues, and reach consensus effortlessly.
-      </p>
+<ng-template #dialogTemplate>
+  <div mat-dialog-content>
+    <div class="content">
+      <div class="main-panel">
+        <h1 class="title">Bring PlanningPoker.live to Your Meeting Sidebar</h1>
+        <p class="description">
+          No more juggling between tabs during meetings! Add PlanningPoker.live
+          to your sidebar, so you can cast your vote and collaborate with your
+          team without leaving the conversation. It’s quick, easy, and keeps
+          everything in one place.
+        </p>
+        <div class="install-buttons">
+          @for(integration of integrations; track integration.name) {
+          <a
+            class="install-button"
+            mat-stroked-button
+            [href]="integration.url"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div class="install-button-inner">
+              <img
+                class="integration-logo"
+                [src]="integration.logo"
+                [alt]="integration.alt"
+              />
+              Install in {{ integration.name }}
+            </div>
+          </a>
+          }
+          <button
+            class="install-button"
+            mat-button
+            (click)="dialogRef().close()"
+          >
+            <mat-icon>public</mat-icon>
+            Continue on the web
+          </button>
+        </div>
+      </div>
+      <div class="side-panel">
+        <div class="branding"></div>
+
+        <img
+          class="background-image"
+          ngSrc="integration-modal"
+          alt="PlanningPoker.live running in Zoom"
+          priority
+          placeholder
+          width="1200"
+          height="2012"
+          sizes="(max-width: 800px) 80vw, 40vw"
+        />
+      </div>
     </div>
-  </mat-card-content>
-  <mat-card-actions>
-    <a
-      mat-flat-button
-      color="primary"
-      href="https://planningpoker.live/api/installZoomApp"
-      target="_blank"
-      rel="noreferrer"
-      class="zoom-button"
-    >
-      <mat-icon>open_in_new</mat-icon>
-      Install in Zoom</a
-    >
-    <a
-      mat-flat-button
-      color="primary"
-      href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
-      target="_blank"
-      rel="noreferrer"
-      class="teams-button"
-    >
-      <mat-icon>open_in_new</mat-icon>
-      Install in Teams</a
-    >
-    <a
-      mat-flat-button
-      color="primary"
-      href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
-      target="_blank"
-      rel="noreferrer"
-      class="meet-button"
-    >
-      <mat-icon>open_in_new</mat-icon>
-      Install in Meet</a
-    >
-    <a
-      mat-flat-button
-      href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
-      target="_blank"
-      color="primary"
-      class="webex-button"
-    >
-      <mat-icon>open_in_new</mat-icon>
-      Install in Webex</a
-    >
-  </mat-card-actions>
-</mat-card>
-}
+  </div>
+</ng-template>

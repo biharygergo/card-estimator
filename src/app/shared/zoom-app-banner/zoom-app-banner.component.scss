@@ -23,7 +23,6 @@
     text-align: center;
     font-size: 24px;
     color: var(--mat-card-subtitle-text-color);
-
   }
 
   .description {
@@ -41,7 +40,7 @@
 .side-panel {
   flex: 2 1 0;
   position: relative;
-  background: #33477C;
+  background: #33477c;
   padding: 2rem 1rem;
 
   .background-image {
@@ -72,12 +71,7 @@
   }
 
   @media only screen and (max-width: 600px) {
-    order: 0;
-    min-height: 150px;
-
-    .branding {
-      display: none;
-    }
+    display: none;
   }
 }
 

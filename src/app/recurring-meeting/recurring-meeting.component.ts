@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppConfigModule } from '../app-config.module';
 import { SharedModule } from '../shared/shared.module';
-import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import {
   Observable,
@@ -38,7 +37,6 @@ type State = {
     CommonModule,
     RouterModule,
     SharedModule,
-    ZoomAppBannerComponent,
     AppConfigModule
 ],
   templateUrl: './recurring-meeting.component.html',

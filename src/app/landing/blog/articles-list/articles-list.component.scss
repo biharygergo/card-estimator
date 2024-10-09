@@ -14,9 +14,16 @@ main {
     margin: 0 auto;
   }
 
+  .articles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
   .article {
     margin: 1rem 0;
     display: flex;
+    flex-direction: column;
     border: 1px solid var(--light-blue);
     border-radius: 20px;
     overflow: hidden;

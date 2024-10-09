@@ -30,3 +30,4 @@
 /knowledge-base/advanced-strategies-planning-poker-remote-teams
 /knowledge-base/planning-poker-guide-agile-estimation-techniques
 /knowledge-base/how-to-use-planning-poker-in-google-meet
+/knowledge-base/commonly-misused-terms-planning-poker

@@ -1,27 +1,34 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Article } from '../landing/blog/types';
 import { map } from 'rxjs';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticlesService {
+  serverUrl =
+    this.configService.getCookie('useLocalArticles') === 'true'
+      ? 'http://localhost:4200/assets'
+      : 'https://storage.googleapis.com/planning-poker-public-assets';
+
   constructor(
     private readonly httpClient: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    @Optional() @Inject('serverUrl') protected serverUrl: string
+    private readonly configService: ConfigService
   ) {}
 
   getArticle(slug: string) {
-    const serverUrl = `https://storage.googleapis.com/planning-poker-public-assets`;
-    return this.httpClient.get<Article>(serverUrl + `/articles/${slug}.json?cacheBust=${Date.now()}`);
+    return this.httpClient.get<Article>(
+      this.serverUrl + `/articles/${slug}.json?cacheBust=${Date.now()}`
+    );
   }
 
   getArticles() {
-    const serverUrl = 'https://storage.googleapis.com/planning-poker-public-assets';
     return this.httpClient
-      .get<Article[]>(serverUrl + '/articles/index.json?cacheBust=' + Date.now())
+      .get<Article[]>(
+        this.serverUrl + '/articles/index.json?cacheBust=' + Date.now()
+      )
       .pipe(
         map((articles) =>
           articles.sort(

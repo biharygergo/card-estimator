@@ -1,6 +1,13 @@
 <main>
   <div class="layout">
     <article *ngIf="article | async as article">
+      <div class="breadcrumbs">
+        <a routerLink="/knowledge-base">Knowledge base</a>
+        <span>></span>
+        <a routerLink="/knowledge-base/{{ article.slug }}">{{
+          article.title
+        }}</a>
+      </div>
       <div class="content">
         <div class="card-header">
           <h1>{{ article.title }}</h1>

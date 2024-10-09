@@ -5,6 +5,22 @@ main {
   padding: 2rem 0;
   min-height: 90vh;
 
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 13px;
+
+    a {
+      color: var(--main-color);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
   .layout {
     max-width: 1100px;
     margin: 0 auto;
@@ -157,5 +173,13 @@ main {
 
     margin-top: 2rem;
     margin-bottom: 2rem;
+  }
+
+  .separator {
+    width: 20px;
+    height: 3px;
+    border-radius: 16px;
+    background: var(--main-color);
+    margin: 2rem auto;
   }
 }

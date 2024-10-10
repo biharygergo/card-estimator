@@ -9,14 +9,16 @@
   <div class="content">
     <h1 class="title">Pricing</h1>
     <p class="description">
-      Flexible and transparent pricing for your team. Everyone
-      <strong>joins rooms for free</strong>, while room creators (e.g., SCRUM
-      masters) choose the payment option that fits their needs.
-      <br /><br />Start with your free credit bundle and
-      <strong>create rooms with individual credits</strong>. Need more credits?
-      Easily <strong>top-up your account</strong>
-      or switch to our <strong>unlimited subscription</strong>. Looking to share credits with
-      your team? Check out our <strong>organization credit options</strong>.
+      Everyone can <strong>join rooms for free</strong>, while room
+      creators (like Scrum Masters) pick a payment option that suits them.<br /><br />
+      Each new room you create costs 1 credit. Everything else is free — no extra charges for using the
+      app in Teams, Zoom, Meet, Webex, or any other platform, regardless of how many participants or features you use.
+      <br /><br />
+      Start with a free credit bundle, and as a registered user, you’ll also receive <strong>1 free credit every
+        month</strong>. Need
+      more? Easily top-up your account or
+      switch to an unlimited subscription. Want to share credits with your team? Explore our organization credit
+      options.
     </p>
     <mat-card appearance="outlined" class="pricing-configurator">
       <mat-card-content>
@@ -40,11 +42,8 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <mat-tab-group
-      class="plan-selector"
-      [selectedIndex]="selectedTabIndex()"
-      (selectedIndexChange)="selectedTabIndex.set($event)"
-    >
+    <mat-tab-group class="plan-selector" [selectedIndex]="selectedTabIndex()"
+      (selectedIndexChange)="selectedTabIndex.set($event)">
       <mat-tab label="Pay-as-you-go">
         @if(creditTypeSelector.value === 'personal') {
         <div class="options-wrapper">
@@ -55,14 +54,8 @@
                 @if(config.runningIn !== 'web') {
                 <img class="plan-image" [src]="plan.imageUrl" />
                 } @else {
-                <img
-                  class="plan-image"
-                  [ngSrc]="plan.cloudinaryId"
-                  [alt]="plan.creditAmount + ' pieces of poker chips'"
-                  placeholder
-                  width="675"
-                  height="675"
-                />
+                <img class="plan-image" [ngSrc]="plan.cloudinaryId" [alt]="plan.creditAmount + ' pieces of poker chips'"
+                  placeholder width="675" height="675" />
                 }
               </div>
               <h3 class="plan-title">{{ plan.title }}</h3>
@@ -72,28 +65,20 @@
               {{ plan.description }}
             </p>
             <div class="plan-price">
-              <span class="price-amount"
-                >{{ currencyControl.value === "eur" ? "€" : "$"
-                }}{{ plan.priceEuro }}</span
-              >
+              <span class="price-amount">{{ currencyControl.value === "eur" ? "€" : "$"
+                }}{{ plan.priceEuro }}</span>
               <span class="price-description">{{ plan.priceDescription }}</span>
             </div>
-            <button
-              mat-flat-button
-              color="primary"
-              class="select-plan"
-              [disabled]="
+            <button mat-flat-button color="primary" class="select-plan" [disabled]="
                 plan.isSelectDisabled ||
                 (isLoadingStripeForBundle &&
                   isLoadingStripeForBundle === plan.bundleName)
-              "
-              (click)="buyBundle(plan.bundleName)"
-            >
+              " (click)="buyBundle(plan.bundleName)">
               {{
-                isLoadingStripeForBundle &&
-                isLoadingStripeForBundle === plan.bundleName
-                  ? "Redirecting to Stripe..."
-                  : "Buy"
+              isLoadingStripeForBundle &&
+              isLoadingStripeForBundle === plan.bundleName
+              ? "Redirecting to Stripe..."
+              : "Buy"
               }}
             </button>
           </div>
@@ -118,16 +103,10 @@
                   cost-effective team-wide planning.
                 </p>
                 <div class="purchase-form" [formGroup]="purchaseForm">
-                  <planning-poker-organization-selector
-                    label="Select organization"
-                    hint="Credits will be assigned to this org."
-                    formControlName="organizationId"
-                    class="organization-selector"
-                  />
-                  <mat-form-field
-                    appearance="outline"
-                    subscriptSizing="dynamic"
-                  >
+                  <planning-poker-organization-selector label="Select organization"
+                    hint="Credits will be assigned to this org." formControlName="organizationId"
+                    class="organization-selector" />
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label>Select credit amount</mat-label>
                     <mat-select formControlName="creditCount">
                       <mat-option [value]="150">150 credits</mat-option>
@@ -138,33 +117,25 @@
                   <div class="summary">
                     <span class="summary-count">{{
                       orgCreditAmountLabel$ | async
-                    }}</span>
+                      }}</span>
                     <span class="summary-total">{{
                       orgCreditTotalLabel$ | async
-                    }}</span>
+                      }}</span>
                   </div>
-                  <span class="hint"
-                    >Do you have a coupon code? You can apply it on the Stripe
-                    checkout page.</span
-                  >
-                  <button
-                    mat-flat-button
-                    color="primary"
-                    class="select-plan"
-                    [disabled]="
+                  <span class="hint">Do you have a coupon code? You can apply it on the Stripe
+                    checkout page.</span>
+                  <button mat-flat-button color="primary" class="select-plan" [disabled]="
                       purchaseForm.invalid ||
                       (isLoadingStripeForBundle &&
                         isLoadingStripeForBundle ===
                           BundleName.ORGANIZATION_BUNDLE)
-                    "
-                    (click)="buyOrganizationBundle()"
-                  >
+                    " (click)="buyOrganizationBundle()">
                     {{
-                      isLoadingStripeForBundle &&
-                      isLoadingStripeForBundle ===
-                        BundleName.ORGANIZATION_BUNDLE
-                        ? "Redirecting to Stripe..."
-                        : "Purchase"
+                    isLoadingStripeForBundle &&
+                    isLoadingStripeForBundle ===
+                    BundleName.ORGANIZATION_BUNDLE
+                    ? "Redirecting to Stripe..."
+                    : "Purchase"
                     }}
                   </button>
                 </div>
@@ -174,10 +145,7 @@
         </mat-card>
         }
       </mat-tab>
-      <mat-tab
-        label="Unlimited use"
-        [disabled]="creditTypeSelector.value === 'organization'"
-      >
+      <mat-tab label="Unlimited use" [disabled]="creditTypeSelector.value === 'organization'">
         <div class="options-wrapper">
           <div class="option">
             <div class="plan-image-and-title">
@@ -193,22 +161,13 @@
               personal customer support. No ads.
             </p>
             <div class="plan-price">
-              <span class="price-amount"
-                >{{ currencyControl.value === "eur" ? "€" : "$" }}15</span
-              >
-              <span class="price-description"
-                >billed monthly or 150{{
-                  currencyControl.value === "eur" ? "€" : "$"
-                }}/year</span
-              >
+              <span class="price-amount">{{ currencyControl.value === "eur" ? "€" : "$" }}15</span>
+              <span class="price-description">billed monthly or 150{{
+                currencyControl.value === "eur" ? "€" : "$"
+                }}/year</span>
             </div>
-            <button
-              mat-flat-button
-              color="primary"
-              class="select-plan"
-              (click)="subscribeToPremium()"
-              [disabled]="isLoadingStripe"
-            >
+            <button mat-flat-button color="primary" class="select-plan" (click)="subscribeToPremium()"
+              [disabled]="isLoadingStripe">
               {{ isLoadingStripe ? "Redirecting to Stripe..." : "Subscribe" }}
             </button>
           </div>

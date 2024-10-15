@@ -282,12 +282,6 @@ mat-list-item.statistic-line {
     opacity: 0;
     transform: scaleX(0);
   }
-  50% {
-    transform: scaleX(1.1);
-  }
-  70% {
-    transform: scaleX(0.95);
-  }
   100% {
     opacity: 1;
     transform: scaleX(1);
@@ -314,12 +308,12 @@ mat-list-item.statistic-line {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    animation: growAnimation 500ms ease-out 0ms 1 forwards;
+    animation: growAnimation 300ms ease-out 0ms 1 forwards;
     transform-origin: left;
     opacity: 0;
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
-        animation-delay: 300ms * $i;
+        animation-delay: 200ms * calc($i - 1);
       }
     }
   }

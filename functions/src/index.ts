@@ -91,14 +91,14 @@ exports.sendEmail = onRequest({cors: true}, async (req, res) => {
   res.redirect(`mailto:info@planningpoker.live?subject=${subject}`);
 });
 
-exports.onUserDetailsCreate = onDocumentCreated("userDetails/{userId}", async (snap, context) => {
+exports.onUserDetailsCreate = onDocumentCreated("userDetails/{userId}", async (snap) => {
   const {onUserDetailsCreate} = await import("./profile/onUserCreateUpdate");
-  onUserDetailsCreate(snap, context);
+  onUserDetailsCreate(snap);
 });
 
-exports.onUserDetailsUpdate = onDocumentUpdated("userDetails/{userId}", async (change, context) => {
+exports.onUserDetailsUpdate = onDocumentUpdated("userDetails/{userId}", async (change) => {
   const {onUserDetailsUpdate} = await import("./profile/onUserCreateUpdate");
-  onUserDetailsUpdate(change, context);
+  onUserDetailsUpdate(change);
 });
 
 exports.setRoomPassword = onCall({cors: true}, async (request) => {
@@ -111,14 +111,14 @@ exports.enterProtectedRoom = onCall({cors: true}, async (request) => {
   enterProtectedRoom(request);
 });
 
-exports.onOrganizationUpdated = onDocumentUpdated("organizations/{organizationId}", async (change, context) => {
+exports.onOrganizationUpdated = onDocumentUpdated("organizations/{organizationId}", async (change) => {
   const {onOrganizationUpdated} = await import("./organizations/protection");
-  onOrganizationUpdated(change, context);
+  onOrganizationUpdated(change);
 });
 
-exports.onOrganizationInvitation = onDocumentCreated("organizations/{organizationId}/memberInvitations/{invitationId}", async (snap, context) => {
+exports.onOrganizationInvitation = onDocumentCreated("organizations/{organizationId}/memberInvitations/{invitationId}", async (snap) => {
   const {onOrganizationInviteCreated} = await import("./organizations/invitation");
-  onOrganizationInviteCreated(snap, context);
+  onOrganizationInviteCreated(snap);
 });
 
 exports.acceptOrganizationInvitation = onRequest({cors: true}, async (req, res) => {
@@ -126,14 +126,14 @@ exports.acceptOrganizationInvitation = onRequest({cors: true}, async (req, res) 
   cookieParser()(req, res, () => acceptInvitation(req));
 });
 
-exports.onUserSubscriptionCreated = onDocumentCreated("customers/{customerId}/subscriptions/{subscriptionId}", async (snap, context) => {
+exports.onUserSubscriptionCreated = onDocumentCreated("customers/{customerId}/subscriptions/{subscriptionId}", async (snap) => {
   const {onCustomerSubscriptionCreated} = await import("./customers/subscription");
-  onCustomerSubscriptionCreated(snap, context);
+  onCustomerSubscriptionCreated(snap);
 });
 
-exports.onUserSubscriptionUpdated = onDocumentUpdated("customers/{customerId}/subscriptions/{subscriptionId}", async (change, context) => {
+exports.onUserSubscriptionUpdated = onDocumentUpdated("customers/{customerId}/subscriptions/{subscriptionId}", async (change) => {
   const {onCustomerSubscriptionUpdated} = await import("./customers/subscription");
-  onCustomerSubscriptionUpdated(change, context);
+  onCustomerSubscriptionUpdated(change);
 });
 
 exports.startJiraAuth = onRequest({cors: true}, async (req, res) => {
@@ -187,9 +187,9 @@ exports.createSummary = onCall({cors: true}, async (req) => {
   createSummary(req);
 });
 
-exports.onRoomCreated = onDocumentCreated("rooms/{roomId}", async (snap, context) => {
+exports.onRoomCreated = onDocumentCreated("rooms/{roomId}", async (snap) => {
   const {onRoomCreated} = await import("./room/created");
-  onRoomCreated(snap, context);
+  onRoomCreated(snap);
 });
 
 exports.startTeamsGoogleAuth = onRequest({cors: true}, async (req, res) => {
@@ -226,14 +226,14 @@ exports.getAllCreditsAndAssignWelcome = onCall({cors: true}, async (request) => 
   return getAllCreditBundles(request.auth.uid);
 });
 
-exports.onUserPaymentCreated = onDocumentCreated("customers/{customerId}/payments/{paymentId}", async (snap, context) => {
+exports.onUserPaymentCreated = onDocumentCreated("customers/{customerId}/payments/{paymentId}", async (snap) => {
   const {onCustomerPaymentCreated} = await import("./customers/subscription");
-  onCustomerPaymentCreated(snap, context);
+  onCustomerPaymentCreated(snap);
 });
 
-exports.onUserPaymentUpdated = onDocumentUpdated("customers/{customerId}/payments/{paymentId}", async (change, context) => {
+exports.onUserPaymentUpdated = onDocumentUpdated("customers/{customerId}/payments/{paymentId}", async (change) => {
   const {onCustomerPaymentUpdated} = await import("./customers/subscription");
-  onCustomerPaymentUpdated(change, context);
+  onCustomerPaymentUpdated(change);
 });
 
 exports.updateRoomsTableInBigQuery = onSchedule({schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB"}, async () => {

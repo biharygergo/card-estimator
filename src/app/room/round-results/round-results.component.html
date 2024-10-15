@@ -5,6 +5,28 @@ roundStatistics()[currentRound()] ) {
     @if (roundStatistics()[currentRound()]; as statistics) {
     <h3 matSubheader class="subheader">Statistics</h3>
     <mat-list-item class="statistic-line">
+      <div class="distribution-chart">
+        @for(chartData of statistics.pieChartData; track chartData.cardKey) {
+        <div
+          class="distribution-chart__part"
+          [style.flex]="chartData.percentage"
+          [style.background-color]="chartData.color"
+          [class.majority]="$index === 0"
+          [matTooltip]="
+            chartData.voteCount + (chartData.voteCount > 1 ? ' votes' : ' vote')
+          "
+          [matTooltipPosition]="'above'"
+        >
+          {{
+            chartData.cardKey
+              | estimateConverter : selectedEstimationCardSetValue() : "exact"
+          }}
+          ({{ chartData.percentage }}%)
+        </div>
+        }
+      </div>
+    </mat-list-item>
+    <mat-list-item class="statistic-line">
       <h3 matLine class="statistic">
         <div class="statistic-title">Majority</div>
         <div class="multiple-chips">
@@ -64,7 +86,9 @@ roundStatistics()[currentRound()] ) {
             {{
               statistics.average
                 | number : "1.0-1"
-                | estimateConverter : selectedEstimationCardSetValue() : "rounded"
+                | estimateConverter
+                  : selectedEstimationCardSetValue()
+                  : "rounded"
             }}
           </mat-chip>
         </mat-chip-set>
@@ -188,8 +212,8 @@ roundStatistics()[currentRound()] ) {
     <div class="vote vote-pass" matTooltip="Passed">
       <mat-icon>question_mark</mat-icon>
     </div>
-    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] !== undefined &&
-    (room()?.rounds)[currentRound()].estimates[member.id] !== null &&
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] !== undefined
+    && (room()?.rounds)[currentRound()].estimates[member.id] !== null &&
     (room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-value">
       {{
@@ -197,18 +221,18 @@ roundStatistics()[currentRound()] ) {
           | estimateConverter : selectedEstimationCardSetValue() : "exact"
       }}
     </div>
-    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] === undefined &&
-    (room()?.rounds)[currentRound()].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] === undefined
+    && (room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-none" matTooltip="No vote cast - maybe next time?">
       <mat-icon>bedtime</mat-icon>
     </div>
-    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] === undefined &&
-    !(room()?.rounds)[currentRound()].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] === undefined
+    && !(room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-waiting" matTooltip="Waiting to vote">
       <mat-icon class="hourglass">hourglass_bottom</mat-icon>
     </div>
-    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] !== undefined &&
-    !(room()?.rounds)[currentRound()].show_results ) {
+    } @if ( (room()?.rounds)[currentRound()].estimates[member.id] !== undefined
+    && !(room()?.rounds)[currentRound()].show_results ) {
     <div class="vote vote-voted" matTooltip="Voted">
       <mat-icon>checked</mat-icon>
     </div>

@@ -115,6 +115,14 @@ import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dro
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
 const TOPIC_ANIMATION_SLIDE_DURATION_MS = 200;
+const CHARTING_COLORS = [
+  '#1c4182',
+  '#475e9a',
+  '#6c7db3',
+  '#8f9ecc',
+  '#b4bfe5',
+  '#d9e2ff',
+];
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -161,10 +169,12 @@ export class RoomComponent implements OnInit, OnDestroy {
   protected readonly currentEstimate = signal<number | undefined>(undefined);
 
   estimationCardSets = signal<CardSetValue[]>(Object.values(CARD_SETS));
-  selectedEstimationCardSetValue = signal<CardSetValue>(CARD_SETS[CardSet.DEFAULT]);
-  estimationValues = signal<{ key: string; value: string }[]>(getSortedCardSetValues(
-    this.selectedEstimationCardSetValue()
-  ));
+  selectedEstimationCardSetValue = signal<CardSetValue>(
+    CARD_SETS[CardSet.DEFAULT]
+  );
+  estimationValues = signal<{ key: string; value: string }[]>(
+    getSortedCardSetValues(this.selectedEstimationCardSetValue())
+  );
 
   isEditingTopic = signal<boolean>(false);
   isObserver = signal<boolean>(false);
@@ -424,7 +434,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe((estimates) => {
         if (this.estimatorService.activeMember) {
-          this.currentEstimate.set(estimates[this.estimatorService.activeMember.id]);
+          this.currentEstimate.set(
+            estimates[this.estimatorService.activeMember.id]
+          );
           this.reCalculateStatistics();
         }
       });
@@ -535,7 +547,9 @@ export class RoomComponent implements OnInit, OnDestroy {
           message,
           10000,
           'info',
-          this.paymentService.isSubscriptionDisabled() ? undefined : 'Top up credits'
+          this.paymentService.isSubscriptionDisabled()
+            ? undefined
+            : 'Top up credits'
         );
         ref
           .onAction()
@@ -586,9 +600,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   private updateSelectedCardSets() {
     this.selectedEstimationCardSetValue.set(getRoomCardSetValue(this.room()));
-    this.estimationValues.set(getSortedCardSetValues(
-      this.selectedEstimationCardSetValue()
-    ));
+    this.estimationValues.set(
+      getSortedCardSetValues(this.selectedEstimationCardSetValue())
+    );
 
     if (
       this.selectedEstimationCardSetValue().key === 'CUSTOM' ||
@@ -743,7 +757,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   calculateRoundStatistics(round: Round) {
     const elapsed = getHumanReadableElapsedTime(round);
     const estimates = Object.keys(round.estimates)
-      .filter((member) => this.room().members.map((m) => m.id).includes(member))
+      .filter((member) =>
+        this.room()
+          .members.map((m) => m.id)
+          .includes(member)
+      )
       .map((member) => ({
         value: round.estimates[member],
         voter: this.room().members.find((m) => m.id === member)?.name,
@@ -768,9 +786,17 @@ export class RoomComponent implements OnInit, OnDestroy {
       );
 
       // [estimateKey, numberOfVotes]
-      const mostPopularVoteEntry: [string, number] = Object.entries<number>(
-        votesCount
-      ).sort((a, b) => b[1] - a[1])[0];
+      const voteStatistics = Object.entries<number>(votesCount).sort(
+        (a, b) => b[1] - a[1]
+      );
+      const mostPopularVoteEntry: [string, number] = voteStatistics[0];
+
+      const pieChartData = voteStatistics.map(([key, value], index) => ({
+        cardKey: +key,
+        voteCount: value,
+        percentage: Math.round((value / estimates.length) * 100),
+        color: CHARTING_COLORS[Math.min(index, CHARTING_COLORS.length - 1)],
+      }));
 
       return {
         average,
@@ -781,6 +807,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           value: +mostPopularVoteEntry[0],
           isConsensus: mostPopularVoteEntry[1] === estimates.length,
         },
+        pieChartData,
       };
     }
   }

@@ -276,3 +276,51 @@ mat-list-item.statistic-line {
 .blur {
   filter: blur(5px);
 }
+
+@keyframes growAnimation {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  50% {
+    transform: scaleX(1.1);
+  }
+  70% {
+    transform: scaleX(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.distribution-chart {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  height: 15px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 4px;
+
+  &__part {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 15px;
+    padding: 0 4px;
+    min-width: 0;
+    font-size: 10px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: growAnimation 500ms ease-out 0ms 1 forwards;
+    transform-origin: left;
+    opacity: 0;
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: 300ms * $i;
+      }
+    }
+  }
+}

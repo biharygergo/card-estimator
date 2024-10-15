@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, input, Input, OnDestroy, OnInit, signal, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+  Signal,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   distinctUntilChanged,
@@ -30,43 +38,57 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 import { RoomDataService } from '../room-data.service';
 import { EstimateConverterPipe } from '../../pipes/estimate-converter.pipe';
 import { MatDivider } from '@angular/material/divider';
-import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import {
+  MatMenuTrigger,
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem,
+} from '@angular/material/menu';
 import { MatIconButton } from '@angular/material/button';
 import { NgIf, AsyncPipe, DecimalPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatChipSet, MatChip, MatChipAvatar, MatChipRemove } from '@angular/material/chips';
-import { MatList, MatListSubheaderCssMatStyler, MatListItem } from '@angular/material/list';
+import {
+  MatChipSet,
+  MatChip,
+  MatChipAvatar,
+  MatChipRemove,
+} from '@angular/material/chips';
+import {
+  MatList,
+  MatListSubheaderCssMatStyler,
+  MatListItem,
+} from '@angular/material/list';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { isEqual } from 'lodash';
 
 @Component({
-    selector: 'app-round-results',
-    templateUrl: './round-results.component.html',
-    styleUrls: ['./round-results.component.scss'],
-    standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatList,
-        MatListSubheaderCssMatStyler,
-        MatListItem,
-        MatChipSet,
-        MatChip,
-        MatChipAvatar,
-        MatIcon,
-        MatChipRemove,
-        MatTooltip,
-        NgIf,
-        MatIconButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuContent,
-        MatMenuItem,
-        MatDivider,
-        AsyncPipe,
-        DecimalPipe,
-        EstimateConverterPipe,
-    ],
+  selector: 'app-round-results',
+  templateUrl: './round-results.component.html',
+  styleUrls: ['./round-results.component.scss'],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatList,
+    MatListSubheaderCssMatStyler,
+    MatListItem,
+    MatChipSet,
+    MatChip,
+    MatChipAvatar,
+    MatIcon,
+    MatChipRemove,
+    MatTooltip,
+    NgIf,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+    MatDivider,
+    AsyncPipe,
+    DecimalPipe,
+    EstimateConverterPipe,
+  ],
 })
 export class RoundResultsComponent implements OnInit, OnDestroy {
   room = input.required<Room>();
@@ -103,7 +125,7 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
         memberIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {})
       ),
       distinctUntilChanged(isEqual),
-      startWith({}),
+      startWith({})
     )
   );
 
@@ -120,20 +142,26 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userProfiles$().pipe(takeUntil(this.destroyed)).subscribe((profiles) => {
-      this.userProfiles.set(profiles);
-    });
+    this.userProfiles$()
+      .pipe(takeUntil(this.destroyed))
+      .subscribe((profiles) => {
+        this.userProfiles.set(profiles);
+      });
 
     this.organization$
       .pipe(takeUntil(this.destroyed))
-      .subscribe((org) => (this.organization.set(org)));
+      .subscribe((org) => this.organization.set(org));
 
     this.authService.user
       .pipe(takeUntil(this.destroyed))
-      .subscribe((user) => (this.currentUserId.set(user?.uid)));
+      .subscribe((user) => this.currentUserId.set(user?.uid));
 
     this.onRevoteClicked.pipe(takeUntil(this.destroyed)).subscribe(() => {
-      this.estimatorService.setActiveRound(this.room(), this.currentRound(), true);
+      this.estimatorService.setActiveRound(
+        this.room(),
+        this.currentRound(),
+        true
+      );
     });
   }
 

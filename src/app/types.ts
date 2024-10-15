@@ -112,6 +112,12 @@ export interface RoundStatistics {
   };
   elapsed?: string;
   consensus: { value: number; isConsensus: boolean };
+  pieChartData: {
+    cardKey: number;
+    voteCount: number;
+    percentage: number;
+    color: string;
+  }[];
 }
 
 export type CardSetValue = {

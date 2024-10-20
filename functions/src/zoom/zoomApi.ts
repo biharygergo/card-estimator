@@ -23,10 +23,6 @@ export function getInstallURL(
     redirectUrlOverride?: string
 ) {
   const verifier = generateVerifier();
-  const challenge: string = crypto
-      .createHash("sha256")
-      .update(verifier)
-      .digest("base64url");
 
   const redirectUrl = redirectUrlOverride ?? getRedirectUrl(request);
 
@@ -38,8 +34,6 @@ export function getInstallURL(
     isDev ? appConfig.zoomClientIdDev : appConfig.zoomClientId
   );
   url.searchParams.set("redirect_uri", redirectUrl);
-  url.searchParams.set("code_challenge", challenge);
-  url.searchParams.set("code_challenge_method", "S256");
 
   return {url, verifier};
 }
@@ -106,16 +100,11 @@ export async function getToken(
     throw Error("authorization code must be a valid string");
   }
 
-  if (!verifier || typeof verifier !== "string") {
-    console.error("Verifier was invalid", verifier);
-  }
-
   const redirectUrl = redirectUriOverride ?? getRedirectUrl(request);
 
   return tokenRequest(
       {
         code,
-        code_verifier: verifier,
         redirect_uri: redirectUrl,
         grant_type: "authorization_code",
       },

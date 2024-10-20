@@ -75,12 +75,11 @@ export async function onOAuthResult(
     JSON.parse(decodeURIComponent(req.query.state as string)) :
     undefined;
   const provider = req.path.split("/").pop() as OAuthProvider;
-
-  const idToken = await HANDLERS[provider].onAuthSuccess(req, res);
-
   if (!provider || !Object.values(OAuthProvider).includes(provider)) {
     throw new Error("Invalid or missing provider");
   }
+
+  const idToken = await HANDLERS[provider].onAuthSuccess(req, res);
 
   if (state?.platform === "teams") {
     if (state.oauthRedirectMethod === "deeplink") {
@@ -124,7 +123,7 @@ export async function onOAuthResult(
   }
 
   if (provider === OAuthProvider.ZOOM) {
-    const isRedirect = req.query.provider !== provider;
+    const isRedirect = req.query.provider && req.query.provider !== provider;
     if (!isRedirect) {
       // fetch deeplink from Zoom API
       const deeplink = await getDeeplink(idToken);

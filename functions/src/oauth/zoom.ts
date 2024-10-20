@@ -1,8 +1,6 @@
 import {OAuthHandler} from "./types";
 import * as functions from "firebase-functions";
 import {getHost, isRunningInDevMode} from "../config";
-import {captureError} from "../shared/errors";
-import {getSessionVariable} from "../zoom/routes";
 import {getToken} from "../zoom/zoomApi";
 
 export function getZoomAccessCodeRedirectUrl(req: functions.Request) {
@@ -11,7 +9,7 @@ export function getZoomAccessCodeRedirectUrl(req: functions.Request) {
     ...Object.entries(req.query),
     Object.keys(req.query).includes("isDev") ?
       [undefined, undefined] :
-      ["isDev", isDev ? "true" : "false"],
+      isDev ? ["isDev", "true"] : [undefined, undefined],
   ]
       .filter(
           (entry): entry is [string, string] => !!entry[0] && entry[0] !== "code"
@@ -22,8 +20,8 @@ export function getZoomAccessCodeRedirectUrl(req: functions.Request) {
             `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
       )
       .join("&");
-  const returnUrl = `${getHost(req)}/api/onOAuthResult/zoom?${queryString}`;
-
+  const params = queryString ? `?${queryString}` : "";
+  const returnUrl = `${getHost(req)}/api/onOAuthResult/zoom${params}`;
   return returnUrl;
 }
 
@@ -34,16 +32,8 @@ export class ZoomOAuthHandler extends OAuthHandler {
 
   async onAuthSuccess(
       req: functions.Request,
-      res: functions.Response
   ): Promise<string> {
     const code = req.query.code;
-    let verifier: string | undefined;
-    try {
-      verifier = getSessionVariable(req, res, false);
-    } catch (err) {
-      captureError(err);
-      console.error("Error while parsing session cookie: ", err);
-    }
     const isDev = isRunningInDevMode(req);
 
     if (!code) {
@@ -53,7 +43,7 @@ export class ZoomOAuthHandler extends OAuthHandler {
       // get Access Token from Zoom
       const {access_token: accessToken} = await getToken(
         code as string,
-        verifier,
+        undefined,
         isDev,
         req,
         getZoomAccessCodeRedirectUrl(req)

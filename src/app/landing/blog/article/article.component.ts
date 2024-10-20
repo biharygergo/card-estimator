@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Signal, inject, signal, viewChild } from '@angular/core';
 import { Article } from '../types';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -16,6 +16,7 @@ import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component
 import { StartPlanningCtaComponent } from '../../components/start-planning-cta/start-planning-cta.component';
 import { MarkdownComponent } from 'ngx-markdown';
 import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
+import { YouTubePlayer } from '@angular/youtube-player';
 
 @Component({
     selector: 'app-article',
@@ -31,9 +32,10 @@ import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
         CarbonAdComponent,
         AsyncPipe,
         DatePipe,
+        YouTubePlayer,
     ],
 })
-export class ArticleComponent {
+export class ArticleComponent implements AfterViewInit{
   private readonly metaService = inject(Meta);
   article: Observable<Article> = inject(ActivatedRoute).data.pipe(
     map((data) => data.article),
@@ -57,5 +59,22 @@ export class ArticleComponent {
     )
   );
 
+  youtubePlayerContainer: Signal<ElementRef<HTMLDivElement>> = viewChild('youtubePlayerContainer');
+  youtubePlayerSize = signal({width: 560, height: 315});
   readonly destroy = new Subject<void>();
+
+  ngAfterViewInit() {
+    this.onResize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (this.youtubePlayerContainer()) {
+      const width = this.youtubePlayerContainer().nativeElement.clientWidth;
+      const height = width * 0.56;
+  
+      this.youtubePlayerSize.set({width, height});
+    }
+    
+  }
 }

@@ -9,25 +9,28 @@
     </div>
     <div class="articles">
       @for (article of articles; track article.slug) {
-        <a
-          class="article"
-          [routerLink]="article.slug"
-          >
-          <div class="article-image">
-            <img
-              [ngSrc]="article.coverImageId"
-              placeholder
-              [alt]="article.coverImageAlt"
-              fill
-              sizes="20wv"
-              />
-          </div>
-          <div class="article-preview">
-            <h3>{{ article.title }}</h3>
-            <h5>{{ article.lastUpdated | date:'mediumDate' }}, {{ article.author }}</h5>
-            <p>{{ article.description }}</p>
-          </div>
-        </a>
+      <a class="article" [routerLink]="article.slug">
+        <div class="article-image">
+          <img
+            [ngSrc]="article.coverImageId"
+            placeholder
+            [alt]="article.coverImageAlt"
+            fill
+            sizes="20wv"
+          />
+          @if (article.youtubeVideoId) {
+          <mat-icon class="play-icon">play_arrow</mat-icon>
+          }
+        </div>
+        <div class="article-preview">
+          <h3>{{ article.title }}</h3>
+          <h5>
+            {{ article.lastUpdated | date : "mediumDate" }},
+            {{ article.author }}
+          </h5>
+          <p>{{ article.description }}</p>
+        </div>
+      </a>
       }
     </div>
   </div>

@@ -20,6 +20,7 @@
             >
           </div>
         </div>
+        @if (!article.youtubeVideoId) {
         <div class="cover-image">
           <img
             [ngSrc]="article.coverImageId"
@@ -30,7 +31,15 @@
             priority
           />
         </div>
-
+        } @else {
+        <div class="video-wrapper" #youtubePlayerContainer>
+          <youtube-player
+            [videoId]="article.youtubeVideoId"
+            [width]="youtubePlayerSize().width"
+            [height]="youtubePlayerSize().height"
+          />
+        </div>
+        }
         <div>
           <markdown [data]="article.content" />
         </div>

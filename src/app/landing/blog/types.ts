@@ -7,4 +7,5 @@ export interface Article {
     content: string;
     coverImageId: string;
     coverImageAlt: string;
+    youtubeVideoId?: string;
 }

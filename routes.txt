@@ -31,3 +31,4 @@
 /knowledge-base/planning-poker-guide-agile-estimation-techniques
 /knowledge-base/how-to-use-planning-poker-in-google-meet
 /knowledge-base/commonly-misused-terms-planning-poker
+/knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live

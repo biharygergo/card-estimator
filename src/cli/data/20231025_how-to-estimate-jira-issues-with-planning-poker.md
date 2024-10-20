@@ -2,10 +2,11 @@
 title: How to estimate JIRA issues with Planning Poker
 description: In this short tutorial you can learn how to set up an integration with JIRA in PlanningPoker.live and estimate tickets with ease
 slug: how-to-estimate-jira-issues-with-planning-poker
-lastUpdated: 2023/10/25
+lastUpdated: 2024/10/20
 author: Gergely Bihary
 coverImageId: topics
 coverImageAlt: A graphic showing issues stacked over each other
+youtubeVideoId: X5ox2EBk3Bs
 ---
 
 ### Introduction
@@ -27,10 +28,27 @@ There are several benefits to using Planning Poker to estimate JIRA issues:
 
 ### Steps to integrate JIRA with PlanningPoker.live
 
-To estimate JIRA issues with Planning Poker, follow these steps:
+To estimate Jira issues with Planning Poker, follow these steps:
 
-1. **Create an estimation session.** You can do this on a website like [planningpoker.live](https://planningpoker.live/create). You will need to set your nickname and create a new room.
-2. **Connect your JIRA account to your Planning Poker account.** This will allow you to select and view JIRA issues directly from the planning poker session. To do this, just click on the button shown below. If you do not have a free PlanningPoker.live account, you'll be prompted to create one. You'll then be redirected to Jira where you can choose which project you want to link to PlanningPoker.live.
+1. **Create an estimation session.** You can do this on a website like [PlanningPoker.live](https://planningpoker.live/create). You will need to set your nickname and create a new room.
+
+2. **Connect your Jira account to your Planning Poker account.** This will allow you to select and view Jira issues directly from the planning poker session. To do this, just click on the **Connect to Jira** button in the topic editor. If you do not have a free PlanningPoker.live account, you'll be prompted to create one. You’ll then be redirected to Jira, where you can choose which project you want to link to PlanningPoker.live.
+
+3. **Select and estimate Jira issues.** Once your Jira account is connected, your most recent Jira issues will automatically appear in the dropdown menu of the topic editor. You can also search for specific issues by title or ID. When you select an issue, your team can start voting on it. After the estimates are revealed, simply click the **Upload** button to save the estimate back to Jira.
+
+4. **Batch import multiple Jira issues.** If you have several issues in your backlog that need to be estimated, PlanningPoker.live makes it easy with the **Batch Import** feature. To do this:
+   - Open the sidebar and click on **Import/Export**.
+   - Select **Batch Import Issues**.
+   - In the dialog, apply filters to find the relevant issues, such as filtering by project or sprint.
+   - Once you've selected multiple tickets, click **Import** to add them all to your current estimation session.
+
+This feature helps you quickly gather all the necessary issues for estimation, making your planning sessions more efficient, especially when dealing with large backlogs.
+
+
+### Why Batch Import is a Game-Changer
+
+The Batch Import feature significantly streamlines the estimation process for Agile teams working with large backlogs. Instead of manually importing each issue one by one, you can now pull in multiple tickets at once, saving time and ensuring that all necessary tasks are reviewed in a single session. This is especially useful for sprint planning meetings or backlog refinement sessions when you need to estimate several tasks quickly.
+
 
 <div class="image-container">
     <img alt="Click on the 'Connect to Jira' button to link your account" src="https://storage.googleapis.com/planning-poker-public-assets/assets/jira_connect.png">

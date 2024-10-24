@@ -109,6 +109,19 @@ body {
   height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   @include mat.all-component-themes($m3-light-theme);
+
+  @include extraSmallScreen {
+      font-size: 14px;
+      @include mat.all-component-densities(-2);
+  
+      .mat-icon, .mat-mdc-outlined-button>.mat-icon {
+        --mat-menu-item-icon-size: 18px;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    
+  }
 }
 
 body {

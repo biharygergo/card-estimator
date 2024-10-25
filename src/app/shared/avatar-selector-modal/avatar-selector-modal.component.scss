@@ -20,6 +20,10 @@
   gap: 16px;
   padding: 8px;
   padding-top: 1rem;
+
+  @include extraSmallScreen {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  }
 }
 
 .avatar-selector-item {

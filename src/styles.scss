@@ -110,17 +110,33 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   @include mat.all-component-themes($m3-light-theme);
 
+  @include smallScreen {
+    --mat-form-field-container-height: 3rem;
+    font-size: 15px;
+    @include mat.all-component-densities(-1);
+    --mat-form-field-container-height: 3rem;
+
+    .mat-icon,
+    .mat-mdc-outlined-button > .mat-icon {
+      --mat-menu-item-icon-size: 20px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
   @include extraSmallScreen {
-      font-size: 14px;
-      @include mat.all-component-densities(-2);
-  
-      .mat-icon, .mat-mdc-outlined-button>.mat-icon {
-        --mat-menu-item-icon-size: 18px;
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-      }
-    
+    font-size: 14px;
+    @include mat.all-component-densities(-2);
+    --mat-form-field-container-height: 3rem;
+
+    .mat-icon,
+    .mat-mdc-outlined-button > .mat-icon {
+      --mat-menu-item-icon-size: 18px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
   }
 }
 

@@ -2,7 +2,7 @@
 title: Connect Linear & PlanningPoker.live for Effortless Agile Estimation
 description: Integrate PlanningPoker.live with Linear to estimate your user stories and tasks. Say goodbye to manual data entry & hello to seamless planning meetings!
 slug: estimate-linear-issues-planning-poker-live
-lastUpdated: 2024/04/07
+lastUpdated: 2024/10/30
 author: Gergely Bihary
 coverImageId: linear-screenshot
 coverImageAlt: Issues in a sprint screen in the Linear app

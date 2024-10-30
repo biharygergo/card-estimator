@@ -6,6 +6,7 @@ lastUpdated: 2024/04/07
 author: Gergely Bihary
 coverImageId: linear-screenshot
 coverImageAlt: Issues in a sprint screen in the Linear app
+youtubeVideoId: UFomiKX_cPU
 ---
 
 ### Introduction

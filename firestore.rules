@@ -20,7 +20,7 @@ service cloud.firestore {
       allow list: if request.auth.uid in resource.data.memberIds;
       allow update: if isAccessAllowed(request) && !isUpdatingSubscriptionMetadata(request, resource);
       allow delete: if false;
-      allow create: if isAccessAllowed(request);
+      allow create: if false;
 
       function isUpdatingSubscriptionMetadata(request, resource) {
         return request.resource.data.diff(resource.data).affectedKeys().hasAny(['subscriptionMetadata'])

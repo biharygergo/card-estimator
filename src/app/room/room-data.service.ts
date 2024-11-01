@@ -216,6 +216,7 @@ export class RoomDataService {
 
   leaveRoom() {
     this.roomSubject.next(undefined);
+    this.localActiveRound.next(undefined);
     this.roomSubscription.unsubscribe();
   }
 

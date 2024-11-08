@@ -50,7 +50,8 @@ $m3-light-theme: mat.define-theme(
 .default-theme {
   &.running-in-teams,
   &.running-in-zoom,
-  &.running-in-meet {
+  &.running-in-meet,
+  &.running-in-webex {
     --background-dark: white;
     --main-dark-color: var(--mdc-outlined-card-container-color);
     --main-color: white;
@@ -155,6 +156,7 @@ body {
   border-top: 0.5px solid lightgrey;
 
   h4 {
+    font-size: 0.9rem;
     margin: 0;
     display: flex;
     justify-content: space-between;
@@ -163,6 +165,12 @@ body {
 
     button {
       flex-shrink: 0;
+    }
+
+    @include extraSmallScreen {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
     }
   }
 }

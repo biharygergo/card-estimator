@@ -7,7 +7,11 @@
         your favorite project management tools.
       </h2>
       <div>
-        <button (click)="scrollTo('video-conferencing')" mat-flat-button class="discover-integrations-button">
+        <button
+          (click)="scrollTo('video-conferencing')"
+          mat-flat-button
+          class="discover-integrations-button"
+        >
           Discover integrations
         </button>
         <p class="header-subtitle">
@@ -40,9 +44,10 @@
     <div class="integration-section-header">
       <h2 class="title">Video conferencing</h2>
       <p class="details">
-        Install the PlanningPoker.live embedded app to enjoy the same great
-        planning experience without leaving your video meeting. Available for
-        all major video conferencing tools for free.
+        Conduct efficient planning poker sessions directly within your video
+        conferences. Our embedded app integrates with popular platforms like
+        Teams, Zoom, Meet, and Webex, allowing you to estimate stories without
+        leaving your meeting.
       </p>
       <div class="details-links">
         <a mat-stroked-button routerLink="/integrations/teams">Teams</a>
@@ -67,11 +72,10 @@
     <div class="integration-section-header">
       <h2 class="title">Project management</h2>
       <p class="details">
-        Link your favorite project management tools to PlanningPoker.live to
-        import them into your planning session. You can import issues in bulk or
-        just estimate issues by selecting from our auto-complete topic editor.
-        It does not get any easier than this. Available for major project
-        management tools for free.
+        Bridge the gap between planning and execution. Integrate with your
+        preferred project management tools (Jira, Linear, etc.) to import issues
+        directly into your planning sessions, ensuring alignment between
+        estimation and delivery.
       </p>
       <div class="details-links">
         <button (click)="scrollTo('jira')" mat-stroked-button>Jira</button>

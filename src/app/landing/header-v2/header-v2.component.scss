@@ -59,8 +59,7 @@ nav {
     li {
       // margin-right: 32px;
 
-      a,
-      button {
+      .navigation-button {
         text-decoration: none;
         color: var(--text-on-white);
         font-size: 0.9rem;
@@ -72,6 +71,12 @@ nav {
         letter-spacing: initial;
 
         transition: background 100ms linear, outline 50ms linear;
+
+        a {
+          text-decoration: none;
+          color: var(--text-on-white);
+        }
+
         &:hover {
           background: #d9e2ff;
         }
@@ -79,6 +84,33 @@ nav {
         &.active {
           background: #d9e2ff;
           color: #345ca8;
+        }
+
+        &.split-button {
+          display: flex;
+          align-items: center;
+          --mdc-icon-button-state-layer-size: 33px;
+          --mdc-icon-button-icon-size: 0.9rem;
+          padding-right: 8px;
+
+          @media screen and (max-width: 800px) {
+            --mdc-icon-button-state-layer-size: 33px;
+            --mdc-icon-button-icon-size: 0.9rem;
+          }
+
+          .split-button-left {
+            position: relative;
+            padding-right: 12px;
+            &:after {
+              content: "";
+              position: absolute;
+              right: 0;
+              top: -8px;
+              width: 1px;
+              height: calc(100% + 16px);
+              background: #c4c6d0;
+            }
+          }
         }
 
         .badge {
@@ -183,11 +215,14 @@ nav {
 
 .rotating-icon {
   transition: transform 150ms ease-in-out;
-  margin-left: 0.2rem;
-  font-size: 0.9rem !important;
-  width: 0.9rem !important;
-  height: 0.9rem !important;
-  line-height: 0.9rem !important;
+  height: 100% !important;
+  width: 100% !important;
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    height: 100%;
+    font-size: 18px !important;
+  }
 
   &.rotated {
     transition: transform 300ms ease-in-out;

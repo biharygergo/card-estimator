@@ -111,6 +111,15 @@ const routes: Routes = [
     },
   },
   {
+    path: 'integrations',
+    pathMatch: 'full',
+    loadComponent: () => import('./integrations/integrations.component').then((mod) => mod.IntegrationsComponent),
+    data: {
+      title: 'Integrations',
+      description: 'PlanningPoker.live integrates with your favorite tools. JIRA, Zoom, Microsoft Teams and more.',
+    }
+  },
+  {
     path: 'organizationInvitation',
     component: OrganizationInvitationComponent,
     data: { title: 'Organization invitation' },

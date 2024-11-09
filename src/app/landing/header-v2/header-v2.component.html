@@ -11,7 +11,11 @@
         <picture>
           <source srcset="/assets/logo.webp" type="image/webp" />
           <source srcset="/assets/logo.png" type="image/png" />
-          <img src="/assets/logo.png" alt="Planning Poker logo" loading="lazy" />
+          <img
+            src="/assets/logo.png"
+            alt="Planning Poker logo"
+            loading="lazy"
+          />
         </picture>
         <span>PlanningPoker.live</span>
       </div>
@@ -23,6 +27,7 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
           (click)="closeMenu()"
+          class="navigation-button"
           >Home</a
         >
       </li>
@@ -31,68 +36,124 @@
           routerLink="/features"
           routerLinkActive="active"
           (click)="closeMenu()"
+          class="navigation-button"
           >Features</a
         >
       </li>
       <li>
-        <button
-          mat-button
-          [matMenuTriggerFor]="menu"
-          (menuOpened)="menuOpen = true"
-          (menuClosed)="menuOpen = false"
-          class="integrations-button"
+        <div
+          class="navigation-button integrations-button split-button"
+          routerLinkActive="active"
         >
-          <span class="centered-menu-item"
-            >Integrations
+          <a
+            class="split-button-left"
+            routerLink="/integrations"
+            >Integrations</a
+          >
+          <button
+            class="split-button-right"
+            mat-icon-button
+            (menuOpened)="menuOpen = true"
+            (menuClosed)="menuOpen = false"
+            [matMenuTriggerFor]="menu"
+          >
             <mat-icon
               class="rotating-icon"
               [class.rotated]="menuOpen"
               [inline]="true"
               >expand_more</mat-icon
-            ></span
-          >
-        </button>
+            >
+          </button>
+        </div>
         <mat-menu #menu="matMenu" [class]="'rounded-nav-menu'">
-          <a routerLink="/integrations/zoom" id="header-zoom-link" mat-menu-item>
+          <a
+            routerLink="/integrations/zoom"
+            id="header-zoom-link"
+            mat-menu-item
+            (click)="closeMenu()"
+          >
             <div class="centered-menu-item" routerLinkActive="active">
-              <img class="integration-logo" src="/assets/zoom-logo.png" loading="lazy" />
+              <img
+                class="integration-logo"
+                src="/assets/zoom-logo.png"
+                loading="lazy"
+              />
               Zoom Meetings
             </div>
           </a>
-          <a routerLink="/integrations/teams" id="header-teams-link" mat-menu-item>
+          <a
+            routerLink="/integrations/teams"
+            id="header-teams-link"
+            mat-menu-item
+            (click)="closeMenu()"
+          >
             <div class="centered-menu-item" routerLinkActive="active">
-              <img class="integration-logo" src="/assets/teams_logo.png" loading="lazy" />
+              <img
+                class="integration-logo"
+                src="/assets/teams_logo.png"
+                loading="lazy"
+              />
               Microsoft Teams
             </div>
           </a>
-          <a routerLink="/integrations/meet"  mat-menu-item id="header-meet-link">
+          <a
+            routerLink="/integrations/meet"
+            mat-menu-item
+            id="header-meet-link"
+            (click)="closeMenu()"
+          >
             <div class="centered-menu-item" routerLinkActive="active">
-              <img class="integration-logo" src="/assets/meet_logo.png" loading="lazy" />
+              <img
+                class="integration-logo"
+                src="/assets/meet_logo.png"
+                loading="lazy"
+              />
               Google Meet™
             </div>
           </a>
-          <a routerLink="/integrations/webex" id="header-webex-link" mat-menu-item>
+          <a
+            routerLink="/integrations/webex"
+            id="header-webex-link"
+            mat-menu-item
+            (click)="closeMenu()"
+          >
             <div class="centered-menu-item" routerLinkActive="active">
-              <img class="integration-logo" src="/assets/webex_logo.png" loading="lazy" />
+              <img
+                class="integration-logo"
+                src="/assets/webex_logo.png"
+                loading="lazy"
+              />
               Webex Meetings
             </div>
           </a>
-          <a routerLink="/features" fragment="jira" mat-menu-item>
+          <a routerLink="/features" fragment="jira" mat-menu-item >
             <div class="centered-menu-item" routerLinkActive="active">
-              <img class="integration-logo" src="/assets/jira.png" loading="lazy" />
+              <img
+                class="integration-logo"
+                src="/assets/jira.png"
+                loading="lazy"
+              />
               Jira tickets
             </div>
           </a>
-          <a routerLink="/features" fragment="linear" mat-menu-item>
+          <a routerLink="/features" fragment="linear" mat-menu-item (click)="closeMenu()">
             <div class="centered-menu-item" routerLinkActive="active">
-              <img class="integration-logo" src="/assets/linear.png" loading="lazy" />
+              <img
+                class="integration-logo"
+                src="/assets/linear.png"
+                loading="lazy"
+              />
               Linear issues
             </div>
           </a>
         </mat-menu>
       </li>
       <li>
-        <a routerLink="/pricing" routerLinkActive="active" (click)="closeMenu()"
+        <a
+          routerLink="/pricing"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="navigation-button"
           >Pricing</a
         >
       </li>

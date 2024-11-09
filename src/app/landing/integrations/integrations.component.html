@@ -1,0 +1,148 @@
+<div class="hero-header-section">
+  <div class="hero-header">
+    <div class="header-intro">
+      <h1>Integrate PlanningPoker.live with your favorite tools</h1>
+      <h2 class="header-description">
+        Install our embedded app in your video conferencing solution and connect
+        your favorite project management tools.
+      </h2>
+      <div>
+        <button
+          (click)="scrollTo('video-conferencing')"
+          mat-flat-button
+          class="discover-integrations-button"
+        >
+          Discover integrations
+        </button>
+        <p class="header-subtitle">
+          Jump to
+          <a href="javascript:void(0)" (click)="scrollTo('video-conferencing')">
+            video conferencing
+          </a>
+          or
+          <a href="javascript:void(0)" (click)="scrollTo('project-management')">
+            project management</a
+          >.
+        </p>
+      </div>
+    </div>
+    <div class="header-image">
+      <img
+        ngSrc="Integrations_Header_V2_hrlcem"
+        alt="PlanningPoker.live running in Zoom"
+        priority
+        placeholder
+        width="1400"
+        height="975"
+        sizes="(max-width: 800px) 100vw, 60vw"
+      />
+    </div>
+  </div>
+</div>
+<main>
+  <section id="video-conferencing">
+    <div class="integration-section-header">
+      <h2 class="title">Video conferencing</h2>
+      <p class="details">
+        Conduct efficient planning poker sessions directly within your video
+        conferences. Our embedded app integrates with popular platforms like
+        Teams, Zoom, Meet, and Webex, allowing you to estimate stories without
+        leaving your meeting.
+      </p>
+      <div class="details-links">
+        <a mat-stroked-button routerLink="/integrations/teams">Teams</a>
+        <a mat-stroked-button routerLink="/integrations/zoom">Zoom</a>
+        <a mat-stroked-button routerLink="/integrations/meet">Meet</a>
+        <a mat-stroked-button routerLink="/integrations/webex">Webex</a>
+      </div>
+    </div>
+    <div class="integration-section-items">
+      @for (integration of videoConferencingIntegrations; track $index) {
+      <ng-container
+        *ngTemplateOutlet="
+          integrationItem;
+          context: { integration: integration, index: $index }
+        "
+      ></ng-container>
+
+      }
+    </div>
+  </section>
+  <section id="project-management">
+    <div class="integration-section-header">
+      <h2 class="title">Project management</h2>
+      <p class="details">
+        Bridge the gap between planning and execution. Integrate with your
+        preferred project management tools (Jira, Linear, etc.) to import issues
+        directly into your planning sessions, ensuring alignment between
+        estimation and delivery.
+      </p>
+      <div class="details-links">
+        <button (click)="scrollTo('jira')" mat-stroked-button>Jira</button>
+        <button (click)="scrollTo('linear')" mat-stroked-button>Linear</button>
+      </div>
+    </div>
+    <div class="integration-section-items">
+      @for (integration of projectManagementIntegrations; track $index) {
+      <ng-container
+        *ngTemplateOutlet="
+          integrationItem;
+          context: { integration: integration, index: $index }
+        "
+      ></ng-container>
+      }
+    </div>
+  </section>
+</main>
+<ng-template #integrationItem let-integration="integration" let-index="index">
+  <div class="integration-section-item" [id]="integration.id">
+    <div class="integration-details">
+      <span class="integration-number">Integration 0{{ index + 1 }}</span>
+      <h3 class="integration-title">
+        {{ integration.title }}
+      </h3>
+      <p class="integration-description">
+        {{ integration.description }}
+      </p>
+      <div>
+        @if (integration.link) {
+        <a
+          [routerLink]="integration.link"
+          mat-stroked-button
+          class="learn-more-button"
+        >
+          Learn more </a
+        >} @if(integration.hasAction) {
+        <button
+          (click)="handleAction(integration.id)"
+          mat-stroked-button
+          class="learn-more-button"
+        >
+          Get started
+        </button>
+        }
+      </div>
+    </div>
+    <div class="integration-image">
+      <video
+        #video
+        autoplay
+        loop
+        muted
+        playsinline
+        (canplay)="video.play()"
+        (loadedmetadata)="video.muted = true"
+        [class.video-16-9]="integration.isBigVideo"
+      >
+        <source
+          [src]="
+            'https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/' +
+            integration.videoId +
+            '.mp4'
+          "
+          type="video/mp4"
+        />
+      </video>
+    </div>
+  </div>
+</ng-template>

@@ -7,6 +7,7 @@ export const routes = [
   '/join',
   '/create',
   '/room',
+  '/integrations',
   '/integrations/zoom',
   '/integrations/webex',
   '/integrations/meet',

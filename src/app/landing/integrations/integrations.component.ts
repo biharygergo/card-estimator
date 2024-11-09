@@ -43,7 +43,7 @@ const VIDEO_CONFERENCING_INTEGRATIONS: IntegrationRow[] = [
   },
   {
     id: 'webex',
-    title: 'PlanningPoker.live for Cisco Webex',
+    title: 'PlanningPoker.live for Webex Meetings',
     description:
       'Install our embedded app for Webex Meetings, the most convenient way to estimate stories for Webex users.',
     videoId: 'Integrations_Webex_1_1_roaiku',

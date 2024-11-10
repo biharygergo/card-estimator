@@ -5,21 +5,25 @@ import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { SlackIntegration } from '../types';
 import { getUserId } from '../jira/oauth';
 import cookieParser = require('cookie-parser');
-
+import { sign } from 'crypto';
+import * as qs from 'querystring';
+import * as crypto from 'crypto';
 export const slackMicroservice = express();
 slackMicroservice.use(express.json());
 slackMicroservice.use(cookieParser());
 
 slackMicroservice.post(
   '/api/slack/commands/planning-poker',
+  validateSlackRequest,
   async (req, res) => {
     // const token = req.query.token;
     const slackUserId = req.body.user_id as string;
-    // const teamId = req.query.team_id;
+    const teamId = req.body.team_id as string;
     // const responseUrl = req.query.response_url;
 
     const slackIntegration = await findSlackIntegrationBySlackUserId(
-      slackUserId
+      slackUserId,
+      teamId
     );
     if (!slackIntegration) {
       res.status(200).json({
@@ -103,6 +107,10 @@ function getSlackConfig(req: express.Request) {
       (isRunningInDevMode(req)
         ? process.env.SLACK_REDIRECT_URL_DEV
         : process.env.SLACK_REDIRECT_URL) || '',
+    signingSecret:
+      (isRunningInDevMode(req)
+        ? process.env.SLACK_SIGNING_SECRET_DEV
+        : process.env.SLACK_SIGNING_SECRET) || '',
   };
   return config;
 }
@@ -153,7 +161,10 @@ async function getSlackIntegration(
   return slackIntegrationRef.data() as SlackIntegration;
 }
 
-async function findSlackIntegrationBySlackUserId(slackUserId: string) {
+async function findSlackIntegrationBySlackUserId(
+  slackUserId: string,
+  teamId: string
+) {
   const slackIntegrationRef = await getFirestore()
     .collectionGroup('integrations')
     .where('slackUserId', '==', slackUserId)
@@ -163,7 +174,53 @@ async function findSlackIntegrationBySlackUserId(slackUserId: string) {
     return undefined;
   }
 
-  return slackIntegrationRef.docs[0].data() as SlackIntegration;
+  const integration = slackIntegrationRef.docs[0].data() as SlackIntegration;
+
+  if (
+    !Object.values(integration.accessTokens).find(
+      (token) => token.teamId === teamId
+    )
+  ) {
+    return undefined;
+  }
+
+  return integration;
+}
+
+function validateSlackRequest(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const config = getSlackConfig(req);
+  let slackSignature = req.headers['x-slack-signature'];
+  let requestBody = qs.stringify(req.body);
+  let timestamp = +(req.headers['x-slack-request-timestamp'] as string);
+  let time = Math.floor(new Date().getTime() / 1000);
+  if (Math.abs(time - timestamp) > 300) {
+    return res.status(400).send('Ignore this request.');
+  }
+  if (!config.signingSecret) {
+    return res.status(400).send('Slack signing secret is empty.');
+  }
+  let sigBasestring = 'v0:' + timestamp + ':' + requestBody;
+  let mySignature =
+    'v0=' +
+    crypto
+      .createHmac('sha256', config.signingSecret)
+      .update(sigBasestring, 'utf8')
+      .digest('hex');
+  if (
+    crypto.timingSafeEqual(
+      Buffer.from(mySignature, 'utf8'),
+      Buffer.from(slackSignature as string, 'utf8')
+    )
+  ) {
+    next();
+    return;
+  } else {
+    return res.status(400).send('Verification failed');
+  }
 }
 
 async function saveSlackIntegration(

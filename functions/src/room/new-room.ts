@@ -1,4 +1,4 @@
-import { Timestamp, getFirestore } from 'firebase-admin/firestore';
+import {Timestamp, getFirestore} from "firebase-admin/firestore";
 import {
   Room,
   Member,
@@ -9,7 +9,7 @@ import {
   Credit,
   MemberType,
   MemberStatus,
-} from '../../../src/app/types';
+} from "../../../src/app/types";
 import {
   uniqueNamesGenerator,
   Config,
@@ -17,29 +17,29 @@ import {
   colors,
   animals,
   languages,
-} from 'unique-names-generator';
-import { isPremiumSubscriber } from '../shared/customClaims';
-import { CallableRequest, HttpsError } from 'firebase-functions/v2/https';
+} from "unique-names-generator";
+import {isPremiumSubscriber} from "../shared/customClaims";
+import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 import {
   assignCreditsAsNeeded,
   getCreditForNewRoom,
   updateCreditUsage,
-} from '../credits';
-import { getCurrentOrganization } from '../organizations';
-import { getAuth } from 'firebase-admin/auth';
-import { sendOutOfCreditsMessage, sendRoomCreatedMessage } from '../slack';
+} from "../credits";
+import {getCurrentOrganization} from "../organizations";
+import {getAuth} from "firebase-admin/auth";
+import {sendOutOfCreditsMessage, sendRoomCreatedMessage} from "../slack/messaging";
 
 export async function createRoomFromSlack(data: any) {
-  const { userId, responseUrl } = data;
+  const {userId, responseUrl} = data;
   const user = await getAuth().getUser(userId);
   const member: Member = {
     id: userId,
     name: user.displayName!,
-    platform: 'web',
+    platform: "web",
     avatarUrl: user.photoURL,
     type: MemberType.ESTIMATOR,
     status: MemberStatus.ACTIVE,
-  }
+  };
 
   try {
     const createResult = await createRoomInternal({
@@ -53,19 +53,18 @@ export async function createRoomFromSlack(data: any) {
       return;
     }
   }
-  
 }
 
 export async function createRoom(
-  request: CallableRequest
+    request: CallableRequest
 ): Promise<{ room: Room; member: Member }> {
   const member: Member = request.data.member;
   const recurringMeetingId = request.data.recurringMeetingId;
 
   if (!request.auth) {
     throw new HttpsError(
-      'failed-precondition',
-      'You are not authenticated. Please try again.'
+        "failed-precondition",
+        "You are not authenticated. Please try again."
     );
   }
 
@@ -73,12 +72,12 @@ export async function createRoom(
     userId: request.auth.uid,
     member,
     recurringMeetingId,
-  }).catch(error => {
+  }).catch((error) => {
     if (error instanceof OutOfCreditsError) {
       throw new HttpsError(
-        'failed-precondition',
-        'No available credits to create room',
-        'error-no-credits'
+          "failed-precondition",
+          "No available credits to create room",
+          "error-no-credits"
       );
     }
 
@@ -88,8 +87,8 @@ export async function createRoom(
 
 class OutOfCreditsError extends Error {
   constructor() {
-    super('No available credits to create room');
-    this.name = 'OutOfCreditsError';
+    super("No available credits to create room");
+    this.name = "OutOfCreditsError";
   }
 }
 
@@ -98,7 +97,7 @@ async function createRoomInternal(params: {
   member: Member;
   recurringMeetingId?: string;
 }) {
-  const { userId, member, recurringMeetingId } = params;
+  const {userId, member, recurringMeetingId} = params;
   const isPremium = await isPremiumSubscriber(userId);
 
   await assignCreditsAsNeeded(userId);
@@ -110,30 +109,30 @@ async function createRoomInternal(params: {
 
   const customConfig: Config = {
     dictionaries: [adjectives, colors, animals, languages],
-    separator: '-',
+    separator: "-",
     length: 3,
-    style: 'lowerCase',
+    style: "lowerCase",
   };
 
-  let roomId = uniqueNamesGenerator(customConfig).replace(' ', '-');
+  let roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
 
   while (await doesRoomAlreadyExist(roomId)) {
-    roomId = uniqueNamesGenerator({ ...customConfig, length: 4 }).replace(
-      ' ',
-      '-'
+    roomId = uniqueNamesGenerator({...customConfig, length: 4}).replace(
+        " ",
+        "-"
     );
   }
 
   const subscriptionMetadata = await getSubscriptionMetadata(
-    userId,
-    creditToUse
+      userId,
+      creditToUse
   );
 
   const room: Room = {
     id: createId(),
     roomId,
     members: [member],
-    rounds: { 0: createRound(1) },
+    rounds: {0: createRound(1)},
     currentRound: 0,
     isOpen: true,
     createdAt: Timestamp.now(),
@@ -147,19 +146,19 @@ async function createRoomInternal(params: {
     room.relatedRecurringMeetingLinkId = recurringMeetingId;
   }
 
-  await getFirestore().collection('rooms').doc(room.roomId).set(room);
+  await getFirestore().collection("rooms").doc(room.roomId).set(room);
 
   if (!isPremium) {
     await updateCreditUsage(creditToUse!, userId, room.roomId);
   }
 
-  return { room, member };
+  return {room, member};
 }
 
 async function doesRoomAlreadyExist(roomId: string): Promise<boolean> {
   return getRoom(roomId)
-    .then((room) => !!room)
-    .catch(() => false);
+      .then((room) => !!room)
+      .catch(() => false);
 }
 
 async function getRoom(roomId: string): Promise<Room | undefined> {
@@ -168,9 +167,9 @@ async function getRoom(roomId: string): Promise<Room | undefined> {
 }
 
 function createRound(
-  roundNumber: number,
-  topic?: string,
-  richTopic?: RichTopic
+    roundNumber: number,
+    topic?: string,
+    richTopic?: RichTopic
 ): Round {
   const round: Round = {
     id: createId(),
@@ -180,7 +179,7 @@ function createRound(
     estimates: {},
     show_results: false,
     notes: {
-      note: '',
+      note: "",
       editedBy: null,
     },
   };
@@ -193,24 +192,24 @@ function createRound(
 }
 
 function createId(): string {
-  return getFirestore().collection('rooms').doc().id;
+  return getFirestore().collection("rooms").doc().id;
 }
 
 async function getSubscriptionMetadata(
-  userId: string,
-  credit: Credit | undefined
+    userId: string,
+    credit: Credit | undefined
 ): Promise<SubscriptionMetadata> {
   const isPremium = await isPremiumSubscriber(userId);
   const organization = await getCurrentOrganization(userId);
 
   const subscriptionMetadata: SubscriptionMetadata = {
-    createdWithPlan: isPremium
-      ? 'premium'
-      : credit
-      ? credit.isPaidCredit
-        ? 'paid-credit'
-        : 'credit'
-      : 'basic',
+    createdWithPlan: isPremium ?
+      "premium" :
+      credit ?
+      credit.isPaidCredit ?
+        "paid-credit" :
+        "credit" :
+      "basic",
     createdWithOrganization: organization ? organization.id : null,
   };
 

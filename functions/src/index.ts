@@ -277,7 +277,7 @@ exports.createRoom = onCall({cors: true}, async (req) => {
   return createRoom(req);
 });
 
-exports.createRoomFromSlack = onMessagePublished('create-room-from-slack', async (event) => {
+exports.createRoomFromSlack = onMessagePublished("create-room-from-slack", async (event) => {
   const {createRoomFromSlack} = await import("./room/new-room");
   return createRoomFromSlack(event.data.message.json);
 });

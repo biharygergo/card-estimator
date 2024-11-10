@@ -1,4 +1,5 @@
 import {onRequest, onCall, HttpsError} from "firebase-functions/v2/https";
+import {onMessagePublished} from "firebase-functions/v2/pubsub";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {
   onDocumentCreated,
@@ -274,6 +275,11 @@ exports.slack = onRequest({cors: true}, async (req, res) => {
 exports.createRoom = onCall({cors: true}, async (req) => {
   const {createRoom} = await import("./room/new-room");
   return createRoom(req);
+});
+
+exports.createRoomFromSlack = onMessagePublished('create-room-from-slack', async (event) => {
+  const {createRoomFromSlack} = await import("./room/new-room");
+  return createRoomFromSlack(event.data.message.json);
 });
 
 exports.getAllCreditsAndAssignWelcome = onCall(

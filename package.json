@@ -10,6 +10,7 @@
     "simulator": "firebase emulators:start",
     "build": "ng build --configuration=production",
     "build:test": "ng build --configuration=test-production",
+    "build:emulator": "ng build --configuration=test-emulator",
     "test": "ng test",
     "lint": "ng lint",
     "sonar": "sonar-scanner",

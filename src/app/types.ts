@@ -380,6 +380,19 @@ export type LinearIntegration = {
   id: string;
 };
 
+export type SlackIntegration = {
+  provider: 'slack';
+  createdAt: FieldValue;
+  slackUserId: string;
+  accessTokens: {
+    [teamId: string]: {
+      accessToken: string;
+      teamId: string;
+      teamName: string;
+    };
+  };
+};
+
 export interface RoomSummary {
   summary: string;
   createdAt: FieldValue;
@@ -461,8 +474,13 @@ export function getRoundedDisplayValue(value: number, cardSet: CardSetValue) {
   }
 
   const roundedValue = Math.round(value);
-  const nearestValueToRounded = findNearestNumber(Object.keys(cardSet.values).map(Number), roundedValue);
-  return cardSet.values[roundedValue] ?? cardSet.values[nearestValueToRounded] ?? '-';
+  const nearestValueToRounded = findNearestNumber(
+    Object.keys(cardSet.values).map(Number),
+    roundedValue
+  );
+  return (
+    cardSet.values[roundedValue] ?? cardSet.values[nearestValueToRounded] ?? '-'
+  );
 }
 
 export function isNumeric(str: any) {

@@ -35,7 +35,10 @@ slackMicroservice.post(
       return;
     }
 
-    await sendCreateRoomPubSubMessage(slackUserId, req.body.response_url);
+    await sendCreateRoomPubSubMessage(
+      slackIntegration.userId,
+      req.body.response_url
+    );
 
     res.json({
       text: 'Hold tight, we are creating a room for you...',
@@ -79,8 +82,9 @@ function createActionMessage(params: {
   text: string;
   actionLabel: string;
   actionUrl: string;
+  responseType?: 'ephemeral' | 'in_channel';
 }) {
-  const { text, actionLabel, actionUrl } = params;
+  const { text, actionLabel, actionUrl, responseType = 'ephemeral' } = params;
   return {
     blocks: [
       {
@@ -106,6 +110,7 @@ function createActionMessage(params: {
         ],
       },
     ],
+    response_type: responseType,
   };
 }
 
@@ -133,9 +138,10 @@ export function sendRoomCreatedMessage(responseUrl: string, room: Room) {
   axios.post(
     responseUrl,
     createActionMessage({
-      text: `A planning poker room has been created. Click the button below to join the room.`,
+      text: `A new planning poker room has been created. Click the button below to join the room with id ${room.roomId}!`,
       actionLabel: 'Join room',
-      actionUrl: `https://planningpoker.live/room/${room.id}`,
+      actionUrl: `https://9ac1-80-99-77-114.ngrok-free.app/room/${room.roomId}`,
+      responseType: 'in_channel',
     })
   );
 }
@@ -144,9 +150,9 @@ export function sendOutOfCreditsMessage(responseUrl: string) {
   axios.post(
     responseUrl,
     createActionMessage({
-      text: `You have no available credits to create a room. Please top up your credits.`,
+      text: `🚨 You have no available credits to create a room. Please top up your credits and try again.`,
       actionLabel: 'Top up credits',
-      actionUrl: `https://planningpoker.live/credits`,
+      actionUrl: `https://planningpoker.live/pricing`,
     })
   );
 }
@@ -303,6 +309,7 @@ async function saveSlackIntegration(
 
   const slackIntegration: SlackIntegration = {
     provider: 'slack',
+    userId,
     slackUserId,
     createdAt: Timestamp.now(),
     accessTokens: {

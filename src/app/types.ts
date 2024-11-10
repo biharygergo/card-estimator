@@ -383,6 +383,7 @@ export type LinearIntegration = {
 export type SlackIntegration = {
   provider: 'slack';
   createdAt: FieldValue;
+  userId: string;
   slackUserId: string;
   accessTokens: {
     [teamId: string]: {

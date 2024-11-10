@@ -26,7 +26,6 @@ import {
   updateCreditUsage,
 } from '../credits';
 import { getCurrentOrganization } from '../organizations';
-import { getUserPreference } from '../shared/users';
 import { getAuth } from 'firebase-admin/auth';
 import { sendOutOfCreditsMessage, sendRoomCreatedMessage } from '../slack';
 

@@ -7,7 +7,12 @@ import cookieParser = require("cookie-parser");
 import {SlackIntegration} from "../types";
 import {getUserId} from "../jira/oauth";
 import {getSlackConfig} from "./config";
-import {createActionMessage, sendCreateRoomPubSubMessage} from "./messaging";
+import {
+  createActionMessage,
+  sendCreateRoomPubSubMessage,
+  sendRoomCreatedMessage,
+} from "./messaging";
+import {replace} from "lodash";
 
 const slackMicroservice = express();
 slackMicroservice.use(express.json());
@@ -20,6 +25,7 @@ slackMicroservice.post(
 );
 slackMicroservice.get("/api/slack/install", handleSlackInstall);
 slackMicroservice.get("/api/slack/oauth-success", handleSlackOAuthSuccess);
+slackMicroservice.post("/api/slack/interaction", handleBlockInteraction);
 
 async function handlePlanningPokerCommand(
     req: express.Request,
@@ -36,8 +42,11 @@ async function handlePlanningPokerCommand(
     res.status(200).json(
         createActionMessage({
           text: "It seems your PlanningPoker.live account isn't linked with Slack yet. Click the button below to set it up.",
-          actionLabel: "Set up",
-          actionUrl: "https://planningpoker.live/integrations/slack",
+          action: {
+            id: "setup",
+            label: "Set up",
+            url: "https://planningpoker.live/integrations/slack",
+          },
         })
     );
     return;
@@ -45,6 +54,7 @@ async function handlePlanningPokerCommand(
 
   await sendCreateRoomPubSubMessage(
       slackIntegration.userId,
+      slackUserId,
       req.body.response_url
   );
 
@@ -86,6 +96,32 @@ async function handleSlackOAuthSuccess(
   );
 
   res.redirect("https://planningpoker.live/integration/success");
+}
+
+async function handleBlockInteraction(
+    req: express.Request,
+    res: express.Response
+) {
+  const payload = JSON.parse(req.body.payload);
+  const responseUrl = payload.response_url as string;
+  const slackUserId = payload.user.id as string;
+  const actions = payload.actions as any[];
+
+  res.status(200).send();
+
+  const action = actions?.[0];
+  if (!action || action.action_id !== "join_room") {
+    return;
+  }
+
+  await axios.post(responseUrl, {
+    text: `<@${slackUserId}> is joining the room...`,
+    response_type: "in_channel",
+    replace_original: false,
+    thread_ts: payload.container.message_ts,
+  });
+
+  return;
 }
 
 function getSlackAccessTokenRedirectUrl(request: express.Request): string {

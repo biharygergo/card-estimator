@@ -27,9 +27,9 @@ import {
 } from "../credits";
 import {getCurrentOrganization} from "../organizations";
 import {getAuth} from "firebase-admin/auth";
-import {sendOutOfCreditsMessage, sendRoomCreatedMessage} from "../slack/messaging";
+import {CreateRoomPubSubMessage, sendGenericErrorMessage, sendOutOfCreditsMessage, sendRoomCreatedMessage} from "../slack/messaging";
 
-export async function createRoomFromSlack(data: any) {
+export async function createRoomFromSlack(data: CreateRoomPubSubMessage) {
   const {userId, responseUrl} = data;
   const user = await getAuth().getUser(userId);
   const member: Member = {
@@ -46,12 +46,15 @@ export async function createRoomFromSlack(data: any) {
       userId,
       member,
     });
-    await sendRoomCreatedMessage(responseUrl, createResult.room);
+    await sendRoomCreatedMessage(responseUrl, createResult.room, data.platformUserId);
   } catch (error) {
+    console.error(error);
+    console.error("Error creating room from Slack");
     if (error instanceof OutOfCreditsError) {
       await sendOutOfCreditsMessage(responseUrl);
       return;
     }
+    await sendGenericErrorMessage(responseUrl, (error as any).message);
   }
 }
 

@@ -58,7 +58,7 @@ export async function sendCreateRoomPubSubMessage(
     responseUrl: string
 ) {
   const pubSub = new PubSub();
-  const topicName = "create-room-from-slack";
+  const topicName = "create-room-from-messaging-integration";
   const data: CreateRoomPubSubMessage = {
     userId,
     responseUrl,

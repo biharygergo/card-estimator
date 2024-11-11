@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "planning-poker-test-dc808"
+    "default": "card-estimator"
   },
   "targets": {
     "card-estimator": {

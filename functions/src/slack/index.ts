@@ -7,10 +7,7 @@ import cookieParser = require("cookie-parser");
 import {SlackIntegration} from "../types";
 import {getUserId} from "../jira/oauth";
 import {getSlackConfig} from "./config";
-import {
-  createActionMessage,
-  sendCreateRoomPubSubMessage,
-} from "./messaging";
+import {createActionMessage, sendCreateRoomPubSubMessage} from "./messaging";
 
 const slackMicroservice = express();
 slackMicroservice.use(express.json());
@@ -23,7 +20,10 @@ slackMicroservice.post(
 );
 slackMicroservice.get("/api/slack/install", handleSlackInstall);
 slackMicroservice.get("/api/slack/oauth-success", handleSlackOAuthSuccess);
-slackMicroservice.post("/api/slack/interaction", handleBlockInteraction);
+slackMicroservice.post(
+    "/api/slack/interaction",
+    handleBlockInteraction
+);
 
 async function handlePlanningPokerCommand(
     req: express.Request,
@@ -39,7 +39,7 @@ async function handlePlanningPokerCommand(
   if (!slackIntegration) {
     res.status(200).json(
         createActionMessage({
-          text: "It seems your PlanningPoker.live account isn't linked with Slack yet.\nTo configure the integration, open PlanningPoker.live click \"Menu\" > \"Integrations\" > \"Slack\".",
+          text: "It seems like your PlanningPoker.live account isn't linked with Slack yet.\nTo configure the integration, open PlanningPoker.live and click \"Menu\" > \"Integrations\" > \"Slack\".",
           action: {
             id: "setup",
             label: "Set up",
@@ -113,7 +113,7 @@ async function handleBlockInteraction(
   }
 
   await axios.post(responseUrl, {
-    text: `<@${slackUserId}> is joining the room...`,
+    text: `👀 <@${slackUserId}> is joining the room...`,
     response_type: "in_channel",
     replace_original: false,
     thread_ts: payload.container.message_ts,

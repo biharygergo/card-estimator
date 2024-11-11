@@ -10,9 +10,7 @@ import {getSlackConfig} from "./config";
 import {
   createActionMessage,
   sendCreateRoomPubSubMessage,
-  sendRoomCreatedMessage,
 } from "./messaging";
-import {replace} from "lodash";
 
 const slackMicroservice = express();
 slackMicroservice.use(express.json());
@@ -41,11 +39,11 @@ async function handlePlanningPokerCommand(
   if (!slackIntegration) {
     res.status(200).json(
         createActionMessage({
-          text: "It seems your PlanningPoker.live account isn't linked with Slack yet. Click the button below to set it up.",
+          text: "It seems your PlanningPoker.live account isn't linked with Slack yet.\nTo configure the integration, open PlanningPoker.live click \"Menu\" > \"Integrations\" > \"Slack\".",
           action: {
             id: "setup",
             label: "Set up",
-            url: "https://planningpoker.live/integrations/slack",
+            url: "https://planningpoker.live/join",
           },
         })
     );
@@ -59,7 +57,7 @@ async function handlePlanningPokerCommand(
   );
 
   res.json({
-    text: "Please wait while we create your planning poker room...",
+    text: "Just a second, creating a new room for you...",
     response_type: "ephemeral",
   });
 }

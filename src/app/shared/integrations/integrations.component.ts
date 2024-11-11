@@ -19,6 +19,8 @@ import { LinearService } from 'src/app/services/linear.service';
 import { AsyncPipe } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { MatAnchor, MatButton } from '@angular/material/button';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { SlackService } from 'src/app/services/slack.service';
 
 export const integrationsModalCreator =
   (): ModalCreator<IntegrationsComponent> => [
@@ -53,11 +55,13 @@ export class IntegrationsComponent {
     .getIntegration()
     .pipe(shareReplay(1));
   linearIntegration$ = this.linearService.getIntegration().pipe(shareReplay(1));
+  slackIntegration = toSignal(this.slackService.getIntegration());
 
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private readonly jiraService: JiraService,
     private readonly linearService: LinearService,
+    private readonly slackService: SlackService,
     private readonly toastService: ToastService,
     private readonly dialog: MatDialog
   ) {}
@@ -136,5 +140,13 @@ export class IntegrationsComponent {
 
   removeLinearIntegration() {
     this.linearService.removeLinearIntegration().subscribe();
+  }
+
+  startSlackAuth() {
+    this.slackService.startSlackAuthFlow();
+  }
+
+  removeSlackIntegration() {
+    this.slackService.removeSlackIntegration().subscribe();
   }
 }

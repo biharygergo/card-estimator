@@ -179,6 +179,30 @@
           }
         </div>
       </div>
+      <div class="integration">
+        <div class="integration-main">
+          <div class="details">
+            <div class="title">
+              <img class="integration-logo" src="/assets/slack.png" />
+              <h4>Slack</h4>
+            </div>
+            <p>
+              Create rooms super easily and invite your team to estimate
+              together from Slack.
+            </p>
+          </div>
+          <div class="actions">
+            <button mat-flat-button color="primary" (click)="startSlackAuth()">
+              {{ slackIntegration() ? "Reconnect" : "Connect" }}
+            </button>
+          </div>
+        </div>
+        <div class="integration-preferences">
+          @if (slackIntegration()) {
+          <button mat-button (click)="removeSlackIntegration()">Remove</button>
+          }
+        </div>
+      </div>
     </div>
   </div>
 </div>

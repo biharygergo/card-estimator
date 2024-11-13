@@ -7,6 +7,8 @@ import {
   RichTopic,
   SubscriptionMetadata,
   Credit,
+  MemberType,
+  MemberStatus,
 } from "../../../src/app/types";
 import {
   uniqueNamesGenerator,
@@ -24,30 +26,88 @@ import {
   updateCreditUsage,
 } from "../credits";
 import {getCurrentOrganization} from "../organizations";
+import {getAuth} from "firebase-admin/auth";
+import {CreateRoomPubSubMessage, sendGenericErrorMessage, sendOutOfCreditsMessage, sendRoomCreatedMessage} from "../slack/messaging";
+
+export async function createRoomFromSlack(data: CreateRoomPubSubMessage) {
+  const {userId, responseUrl} = data;
+  const user = await getAuth().getUser(userId);
+  const member: Member = {
+    id: userId,
+    name: user.displayName!,
+    platform: "web",
+    avatarUrl: user.photoURL,
+    type: MemberType.ESTIMATOR,
+    status: MemberStatus.ACTIVE,
+  };
+
+  try {
+    const createResult = await createRoomInternal({
+      userId,
+      member,
+    });
+    await sendRoomCreatedMessage(responseUrl, createResult.room, data.platformUserId);
+  } catch (error) {
+    console.error(error);
+    console.error("Error creating room from Slack");
+    if (error instanceof OutOfCreditsError) {
+      await sendOutOfCreditsMessage(responseUrl);
+      return;
+    }
+    await sendGenericErrorMessage(responseUrl, (error as any).message);
+  }
+}
 
 export async function createRoom(
     request: CallableRequest
 ): Promise<{ room: Room; member: Member }> {
   const member: Member = request.data.member;
-  const recurringMeetingId: string | null = request.data.recurringMeetingId;
+  const recurringMeetingId = request.data.recurringMeetingId;
+
   if (!request.auth) {
     throw new HttpsError(
         "failed-precondition",
         "You are not authenticated. Please try again."
     );
   }
-  const userId = request.auth.uid;
+
+  return createRoomInternal({
+    userId: request.auth.uid,
+    member,
+    recurringMeetingId,
+  }).catch((error) => {
+    if (error instanceof OutOfCreditsError) {
+      throw new HttpsError(
+          "failed-precondition",
+          "No available credits to create room",
+          "error-no-credits"
+      );
+    }
+
+    throw error;
+  });
+}
+
+class OutOfCreditsError extends Error {
+  constructor() {
+    super("No available credits to create room");
+    this.name = "OutOfCreditsError";
+  }
+}
+
+async function createRoomInternal(params: {
+  userId: string;
+  member: Member;
+  recurringMeetingId?: string;
+}) {
+  const {userId, member, recurringMeetingId} = params;
   const isPremium = await isPremiumSubscriber(userId);
 
   await assignCreditsAsNeeded(userId);
   const creditToUse = await getCreditForNewRoom(userId);
 
   if (!creditToUse && !isPremium) {
-    throw new HttpsError(
-        "failed-precondition",
-        "No available credits to create room",
-        "error-no-credits"
-    );
+    throw new OutOfCreditsError();
   }
 
   const customConfig: Config = {
@@ -66,13 +126,16 @@ export async function createRoom(
     );
   }
 
-  const subscriptionMetadata = await getSubscriptionMetadata(userId, creditToUse);
+  const subscriptionMetadata = await getSubscriptionMetadata(
+      userId,
+      creditToUse
+  );
 
   const room: Room = {
     id: createId(),
     roomId,
     members: [member],
-    rounds: {0: createRound([member], 1)},
+    rounds: {0: createRound(1)},
     currentRound: 0,
     isOpen: true,
     createdAt: Timestamp.now(),
@@ -107,7 +170,6 @@ async function getRoom(roomId: string): Promise<Room | undefined> {
 }
 
 function createRound(
-    members: Member[],
     roundNumber: number,
     topic?: string,
     richTopic?: RichTopic
@@ -144,7 +206,13 @@ async function getSubscriptionMetadata(
   const organization = await getCurrentOrganization(userId);
 
   const subscriptionMetadata: SubscriptionMetadata = {
-    createdWithPlan: isPremium ? "premium" : credit ? credit.isPaidCredit ? "paid-credit" : "credit" : "basic",
+    createdWithPlan: isPremium ?
+      "premium" :
+      credit ?
+      credit.isPaidCredit ?
+        "paid-credit" :
+        "credit" :
+      "basic",
     createdWithOrganization: organization ? organization.id : null,
   };
 

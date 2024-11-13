@@ -4,6 +4,7 @@
     "lint": "eslint --ext .js,.ts .",
     "lintfix": "eslint --fix --ext .js,.ts .",
     "build": "tsc",
+    "watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -16,6 +17,7 @@
   "main": "lib/functions/src/index.js",
   "dependencies": {
     "@google-cloud/bigquery": "^7.7.1",
+    "@google-cloud/pubsub": "^4.8.0",
     "@google-cloud/vertexai": "^0.5.0",
     "@linear/sdk": "^19.3.0",
     "@sendgrid/client": "^7.7.0",

@@ -1,4 +1,5 @@
 import {onRequest, onCall, HttpsError} from "firebase-functions/v2/https";
+import {onMessagePublished} from "firebase-functions/v2/pubsub";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {
   onDocumentCreated,
@@ -44,7 +45,9 @@ exports.uninstallZoomApp = onRequest({cors: true}, async (req) => {
 
 exports.fetchAppCheckToken = onCall({cors: true}, async () => {
   try {
-    const result = await appCheck().createToken("1:417578634660:web:3617c13e4d28109aa18531");
+    const result = await appCheck().createToken(
+        "1:417578634660:web:3617c13e4d28109aa18531"
+    );
     const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
     return {token: result.token, expiresAt};
   } catch (err) {
@@ -70,15 +73,21 @@ exports.startGoogleAuth = onRequest({cors: true}, async (req, res) => {
   return cookieParser()(req, res, () => startGoogleOauthFlow(req, res));
 });
 
-exports.onZoomAuthResponseRedirectToGoogle = onRequest({cors: true}, async (req, res) => {
-  const {zoomAuthSuccess} = await import("./zoom/googleAuth");
-  return cookieParser()(req, res, () => zoomAuthSuccess(req, res));
-});
+exports.onZoomAuthResponseRedirectToGoogle = onRequest(
+    {cors: true},
+    async (req, res) => {
+      const {zoomAuthSuccess} = await import("./zoom/googleAuth");
+      return cookieParser()(req, res, () => zoomAuthSuccess(req, res));
+    }
+);
 
-exports.onGoogleAuthResponseDeeplink = onRequest({cors: true}, async (req, res) => {
-  const {googleAuthSuccess} = await import("./zoom/googleAuth");
-  return cookieParser()(req, res, () => googleAuthSuccess(req, res));
-});
+exports.onGoogleAuthResponseDeeplink = onRequest(
+    {cors: true},
+    async (req, res) => {
+      const {googleAuthSuccess} = await import("./zoom/googleAuth");
+      return cookieParser()(req, res, () => googleAuthSuccess(req, res));
+    }
+);
 
 exports.giveFeedback = onRequest({cors: true}, async (req, res) => {
   return res.redirect("https://forms.gle/Rhd8mAQqCmewhfCR7");
@@ -91,19 +100,31 @@ exports.reportAnIssue = onRequest({cors: true}, async (req, res) => {
 });
 
 exports.sendEmail = onRequest({cors: true}, async (req, res) => {
-  const subject = encodeURIComponent((req.query.subject as string | undefined) || "");
+  const subject = encodeURIComponent(
+      (req.query.subject as string | undefined) || ""
+  );
   return res.redirect(`mailto:info@planningpoker.live?subject=${subject}`);
 });
 
-exports.onUserDetailsCreate = onDocumentCreated("userDetails/{userId}", async (snap) => {
-  const {onUserDetailsCreate} = await import("./profile/onUserCreateUpdate");
-  return onUserDetailsCreate(snap);
-});
+exports.onUserDetailsCreate = onDocumentCreated(
+    "userDetails/{userId}",
+    async (snap) => {
+      const {onUserDetailsCreate} = await import(
+          "./profile/onUserCreateUpdate"
+      );
+      return onUserDetailsCreate(snap);
+    }
+);
 
-exports.onUserDetailsUpdate = onDocumentUpdated("userDetails/{userId}", async (change) => {
-  const {onUserDetailsUpdate} = await import("./profile/onUserCreateUpdate");
-  return onUserDetailsUpdate(change);
-});
+exports.onUserDetailsUpdate = onDocumentUpdated(
+    "userDetails/{userId}",
+    async (change) => {
+      const {onUserDetailsUpdate} = await import(
+          "./profile/onUserCreateUpdate"
+      );
+      return onUserDetailsUpdate(change);
+    }
+);
 
 exports.setRoomPassword = onCall({cors: true}, async (request) => {
   const {setRoomPassword} = await import("./room/password-protection");
@@ -115,30 +136,53 @@ exports.enterProtectedRoom = onCall({cors: true}, async (request) => {
   return enterProtectedRoom(request);
 });
 
-exports.onOrganizationUpdated = onDocumentUpdated("organizations/{organizationId}", async (change) => {
-  const {onOrganizationUpdated} = await import("./organizations/protection");
-  return onOrganizationUpdated(change);
-});
+exports.onOrganizationUpdated = onDocumentUpdated(
+    "organizations/{organizationId}",
+    async (change) => {
+      const {onOrganizationUpdated} = await import(
+          "./organizations/protection"
+      );
+      return onOrganizationUpdated(change);
+    }
+);
 
-exports.onOrganizationInvitation = onDocumentCreated("organizations/{organizationId}/memberInvitations/{invitationId}", async (snap) => {
-  const {onOrganizationInviteCreated} = await import("./organizations/invitation");
-  return onOrganizationInviteCreated(snap);
-});
+exports.onOrganizationInvitation = onDocumentCreated(
+    "organizations/{organizationId}/memberInvitations/{invitationId}",
+    async (snap) => {
+      const {onOrganizationInviteCreated} = await import(
+          "./organizations/invitation"
+      );
+      return onOrganizationInviteCreated(snap);
+    }
+);
 
-exports.acceptOrganizationInvitation = onRequest({cors: true}, async (req, res) => {
-  const {acceptInvitation} = await import("./organizations/invitation");
-  return cookieParser()(req, res, () => acceptInvitation(req));
-});
+exports.acceptOrganizationInvitation = onRequest(
+    {cors: true},
+    async (req, res) => {
+      const {acceptInvitation} = await import("./organizations/invitation");
+      return cookieParser()(req, res, () => acceptInvitation(req));
+    }
+);
 
-exports.onUserSubscriptionCreated = onDocumentCreated("customers/{customerId}/subscriptions/{subscriptionId}", async (snap) => {
-  const {onCustomerSubscriptionCreated} = await import("./customers/subscription");
-  return onCustomerSubscriptionCreated(snap);
-});
+exports.onUserSubscriptionCreated = onDocumentCreated(
+    "customers/{customerId}/subscriptions/{subscriptionId}",
+    async (snap) => {
+      const {onCustomerSubscriptionCreated} = await import(
+          "./customers/subscription"
+      );
+      return onCustomerSubscriptionCreated(snap);
+    }
+);
 
-exports.onUserSubscriptionUpdated = onDocumentUpdated("customers/{customerId}/subscriptions/{subscriptionId}", async (change) => {
-  const {onCustomerSubscriptionUpdated} = await import("./customers/subscription");
-  return onCustomerSubscriptionUpdated(change);
-});
+exports.onUserSubscriptionUpdated = onDocumentUpdated(
+    "customers/{customerId}/subscriptions/{subscriptionId}",
+    async (change) => {
+      const {onCustomerSubscriptionUpdated} = await import(
+          "./customers/subscription"
+      );
+      return onCustomerSubscriptionUpdated(change);
+    }
+);
 
 exports.startJiraAuth = onRequest({cors: true}, async (req, res) => {
   const {startJiraAuthFlow} = await import("./jira/oauth");
@@ -158,7 +202,8 @@ exports.queryJiraIssues = onCall({cors: true}, async (request) => {
 exports.updateIssue = onCall({cors: true}, async (req) => {
   const {updateIssue} = await import("./jira/updateIssue");
   const {updateLinearIssue} = await import("./linear/updateIssue");
-  return (req.data.updateRequest as IssueUpdateRequestData).provider === "linear" ?
+  return (req.data.updateRequest as IssueUpdateRequestData).provider ===
+    "linear" ?
     updateLinearIssue(req) :
     updateIssue(req);
 });
@@ -170,7 +215,9 @@ exports.startLinearAuth = onRequest({cors: true}, async (req, res) => {
 
 exports.onLinearAuthResponse = onRequest({cors: true}, async (req, res) => {
   const {onLinearAuthorizationReceived} = await import("./linear/oauth");
-  return cookieParser()(req, res, () => onLinearAuthorizationReceived(req, res));
+  return cookieParser()(req, res, () =>
+    onLinearAuthorizationReceived(req, res)
+  );
 });
 
 exports.queryLinearIssues = onCall({cors: true}, async (request) => {
@@ -201,10 +248,13 @@ exports.startTeamsGoogleAuth = onRequest({cors: true}, async (req, res) => {
   return cookieParser()(req, res, () => startTeamsGoogleAuth(req, res));
 });
 
-exports.onTeamsGoogleAuthResult = onRequest({cors: true}, async (req, res) => {
-  const {onTeamsGoogleAuthResult} = await import("./ms-teams");
-  return cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
-});
+exports.onTeamsGoogleAuthResult = onRequest(
+    {cors: true},
+    async (req, res) => {
+      const {onTeamsGoogleAuthResult} = await import("./ms-teams");
+      return cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
+    }
+);
 
 exports.startOAuth = onRequest({cors: true}, async (req, res) => {
   const {startOAuth} = await import("./oauth");
@@ -216,34 +266,65 @@ exports.onOAuthResult = onRequest({cors: true}, async (req, res) => {
   return cookieParser()(req, res, () => onOAuthResult(req, res));
 });
 
+exports.slack = onRequest({cors: true}, async (req, res) => {
+  const {slackMicroservice} = await import("./slack");
+  return slackMicroservice(req, res);
+});
+
 exports.createRoom = onCall({cors: true}, async (req) => {
   const {createRoom} = await import("./room/new-room");
   return createRoom(req);
 });
 
-exports.getAllCreditsAndAssignWelcome = onCall({cors: true}, async (request) => {
-  if (!request.auth?.uid) {
-    throw new HttpsError("unauthenticated", "You need to be authenticated to fetch credits.");
-  }
-  const {assignCreditsAsNeeded, getAllCreditBundles} = await import("./credits");
-  await assignCreditsAsNeeded(request.auth.uid);
-  return getAllCreditBundles(request.auth.uid);
+exports.createRoomFromMessagingIntegration = onMessagePublished("create-room-from-messaging-integration", async (event) => {
+  const {createRoomFromSlack} = await import("./room/new-room");
+  return createRoomFromSlack(event.data.message.json);
 });
 
-exports.onUserPaymentCreated = onDocumentCreated("customers/{customerId}/payments/{paymentId}", async (snap) => {
-  const {onCustomerPaymentCreated} = await import("./customers/subscription");
-  return onCustomerPaymentCreated(snap);
-});
+exports.getAllCreditsAndAssignWelcome = onCall(
+    {cors: true},
+    async (request) => {
+      if (!request.auth?.uid) {
+        throw new HttpsError(
+            "unauthenticated",
+            "You need to be authenticated to fetch credits."
+        );
+      }
+      const {assignCreditsAsNeeded, getAllCreditBundles} = await import(
+          "./credits"
+      );
+      await assignCreditsAsNeeded(request.auth.uid);
+      return getAllCreditBundles(request.auth.uid);
+    }
+);
 
-exports.onUserPaymentUpdated = onDocumentUpdated("customers/{customerId}/payments/{paymentId}", async (change) => {
-  const {onCustomerPaymentUpdated} = await import("./customers/subscription");
-  return onCustomerPaymentUpdated(change);
-});
+exports.onUserPaymentCreated = onDocumentCreated(
+    "customers/{customerId}/payments/{paymentId}",
+    async (snap) => {
+      const {onCustomerPaymentCreated} = await import(
+          "./customers/subscription"
+      );
+      return onCustomerPaymentCreated(snap);
+    }
+);
 
-exports.updateRoomsTableInBigQuery = onSchedule({schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB"}, async () => {
-  console.log("Scheduled room update function triggered.");
-  const {updateRoomsTableInBigQuery} = await import("./room/bigquery");
-  await updateRoomsTableInBigQuery();
-  console.log("Room update completed.");
-  return;
-});
+exports.onUserPaymentUpdated = onDocumentUpdated(
+    "customers/{customerId}/payments/{paymentId}",
+    async (change) => {
+      const {onCustomerPaymentUpdated} = await import(
+          "./customers/subscription"
+      );
+      return onCustomerPaymentUpdated(change);
+    }
+);
+
+exports.updateRoomsTableInBigQuery = onSchedule(
+    {schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB"},
+    async () => {
+      console.log("Scheduled room update function triggered.");
+      const {updateRoomsTableInBigQuery} = await import("./room/bigquery");
+      await updateRoomsTableInBigQuery();
+      console.log("Room update completed.");
+      return;
+    }
+);

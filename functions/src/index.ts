@@ -268,7 +268,6 @@ exports.onOAuthResult = onRequest({cors: true}, async (req, res) => {
 
 exports.slack = onRequest({cors: true}, async (req, res) => {
   const {slackMicroservice} = await import("./slack");
-  console.log("running slack", req.path);
   return slackMicroservice(req, res);
 });
 

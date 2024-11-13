@@ -172,9 +172,6 @@ async function findSlackIntegrationBySlackUserId(
     slackUserId: string,
     teamId: string
 ) {
-  try {
-    console.log("slackUserId", slackUserId);
-    console.log("teamId", teamId);
     const slackIntegrationRef = await getFirestore()
         .collectionGroup("integrations")
         .where("slackUserId", "==", slackUserId)
@@ -195,10 +192,6 @@ async function findSlackIntegrationBySlackUserId(
     }
 
     return integration;
-  } catch (e) {
-    console.error(e, (e as any).message);
-    throw e;
-  }
 }
 
 function validateSlackRequest(

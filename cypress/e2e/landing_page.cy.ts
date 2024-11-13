@@ -31,21 +31,21 @@ describe('Landing page', () => {
 
   it('can go to the Teams page', () => {
     cy.wait(500);
-    cy.contains('Integrations').click();
+    cy.get('.integrations-button .split-button-right').click();
     cy.get('#header-teams-link').click();
     cy.location('pathname').should('eq', '/integrations/teams');
   });
 
   it('can go to the Zoom page', () => {
     cy.wait(500);
-    cy.contains('Integrations').click();
+    cy.get('.integrations-button .split-button-right').click();
     cy.get('#header-zoom-link').click();
     cy.location('pathname').should('eq', '/integrations/zoom');
   });
 
   it('can go to the Webex page', () => {
     cy.wait(500);
-    cy.contains('Integrations').click();
+    cy.get('.integrations-button .split-button-right').click();
     cy.get('#header-webex-link').click();
     cy.location('pathname').should('eq', '/integrations/webex');
   });

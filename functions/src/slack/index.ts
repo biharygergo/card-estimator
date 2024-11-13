@@ -172,26 +172,26 @@ async function findSlackIntegrationBySlackUserId(
     slackUserId: string,
     teamId: string
 ) {
-    const slackIntegrationRef = await getFirestore()
-        .collectionGroup("integrations")
-        .where("slackUserId", "==", slackUserId)
-        .get();
+  const slackIntegrationRef = await getFirestore()
+      .collectionGroup("integrations")
+      .where("slackUserId", "==", slackUserId)
+      .get();
 
-    if (slackIntegrationRef.empty) {
-      return undefined;
-    }
+  if (slackIntegrationRef.empty) {
+    return undefined;
+  }
 
-    const integration = slackIntegrationRef.docs[0].data() as SlackIntegration;
+  const integration = slackIntegrationRef.docs[0].data() as SlackIntegration;
 
-    if (
-      !Object.values(integration.accessTokens).find(
-          (token) => token.teamId === teamId
-      )
-    ) {
-      return undefined;
-    }
+  if (
+    !Object.values(integration.accessTokens).find(
+        (token) => token.teamId === teamId
+    )
+  ) {
+    return undefined;
+  }
 
-    return integration;
+  return integration;
 }
 
 function validateSlackRequest(

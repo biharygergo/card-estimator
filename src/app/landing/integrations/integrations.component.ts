@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { PageHeaderWithCtaComponent } from '../components/page-header-with-cta/page-header-with-cta.component';
 import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { integrationsModalCreator } from 'src/app/shared/integrations/integrations.component';
+import { SlackService } from 'src/app/services/slack.service';
 
 interface IntegrationRow {
   id: string;
@@ -13,6 +13,7 @@ interface IntegrationRow {
   videoId: string;
   link?: string;
   isBigVideo?: boolean;
+  is169Video?: boolean;
   hasAction?: boolean;
 }
 
@@ -72,11 +73,22 @@ const PROJECT_MANAGEMENT_INTEGRATIONS: IntegrationRow[] = [
   },
 ];
 
+const MESSAGING_INTEGRATIONS: IntegrationRow[] = [
+  {
+    id: 'slack',
+    title: 'Start a planning poker session from Slack',
+    description:
+      'Use our Slack app to start a planning poker session in your channel. Invite your teammates to estimate stories and keep your team in sync. Just type /create-room in your channel to get started.',
+    videoId: 'Slackzoomed_hyi6xy',
+    hasAction: true,
+    is169Video: true,
+  },
+];
+
 @Component({
   selector: 'app-integrations',
   standalone: true,
   imports: [
-    PageHeaderWithCtaComponent,
     NgOptimizedImage,
     MatButtonModule,
     RouterLink,
@@ -90,9 +102,11 @@ export class IntegrationsComponent {
     VIDEO_CONFERENCING_INTEGRATIONS;
   protected readonly projectManagementIntegrations: IntegrationRow[] =
     PROJECT_MANAGEMENT_INTEGRATIONS;
+  protected readonly messagingIntegrations: IntegrationRow[] =
+    MESSAGING_INTEGRATIONS;
 
-  readonly dialog = inject(MatDialog)
-
+  readonly dialog = inject(MatDialog);
+  readonly slackApiService = inject(SlackService);
   scrollTo(id: string) {
     const element = document.getElementById(id);
     const y = element.getBoundingClientRect().top + window.scrollY - 50;
@@ -101,6 +115,8 @@ export class IntegrationsComponent {
   }
 
   handleAction(id: string) {
-    this.dialog.open(...integrationsModalCreator())
+    if (id === 'slack') {
+      this.slackApiService.startSlackAuthFlow();
+    }
   }
 }

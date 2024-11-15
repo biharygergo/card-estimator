@@ -12,18 +12,19 @@ import { SlackIntegration } from '../types';
   providedIn: 'root'
 })
 export class SlackService {
-
-  API_URL = `${window.location.origin}/api`;
   constructor(
     private readonly firestore: Firestore,
     private readonly authService: AuthService,
     private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig
-  ) {}
+  ) {
+
+  }
 
   async startSlackAuthFlow() {
-    const apiUrl = `${this.API_URL}/slack/install`;
+    const API_URL = `${window.location.origin}/api`;
+    const apiUrl = `${API_URL}/slack/install`;
     let user = await this.authService.getUser();
 
     if (!user || user?.isAnonymous) {

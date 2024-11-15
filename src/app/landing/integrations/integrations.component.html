@@ -18,10 +18,11 @@
           Jump to
           <a href="javascript:void(0)" (click)="scrollTo('video-conferencing')">
             video conferencing
-          </a>
-          or
+          </a>,
           <a href="javascript:void(0)" (click)="scrollTo('project-management')">
             project management</a
+          > or <a href="javascript:void(0)" (click)="scrollTo('messaging')">
+            messaging</a
           >.
         </p>
       </div>
@@ -93,6 +94,29 @@
       }
     </div>
   </section>
+  <section id="messaging">
+    <div class="integration-section-header">
+      <h2 class="title">Messaging</h2>
+      <p class="details">
+        Create rooms effortlessly and invite your team members to estimate
+        without leaving your chat platform. Our messaging integrations make it
+        easy to start planning poker sessions and keep everyone in the loop.
+      </p>
+      <div class="details-links">
+        <button (click)="scrollTo('slack')" mat-stroked-button>Slack</button>
+      </div>
+    </div>
+    <div class="integration-section-items">
+      @for (integration of messagingIntegrations; track $index) {
+      <ng-container
+        *ngTemplateOutlet="
+          integrationItem;
+          context: { integration: integration, index: $index }
+        "
+      ></ng-container>
+      }
+    </div>
+  </section>
 </main>
 <ng-template #integrationItem let-integration="integration" let-index="index">
   <div class="integration-section-item" [id]="integration.id">
@@ -132,7 +156,8 @@
         playsinline
         (canplay)="video.play()"
         (loadedmetadata)="video.muted = true"
-        [class.video-16-9]="integration.isBigVideo"
+        [class.video-big]="integration.isBigVideo"
+        [class.video-16-9]="integration.is169Video"
       >
         <source
           [src]="

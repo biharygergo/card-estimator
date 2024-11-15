@@ -199,8 +199,13 @@
         aspect-ratio: 1152/1000;
         border-radius: 20px;
 
-        &.video-16-9 {
+        &.video-big {
           aspect-ratio: 16/9;
+          max-width: 500px;
+        }
+
+        &.video-16-9 {
+          aspect-ratio: 1736/1080;
           max-width: 500px;
         }
       }

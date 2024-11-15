@@ -45,9 +45,7 @@
           class="navigation-button integrations-button split-button"
           routerLinkActive="active"
         >
-          <a
-            class="split-button-left"
-            routerLink="/integrations"
+          <a class="split-button-left" routerLink="/integrations"
             >Integrations</a
           >
           <button
@@ -126,7 +124,11 @@
               Webex Meetings
             </div>
           </a>
-          <a routerLink="/features" fragment="jira" mat-menu-item >
+          <a
+            routerLink="/integrations"
+            fragment="project-management"
+            mat-menu-item
+          >
             <div class="centered-menu-item" routerLinkActive="active">
               <img
                 class="integration-logo"
@@ -136,7 +138,12 @@
               Jira tickets
             </div>
           </a>
-          <a routerLink="/features" fragment="linear" mat-menu-item (click)="closeMenu()">
+          <a
+            routerLink="/integrations"
+            fragment="project-management"
+            mat-menu-item
+            (click)="closeMenu()"
+          >
             <div class="centered-menu-item" routerLinkActive="active">
               <img
                 class="integration-logo"
@@ -144,6 +151,21 @@
                 loading="lazy"
               />
               Linear issues
+            </div>
+          </a>
+          <a
+            routerLink="/integrations"
+            fragment="messaging"
+            mat-menu-item
+            (click)="closeMenu()"
+          >
+            <div class="centered-menu-item" routerLinkActive="active">
+              <img
+                class="integration-logo"
+                src="/assets/slack.png"
+                loading="lazy"
+              />
+              Slack
             </div>
           </a>
         </mat-menu>

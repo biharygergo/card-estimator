@@ -14,7 +14,7 @@ slackMicroservice.use(express.json());
 slackMicroservice.use(cookieParser());
 
 slackMicroservice.post(
-    "/api/slack/commands/planning-poker",
+    "/api/slack/commands/create-room",
     validateSlackRequest,
     handlePlanningPokerCommand
 );

@@ -80,6 +80,7 @@ const MESSAGING_INTEGRATIONS: IntegrationRow[] = [
     description:
       'Use our Slack app to start a planning poker session in your channel. Invite your teammates to estimate stories and keep your team in sync. Just type /create-room in your channel to get started.',
     videoId: 'Slackzoomed_hyi6xy',
+    link: '/integrations/slack',
     hasAction: true,
     is169Video: true,
   },

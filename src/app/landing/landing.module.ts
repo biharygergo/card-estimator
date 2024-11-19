@@ -33,6 +33,7 @@ import { FeaturesItemsComponent } from './features/features-items/features-items
 import { FeaturesPreviewComponent } from './features/features-preview/features-preview.component';
 import { PageHeaderWithCtaComponent } from './components/page-header-with-cta/page-header-with-cta.component';
 import { MeetComponent } from './integrations/meet/meet.component';
+import { SlackComponent } from './integrations/slack/slack.component';
 
 const routes: Routes = [
   {
@@ -108,6 +109,16 @@ const routes: Routes = [
       disablePostfix: true,
       description:
         'Install our integration for Google Meet, the simplest way to estimate stories.',
+    },
+  },
+  {
+    path: 'integrations/slack',
+    loadComponent: () => import('./integrations/slack/slack.component').then((mod) => mod.SlackComponent),
+    data: {
+      title: 'Planning Poker for Slack',
+      disablePostfix: true,
+      description:
+        'Integrate PlanningPoker.live with Slack and create rooms directly from your Slack channel.',
     },
   },
   {

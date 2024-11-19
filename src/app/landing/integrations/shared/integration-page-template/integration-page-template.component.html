@@ -1,0 +1,89 @@
+<section class="integration-header">
+  <div class="integration-header-content">
+    <div class="integration-header-left">
+      <h1 class="integration-title">{{ config().header.title }}</h1>
+      <p class="integration-description">
+        {{ config().header.description }}
+      </p>
+      <div class="details-links">
+        <button
+          (click)="config().action()"
+          mat-flat-button
+          class="install-button"
+        >
+          {{ config().header.buttonLabel }}
+        </button>
+      </div>
+    </div>
+    <div class="integration-header-right">
+      <video
+        class="integration-hero-video"
+        #video
+        autoplay
+        loop
+        muted
+        playsinline
+        (canplay)="video.play()"
+        (loadedmetadata)="video.muted = true"
+      >
+        <source
+          [src]="
+            'https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/' +
+            config().header.videoId +
+            '.mp4'
+          "
+          type="video/mp4"
+        />
+      </video>
+    </div>
+  </div>
+</section>
+<section class="integration-main">
+  <div class="integration-details">
+    <p class="integration-details-title">
+      {{ config().details.description }}
+    </p>
+    @for (step of config().details.steps; track $index;) {
+    <div class="integration-details-step">
+      <div class="integration-details-step-left">
+        <h3 class="integration-details-step-title">{{ step.title }}</h3>
+        <p class="integration-details-step-description">
+          {{ step.text }}
+        </p>
+      </div>
+      <div class="integration-details-step-right">
+        <img
+          class="integration-details-step-image"
+          [ngSrc]="step.imgId"
+          alt="Marketplace landing page for PlanningPoker.live"
+          placeholder
+          [width]="step.width"
+          [height]="step.height"
+          sizes="(max-width: 800px) 80vw, 60vw"
+          [priority]="$index === 0"
+          [class.not-app-screenshot]="step.notAppScreenshot"
+        />
+      </div>
+    </div>
+    }
+  </div>
+  <div class="integration-support">
+    <h2 class="integration-support-title">Need help?</h2>
+    <p class="integration-support-description">
+      Need help or have an issue with the Slack integration? We're here for you!
+      You can create a
+      <a
+        href="https://github.com/biharygergo/card-estimator/issues"
+        target="_blank"
+        >Github ticket</a
+      >
+      to report bugs or suggest improvements, or reach out to us directly at
+      <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a>.
+      Our team will get back to you as quickly as possible to ensure your
+      experience runs smoothly.
+    </p>
+  </div>
+  <div class="end-cta">
+    <start-planning-cta />
+  </div>
+</section>

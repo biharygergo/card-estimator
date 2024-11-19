@@ -12,6 +12,7 @@ export const routes = [
   '/integrations/webex',
   '/integrations/meet',
   '/integrations/teams',
+  '/integrations/slack',
   '/history',
   '/premium',
   '/pricing',

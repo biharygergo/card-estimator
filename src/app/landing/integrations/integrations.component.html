@@ -128,7 +128,7 @@
       <p class="integration-description">
         {{ integration.description }}
       </p>
-      <div>
+      <div class="action-buttons">
         @if (integration.link) {
         <a
           [routerLink]="integration.link"
@@ -139,7 +139,7 @@
         >} @if(integration.hasAction) {
         <button
           (click)="handleAction(integration.id)"
-          mat-stroked-button
+          mat-button
           class="learn-more-button"
         >
           Get started

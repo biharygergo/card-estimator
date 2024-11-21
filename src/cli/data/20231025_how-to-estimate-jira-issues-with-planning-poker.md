@@ -34,34 +34,28 @@ To estimate Jira issues with Planning Poker, follow these steps:
 
 2. **Connect your Jira account to your Planning Poker account.** This will allow you to select and view Jira issues directly from the planning poker session. To do this, just click on the **Connect to Jira** button in the topic editor. If you do not have a free PlanningPoker.live account, you'll be prompted to create one. You’ll then be redirected to Jira, where you can choose which project you want to link to PlanningPoker.live.
 
+<div class="image-container">
+    <img alt="Click on the 'Connect to Jira' button to link your account" src="https://storage.googleapis.com/planning-poker-public-assets/assets/jira_connect.png">
+    <p>Click on the "Connect to Jira" button to link your account</p>
+</div>
+
 3. **Select and estimate Jira issues.** Once your Jira account is connected, your most recent Jira issues will automatically appear in the dropdown menu of the topic editor. You can also search for specific issues by title or ID. When you select an issue, your team can start voting on it. After the estimates are revealed, simply click the **Upload** button to save the estimate back to Jira.
+
+<div class="image-container">
+    <img alt="Use the topic editor to search for issues" src="https://storage.googleapis.com/planning-poker-public-assets/assets/jira_search.png">
+    <p>Use the topic editor to search for issues</p>
+</div>
 
 4. **Batch import multiple Jira issues.** If you have several issues in your backlog that need to be estimated, PlanningPoker.live makes it easy with the **Batch Import** feature. To do this:
    - Open the sidebar and click on **Import/Export**.
    - Select **Batch Import Issues**.
    - In the dialog, apply filters to find the relevant issues, such as filtering by project or sprint.
    - Once you've selected multiple tickets, click **Import** to add them all to your current estimation session.
-
 This feature helps you quickly gather all the necessary issues for estimation, making your planning sessions more efficient, especially when dealing with large backlogs.
-
-
-### Why Batch Import is a Game-Changer
 
 The Batch Import feature significantly streamlines the estimation process for Agile teams working with large backlogs. Instead of manually importing each issue one by one, you can now pull in multiple tickets at once, saving time and ensuring that all necessary tasks are reviewed in a single session. This is especially useful for sprint planning meetings or backlog refinement sessions when you need to estimate several tasks quickly.
 
-
-<div class="image-container">
-    <img alt="Click on the 'Connect to Jira' button to link your account" src="https://storage.googleapis.com/planning-poker-public-assets/assets/jira_connect.png">
-    <p>Click on the "Connect to Jira" button to link your account</p>
-</div>
-
-3. **Select the JIRA issues that you want to estimate.** Once connected, click on the "Edit topic" button and select a recent issue from the dropdown menu. You can also use the topic name field to search for Jira issues - they will appear in the dropdown as well.
-4. **Discuss the estimates and come to a consensus.** That's it! Select an issue and once everyone has cast their vote, the results will be displayed. Discuss the estimates and come to a consensus on the estimate for each issue.
-
-<div class="image-container">
-    <img alt="Use the topic editor to search for issues" src="https://storage.googleapis.com/planning-poker-public-assets/assets/jira_search.png">
-    <p>Use the topic editor to search for issues</p>
-</div>
+5. **Discuss the estimates and come to a consensus.** That's it! Select an issue and once everyone has cast their vote, the results will be displayed. Discuss the estimates and come to a consensus on the estimate for each issue.
 
 ### Some further tips
 

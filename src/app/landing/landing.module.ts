@@ -122,6 +122,16 @@ const routes: Routes = [
     },
   },
   {
+    path: 'integrations/jira',
+    loadComponent: () => import('./integrations/jira/jira.component').then((mod) => mod.JiraComponent),
+    data: {
+      title: 'Estimate JIRA Issues with PlanningPoker.live',
+      disablePostfix: true,
+      description:
+        'Connect your JIRA account with PlanningPoker.live to estimate issues directly from your backlog.',
+    },
+  },
+  {
     path: 'integrations',
     pathMatch: 'full',
     loadComponent: () => import('./integrations/integrations.component').then((mod) => mod.IntegrationsComponent),

@@ -31,7 +31,6 @@ import { ZoomApiService } from './zoom-api.service';
   providedIn: 'root',
 })
 export class JiraService {
-  API_URL = `${window.location.origin}/api`;
   constructor(
     private readonly firestore: Firestore,
     private readonly authService: AuthService,
@@ -43,7 +42,9 @@ export class JiraService {
   ) {}
 
   async startJiraAuthFlow() {
-    const apiUrl = `${this.API_URL}/startJiraAuth`;
+    const API_URL = `${window.location.origin}/api`;
+
+    const apiUrl = `${API_URL}/startJiraAuth`;
     let user = await this.authService.getUser();
 
     if (!user || user?.isAnonymous) {

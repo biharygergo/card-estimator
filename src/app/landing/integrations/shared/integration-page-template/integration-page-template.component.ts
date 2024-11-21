@@ -9,6 +9,7 @@ export interface IntegrationConfig {
     description: string;
     buttonLabel: string;
     videoId: string;
+    aspectRatio: string;
   };
   details: {
     description: string;
@@ -16,6 +17,7 @@ export interface IntegrationConfig {
       title: string;
       text: string;
       imgId: string;
+      alt: string;
       width: number;
       height: number;
       notAppScreenshot?: boolean;

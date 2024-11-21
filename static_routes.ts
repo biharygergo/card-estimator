@@ -13,6 +13,7 @@ export const routes = [
   '/integrations/meet',
   '/integrations/teams',
   '/integrations/slack',
+  '/integrations/jira',
   '/history',
   '/premium',
   '/pricing',

@@ -11,7 +11,7 @@
   padding: 24px 24px 0 24px;
   max-width: 1000px;
   margin: 0 auto;
-  gap: 8px;
+  gap: 2rem;
 
   .integration-header-left {
     display: flex;
@@ -53,20 +53,8 @@
       object-fit: contain;
       height: auto;
       width: 100%;
-      max-width: 400px;
-      aspect-ratio: 1152/1000;
-      aspect-ratio: 1736/1080;
+      max-width: 500px;
       border-radius: 20px;
-
-      &.video-big {
-        aspect-ratio: 16/9;
-        max-width: 500px;
-      }
-
-      &.video-16-9 {
-        aspect-ratio: 1736/1080;
-        max-width: 500px;
-      }
     }
   }
 

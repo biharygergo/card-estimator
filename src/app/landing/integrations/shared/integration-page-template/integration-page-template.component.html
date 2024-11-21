@@ -25,6 +25,7 @@
         playsinline
         (canplay)="video.play()"
         (loadedmetadata)="video.muted = true"
+        [style.aspect-ratio]="config().header.aspectRatio"
       >
         <source
           [src]="
@@ -55,7 +56,7 @@
         <img
           class="integration-details-step-image"
           [ngSrc]="step.imgId"
-          alt="Marketplace landing page for PlanningPoker.live"
+          [alt]="step.alt"
           placeholder
           [width]="step.width"
           [height]="step.height"

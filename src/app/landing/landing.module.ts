@@ -132,6 +132,16 @@ const routes: Routes = [
     },
   },
   {
+    path: 'integrations/linear',
+    loadComponent: () => import('./integrations/linear/linear.component').then((mod) => mod.LinearComponent),
+    data: {
+      title: 'Estimate Linear tickets with PlanningPoker.live',
+      disablePostfix: true,
+      description:
+        'Connect your Linear account with PlanningPoker.live to estimate issues directly from your backlog.',
+    },
+  },
+  {
     path: 'integrations',
     pathMatch: 'full',
     loadComponent: () => import('./integrations/integrations.component').then((mod) => mod.IntegrationsComponent),

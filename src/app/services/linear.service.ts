@@ -23,7 +23,6 @@ import { ZoomApiService } from './zoom-api.service';
   providedIn: 'root',
 })
 export class LinearService {
-  API_URL = `${window.location.origin}/api`;
   constructor(
     private readonly firestore: Firestore,
     private readonly authService: AuthService,
@@ -34,7 +33,9 @@ export class LinearService {
   ) {}
 
   async startLinearAuthFlow() {
-    const apiUrl = `${this.API_URL}/startLinearAuth`;
+    const API_URL = `${window.location.origin}/api`;
+
+    const apiUrl = `${API_URL}/startLinearAuth`;
     let user = await this.authService.getUser();
 
     if (!user || user?.isAnonymous) {

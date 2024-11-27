@@ -14,6 +14,7 @@ export const routes = [
   '/integrations/teams',
   '/integrations/slack',
   '/integrations/jira',
+  '/integrations/linear',
   '/history',
   '/premium',
   '/pricing',

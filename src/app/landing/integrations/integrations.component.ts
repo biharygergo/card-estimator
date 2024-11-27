@@ -59,7 +59,7 @@ const PROJECT_MANAGEMENT_INTEGRATIONS: IntegrationRow[] = [
     description:
       'Connect your PlanningPoker.live account with JIRA to estimate issues directly from your backlog. Use advanced filters to import only the issues you need from your active sprint or project.',
     videoId: 'Jira_Optimized_2_tugns9',
-    link: '/knowledge-base/how-to-estimate-jira-issues-with-planning-poker',
+    link: '/integrations/jira',
     isBigVideo: true,
   },
   {
@@ -68,7 +68,7 @@ const PROJECT_MANAGEMENT_INTEGRATIONS: IntegrationRow[] = [
     description:
       'Running a team on Linear? Connect your account and estimate issues directly from your Linear board. Select issues directly from your recents or search for your most recent cycle to import.',
     videoId: 'Linear_Optimized_pu8atx',
-    link: '/knowledge-base/estimate-linear-issues-planning-poker-live',
+    link: '/integrations/linear',
     isBigVideo: true,
   },
 ];

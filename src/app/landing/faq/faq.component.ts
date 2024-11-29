@@ -112,37 +112,37 @@ const faqs: FaqRow[] = [
     question: 'How can I integrate Planning Poker with Microsoft Teams?',
     category: 'Integration',
     answer:
-      'To integrate Planning Poker with Microsoft Teams, visit the [Microsoft Teams integration page](https://planningpoker.live/integrations/teams). Follow the step-by-step instructions to install the Planning Poker app in Teams. This integration allows you to conduct estimation sessions directly within your Teams meetings.',
+      'To integrate Planning Poker with Microsoft Teams, visit the <a href="https://planningpoker.live/integrations/teams">Microsoft Teams integration page</a>. Follow the step-by-step instructions to install the Planning Poker app in Teams. This integration allows you to conduct estimation sessions directly within your Teams meetings.',
   },
   {
     question: 'How can I integrate Planning Poker with Zoom?',
     category: 'Integration',
     answer:
-      'To integrate Planning Poker with Zoom, visit the [Zoom integration page](https://planningpoker.live/integrations/zoom). Follow the instructions to install the Planning Poker app in Zoom. This integration enables seamless planning sessions within your Zoom meetings.',
+      'To integrate Planning Poker with Zoom, visit the <a href="https://planningpoker.live/integrations/zoom">Zoom integration page</a>. Follow the instructions to install the Planning Poker app in Zoom. This integration enables seamless planning sessions within your Zoom meetings.',
   },
   {
     question: 'How can I integrate Planning Poker with Google Meet?',
     category: 'Integration',
     answer:
-      'To integrate Planning Poker with Google Meet, visit the [Google Meet integration page](https://planningpoker.live/integrations/meet). Follow the guide to install the Planning Poker app in Google Meet. This integration helps you run effective planning sessions within your Meet meetings.',
+      'To integrate Planning Poker with Google Meet, visit the <a href="https://planningpoker.live/integrations/meet">Google Meet integration page</a>. Follow the guide to install the Planning Poker app in Google Meet. This integration helps you run effective planning sessions within your Meet meetings.',
   },
   {
     question: 'How can I integrate Planning Poker with Webex?',
     category: 'Integration',
     answer:
-      'To integrate Planning Poker with Webex, visit the [Webex integration page](https://planningpoker.live/integrations/webex). Follow the steps to install the Planning Poker app in Webex. This integration allows you to conduct planning sessions directly within your Webex meetings.',
+      'To integrate Planning Poker with Webex, visit the <a href="https://planningpoker.live/integrations/webex">Webex integration page</a>. Follow the steps to install the Planning Poker app in Webex. This integration allows you to conduct planning sessions directly within your Webex meetings.',
   },
   {
     question: 'How can I integrate Planning Poker with Jira?',
     category: 'Integration',
     answer:
-      'To integrate Planning Poker with Jira, visit the [Jira integration page](https://planningpoker.live/integrations/jira). Follow the step-by-step instructions to install the Planning Poker app in Jira. This integration allows you to conduct estimation sessions directly within your Jira projects.',
+      'To integrate Planning Poker with Jira, visit the <a href="https://planningpoker.live/integrations/jira">Jira integration page</a>. Follow the step-by-step instructions to install the Planning Poker app in Jira. This integration allows you to conduct estimation sessions directly within your Jira projects.',
   },
   {
     question: 'How can I integrate Planning Poker with Linear?',
     category: 'Integration',
     answer:
-      'To integrate Planning Poker with Linear, visit the [Linear integration page](https://planningpoker.live/integrations/linear). Follow the instructions to install the Planning Poker app in Linear. This integration enables seamless planning sessions within your Linear workspace.',
+      'To integrate Planning Poker with Linear, visit the <a href="https://planningpoker.live/integrations/linear">Linear integration page</a>. Follow the instructions to install the Planning Poker app in Linear. This integration enables seamless planning sessions within your Linear workspace.',
   },
   {
     question: 'How can I select tickets from Jira or Linear?',

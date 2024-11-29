@@ -13,13 +13,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, take, takeUntil, tap } from 'rxjs';
 import {
   AnalyticsService,
   ZoomAppCtaLocation,
 } from 'src/app/services/analytics.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { COOKIE_BEEN_HERE_BEFORE_KEY } from 'src/app/services/cookie.service';
+import { EstimatorService } from 'src/app/services/estimator.service';
 
 const ZOOM_APP_PROMO_SEEN_KEY = 'zoomAppPromoSeen';
 const INTEGRATIONS = [
@@ -79,30 +80,35 @@ export class ZoomAppBannerComponent implements OnInit, OnDestroy {
   constructor(
     private readonly analytics: AnalyticsService,
     private readonly configService: ConfigService,
-    private readonly dialog: MatDialog
-  ) {}
+    private readonly dialog: MatDialog,
+    private readonly estimatorService: EstimatorService
+  ) { }
 
   ngOnInit(): void {
-    if (
-      typeof window !== 'undefined' &&
-      window?.localStorage &&
-      !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY) &&
-      !!this.configService.getCookie(COOKIE_BEEN_HERE_BEFORE_KEY)
-    ) {
-      const ref = this.dialog.open(this.dialogContent(), {
-        width: '90%',
-        maxWidth: '800px',
-      });
-      ref
-        .afterClosed()
-        .pipe(takeUntil(this.destroy))
-        .subscribe(() => {
-          this.dialogRef().close();
-          window.localStorage.setItem(ZOOM_APP_PROMO_SEEN_KEY, '1');
-          this.analytics.logClickedCloseZoomAppBanner(this.bannerLocation);
+    this.estimatorService.getPreviousSessions(1).pipe(take(1)).subscribe(prevSessions => {
+      if (
+        prevSessions.length > 0 &&
+        typeof window !== 'undefined' &&
+        window?.localStorage &&
+        !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY) &&
+        !!this.configService.getCookie(COOKIE_BEEN_HERE_BEFORE_KEY)
+      ) {
+        const ref = this.dialog.open(this.dialogContent(), {
+          width: '90%',
+          maxWidth: '800px',
         });
-      this.dialogRef.set(ref);
-    }
+        ref
+          .afterClosed()
+          .pipe(takeUntil(this.destroy))
+          .subscribe(() => {
+            this.dialogRef().close();
+            window.localStorage.setItem(ZOOM_APP_PROMO_SEEN_KEY, '1');
+            this.analytics.logClickedCloseZoomAppBanner(this.bannerLocation);
+          });
+        this.dialogRef.set(ref);
+      }
+    });
+    
 
     this.onInstallClicked
       .pipe(

@@ -11,7 +11,7 @@ youtubeVideoId: X5ox2EBk3Bs
 
 ### Introduction
 
-Planning Poker is a consensus-based technique for estimating effort or complexity. It is often used in agile software development to estimate user stories or product backlog items, making it an ideal fit for estimating JIRA issues.
+Planning Poker is a consensus-based technique for estimating effort or complexity. It is often used in agile software development to estimate user stories or product backlog items, making it an ideal fit for estimating JIRA issues. PlanningPoker.live [offers a convenient integration](https://planningpoker.live/integrations/jira) with JIRA that brings your backlog into your planning meeting with just a couple of clicks.
 
 ### Benefits of using Planning Poker to estimate JIRA issues
 

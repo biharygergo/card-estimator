@@ -9,7 +9,7 @@ coverImageAlt: The PlanningPoker.live app running inside Microsoft Teams
 ---
 
 ### Introduction
-Efficiency and cohesion are key in any collaborative setting, especially for remote software engineering teams. That's why we've developed a seamless Planning Poker app that integrates directly into Microsoft Teams. With this tool, there's no need to navigate away from your meeting window to conduct estimation sessions. In this guide, we'll walk you through the simple process of installing the Planning Poker app in Teams and provide tips for maximizing its utility.
+Efficiency and cohesion are key in any collaborative setting, especially for remote software engineering teams. That's why we've developed a seamless Planning Poker app that [integrates directly into Microsoft Teams](https://planningpoker.live/integrations/teams). With this tool, there's no need to navigate away from your meeting window to conduct estimation sessions. In this guide, we'll walk you through the simple process of installing the Planning Poker app in Teams and provide tips for maximizing its utility.
 
 ### Installation
 Getting started with our app in Teams is straightforward. You can find it in the Teams app store, known as "App Source." Simply search for "Planning Poker" or navigate directly to the [app listing](https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview). There, you'll find basic information and screenshots showcasing its functionality. Rest assured, the app only requires minimal permissions to function within Teams.

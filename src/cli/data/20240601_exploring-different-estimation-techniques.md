@@ -26,7 +26,7 @@ In some teams, senior members or more vocal individuals may dominate the discuss
 
 ### Solutions:
 
-- Use anonymous voting tools to ensure independent input.
+- Use anonymous voting tools to ensure independent input (pro tip: PlanningPoker.live [supports anonymous voting](https://planningpoker.live/features)!)
 - Facilitate discussions in a way that encourages quieter team members to voice their opinions.
 - Rotate facilitators to prevent dominance by a single individual.
 

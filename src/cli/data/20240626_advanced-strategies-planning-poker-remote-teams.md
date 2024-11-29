@@ -44,7 +44,7 @@ Remote Planning Poker sessions can face unique challenges. Here’s how to addre
 3. **Maintaining Engagement**: Use interactive elements like polls or quick breaks to keep energy levels high. Encourage camera use to make sessions more personal.
 
 ## Leveraging PlanningPoker.live’s Unique Integrations
-One of the standout features of [PlanningPoker.live](https://planningpoker.live/) is its integration with Zoom, Webex, and Microsoft Teams. This integration allows for a seamless experience where you can:
+One of the standout features of [PlanningPoker.live](https://planningpoker.live/integrations) is its integration with Zoom, Webex,Microsoft Teams and Google Meet. This integration allows for a seamless experience where you can:
 
 - **Conduct Sessions Within Video Calls**: Launch Planning Poker sessions directly within your video meetings, ensuring that all discussions and estimations happen in real-time without switching between different platforms.
 - **Enhanced Collaboration**: Utilize the interactive features of Zoom, Webex, and Teams such as breakout rooms, screen sharing, and live chat to facilitate deeper discussions and consensus building.

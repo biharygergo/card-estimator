@@ -10,7 +10,7 @@ coverImageAlt: A screenshot showing the PlanningPoker.live app running in Zoom
 
 
 ### Introduction
-As remote work continues to evolve, the need for effective collaboration tools becomes increasingly vital. This blog post explores the advantages of integrating PlanningPoker.live into Zoom meetings. With the Zoom integration, teams can enhance their planning sessions without the need to switch between platforms.
+As remote work continues to evolve, the need for effective collaboration tools becomes increasingly vital. This blog post explores the advantages of integrating PlanningPoker.live into Zoom meetings. With the [Zoom integration](https://planningpoker.live/integrations/zoom), teams can enhance their planning sessions without the need to switch between platforms.
 
 ### Integrating PlanningPoker.live with Zoom
 

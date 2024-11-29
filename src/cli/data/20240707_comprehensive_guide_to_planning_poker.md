@@ -12,7 +12,7 @@ Planning Poker has become an essential tool in the Agile practitioner's toolkit.
 
 ## 1. Introduction to Planning Poker
 
-Planning Poker, also known as Scrum Poker, is a consensus-based estimation technique used primarily in Agile software development. It was first described by James Grenning in 2002 and later popularized by Mike Cohn in his book "Agile Estimating and Planning."
+Planning Poker, also known as Scrum Poker, is a consensus-based estimation technique used primarily in Agile software development. It was first described by [James Grenning in 2002](https://wingman-sw.com/papers/PlanningPoker-v1.1.pdf) and later popularized by Mike Cohn in his book ["Agile Estimating and Planning."](https://www.mountaingoatsoftware.com/books/agile-estimating-and-planning)
 
 The primary goal of Planning Poker is to estimate the relative effort or complexity of user stories or tasks within a project. By leveraging the collective wisdom of the team and encouraging discussion, Planning Poker helps create more accurate estimates while fostering collaboration and shared understanding.
 

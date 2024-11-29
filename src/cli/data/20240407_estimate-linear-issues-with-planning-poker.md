@@ -13,11 +13,11 @@ youtubeVideoId: UFomiKX_cPU
 
 **Planning poker is a cornerstone of agile project management.** This estimation technique fosters collaboration and reduces bias by allowing teams to anonymously assign effort points to user stories and tasks in a gamified setting. This leads to more realistic project timelines and better resource allocation.
 
-**Linear is a project management tool loved for its clean interface and its features that cater specifically to agile workflows.** This blog post will guide you through integrating PlanningPoker.live with [Linear](https://linear.app), enabling you to seamlessly estimate your Linear issues during your next planning session.
+**Linear is a project management tool loved for its clean interface and its features that cater specifically to agile workflows.** This blog post will guide you through [integrating PlanningPoker.live](https://planningpoker.live/integrations/linear) with [Linear](https://linear.app), enabling you to seamlessly estimate your Linear issues during your next planning session.
 
 ### Steps to Integrate PlanningPoker.live with Linear:
 
-1.  **Create a free account on PlanningPoker.live.** It only takes a minute to get started!
+1.  **Create a free account on PlanningPoker.live.** It only takes a minute to [get started](https://planningpoker.live/create)!
 2.  **Navigate to the "Integrations" menu** (or edit the topic of a planning round) and select "Import"
 
 <div class="image-container">
@@ -43,6 +43,6 @@ youtubeVideoId: UFomiKX_cPU
 
 **Effortless Data Flow:** Once you've reached a consensus on the effort points for each issue, PlanningPoker.live seamlessly transmits the estimates back to your Linear workspace. This two-way synchronization eliminates the need for manual data entry after the planning session, saving you valuable time and reducing the risk of errors.
 
-**By combining the collaborative power of planning poker with the intuitive interface of Linear, you can ensure your agile projects have a strong foundation and are delivered on time.** Give PlanningPoker.live a try today and experience the difference in your estimation process!
+**By combining the collaborative power of planning poker with the intuitive interface of Linear, you can ensure your agile projects have a strong foundation and are delivered on time.** Give PlanningPoker.live a try today and experience the [difference](https://planningpoker.live/features) in your estimation process!
 
 **Want to learn more about planning poker?** Check out our other [blog posts](https://planningpoker.live/knowledge-base) for in-depth guides and best practices to make your planning sessions even more effective.

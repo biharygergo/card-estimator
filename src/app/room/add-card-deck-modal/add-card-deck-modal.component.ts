@@ -1,8 +1,4 @@
-import {
-  Component,
-  Inject,
-  OnInit,
-} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -47,7 +43,7 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatCard } from '@angular/material/card';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
@@ -79,7 +75,6 @@ export type AddCardDeckModalData = {
     MatButton,
     MatDialogClose,
     MatIcon,
-    AsyncPipe,
     MatExpansionModule,
   ],
 })
@@ -98,7 +93,10 @@ export class AddCardDeckModalComponent implements OnInit {
     (
       control: AbstractControl<{ [cardLabel: string]: number }>
     ): ValidationErrors | null => {
-      const values = Object.values(control.value);
+      const cards = convertInputToCards(
+        this.cardDeckForm.get('cardDeckValues').value
+      );
+      const values = cards.map((card) => control.value[card]);
 
       const isAnyDuplicated = new Set(values).size !== values.length;
       if (isAnyDuplicated) {

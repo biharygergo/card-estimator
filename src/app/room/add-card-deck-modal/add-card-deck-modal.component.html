@@ -34,8 +34,11 @@
           (cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates'])
           {
           <mat-error> All cards must be unique. </mat-error>
-          }
+          } 
         </mat-form-field>
+        @if(numericCardValuesFormGroup.errors?.notAscending) {
+          <mat-error> Numeric values must be in ascending order. </mat-error>
+          }
         <p class="hint">
           Card values as a comma separated list in ascending order. You can use
           numbers or words as well. You can add up to 10 cards.

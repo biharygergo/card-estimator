@@ -13,6 +13,7 @@ import {
 } from '@angular/material/expansion';
 import { FeaturesPreviewComponent } from '../../features/features-preview/features-preview.component';
 import { PageHeaderWithCtaComponent } from '../../components/page-header-with-cta/page-header-with-cta.component';
+import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component';
 
 @Component({
   selector: 'app-zoom',
@@ -31,6 +32,7 @@ import { PageHeaderWithCtaComponent } from '../../components/page-header-with-ct
     MatDivider,
     RouterLink,
     StartPlanningCtaComponent,
+    CarbonAdComponent,
   ],
 })
 export class ZoomComponent implements OnInit, OnDestroy {

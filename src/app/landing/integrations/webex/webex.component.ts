@@ -6,6 +6,7 @@ import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
 import { MatAnchor } from '@angular/material/button';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
+import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component';
 
 @Component({
   selector: 'app-webex',
@@ -21,6 +22,7 @@ import { PageHeaderComponent } from '../../components/page-header/page-header.co
     MatDivider,
     RouterLink,
     StartPlanningCtaComponent,
+    CarbonAdComponent,
   ],
 })
 export class WebexComponent {

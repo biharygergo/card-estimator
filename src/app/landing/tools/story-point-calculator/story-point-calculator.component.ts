@@ -44,6 +44,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatChipsModule } from '@angular/material/chips';
 import { distinctUntilChanged } from 'rxjs';
 import { add } from 'lodash';
+import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component';
 
 interface TeamMember {
   id: string;
@@ -243,6 +244,7 @@ function estimateProjectTimeline(config: {
     DatePipe,
     BaseChartDirective,
     RouterLink,
+    CarbonAdComponent,
   ],
   providers: [
     provideNativeDateAdapter(),

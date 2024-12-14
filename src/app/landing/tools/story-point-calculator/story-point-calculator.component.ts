@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal, viewChild } from '@angular/core';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,8 +18,20 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { D } from '@angular/cdk/keycodes';
 import { DatePipe } from '@angular/common';
+import {
+  BaseChartDirective,
+  provideCharts,
+  withDefaultRegisterables,
+} from 'ng2-charts';
+import { ChartConfiguration } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import {
+  MatAccordion,
+  MatExpansionModule,
+  MatExpansionPanel,
+} from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface TeamMember {
   id: string;
@@ -40,14 +52,15 @@ function createTeamMember() {
 interface DailyBurndownData {
   date: Date;
   storyPointsCompleted: number;
+  remainingStoryPoints: number;
 }
 
 interface TimelineEstimate {
-  estimatedEndDate: Date;
+  estimatedEndDateFromStoryPoints: Date;
+  totalDaysFromStoryPoints: number;
   actualEndDate: Date;
-  dailyBurndown: DailyBurndownData[];
-  estimatedDaysFromStoryPoints: number;
   actualDaysFromCapacity: number;
+  dailyBurndown: DailyBurndownData[];
 }
 
 function addWeekdays(startDate: Date, daysToAdd: number): Date {
@@ -66,6 +79,7 @@ function addWeekdays(startDate: Date, daysToAdd: number): Date {
 function estimateProjectTimeline(config: {
   startDate: Date;
   teamMembers: TeamMember[];
+  staffing: number;
   totalStoryPoints: number;
   storyPointToDays: number;
   targetVelocity: number;
@@ -78,6 +92,7 @@ function estimateProjectTimeline(config: {
     storyPointToDays,
     targetVelocity,
     bufferDays,
+    staffing,
   } = config;
   // The actual number of days it takes to complete a story point
   const effectiveStoryPointDays = storyPointToDays / targetVelocity;
@@ -88,10 +103,12 @@ function estimateProjectTimeline(config: {
     totalStoryPoints * effectiveStoryPointDays
   );
 
+  const totalDaysFromStoryPoints =
+    estimatedDaysFromStoryPoints / staffing + bufferDays;
   // The estimated end date based on the story points excluding weekends
   const estimatedEndDateFromStoryPoints = addWeekdays(
     startDate,
-    estimatedDaysFromStoryPoints
+    totalDaysFromStoryPoints
   );
 
   let remainingStoryPoints = totalStoryPoints;
@@ -107,13 +124,15 @@ function estimateProjectTimeline(config: {
   while (remainingStoryPoints > 0) {
     // Skip weekends (Saturday: 6, Sunday: 0)
     if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-      const availableHoursThisDay = teamMembers.reduce((sum, member) => {
-        if (memberDayOffBalance[member.id] > 0) {
-          memberDayOffBalance[member.id]--;
-          return sum;
-        }
-        return sum + (member.contribution / 100) * 8;
-      }, 0);
+      const availableHoursThisDay = teamMembers.length
+        ? teamMembers.reduce((sum, member) => {
+            if (memberDayOffBalance[member.id] > 0) {
+              memberDayOffBalance[member.id]--;
+              return sum;
+            }
+            return sum + (member.contribution / 100) * 8;
+          }, 0)
+        : 8 * staffing;
 
       const storyPointsThisDay = Math.min(
         remainingStoryPoints,
@@ -121,10 +140,30 @@ function estimateProjectTimeline(config: {
       );
       dailyBurndown.push({
         date: new Date(currentDate),
+        remainingStoryPoints,
         storyPointsCompleted: storyPointsThisDay,
       });
       remainingStoryPoints -= storyPointsThisDay;
       actualDaysFromCapacity++;
+    } else {
+      dailyBurndown.push({
+        date: new Date(currentDate),
+        remainingStoryPoints,
+        storyPointsCompleted: 0,
+      });
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  let remainingBufferDays = bufferDays;
+  while (remainingBufferDays > 0) {
+    if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+      dailyBurndown.push({
+        date: new Date(currentDate),
+        remainingStoryPoints,
+        storyPointsCompleted: 0,
+      });
+      remainingBufferDays--;
     }
     currentDate.setDate(currentDate.getDate() + 1);
   }
@@ -135,11 +174,11 @@ function estimateProjectTimeline(config: {
   );
 
   return {
-    estimatedEndDate: estimatedEndDateFromStoryPoints,
+    estimatedEndDateFromStoryPoints,
+    totalDaysFromStoryPoints,
     actualEndDate,
+    actualDaysFromCapacity: actualDaysFromCapacity + bufferDays,
     dailyBurndown,
-    estimatedDaysFromStoryPoints,
-    actualDaysFromCapacity,
   };
 }
 
@@ -156,10 +195,16 @@ function estimateProjectTimeline(config: {
     MatOptionModule,
     MatButtonModule,
     MatIconModule,
+    MatExpansionModule,
+    MatTooltipModule,
     ReactiveFormsModule,
     DatePipe,
+    BaseChartDirective,
   ],
-  providers: [provideNativeDateAdapter()],
+  providers: [
+    provideNativeDateAdapter(),
+    provideCharts(withDefaultRegisterables()),
+  ],
   templateUrl: './story-point-calculator.component.html',
   styleUrl: './story-point-calculator.component.scss',
 })
@@ -169,11 +214,54 @@ export class StoryPointCalculatorComponent {
     startDate: new FormControl<Date>(new Date(), [Validators.required]),
     storyPointToDays: new FormControl<number>(1, [Validators.required]),
     targetVelocity: new FormControl<number>(80, [Validators.required]),
+    staffing: new FormControl<number>(1, [Validators.required]),
     buffer: new FormControl<number>(1, [Validators.required]),
   });
   protected readonly teamMembers = new FormArray([createTeamMember()]);
 
   protected readonly result = signal<TimelineEstimate | undefined>(undefined);
+  protected readonly lineChartData = computed<ChartConfiguration['data']>(
+    () => {
+      if (!this.result()) {
+        return { datasets: [] };
+      }
+
+      return {
+        datasets: [
+          {
+            label: 'Story points remaining',
+            data: this.result().dailyBurndown.map(
+              (data) => data.remainingStoryPoints
+            ),
+          },
+        ],
+        labels: this.result().dailyBurndown.map((data) =>
+          data.date.toISOString()
+        ),
+      };
+    }
+  );
+  protected readonly lineChartOptions: ChartConfiguration['options'] = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'day',
+        },
+      },
+    },
+  };
+
+  protected readonly parametersExpander =
+    viewChild<MatExpansionPanel>('parametersExpander');
+  protected readonly teamMembersExpander = viewChild<MatExpansionPanel>(
+    'teamMembersExpander'
+  );
 
   addTeamMember() {
     this.teamMembers.push(createTeamMember());
@@ -188,9 +276,13 @@ export class StoryPointCalculatorComponent {
       return;
     }
 
+    this.parametersExpander().close();
+    this.teamMembersExpander().close();
+
     const timelineEstimate = estimateProjectTimeline({
       startDate: this.parametersForm.controls.startDate.value,
       teamMembers: this.teamMembers.value as TeamMember[],
+      staffing: this.parametersForm.controls.staffing.value,
       totalStoryPoints: this.parametersForm.controls.storyPoints.value,
       storyPointToDays: this.parametersForm.controls.storyPointToDays.value,
       targetVelocity: this.parametersForm.controls.targetVelocity.value / 100,
@@ -199,5 +291,10 @@ export class StoryPointCalculatorComponent {
 
     console.log(timelineEstimate);
     this.result.set(timelineEstimate);
+  }
+
+  nextStep() {
+    this.parametersExpander().close();
+    this.teamMembersExpander().open();
   }
 }

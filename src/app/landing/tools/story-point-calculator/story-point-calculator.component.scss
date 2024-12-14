@@ -1,5 +1,5 @@
 .calculator-section {
-  padding: 5rem 1rem;
+  padding: 2rem 1rem;
   .calculator-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -9,26 +9,60 @@
 .calculator {
   max-width: 800px;
   margin: 0 auto;
-  margin-bottom: 3rem;
 
   mat-form-field {
     width: 100%;
     margin-bottom: 1rem;
   }
+}
 
-  .card-header {
-    margin-bottom: 2rem;
-    h3 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      margin-top: 0;
-      color: var(--text-on-white);
-    }
+.calculate-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  button {
+    width: 100%;
   }
 }
 
 .team-member {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.result-section {
+  padding: 2rem 1rem;
+  padding-top: 0;
+
+  .result-container {
+    max-width: 800px;
+    margin: 0 auto;
+
+    .result-statistics {
+      margin: 0 auto;
+    }
+  }
+}
+
+.key-dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+}
+
+.key-date-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.key-date p {
+    margin-top: 0;
+}
+
+.key-date h4 {
+  margin-bottom: 0.5rem;
 }

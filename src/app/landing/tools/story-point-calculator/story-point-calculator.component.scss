@@ -1,3 +1,5 @@
+@import '../../../common.scss';
+
 .calculator-section {
   padding: 2rem 1rem;
   .calculator-container {
@@ -13,6 +15,10 @@
   mat-form-field {
     width: 100%;
     margin-bottom: 1rem;
+
+    @include smallScreen {
+        margin-bottom: 2rem;
+    }
   }
 }
 
@@ -45,6 +51,10 @@
 .key-dates {
   display: grid;
   grid-template-columns: repeat(2, minmax(200px, 1fr));
+
+  @include smallScreen {
+    grid-template-columns: 1fr;
+  }
 }
 
 .key-date-title {

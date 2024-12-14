@@ -1,0 +1,34 @@
+.calculator-section {
+  padding: 5rem 1rem;
+  .calculator-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.calculator {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    margin-bottom: 2rem;
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      margin-top: 0;
+      color: var(--text-on-white);
+    }
+  }
+}
+
+.team-member {
+    margin-bottom: 1rem;
+}

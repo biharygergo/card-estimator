@@ -183,6 +183,13 @@ const routes: Routes = [
     path: 'knowledge-base',
     loadChildren: () => import('./blog/blog.module').then((m) => m.BlogModule),
   },
+  {
+    path: 'tools/story-point-calculator',
+    loadComponent: () =>
+      import(
+        './tools/story-point-calculator/story-point-calculator.component'
+      ).then((m) => m.StoryPointCalculatorComponent),
+  },
 ];
 
 @NgModule({

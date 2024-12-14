@@ -1,0 +1,185 @@
+<main>
+  <app-page-header
+    [title]="'Story Point Calculator'"
+    [subtitle]="
+      'Convert story points to time and estimate your project timeline with this simple calculator.'
+    "
+  ></app-page-header>
+  <section class="calculator-section">
+    <div class="calculator-container">
+      <mat-card class="calculator">
+        <mat-card-content>
+          <div class="card-header">
+            <h3>Step 1: Parameters</h3>
+            <p>
+              Configure the basic parameters of your project to get the most
+              accurate timeline estimate.
+            </p>
+          </div>
+
+          <form [formGroup]="parametersForm">
+            <mat-form-field appearance="outline">
+              <mat-label>Story points at project start</mat-label>
+              <input matInput formControlName="storyPoints" type="number" />
+              <mat-hint>How many story points to begin with?</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Project start date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="startDate"
+              />
+              <mat-hint>When will this project start?</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Target velocity</mat-label>
+              <input matInput formControlName="targetVelocity" type="number" />
+              <span matTextSuffix>%</span>
+              <mat-hint
+                >What's the target velocity of the team? Consider unforeseen
+                bugs, blockers, overhead.</mat-hint
+              >
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Buffer</mat-label>
+              <input matInput formControlName="buffer" type="number" />
+              <span matTextSuffix>week(s)</span>
+              <mat-hint
+                >How much buffer time should there be at the end of the project?
+                Consider testing, QA, release.</mat-hint
+              >
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Story point equals to</mat-label>
+              <mat-select formControlName="storyPointToDays">
+                <mat-option [value]="0.125">1 hour</mat-option>
+                <mat-option [value]="1">1 day</mat-option>
+                <mat-option [value]="7">1 week</mat-option>
+              </mat-select>
+              <mat-hint>How much time does one point usually take?</mat-hint>
+            </mat-form-field>
+          </form>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-flat-button>
+            <mat-icon>arrow_forward</mat-icon>
+            Continue
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="calculator">
+        <mat-card-content>
+          <div class="card-header">
+            <h3>Step 2: Team members</h3>
+            <p>
+              Set the people working on the project to get an accurate project
+              timeline.
+            </p>
+          </div>
+
+          @for(teamMember of teamMembers.controls; track $index) {
+          <mat-card appearance="outlined" class="team-member">
+            <mat-card-content>
+              <h4>Team member {{ $index + 1 }}</h4>
+              <form [formGroup]="teamMember">
+                <mat-form-field appearance="outline">
+                  <mat-label>Team member name</mat-label>
+                  <input matInput formControlName="name" />
+                  <mat-hint>Who's working on this project?</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Contribution</mat-label>
+                  <input
+                    matInput
+                    formControlName="contribution"
+                    type="number"
+                  />
+                  <span matTextSuffix>%</span>
+                  <mat-hint
+                    >How much can this person contribute to the project? Any
+                    other projects taking time?</mat-hint
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Days off</mat-label>
+                  <input
+                    matInput
+                    formControlName="daysOffUntilEnd"
+                    type="number"
+                  />
+                  <span matTextSuffix>days</span>
+                  <mat-hint
+                    >How many days off are expected during the project? Consider
+                    sick leaves, vacations, etc.</mat-hint
+                  >
+                </mat-form-field>
+              </form>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button
+                mat-button
+                color="warn"
+                (click)="removeTeamMember($index)"
+              >
+                <mat-icon>delete</mat-icon>
+                Remove
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          }
+          <button mat-stroked-button (click)="addTeamMember()">
+            <mat-icon>add</mat-icon>
+            Add another team member
+          </button>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-flat-button (click)="calculate()">
+            <mat-icon>arrow_forward</mat-icon>
+            Finish
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+  @if (result()) {
+  <section class="result-section">
+    <div class="result-container">
+      <mat-card class="result-statistics">
+        <mat-card-content>
+          <h3>Key dates</h3>
+          <p>
+            Based on the parameters you've set, here are the key dates of your
+            project:
+          </p>
+          <div class="key-dates">
+            <div class="key-date">
+              <h4>Estimated end date</h4>
+              <p>{{ result().estimatedEndDate | date : "mediumDate" }}</p>
+              <p>
+                Based on the number of story points you've provided, this is the
+                best-case scenario for finishing your project.
+              </p>
+            </div>
+            <div class="key-date">
+              <h4>Actual end date</h4>
+              <p>{{ result().actualEndDate | date : "mediumDate" }}</p>
+              <p>
+                Considering the available capacity based on your team members,
+                this is the actual end date that is achievable for this
+                project.
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+  }
+</main>

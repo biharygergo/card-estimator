@@ -189,6 +189,12 @@ const routes: Routes = [
       import(
         './tools/story-point-calculator/story-point-calculator.component'
       ).then((m) => m.StoryPointCalculatorComponent),
+    data: {
+      title: 'Story Point Calculator',
+      disablePostfix: true,
+      description:
+        'Convert story points into project timelines with our free Story Point Calculator.',
+    },
   },
 ];
 

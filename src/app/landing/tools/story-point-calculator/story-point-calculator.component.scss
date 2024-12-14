@@ -49,6 +49,7 @@
 
 .key-date-title {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
 
@@ -60,9 +61,31 @@
 }
 
 .key-date p {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .key-date h4 {
   margin-bottom: 0.5rem;
+}
+
+.hidden-input {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.result-chart {
+    margin: 1rem 0;
+}
+
+.howto {
+    color: white;
+    margin-bottom: 2rem;
+    p {
+        color: var(--landing-text-color);
+    }
+
+    a {
+        color: white;
+    }
 }

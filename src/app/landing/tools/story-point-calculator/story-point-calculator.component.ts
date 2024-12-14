@@ -1,4 +1,11 @@
-import { Component, computed, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,20 +39,29 @@ import {
   MatExpansionPanel,
 } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatChipsModule } from '@angular/material/chips';
+import { distinctUntilChanged } from 'rxjs';
+import { add } from 'lodash';
 
 interface TeamMember {
   id: string;
   name: string;
   contribution: number;
   daysOffUntilEnd: number;
+  daysOff: Date[];
 }
 
-function createTeamMember() {
+function createTeamMember(member?: TeamMember) {
   return new FormGroup({
-    id: new FormControl<string>(Date.now().toString()),
-    name: new FormControl<string>(''),
-    contribution: new FormControl<number>(100),
-    daysOffUntilEnd: new FormControl<number>(0),
+    id: new FormControl<string>(member?.id || Date.now().toString()),
+    name: new FormControl<string>(member?.name || ''),
+    contribution: new FormControl<number>(member?.contribution || 100),
+    daysOffUntilEnd: new FormControl<number>(member?.daysOffUntilEnd || 0),
+    daysOff: new FormArray(
+      member?.daysOff?.map((day) => new FormControl<Date>(day)) ?? []
+    ),
   });
 }
 
@@ -74,6 +90,31 @@ function addWeekdays(startDate: Date, daysToAdd: number): Date {
     }
   }
   return new Date(currentDate);
+}
+
+function findNearestAvailableWeekday(
+  takenDates: Date[],
+  startDate: Date
+): Date {
+  let currentDate = new Date(startDate);
+  while (
+    takenDates.some(
+      (takenDate) => takenDate.getTime() === currentDate.getTime()
+    ) ||
+    currentDate.getDay() === 0 ||
+    currentDate.getDay() === 6
+  ) {
+    currentDate = addWeekdays(currentDate, 1);
+  }
+  return currentDate;
+}
+
+function isSameDay(date1: Date, date2: Date): boolean {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
 }
 
 function estimateProjectTimeline(config: {
@@ -116,18 +157,18 @@ function estimateProjectTimeline(config: {
   let currentDate = new Date(startDate);
   let actualDaysFromCapacity = 0;
 
-  const memberDayOffBalance = teamMembers.reduce((balance, member) => {
-    balance[member.id] = member.daysOffUntilEnd;
-    return balance;
-  }, {} as Record<string, number>);
-
   while (remainingStoryPoints > 0) {
     // Skip weekends (Saturday: 6, Sunday: 0)
     if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
       const availableHoursThisDay = teamMembers.length
         ? teamMembers.reduce((sum, member) => {
-            if (memberDayOffBalance[member.id] > 0) {
-              memberDayOffBalance[member.id]--;
+            console.log(member.daysOff);
+            if (
+              member.daysOff.some((dayOff) =>
+                isSameDay(new Date(dayOff), currentDate)
+              )
+            ) {
+              console.log('day off');
               return sum;
             }
             return sum + (member.contribution / 100) * 8;
@@ -138,12 +179,12 @@ function estimateProjectTimeline(config: {
         remainingStoryPoints,
         availableHoursThisDay / effectiveStoryPointHours
       );
+      remainingStoryPoints -= storyPointsThisDay;
       dailyBurndown.push({
         date: new Date(currentDate),
         remainingStoryPoints,
         storyPointsCompleted: storyPointsThisDay,
       });
-      remainingStoryPoints -= storyPointsThisDay;
       actualDaysFromCapacity++;
     } else {
       dailyBurndown.push({
@@ -197,9 +238,11 @@ function estimateProjectTimeline(config: {
     MatIconModule,
     MatExpansionModule,
     MatTooltipModule,
+    MatChipsModule,
     ReactiveFormsModule,
     DatePipe,
     BaseChartDirective,
+    RouterLink,
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -215,9 +258,9 @@ export class StoryPointCalculatorComponent {
     storyPointToDays: new FormControl<number>(1, [Validators.required]),
     targetVelocity: new FormControl<number>(80, [Validators.required]),
     staffing: new FormControl<number>(1, [Validators.required]),
-    buffer: new FormControl<number>(1, [Validators.required]),
+    bufferDays: new FormControl<number>(5, [Validators.required]),
+    teamMembers: new FormArray([createTeamMember()]),
   });
-  protected readonly teamMembers = new FormArray([createTeamMember()]);
 
   protected readonly result = signal<TimelineEstimate | undefined>(undefined);
   protected readonly lineChartData = computed<ChartConfiguration['data']>(
@@ -263,12 +306,73 @@ export class StoryPointCalculatorComponent {
     'teamMembersExpander'
   );
 
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+
+  ngOnInit() {
+    const formState =
+      this.activatedRoute.snapshot.queryParamMap.get('formState');
+    if (formState) {
+      const { teamMembers, ...otherValues } = JSON.parse(formState);
+      this.parametersForm.patchValue(otherValues);
+      this.parametersForm.setControl(
+        'teamMembers',
+        new FormArray(
+          (teamMembers as TeamMember[]).map((member) =>
+            createTeamMember(member)
+          )
+        )
+      );
+      this.teamMembersExpander().open();
+    }
+
+    this.parametersForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((formState) => {
+        const queryParams = new URLSearchParams(window.location.search);
+        queryParams.set('formState', JSON.stringify(formState));
+        const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+        window.history.replaceState({}, '', newUrl);
+      });
+
+    this.parametersForm.controls.teamMembers.valueChanges
+      .pipe(
+        distinctUntilChanged(
+          (prev, curr) =>
+            prev.map((m) => m.daysOffUntilEnd).join(',') ===
+            curr.map((m) => m.daysOffUntilEnd).join(',')
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((teamMembers) => {
+        teamMembers.forEach((member, index) => {
+          const daysOff = member.daysOffUntilEnd;
+          const daysOffArray =
+            this.parametersForm.controls.teamMembers.at(index).controls.daysOff;
+          let lastAddedDay = this.parametersForm.value.startDate ?? new Date();
+          if (daysOffArray.length < daysOff) {
+            for (let i = daysOffArray.length; i < daysOff; i++) {
+              daysOffArray.push(
+                new FormControl<Date>(
+                  findNearestAvailableWeekday(member.daysOff, lastAddedDay)
+                )
+              );
+            }
+          } else {
+            for (let i = daysOffArray.length; i > daysOff; i--) {
+              daysOffArray.removeAt(i - 1);
+            }
+          }
+        });
+      });
+  }
+
   addTeamMember() {
-    this.teamMembers.push(createTeamMember());
+    this.parametersForm.controls.teamMembers.push(createTeamMember());
   }
 
   removeTeamMember(index: number) {
-    this.teamMembers.removeAt(index);
+    this.parametersForm.controls.teamMembers.removeAt(index);
   }
 
   calculate() {
@@ -276,21 +380,22 @@ export class StoryPointCalculatorComponent {
       return;
     }
 
-    this.parametersExpander().close();
-    this.teamMembersExpander().close();
-
     const timelineEstimate = estimateProjectTimeline({
       startDate: this.parametersForm.controls.startDate.value,
-      teamMembers: this.teamMembers.value as TeamMember[],
+      teamMembers: this.parametersForm.controls.teamMembers
+        .value as TeamMember[],
       staffing: this.parametersForm.controls.staffing.value,
       totalStoryPoints: this.parametersForm.controls.storyPoints.value,
       storyPointToDays: this.parametersForm.controls.storyPointToDays.value,
       targetVelocity: this.parametersForm.controls.targetVelocity.value / 100,
-      bufferDays: this.parametersForm.controls.buffer.value * 7,
+      bufferDays: this.parametersForm.controls.bufferDays.value,
     });
 
-    console.log(timelineEstimate);
     this.result.set(timelineEstimate);
+
+    this.parametersExpander().close();
+    this.teamMembersExpander().close();
+    window.scrollTo({ top: 500 });
   }
 
   nextStep() {

@@ -22,6 +22,7 @@
 /integration
 /integrations/teams/configure
 /knowledge-base
+/tools/story-point-calculator
 /knowledge-base/planning-poker-and-the-scrum-roles
 /knowledge-base/comparing-agile-estimation-techniques
 /knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning

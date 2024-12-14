@@ -1,20 +1,40 @@
 <main>
-  <!-- <app-page-header
+  <app-page-header
     [title]="'Story Point Calculator'"
     [subtitle]="
-      'Convert story points to time and estimate your project timeline with this simple calculator.'
+      'Easily convert story points to time and estimate your project timeline with this intuitive calculator.'
     "
-  ></app-page-header> -->
+  ></app-page-header>
   <section class="calculator-section">
     <div class="calculator-container">
       <div class="calculator">
+        <div class="howto">
+          <h2>What is this?</h2>
+          <p>
+            Some agile teams prefer to convert story points to some measuremenet of
+            time. This story point calculator helps these teams estimate project
+            delivery timelines by converting story points into project
+            timelines. It considers various parameters such as team members,
+            velocity, days off, and buffer days to provide accurate and
+            realistic project timelines. By inputting these details, teams can
+            better plan and manage their projects, ensuring timely delivery and
+            efficient resource allocation.
+          </p>
+          <h2>How does it work?</h2>
+          <p>
+            Simply enter your project details and estimates (you can use
+            <a routerLink="/">PlanningPoker.live</a> to estimate) and then click
+            "Calculate!" to get your project timeline. The tool will provide you
+            with key dates, burndown charts, and other relevant information to
+            help you plan your project effectively. All data is stored locally
+            in the URL, so you can easily share it with your team or bookmark it
+            for future reference.
+          </p>
+        </div>
         <mat-accordion multi="true">
           <mat-expansion-panel #parametersExpander [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Step 1: Parameters</mat-panel-title>
-              <!-- <mat-panel-description>
-                Configure the basic parameters of your project
-              </mat-panel-description> -->
             </mat-expansion-panel-header>
             <div>
               <form [formGroup]="parametersForm">
@@ -61,8 +81,8 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Buffer</mat-label>
-                  <input matInput formControlName="buffer" type="number" />
-                  <span matTextSuffix>week(s)</span>
+                  <input matInput formControlName="bufferDays" type="number" />
+                  <span matTextSuffix>day(s)</span>
                   <mat-hint
                     >How much buffer time should there be at the end of the
                     project? Consider testing, QA, release.</mat-hint
@@ -92,11 +112,9 @@
           <mat-expansion-panel #teamMembersExpander>
             <mat-expansion-panel-header>
               <mat-panel-title>Step 2: Team members (optional)</mat-panel-title>
-              <!-- <mat-panel-description>
-                Add your team members to get more accurate estimates
-              </mat-panel-description> -->
             </mat-expansion-panel-header>
-            @for(teamMember of teamMembers.controls; track $index) {
+            @for(teamMember of parametersForm.controls.teamMembers.controls;
+            track $index) {
             <mat-card appearance="outlined" class="team-member">
               <mat-card-content>
                 <h4>Team member {{ $index + 1 }}</h4>
@@ -132,6 +150,21 @@
                       Consider sick leaves, vacations, etc.</mat-hint
                     >
                   </mat-form-field>
+                  <mat-chip-set aria-label="Fish selection">
+                    @for (dayOff of teamMember.controls.daysOff.controls; track
+                    dayOff) {
+                    <mat-chip (click)="picker.open()">{{
+                      dayOff.value | date : "mediumDate"
+                    }}</mat-chip>
+                    <input
+                      class="hidden-input"
+                      matInput
+                      [matDatepicker]="picker"
+                      [formControl]="dayOff"
+                    />
+                    <mat-datepicker #picker></mat-datepicker>
+                    }
+                  </mat-chip-set>
                 </form>
               </mat-card-content>
               <mat-card-actions align="end">
@@ -177,8 +210,7 @@
               <h4 class="key-date-title">
                 Estimated end date
                 <mat-icon
-                  matTooltip="Based on the number of story points you've provided, this is the
-                best-case scenario for finishing your project."
+                  matTooltip="Based on the number of story points, velocity, buffer and staffing you've provided, this is the estimated end date for the project without considering team member details."
                   >help</mat-icon
                 >
               </h4>
@@ -192,19 +224,19 @@
               <h4 class="key-date-title">
                 Estimated days to complete
                 <mat-icon
-                  matTooltip="Based on the number of story points you've provided, this is the
-                      total number of days required to complete the project."
+                  matTooltip="Based on the number of story points, velocity, buffer and staffing you've provided, this is the
+                      total number of days required to complete the project without considering team member details."
                   >help</mat-icon
                 >
               </h4>
               <p>{{ result().totalDaysFromStoryPoints }}</p>
             </div>
-            @if (teamMembers.controls.length) {
+            @if (parametersForm.controls.teamMembers.controls.length > 0) {
             <div class="key-date">
               <h4 class="key-date-title">
                 Actual end date
                 <mat-icon
-                  matTooltip="Considering the available capacity based on your team members,
+                  matTooltip="Considering the commitment and days off of your team members,
                       this is the actual end date that is achievable for this project."
                   >help</mat-icon
                 >
@@ -215,7 +247,7 @@
               <h4 class="key-date-title">
                 Actual days to complete
                 <mat-icon
-                  matTooltip="Considering the available capacity based on your team members,
+                  matTooltip="Considering the commitment and days off of your team members,
                       this is the actual number of days required to finish the
                       project."
                   >help</mat-icon
@@ -230,6 +262,7 @@
             [data]="lineChartData()"
             [options]="lineChartOptions"
             [type]="'line'"
+            class="result-chart"
           ></canvas>
         </mat-card-content>
       </mat-card>

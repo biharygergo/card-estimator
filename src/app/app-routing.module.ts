@@ -72,7 +72,7 @@ const routes: Routes = [
   {
     path: 'integrations/teams/configure',
     loadComponent: () =>
-      import('./integrations/teams/configure-tab/configure-tab.component').then(
+      import('./landing/integrations/teams/configure-tab/configure-tab.component').then(
         (mod) => mod.ConfigureTabComponent
       ),
     data: { title: 'Configure Teams', supportsTheme: true, noIndex: true },
@@ -80,7 +80,7 @@ const routes: Routes = [
   {
     path: 'integrations/teams/auth',
     loadComponent: () =>
-      import('./integrations/teams/auth/auth.component').then(
+      import('./landing/integrations/teams/auth/auth.component').then(
         (mod) => mod.AuthComponent
       ),
     data: { title: 'Authenticate', supportsTheme: true, noIndex: true },

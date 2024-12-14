@@ -1,39 +1,7 @@
 import { CommonModule, provideCloudinaryLoader } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs';
 import { Routes, RouterModule } from '@angular/router';
-import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
-import { PageHeaderComponent } from './components/page-header/page-header.component';
-import { FaqRowComponent } from './faq/faq-row/faq-row.component';
-import { FaqComponent } from './faq/faq.component';
-import { FeaturesComponent } from './features/features.component';
-import { HeaderV2Component } from './header-v2/header-v2.component';
 import { HomeComponent } from './home/home.component';
-import { PrivacyComponent } from './privacy/privacy.component';
-import { TermsComponent } from './terms/terms.component';
-import { WrapperComponent } from './wrapper/wrapper.component';
-import { ZoomComponent } from './integrations/zoom/zoom.component';
-import { OrganizationInvitationComponent } from './organization-invitation/organization-invitation.component';
-import { PremiumComponent } from './premium/premium.component';
-import { NgOptimizedImage } from '@angular/common';
-import { StartPlanningCtaComponent } from './components/start-planning-cta/start-planning-cta.component';
-import { WebexComponent } from './integrations/webex/webex.component';
-import { TeamsComponent } from './integrations/teams/teams.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
-import { FeaturesItemsComponent } from './features/features-items/features-items.component';
-import { FeaturesPreviewComponent } from './features/features-preview/features-preview.component';
-import { PageHeaderWithCtaComponent } from './components/page-header-with-cta/page-header-with-cta.component';
-import { MeetComponent } from './integrations/meet/meet.component';
-import { SlackComponent } from './integrations/slack/slack.component';
 
 const routes: Routes = [
   {
@@ -46,7 +14,10 @@ const routes: Routes = [
   },
   {
     path: 'features',
-    component: FeaturesComponent,
+    loadComponent: () =>
+      import('./features/features.component').then(
+        (mod) => mod.FeaturesComponent
+      ),
     data: {
       title: 'Features',
       description:
@@ -55,7 +26,8 @@ const routes: Routes = [
   },
   {
     path: 'faq',
-    component: FaqComponent,
+    loadComponent: () =>
+      import('./faq/faq.component').then((mod) => mod.FaqComponent),
     data: {
       title: 'FAQ',
       description: 'All of our most frequently asked questions, answered.',
@@ -63,17 +35,22 @@ const routes: Routes = [
   },
   {
     path: 'policies/privacy',
-    component: PrivacyComponent,
+    loadComponent: () =>
+      import('./privacy/privacy.component').then((mod) => mod.PrivacyComponent),
     data: { title: 'Privacy Policy' },
   },
   {
     path: 'policies/terms',
-    component: TermsComponent,
+    loadComponent: () =>
+      import('./terms/terms.component').then((mod) => mod.TermsComponent),
     data: { title: 'Terms and Conditions' },
   },
   {
     path: 'integrations/zoom',
-    component: ZoomComponent,
+    loadComponent: () =>
+      import('./integrations/zoom/zoom.component').then(
+        (mod) => mod.ZoomComponent
+      ),
     data: {
       title: 'Planning Poker for Zoom Meetings',
       description:
@@ -83,7 +60,10 @@ const routes: Routes = [
   },
   {
     path: 'integrations/webex',
-    component: WebexComponent,
+    loadComponent: () =>
+      import('./integrations/webex/webex.component').then(
+        (mod) => mod.WebexComponent
+      ),
     data: {
       title: 'Planning Poker for Webex Meetings',
       disablePostfix: true,
@@ -93,7 +73,10 @@ const routes: Routes = [
   },
   {
     path: 'integrations/teams',
-    component: TeamsComponent,
+    loadComponent: () =>
+      import('./integrations/teams/teams.component').then(
+        (mod) => mod.TeamsComponent
+      ),
     data: {
       title: 'Planning Poker for Microsoft Teams',
       disablePostfix: true,
@@ -103,7 +86,10 @@ const routes: Routes = [
   },
   {
     path: 'integrations/meet',
-    component: MeetComponent,
+    loadComponent: () =>
+      import('./integrations/meet/meet.component').then(
+        (mod) => mod.MeetComponent
+      ),
     data: {
       title: 'Planning Poker for Google Meet',
       disablePostfix: true,
@@ -113,7 +99,10 @@ const routes: Routes = [
   },
   {
     path: 'integrations/slack',
-    loadComponent: () => import('./integrations/slack/slack.component').then((mod) => mod.SlackComponent),
+    loadComponent: () =>
+      import('./integrations/slack/slack.component').then(
+        (mod) => mod.SlackComponent
+      ),
     data: {
       title: 'Planning Poker for Slack',
       disablePostfix: true,
@@ -123,7 +112,10 @@ const routes: Routes = [
   },
   {
     path: 'integrations/jira',
-    loadComponent: () => import('./integrations/jira/jira.component').then((mod) => mod.JiraComponent),
+    loadComponent: () =>
+      import('./integrations/jira/jira.component').then(
+        (mod) => mod.JiraComponent
+      ),
     data: {
       title: 'Estimate JIRA Issues with PlanningPoker.live',
       disablePostfix: true,
@@ -133,7 +125,10 @@ const routes: Routes = [
   },
   {
     path: 'integrations/linear',
-    loadComponent: () => import('./integrations/linear/linear.component').then((mod) => mod.LinearComponent),
+    loadComponent: () =>
+      import('./integrations/linear/linear.component').then(
+        (mod) => mod.LinearComponent
+      ),
     data: {
       title: 'Estimate Linear tickets with PlanningPoker.live',
       disablePostfix: true,
@@ -144,15 +139,22 @@ const routes: Routes = [
   {
     path: 'integrations',
     pathMatch: 'full',
-    loadComponent: () => import('./integrations/integrations.component').then((mod) => mod.IntegrationsComponent),
+    loadComponent: () =>
+      import('./integrations/integrations.component').then(
+        (mod) => mod.IntegrationsComponent
+      ),
     data: {
       title: 'Integrations',
-      description: 'PlanningPoker.live integrates with your favorite tools. JIRA, Zoom, Microsoft Teams and more.',
-    }
+      description:
+        'PlanningPoker.live integrates with your favorite tools. JIRA, Zoom, Microsoft Teams and more.',
+    },
   },
   {
     path: 'organizationInvitation',
-    component: OrganizationInvitationComponent,
+    loadComponent: () =>
+      import(
+        './organization-invitation/organization-invitation.component'
+      ).then((mod) => mod.OrganizationInvitationComponent),
     data: { title: 'Organization invitation' },
   },
   {
@@ -184,42 +186,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    ZoomAppBannerComponent,
-    PremiumComponent,
-    CarbonAdComponent,
-    MatCardModule,
-    MatButtonModule,
-    MatSnackBarModule,
-    MatExpansionModule,
-    MatDividerModule,
-    MatIconModule,
-    MatTabsModule,
-    MatDialogModule,
-    MatMenuModule,
-    MatTooltipModule,
-    ZoomAppBannerComponent,
-    NgOptimizedImage,
-    PageHeaderComponent,
-    StartPlanningCtaComponent,
-    FeaturesComponent,
-    FeaturesItemsComponent,
-    FeaturesPreviewComponent,
-    FaqComponent,
-    FaqRowComponent,
-    PrivacyComponent,
-    TermsComponent,
-    ZoomComponent,
-    HomeComponent,
-    WrapperComponent,
-    HeaderV2Component,
-    OrganizationInvitationComponent,
-    WebexComponent,
-    TeamsComponent,
-    PageHeaderWithCtaComponent,
-  ],
+  imports: [CommonModule, RouterModule.forChild(routes)],
   providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })
 export class LandingModule {}

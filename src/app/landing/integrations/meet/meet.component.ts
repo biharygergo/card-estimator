@@ -30,7 +30,7 @@ import { NgOptimizedImage } from '@angular/common';
     NgOptimizedImage,
   ],
   templateUrl: './meet.component.html',
-  styleUrl: '../../teams/teams.component.scss',
+  styleUrl: '../teams/teams.component.scss',
 })
 export class MeetComponent {
   selectedIndex = 0;

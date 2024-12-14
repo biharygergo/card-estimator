@@ -8,30 +8,33 @@
   <section class="calculator-section">
     <div class="calculator-container">
       <div class="calculator">
-        <div class="howto">
-          <h2>What is this?</h2>
-          <p>
-            Some agile teams prefer to convert story points to some measuremenet of
-            time. This story point calculator helps these teams estimate project
-            delivery timelines by converting story points into project
-            timelines. It considers various parameters such as team members,
-            velocity, days off, and buffer days to provide accurate and
-            realistic project timelines. By inputting these details, teams can
-            better plan and manage their projects, ensuring timely delivery and
-            efficient resource allocation.
-          </p>
-          <h2>How does it work?</h2>
-          <p>
-            Simply enter your project details and estimates (you can use
-            <a routerLink="/">PlanningPoker.live</a> to estimate) and then click
-            "Calculate!" to get your project timeline. The tool will provide you
-            with key dates, burndown charts, and other relevant information to
-            help you plan your project effectively. All data is stored locally
-            in the URL, so you can easily share it with your team or bookmark it
-            for future reference.
-          </p>
-        </div>
         <mat-accordion multi="true">
+          <mat-expansion-panel #howToExpander [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>About this tool</mat-panel-title>
+            </mat-expansion-panel-header>
+            <h2>What is this?</h2>
+            <p>
+              Some agile teams prefer to convert story points to some
+              measuremenet of time. This story point calculator helps these
+              teams estimate project delivery timelines by converting story
+              points into project timelines. It considers various parameters
+              such as team members, velocity, days off, and buffer days to
+              provide accurate and realistic project timelines. By inputting
+              these details, teams can better plan and manage their projects,
+              ensuring timely delivery and efficient resource allocation.
+            </p>
+            <h2>How does it work?</h2>
+            <p>
+              Simply enter your project details and estimates (you can use
+              <a routerLink="/">PlanningPoker.live</a> to estimate) and then
+              click "Calculate!" to get your project timeline. The tool will
+              provide you with key dates, burndown charts, and other relevant
+              information to help you plan your project effectively. All data is
+              stored locally in the URL, so you can easily share it with your
+              team or bookmark it for future reference.
+            </p>
+          </mat-expansion-panel>
           <mat-expansion-panel #parametersExpander [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Step 1: Parameters</mat-panel-title>

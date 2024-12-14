@@ -300,6 +300,7 @@ export class StoryPointCalculatorComponent {
     },
   };
 
+  protected readonly howToExpander = viewChild<MatExpansionPanel>('howToExpander');
   protected readonly parametersExpander =
     viewChild<MatExpansionPanel>('parametersExpander');
   protected readonly teamMembersExpander = viewChild<MatExpansionPanel>(
@@ -393,13 +394,16 @@ export class StoryPointCalculatorComponent {
 
     this.result.set(timelineEstimate);
 
+    this.howToExpander().close();
     this.parametersExpander().close();
     this.teamMembersExpander().close();
-    window.scrollTo({ top: 500 });
+    document.querySelector('.calculator').scrollIntoView();
   }
 
   nextStep() {
+    this.howToExpander().close();
     this.parametersExpander().close();
     this.teamMembersExpander().open();
+    document.querySelector('.calculator').scrollIntoView();
   }
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import * as microsoftTeams from '@microsoft/teams-js';
 import { Theme, ThemeService } from './theme.service';
 import { PaymentService } from './payment.service';
 
@@ -9,6 +8,7 @@ import { PaymentService } from './payment.service';
 })
 export class TeamsService {
   isInitialized = false;
+  microsoftTeams: any;
 
   constructor(
     private readonly router: Router,
@@ -16,11 +16,16 @@ export class TeamsService {
     private readonly paymentService: PaymentService
   ) {}
 
+  private async loadSdk(): Promise<void> {
+    this.microsoftTeams = await import('@microsoft/teams-js');
+  }
+
   async configureApp() {
     if (!this.isInitialized) {
-      await microsoftTeams.app.initialize();
-      const frameContext = microsoftTeams.app.getFrameContext();
-      const appContext = await microsoftTeams.app.getContext();
+      await this.loadSdk();
+      await this.microsoftTeams.app.initialize();
+      const frameContext = this.microsoftTeams.app.getFrameContext();
+      const appContext = await this.microsoftTeams.app.getContext();
 
       if (
         ['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)
@@ -33,15 +38,15 @@ export class TeamsService {
       }
 
       try {
-        microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
+        this.microsoftTeams.teamsCore.registerOnLoadHandler((data) => {
           try {
-            microsoftTeams.app.notifySuccess();
+            this.microsoftTeams.app.notifySuccess();
           } catch {
             console.error('Could not notify success');
           }
         });
 
-        microsoftTeams.teamsCore.registerBeforeUnloadHandler(
+        this.microsoftTeams.teamsCore.registerBeforeUnloadHandler(
           (readyToUnload) => {
             try {
               readyToUnload();
@@ -69,7 +74,7 @@ export class TeamsService {
       }
 
       const roomUrl = `${window.location.origin}/room/${roomId}?s=teams`;
-      microsoftTeams.meeting.shareAppContentToStage((err, result) => {
+      this.microsoftTeams.meeting.shareAppContentToStage((err, result) => {
         if (result) {
           resolve(true);
         }
@@ -84,7 +89,7 @@ export class TeamsService {
 
   async canShareToStage() {
     return new Promise((resolve) => {
-      const frameContext = microsoftTeams.app.getFrameContext();
+      const frameContext = this.microsoftTeams.app.getFrameContext();
       const isInMeeting =
         frameContext === 'sidePanel' || frameContext === 'meetingStage';
 
@@ -93,7 +98,7 @@ export class TeamsService {
         return;
       }
 
-      microsoftTeams.meeting.getAppContentStageSharingCapabilities(
+      this.microsoftTeams.meeting.getAppContentStageSharingCapabilities(
         (err, result) => {
           if (result?.doesAppHaveSharePermission) {
             resolve(true);
@@ -109,7 +114,7 @@ export class TeamsService {
 
   async getDeepLink(roomId: string) {
     const joinUrl = `${window.location.origin}/join?s=teams&roomId=${roomId}`;
-    const context = await microsoftTeams.app.getContext();
+    const context = await this.microsoftTeams.app.getContext();
     const isRunningInMeeting = !!context.meeting?.id;
     const linkContext = {
       subEntityId: roomId,
@@ -128,7 +133,7 @@ export class TeamsService {
   }
 
   async getLinkedRoomId(): Promise<string | undefined> {
-    const context = await microsoftTeams.app.getContext();
+    const context = await this.microsoftTeams.app.getContext();
     return context.page.subPageId;
   }
 
@@ -140,7 +145,7 @@ export class TeamsService {
     }/api/startOAuth?oauthRedirectMethod={oauthRedirectMethod}&authId={authId}&redirectTo=${encodeURIComponent(
       returnTo
     )}&platform=teams&provider=google`;
-    const token = await microsoftTeams.authentication.authenticate({
+    const token = await this.microsoftTeams.authentication.authenticate({
       url: apiUrl,
       isExternal: true,
     });
@@ -149,7 +154,7 @@ export class TeamsService {
   }
 
   notifySuccess(token: string) {
-    microsoftTeams.authentication.notifySuccess(token);
+    this.microsoftTeams.authentication.notifySuccess(token);
   }
 
   async getMicrosoftAuthToken(returnTo: string): Promise<string> {
@@ -160,7 +165,7 @@ export class TeamsService {
     }/api/startOAuth?oauthRedirectMethod={oauthRedirectMethod}&authId={authId}&redirectTo=${encodeURIComponent(
       returnTo
     )}&platform=teams&provider=microsoft`;
-    const token = await microsoftTeams.authentication.authenticate({
+    const token = await this.microsoftTeams.authentication.authenticate({
       url: apiUrl,
       isExternal: true,
     });

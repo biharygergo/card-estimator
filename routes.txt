@@ -36,3 +36,4 @@
 /knowledge-base/how-to-use-planning-poker-in-google-meet
 /knowledge-base/commonly-misused-terms-planning-poker
 /knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live
+/knowledge-base/maximize-estimation-with-different-card-sets-in-planningpoker-live

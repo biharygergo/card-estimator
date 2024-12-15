@@ -27,6 +27,9 @@ import {
   withFetch,
 } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppConfigModule } from './app-config.module';
 import { AppRoutingModule } from './app-routing.module';
 import { provideCloudinaryLoader } from '@angular/common';
@@ -49,6 +52,9 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       AppRoutingModule,
       AppConfigModule,
+      MatSnackBarModule,
+      MatMenuModule,
+      MatDialogModule,
       BrowserModule
     ),
     ScreenTrackingService,

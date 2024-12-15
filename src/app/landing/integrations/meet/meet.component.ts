@@ -12,6 +12,7 @@ import { FeaturesItemsComponent } from '../../features/features-items/features-i
 import { FeaturesPreviewComponent } from '../../features/features-preview/features-preview.component';
 import { BehaviorSubject } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
+import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component';
 
 @Component({
   selector: 'app-meet',
@@ -28,6 +29,7 @@ import { NgOptimizedImage } from '@angular/common';
     MatTab,
     StartPlanningCtaComponent,
     NgOptimizedImage,
+    CarbonAdComponent,
   ],
   templateUrl: './meet.component.html',
   styleUrl: '../teams/teams.component.scss',

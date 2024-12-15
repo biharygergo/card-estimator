@@ -23,4 +23,5 @@ export const routes = [
   '/integration',
   '/integrations/teams/configure',
   '/knowledge-base',
+  '/tools/story-point-calculator',
 ];

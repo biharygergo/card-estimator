@@ -1,0 +1,293 @@
+<main>
+  <app-page-header
+    [title]="'Story Point Calculator'"
+    [subtitle]="
+      'Easily convert story points to time and estimate your project timeline with this intuitive calculator.'
+    "
+  ></app-page-header>
+  <section class="calculator-section">
+    <div class="calculator-container">
+      <div class="calculator">
+        <mat-accordion multi="true">
+          <mat-expansion-panel #howToExpander [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>About this tool</mat-panel-title>
+            </mat-expansion-panel-header>
+            <h2>What is this?</h2>
+            <p>
+              Some agile teams prefer to convert story points to some
+              measurement of time, while others are
+              <a
+                href="https://www.mountaingoatsoftware.com/blog/dont-equate-story-points-to-hours"
+                target="_blank"
+                >strongly against this conversion</a
+              >. This story point calculator helps the former teams estimate
+              project delivery timelines by converting story points a
+              measurement of time. It considers various parameters such as team
+              members, velocity, days off, and buffer days to provide a somewhat
+              accurate project burndown. By inputting these details, teams can
+              better plan and manage their projects, ensuring timely delivery
+              and efficient resource allocation.
+            </p>
+            <h2>How does it work?</h2>
+            <p>
+              Simply enter your project details and estimates (you can use
+              <a routerLink="/">PlanningPoker.live</a> to estimate) and then
+              click "Calculate!" to get your project timeline. The tool will
+              provide you with key dates, burndown charts, and other relevant
+              information to help you plan your project effectively. All data is
+              stored locally in the URL, so you can easily share it with your
+              team or bookmark it for future reference.
+            </p>
+            <h2>Why use this tool?</h2>
+            <p>
+              In need of a quick project estimate? It is much simpler and faster
+              to estimate with this tool than to import tickets one-by-one into
+              a more complex project management software. This calculator provides a good
+              estimate while taking into account many different factors that are
+              difficult to consider manually.
+            </p>
+          </mat-expansion-panel>
+          <mat-expansion-panel #parametersExpander [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Step 1: Parameters</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <form [formGroup]="parametersForm">
+                <mat-form-field appearance="outline">
+                  <mat-label>Story points at project start</mat-label>
+                  <input matInput formControlName="storyPoints" type="number" />
+                  <mat-hint>How many story points to begin with?</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Project start date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    formControlName="startDate"
+                  />
+                  <mat-hint>When will this project start?</mat-hint>
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Target velocity</mat-label>
+                  <input
+                    matInput
+                    formControlName="targetVelocity"
+                    type="number"
+                  />
+                  <span matTextSuffix>%</span>
+                  <mat-hint
+                    >What's the target velocity of the team? Consider unforeseen
+                    bugs, blockers, overhead.</mat-hint
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Staffing</mat-label>
+                  <input matInput formControlName="staffing" type="number" />
+                  <span matTextSuffix>people</span>
+                  <mat-hint
+                    >How many people are expected to work on this
+                    project?</mat-hint
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Buffer</mat-label>
+                  <input matInput formControlName="bufferDays" type="number" />
+                  <span matTextSuffix>day(s)</span>
+                  <mat-hint
+                    >How much buffer time should there be at the end of the
+                    project? Consider testing, QA, release.</mat-hint
+                  >
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Story point equals to</mat-label>
+                  <mat-select formControlName="storyPointToDays">
+                    <mat-option [value]="0.125">1 hour</mat-option>
+                    <mat-option [value]="1">1 day</mat-option>
+                    <mat-option [value]="5">1 work-week</mat-option>
+                  </mat-select>
+                  <mat-hint
+                    >How much time does one story-point usually take for one
+                    person?</mat-hint
+                  >
+                </mat-form-field>
+              </form>
+            </div>
+            <mat-action-row>
+              <button mat-flat-button (click)="nextStep()">
+                <mat-icon>arrow_forward</mat-icon>
+                Continue
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+          <mat-expansion-panel #teamMembersExpander>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Step 2: Team members (optional)</mat-panel-title>
+            </mat-expansion-panel-header>
+            @for(teamMember of parametersForm.controls.teamMembers.controls;
+            track $index) {
+            <mat-card appearance="outlined" class="team-member">
+              <mat-card-content>
+                <h4>Team member {{ $index + 1 }}</h4>
+                <form [formGroup]="teamMember">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Team member name</mat-label>
+                    <input matInput formControlName="name" />
+                    <mat-hint>Who's working on this project?</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Contribution</mat-label>
+                    <input
+                      matInput
+                      formControlName="contribution"
+                      type="number"
+                    />
+                    <span matTextSuffix>%</span>
+                    <mat-hint
+                      >How much can this person contribute to the project? Any
+                      other projects taking time?</mat-hint
+                    >
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Days off</mat-label>
+                    <input
+                      matInput
+                      formControlName="daysOffUntilEnd"
+                      type="number"
+                    />
+                    <span matTextSuffix>days</span>
+                    <mat-hint
+                      >How many days off are expected during the project?
+                      Consider sick leaves, vacations, etc.</mat-hint
+                    >
+                  </mat-form-field>
+                  <mat-chip-set aria-label="Fish selection">
+                    @for (dayOff of teamMember.controls.daysOff.controls; track
+                    dayOff) {
+                    <mat-chip (click)="picker.open()">{{
+                      dayOff.value | date : "mediumDate"
+                    }}</mat-chip>
+                    <input
+                      class="hidden-input"
+                      matInput
+                      [matDatepicker]="picker"
+                      [formControl]="dayOff"
+                    />
+                    <mat-datepicker #picker></mat-datepicker>
+                    }
+                  </mat-chip-set>
+                </form>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <button
+                  mat-button
+                  color="warn"
+                  (click)="removeTeamMember($index)"
+                >
+                  <mat-icon>delete</mat-icon>
+                  Remove
+                </button>
+              </mat-card-actions>
+            </mat-card>
+
+            }
+            <button mat-stroked-button (click)="addTeamMember()">
+              <mat-icon>add</mat-icon>
+              Add team member
+            </button>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      <div class="calculate-container">
+        <button
+          mat-flat-button
+          (click)="calculate()"
+          [disabled]="!parametersForm.valid"
+        >
+          <mat-icon>arrow_forward</mat-icon>
+          Calculate!
+        </button>
+      </div>
+    </div>
+  </section>
+  @if (result()) {
+  <section class="result-section">
+    <div class="result-container">
+      <mat-card class="result-statistics">
+        <mat-card-content>
+          <h3>Timeline</h3>
+          <p>
+            Based on the parameters you've set, here are the key dates and
+            burndown of your project:
+          </p>
+          <div class="key-dates">
+            <div class="key-date">
+              <h4 class="key-date-title">
+                Estimated end date
+                <mat-icon
+                  matTooltip="Based on the number of story points, velocity, buffer and staffing you've provided, this is the estimated end date for the project without considering team member details."
+                  >help</mat-icon
+                >
+              </h4>
+              <p>
+                {{
+                  result().estimatedEndDateFromStoryPoints | date : "mediumDate"
+                }}
+              </p>
+            </div>
+            <div class="key-date">
+              <h4 class="key-date-title">
+                Estimated days to complete
+                <mat-icon
+                  matTooltip="Based on the number of story points, velocity, buffer and staffing you've provided, this is the
+                      total number of days required to complete the project without considering team member details."
+                  >help</mat-icon
+                >
+              </h4>
+              <p>{{ result().totalDaysFromStoryPoints }}</p>
+            </div>
+            @if (parametersForm.controls.teamMembers.controls.length > 0) {
+            <div class="key-date">
+              <h4 class="key-date-title">
+                Actual end date
+                <mat-icon
+                  matTooltip="Considering the commitment and days off of your team members,
+                      this is the actual end date that is achievable for this project."
+                  >help</mat-icon
+                >
+              </h4>
+              <p>{{ result().actualEndDate | date : "mediumDate" }}</p>
+            </div>
+            <div class="key-date">
+              <h4 class="key-date-title">
+                Actual days to complete
+                <mat-icon
+                  matTooltip="Considering the commitment and days off of your team members,
+                      this is the actual number of days required to finish the
+                      project."
+                  >help</mat-icon
+                >
+              </h4>
+              <p>{{ result().actualDaysFromCapacity }}</p>
+            </div>
+            }
+          </div>
+          <canvas
+            baseChart
+            [data]="lineChartData()"
+            [options]="lineChartOptions"
+            [type]="'line'"
+            class="result-chart"
+          ></canvas>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+  }
+</main>
+<app-carbon-ad placement="landing" />

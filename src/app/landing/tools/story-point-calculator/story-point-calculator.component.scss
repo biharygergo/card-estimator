@@ -1,0 +1,102 @@
+@import '../../../common.scss';
+
+.calculator-section {
+  padding: 2rem 1rem;
+  .calculator-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.calculator {
+  max-width: 800px;
+  margin: 0 auto;
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    @include smallScreen {
+        margin-bottom: 2rem;
+    }
+  }
+}
+
+.calculate-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  button {
+    --mdc-filled-button-disabled-container-color: darkgray;
+    width: 100%;
+  }
+}
+
+.team-member {
+  margin-bottom: 1rem;
+}
+
+.result-section {
+  padding: 2rem 1rem;
+  padding-top: 0;
+
+  .result-container {
+    max-width: 800px;
+    margin: 0 auto;
+
+    .result-statistics {
+      margin: 0 auto;
+    }
+  }
+}
+
+.key-dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+
+  @include smallScreen {
+    grid-template-columns: 1fr;
+  }
+}
+
+.key-date-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.key-date p {
+  margin-top: 0;
+}
+
+.key-date h4 {
+  margin-bottom: 0.5rem;
+}
+
+.hidden-input {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.result-chart {
+    margin: 1rem 0;
+}
+
+.howto {
+    color: white;
+    margin-bottom: 2rem;
+    p {
+        color: var(--landing-text-color);
+    }
+
+    a {
+        color: white;
+    }
+}

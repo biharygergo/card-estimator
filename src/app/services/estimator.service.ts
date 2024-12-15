@@ -5,6 +5,7 @@ import {
   collectionData,
   collectionSnapshots,
   docData,
+  DocumentReference,
   Firestore,
   limit,
   orderBy,
@@ -56,7 +57,6 @@ import {
   Timestamp,
   updateDoc,
 } from '@angular/fire/firestore';
-import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
 import { OrganizationService } from './organization.service';

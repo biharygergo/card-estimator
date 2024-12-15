@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
+import zoomSdk from '@zoom/appssdk';
 import { BehaviorSubject } from 'rxjs';
 
 type ZoomAuthenticationStatus =
@@ -19,18 +20,12 @@ export class ZoomApiService {
     'unauthenticated'
   );
   isInGuestMode = new BehaviorSubject<boolean>(true);
-  zoomSdk: any;
-
-  private async loadSdk() {
-    this.zoomSdk = await import('@zoom/appssdk');
-  }
 
   async configureApp() {
     if (this.config.runningIn !== 'zoom') {
       throw Error('Not running inside Zoom.');
     }
-    await this.loadSdk();
-    const configResponse = await this.zoomSdk.config({
+    const configResponse = await zoomSdk.config({
       popoutSize: { width: 480, height: 360 },
       capabilities: [
         'authorize',
@@ -52,7 +47,7 @@ export class ZoomApiService {
 
   setAuthenticationListeners() {
     console.log('In-Client OAuth flow: onAuthorized event listener added');
-    this.zoomSdk.addEventListener('onAuthorized', (event) => {
+    zoomSdk.addEventListener('onAuthorized', (event) => {
       const { code } = event;
       console.log('3. onAuthorized event fired.');
       console.log(
@@ -80,7 +75,7 @@ export class ZoomApiService {
       });
     });
 
-    this.zoomSdk.addEventListener('onMyUserContextChange', (event) => {
+    zoomSdk.addEventListener('onMyUserContextChange', (event) => {
       console.log('onMyUserContextChange', event);
       this.userContextStatus.next(event.status);
       if (event.status === 'authorized') {
@@ -93,7 +88,7 @@ export class ZoomApiService {
 
   async promptAuthorize() {
     try {
-      const promptAuthResponse = await this.zoomSdk.promptAuthorize();
+      const promptAuthResponse = await zoomSdk.promptAuthorize();
       console.log(promptAuthResponse);
     } catch (e) {
       console.error(e);
@@ -125,9 +120,9 @@ export class ZoomApiService {
     const authorizeOptions = {
       codeChallenge: codeChallenge,
     };
-    console.log('2. Invoke authorize, eg this.zoomSdk.authorize(authorizeOptions)');
+    console.log('2. Invoke authorize, eg zoomSdk.authorize(authorizeOptions)');
     try {
-      const zoomAuthResponse = await this.zoomSdk.authorize(authorizeOptions);
+      const zoomAuthResponse = await zoomSdk.authorize(authorizeOptions);
       console.log(zoomAuthResponse);
     } catch (e) {
       console.error(e);
@@ -138,7 +133,7 @@ export class ZoomApiService {
     if (this.isInGuestMode.value) {
       this.promptAuthorize();
     } else {
-      return this.zoomSdk.sendAppInvitationToAllParticipants();
+      return zoomSdk.sendAppInvitationToAllParticipants();
     }
   }
 
@@ -146,7 +141,7 @@ export class ZoomApiService {
     if (initialize) {
       await this.configureApp();
     }
-    return this.zoomSdk.openUrl({
+    return zoomSdk.openUrl({
       url,
     });
   }

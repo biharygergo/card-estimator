@@ -7,7 +7,6 @@ import {
   collection,
   collectionData,
   doc,
-  docData,
   orderBy,
   query,
   setDoc,
@@ -30,6 +29,7 @@ import {
   RecurringMeetingLinkCreatedRoom,
   Room,
 } from '../types';
+import { docData } from 'rxfire/firestore';
 import { OrganizationService } from './organization.service';
 
 @Injectable({

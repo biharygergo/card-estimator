@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, sortedChanges, Timestamp } from '@angular/fire/firestore';
+import { CollectionReference, Timestamp } from '@angular/fire/firestore';
 import { NEVER, Observable, Subject, catchError, filter, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import {
@@ -10,6 +10,7 @@ import {
   setDoc,
   where,
 } from '@angular/fire/firestore';
+import { sortedChanges } from 'rxfire/firestore';
 
 export interface ReactionOption {
   id: string;

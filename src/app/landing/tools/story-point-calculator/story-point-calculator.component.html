@@ -22,10 +22,10 @@
                 target="_blank"
                 >strongly against this conversion</a
               >. This story point calculator helps the former teams estimate
-              project delivery timelines by converting story points into project
-              timelines. It considers various parameters such as team members,
-              velocity, days off, and buffer days to provide accurate and
-              realistic project timelines. By inputting these details, teams can
+              project delivery timelines by converting story points a
+              measurement of time. It considers various parameters such as team
+              members, velocity, days off, and buffer days to provide a somewhat
+              accurate project burndown. By inputting these details, teams can
               better plan and manage their projects, ensuring timely delivery
               and efficient resource allocation.
             </p>
@@ -38,6 +38,13 @@
               information to help you plan your project effectively. All data is
               stored locally in the URL, so you can easily share it with your
               team or bookmark it for future reference.
+            </p>
+            <h2>Why use this tool?</h2>
+            <p>
+              At my current workplace, we use a complex table to calculate burndown
+              charts for projects. This is meant to help us and it might help
+              you! It is much simpler to estimate with this tool than to import
+              tickets one-by-one into a more complex project management tool.
             </p>
           </mat-expansion-panel>
           <mat-expansion-panel #parametersExpander [expanded]="true">
@@ -190,13 +197,17 @@
             }
             <button mat-stroked-button (click)="addTeamMember()">
               <mat-icon>add</mat-icon>
-              Add another team member
+              Add team member
             </button>
           </mat-expansion-panel>
         </mat-accordion>
       </div>
       <div class="calculate-container">
-        <button mat-flat-button (click)="calculate()">
+        <button
+          mat-flat-button
+          (click)="calculate()"
+          [disabled]="!parametersForm.valid"
+        >
           <mat-icon>arrow_forward</mat-icon>
           Calculate!
         </button>

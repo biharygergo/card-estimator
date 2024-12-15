@@ -34,7 +34,6 @@ import {
 import { ChartConfiguration } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import {
-  MatAccordion,
   MatExpansionModule,
   MatExpansionPanel,
 } from '@angular/material/expansion';
@@ -43,7 +42,6 @@ import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatChipsModule } from '@angular/material/chips';
 import { distinctUntilChanged } from 'rxjs';
-import { add } from 'lodash';
 import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component';
 
 interface TeamMember {
@@ -52,6 +50,14 @@ interface TeamMember {
   contribution: number;
   daysOffUntilEnd: number;
   daysOff: Date[];
+}
+
+interface TeamMemberForm {
+  id: FormControl<string>;
+  name: FormControl<string>;
+  contribution: FormControl<number>;
+  daysOffUntilEnd: FormControl<number>;
+  daysOff: FormArray<FormControl<Date>>;
 }
 
 function createTeamMember(member?: TeamMember) {
@@ -118,6 +124,12 @@ function isSameDay(date1: Date, date2: Date): boolean {
   );
 }
 
+function setDateToStartOfDay(date: Date): Date {
+  const newDate = new Date(date);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+}
+
 function estimateProjectTimeline(config: {
   startDate: Date;
   teamMembers: TeamMember[];
@@ -178,12 +190,12 @@ function estimateProjectTimeline(config: {
         remainingStoryPoints,
         availableHoursThisDay / effectiveStoryPointHours
       );
-      remainingStoryPoints -= storyPointsThisDay;
       dailyBurndown.push({
         date: new Date(currentDate),
-        remainingStoryPoints,
+        remainingStoryPoints: remainingStoryPoints - storyPointsThisDay <= 0 ? 0 : remainingStoryPoints,
         storyPointsCompleted: storyPointsThisDay,
       });
+      remainingStoryPoints -= storyPointsThisDay;
       actualDaysFromCapacity++;
     } else {
       dailyBurndown.push({
@@ -253,13 +265,13 @@ function estimateProjectTimeline(config: {
 })
 export class StoryPointCalculatorComponent {
   protected readonly parametersForm = new FormGroup({
-    storyPoints: new FormControl<number>(0, [Validators.required]),
+    storyPoints: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
     startDate: new FormControl<Date>(new Date(), [Validators.required]),
     storyPointToDays: new FormControl<number>(1, [Validators.required]),
-    targetVelocity: new FormControl<number>(80, [Validators.required]),
-    staffing: new FormControl<number>(1, [Validators.required]),
-    bufferDays: new FormControl<number>(5, [Validators.required]),
-    teamMembers: new FormArray([createTeamMember()]),
+    targetVelocity: new FormControl<number>(80, [Validators.required, Validators.min(0), Validators.max(100)]),
+    staffing: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
+    bufferDays: new FormControl<number>(5, [Validators.required, Validators.min(0)]),
+    teamMembers: new FormArray<FormGroup<TeamMemberForm>>([]),
   });
 
   protected readonly result = signal<TimelineEstimate | undefined>(undefined);
@@ -295,6 +307,7 @@ export class StoryPointCalculatorComponent {
         type: 'time',
         time: {
           unit: 'day',
+          tooltipFormat:'yyyy-MM-dd', // <- HERE
         },
       },
     },
@@ -382,7 +395,7 @@ export class StoryPointCalculatorComponent {
     }
 
     const timelineEstimate = estimateProjectTimeline({
-      startDate: this.parametersForm.controls.startDate.value,
+      startDate: setDateToStartOfDay(this.parametersForm.controls.startDate.value),
       teamMembers: this.parametersForm.controls.teamMembers
         .value as TeamMember[],
       staffing: this.parametersForm.controls.staffing.value,

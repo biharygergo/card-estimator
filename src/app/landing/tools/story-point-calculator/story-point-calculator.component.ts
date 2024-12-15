@@ -163,13 +163,11 @@ function estimateProjectTimeline(config: {
     if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
       const availableHoursThisDay = teamMembers.length
         ? teamMembers.reduce((sum, member) => {
-            console.log(member.daysOff);
             if (
               member.daysOff.some((dayOff) =>
                 isSameDay(new Date(dayOff), currentDate)
               )
             ) {
-              console.log('day off');
               return sum;
             }
             return sum + (member.contribution / 100) * 8;

@@ -8,7 +8,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppConfigModule } from '../app-config.module';
-import { SharedModule } from '../shared/shared.module';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
 import {
   Observable,
@@ -22,6 +21,10 @@ import {
 } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { RecurringMeetingLink } from '../types';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
+import { MatButtonModule } from '@angular/material/button';
 
 type State = {
   roomId?: string;
@@ -36,7 +39,10 @@ type State = {
   imports: [
     CommonModule,
     RouterModule,
-    SharedModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    ProfileDropdownComponent,
+    MatButtonModule,
     AppConfigModule
 ],
   templateUrl: './recurring-meeting.component.html',

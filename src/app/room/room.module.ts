@@ -13,7 +13,6 @@ import { NotesFieldComponent } from './notes-field/notes-field.component';
 import { AddOrUpdateTopicComponent } from './topics-sidebar/add-or-update-topic/add-or-update-topic.component';
 import { TopicsSidebarComponent } from './topics-sidebar/topics-sidebar.component';
 import { VelocityComponent } from './velocity/velocity.component';
-import { SharedModule } from '../shared/shared.module';
 import { RoomConfigurationModalComponent } from './room-configuration-modal/room-configuration-modal.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TopicEditorComponent } from './topic-editor/topic-editor.component';
@@ -65,7 +64,6 @@ const routes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        SharedModule,
         MatSlideToggleModule,
         MatAutocompleteModule,
         MatButtonToggleModule,

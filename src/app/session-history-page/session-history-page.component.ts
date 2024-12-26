@@ -2,14 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NavigationService } from '../services/navigation.service';
-import { SharedModule } from '../shared/shared.module';
+import { AnonymousUserBannerComponent } from '../shared/anonymous-user-banner/anonymous-user-banner.component';
+import { SessionHistoryComponent } from '../shared/session-history/session-history.component';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    SharedModule
+    AnonymousUserBannerComponent,
+    SessionHistoryComponent,
+    MatIconModule,
+    MatButtonModule,
 ],
   selector: 'app-session-history-page',
   templateUrl: './session-history-page.component.html',

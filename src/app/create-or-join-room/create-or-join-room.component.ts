@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule, Params } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -50,7 +50,6 @@ import {
   AuthProgressState,
 } from '../shared/auth-progress-dialog/auth-progress-dialog.component';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../shared/shared.module';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
 import {
   signUpOrLoginDialogCreator,
@@ -67,6 +66,17 @@ import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 import { pricingModalCreator } from '../shared/pricing-table/pricing-table.component';
 import { ToastService } from '../services/toast.service';
 import { MeetApiService } from '../services/meet-api.service';
+import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ResizeMonitorDirective } from '../shared/directives/resize-monitor.directive';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 enum PageMode {
   CREATE = 'create',
@@ -126,10 +136,21 @@ const LOADING_MESSAGES = [
   imports: [
     CommonModule,
     RouterModule,
-    SharedModule,
     ZoomAppBannerComponent,
     AppConfigModule,
     CarbonAdComponent,
+    ProfileDropdownComponent,
+    MatIcon,
+    MatCardModule,
+    MatOptionModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    ResizeMonitorDirective,
+    MatTooltipModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   selector: 'app-create-or-join-room',
   templateUrl: './create-or-join-room.component.html',

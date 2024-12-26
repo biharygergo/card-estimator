@@ -6,7 +6,7 @@ import { HomeComponent } from './home/home.component';
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    loadComponent: () => import('./home/home.component').then((mod) => mod.HomeComponent),
     data: {
       title: 'Planning Poker - Made for Remote Teams - SCRUM Poker',
       disablePostfix: true,

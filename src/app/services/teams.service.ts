@@ -3,7 +3,7 @@ import { app, authentication, meeting, teamsCore } from '@microsoft/teams-js';
 import { Theme, ThemeService } from './theme.service';
 import { PaymentService } from './payment.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class TeamsService {
   isInitialized = false;
 

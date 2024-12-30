@@ -595,3 +595,49 @@ body {
     padding: 50px 16px !important;
   }
 }
+
+.shepherd-theme-custom.shepherd-element {
+  border-radius: 24px;
+  background: var(--mdc-dialog-container-color);
+
+  .shepherd-arrow::before {
+    background-color: var(--mdc-dialog-container-color) !important;
+  }
+
+  .shepherd-content {
+    border-radius: 24px;
+
+    .shepherd-header {
+      background: var(--mdc-dialog-container-color);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      .shepherd-title {
+        color: var(--mat-app-text-color);
+        font-weight: 500;
+      }
+    }
+
+    .shepherd-text,
+    .shepherd-footer {
+      background: var(--mdc-elevated-card-container-color);
+    }
+
+    .shepherd-text {
+      color: var(--mat-app-text-color);
+    }
+
+    .shepherd-button {
+      background: var(--mdc-filled-button-container-color);
+      color: var(--mdc-filled-button-label-text-color);
+      font-family: "Roboto";
+      font-weight: 500;
+      border-radius: 24px;
+    }
+
+    .shepherd-footer {
+      padding-top: 16px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+  }
+}

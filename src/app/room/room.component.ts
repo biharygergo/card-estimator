@@ -69,7 +69,6 @@ import { avatarModalCreator } from '../shared/avatar-selector-modal/avatar-selec
 import { AppConfig, APP_CONFIG } from '../app-config.module';
 import { ZoomApiService } from '../services/zoom-api.service';
 import { StarRatingComponent } from '../shared/star-rating/star-rating.component';
-import { toSignal } from '@angular/core/rxjs-interop';
 import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
@@ -111,6 +110,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
+import { ShepherdService } from 'angular-shepherd';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
@@ -161,6 +161,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   sidenav: MatSidenavContainer;
   @ViewChild('sidenavContent', { read: ElementRef, static: true })
   sidenavContent: ElementRef;
+  @ViewChild('roomControllerPanel') roomControllerPanel: RoomControllerPanelComponent;
+  @ViewChild('profileDropdown') profileDropdown: ProfileDropdownComponent;
+
   destroy = new Subject<void>();
 
   room = signal<Room | undefined>(undefined);
@@ -386,7 +389,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly breakpointObserver: BreakpointObserver,
     private readonly themeService: ThemeService,
     private readonly roomDataService: RoomDataService,
-    private readonly confirmDialogService: ConfirmDialogService
+    private readonly confirmDialogService: ConfirmDialogService,
+    private readonly shepherdService: ShepherdService
   ) {}
 
   ngOnInit(): void {
@@ -575,6 +579,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         element.style.animation = null;
       }, 10);
     });
+
+    this.startOnboarding();
   }
 
   ngOnDestroy(): void {
@@ -926,5 +932,147 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (confirmed) {
       this.router.navigate(['/create']);
     }
+  }
+
+  private startOnboarding() {
+    this.shepherdService.modal = true;
+    this.shepherdService.defaultStepOptions = {
+      classes: 'shepherd-theme-custom'
+    };
+  
+    this.shepherdService.addSteps([
+      {
+        id: 'welcome',
+        title: 'Welcome to PlanningPoker.live! 🎉',
+        text: 'Let me show you around the room so your team can start estimating issues together.',
+        buttons: [
+          {
+            text: 'Next',
+            action: () => {
+              this.shepherdService.next();
+            },
+          },
+          {
+            text: 'Skip',
+            action: () => {
+              this.shepherdService.cancel();
+            },
+          },
+        ],
+      },
+      {
+        id: 'topic-selector',
+        title: 'Topic selector',
+        text: 'Set the topic of each round here. You can type a topic or select from JIRA or Linear.',
+        attachTo: {
+          element: '.topic-container',
+          on: 'bottom',
+        },
+        buttons: [
+          {
+            text: 'Next',
+            action: () => {
+              this.shepherdService.next();
+            },
+          },
+          {
+            text: 'Back',
+            action: () => {
+              this.shepherdService.back();
+            },
+          },
+        ],
+      },
+      {
+        id: 'room-members',
+        title: 'Room members',
+        text: 'You can see who has joined the room as well as their estimates here. Once everyone has estimated, statistics will also be shown here.',
+        attachTo: {
+          element: '.members-card',
+          on: 'right',
+        },
+        buttons: [
+          {
+            text: 'Next',
+            action: () => {
+              this.shepherdService.next();
+            },
+          },
+          {
+            text: 'Back',
+            action: () => {
+              this.shepherdService.back();
+            },
+          },
+        ],
+      },
+      {
+        id: 'room-control',
+        title: 'Room control',
+        text: 'Everything you need to control the room is here. You can start a new round, reveal results, invite others, set a timer or configure more settings.',
+        attachTo: {
+          element: '.estimate-container .big-panel',
+          on: 'right',
+        },
+        buttons: [
+          {
+            text: 'Next',
+            action: () => {
+              this.roomControllerPanel.openMenu();
+              this.shepherdService.next();
+            },
+          },
+          {
+            text: 'Back',
+            action: () => {
+              this.shepherdService.back();
+            },
+          },
+        ],
+      },
+      {
+        id: 'more-options',
+        attachTo: {
+          element: '.mat-mdc-menu-panel',
+          on: 'left'
+        },
+        title: 'More settings',
+        text: 'You can configure different card sets, manage rounds or set up room security from this menu.',
+        buttons: [
+          {
+            text: 'Next',
+            action: () => {
+              this.roomControllerPanel.closeMenu();
+              this.profileDropdown.openMenu();
+              this.shepherdService.next();
+            },
+          },
+          {
+            text: 'Back',
+            action: () => {
+              this.shepherdService.back();
+            },
+          },
+        ]
+      },
+      {
+        id: 'app-options',
+        attachTo: {
+          element: '.profile-menu',
+          on: 'right',
+        },
+        title: 'App options',
+        text: 'You can find all app related options up here. You can see your previous sessions, create an organization or recurring meeting links. You can also set the app theme, view your credits and set up integrations from this menu.',
+        buttons: [
+          {
+            text: 'Finish',
+            action: () => {
+              this.shepherdService.complete();
+            }
+          }
+        ]
+      }
+    ]);
+    this.shepherdService.start();
   }
 }

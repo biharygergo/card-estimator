@@ -44,6 +44,7 @@
     "@sentry/tracing": "^7.114.0",
     "@stripe/firestore-stripe-payments": "^0.0.6",
     "@zoom/appssdk": "^0.16.11",
+    "angular-shepherd": "^18.0.2",
     "chart.js": "^4.4.7",
     "chartjs-adapter-date-fns": "^3.0.0",
     "date-fns": "^4.1.0",

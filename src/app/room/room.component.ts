@@ -606,7 +606,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
     this.shouldStartOnboardingTutorial$.subscribe(({small}) => {
-      this.authService.updateUserPreference({ onboardingTutorialShown: true }).subscribe();
       this.startOnboarding(small);
     });
   }
@@ -999,6 +998,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             action: () => {
               this.shepherdService.cancel();
               this.analytics.logSkippedOnboarding();
+              this.authService.updateUserPreference({ onboardingTutorialShown: true }).subscribe();
             },
           },
           {
@@ -1006,6 +1006,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             action: () => {
               this.shepherdService.next();
               this.analytics.logStartedOnboarding();
+              this.authService.updateUserPreference({ onboardingTutorialShown: true }).subscribe();
             },
           },
         ],

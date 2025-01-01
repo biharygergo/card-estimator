@@ -16,6 +16,9 @@ describe('Authentication', () => {
 
   it('can link an account with email', () => {
     createNewRoom('Test Bela');
+    // Skip onboarding
+    cy.contains('No thanks').click();
+
     cy.get('#menu-button').click();
     cy.get('#account-menu-item').click();
 

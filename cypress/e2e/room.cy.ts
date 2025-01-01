@@ -9,6 +9,7 @@ describe('Inside the room', () => {
     cy.get('@roomUrl').then((url) => {
       roomUrl = url;
     });
+
   });
 
   beforeEach(() => {
@@ -18,6 +19,33 @@ describe('Inside the room', () => {
   afterEach(() => {
     cy.wait(1000);
   });
+
+  it('shows onboarding tutorial', () => {
+    cy.wait(1000);
+
+    cy.contains('Greetings and Welcome to PlanningPoker.live 🎉').should('be.visible');
+    cy.contains('Next').click();
+
+    cy.contains('Define Your Topic').should('be.visible');
+    cy.contains('Next').click({force: true});
+
+    cy.contains('View Room Participants').should('be.visible');
+    cy.contains('Next').click({force: true});
+
+    cy.contains('Poker Card Deck').should('be.visible');
+    cy.contains('Next').click({force: true});
+
+    cy.contains('Manage the Room').should('be.visible');
+    cy.contains('Next').click({force: true});
+
+    cy.contains('Additional Configuration').should('be.visible');
+    cy.contains('Next').click({force: true});
+
+    cy.contains('Access Your Account & Settings').should('be.visible');
+    cy.contains('Finish').click();
+
+    cy.contains('Test User').should('be.visible');
+  })
 
   it('can cast votes', () => {
     cy.contains('Test User').should('be.visible');

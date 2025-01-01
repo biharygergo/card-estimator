@@ -1,6 +1,7 @@
 <ng-container>
   <button
     mat-stroked-button
+    #menuTrigger="matMenuTrigger"
     [matMenuTriggerFor]="menu"
     class="menu-button responsive-label-button"
     id="menu-button"
@@ -8,7 +9,7 @@
     <mat-icon>more_vert</mat-icon>
     Menu
   </button>
-  <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true">
+  <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true" class="profile-menu">
     @if (currentUser | async; as user) {
     <button mat-menu-item (click)="openAvatarSelector()" id="account-menu-item">
       <mat-icon>account_circle</mat-icon>

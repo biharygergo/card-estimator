@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -44,6 +44,8 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class ProfileDropdownComponent implements OnInit {
+  @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
+
   currentUser = this.auth.user;
 
   isOnJoinOrCreateScreen$: Observable<boolean> = this.activeRoute.url.pipe(
@@ -155,5 +157,13 @@ export class ProfileDropdownComponent implements OnInit {
 
   openRecurringMeetingsModal() {
     this.dialog.open(...recurringMeetingsModalCreator());
+  }
+
+  openMenu() {
+    this.menuTrigger.openMenu();
+  }
+
+  closeMenu() {
+    this.menuTrigger.closeMenu();
   }
 }

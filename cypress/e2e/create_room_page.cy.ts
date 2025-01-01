@@ -17,6 +17,9 @@ describe('Creating a room as a new user', () => {
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
 
+    // Skip onboarding
+    cy.contains('No thanks').click();
+
     // It uses a credit
     cy.contains('Menu').click();
     cy.contains('My account').click();

@@ -2,7 +2,7 @@
   <mat-sidenav-content class="sidenav-content" #sidenavContent>
     <div class="navbar">
       <div class="navbar-left">
-        <app-profile-dropdown class="profile-dropdown" />
+        <app-profile-dropdown class="profile-dropdown" #profileDropdown />
       </div>
       <div class="navbar-right">
         @if(!(permissionsService.isPremiumSubscriber | async) && (isRoomCreator$
@@ -170,6 +170,7 @@
       (muteClicked)="toggleMute()"
       (inviteClicked)="copyRoomId()"
       (expandClicked)="toggleControlPane()"
+      #roomControllerPanel
     />
   </div>
 </ng-template>

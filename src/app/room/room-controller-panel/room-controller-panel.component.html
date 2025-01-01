@@ -1,7 +1,7 @@
 <mat-card appearance="outlined" class="rounded-card">
   @if (isExpanded()) {
   <mat-card-content class="big-panel">
-    <div class="action-buttons-container">
+    <div class="action-buttons-container main-room-actions">
       @if (room()?.isAsyncVotingEnabled) {
       <div class="alert">
         <button
@@ -119,6 +119,7 @@
     <div class="card-footer-actions align-right">
       <button
         mat-stroked-button
+        #menuTrigger="matMenuTrigger"
         [matMenuTriggerFor]="roomSettingsMenu"
         id="room-options-button"
         class="responsive-label-button"

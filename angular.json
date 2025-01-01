@@ -39,7 +39,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/shepherd.js/dist/css/shepherd.css"
             ],
             "scripts": [
               "node_modules/marked/marked.min.js"

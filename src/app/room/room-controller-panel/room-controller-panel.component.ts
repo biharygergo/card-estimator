@@ -9,6 +9,7 @@ import {
   OnInit,
   Output,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
@@ -116,6 +117,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   readonly inviteButtonCooldownState$ = createCooldownState();
 
   readonly MemberType = MemberType;
+
+  @ViewChild('menuTrigger') private readonly settingsMenuTrigger: MatMenuTrigger;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -312,5 +315,13 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       this.room(),
       this.estimatorService.activeMember.id
     );
+  }
+
+  openMenu() {
+    this.settingsMenuTrigger.openMenu();
+  }
+
+  closeMenu() {
+    this.settingsMenuTrigger.closeMenu();
   }
 }

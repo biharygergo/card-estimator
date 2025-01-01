@@ -598,17 +598,18 @@ body {
 
 .shepherd-theme-custom.shepherd-element {
   border-radius: 24px;
-  background: var(--mdc-dialog-container-color);
+  background: var(--mat-menu-container-color);
 
   .shepherd-arrow::before {
-    background-color: var(--mdc-dialog-container-color) !important;
+    background-color: var(--mat-menu-container-color) !important;
   }
 
   .shepherd-content {
     border-radius: 24px;
+    padding: 1rem 0.5rem;
 
     .shepherd-header {
-      background: var(--mdc-dialog-container-color);
+      background: var(--mat-menu-container-color);
       border-top-left-radius: 24px;
       border-top-right-radius: 24px;
       .shepherd-title {
@@ -619,7 +620,7 @@ body {
 
     .shepherd-text,
     .shepherd-footer {
-      background: var(--mdc-elevated-card-container-color);
+      background: var(--mat-menu-container-color);
     }
 
     .shepherd-text {
@@ -627,11 +628,27 @@ body {
     }
 
     .shepherd-button {
-      background: var(--mdc-filled-button-container-color);
-      color: var(--mdc-filled-button-label-text-color);
       font-family: "Roboto";
       font-weight: 500;
       border-radius: 24px;
+      background: var(--mdc-filled-button-container-color);
+      color: var(--mdc-filled-button-label-text-color);
+      transition: background 50ms linear;
+
+      &:hover {
+        background: #7c94c3;
+      }
+
+      &.shepherd-button-secondary {
+        background: none;
+        color: var(--mdc-outlined-button-label-text-color);
+
+        &:hover {
+          background: none;
+        }
+      }
+
+      
     }
 
     .shepherd-footer {

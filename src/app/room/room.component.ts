@@ -161,7 +161,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   sidenav: MatSidenavContainer;
   @ViewChild('sidenavContent', { read: ElementRef, static: true })
   sidenavContent: ElementRef;
-  @ViewChild('roomControllerPanel') roomControllerPanel: RoomControllerPanelComponent;
+  @ViewChild('roomControllerPanel')
+  roomControllerPanel: RoomControllerPanelComponent;
   @ViewChild('profileDropdown') profileDropdown: ProfileDropdownComponent;
 
   destroy = new Subject<void>();
@@ -261,8 +262,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     })
   );
 
-  sessionCount$ = this.estimatorService.getPreviousSessions().pipe(
-    first(),
+  private previousSessions$ = this.estimatorService
+    .getPreviousSessions()
+    .pipe(first(), share(), takeUntil(this.destroy));
+
+  sessionCount$ = this.previousSessions$.pipe(
     map((sessions) => sessions.length),
     share(),
     takeUntil(this.destroy)
@@ -313,6 +317,27 @@ export class RoomComponent implements OnInit, OnDestroy {
       return roundNumber > 0 && sessionCount < 2 && !pref.aloneInRoomModalShown;
     }),
     filter((shouldOpen) => !!shouldOpen)
+  );
+
+  shouldStartOnboardingTutorial$: Observable<{
+    shouldOpen: boolean;
+    small: boolean;
+  }> = combineLatest([
+    this.previousSessions$,
+    this.user$,
+    this.userPreferences$.pipe(first()),
+    this.isSmallScreen$,
+  ]).pipe(
+    map(([previousSessions, user, pref, isSmallScreen]) => {
+      return {
+        shouldOpen:
+          previousSessions.length === 1 &&
+          previousSessions[0].createdById === user.uid &&
+          !pref.onboardingTutorialShown,
+        small: isSmallScreen.matches,
+      };
+    }),
+    filter(({ shouldOpen }) => !!shouldOpen)
   );
 
   shouldOpenExistingUserPricingModal$: Observable<boolean> = combineLatest([
@@ -580,7 +605,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       }, 10);
     });
 
-    this.startOnboarding();
+    this.shouldStartOnboardingTutorial$.subscribe(({small}) => {
+      this.authService.updateUserPreference({ onboardingTutorialShown: true }).subscribe();
+      this.startOnboarding(small);
+    });
   }
 
   ngOnDestroy(): void {
@@ -934,144 +962,145 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   }
 
-  private startOnboarding() {
+  private startOnboarding(isSmallScreen = true) {
     this.shepherdService.modal = true;
     this.shepherdService.defaultStepOptions = {
-      classes: 'shepherd-theme-custom'
+      classes: 'shepherd-theme-custom',
+      scrollTo: { behavior: 'smooth' },
     };
-  
+
+    const nextAndBackButtons = [
+      {
+        text: 'Back',
+        secondary: true,
+        action: () => {
+          this.shepherdService.back();
+          this.analytics.logClickedBackOnboarding();
+        },
+      },
+      {
+        text: 'Next',
+        action: () => {
+          this.shepherdService.next();
+          this.analytics.logClickedNextOnboarding();
+        },
+      },
+    ];
+
     this.shepherdService.addSteps([
       {
         id: 'welcome',
-        title: 'Welcome to PlanningPoker.live! 🎉',
-        text: 'Let me show you around the room so your team can start estimating issues together.',
+        title: 'Greetings and Welcome to PlanningPoker.live 🎉',
+        text: `<p>Get ready to streamline your estimation sessions! This brief guide will introduce you to the key features available in your virtual Planning Poker room.</p><p>If you're a Scrum Master, this tour will show you how to guide your team effectively. Let's get started!</p>`,
         buttons: [
+          {
+            text: 'No thanks',
+            secondary: true,
+            action: () => {
+              this.shepherdService.cancel();
+              this.analytics.logSkippedOnboarding();
+            },
+          },
           {
             text: 'Next',
             action: () => {
               this.shepherdService.next();
-            },
-          },
-          {
-            text: 'Skip',
-            action: () => {
-              this.shepherdService.cancel();
+              this.analytics.logStartedOnboarding();
             },
           },
         ],
       },
       {
         id: 'topic-selector',
-        title: 'Topic selector',
-        text: 'Set the topic of each round here. You can type a topic or select from JIRA or Linear.',
+        title: 'Define Your Topic',
+        text: `<p>Use this area to set the focal point for your team’s discussion—whether it's a story, bug, or task. You can easily edit the topic at any time or link it directly from Jira or Linear.</p><p>Clear topics help keep everyone on the same page throughout each round.</p>`,
         attachTo: {
           element: '.topic-container',
           on: 'bottom',
         },
-        buttons: [
-          {
-            text: 'Next',
-            action: () => {
-              this.shepherdService.next();
-            },
-          },
-          {
-            text: 'Back',
-            action: () => {
-              this.shepherdService.back();
-            },
-          },
-        ],
+        buttons: nextAndBackButtons,
       },
       {
         id: 'room-members',
-        title: 'Room members',
-        text: 'You can see who has joined the room as well as their estimates here. Once everyone has estimated, statistics will also be shown here.',
+        title: 'View Room Participants',
+        text: `<p>Team members who join this room will appear here, ready to cast their estimates. Once everyone has voted, the results and statictics will also be displayed here.</p><p>There is also a built-in notes section—perfect for capturing key conversations and action points relevant to each topic.</p>`,
         attachTo: {
           element: '.members-card',
-          on: 'right',
+          on: isSmallScreen ? 'top' : 'right',
         },
-        buttons: [
-          {
-            text: 'Next',
-            action: () => {
-              this.shepherdService.next();
-            },
-          },
-          {
-            text: 'Back',
-            action: () => {
-              this.shepherdService.back();
-            },
-          },
-        ],
+        buttons: nextAndBackButtons,
+      },
+      {
+        id: 'card-deck',
+        title: 'Poker Card Deck',
+        text: `<p>Here you can select your estimate by choosing a card that reflects the complexity or effort of the round's topic. Once all teammates have selected their cards, you can reveal everyone's estimates for transparent discussion.</p><p>You can even switch card sets later if you prefer a different estimation scale.</p>`,
+        attachTo: {
+          element: '.card-deck-container',
+          on: 'top',
+        },
+        buttons: nextAndBackButtons,
       },
       {
         id: 'room-control',
-        title: 'Room control',
-        text: 'Everything you need to control the room is here. You can start a new round, reveal results, invite others, set a timer or configure more settings.',
+        title: 'Manage the Room',
+        text: `<p>Control your workflow from this panel—start a round, reveal results, invite team members, or set a timer to keep discussions focused. Keeping all controls in one area makes it easy to moderate sessions.</p><p>Use these features to ensure smooth estimation cycles.</p>`,
         attachTo: {
           element: '.estimate-container .big-panel',
-          on: 'right',
+          on: isSmallScreen ? 'top' : 'right',
         },
-        buttons: [
-          {
-            text: 'Next',
-            action: () => {
-              this.roomControllerPanel.openMenu();
-              this.shepherdService.next();
-            },
-          },
-          {
-            text: 'Back',
-            action: () => {
-              this.shepherdService.back();
-            },
-          },
-        ],
+        buttons: nextAndBackButtons,
       },
       {
         id: 'more-options',
         attachTo: {
           element: '.mat-mdc-menu-panel',
-          on: 'left'
+          on: isSmallScreen ? 'top' : 'left',
         },
-        title: 'More settings',
-        text: 'You can configure different card sets, manage rounds or set up room security from this menu.',
-        buttons: [
-          {
-            text: 'Next',
-            action: () => {
-              this.roomControllerPanel.closeMenu();
-              this.profileDropdown.openMenu();
-              this.shepherdService.next();
-            },
+        title: 'Additional Configuration',
+        text: `<p>Need more advanced settings? Access extra configuration options here, including different card sets, passwords, permissions, and a sidebar for managing rounds.</p><p>This section helps you tailor your experience to your team’s specific needs.</p>`,
+        beforeShowPromise: () => {
+          return new Promise((resolve) => {
+            this.roomControllerPanel.openMenu();
+            resolve(true);
+          });
+        },
+        when: {
+          hide: () => {
+            this.roomControllerPanel.closeMenu();
           },
-          {
-            text: 'Back',
-            action: () => {
-              this.shepherdService.back();
-            },
-          },
-        ]
+        },
+        buttons: nextAndBackButtons,
       },
       {
         id: 'app-options',
         attachTo: {
           element: '.profile-menu',
-          on: 'right',
+          on: isSmallScreen ? 'top' : 'right',
         },
-        title: 'App options',
-        text: 'You can find all app related options up here. You can see your previous sessions, create an organization or recurring meeting links. You can also set the app theme, view your credits and set up integrations from this menu.',
+        title: 'Access Your Account & Settings',
+        text: `<p>All other account management features are found here—update your avatar, check your past sessions, monitor credits, or manage your organization in one convenient menu.</p><p>These tools help maintain a smooth and organized Planning Poker experience for you and your team.</p>`,
+        beforeShowPromise: () => {
+          return new Promise((resolve) => {
+            this.profileDropdown.openMenu();
+            resolve(true);
+          });
+        },
+        when: {
+          hide: () => {
+            this.profileDropdown.closeMenu();
+          },
+        },
         buttons: [
           {
             text: 'Finish',
             action: () => {
+              this.profileDropdown.closeMenu();
               this.shepherdService.complete();
-            }
-          }
-        ]
-      }
+              this.analytics.logCompletedOnboarding();
+            },
+          },
+        ],
+      },
     ]);
     this.shepherdService.start();
   }

@@ -375,4 +375,24 @@ export class AnalyticsService {
   logClickedImportBatchIssues() {
     this.logEventInternal('clicked_import_batch_issues');
   }
+
+  logCompletedOnboarding() {
+    this.logEventInternal('completed_onboarding');
+  }
+
+  logClickedNextOnboarding() {
+    this.logEventInternal('clicked_next_onboarding');
+  }
+
+  logClickedBackOnboarding() {
+    this.logEventInternal('clicked_back_onboarding');
+  }
+
+  logStartedOnboarding() {
+    this.logEventInternal('started_onboarding');
+  }
+
+  logSkippedOnboarding() {
+    this.logEventInternal('skipped_onboarding');
+  }
 }

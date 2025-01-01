@@ -507,6 +507,7 @@ export interface UserPreference {
   aloneInRoomModalShown?: boolean;
   selectedIssueIntegrationProvider?: 'jira' | 'linear';
   activeOrganizationId?: string;
+  onboardingTutorialShown?: boolean;
 }
 
 export interface Credit {

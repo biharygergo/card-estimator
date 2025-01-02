@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   EventEmitter,
+  importProvidersFrom,
   Inject,
   input,
   Output,
@@ -19,10 +20,34 @@ import { finalize } from 'rxjs/operators';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import jira2md from 'jira2md';
 import { LinearService } from 'src/app/services/linear.service';
-import { MarkdownComponent } from 'ngx-markdown';
+import {
+  MARKED_OPTIONS,
+  MarkdownComponent,
+  MarkdownModule,
+  MarkedOptions,
+  MarkedRenderer,
+  provideMarkdown,
+} from 'ngx-markdown';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton } from '@angular/material/button';
+
+// function that returns `MarkedOptions` with renderer override
+export function markedOptionsFactory(): MarkedOptions {
+  const renderer = new MarkedRenderer();
+  const linkRenderer = renderer.link;
+  renderer.link = (href, title, text) => {
+    const html = linkRenderer.call(renderer, href, title, text);
+    return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ');
+  };
+
+  return {
+    renderer: renderer,
+    gfm: true,
+    breaks: false,
+    pedantic: false,
+  };
+}
 
 @Component({
   selector: 'app-rich-topic',
@@ -32,6 +57,14 @@ import { MatIconButton } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [MatIconButton, MatTooltip, MatIcon, MarkdownComponent],
+  providers: [
+    provideMarkdown({
+      markedOptions: {
+        provide: MARKED_OPTIONS,
+        useFactory: markedOptionsFactory,
+      },
+    })
+  ]
 })
 export class RichTopicComponent {
   richTopic = input.required<RichTopic | null | undefined>();
@@ -61,7 +94,7 @@ export class RichTopicComponent {
     private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly permissionService: PermissionsService
-  ) {}
+  ) { }
 
   openRemoteTopic() {
     this.analyticsService.logClickedViewOnJiraButton();

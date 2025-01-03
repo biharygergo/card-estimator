@@ -337,7 +337,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         small: isSmallScreen.matches,
       };
     }),
-    filter(({ shouldOpen }) => !!shouldOpen)
+    filter(({ shouldOpen }) => !!shouldOpen),
+    take(1)
   );
 
   shouldOpenExistingUserPricingModal$: Observable<boolean> = combineLatest([

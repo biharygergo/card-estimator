@@ -38,3 +38,4 @@
 /knowledge-base/commonly-misused-terms-planning-poker
 /knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live
 /knowledge-base/maximize-estimation-with-different-card-sets-in-planningpoker-live
+/knowledge-base/planningpoker-live-2024-year-in-review

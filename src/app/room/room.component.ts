@@ -1025,7 +1025,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       {
         id: 'room-members',
         title: 'View Room Participants',
-        text: `<p>Team members who join this room will appear here, ready to cast their estimates. Once everyone has voted, the results and statictics will also be displayed here.</p><p>There is also a built-in notes section—perfect for capturing key conversations and action points relevant to each topic.</p>`,
+        text: `<p>Team members who join this room will appear here, ready to cast their estimates. Once everyone has voted, the results and statistics will also be displayed here.</p><p>There is also a built-in notes section—perfect for capturing key conversations and action points relevant to each topic.</p>`,
         attachTo: {
           element: '.members-card',
           on: isSmallScreen ? 'top' : 'right',

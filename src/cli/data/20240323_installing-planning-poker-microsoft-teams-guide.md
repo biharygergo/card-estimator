@@ -15,7 +15,7 @@ Efficiency and cohesion are key in any collaborative setting, especially for rem
 Getting started with our app in Teams is straightforward. You can find it in the Teams app store, known as "App Source." Simply search for "Planning Poker" or navigate directly to the [app listing](https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview). There, you'll find basic information and screenshots showcasing its functionality. Rest assured, the app only requires minimal permissions to function within Teams.
 
 <div class="image-container">
-    <img alt="Store listing for PlanningPoker.live" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/teams-store-listing.png">
+    <img alt="Store listing for PlanningPoker.live" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/teams-store-listing.png">
     <p>App Source listing for PlanningPoker.live</p>
 </div>
 
@@ -36,7 +36,7 @@ For regularly scheduled planning meetings, such as "Weekly Planning," selecting 
 With the app installed, it becomes readily available as a tab within your meeting or chat interface. The Planning Poker technique is typically utilized during planning meetings, making this integration perfectly suited for the task. Follow these steps to use Planning Poker in your meetings:
 
 <div class="image-container">
-    <img alt="Create a room screen of the app" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/teams-create-room-screen.png">
+    <img alt="Create a room screen of the app" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/teams-create-room-screen.png">
     <p>Create a room screen in PlanningPoker.live in Teams</p>
 </div>
 
@@ -54,7 +54,7 @@ With the app installed, it becomes readily available as a tab within your meetin
    Explore additional features to enhance your planning sessions further.
 
 <div class="image-container">
-    <img alt="The is shared to the Meeting Stage" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/teams-meeting-stage.png">
+    <img alt="The is shared to the Meeting Stage" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/teams-meeting-stage.png">
     <p>Click "Invite" and the app will be shared with everyone and put on the meeting stage</p>
 </div>
 

@@ -21,7 +21,7 @@ youtubeVideoId: UFomiKX_cPU
 2.  **Navigate to the "Integrations" menu** (or edit the topic of a planning round) and select "Import"
 
 <div class="image-container">
-    <img alt="Import dropdown in the topic editor" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/linear-selector.png">
+    <img alt="Import dropdown in the topic editor" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/linear-selector.png">
     <p>Choose Linear from the Import dropdown</p>
 </div>
 
@@ -29,13 +29,13 @@ youtubeVideoId: UFomiKX_cPU
 4.  **You'll be directed to the Linear authorization screen.** Grant Planning Poker.live access to your Linear account by clicking "Authorize Planning Poker".
 
 <div class="image-container">
-    <img alt="Linear Auth screen" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/linear-auth-screen.png">
+    <img alt="Linear Auth screen" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/linear-auth-screen.png">
     <p>Authorize Planning Poker to read issues and write estimate results back</p>
 </div>
 
 5.  **Voila! Linear is now connected!** When you click on the topic editor, the auto-suggest box will display tickets from your recent Linear history. Additionally, the editor acts as a search bar, allowing you to search all of your Linear issues for easy selection.
 <div class="image-container">
-    <img alt="Linear issues in the Planning Poker topic editor" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/linear-integration.png">
+    <img alt="Linear issues in the Planning Poker topic editor" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/linear-integration.png">
     <p>Linear issues in the topic editor after successful connection</p>
 </div>
 

@@ -17,7 +17,7 @@ This year, 🏢 31,465 rooms were created on PlanningPoker.live, 🧑‍🧑‍�
 🔄 The site saw 1.5 million page views in 2024 and tracked 5.6 million analytics events to help us understand how people are using the platform. On the technical side, 345 [git commits](https://github.com/biharygergo/card-estimator/commits/master/) were made—a mix of bug fixes, improvements, and new features.
 
 <div class="image-container">
-    <img alt="PlanningPoker.live statistics for 2024" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680,q_auto/v1711188812/Group_37_1_sgax77">
+    <img alt="PlanningPoker.live statistics for 2024" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70,q_auto/v1711188812/Group_37_1_sgax77">
     <p>PlanningPoker.live statistics for 2024</p>
 </div>
 

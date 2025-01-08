@@ -28,7 +28,7 @@ Follow these simple steps to install the app:
 1. **Visit the Google Workspace Marketplace:** First, head over to the [Workspace Marketplace](https://workspace.google.com/marketplace/app/planningpokerlive/417578634660) and search for "PlanningPoker.live." Once you’ve located the app, click on the blue “Install” button to add it to your Google account.
 
 <div class="image-container">
-    <img alt="PlanningPoker.live in Marketplace" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/Meet_store.png">
+    <img alt="PlanningPoker.live in Marketplace" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet_store.png">
     <p>PlanningPoker.live in the Workspace Marketplace</p>
 </div>
 
@@ -37,7 +37,7 @@ Follow these simple steps to install the app:
 3. **Accessing PlanningPoker.live in Google Meet:** Once the installation is complete, head over to [Google Meet](https://meet.google.com). Start or join a meeting, and then click on the “Activities” icon located in the bottom-right corner to open the sidebar.
 
 <div class="image-container">
-    <img alt="PlanningPoker.live in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/Meet-apps-tray.png">
+    <img alt="PlanningPoker.live in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet-apps-tray.png">
     <p>Google Meet Activities sidebar open</p>
 </div>
 
@@ -47,7 +47,7 @@ Follow these simple steps to install the app:
    - If you’re joining, simply enter the room ID shared by your team.
 
 <div class="image-container">
-    <img alt="PlanningPoker.live open in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/Meet-landing.png">
+    <img alt="PlanningPoker.live open in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet-landing.png">
     <p>PlanningPoker.live started in Google Meet</p>
 </div>
 
@@ -58,7 +58,7 @@ Once inside the session, the next step is to invite your teammates. To do this, 
 Alternatively, you can copy the room ID and share it manually with colleagues via chat or email. They can then join the room directly from their Meet interface or through the PlanningPoker.live web app.
 
 <div class="image-container">
-    <img alt="PlanningPoker.live open in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1680/v1711188812/Meet_3.png">
+    <img alt="PlanningPoker.live open in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet_3.png">
     <p>Click the "Invite" button to share the room</p>
 </div>
 

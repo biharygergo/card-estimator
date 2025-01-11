@@ -10,7 +10,6 @@
 .loading-card {
   width: 80%;
   max-width: 300px;
-  view-transition-name: loading-card;
   
   color: var(--mat-card-subtitle-text-color);
 
@@ -20,6 +19,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    padding-bottom: 2rem;
   }
 }
 
@@ -32,10 +32,10 @@
 .loader {
   font-size: 10px;
   position: relative;
-  border-top: 4px solid rgba(255, 255, 255, 0.2);
-  border-right: 4px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 4px solid rgba(255, 255, 255, 0.2);
-  border-left: 4px solid #ffffff;
+  border-top: 4px solid var(--mat-card-subtitle-text-color);
+  border-right: 4px solid var(--mat-card-subtitle-text-color);
+  border-bottom: 4px solid var(--mat-card-subtitle-text-color);
+  border-left: 4px solid var(--mdc-outlined-card-container-color);
   transform: translateZ(0);
   animation: load 1s infinite linear;
 }

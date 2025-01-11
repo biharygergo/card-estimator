@@ -41,6 +41,7 @@
 }
 
 .meta-container {
+  view-transition-name: loading-card;
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -132,7 +133,6 @@
 }
 
 .members-card {
-  view-transition-name: loading-card;
   margin-bottom: 1rem;
   flex-shrink: 0;
   transition: height 200ms ease-out;

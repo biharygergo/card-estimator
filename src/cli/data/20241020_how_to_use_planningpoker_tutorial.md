@@ -7,6 +7,8 @@ author: Gergely Bihary
 coverImageId: Tutorial_1_thumbnail_jlpkbg
 coverImageAlt: Video thumbnail image
 youtubeVideoId: FwdMBev0pzU
+category: guide
+tags: tutorial, planning poker, guide
 ---
 
 Welcome to our first tutorial on using PlanningPoker.live! In this video, we’ll walk you through the basics of setting up and running an estimation session with your team. Whether you’re new to Agile estimation or looking to improve your backlog refinement process, this guide will help you get started.

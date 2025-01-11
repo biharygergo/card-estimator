@@ -7,6 +7,8 @@ author: Gergely Bihary
 coverImageId: topics
 coverImageAlt: A graphic showing issues stacked over each other
 youtubeVideoId: X5ox2EBk3Bs
+category: guide
+tags: integration, jira, planning poker
 ---
 
 ### Introduction

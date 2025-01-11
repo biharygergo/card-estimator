@@ -6,6 +6,8 @@ lastUpdated: 2023/10/05
 author: Gergely Bihary
 coverImageId: pexels-lukas-317353_hm0fzm
 coverImageAlt: A top shot of a post it and a keyboard
+category: techniques
+tags: agile, estimation, scrum
 ---
 ## Introduction
 

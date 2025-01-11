@@ -7,6 +7,8 @@ author: Gergely Bihary
 coverImageId: Tutorial_2_thumbnail_2_pkrdvi
 coverImageAlt: Video thumbnail image showing different card sets in PlanningPoker.live
 youtubeVideoId: Yb5hrUG3h9E
+category: guide
+tags: planning poker, fibonacci, agile, estimate, cards
 ---
 
 ## **Maximize Your Estimation Process with Different Card Sets in PlanningPoker.live**

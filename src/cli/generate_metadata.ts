@@ -2,7 +2,6 @@ import { openSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { Article } from '../app/landing/blog/types';
 import * as path from 'path';
 
-
 export function getArticles(): Article[] {
   return readdirSync(path.join(__dirname, 'data'))
     .map((fileName) => {
@@ -24,10 +23,14 @@ export function getArticles(): Article[] {
             fieldName: splitLine[0],
             content: splitLine[1],
           }))
-          .reduce(
-            (acc, curr) => ({ ...acc, [curr.fieldName]: curr.content.trim() }),
-            {}
-          ) as Omit<Article, 'content'>;
+          .reduce((acc, curr) => {
+            const fieldContent = curr.content.trim();
+            if (curr.fieldName === 'tags') {
+              return { ...acc, [curr.fieldName]: fieldContent.split(', ') };
+            }
+
+            return { ...acc, [curr.fieldName]: fieldContent };
+          }, {}) as Omit<Article, 'content'>;
 
         return { ...metaContent, content };
       } catch (e) {
@@ -40,12 +43,7 @@ export function getArticles(): Article[] {
 
 function generateArticlesToAssets() {
   const articles = getArticles();
-  const assetsArticlesPath = path.join(
-    __dirname,
-    '..',
-    'assets',
-    'articles'
-  );
+  const assetsArticlesPath = path.join(__dirname, '..', 'assets', 'articles');
 
   /** Generate index file */
   const indexFilePath = path.join(assetsArticlesPath, 'index.json');

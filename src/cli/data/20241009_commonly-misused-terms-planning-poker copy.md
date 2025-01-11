@@ -6,6 +6,8 @@ lastUpdated: 2024/10/09
 author: Gergely Bihary
 coverImageId: planning-poker-misused-terms
 coverImageAlt: Word cloud around Planning Poker
+category: other
+tags: planning poker, planningpoker, pokerplanning
 ---
 
 If you’ve ever stumbled across terms like “poker planning” or “backlog refinement poker” and wondered, “Are these just creative variations of Planning Poker, or am I missing out on a new agile technique?” — you’re not alone!

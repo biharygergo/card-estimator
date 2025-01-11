@@ -6,6 +6,8 @@ lastUpdated: 2024/06/01
 author: Gergely Bihary
 coverImageId: poker-cards_akrfnx
 coverImageAlt: An ace poker card
+category: technique
+tags: planning poker, mistakes, agile
 ---
 
 Planning poker is an excellent tool for agile teams to estimate project effort collaboratively. However, several common mistakes can hinder its effectiveness. Here’s a comprehensive guide to avoiding these pitfalls:

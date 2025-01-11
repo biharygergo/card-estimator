@@ -6,6 +6,8 @@ lastUpdated: 2024/06/16
 author: Gergely Bihary
 coverImageId: pexels-michael-burrows-7128984_y0jrsq
 coverImageAlt: Hands on a keyboard
+category: technique
+tags: planning poker, remote teams, agile
 ---
 
 ## Introduction

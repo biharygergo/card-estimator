@@ -6,6 +6,8 @@ lastUpdated: 2024/05/12
 author: Gergely Bihary
 coverImageId: Feautres_Zoom_fkn3mh
 coverImageAlt: PlanningPoker.live integrates with many agile solutions
+category: technique
+tags: scrum master, agile, tools
 ---
 
 The Scrum Master role is a dynamic blend of coach, facilitator, and servant leader, dedicated to guiding their team towards peak performance. In today's fast-paced digital world, a well-chosen set of software tools can be a game-changer, streamlining processes, boosting collaboration, and ultimately, driving project success. Let's dive into the five must-have categories of tools that every Scrum Master should consider:

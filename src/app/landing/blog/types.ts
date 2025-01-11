@@ -1,3 +1,4 @@
+export type Category = 'guide' | 'technique' | 'other';
 export interface Article {
     slug: string;
     title: string;
@@ -8,4 +9,6 @@ export interface Article {
     coverImageId: string;
     coverImageAlt: string;
     youtubeVideoId?: string;
+    category: Category;
+    tags: string[];
 }

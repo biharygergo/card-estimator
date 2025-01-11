@@ -6,6 +6,8 @@ lastUpdated: 2023/12/26
 author: Gergely Bihary
 coverImageId: zoom_app
 coverImageAlt: A screenshot showing the PlanningPoker.live app running in Zoom
+category: guide
+tags: planning poker, zoom meetings, agile
 ---
 
 

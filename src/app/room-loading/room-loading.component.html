@@ -1,7 +1,12 @@
 @if (isLoading) {
   <div class="center">
-    <span>Preparing room...</span>
-    <div class="loader"></div>
+    <mat-card class="loading-card">
+      <mat-card-content>
+        <span>Preparing room...</span>
+        <div class="loader"></div>
+      </mat-card-content>
+    </mat-card>
+    
   </div>
 }
 <router-outlet (activate)="roomLoaded()"> </router-outlet>

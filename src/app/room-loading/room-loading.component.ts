@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -6,7 +7,7 @@ import { RouterOutlet } from '@angular/router';
     templateUrl: './room-loading.component.html',
     styleUrls: ['./room-loading.component.scss'],
     standalone: true,
-    imports: [RouterOutlet]
+    imports: [RouterOutlet, MatCardModule]
 })
 export class RoomLoadingComponent implements OnInit {
   isLoading = true;

@@ -9,6 +9,10 @@
   gap: 2rem;
 }
 
+.loading-card {
+  view-transition-name: loading-card;
+}
+
 .loader,
 .loader:after {
   border-radius: 50%;

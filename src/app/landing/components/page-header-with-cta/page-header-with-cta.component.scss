@@ -163,4 +163,10 @@
       }
     }
   }
+
+  @media screen and (max-width: 600px) {
+    .header-cards {
+      min-height: 200px;
+    }
+  }
 }

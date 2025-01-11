@@ -5,12 +5,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-on-main);
-  gap: 2rem;
 }
 
 .loading-card {
+  width: 80%;
+  max-width: 300px;
   view-transition-name: loading-card;
+  
+  color: var(--mat-card-subtitle-text-color);
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
 }
 
 .loader,

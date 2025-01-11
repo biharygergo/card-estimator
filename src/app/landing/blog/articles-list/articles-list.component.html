@@ -7,32 +7,36 @@
         Poker, agile estimation and related topics.
       </h2>
     </div>
+    <h3>Tutorials</h3>
+    <p>
+      Learn how to use PlanningPoker.live with our in-depth tutorials covering
+      basic usage, Jira/Linear integration and our embedded apps in Teams, Zoom,
+      Meet and Webex.
+    </p>
     <div class="articles">
-      <h3>Tutorials</h3>
-      <p>
-        Learn how to use PlanningPoker.live with our in-depth tutorials covering
-        basic usage, Jira/Linear integration and our embedded apps in Teams,
-        Zoom, Meet and Webex.
-      </p>
       @for (article of articlesByCategory['guide']; track article.slug) {
       <ng-container
         *ngTemplateOutlet="articleCard; context: { $implicit: article }"
       ></ng-container>
       }
-      <h3>Planning poker techniques</h3>
-      <p>
-        Learn how to estimate with Planning Poker, how to facilitate a session
-        and how to use the app to get the most out of your estimation sessions.
-      </p>
-      @for (article of articlesByCategory['knowledge']; track article.slug) {
+    </div>
+    <h3>Planning poker techniques</h3>
+    <p>
+      Learn how to estimate with Planning Poker, how to facilitate a session and
+      how to use the app to get the most out of your estimation sessions.
+    </p>
+    <div class="articles">
+      @for (article of articlesByCategory['technique']; track article.slug) {
       <ng-container
         *ngTemplateOutlet="articleCard; context: { $implicit: article }"
       ></ng-container>
       }
-      <h3>News & app updates</h3>
-      <p>
-        Read about our latest updates, new features and improvements to the app.
-      </p>
+    </div>
+    <h3>News & app updates</h3>
+    <p>
+      Read about our latest updates, new features and improvements to the app.
+    </p>
+    <div class="articles">
       @for (article of articlesByCategory['other']; track article.slug) {
       <ng-container
         *ngTemplateOutlet="articleCard; context: { $implicit: article }"

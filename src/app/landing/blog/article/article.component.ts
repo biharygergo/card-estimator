@@ -1,4 +1,15 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Signal, inject, signal, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  Signal,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Article } from '../types';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -19,27 +30,32 @@ import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
 import { YouTubePlayer } from '@angular/youtube-player';
 
 @Component({
-    selector: 'app-article',
-    templateUrl: './article.component.html',
-    styleUrls: ['./article.component.scss'],
-    standalone: true,
-    imports: [
-        NgIf,
-        NgOptimizedImage,
-        MarkdownComponent,
-        StartPlanningCtaComponent,
-        RouterLink,
-        CarbonAdComponent,
-        AsyncPipe,
-        DatePipe,
-        YouTubePlayer,
-    ],
+  selector: 'app-article',
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgOptimizedImage,
+    MarkdownComponent,
+    StartPlanningCtaComponent,
+    RouterLink,
+    CarbonAdComponent,
+    AsyncPipe,
+    DatePipe,
+    YouTubePlayer,
+  ],
 })
-export class ArticleComponent implements AfterViewInit{
+export class ArticleComponent implements AfterViewInit {
   private readonly metaService = inject(Meta);
-  article: Observable<Article> = inject(ActivatedRoute).data.pipe(
-    map((data) => data.article),
-    tap((article: Article) => {
+  article: Observable<Article & { tagsString: string }> = inject(
+    ActivatedRoute
+  ).data.pipe(
+    map((data) => ({
+      ...data.article,
+      tagsString: data.article.tags.map((tag) => `#${tag}`).join(', '),
+    })),
+    tap((article: Article & { tagsString: string }) => {
       this.titleService.setTitle(`${article.title} - PlanningPoker.live`);
       this.metaService.updateTag({
         name: 'description',
@@ -59,8 +75,10 @@ export class ArticleComponent implements AfterViewInit{
     )
   );
 
-  youtubePlayerContainer: Signal<ElementRef<HTMLDivElement>> = viewChild('youtubePlayerContainer');
-  youtubePlayerSize = signal({width: 560, height: 315});
+  youtubePlayerContainer: Signal<ElementRef<HTMLDivElement>> = viewChild(
+    'youtubePlayerContainer'
+  );
+  youtubePlayerSize = signal({ width: 560, height: 315 });
   readonly destroy = new Subject<void>();
 
   ngAfterViewInit() {
@@ -72,9 +90,8 @@ export class ArticleComponent implements AfterViewInit{
     if (this.youtubePlayerContainer()) {
       const width = this.youtubePlayerContainer().nativeElement.clientWidth;
       const height = width * 0.56;
-  
-      this.youtubePlayerSize.set({width, height});
+
+      this.youtubePlayerSize.set({ width, height });
     }
-    
   }
 }

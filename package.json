@@ -20,7 +20,8 @@
     "generate-routes": "ts-node src/cli/generate_routes.ts",
     "upload-articles": "gsutil copy -r src/assets/articles/** gs://planning-poker-public-assets/articles",
     "stripe-forward-local": "stripe listen --forward-to 127.0.0.1:5001/ext-firestore-stripe-payments-handleWebhookEvents",
-    "serve:ssr:estimator": "node dist/estimator/server/server.mjs"
+    "serve:ssr:estimator": "node dist/estimator/server/server.mjs",
+    "generate-sitemap": "ngx-sitemap dist/estimator/browser https://planningpoker.live"
   },
   "private": true,
   "dependencies": {
@@ -90,6 +91,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.4",
+    "ngx-sitemap": "^1.0.0",
     "protractor": "~7.0.0",
     "sonar-scanner": "^3.1.0",
     "ts-node": "~8.3.0",

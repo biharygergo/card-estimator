@@ -303,7 +303,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   ]).pipe(
     first(),
     map(([isSmallScreen, room, user]) => {
-      const isCreator = room.createdById === user.uid;
+      const isCreator = room.createdById === user?.uid;
       return !isSmallScreen.matches || (isSmallScreen.matches && isCreator);
     })
   );
@@ -332,7 +332,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       return {
         shouldOpen:
           previousSessions.length === 1 &&
-          previousSessions[0].createdById === user.uid &&
+          previousSessions[0].createdById === user?.uid &&
           !pref.onboardingTutorialShown,
         small: isSmallScreen.matches,
       };

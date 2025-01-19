@@ -16,7 +16,6 @@ export const routes = [
   '/integrations/jira',
   '/integrations/linear',
   '/history',
-  '/premium',
   '/pricing',
   '/recurringMeeting',
   '/organizationInvitation',

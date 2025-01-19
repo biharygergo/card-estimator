@@ -155,7 +155,7 @@ const routes: Routes = [
       import(
         './organization-invitation/organization-invitation.component'
       ).then((mod) => mod.OrganizationInvitationComponent),
-    data: { title: 'Organization invitation' },
+    data: { title: 'Organization invitation', noIndex: true },
   },
   {
     path: 'premium',

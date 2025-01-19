@@ -203,6 +203,11 @@
           "source": "/privacy",
           "destination": "/policies/privacy",
           "type": 301
+        },
+        {
+          "source": "/premium",
+          "destination": "/pricing",
+          "type": 301
         }
       ]
     }

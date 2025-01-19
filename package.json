@@ -21,7 +21,7 @@
     "upload-articles": "gsutil copy -r src/assets/articles/** gs://planning-poker-public-assets/articles",
     "stripe-forward-local": "stripe listen --forward-to 127.0.0.1:5001/ext-firestore-stripe-payments-handleWebhookEvents",
     "serve:ssr:estimator": "node dist/estimator/server/server.mjs",
-    "generate-sitemap": "tsx ./src/cli/generate_sitemap.ts"
+    "generate-sitemap": "npx tsx ./src/cli/generate_sitemap.ts"
   },
   "private": true,
   "dependencies": {

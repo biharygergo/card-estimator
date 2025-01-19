@@ -15,7 +15,6 @@
 /integrations/jira
 /integrations/linear
 /history
-/premium
 /pricing
 /recurringMeeting
 /organizationInvitation

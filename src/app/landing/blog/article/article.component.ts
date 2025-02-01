@@ -1,13 +1,7 @@
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
-  HostListener,
   Renderer2,
-  Signal,
   inject,
-  signal,
-  viewChild,
 } from '@angular/core';
 import { Article } from '../types';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -18,9 +12,9 @@ import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component
 import { StartPlanningCtaComponent } from '../../components/start-planning-cta/start-planning-cta.component';
 import { MarkdownComponent } from 'ngx-markdown';
 import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
-import { YouTubePlayer } from '@angular/youtube-player';
 import { SchemaTagService } from 'src/app/services/schema-tag.service';
 import type { Article as SchemaArticle, WithContext } from 'schema-dts';
+import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-player.component';
 
 @Component({
   selector: 'app-article',
@@ -36,10 +30,10 @@ import type { Article as SchemaArticle, WithContext } from 'schema-dts';
     CarbonAdComponent,
     AsyncPipe,
     DatePipe,
-    YouTubePlayer,
+    YoutubePlayerComponent,
   ],
 })
-export class ArticleComponent implements AfterViewInit {
+export class ArticleComponent {
   private readonly metaService = inject(Meta);
   private readonly schemaTagService = inject(SchemaTagService);
   private readonly renderer2 = inject(Renderer2);
@@ -122,24 +116,5 @@ export class ArticleComponent implements AfterViewInit {
         .slice(0, 5)
     )
   );
-
-  youtubePlayerContainer: Signal<ElementRef<HTMLDivElement>> = viewChild(
-    'youtubePlayerContainer'
-  );
-  youtubePlayerSize = signal({ width: 560, height: 315 });
   readonly destroy = new Subject<void>();
-
-  ngAfterViewInit() {
-    this.onResize();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    if (this.youtubePlayerContainer()) {
-      const width = this.youtubePlayerContainer().nativeElement.clientWidth;
-      const height = width * 0.56;
-
-      this.youtubePlayerSize.set({ width, height });
-    }
-  }
 }

@@ -1,13 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { LinearService } from 'src/app/services/linear.service';
-import { IntegrationConfig, IntegrationPageTemplateComponent } from '../shared/integration-page-template/integration-page-template.component';
+import {
+  IntegrationConfig,
+  IntegrationPageTemplateComponent,
+} from '../shared/integration-page-template/integration-page-template.component';
 
 @Component({
   selector: 'app-linear',
   standalone: true,
   imports: [IntegrationPageTemplateComponent],
   templateUrl: './linear.component.html',
-  styleUrl: './linear.component.scss'
+  styleUrl: './linear.component.scss',
 })
 export class LinearComponent {
   private readonly linearService = inject(LinearService);
@@ -23,6 +26,11 @@ export class LinearComponent {
     details: {
       description:
         'Integrate PlanningPoker.live with Linear to select and view Linear issues directly during your planning poker session. This integration streamlines your workflow and boosts your team’s productivity.',
+      youtubeVideo: {
+        videoId: 'UFomiKX_cPU',
+        title:
+          'Get started quickly with our tutorial video on integrating Linear with PlanningPoker.live',
+      },
       steps: [
         {
           title: 'Step 1: Connect your Linear account to PlanningPoker.live',
@@ -30,7 +38,7 @@ export class LinearComponent {
           imgId: 'linear-connect-screen',
           alt: 'Linear authentication screen',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
         {
           title: 'Step 2: Select and estimate Linear issues',
@@ -38,7 +46,7 @@ export class LinearComponent {
           imgId: 'linear-issues-dropdown',
           alt: 'Linear issues dropdown',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
         {
           title: 'Step 3: Import multiple tickets in batch',
@@ -46,7 +54,7 @@ export class LinearComponent {
           imgId: 'linear-batch-import-modal',
           alt: 'Linear batch import modal',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
         {
           title: 'Step 4: Collaborate and finalize estimates',
@@ -54,7 +62,7 @@ export class LinearComponent {
           imgId: 'linear-issue-selected',
           alt: 'Linear issue selected',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
       ],
     },
@@ -62,5 +70,4 @@ export class LinearComponent {
       this.linearService.startLinearAuthFlow();
     },
   };
-
 }

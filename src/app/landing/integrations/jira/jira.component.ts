@@ -22,7 +22,11 @@ export class JiraComponent {
     },
     details: {
       description:
-        'Integrate PlanningPoker.live with Jira to select and view Jira issues directly from the planning poker session. This integration helps you keep your team aligned and productive.',
+        'Integrate PlanningPoker.live with Jira to select and view Jira issues directly from the planning poker session. Follow these steps to connect your Jira account and start estimating issues with your team:',
+      youtubeVideo: {
+        title: 'Get started quickly with our tutorial video on integrating Jira with PlanningPoker.live',
+        videoId: 'X5ox2EBk3Bs',
+      },
       steps: [
         {
           title: 'Step 1: Connect your Jira account to PlanningPoker.live',

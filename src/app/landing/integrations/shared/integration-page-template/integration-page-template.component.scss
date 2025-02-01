@@ -120,6 +120,10 @@
         padding: 1rem;
       }
 
+      .integration-details-step-center {
+        flex: 1;
+      }
+
       .integration-details-step-image {
         width: 100%;
         height: 100%;
@@ -134,6 +138,14 @@
           box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
           margin-top: 20px;
         }
+      }
+
+      .integration-details-step-youtube {
+        max-width: 800px;
+        margin: 0 auto;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
       }
 
       .integration-details-step-title {

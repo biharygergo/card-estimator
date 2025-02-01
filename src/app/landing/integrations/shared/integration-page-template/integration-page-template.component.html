@@ -41,6 +41,21 @@
 </section>
 <section class="integration-main">
   <div class="integration-details">
+    @if (config().details.youtubeVideo) {
+      <p class="integration-details-title">
+        {{ config().details.youtubeVideo.title }}
+      </p>
+      <div class="integration-details-step">
+        <div class="integration-details-step-center">
+          <div class="integration-details-step-youtube">
+            <app-youtube-player
+              class="integration-details-step-youtube"
+              [youtubeVideoId]="config().details.youtubeVideo.videoId"
+            />
+            </div>
+        </div>
+      </div>
+    }
     <p class="integration-details-title">
       {{ config().details.description }}
     </p>

@@ -62,6 +62,7 @@
     "ngx-markdown": "^18.0.0",
     "rxfire": "^6.0.0",
     "rxjs": "^7.4.0",
+    "schema-dts": "^1.1.2",
     "tslib": "^2.0.0",
     "typed.js": "^2.0.15",
     "zone.js": "~0.14.2"

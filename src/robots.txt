@@ -1,1 +1,12 @@
-User-agent: * Disallow: 
+User-agent: *
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /.well-known/
+Disallow: /chunk-*
+Disallow: /scripts-*
+Disallow: /main-*
+Disallow: /polyfills-*
+Disallow: /*?ref=*
+Disallow: /*?utm_*
+
+Sitemap: https://planningpoker.live/sitemap.xml

@@ -7,7 +7,8 @@ const routes: Routes = [
     path: '',
     loadComponent: () => import('./home/home.component').then((mod) => mod.HomeComponent),
     data: {
-      title: 'Planning Poker - Made for Remote Teams - SCRUM Poker',
+      title: 'Planning Poker – The #1 Agile Estimation Tool for Remote Teams',
+      description: 'Looking for the best planning poker tool? Get real-time estimates, seamless Jira/Linear integration, and anonymous voting—no sign-up required! Try it now.',
       disablePostfix: true,
     },
   },
@@ -18,9 +19,9 @@ const routes: Routes = [
         (mod) => mod.FeaturesComponent
       ),
     data: {
-      title: 'Features',
+      title: 'Unlock Powerful Planning Poker Features (JIRA, Teams & More)',
       description:
-        'Check out all the features available in our app. JIRA integration, customizable card sets and more.',
+        'Discover game-changing Planning Poker features—custom card sets, JIRA integration, video conferencing & more. See what’s inside!',
     },
   },
   {
@@ -28,21 +29,22 @@ const routes: Routes = [
     loadComponent: () =>
       import('./faq/faq.component').then((mod) => mod.FaqComponent),
     data: {
-      title: 'FAQ',
-      description: 'All of our most frequently asked questions, answered.',
+      title: 'Got Questions? Here’s Everything About Planning Poker',
+      description: 'Confused about how Planning Poker works? Get answers to the most frequently asked questions in one place.',
+      disablePostfix: true,
     },
   },
   {
     path: 'policies/privacy',
     loadComponent: () =>
       import('./privacy/privacy.component').then((mod) => mod.PrivacyComponent),
-    data: { title: 'Privacy Policy' },
+    data: { title: 'Privacy Policy - Your Data, Your Control', description: 'We take your privacy seriously. Learn how your data is collected, stored, and protected at PlanningPoker.live.' },
   },
   {
     path: 'policies/terms',
     loadComponent: () =>
       import('./terms/terms.component').then((mod) => mod.TermsComponent),
-    data: { title: 'Terms and Conditions' },
+    data: { title: 'Terms & Conditions - Using PlanningPoker.live', description: 'Understand the rules, policies, and user agreements for using PlanningPoker.live. Stay informed before you start.' },
   },
   {
     path: 'integrations/zoom',
@@ -143,9 +145,9 @@ const routes: Routes = [
         (mod) => mod.IntegrationsComponent
       ),
     data: {
-      title: 'Integrations',
+      title: 'Planning Poker Integrations: JIRA, Linear, Zoom, Teams & More',
       description:
-        'PlanningPoker.live integrates with your favorite tools. JIRA, Zoom, Microsoft Teams and more.',
+        'Seamlessly integrate PlanningPoker.live with JIRA, Zoom, Microsoft Teams, and more. Improve sprint planning with one-click integrations.',
     },
   },
   {
@@ -165,9 +167,10 @@ const routes: Routes = [
     loadComponent: () =>
       import('./premium/premium.component').then((mod) => mod.PremiumComponent),
     data: {
-      title: 'Pricing',
+      title: 'Planning Poker Pricing: Simple, No Hidden Fees (See Plans)',
+      disablePostfix: true,
       description:
-        'Free monthly credits with our pay-as-you-go plan or unlimited with a subscription. No hidden fees.',
+        'Get free monthly credits or go unlimited with a subscription. See the full pricing breakdown—no hidden charges.',
     },
   },
   {
@@ -201,4 +204,4 @@ const routes: Routes = [
   imports: [CommonModule, RouterModule.forChild(routes)],
   providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })
-export class LandingModule {}
+export class LandingModule { }

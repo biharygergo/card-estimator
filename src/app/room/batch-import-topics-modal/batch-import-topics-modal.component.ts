@@ -1,4 +1,4 @@
-import { I18nPluralPipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
+import { I18nPluralPipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -53,6 +53,7 @@ interface FilterField {
   values?: Array<{ label: string; fieldName: string }>;
   convertToNumber?: boolean;
   placeholder?: string;
+  fixedValue?: any;
 }
 const LINEAR_FILTER_FIELDS: FilterField[] = [
   {
@@ -91,6 +92,12 @@ const LINEAR_FILTER_FIELDS: FilterField[] = [
     label: 'Status',
     fieldName: 'state.name',
     comparator: 'contains',
+  },
+  {
+    label: 'Not estimated',
+    fieldName: 'estimate',
+    comparator: 'is',
+    fixedValue: null,
   },
 ];
 
@@ -151,7 +158,6 @@ interface FilterChip {
     MatExpansionModule,
     DragDropModule,
     I18nPluralPipe,
-    NgTemplateOutlet,
     MatProgressSpinnerModule,
     RichTopicComponent,
     MatMenuModule,
@@ -378,7 +384,9 @@ export class BatchImportTopicsModalComponent implements OnInit {
       },
     ]);
     setTimeout(() => {
-      this.filterChipElements.last.nativeElement.focus();
+      if (this.filterChipElements.last?.nativeElement) {
+        this.filterChipElements.last.nativeElement.focus();
+      }
     });
   }
 
@@ -408,7 +416,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
 
       return {
         fieldName: chip.filter.fieldName,
-        value: filterValue,
+        value: chip.filter.fixedValue === undefined ? filterValue : chip.filter.fixedValue,
         comparator: chip.filter.comparator,
       };
     });

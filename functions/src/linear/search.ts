@@ -15,7 +15,12 @@ function createNestedFilter(filters: IssueApiFilter[]): any {
     fieldParts.forEach((part, index) => {
       if (index === fieldParts.length - 1) {
         // Last part of the path, assign the value
-        current[part] = comparator === "is" ? {eq: value} : {containsIgnoreCase: value};
+        current[part] =
+          comparator === "is" ?
+            value === null ?
+              {null: true} :
+              {eq: value} :
+            {containsIgnoreCase: value};
       } else {
         // If the part doesn't exist, create an empty object
         if (!current[part]) {
@@ -94,7 +99,7 @@ export async function searchLinear(
             or: [
               {title: {containsIgnoreCase: query}},
               {description: {containsIgnoreCase: query}},
-              ...keyMatch ? [{number: {eq: keyMatch}}] : [],
+              ...(keyMatch ? [{number: {eq: keyMatch}}] : []),
             ],
           },
         } :

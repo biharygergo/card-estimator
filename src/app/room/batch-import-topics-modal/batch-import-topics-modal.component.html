@@ -26,6 +26,7 @@
             <div class="filter-chip__label">
               {{ filterChip.filter.label }}
             </div>
+            @if (filterChip.filter.fixedValue === undefined) {
             <div class="filter-chip__comparator">
               {{ filterChip.filter.comparator }}
             </div>
@@ -37,6 +38,7 @@
                 #filterChipInput
               />
             </div>
+            }
           </div>
           }
         </div>

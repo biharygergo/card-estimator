@@ -565,7 +565,7 @@ export function getBundleTitle(bundleName: BundleName) {
 
 export interface IssueApiFilter {
   fieldName: string;
-  value: string | number;
+  value: string | number | null;
   comparator: 'contains' | 'is';
 }
 

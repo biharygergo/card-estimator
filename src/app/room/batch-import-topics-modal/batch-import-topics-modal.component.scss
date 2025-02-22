@@ -90,31 +90,41 @@
     border: 1px solid var(--mdc-chip-elevated-selected-container-color);
     border-radius: 24px;
     overflow: hidden;
+    font-size: 13px;
 
     &__label {
       font-weight: 500;
-      padding: 8px 16px;
+      padding: 6px 16px;
       text-align: center;
       border-right: 1px solid rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
     }
 
     &__comparator {
       font-weight: 500;
-      padding: 8px;
+      padding: 6px;
       text-align: center;
       border-right: 1px solid rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
     }
 
     &__input {
+      display: flex;
+      align-items: center;
       input {
         width: 130px;
         border-top-right-radius: 24px;
         border-bottom-right-radius: 24px;
-        padding: 8px;
+        padding: 6px 8px;
         height: 100%;
         border: none;
         background: var(--mdc-chip-elevated-selected-container-color);
-        color: var(--mdc-chip-selected-label-text-color);
+        color: var(--mdc-dialog-supporting-text-color);
+        font-family: 'Roboto';
+        font-weight: 500;
+        font-size: 13px;
       }
     }
 

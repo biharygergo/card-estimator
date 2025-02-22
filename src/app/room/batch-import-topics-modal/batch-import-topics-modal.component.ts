@@ -99,6 +99,17 @@ const LINEAR_FILTER_FIELDS: FilterField[] = [
     comparator: 'is',
     fixedValue: null,
   },
+  {
+    label: 'Label',
+    fieldName: 'labels.name',
+    comparator: 'contains',
+  },
+  {
+    label: 'Only parent issues',
+    fieldName: 'parent',
+    comparator: 'is',
+    fixedValue: null,
+  }
 ];
 
 const JIRA_FILTER_FIELDS: FilterField[] = [

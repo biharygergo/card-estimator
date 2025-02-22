@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: pexels-fauxels-3183197_k4uned
 coverImageAlt: People in a meeting room
 category: technique
-tags: planning poker, estimation, guide
+tags: Planning Poker Guide, Agile Estimation Techniques, Scrum Master Tools, Story Point Estimation, Agile Best Practices
 ---
 
 Planning Poker has become an essential tool in the Agile practitioner's toolkit. Whether you're new to Agile methodologies or a seasoned Scrum Master, understanding and effectively implementing Planning Poker can significantly improve your team's estimation accuracy and overall project success. In this comprehensive guide, we'll explore everything you need to know about Planning Poker, from its basic concepts to advanced techniques and best practices.

@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: pexels-fauxels-3184306_vv2kvt
 coverImageAlt: A group of people during a meeting
 category: guide
-tags: planning poker, video, tutorial
+tags: Planning Poker, Sprint Planning, Agile Estimation, Team Collaboration, Estimation Techniques
 ---
 ## What is Planning Poker?
 

@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: year-in-review-cover
 coverImageAlt: 2024 year in review illustration
 category: other
-tags: statistics, wrapped, 2024
+tags: Planning Poker Statistics, Year in Review, 2024 Highlights, Agile Tools, Remote Collaboration
 ---
 
 ✨ As 2024 comes to a close, it’s a good time to look back on what this project has accomplished over the past year. PlanningPoker.live has grown steadily, and while it remains a side project for us, we’re thrilled to see how it’s been used by teams around the world. Here are some highlights from the year.

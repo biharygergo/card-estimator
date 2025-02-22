@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: pexels-lukas-317353_hm0fzm
 coverImageAlt: A top shot of a post it and a keyboard
 category: techniques
-tags: agile, estimation, scrum
+tags: Agile Estimation, Planning Poker, T-shirt Sizing, Dot Voting, Wideband Delphi, Three-Point Estimate
 ---
 ## Introduction
 

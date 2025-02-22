@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: easy_accessible
 coverImageAlt: The PlanningPoker.live app running inside Microsoft Teams
 category: guide
-tags: microsoft teams, tutorial, planning poker, agile
+tags: Microsoft Teams, Planning Poker, Installation Guide, Agile Estimation, Team Collaboration
 ---
 
 ### Introduction

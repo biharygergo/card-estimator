@@ -8,7 +8,7 @@ coverImageId: topics
 coverImageAlt: A graphic showing issues stacked over each other
 youtubeVideoId: X5ox2EBk3Bs
 category: guide
-tags: integration, jira, planning poker
+tags: JIRA Integration, Planning Poker, Agile Estimation, Task Estimation, Project Management
 ---
 
 ### Introduction

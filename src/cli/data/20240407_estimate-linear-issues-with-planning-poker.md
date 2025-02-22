@@ -8,7 +8,7 @@ coverImageId: linear-screenshot
 coverImageAlt: Issues in a sprint screen in the Linear app
 youtubeVideoId: UFomiKX_cPU
 category: guide
-tags: linear, agile, planning poker, integration
+tags: Linear Integration, Agile Estimation, Planning Poker, Project Management, Task Estimation
 ---
 
 ### Introduction

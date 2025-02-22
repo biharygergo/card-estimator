@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: pexels-michael-burrows-7128984_y0jrsq
 coverImageAlt: Hands on a keyboard
 category: technique
-tags: planning poker, remote teams, agile
+tags: Planning Poker, Remote Teams, Agile Estimation, Collaboration Tools, Video Conferencing
 ---
 
 ## Introduction

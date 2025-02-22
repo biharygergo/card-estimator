@@ -7,7 +7,7 @@ author: Gergely Bihary
 coverImageId: Meet_1
 coverImageAlt: PlanningPoker.live in Google Meet
 category: guide
-tags: google meet, planning poker, agile, tutorial
+tags: Google Meet Integration, Planning Poker Setup, Scrum Tools, Agile Estimation, Remote Collaboration
 ---
 
 This step-by-step tutorial will guide you through installing the [PlanningPoker.live app in Google Meet](https://planningpoker.live/integrations/meet), so you can streamline your planning sessions quickly and easily.

@@ -33,6 +33,7 @@ import { SubscriptionResult } from './types';
 import { Theme, ThemeService } from './services/theme.service';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -123,6 +124,8 @@ export class AppComponent implements OnInit, OnDestroy {
             content: 'noindex',
           });
         }
+        const canonicalLink = this.document.querySelector('link[rel="canonical"]');
+        this.renderer.setAttribute(canonicalLink, 'href', `${environment.domain}${this.router.url}`);
       });
 
     this.subscriptionResult$

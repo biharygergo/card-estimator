@@ -24,4 +24,5 @@ export const environment = {
   orgBundlePriceId: 'price_1PmhwHCG1hllVHnc1xKWi8bD',
   orgBundlePriceIdUsd: 'price_1PmhwHCG1hllVHncF0Ot6HKr',
   cloudProjectNumber: '417578634660',
+  domain: 'https://planningpoker.live',
 };

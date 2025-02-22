@@ -28,6 +28,7 @@ export const environment = {
   orgBundlePriceId: 'price_1PmaW8CG1hllVHncND9hIWfd',
   orgBundlePriceIdUsd: 'price_1PmaWYCG1hllVHnca39K5Xzg',
   cloudProjectNumber: '417578634660',
+  domain: 'https://localhost:4200',
 };
 
 /*

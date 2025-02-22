@@ -19,8 +19,8 @@ tags: Linear Integration, Agile Estimation, Planning Poker, Project Management, 
 
 ### Steps to Integrate PlanningPoker.live with Linear:
 
-1.  **Create a free account on PlanningPoker.live.** It only takes a minute to [get started](https://planningpoker.live/create)!
-2.  **Navigate to the "Integrations" menu** (or edit the topic of a planning round) and select "Import"
+1.  **Create a free account on PlanningPoker.live.** It only takes a minute to [get started](https://planningpoker.live/create)!
+2.  **Navigate to the "Integrations" menu** (or edit the topic of a planning round) and select "Import"
 
 <div class="image-container">
     <img alt="Import dropdown in the topic editor" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/linear-selector.png">
@@ -28,14 +28,14 @@ tags: Linear Integration, Agile Estimation, Planning Poker, Project Management, 
 </div>
 
 3.  **Choose "Connect to Linear" from the available options.**
-4.  **You'll be directed to the Linear authorization screen.** Grant Planning Poker.live access to your Linear account by clicking "Authorize Planning Poker".
+4.  **You'll be directed to the Linear authorization screen.** Grant Planning Poker.live access to your Linear account by clicking "Authorize Planning Poker".
 
 <div class="image-container">
     <img alt="Linear Auth screen" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/linear-auth-screen.png">
     <p>Authorize Planning Poker to read issues and write estimate results back</p>
 </div>
 
-5.  **Voila! Linear is now connected!** When you click on the topic editor, the auto-suggest box will display tickets from your recent Linear history. Additionally, the editor acts as a search bar, allowing you to search all of your Linear issues for easy selection.
+5.  **Voila! Linear is now connected!** When you click on the topic editor, the auto-suggest box will display tickets from your recent Linear history. Additionally, the editor acts as a search bar, allowing you to search all of your Linear issues for easy selection.
 <div class="image-container">
     <img alt="Linear issues in the Planning Poker topic editor" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/linear-integration.png">
     <p>Linear issues in the topic editor after successful connection</p>
@@ -47,4 +47,7 @@ tags: Linear Integration, Agile Estimation, Planning Poker, Project Management, 
 
 **By combining the collaborative power of planning poker with the intuitive interface of Linear, you can ensure your agile projects have a strong foundation and are delivered on time.** Give PlanningPoker.live a try today and experience the [difference](https://planningpoker.live/features) in your estimation process!
 
-**Want to learn more about planning poker?** Check out our other [blog posts](https://planningpoker.live/knowledge-base) for in-depth guides and best practices to make your planning sessions even more effective.
+**Want to learn more about planning poker?** Check out our other guides:
+- [Comprehensive guide to Planning Poker](/knowledge-base/planning-poker-guide-agile-estimation-techniques)
+- [How to improve sprint planning with Planning Poker](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning)
+- [Different estimation techniques compared](/knowledge-base/comparing-agile-estimation-techniques)

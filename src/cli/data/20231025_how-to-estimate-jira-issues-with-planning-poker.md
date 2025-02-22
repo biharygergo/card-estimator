@@ -34,7 +34,7 @@ To estimate Jira issues with Planning Poker, follow these steps:
 
 1. **Create an estimation session.** You can do this on a website like [PlanningPoker.live](https://planningpoker.live/create). You will need to set your nickname and create a new room.
 
-2. **Connect your Jira account to your Planning Poker account.** This will allow you to select and view Jira issues directly from the planning poker session. To do this, just click on the **Connect to Jira** button in the topic editor. If you do not have a free PlanningPoker.live account, you'll be prompted to create one. You’ll then be redirected to Jira, where you can choose which project you want to link to PlanningPoker.live.
+2. **Connect your Jira account to your Planning Poker account.** This will allow you to select and view Jira issues directly from the planning poker session. To do this, just click on the **Connect to Jira** button in the topic editor. If you do not have a free PlanningPoker.live account, you'll be prompted to create one. You'll then be redirected to Jira, where you can choose which project you want to link to PlanningPoker.live.
 
 <div class="image-container">
     <img alt="Click on the 'Connect to Jira' button to link your account" src="https://storage.googleapis.com/planning-poker-public-assets/assets/jira_connect.png">
@@ -68,3 +68,5 @@ Here are some tips for estimating JIRA issues with the Planning Poker technique:
 - **Hold regular Planning Poker sessions to estimate new JIRA issues and to revisit the estimates for existing issues.** This will help to ensure that your estimates are always up-to-date and that your team is on track to deliver projects on time and on budget.
 
 By following these tips, you can use Planning Poker to effectively estimate JIRA issues and improve your team's communication, collaboration, and confidence.
+
+Planning Poker is a consensus-based technique for estimating effort or complexity. It is often used in agile software development to estimate user stories or product backlog items, making it an ideal fit for estimating JIRA issues. Learn more about [how different Scrum roles use Planning Poker](/knowledge-base/planning-poker-and-the-scrum-roles) and [how it can improve your sprint planning](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning).

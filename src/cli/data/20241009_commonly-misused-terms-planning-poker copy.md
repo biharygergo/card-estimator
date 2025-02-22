@@ -1,6 +1,6 @@
 ---
 title: Commonly Misused Terms in Planning Poker - What They Really Mean
-description:  Discover the most common misused and misspelled terms like 'PlanningPoker,' 'Scrum Poker,' and 'Backlog Refinement Poker' that all point to the popular agile estimation technique, Planning Poker. Learn the differences and boost your agile team’s efficiency with this lighthearted guide.
+description:  Discover the most common misused and misspelled terms like 'PlanningPoker,' 'Scrum Poker,' and 'Backlog Refinement Poker' that all point to the popular agile estimation technique, Planning Poker. Learn the differences and boost your agile team's efficiency with this lighthearted guide.
 slug: commonly-misused-terms-planning-poker
 lastUpdated: 2024/10/09
 author: Gergely Bihary
@@ -10,15 +10,15 @@ category: other
 tags: Planning Poker Terms, Agile Estimation, Scrum Poker, Backlog Refinement, Agile Techniques
 ---
 
-If you’ve ever stumbled across terms like “poker planning” or “backlog refinement poker” and wondered, “Are these just creative variations of Planning Poker, or am I missing out on a new agile technique?” — you’re not alone!
+If you've ever stumbled across terms like "poker planning" or "backlog refinement poker" and wondered, "Are these just creative variations of Planning Poker, or am I missing out on a new agile technique?" — you're not alone!
 
-Planning Poker, also known as **Scrum Poker** or **Agile Poker**, is one of those techniques with many names (and misspellings!). Whether you're a seasoned Scrum Master or new to the world of agile, understanding these terms can be useful. In this post, we’ll break down these often misused and misspelled terms so you know exactly what they mean and why they all point back to the same technique.
+Planning Poker, also known as **Scrum Poker** or **Agile Poker**, is one of those techniques with many names (and misspellings!). Whether you're a seasoned Scrum Master or new to the world of agile, understanding these terms can be useful. In this post, we'll break down these often misused and misspelled terms so you know exactly what they mean and why they all point back to the same technique.
 
 <div class="separator"></div>
 
 ## **1. PlanningPoker (aka Planning Poker)**
 
-Let’s start with the classic! **PlanningPoker** (sometimes spelled as a single word, “planningpoker”) is a consensus-based estimation technique used primarily in Scrum and Agile development. The team gathers to estimate the effort required to complete tasks using a deck of cards, with each card representing an estimate of the task’s size or complexity. It’s all about collaboration and reducing bias during sprint planning.
+Let's start with the classic! **PlanningPoker** (sometimes spelled as a single word, "planningpoker") is a consensus-based estimation technique used primarily in Scrum and Agile development. The team gathers to estimate the effort required to complete tasks using a deck of cards, with each card representing an estimate of the task's size or complexity. Learn more about [how different Scrum roles use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles).
 
 *Need a refresher on how PlanningPoker works? Check out our [comprehensive guide to Planning Poker](https://planningpoker.live/knowledge-base/planning-poker-guide-agile-estimation-techniques).*
 
@@ -26,9 +26,9 @@ Let’s start with the classic! **PlanningPoker** (sometimes spelled as a single
 
 ## **2. Poker Planning**
 
-At first glance, **poker planning** sounds like it might be a new form of card game strategy, but don’t be fooled! It’s just a flip of words that refers to the exact same thing: Planning Poker. If you’re seeing “poker planning” in an agile context, rest assured — it’s still the same team-based estimation game.
+At first glance, **poker planning** sounds like it might be a new form of card game strategy, but don't be fooled! It's just a flip of words that refers to the exact same thing: Planning Poker. If you're seeing "poker planning" in an agile context, rest assured — it's still the same team-based estimation game. Learn more about [how to improve sprint planning with Planning Poker](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning).
 
-We’ve got more on how to avoid common pitfalls when using the Planning Poker technique in our [blog post](https://planningpoker.live/knowledge-base/common-mistakes-planning-poker).
+We've got more on how to avoid common pitfalls when using the Planning Poker technique in our [blog post](https://planningpoker.live/knowledge-base/common-mistakes-planning-poker).
 
 <div class="separator"></div>
 
@@ -36,13 +36,13 @@ We’ve got more on how to avoid common pitfalls when using the Planning Poker t
 
 **Scrum Poker** is simply another name for Planning Poker, often used when teams want to emphasize the technique's connection to the **Scrum** framework. In Scrum, estimating the size of backlog items is a key part of the sprint planning process. And since Planning Poker is one of the most popular methods for doing that, the name **Scrum Poker** came into use.
 
-Need help running a Scrum planning session? We’ve got you covered with our [guide of the top tools for SCRUM Masters](https://planningpoker.live/knowledge-base/essential-scrum-master-tools).
+Need help running a Scrum planning session? We've got you covered with our [guide of the top tools for SCRUM Masters](https://planningpoker.live/knowledge-base/essential-scrum-master-tools).
 
 <div class="separator"></div>
 
 ## **4. Agile Poker**
 
-Much like Scrum Poker, **Agile Poker** is just a variation in name. Teams outside of Scrum, following broader agile methodologies, often use this term. Whether you’re following Kanban, Lean, or XP, **Agile Poker** fits right in. The process is still the same: gather the team, estimate tasks, and have a bit of fun while doing it.
+Much like Scrum Poker, **Agile Poker** is just a variation in name. Teams outside of Scrum, following broader agile methodologies, often use this term. Whether you're following Kanban, Lean, or XP, **Agile Poker** fits right in. Check out our [comparison of different estimation techniques](/knowledge-base/comparing-agile-estimation-techniques) to learn more about how these methodologies approach estimation.
 
 <div class="separator"></div>
 
@@ -61,7 +61,7 @@ Need to know more about backlog refinement and how to make it more effective? Ch
 
 ## **6. Pocker Planning**
 
-Ah yes, the classic typo: **Pocker Planning**! If you’ve ever typed "pocker" instead of "poker," you’re not alone. But rest assured, **Pocker Planning** is still Planning Poker with an extra dash of creativity (or a finger slip). While the typo is common, it’s always fun to see how even small mistakes can give familiar terms a whole new vibe.
+Ah yes, the classic typo: **Pocker Planning**! If you've ever typed "pocker" instead of "poker," you're not alone. But rest assured, **Pocker Planning** is still Planning Poker with an extra dash of creativity (or a finger slip). While the typo is common, it's always fun to see how even small mistakes can give familiar terms a whole new vibe.
 
 For a typo-free overview of how to make your next sprint planning session a success, head over to our [guide to all roles in a Planning Poker session](https://planningpoker.live/knowledge-base/planning-poker-and-the-scrum-roles).
 
@@ -69,7 +69,7 @@ For a typo-free overview of how to make your next sprint planning session a succ
 
 ## **7. Sprint Poker**
 
-Much like "Scrum Poker," **Sprint Poker** refers to using Planning Poker during a sprint planning meeting. This term emphasizes the technique’s use during the sprint phase of agile development, which is when tasks are estimated and prioritized. It's especially useful if you want to rank for sprint-related keywords.
+Much like "Scrum Poker," **Sprint Poker** refers to using Planning Poker during a sprint planning meeting. This term emphasizes the technique's use during the sprint phase of agile development, which is when tasks are estimated and prioritized. It's especially useful if you want to rank for sprint-related keywords.
 
 <div class="separator"></div>
 
@@ -95,10 +95,10 @@ Sometimes referred to as **Story Point Poker**, this term zeroes in on the story
 
 In the end, whether you call it **PlanningPoker**, **Poker Planning**, **Scrum Poker**, or even **Pocker Planning**, they all refer to the same technique: a fun, collaborative way to estimate effort and complexity in Agile teams. While the names may differ, the core process remains the same.
 
-So, next time you see these terms thrown around, feel free to jump into the conversation knowing that you’re all talking about the same thing — even if the spelling is a little off.
+So, next time you see these terms thrown around, feel free to jump into the conversation knowing that you're all talking about the same thing — even if the spelling is a little off.
 
 <div class="separator"></div>
 
-If you’re ready to use Planning Poker in your next sprint, why not try it out in [Microsoft Teams](https://planningpoker.live/integrations/teams), [Google Meet](https://planningpoker.live/integrations/meet) or explore the [PlanningPoker.live app](https://planningpoker.live/) to integrate it directly into your remote meetings?
+If you're ready to use Planning Poker in your next sprint, why not try it out in [Microsoft Teams](https://planningpoker.live/integrations/teams), [Google Meet](https://planningpoker.live/integrations/meet) or explore the [PlanningPoker.live app](https://planningpoker.live/) to integrate it directly into your remote meetings?
 
 Happy estimating!

@@ -14,7 +14,7 @@ Planning Poker has become an essential tool in the Agile practitioner's toolkit.
 
 ## 1. Introduction to Planning Poker
 
-Planning Poker, also known as Scrum Poker, is a consensus-based estimation technique used primarily in Agile software development. It was first described by [James Grenning in 2002](https://wingman-sw.com/papers/PlanningPoker-v1.1.pdf) and later popularized by Mike Cohn in his book ["Agile Estimating and Planning."](https://www.mountaingoatsoftware.com/books/agile-estimating-and-planning)
+Planning Poker, also known as Scrum Poker, is a consensus-based estimation technique used primarily in Agile software development. It was first described by [James Grenning in 2002](https://wingman-sw.com/papers/PlanningPoker-v1.1.pdf) and later popularized by Mike Cohn in his book ["Agile Estimating and Planning."](https://www.mountaingoatsoftware.com/books/agile-estimating-and-planning) Learn more about [how different Scrum roles use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles).
 
 The primary goal of Planning Poker is to estimate the relative effort or complexity of user stories or tasks within a project. By leveraging the collective wisdom of the team and encouraging discussion, Planning Poker helps create more accurate estimates while fostering collaboration and shared understanding.
 
@@ -69,9 +69,9 @@ While the modified Fibonacci sequence is the most common, several variations of 
 
 While Planning Poker can be conducted with physical cards, many teams, especially those working remotely, opt for digital solutions. Some popular tools include:
 
-1. [PlanningPoker.live](https://planningpoker.live): A web-based tool that integrates with popular project management and video conferencing platforms.
+1. [PlanningPoker.live](https://planningpoker.live): A web-based tool that integrates with popular project management and video conferencing platforms. You can use it in [Microsoft Teams](/knowledge-base/installing-planning-poker-microsoft-teams-guide), [Google Meet](/knowledge-base/how-to-use-planning-poker-in-google-meet), or [Zoom](/knowledge-base/how-to-use-planning-poker-in-zoom).
 
-2. [Jira](https://www.atlassian.com/software/jira): Offers integrations to facilitate Planning Poker for teams already using the Atlassian suite.
+2. [Jira](https://www.atlassian.com/software/jira): Offers integrations to facilitate Planning Poker for teams already using the Atlassian suite. Learn more about [estimating JIRA issues with Planning Poker](/knowledge-base/how-to-estimate-jira-issues-with-planning-poker).
 
 3. [Trello Power-Ups](https://trello.com/power-ups): Various Trello add-ons provide Planning Poker functionality, allowing teams to estimate directly within their Trello boards.
 

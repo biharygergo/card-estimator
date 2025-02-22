@@ -12,7 +12,7 @@ tags: Planning Poker, Scrum Roles, Product Owner, Scrum Master, Developers, Team
 
 ## Introduction
 
-Planning Poker is a consensus-based technique for estimating effort in agile software development. It is a fun and engaging way for teams to apply relative estimates to planned work. Planning Poker can be used to improve Sprint Planning meetings and deliver more value to customers.
+Planning Poker is a consensus-based technique for estimating effort in agile software development. It is a fun and engaging way for teams to apply relative estimates to planned work. Planning Poker can be used to improve [Sprint Planning meetings](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning) and deliver more value to customers.
 
 The three Scrum roles, the Product Owner, Scrum Master, and Developers, all play a role in using Planning Poker effectively.
 
@@ -54,13 +54,13 @@ The Product Owner, Scrum Master, and Developers can work together to use Plannin
 - **Trusting each other.** It is also important for all three roles to trust each other. The Product Owner needs to trust the Developers to provide accurate estimates, and the Scrum Master needs to trust the Product Owner and Developers to work together to reach a consensus.
 - **Being open to feedback.** Everyone on the team should be open to feedback from the other team members. This will help to ensure that the estimates are accurate and that the team is on the same page.
 
-By following these tips, the Product Owner, Scrum Master, and Developers can work together to use Planning Poker effectively and improve their team's velocity.
+By following these tips, the Product Owner, Scrum Master, and Developers can work together to use Planning Poker effectively and improve their team's velocity. For a deeper dive into estimation techniques, check out our guide on [comparing different agile estimation approaches](/knowledge-base/comparing-agile-estimation-techniques).
 
 **Additional tips for using Planning Poker effectively:**
 
 - Use a Fibonacci sequence to estimate effort. This will help to avoid estimating in whole numbers and to make more accurate estimates.
 - Be honest with your estimates. Don't be afraid to say "I don't know" or to change your estimate if you hear new information.
 - Have fun! Planning Poker should be a fun and collaborative experience. Don't take it too seriously.
-- Use an online tool for estimating, as it makes things easier to track and more enjoyable. Give [PlanningPoker.live](https://planningpoker.live) a try!
+- Use an online tool for estimating, as it makes things easier to track and more enjoyable. Give [PlanningPoker.live](https://planningpoker.live) a try! You can even [use it directly in Zoom](/knowledge-base/how-to-use-planning-poker-in-zoom) or [Microsoft Teams](/knowledge-base/installing-planning-poker-microsoft-teams-guide).
 
 By using Planning Poker effectively, you can improve your team's velocity and deliver more value to your customers.

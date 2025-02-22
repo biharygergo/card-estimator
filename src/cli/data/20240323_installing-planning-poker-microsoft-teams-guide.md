@@ -11,7 +11,7 @@ tags: Microsoft Teams, Planning Poker, Installation Guide, Agile Estimation, Tea
 ---
 
 ### Introduction
-Efficiency and cohesion are key in any collaborative setting, especially for remote software engineering teams. That's why we've developed a seamless Planning Poker app that [integrates directly into Microsoft Teams](https://planningpoker.live/integrations/teams). With this tool, there's no need to navigate away from your meeting window to conduct estimation sessions. In this guide, we'll walk you through the simple process of installing the Planning Poker app in Teams and provide tips for maximizing its utility.
+Efficiency and cohesion are key in any collaborative setting, especially for remote software engineering teams. That's why we've developed a seamless Planning Poker app that [integrates directly into Microsoft Teams](https://planningpoker.live/integrations/teams). With this tool, there's no need to navigate away from your meeting window to conduct estimation sessions. Learn more about [how different Scrum roles can use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles) in your planning sessions.
 
 ### Installation
 Getting started with our app in Teams is straightforward. You can find it in the Teams app store, known as "App Source." Simply search for "Planning Poker" or navigate directly to the [app listing](https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview). There, you'll find basic information and screenshots showcasing its functionality. Rest assured, the app only requires minimal permissions to function within Teams.
@@ -68,3 +68,10 @@ To make the most of your Planning Poker sessions, consider the following tips:
 - Use Planning Poker as a tool for team building and fostering a sense of ownership and accountability among team members.
 
 By integrating Planning Poker into your Microsoft Teams environment and following these tips, you can streamline your planning processes and foster greater collaboration within your team.
+
+### Best Practices
+Implementing the following best practices can enhance the effectiveness of remote Planning Poker sessions:
+
+1. **Set Clear Objectives**: Ensure that all participants understand the goals of the session. Share the agenda and expected outcomes beforehand. Check out our guide on [how to improve sprint planning with Planning Poker](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning) for more tips.
+
+Need help running a Scrum planning session? We've got you covered with our [guide of the top tools for SCRUM Masters](/knowledge-base/essential-scrum-master-tools) and our [comparison of different estimation techniques](/knowledge-base/comparing-agile-estimation-techniques).

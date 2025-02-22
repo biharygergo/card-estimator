@@ -10,7 +10,9 @@ category: technique
 tags: Planning Poker, Agile Mistakes, Estimation Techniques, Sprint Planning, Team Collaboration
 ---
 
-Planning poker is an excellent tool for agile teams to estimate project effort collaboratively. However, several common mistakes can hinder its effectiveness. Here’s a comprehensive guide to avoiding these pitfalls:
+## Introduction
+
+Planning poker is an excellent tool for agile teams to estimate project effort collaboratively. Learn more about [how different Scrum roles can use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles).
 
 ## 1. Lack of Preparation
 
@@ -31,6 +33,7 @@ In some teams, senior members or more vocal individuals may dominate the discuss
 - Use anonymous voting tools to ensure independent input (pro tip: PlanningPoker.live [supports anonymous voting](https://planningpoker.live/features)!)
 - Facilitate discussions in a way that encourages quieter team members to voice their opinions.
 - Rotate facilitators to prevent dominance by a single individual.
+- Learn more about [how to improve sprint planning with Planning Poker](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning).
 
 ## 3. Underestimating Story Complexity
 
@@ -44,7 +47,7 @@ Teams sometimes overlook the complexity of a user story, leading to underestimat
 
 ## 4. Skipping Discussion on Disparities
 
-When there’s a significant difference in estimates, it’s essential to discuss the reasons behind the disparity. This discussion often reveals overlooked details and leads to a more accurate consensus.
+When there's a significant difference in estimates, it's essential to discuss the reasons behind the disparity. This discussion often reveals overlooked details and leads to a more accurate consensus.
 
 ### Solutions:
 
@@ -54,7 +57,7 @@ When there’s a significant difference in estimates, it’s essential to discus
 
 ## 5. Ignoring Team Capacity
 
-Even if the estimates are accurate, not considering the team’s capacity can derail a sprint. Balance the estimated workload with the team’s available capacity to avoid overcommitment.
+Even if the estimates are accurate, not considering the team's capacity can derail a sprint. Balance the estimated workload with the team's available capacity to avoid overcommitment.
 
 ### Solutions:
 
@@ -64,7 +67,7 @@ Even if the estimates are accurate, not considering the team’s capacity can de
 
 ## 6. Using planning poker for Every Story
 
-While planning poker is valuable, it’s not necessary for every user story, especially small or well-understood tasks. Reserve it for complex or high-uncertainty stories to keep sessions efficient.
+While planning poker is valuable, it's not necessary for every user story, especially small or well-understood tasks. Reserve it for complex or high-uncertainty stories to keep sessions efficient.
 
 ### Solutions:
 
@@ -104,7 +107,7 @@ Post-sprint retrospectives should include a review of estimation accuracy. Analy
 
 ## 10. Not Adapting the Process
 
-Every team is different, and so is every project. Be open to tweaking the planning poker process to better fit your team’s needs and dynamics.
+Every team is different, and so is every project. Be open to tweaking the planning poker process to better fit your team's needs and dynamics.
 
 ### Solutions:
 
@@ -115,4 +118,4 @@ Every team is different, and so is every project. Be open to tweaking the planni
 By avoiding these common mistakes, you can enhance the accuracy and effectiveness of your planning poker sessions, leading to more predictable and manageable sprints.
 
 
-**Ready to avoid these pitfalls? Start refining your sessions today with PlanningPoker.live and watch your team’s estimation accuracy soar!**
+**Ready to avoid these pitfalls? Start refining your sessions today with PlanningPoker.live and watch your team's estimation accuracy soar!**

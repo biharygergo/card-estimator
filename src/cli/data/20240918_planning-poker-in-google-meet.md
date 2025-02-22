@@ -10,11 +10,13 @@ category: guide
 tags: Google Meet Integration, Planning Poker Setup, Scrum Tools, Agile Estimation, Remote Collaboration
 ---
 
+### Introduction
+
 This step-by-step tutorial will guide you through installing the [PlanningPoker.live app in Google Meet](https://planningpoker.live/integrations/meet), so you can streamline your planning sessions quickly and easily.
 
 ## Why Use Planning Poker?
 
-Planning Poker is an essential tool for teams practicing agile development, especially for estimating the effort required for tasks. It fosters collaboration, reduces biases, and ensures that all team members have a say in the estimation process. Using PlanningPoker.live within [Google Meet](https://meet.google.com) simplifies remote team planning by integrating seamlessly into your virtual meetings. Here’s why you should consider using it:
+Planning Poker is an essential tool for teams practicing agile development, especially for estimating the effort required for tasks. Learn more about [how different Scrum roles can use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles) and [how it can improve your sprint planning](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning). It fosters collaboration, reduces biases, and ensures that all team members have a say in the estimation process. Using PlanningPoker.live within [Google Meet](https://meet.google.com) simplifies remote team planning by integrating seamlessly into your virtual meetings. Here's why you should consider using it:
 
 - **Effortless Collaboration:** All participants can provide estimates in real-time during the meeting, ensuring consensus and preventing any one member from dominating the conversation.
 - **Bias-Free Voting:** Anonymous voting ensures fair estimates, avoiding influence from senior team members or dominant voices.
@@ -27,7 +29,7 @@ By embedding PlanningPoker.live into your Google Meet workflow, your sprint plan
 
 Follow these simple steps to install the app:
 
-1. **Visit the Google Workspace Marketplace:** First, head over to the [Workspace Marketplace](https://workspace.google.com/marketplace/app/planningpokerlive/417578634660) and search for "PlanningPoker.live." Once you’ve located the app, click on the blue “Install” button to add it to your Google account.
+1. **Visit the Google Workspace Marketplace:** First, head over to the [Workspace Marketplace](https://workspace.google.com/marketplace/app/planningpokerlive/417578634660) and search for "PlanningPoker.live." Once you've located the app, click on the blue "Install" button to add it to your Google account.
 
 <div class="image-container">
     <img alt="PlanningPoker.live in Marketplace" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet_store.png">
@@ -36,17 +38,17 @@ Follow these simple steps to install the app:
 
 2. **Grant Permissions:** A pop-up will appear, asking you to grant necessary permissions. This step is required for installing the add-on and does not give the app any access beyond what's necessary to function within your workspace.
 
-3. **Accessing PlanningPoker.live in Google Meet:** Once the installation is complete, head over to [Google Meet](https://meet.google.com). Start or join a meeting, and then click on the “Activities” icon located in the bottom-right corner to open the sidebar.
+3. **Accessing PlanningPoker.live in Google Meet:** Once the installation is complete, head over to [Google Meet](https://meet.google.com). Start or join a meeting, and then click on the "Activities" icon located in the bottom-right corner to open the sidebar.
 
 <div class="image-container">
     <img alt="PlanningPoker.live in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet-apps-tray.png">
     <p>Google Meet Activities sidebar open</p>
 </div>
 
-4. **Launching the App:** Within the Activities sidebar, you’ll now see the PlanningPoker.live app. Click on its icon to launch it. After the initial load, you’ll land on the “Create/Join” page. Here, you can choose to either start a new planning poker session or join an existing one.
+4. **Launching the App:** Within the Activities sidebar, you'll now see the PlanningPoker.live app. Click on its icon to launch it. After the initial load, you'll land on the "Create/Join" page. Here, you can choose to either start a new planning poker session or join an existing one.
 
    - If you're the meeting organizer, click "Create Room" to start a new session.
-   - If you’re joining, simply enter the room ID shared by your team.
+   - If you're joining, simply enter the room ID shared by your team.
 
 <div class="image-container">
     <img alt="PlanningPoker.live open in the Activities sidebar" src="https://res.cloudinary.com/dtvhnllmc/image/upload/c_scale,f_auto,w_1000,q_70/v1711188812/Meet-landing.png">
@@ -55,7 +57,7 @@ Follow these simple steps to install the app:
 
 ## Inviting Participants
 
-Once inside the session, the next step is to invite your teammates. To do this, click on the "Invite" button next to the room ID. This initiates a “Shared Activity” within Meet, automatically inviting other participants to install and open the PlanningPoker.live app.
+Once inside the session, the next step is to invite your teammates. To do this, click on the "Invite" button next to the room ID. This initiates a "Shared Activity" within Meet, automatically inviting other participants to install and open the PlanningPoker.live app.
 
 Alternatively, you can copy the room ID and share it manually with colleagues via chat or email. They can then join the room directly from their Meet interface or through the PlanningPoker.live web app.
 
@@ -66,7 +68,7 @@ Alternatively, you can copy the room ID and share it manually with colleagues vi
 
 ## Exploring Key Features
 
-Now that you’ve installed PlanningPoker.live, here’s how to make the most of its features:
+Now that you've installed PlanningPoker.live, here's how to make the most of its features:
 
 - **Jira and Linear Integration:** Link PlanningPoker.live with your project management tools like [Jira](https://planningpoker.live/integrations/jira) or [Linear](https://planningpoker.live/integrations/linear) to import tasks directly. Once your planning session is complete, export the estimates back into your tool for easy tracking. Learn more about our [Jira integration](https://planningpoker.live/knowledge-base/how-to-estimate-jira-issues-with-planning-poker) and our [Linear integration](https://planningpoker.live/knowledge-base/estimate-linear-issues-planning-poker-live) in our knowledge base.
   

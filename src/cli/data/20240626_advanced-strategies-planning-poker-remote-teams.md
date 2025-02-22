@@ -17,7 +17,7 @@ Remote work is increasingly becoming the norm, and with it comes the need for ef
 To facilitate seamless remote Planning Poker sessions, use reliable tools that support real-time collaboration. Here are a few recommendations:
 
 - **Planning Poker Platforms**:
-  - **[PlanningPoker.live](https://planningpoker.live/)**: This tool offers seamless integration with Zoom, Webex, and Microsoft Teams, providing a unique advantage for remote teams by allowing estimations directly within your video calls.
+  - **[PlanningPoker.live](https://planningpoker.live/)**: This tool offers seamless integration with [Zoom](/knowledge-base/how-to-use-planning-poker-in-zoom), [Teams](/knowledge-base/installing-planning-poker-microsoft-teams-guide), and [Google Meet](/knowledge-base/how-to-use-planning-poker-in-google-meet), providing a unique advantage for remote teams.
   - **[PlanningPoker.com](https://www.planningpoker.com/)**: Known for its user-friendly interface and ease of use.
   - **[PlanningPokerOnline.com](https://www.planningpokeronline.com/)**: Another popular choice for its simplicity.
 
@@ -39,18 +39,17 @@ Implementing the following best practices can enhance the effectiveness of remot
 4. **Time Management**: Schedule sessions considering time zone differences. Keep the sessions concise to maintain engagement.
 
 ## Overcoming Challenges
-Remote Planning Poker sessions can face unique challenges. Here’s how to address some common issues:
+Remote Planning Poker sessions can face unique challenges. Here's how to address some common issues:
 
 1. **Time Zone Differences**: Rotate meeting times to accommodate different time zones fairly. Use scheduling tools like [World Time Buddy](https://www.worldtimebuddy.com/) to find suitable times.
 2. **Technical Issues**: Have a backup plan for technical difficulties. Ensure all team members are familiar with the tools being used.
 3. **Maintaining Engagement**: Use interactive elements like polls or quick breaks to keep energy levels high. Encourage camera use to make sessions more personal.
 
-## Leveraging PlanningPoker.live’s Unique Integrations
-One of the standout features of [PlanningPoker.live](https://planningpoker.live/integrations) is its integration with Zoom, Webex,Microsoft Teams and Google Meet. This integration allows for a seamless experience where you can:
+## Leveraging PlanningPoker.live's Unique Integrations
+One of the standout features of [PlanningPoker.live](https://planningpoker.live/integrations) is its integration with popular tools. This integration allows for:
 
-- **Conduct Sessions Within Video Calls**: Launch Planning Poker sessions directly within your video meetings, ensuring that all discussions and estimations happen in real-time without switching between different platforms.
-- **Enhanced Collaboration**: Utilize the interactive features of Zoom, Webex, and Teams such as breakout rooms, screen sharing, and live chat to facilitate deeper discussions and consensus building.
-- **Streamlined Workflow**: Integration with these platforms means you can schedule, conduct, and follow up on Planning Poker sessions without needing separate tools, which enhances productivity and reduces technical friction.
+- **Enhanced Project Management**: Connect with [Jira](/knowledge-base/how-to-estimate-jira-issues-with-planning-poker) or [Linear](/knowledge-base/estimate-linear-issues-planning-poker-live) for seamless ticket management
+- **Improved Collaboration**: Learn more about [different estimation techniques](/knowledge-base/comparing-agile-estimation-techniques) and [how to use Planning Poker effectively](/knowledge-base/planning-poker-guide-agile-estimation-techniques)
 
 ## Conclusion
 Remote Planning Poker sessions, when executed well, can significantly enhance the estimation process and overall project management for distributed teams. By leveraging the right tools like [PlanningPoker.live](https://planningpoker.live/), following best practices, and addressing common challenges, your team can improve collaboration and achieve more accurate estimates.

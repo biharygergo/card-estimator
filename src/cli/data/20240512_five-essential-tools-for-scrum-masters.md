@@ -116,11 +116,11 @@ Key Features & Benefits for Scrum Masters:
 
 ### 5\. Estimation & Planning Tools: Laying the Foundation for Successful Sprints
 
-Accurate estimation is crucial for effective sprint planning. Planning Poker is a popular technique that promotes collaboration and consensus.
+Accurate estimation is crucial for effective sprint planning. [Planning Poker](/knowledge-base/planning-poker-guide-agile-estimation-techniques) is a popular technique that promotes collaboration and consensus.
 
 Our Recommendation: [PlanningPoker.live](https://planningpoker.live)
 
-PlanningPoker.live brings the power of Planning Poker online, making it easy for distributed teams to estimate story points or effort in real-time.
+PlanningPoker.live brings the power of Planning Poker online, making it easy for distributed teams to estimate story points or effort in real-time. Learn more about [how different Scrum roles can use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles).
 
 Key Features & Benefits for Scrum Masters:
 
@@ -130,7 +130,7 @@ Key Features & Benefits for Scrum Masters:
 
 - Data-Driven Insights: Track estimation history and identify patterns.
 
-- Seamless Integrations: Connect with Jira and Linear to import tasks directly from your backlog. Plan in your video meetings with integrations for Zoom, Teams, Meet and Webex.
+- Seamless Integrations: Connect with [Jira](/knowledge-base/how-to-estimate-jira-issues-with-planning-poker) and [Linear](/knowledge-base/estimate-linear-issues-planning-poker-live) to import tasks directly from your backlog. Plan in your video meetings with integrations for [Zoom](/knowledge-base/how-to-use-planning-poker-in-zoom), [Teams](/knowledge-base/installing-planning-poker-microsoft-teams-guide), Meet and Webex.
 
 - Easy to get started: Start planning in a couple of clicks.
 

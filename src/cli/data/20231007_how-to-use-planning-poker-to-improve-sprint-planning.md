@@ -28,7 +28,7 @@ Planning Poker is a consensus-based technique for estimating effort in agile sof
 
 ## Tips for using Planning Poker effectively
 
-- **Use a Fibonacci sequence.** Planning Poker cards are typically numbered in a Fibonacci sequence, such as 0, 1, 2, 3, 5, 8, 13, 21, 34, 55, and 89. This sequence helps to avoid the tendency to estimate in whole numbers. You can even decide on your own card deck, which is supported by most online tools as well.
+- **Use a Fibonacci sequence.** Planning Poker cards are typically numbered in a Fibonacci sequence, such as 0, 1, 2, 3, 5, 8, 13, 21, 34, 55, and 89. This sequence helps to avoid the tendency to estimate in whole numbers. You can learn more about different estimation techniques in our [comparison guide](/knowledge-base/comparing-agile-estimation-techniques).
 - **Use relative estimates.** Planning Poker estimates are relative to each other, rather than to a specific unit of time. This helps to avoid the problem of overestimating or underestimating complex tasks.
 - **Don't be afraid to say "I don't know."** If you don't have enough information to estimate a user story, it's okay to say so. The goal of Planning Poker is to get a rough estimate of the effort required, not to be precise. When played online, you can add a "Pass" card to the deck to represent this vote.
 - **Don't be afraid to change your mind.** If you hear new information during the discussion phase, you can change your estimate. The goal is to reach a consensus on an estimate that everyone is comfortable with.
@@ -41,3 +41,5 @@ Planning Poker is a consensus-based technique for estimating effort in agile sof
 - **Have fun!** Planning Poker should be a fun and collaborative experience. Don't take it too seriously.
 
 Planning Poker is a powerful tool that can help you to improve your sprint planning meetings and deliver more value to your customers. By following the tips above, you can use Planning Poker effectively to estimate the effort required for your Sprint Backlog items.
+
+Learn more about [how different Scrum roles can use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles).

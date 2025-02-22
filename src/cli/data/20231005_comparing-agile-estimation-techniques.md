@@ -15,7 +15,7 @@ Agile estimation is the process of estimating the effort and time required to co
 
 There are a number of different agile estimation techniques available, each with its own strengths and weaknesses. In this blog post, we will compare some of the most popular agile estimation techniques, including:
 
-* [Planning Poker](https://en.wikipedia.org/wiki/Planning_poker)
+* [Planning Poker](https://en.wikipedia.org/wiki/Planning_poker) - Learn more about how [different Scrum roles use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles)
 * [T-shirt Sizing](https://asana.com/resources/t-shirt-sizing)
 * [Dot Voting](https://en.wikipedia.org/wiki/Dot-voting)
 * [Wideband Delphi](https://en.wikipedia.org/wiki/Wideband_delphi)
@@ -39,7 +39,7 @@ The best agile estimation technique for you will depend on a number of factors, 
 * The type of work you are doing
 * The level of accuracy you require
 
-If you are new to agile estimation, I recommend starting with a simple technique such as [Planning Poker](https://planningpoker.live) or T-shirt Sizing. Once you have more experience, you can try more complex techniques such as Wideband Delphi or three-point estimating. Most Planning Poker tools also support T-shirt sizing, such as PlanningPoker.live.
+If you are new to agile estimation, I recommend starting with a simple technique such as [Planning Poker](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning) or T-shirt Sizing. Once you have more experience, you can try more complex techniques such as Wideband Delphi or three-point estimating. Most Planning Poker tools also support T-shirt sizing, such as PlanningPoker.live.
 
 ## How to Use Agile Estimation Techniques Effectively
 

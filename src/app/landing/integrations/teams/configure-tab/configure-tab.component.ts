@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { app, pages } from '@microsoft/teams-js';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 
 @Component({
   selector: 'app-configure-tab',
@@ -10,7 +11,13 @@ import { app, pages } from '@microsoft/teams-js';
   styleUrls: ['./configure-tab.component.scss'],
 })
 export class ConfigureTabComponent implements OnInit {
+  config: AppConfig = inject(APP_CONFIG);
+
   ngOnInit(): void {
+    if (this.config.runningIn !== 'teams') {
+      return;
+    }
+
     // Initialize the Microsoft Teams SDK
     app.initialize().then(async () => {
       // const context = await app.getContext();

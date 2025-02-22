@@ -2,6 +2,8 @@
   <div class="layout">
     <article *ngIf="article | async as article">
       <div class="breadcrumbs">
+        <a routerLink="/">Home</a>
+        <span>></span>
         <a routerLink="/knowledge-base">Knowledge base</a>
         <span>></span>
         <a routerLink="/knowledge-base/{{ article.slug }}">{{

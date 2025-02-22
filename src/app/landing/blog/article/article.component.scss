@@ -187,3 +187,18 @@ main {
 .video-wrapper {
   margin: 1rem 0;
 }
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  span {
+    color: var(--main-color);
+    font-size: 13px;
+    background: var(--light-blue);
+    padding: 0.1rem 0.5rem;
+    border-radius: 16px;
+  }
+}

@@ -19,10 +19,6 @@
             <small
               >Last updated:
               {{ article.lastUpdated | date : "mediumDate" }}</small
-            ><br/>
-            <small
-              >Tags:
-              {{ article.tagsString }}</small
             >
           </div>
         </div>
@@ -38,10 +34,15 @@
           />
         </div>
         } @else {
-          <app-youtube-player [youtubeVideoId]="article.youtubeVideoId"/>
+        <app-youtube-player [youtubeVideoId]="article.youtubeVideoId" />
         }
         <div>
           <markdown [data]="article.content" />
+          <div class="tag-cloud">
+            @for(tag of article.tags; track $index){
+            <span class="tag">{{ tag }}</span>
+            }
+          </div>
         </div>
         <div class="banner-wrapper">
           <start-planning-cta></start-planning-cta>

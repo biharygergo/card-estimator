@@ -38,14 +38,13 @@ export class ArticleComponent {
   private readonly schemaTagService = inject(SchemaTagService);
   private readonly renderer2 = inject(Renderer2);
 
-  article: Observable<Article & { tagsString: string }> = inject(
+  article: Observable<Article> = inject(
     ActivatedRoute
   ).data.pipe(
     map((data) => ({
       ...data.article,
-      tagsString: data.article.tags.map((tag) => `#${tag}`).join(', '),
     })),
-    tap((article: Article & { tagsString: string }) => {
+    tap((article: Article) => {
       this.titleService.setTitle(`${article.title} - PlanningPoker.live`);
       this.metaService.updateTag({
         name: 'description',

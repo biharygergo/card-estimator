@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { FaqRowComponent } from '../faq-row/faq-row.component';
 
-type FaqRow = {
+export type FaqRow = {
   question: string;
   answer: string;
 };

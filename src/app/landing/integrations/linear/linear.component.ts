@@ -31,6 +31,33 @@ export class LinearComponent {
         title:
           'Get started quickly with our tutorial video on integrating Linear with PlanningPoker.live',
       },
+      faqs: [
+        {
+          question: 'How do I set up the Linear integration?',
+          answer:
+            'Setting up Linear integration is quick and secure. Just click "Connect Linear" in your planning session, authorize with minimal permissions (we only need read access to issues and write access to story points), and you\'re ready to start estimating. No configuration or admin rights required.',
+        },
+        {
+          question: 'Is the Linear integration free to use?',
+          answer:
+            'Yes! The Linear integration is completely free to use. You can import issues, estimate them in real-time with your team, and sync story points back to Linear without any additional cost.',
+        },
+        {
+          question: 'How does the Linear integration work?',
+          answer:
+            'Once connected, you can import issues directly from your Linear teams and projects. During planning sessions, story points are can be synced back to Linear when consensus is reached. You can also bulk import multiple issues for efficient sprint planning.',
+        },
+        {
+          question: 'What permissions does the Linear integration need?',
+          answer:
+            "We follow the principle of least privilege and only request essential permissions: read access to view your issues and write access to update story points. We don't request access to sensitive data or admin capabilities.",
+        },
+        {
+          question: 'Can I use Linear integration in video calls?',
+          answer:
+            'Yes! The Linear integration works seamlessly with our <a href="/integrations">video conferencing integrations</a>. Whether you\'re using Teams, Zoom, Meet, or Webex, you can import and estimate Linear issues directly in your meetings.',
+        },
+      ],
       steps: [
         {
           title: 'Step 1: Connect your Linear account to PlanningPoker.live',

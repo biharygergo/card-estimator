@@ -51,8 +51,8 @@ export class TeamsComponent {
       answer: 'First, install the Planning Poker app from the Teams store. During a meeting, click the Apps button and select Planning Poker. Share the app to make it visible to all participants. The room is automatically created and everyone in the meeting can join instantly - no registration required.',
     },
     {
-      question: 'Can I use Planning Poker with Jira while in Teams?',
-      answer: 'Yes! Even when using Planning Poker in Teams, you can still connect to Jira. Import your backlog items directly into the estimation session and sync story points back to Jira when you\'re done. Visit our <a href="/integrations">integrations page</a> to learn more about connecting Jira.',
+      question: 'Can I use Planning Poker with Jira or Linear while in Teams?',
+      answer: 'Yes! Even when using Planning Poker in Teams, you can still connect to Jira or Linear. Import your backlog items directly into the estimation session and sync story points back to your project management tool when you\'re done. Visit our <a href="/integrations">integrations page</a> to learn more about connecting Jira or Linear.',
     },
     {
       question: 'Is the Teams app different from the web version?',

@@ -19,7 +19,7 @@ import {
 import { FeaturesPreviewComponent } from '../features/features-preview/features-preview.component';
 import { PageHeaderWithCtaComponent } from '../components/page-header-with-cta/page-header-with-cta.component';
 import { RouterLink } from '@angular/router';
-import { FaqRowComponent } from '../faq/faq-row/faq-row.component';
+import { FaqSectionComponent } from '../faq/faq-section/faq-section.component';
 
 const KNOWLEDGE_BASE_SAMPLES = [
   {
@@ -71,7 +71,7 @@ const KNOWLEDGE_BASE_SAMPLES = [
     NgOptimizedImage,
     CarbonAdComponent,
     RouterLink,
-    FaqRowComponent,
+    FaqSectionComponent,
   ],
 })
 export class HomeComponent implements OnInit {
@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit {
     {
       question: 'What story point scales are available in Planning Poker?',
       answer:
-        'We offer multiple estimation scales including the Fibonacci sequence (1, 2, 3, 5, 8, 13...), Modified Fibonacci, T-shirt sizes (XS, S, M, L, XL), and Powers of 2 (1, 2, 4, 8, 16). You can also create custom card sets to match your team\'s preferred estimation scale. Learn more about setting up custom card sets in our <a href="/knowledge-base/maximize-estimation-with-different-card-sets-in-planningpoker-live">knowledge base</a>.',
+        'We offer multiple default estimation scales including the Fibonacci sequence (1, 2, 3, 5, 8, 13...), Modified Fibonacci and T-shirt sizes (XS, S, M, L, XL). You can also create custom card sets to match your team\'s preferred estimation scale. Learn more about setting up custom card sets in our <a href="/knowledge-base/maximize-estimation-with-different-card-sets-in-planningpoker-live">knowledge base</a>.',
     },
     {
       question: 'How private are Planning Poker sessions?',

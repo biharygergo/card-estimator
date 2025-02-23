@@ -32,49 +32,6 @@ main {
   .mat-expansion-panel-spacing {
     margin: 0 0;
   }
-
-  .mat-expansion-panel {
-    background: var(--background-color);
-    color: #d9e2ff;
-    box-shadow: none !important;
-    width: 100%;
-
-    &:first-of-type {
-      border-top-right-radius: 20px;
-      border-top-left-radius: 20px;
-    }
-
-    &:last-of-type {
-      border-bottom-right-radius: 20px;
-      border-bottom-left-radius: 20px;
-    }
-
-    &:not(.expanded) {
-      margin-bottom: 10px;
-    }
-
-    .mat-expansion-panel-header {
-      height: unset;
-      padding: 1rem 0.2rem;
-    }
-
-    .mat-expansion-panel-header-title {
-      color: #d9e2ff;
-      font-size: 1.5rem;
-      line-height: 1.6rem;
-      font-weight: 400;
-    }
-
-    .mat-expansion-indicator::after {
-      color: white;
-    }
-
-    p {
-      a {
-        color: white;
-      }
-    }
-  }
 }
 
 .cta-wrapper {

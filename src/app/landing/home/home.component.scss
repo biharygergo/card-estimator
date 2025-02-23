@@ -425,3 +425,40 @@
     font-size: 1.7rem;
   }
 }
+
+.faq-section {
+  padding: 4rem 0;
+  background: var(--background-color);
+
+  .faq-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+
+    h3 {
+      color: #bfc6dc;
+      text-align: center;
+      margin-bottom: 4rem;
+      font-size: 1.7rem;
+    }
+
+    .faq-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .view-all-faqs {
+      text-align: center;
+      margin-top: 2rem;
+
+      a {
+        color: #d9e2ff;
+      }
+    }
+  }
+}

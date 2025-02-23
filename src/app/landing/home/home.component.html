@@ -100,6 +100,19 @@
     </div>
   </div>
 </section>
+<section class="faq-section">
+  <div class="faq-content">
+    <h3>Frequently Asked Questions</h3>
+    <div class="faq-grid">
+      @for (faq of faqs; track faq.question) {
+        <app-faq-row [question]="faq.question" [answer]="faq.answer" />
+      }
+    </div>
+    <div class="view-all-faqs">
+      <a mat-stroked-button color="primary" routerLink="/faq">View all FAQs</a>
+    </div>
+  </div>
+</section>
 <section class="knowledge-base-section">
   <div class="knowledge-base-section-content">
     <h3>Learn more about agile techniques & SCRUM poker</h3>

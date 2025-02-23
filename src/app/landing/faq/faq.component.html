@@ -8,12 +8,7 @@
         </div>
         <mat-accordion multi class="category-answers">
           @for (faq of category.faqs; track faq.question) {
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>{{ faq.question }}</mat-panel-title>
-              </mat-expansion-panel-header>
-              <p [innerHtml]="faq.answer"></p>
-            </mat-expansion-panel>
+            <app-faq-row [question]="faq.question" [answer]="faq.answer" />
           }
         </mat-accordion>
       </div>

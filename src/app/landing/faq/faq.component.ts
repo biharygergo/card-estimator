@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CarbonAdComponent } from '../../shared/carbon-ad/carbon-ad.component';
 import { StartPlanningCtaComponent } from '../components/start-planning-cta/start-planning-cta.component';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import {
+  MatAccordion,
+} from '@angular/material/expansion';
 import { PageHeaderComponent } from '../components/page-header/page-header.component';
+import { FaqRowComponent } from './faq-row/faq-row.component';
 
 type FaqRow = {
   question: string;
@@ -94,7 +97,7 @@ const faqs: FaqRow[] = [
     question: 'How can I view the velocity of my team?',
     category: 'Gameplay',
     answer:
-      'Velocity data is shown in the sidebar and is available after results have been revealed. Velocity calculation works with numbered card sets only. This helps you track your team\'s progress and improve future estimations.',
+      "Velocity data is shown in the sidebar and is available after results have been revealed. Velocity calculation works with numbered card sets only. This helps you track your team's progress and improve future estimations.",
   },
   {
     question: 'How are rooms protected? Can I set a password?',
@@ -203,7 +206,7 @@ const faqs: FaqRow[] = [
     category: 'Meeting Links',
     answer:
       'To manage your meeting links, go to the "Meeting Links" section. Here you can view all your links, create new ones, or delete existing ones. You can also see which room each link currently points to.',
-  }
+  },
 ];
 
 type FaqCategory = {
@@ -212,20 +215,18 @@ type FaqCategory = {
 };
 
 @Component({
-    selector: 'app-faq',
-    templateUrl: './faq.component.html',
-    styleUrls: ['./faq.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [
-        PageHeaderComponent,
-        MatAccordion,
-        MatExpansionPanel,
-        MatExpansionPanelHeader,
-        MatExpansionPanelTitle,
-        StartPlanningCtaComponent,
-        CarbonAdComponent,
-    ],
+  selector: 'app-faq',
+  templateUrl: './faq.component.html',
+  styleUrls: ['./faq.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    FaqRowComponent,
+    PageHeaderComponent,
+    MatAccordion,
+    StartPlanningCtaComponent,
+    CarbonAdComponent,
+  ],
 })
 export class FaqComponent implements OnInit {
   categories: FaqCategory[] = Object.values(

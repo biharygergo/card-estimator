@@ -1,16 +1,19 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 
 @Component({
-    selector: 'app-faq-row',
-    template: `
-    <section class="faq-row">
-      <h2>{{ question }}</h2>
+  selector: 'app-faq-row',
+  template: `
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ question }}</mat-panel-title>
+      </mat-expansion-panel-header>
       <p [innerHtml]="answer"></p>
-    </section>
+    </mat-expansion-panel>
   `,
-    styleUrls: ['./faq-row.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: true,
+  styleUrls: ['./faq-row.component.scss'],
+  standalone: true,
+  imports: [MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle],
 })
 export class FaqRowComponent implements OnInit {
   @Input() question: string;

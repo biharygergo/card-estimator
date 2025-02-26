@@ -3,16 +3,17 @@
     🚀</span>
 </div> -->
 <planning-poker-page-header-with-cta [config]="{
-  title:'Real-Time Agile Estimation for Remote Scrum Teams',
-  description: 'Get accurate estimates for your next sprint with our intuitive planning poker app.',
+  title: 'Planning Poker for Remote Agile Teams',
+  description: 'The most trusted Planning Poker tool for agile teams. Run effective scrum poker sessions with JIRA integration, custom card sets, and real-time estimation features.',
   internalLink: '/create',
   ctaIcon: 'play_arrow',
-  ctaTitle: 'Start planning',
+  ctaTitle: 'Start Planning Poker Session',
   showPlatforms: true,
 }" />
 <section class="used-by-section">
   <div class="used-by-content">
-    <h3>Simplifies planning poker for agile teams around the world</h3>
+    <h3>The #1 Planning Poker Tool Trusted by Agile Teams Worldwide</h3>
+    <p class="subtitle">Join thousands of Scrum teams using our Planning Poker app for accurate sprint estimations</p>
     <div class="logo-carousel">
       <ul class="logo-carousel-track">
         @for (logo of logos; track $index; let i = $index) {
@@ -20,7 +21,7 @@
           <picture>
             <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
             <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
-            <img src="/assets/logos/{{ logo }}.png" alt="Logo of {{ companies[i] }}" loading="lazy" />
+            <img src="/assets/logos/{{ logo }}.png" alt="{{ companies[i] }} uses Planning Poker" loading="lazy" />
           </picture>
         </li>
         }
@@ -30,13 +31,14 @@
 </section>
 <section class="features-section">
   <div class="features-content">
-    <h3>Essential features for efficient estimation sessions</h3>
+    <h3>Essential Planning Poker Features for Scrum Teams</h3>
+    <p class="subtitle">Everything you need to run effective Planning Poker sessions</p>
     <planning-poker-features-preview />
   </div>
   <div class="see-more-features">
     <mat-expansion-panel class="see-more-panel" (opened)="viewAllFeaturesOpened()">
       <mat-expansion-panel-header class="see-more-panel-header">
-        <mat-panel-title class="see-more-panel-title">View all features</mat-panel-title>
+        <mat-panel-title class="see-more-panel-title">View All Planning Poker Features</mat-panel-title>
       </mat-expansion-panel-header>
       <planning-poker-features-items [loadVideos]="loadVideos" />
     </mat-expansion-panel>
@@ -44,7 +46,8 @@
 </section>
 <section class="demo-video-section">
   <div class="demo-video-section-content">
-    <h3>Learn how to start a planning poker session in seconds</h3>
+    <h3>Start a Planning Poker Session in Seconds</h3>
+    <p class="subtitle">Watch how easy it is to run agile estimations with our Planning Poker tool</p>
     <div class="video-container">
       <video #video loop muted preload="none" (loadedmetadata)="video.muted = true" [controls]="!video.paused"
         poster="/assets/video_poster.webp">

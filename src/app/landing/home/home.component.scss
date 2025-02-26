@@ -425,3 +425,19 @@
     font-size: 1.7rem;
   }
 }
+
+.subtitle {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--landing-text-color);
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto;
+  margin: 3rem auto;
+  margin-top: -1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    margin: 0.5rem 0 1rem;
+  }
+}

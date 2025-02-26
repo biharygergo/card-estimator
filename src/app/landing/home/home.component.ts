@@ -101,9 +101,12 @@ export class HomeComponent implements OnInit {
   protected knowledgeBaseSamples = KNOWLEDGE_BASE_SAMPLES;
   faqs = [
     {
-      question: 'What is Planning Poker and how does it work?',
-      answer:
-        'Planning Poker is an agile estimation technique where team members independently vote on the complexity of user stories using numbered cards. PlanningPoker.live makes this process easy and free - team members vote simultaneously, discuss their estimates, and reach consensus, all in real-time. Check out our <a href="/features">full feature list</a> to learn more.',
+      question: 'What is Planning Poker and how does it improve agile estimation?',
+      answer: 'Planning Poker (also known as Scrum Poker) is an agile estimation technique where team members use numbered cards to vote on story complexity. Our Planning Poker app makes this process easy by enabling real-time voting, discussion, and consensus-building. Teams can estimate user stories more accurately while avoiding common biases. Check out our <a href="/features">full feature list</a> to learn more.',
+    },
+    {
+      question: 'Why do Scrum teams choose our Planning Poker tool?',
+      answer: 'Our Planning Poker app is trusted by agile teams at companies like Google, Netflix, and Amazon because it offers a complete solution for sprint planning and estimation. Features include JIRA integration, custom card sets, anonymous voting, and seamless integration with video conferencing tools. Teams report more accurate estimates and more engaged planning sessions.',
     },
     {
       question: 'Why should teams use Planning Poker for estimating?',

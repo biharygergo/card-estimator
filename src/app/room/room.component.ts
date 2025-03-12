@@ -842,6 +842,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           isConsensus: mostPopularVoteEntry[1] === estimates.length,
         },
         pieChartData,
+        consensusOverride: round.majorityOverride,
       };
     }
   }

@@ -63,8 +63,8 @@ export function markedOptionsFactory(): MarkedOptions {
         provide: MARKED_OPTIONS,
         useFactory: markedOptionsFactory,
       },
-    })
-  ]
+    }),
+  ],
 })
 export class RichTopicComponent {
   richTopic = input.required<RichTopic | null | undefined>();
@@ -94,7 +94,7 @@ export class RichTopicComponent {
     private readonly linearService: LinearService,
     private readonly toastService: ToastService,
     private readonly permissionService: PermissionsService
-  ) { }
+  ) {}
 
   openRemoteTopic() {
     this.analyticsService.logClickedViewOnJiraButton();
@@ -133,7 +133,9 @@ export class RichTopicComponent {
     this.toastService.showMessage(`Saving to ${providerName}, hold tight...`);
 
     this.isSavingToJira.set(true);
-    const convertedMajority = this.roundStatistics().consensus.value;
+    const convertedMajority =
+      this.roundStatistics()?.consensusOverride ??
+      this.roundStatistics()?.consensus.value;
 
     providerService
       .updateIssue({

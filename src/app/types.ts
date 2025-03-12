@@ -118,6 +118,7 @@ export interface RoundStatistics {
     percentage: number;
     color: string;
   }[];
+  consensusOverride?: number;
 }
 
 export type CardSetValue = {

@@ -34,6 +34,7 @@ import { Theme, ThemeService } from './services/theme.service';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 import { environment } from 'src/environments/environment';
+import Clarity from '@microsoft/clarity';
 
 @Component({
   selector: 'app-root',
@@ -165,6 +166,10 @@ export class AppComponent implements OnInit, OnDestroy {
         this.document.body,
         `running-in-${this.config.runningIn}`
       );
+
+      if (this.config.runningIn === 'web') {
+        Clarity.init('qngk5xwpfw');
+      }
     }
   }
 

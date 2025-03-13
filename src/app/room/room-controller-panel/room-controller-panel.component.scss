@@ -130,3 +130,36 @@
     height: 22px;
   }
 }
+
+.split-reveal-button-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .main-button {
+    flex: 1 0 90%;
+    z-index: 1;
+    background-color: var(--mdc-outlined-card-container-color);
+  }
+
+  .split-reveal-button-container-side-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-color: var(--mdc-outlined-button-outline-color);
+    border-right: 1px solid var(--mdc-outlined-button-outline-color);
+    border-top: 1px solid var(--mdc-outlined-button-outline-color);
+    border-bottom: 1px solid var(--mdc-outlined-button-outline-color);
+    border-top-right-radius: var(--mdc-outlined-button-container-shape);
+    border-bottom-right-radius: var(--mdc-outlined-button-container-shape);
+    margin-left: -1.2rem;
+    padding-left: 1.2rem;
+    &.enabled {
+      background-color: var(--mdc-filled-button-container-color);
+      button {
+        color: var(--mdc-outlined-card-container-color);
+      }
+    }
+  }
+}

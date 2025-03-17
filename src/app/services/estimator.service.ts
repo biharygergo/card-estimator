@@ -434,6 +434,12 @@ export class EstimatorService {
     });
   }
 
+  toggleAutoReveal(roomId: string, isAutoRevealEnabled: boolean) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      isAutoRevealEnabled,
+    });
+  }
+
   // Keep this in sync with /functions
   createRound(
     members: Member[],

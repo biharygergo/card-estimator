@@ -89,9 +89,22 @@
             }}
           </div>
         </button>
-        <div class="split-reveal-button-container-side-button">
-          <button mat-icon-button>
-            <mat-icon>check</mat-icon>
+        <div
+          class="split-reveal-button-container-side-button"
+          [class.enabled]="room().isAutoRevealEnabled"
+        >
+          <button
+            mat-icon-button
+            (click)="toggleAutoReveal()"
+            [matTooltip]="
+              room().isAutoRevealEnabled
+                ? 'Disable auto-reveal'
+                : 'Enable auto-reveal (reveals results once all votes are cast)'
+            "
+          >
+            <mat-icon class="material-symbols-outlined"
+              >visibility_lock</mat-icon
+            >
           </button>
         </div>
       </div>

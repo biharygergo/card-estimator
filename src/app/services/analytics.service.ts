@@ -395,4 +395,10 @@ export class AnalyticsService {
   logSkippedOnboarding() {
     this.logEventInternal('skipped_onboarding');
   }
+
+  logToggleAutoReveal(arg0: boolean) {
+    this.logEventInternal('toggled_auto_reveal', {
+      auto_reveal_enabled: arg0,
+    });
+  }
 }

@@ -44,6 +44,7 @@ export interface Room {
   relatedRecurringMeetingLinkId?: string;
   isAsyncVotingEnabled?: boolean;
   isAnonymousVotingEnabled?: boolean;
+  isAutoRevealEnabled?: boolean;
 }
 
 export interface Round {

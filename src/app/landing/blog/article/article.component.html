@@ -44,6 +44,10 @@
             }
           </div>
         </div>
+
+        @if (article.faqs?.length > 0) {
+        <app-faq-section [faqs]="article.faqs" [inverse]="true" [hideMoreButton]="true" [hideTitle]="true" />
+        }
         <div class="banner-wrapper">
           <start-planning-cta></start-planning-cta>
         </div>

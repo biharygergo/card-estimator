@@ -11,4 +11,5 @@ export interface Article {
     youtubeVideoId?: string;
     category: Category;
     tags: string[];
+    faqs?: { question: string; answer: string }[];
 }

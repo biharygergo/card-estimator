@@ -17,4 +17,7 @@ export type FaqRow = {
 })
 export class FaqSectionComponent {
   faqs = input.required<FaqRow[]>();
+  inverse = input<boolean>(false);
+  hideMoreButton = input<boolean>(false);
+  hideTitle = input<boolean>(false);
 }

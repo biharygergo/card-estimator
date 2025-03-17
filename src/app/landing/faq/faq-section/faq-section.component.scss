@@ -2,10 +2,15 @@
   padding: 4rem 0;
   background: var(--background-color);
 
+  &.inverse .faq-content {
+    h3 {
+      color: #000;
+    }
+  }
+
   .faq-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
 
     h3 {
       color: #bfc6dc;

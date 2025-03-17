@@ -18,15 +18,18 @@ export function getArticles(): Article[] {
 
         const metaContent: Omit<Article, 'content'> = meta
           .split('\n')
-          .map((line) => line.split(':'))
-          .map((splitLine) => ({
-            fieldName: splitLine[0],
-            content: splitLine[1],
+          .map((line) => ({
+            fieldName: line.split(':')[0],
+            content: line.split(':').slice(1).join(':').trim(),
           }))
           .reduce((acc, curr) => {
             const fieldContent = curr.content.trim();
             if (curr.fieldName === 'tags') {
               return { ...acc, [curr.fieldName]: fieldContent.split(', ') };
+            }
+            if (curr.fieldName === 'faqs') {
+              const faqs = JSON.parse(fieldContent);
+              return { ...acc, [curr.fieldName]: faqs };
             }
 
             return { ...acc, [curr.fieldName]: fieldContent };

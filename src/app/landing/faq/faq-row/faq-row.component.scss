@@ -16,6 +16,11 @@ section.faq-row {
   width: 100%;
   --mat-expansion-header-indicator-color: white;
 
+  &.inverse {
+    color: #000;
+    --mat-expansion-header-indicator-color: #000;
+  }
+
   &:first-of-type {
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
@@ -32,14 +37,26 @@ section.faq-row {
 
   .mat-expansion-panel-header {
     height: unset;
-    padding: 1rem 0.2rem;
+    padding: 1rem 0.5rem;
   }
 
   .mat-expansion-panel-header-title {
     color: #d9e2ff;
-    font-size: 1.5rem;
-    line-height: 1.6rem;
+    font-size: 1.2rem;
+    line-height: 1.4rem;
     font-weight: 400;
+  }
+
+  &.inverse {
+    .mat-expansion-panel-header-title {
+      color: #000;
+    }
+
+    ::ng-deep p {
+      a {
+        color: #000;
+      }
+    }
   }
 
   ::ng-deep p {

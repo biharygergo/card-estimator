@@ -15,6 +15,7 @@ import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
 import { SchemaTagService } from 'src/app/services/schema-tag.service';
 import type { Article as SchemaArticle, WithContext } from 'schema-dts';
 import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-player.component';
+import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
   selector: 'app-article',
@@ -31,6 +32,7 @@ import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-pl
     AsyncPipe,
     DatePipe,
     YoutubePlayerComponent,
+    FaqSectionComponent,
   ],
 })
 export class ArticleComponent {

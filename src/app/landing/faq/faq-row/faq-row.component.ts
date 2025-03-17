@@ -4,7 +4,7 @@ import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } fr
 @Component({
   selector: 'app-faq-row',
   template: `
-    <mat-expansion-panel>
+    <mat-expansion-panel [class.inverse]="inverse">
       <mat-expansion-panel-header>
         <mat-panel-title>{{ question }}</mat-panel-title>
       </mat-expansion-panel-header>
@@ -18,7 +18,7 @@ import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } fr
 export class FaqRowComponent implements OnInit {
   @Input() question: string;
   @Input() answer: string;
-
+  @Input() inverse: boolean = false;
   constructor() {}
 
   ngOnInit(): void {}

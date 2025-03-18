@@ -54,28 +54,28 @@ import { ToastService } from 'src/app/services/toast.service';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
 @Component({
-    selector: 'planning-poker-room-controller-panel',
-    templateUrl: './room-controller-panel.component.html',
-    styleUrls: ['./room-controller-panel.component.scss'],
-    animations: [fadeAnimation, delayedFadeAnimation],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardContent,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        MatButton,
-        CountdownTimerComponent,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDivider,
-        MatCheckbox,
-        NgClass,
-        AsyncPipe,
-    ],
+  selector: 'planning-poker-room-controller-panel',
+  templateUrl: './room-controller-panel.component.html',
+  styleUrls: ['./room-controller-panel.component.scss'],
+  animations: [fadeAnimation, delayedFadeAnimation],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatButton,
+    CountdownTimerComponent,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    MatCheckbox,
+    NgClass,
+    AsyncPipe,
+  ],
 })
 export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   room = input.required<Room>();
@@ -104,7 +104,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
     map((result) => result.matches),
-    tap((isSmallScreen) => (this.isSmallScreen.set(isSmallScreen)))
+    tap((isSmallScreen) => this.isSmallScreen.set(isSmallScreen))
   );
   isSmallScreen = signal<boolean>(false);
 
@@ -118,7 +118,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   readonly MemberType = MemberType;
 
-  @ViewChild('menuTrigger') private readonly settingsMenuTrigger: MatMenuTrigger;
+  @ViewChild('menuTrigger')
+  private readonly settingsMenuTrigger: MatMenuTrigger;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -131,7 +132,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     private readonly breakpointObserver: BreakpointObserver,
     private readonly roomDataService: RoomDataService,
     private readonly confirmService: ConfirmDialogService,
-    private readonly toastService: ToastService,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -152,8 +153,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
-    this.savedCardSets$.subscribe(
-      (cardSets) => (this.savedCardSets.set(cardSets))
+    this.savedCardSets$.subscribe((cardSets) =>
+      this.savedCardSets.set(cardSets)
     );
   }
 
@@ -191,7 +192,11 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   showResults() {
     this.analytics.logClickedShowResults();
-    this.estimatorService.setShowResults(this.room(), this.currentRound(), true);
+    this.estimatorService.setShowResults(
+      this.room(),
+      this.currentRound(),
+      true
+    );
   }
 
   clickedUnitsButton() {
@@ -272,6 +277,31 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     );
   }
 
+  async toggleAutoReveal() {
+    this.analytics.logToggleAutoReveal(!this.room().isAutoRevealEnabled);
+    const confirmed =
+      this.room().isAutoRevealEnabled ||
+      (await this.confirmService.openConfirmationDialog({
+        title: 'Are you sure you want to toggle auto reveal?',
+        content:
+          'This will automatically reveal all votes when all members have voted. Make sure you enable this once all members have joined the room. \n\n This is a new feature, please report any issues you find.',
+        positiveText: 'Enable',
+        negativeText: 'Cancel',
+      }));
+    if (!confirmed) {
+      return;
+    }
+    this.estimatorService.toggleAutoReveal(
+      this.room().roomId,
+      !this.room().isAutoRevealEnabled
+    );
+    this.toastService.showMessage(
+      'Auto reveal is now ' +
+        (!this.room().isAutoRevealEnabled ? 'enabled' : 'disabled') +
+        '.'
+    );
+  }
+
   openAddCardDeckModal() {
     if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
       this.analytics.logClickedSetCustomCards();
@@ -291,17 +321,19 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   }
 
   async deleteSavedCardSet(cardSetId: string) {
-    if (await this.confirmService.openConfirmationDialog({
-      title: 'Are you sure you want to delete this card set?',
-      content: 'The set will be removed from your saved sets but it will be kept in rooms where it is selected.',
-      positiveText: 'Delete',
-      negativeText: 'Cancel',
-    })) {
+    if (
+      await this.confirmService.openConfirmationDialog({
+        title: 'Are you sure you want to delete this card set?',
+        content:
+          'The set will be removed from your saved sets but it will be kept in rooms where it is selected.',
+        positiveText: 'Delete',
+        negativeText: 'Cancel',
+      })
+    ) {
       this.cardDeckService.deleteCardDeck(cardSetId).subscribe(() => {
         this.toastService.showMessage('Card set deleted');
       });
     }
-    
   }
 
   async updateMemberType(newType: MemberType) {

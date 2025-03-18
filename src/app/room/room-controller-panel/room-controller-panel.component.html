@@ -24,7 +24,8 @@
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
-      } @if (currentRound() === rounds().length - 1 && !room().isAsyncVotingEnabled) {
+      } @if (currentRound() === rounds().length - 1 &&
+      !room().isAsyncVotingEnabled) {
       <button
         mat-flat-button
         color="primary"
@@ -49,7 +50,8 @@
         </div>
         }
       </button>
-      } @if (currentRound() < rounds().length - 1 && !room()?.isAsyncVotingEnabled) {
+      } @if (currentRound() < rounds().length - 1 &&
+      !room()?.isAsyncVotingEnabled) {
       <button
         mat-flat-button
         color="primary"
@@ -66,26 +68,55 @@
         </div>
       </button>
       } @if (!room()?.isAsyncVotingEnabled) {
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="showResults()"
-        [disabled]="
-          (room()?.rounds)[currentRound()]?.show_results ||
-          !(permissionsService.canRevealResults() | async)
+      <div
+        class="split-reveal-button-container"
+        [class.disabled]="
+          !(permissionsService.canRevealResults() | async) ||
+          (room()?.rounds)[currentRound()]?.show_results
         "
-        id="reveal-results-button"
-        class="main-button"
       >
-        <div class="center-icon-button">
-          <mat-icon>visibility</mat-icon>
-          {{
-            (room()?.rounds)[currentRound()]?.show_results
-              ? "Votes revealed"
-              : "Reveal votes"
-          }}
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="showResults()"
+          [disabled]="
+            (room()?.rounds)[currentRound()]?.show_results ||
+            !(permissionsService.canRevealResults() | async)
+          "
+          id="reveal-results-button"
+          class="main-button"
+        >
+          <div class="center-icon-button">
+            <mat-icon>visibility</mat-icon>
+            {{
+              (room()?.rounds)[currentRound()]?.show_results
+                ? "Votes revealed"
+                : "Reveal votes"
+            }}
+          </div>
+        </button>
+        <div
+          class="split-reveal-button-container-side-button"
+          [class.enabled]="room().isAutoRevealEnabled"
+        >
+          <button
+            id="auto-reveal-button"
+            mat-icon-button
+            (click)="toggleAutoReveal()"
+            [disabled]="!(permissionsService.canRevealResults() | async)"
+            [matTooltip]="
+              room().isAutoRevealEnabled
+                ? 'Disable auto-reveal'
+                : 'Enable auto-reveal (reveals results once all votes are cast)'
+            "
+          >
+            <mat-icon class="material-symbols-outlined"
+              >visibility_lock</mat-icon
+            >
+          </button>
         </div>
-      </button>
+      </div>
+
       }
     </div>
     <div class="room-id-container">
@@ -114,7 +145,7 @@
       </h4>
     </div>
     <div class="card-footer-actions">
-      <countdown-timer [room]="room$()" [minimized]="false"/>
+      <countdown-timer [room]="room$()" [minimized]="false" />
     </div>
     <div class="card-footer-actions align-right">
       <button
@@ -155,7 +186,8 @@
   </mat-card-content>
   } @if (!isExpanded()) {
   <mat-card-content class="mini-panel">
-    @if (currentRound() === rounds().length - 1 && !room().isAsyncVotingEnabled) {
+    @if (currentRound() === rounds().length - 1 && !room().isAsyncVotingEnabled)
+    {
     <button
       mat-icon-button
       aria-label="New round"
@@ -177,7 +209,8 @@
       <mat-icon @fadeAnimation>add</mat-icon>
       }
     </button>
-    } @if (currentRound() < rounds().length - 1 && !room().isAsyncVotingEnabled) {
+    } @if (currentRound() < rounds().length - 1 && !room().isAsyncVotingEnabled)
+    {
     <button
       mat-icon-button
       color="primary"
@@ -240,7 +273,7 @@
       <mat-icon @fadeAnimation>checkmark</mat-icon>
       }
     </button>
-    <countdown-timer [room]="room$()" [minimized]="true"/>
+    <countdown-timer [room]="room$()" [minimized]="true" />
     <button
       mat-icon-button
       [matMenuTriggerFor]="roomSettingsMenu"
@@ -361,7 +394,9 @@
   <button
     mat-menu-item
     (click)="setEstimationCardSet(cardSet)"
-    [ngClass]="selectedEstimationCardSetValue().key === cardSet.key && 'selected'"
+    [ngClass]="
+      selectedEstimationCardSetValue().key === cardSet.key && 'selected'
+    "
   >
     <mat-icon>{{ cardSet.icon }}</mat-icon>
     <span class="card-set-title"

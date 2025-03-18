@@ -210,6 +210,17 @@ describe('Inside the room', () => {
     cy.get('.estimator-buttons').should('not.exist');
   });
 
+  it('can auto-reveal votes', () => {
+    cy.get('#new-round-button').click();
+
+    cy.get('#auto-reveal-button').click();
+    cy.contains('Are you sure you want to toggle auto reveal?').should('be.visible');
+    cy.get('#confirm-dialog-confirm-button').click();
+
+    cy.contains('1').click();
+    cy.contains('Votes revealed').should('be.visible');
+  });
+
   it('can leave the room', () => {
     cy.get('#room-options-button').click();
 

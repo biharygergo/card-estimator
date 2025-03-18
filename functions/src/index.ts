@@ -243,6 +243,11 @@ exports.onRoomCreated = onDocumentCreated("rooms/{roomId}", async (snap) => {
   return onRoomCreated(snap);
 });
 
+exports.onRoomUpdated = onDocumentUpdated("rooms/{roomId}", async (change) => {
+  const {onRoomUpdated} = await import("./room/updated");
+  return onRoomUpdated(change);
+});
+
 exports.startTeamsGoogleAuth = onRequest({cors: true}, async (req, res) => {
   const {startTeamsGoogleAuth} = await import("./ms-teams");
   return cookieParser()(req, res, () => startTeamsGoogleAuth(req, res));

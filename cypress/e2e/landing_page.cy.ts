@@ -10,7 +10,7 @@ describe('Landing page', () => {
   it('opens the landing page', () => {
     cy.get('h1').should(
       'contain.text',
-      'Real-Time Agile Estimation for Remote Scrum Teams'
+      'Planning Poker - Sprint Estimation for Agile Teams'
     );
   });
 

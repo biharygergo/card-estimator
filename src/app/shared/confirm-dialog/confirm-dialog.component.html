@@ -1,10 +1,23 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content>
+<div mat-dialog-content class="preserve-whitespace">
   {{ data.content }}
 </div>
 <div mat-dialog-actions>
-  <button mat-flat-button color="primary" [mat-dialog-close]="true">{{ data.positiveText }}</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [mat-dialog-close]="true"
+    id="confirm-dialog-confirm-button"
+  >
+    {{ data.positiveText }}
+  </button>
   @if (!data.removeNegativeOption) {
-    <button mat-button [mat-dialog-close]="false">{{ data.negativeText }}</button>
+  <button
+    mat-button
+    [mat-dialog-close]="false"
+    id="confirm-dialog-cancel-button"
+  >
+    {{ data.negativeText }}
+  </button>
   }
 </div>

@@ -68,7 +68,13 @@
         </div>
       </button>
       } @if (!room()?.isAsyncVotingEnabled) {
-      <div class="split-reveal-button-container">
+      <div
+        class="split-reveal-button-container"
+        [class.disabled]="
+          !(permissionsService.canRevealResults() | async) ||
+          (room()?.rounds)[currentRound()]?.show_results
+        "
+      >
         <button
           mat-stroked-button
           color="primary"
@@ -94,8 +100,10 @@
           [class.enabled]="room().isAutoRevealEnabled"
         >
           <button
+            id="auto-reveal-button"
             mat-icon-button
             (click)="toggleAutoReveal()"
+            [disabled]="!(permissionsService.canRevealResults() | async)"
             [matTooltip]="
               room().isAutoRevealEnabled
                 ? 'Disable auto-reveal'

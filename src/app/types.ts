@@ -45,6 +45,7 @@ export interface Room {
   isAsyncVotingEnabled?: boolean;
   isAnonymousVotingEnabled?: boolean;
   isAutoRevealEnabled?: boolean;
+  isChangeVoteAfterRevealEnabled?: boolean;
 }
 
 export interface Round {

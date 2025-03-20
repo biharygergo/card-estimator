@@ -401,4 +401,10 @@ export class AnalyticsService {
       auto_reveal_enabled: arg0,
     });
   }
+
+  logToggleChangeVoteAfterReveal(arg0: boolean) {
+    this.logEventInternal('toggled_change_vote_after_reveal', {
+      change_vote_after_reveal_enabled: arg0,
+    });
+  }
 }

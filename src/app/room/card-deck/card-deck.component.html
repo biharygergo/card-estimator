@@ -29,7 +29,8 @@
             [class.selected]="+item.key === currentEstimate()"
             [disabled]="
               !(permissionsService.canVote() | async) ||
-              (room()?.rounds)[currentRound()]?.show_results
+              ((room()?.rounds)[currentRound()]?.show_results &&
+                !room()?.isChangeVoteAfterRevealEnabled)
             "
           >
             {{ item.value }}

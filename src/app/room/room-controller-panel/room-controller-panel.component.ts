@@ -302,6 +302,14 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     );
   }
 
+  toggleChangeVoteAfterReveal() {
+    this.analytics.logToggleChangeVoteAfterReveal(!this.room().isChangeVoteAfterRevealEnabled);
+    this.estimatorService.toggleChangeVoteAfterReveal(
+      this.room().roomId,
+      !this.room().isChangeVoteAfterRevealEnabled
+    );
+  }
+
   openAddCardDeckModal() {
     if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
       this.analytics.logClickedSetCustomCards();

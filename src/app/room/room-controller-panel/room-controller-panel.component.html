@@ -336,6 +336,15 @@
   </button>
   <button
     mat-menu-item
+    [matMenuTriggerFor]="voteSettingsMenu"
+    aria-label="Vote settings"
+    id="vote-settings-button"
+  >
+    <mat-icon>ballot</mat-icon>
+    Voting settings
+  </button>
+  <button
+    mat-menu-item
     aria-label="Permissions and security"
     class="estimator-settings-button"
     (click)="openRoomConfigurationModal()"
@@ -344,13 +353,44 @@
     <span>Security and permissions</span>
   </button>
   <mat-divider />
+  <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
+    <mat-icon>{{ isMuted() ? "volume_mute" : "volume_up" }}</mat-icon>
+    {{ isMuted() ? "Sound is off" : "Sound is on" }}
+  </button>
+  <button
+    mat-menu-item
+    color="warn"
+    (click)="leaveRoom()"
+    id="leave-room-button"
+  >
+    <mat-icon>exit_to_app</mat-icon>
+    Leave room
+  </button>
+</mat-menu>
+<mat-menu #voteSettingsMenu="matMenu">
+  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
+    <mat-checkbox
+      (click)="toggleAutoReveal(); $event.stopPropagation()"
+      [disabled]="!(permissionsService.canRevealResults() | async)"
+      [checked]="room()?.isAutoRevealEnabled"
+      class="menu-option-checkbox auto-reveal-checkbox"
+      ><span class="pass-option-label"
+        >Auto-reveal results
+        <mat-icon
+          matTooltip="When enabled, results are revealed once all votes are cast."
+          class="menu-item-icon"
+          >help</mat-icon
+        ></span
+      ></mat-checkbox
+    >
+  </div>
   <div mat-menu-item role="menuitemcheckbox" class="pass-option">
     <mat-checkbox
       (click)="toggleAsyncVoting(); $event.stopPropagation()"
       [checked]="room()?.isAsyncVotingEnabled"
       class="menu-option-checkbox async-vote-checkbox"
       ><span class="pass-option-label"
-        >Enable async voting
+        >Async voting
         <mat-icon
           matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
           class="menu-item-icon"
@@ -365,7 +405,7 @@
       [checked]="room()?.isAnonymousVotingEnabled"
       class="menu-option-checkbox anonymous-vote-checkbox"
       ><span class="pass-option-label"
-        >Enable anonymous voting
+        >Anonymous voting
         <mat-icon
           matTooltip="Anonymous voting hides members' names to reduce bias during discussions."
           class="menu-item-icon"
@@ -374,20 +414,21 @@
       ></mat-checkbox
     >
   </div>
-  <mat-divider></mat-divider>
-  <button mat-menu-item (click)="muteClicked.emit()" id="sound-button">
-    <mat-icon>{{ isMuted() ? "volume_mute" : "volume_up" }}</mat-icon>
-    {{ isMuted() ? "Sound is off" : "Sound is on" }}
-  </button>
-  <button
-    mat-menu-item
-    color="warn"
-    (click)="leaveRoom()"
-    id="leave-room-button"
-  >
-    <mat-icon>exit_to_app</mat-icon>
-    Leave room
-  </button>
+  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
+    <mat-checkbox
+      (click)="toggleChangeVoteAfterReveal(); $event.stopPropagation()"
+      [checked]="room()?.isChangeVoteAfterRevealEnabled"
+      class="menu-option-checkbox anonymous-vote-checkbox"
+      ><span class="pass-option-label"
+        >Change vote after reveal
+        <mat-icon
+          matTooltip="Allow members to change their vote after the results are revealed."
+          class="menu-item-icon"
+          >help</mat-icon
+        ></span
+      ></mat-checkbox
+    >
+  </div>
 </mat-menu>
 <mat-menu #menu="matMenu">
   @for (cardSet of estimationCardSets(); track $index) {

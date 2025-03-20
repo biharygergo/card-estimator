@@ -440,6 +440,12 @@ export class EstimatorService {
     });
   }
 
+  toggleChangeVoteAfterReveal(roomId: string, isChangeVoteAfterRevealEnabled: boolean) {
+    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+      isChangeVoteAfterRevealEnabled,
+    });
+  }
+
   // Keep this in sync with /functions
   createRound(
     members: Member[],

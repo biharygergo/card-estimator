@@ -263,7 +263,6 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   issueSelected(issue: RichTopic) {
-    console.log(issue);
     this.selectedRichTopic.set({
       description: issue.description,
       summary: issue.summary,

@@ -166,7 +166,7 @@ export class AppComponent implements OnInit, OnDestroy {
         `running-in-${this.config.runningIn}`
       );
 
-      if (this.config.runningIn === 'web') {
+      if (this.config.runningIn === 'web' && (window as any).Cypress === undefined) {
         Clarity.init('qngk5xwpfw');
       }
     }

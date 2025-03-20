@@ -282,6 +282,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     })
   );
 
+  isServer = typeof window === 'undefined';
+
   readonly PageMode = PageMode;
   readonly MemberType = MemberType;
 
@@ -305,6 +307,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     this.cookieService.tryShowCookieBanner();
 
     const sessionCookie = this.authService.getSessionCookie();

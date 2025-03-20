@@ -1,4 +1,4 @@
-<div class="join-container">
+<div class="join-container" *ngIf="!isServer">
   @if (!(isLoadingUser | async)) {
   <div class="navbar">
     @if (vm | async; as viewModel) {

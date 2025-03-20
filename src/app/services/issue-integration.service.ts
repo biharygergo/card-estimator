@@ -130,8 +130,7 @@ export class IssueIntegrationService {
         }
 
         return integration.service
-          .getIssues(query, filters, after)
-          .pipe(tap((result) => console.log({ result })));
+          .getIssues(query, filters, after);
       }),
       catchError((e) => this.handleError(e))
     );

@@ -1,4 +1,10 @@
-import { ApplicationConfig, ErrorHandler, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
+import {
+  ApplicationConfig,
+  ErrorHandler,
+  importProvidersFrom,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import {
   provideFunctions,
   getFunctions,
@@ -62,9 +68,11 @@ export const appConfig: ApplicationConfig = {
       deps: [Router],
     },
     provideAppInitializer(() => {
-        const initializerFn = (() => () => {})(inject(Sentry.TraceService));
-        return initializerFn();
-      }),
+      const initializerFn = ((() => () => {}) as any)(
+        inject(Sentry.TraceService)
+      );
+      return initializerFn();
+    }),
     provideClientHydration(),
     provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
     provideAnimations(),

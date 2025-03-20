@@ -1,5 +1,5 @@
 import {getFirestore} from "firebase-admin/firestore";
-import {MemberStatus, Room} from "../types";
+import {MemberStatus, MemberType, Room} from "../types";
 import {
   FirestoreEvent,
   QueryDocumentSnapshot,
@@ -34,6 +34,7 @@ const handleAutoReveal = async (room: Room, roomBefore: Room) => {
       .filter(
           (member) =>
             member.status === MemberStatus.ACTIVE &&
+        member.type === MemberType.ESTIMATOR &&
         room.memberIds.includes(member.id)
       )
       .map((member) => member.id);
@@ -41,6 +42,7 @@ const handleAutoReveal = async (room: Room, roomBefore: Room) => {
       .filter(
           (member) =>
             member.status === MemberStatus.ACTIVE &&
+        member.type === MemberType.ESTIMATOR &&
         roomBefore.memberIds.includes(member.id)
       )
       .map((member) => member.id);

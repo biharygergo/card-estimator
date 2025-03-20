@@ -143,6 +143,7 @@ describe('Inside the room', () => {
 
   it('can use async voting', () => {
     cy.get('#room-options-button').click();
+    cy.contains('Voting settings').click();
     cy.get('.async-vote-checkbox').click();
 
     cy.get('body').click(10, 10);
@@ -160,6 +161,7 @@ describe('Inside the room', () => {
     cy.contains('Custom name').should('be.visible');
 
     cy.get('#room-options-button').click();
+    cy.contains('Voting settings').click();
     cy.get('.async-vote-checkbox').click();
 
     cy.get('body').click(10, 10);
@@ -170,6 +172,7 @@ describe('Inside the room', () => {
     cy.contains('Test User').should('be.visible');
 
     cy.get('#room-options-button').click();
+    cy.contains('Voting settings').click();
     cy.get('.anonymous-vote-checkbox').click();
 
     cy.get('body').click(10, 10);
@@ -177,6 +180,7 @@ describe('Inside the room', () => {
     cy.contains('Test User').should('not.exist');
 
     cy.get('#room-options-button').click();
+    cy.contains('Voting settings').click();
     cy.get('.anonymous-vote-checkbox').click();
   });
 

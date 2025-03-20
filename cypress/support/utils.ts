@@ -1,5 +1,5 @@
 export function setAppCheckCookie() {
-  cy.setCookie('APP_CHECK_CI_TOKEN', Cypress.env('APP_CHECK_TOKEN'));
+  // cy.setCookie('APP_CHECK_CI_TOKEN', Cypress.env('APP_CHECK_TOKEN'));
   window.localStorage.setItem('cookiesAccepted', 'true')
 }
 

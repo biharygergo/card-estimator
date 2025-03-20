@@ -72,7 +72,7 @@ $m3-light-theme: mat.define-theme(
 
 .dark-theme {
   @include mat.all-component-colors($m3-dark-theme);
-  --mdc-outlined-card-container-color: #2a2929;
+  --mdc-outlined-card-container-color: #2a2929 !important;
   --background-dark: black;
   --main-dark-color: black;
   --main-dark-highlight-color: black;
@@ -93,7 +93,7 @@ $m3-light-theme: mat.define-theme(
   }
 
   &.running-in-zoom {
-    --mdc-outlined-card-container-color: #1d1d1d;
+    --mdc-outlined-card-container-color: #1d1d1d !important;
     --background-dark: #242424;
     --main-color: #242424;
   }

@@ -11,6 +11,11 @@ import { app, pages } from '@microsoft/teams-js';
 })
 export class ConfigureTabComponent implements OnInit {
   ngOnInit(): void {
+    if (typeof window === 'undefined') {
+      // Client-side only code
+      console.log('This code runs only on the client side');
+      return;
+    }
     // Initialize the Microsoft Teams SDK
     app.initialize().then(async () => {
       // const context = await app.getContext();

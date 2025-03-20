@@ -60,7 +60,7 @@
     "moment": "^2.29.4",
     "ng2-charts": "^7.0.0",
     "ngx-lottie": "^12.0.0",
-    "ngx-markdown": "^18.0.0",
+    "ngx-markdown": "^19.1.1",
     "rxfire": "^6.0.0",
     "rxjs": "^7.4.0",
     "schema-dts": "^1.1.2",

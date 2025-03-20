@@ -10,22 +10,21 @@ import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component'
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
-  selector: 'app-webex',
-  templateUrl: './webex.component.html',
-  styleUrls: ['./webex.component.scss'],
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    MatAnchor,
-    MatIcon,
-    MatTabGroup,
-    MatTab,
-    MatDivider,
-    RouterLink,
-    StartPlanningCtaComponent,
-    CarbonAdComponent,
-    FaqSectionComponent
-  ],
+    selector: 'app-webex',
+    templateUrl: './webex.component.html',
+    styleUrls: ['./webex.component.scss'],
+    imports: [
+        PageHeaderComponent,
+        MatAnchor,
+        MatIcon,
+        MatTabGroup,
+        MatTab,
+        MatDivider,
+        RouterLink,
+        StartPlanningCtaComponent,
+        CarbonAdComponent,
+        FaqSectionComponent
+    ]
 })
 export class WebexComponent {
   selectedIndex = 0;

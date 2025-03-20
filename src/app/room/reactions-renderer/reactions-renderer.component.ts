@@ -21,12 +21,11 @@ interface VisibleReaction {
 }
 
 @Component({
-  selector: 'app-reactions-renderer',
-  templateUrl: './reactions-renderer.component.html',
-  styleUrls: ['./reactions-renderer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [LottieComponent],
+    selector: 'app-reactions-renderer',
+    templateUrl: './reactions-renderer.component.html',
+    styleUrls: ['./reactions-renderer.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LottieComponent]
 })
 export class ReactionsRendererComponent implements OnInit, OnDestroy {
   members = input.required<Observable<Member[]>>();

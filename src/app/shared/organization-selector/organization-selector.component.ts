@@ -13,23 +13,22 @@ import { skip, skipWhile, take } from 'rxjs';
 import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
-  selector: 'planning-poker-organization-selector',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-  ],
-  templateUrl: './organization-selector.component.html',
-  styleUrl: './organization-selector.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: OrganizationSelectorComponent,
-    },
-  ],
+    selector: 'planning-poker-organization-selector',
+    imports: [
+        AsyncPipe,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+    ],
+    templateUrl: './organization-selector.component.html',
+    styleUrl: './organization-selector.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: OrganizationSelectorComponent,
+        },
+    ]
 })
 export class OrganizationSelectorComponent
   implements OnInit, ControlValueAccessor

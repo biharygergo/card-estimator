@@ -18,22 +18,21 @@ import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-pl
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
-  selector: 'app-article',
-  templateUrl: './article.component.html',
-  styleUrls: ['./article.component.scss'],
-  standalone: true,
-  imports: [
-    NgIf,
-    NgOptimizedImage,
-    MarkdownComponent,
-    StartPlanningCtaComponent,
-    RouterLink,
-    CarbonAdComponent,
-    AsyncPipe,
-    DatePipe,
-    YoutubePlayerComponent,
-    FaqSectionComponent,
-  ],
+    selector: 'app-article',
+    templateUrl: './article.component.html',
+    styleUrls: ['./article.component.scss'],
+    imports: [
+        NgIf,
+        NgOptimizedImage,
+        MarkdownComponent,
+        StartPlanningCtaComponent,
+        RouterLink,
+        CarbonAdComponent,
+        AsyncPipe,
+        DatePipe,
+        YoutubePlayerComponent,
+        FaqSectionComponent,
+    ]
 })
 export class ArticleComponent {
   private readonly metaService = inject(Meta);

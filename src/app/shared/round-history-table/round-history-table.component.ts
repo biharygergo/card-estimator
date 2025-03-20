@@ -52,24 +52,23 @@ interface TableRow {
 }
 
 @Component({
-  selector: 'planning-poker-round-history-table',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    RouterModule
-],
-  providers: [CdkColumnDef],
-  templateUrl: './round-history-table.component.html',
-  styleUrls: ['./round-history-table.component.scss'],
+    selector: 'planning-poker-round-history-table',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        RouterModule
+    ],
+    providers: [CdkColumnDef],
+    templateUrl: './round-history-table.component.html',
+    styleUrls: ['./round-history-table.component.scss']
 })
 export class RoundHistoryTableComponent
   implements OnInit, OnDestroy, AfterViewInit

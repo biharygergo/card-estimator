@@ -34,20 +34,19 @@ type State = {
 };
 
 @Component({
-  selector: 'app-recurring-meeting',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    ProfileDropdownComponent,
-    MatButtonModule,
-    AppConfigModule
-],
-  templateUrl: './recurring-meeting.component.html',
-  styleUrls: ['./recurring-meeting.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-recurring-meeting',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        ProfileDropdownComponent,
+        MatButtonModule,
+        AppConfigModule
+    ],
+    templateUrl: './recurring-meeting.component.html',
+    styleUrls: ['./recurring-meeting.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecurringMeetingComponent implements OnInit, OnDestroy {
   recurringMeetingLinkId: Observable<string> = this.route.paramMap.pipe(

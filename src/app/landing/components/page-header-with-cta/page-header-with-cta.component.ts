@@ -17,7 +17,6 @@ export interface HeaderConfig {
     selector: 'planning-poker-page-header-with-cta',
     templateUrl: './page-header-with-cta.component.html',
     styleUrl: './page-header-with-cta.component.scss',
-    standalone: true,
     imports: [MatIcon, MatAnchor, RouterLink, NgOptimizedImage]
 })
 export class PageHeaderWithCtaComponent {

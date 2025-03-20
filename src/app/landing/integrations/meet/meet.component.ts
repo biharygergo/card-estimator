@@ -16,25 +16,24 @@ import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component'
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
-  selector: 'app-meet',
-  standalone: true,
-  imports: [
-    PageHeaderWithCtaComponent,
-    FeaturesPreviewComponent,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    FeaturesItemsComponent,
-    RouterLink,
-    MatTabGroup,
-    MatTab,
-    StartPlanningCtaComponent,
-    NgOptimizedImage,
-    CarbonAdComponent,
-    FaqSectionComponent,
-  ],
-  templateUrl: './meet.component.html',
-  styleUrl: '../teams/teams.component.scss',
+    selector: 'app-meet',
+    imports: [
+        PageHeaderWithCtaComponent,
+        FeaturesPreviewComponent,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        FeaturesItemsComponent,
+        RouterLink,
+        MatTabGroup,
+        MatTab,
+        StartPlanningCtaComponent,
+        NgOptimizedImage,
+        CarbonAdComponent,
+        FaqSectionComponent,
+    ],
+    templateUrl: './meet.component.html',
+    styleUrl: '../teams/teams.component.scss'
 })
 export class MeetComponent {
   selectedIndex = 0;

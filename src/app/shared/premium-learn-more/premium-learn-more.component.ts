@@ -27,7 +27,6 @@ export const premiumLearnMoreModalCreator =
     selector: 'app-premium-learn-more',
     templateUrl: './premium-learn-more.component.html',
     styleUrls: ['./premium-learn-more.component.scss'],
-    standalone: true,
     imports: [
         MatButton,
         MatDialogClose,
@@ -36,7 +35,7 @@ export const premiumLearnMoreModalCreator =
         MatCardContent,
         MatTooltip,
         AsyncPipe,
-    ],
+    ]
 })
 export class PremiumLearnMoreComponent {
   @Input() pageMode: 'modal' | 'page' = 'modal';

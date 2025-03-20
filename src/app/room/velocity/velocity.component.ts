@@ -24,13 +24,12 @@ interface Velocity {
     selector: 'app-velocity',
     templateUrl: './velocity.component.html',
     styleUrls: ['./velocity.component.scss'],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIcon,
         MatTooltip,
         AsyncPipe,
-    ],
+    ]
 })
 export class VelocityComponent implements OnInit, OnDestroy {
   room = input.required<Observable<Room>>();

@@ -5,7 +5,6 @@ import { PageHeaderComponent } from '../components/page-header/page-header.compo
     selector: 'app-terms',
     templateUrl: './terms.component.html',
     styleUrls: ['./terms.component.scss'],
-    standalone: true,
     imports: [PageHeaderComponent]
 })
 export class TermsComponent implements OnInit {

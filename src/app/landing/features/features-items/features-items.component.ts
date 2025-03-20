@@ -9,7 +9,6 @@ import { NgOptimizedImage } from '@angular/common';
     selector: 'planning-poker-features-items',
     templateUrl: './features-items.component.html',
     styleUrl: './features-items.component.scss',
-    standalone: true,
     imports: [NgOptimizedImage, MatAnchor, RouterLink, MatIcon]
 })
 export class FeaturesItemsComponent implements OnInit, OnDestroy {

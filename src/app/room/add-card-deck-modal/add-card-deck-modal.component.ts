@@ -56,27 +56,26 @@ export type AddCardDeckModalData = {
 };
 
 @Component({
-  selector: 'app-add-card-deck-modal',
-  templateUrl: './add-card-deck-modal.component.html',
-  styleUrls: ['./add-card-deck-modal.component.scss'],
-  standalone: true,
-  imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatError,
-    MatCard,
-    NgClass,
-    MatDialogActions,
-    MatButton,
-    MatDialogClose,
-    MatIcon,
-    MatExpansionModule,
-  ],
+    selector: 'app-add-card-deck-modal',
+    templateUrl: './add-card-deck-modal.component.html',
+    styleUrls: ['./add-card-deck-modal.component.scss'],
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatError,
+        MatCard,
+        NgClass,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+        MatIcon,
+        MatExpansionModule,
+    ]
 })
 export class AddCardDeckModalComponent implements OnInit {
   cardDeckForm = new FormGroup({

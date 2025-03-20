@@ -6,11 +6,10 @@ import {
 } from '../shared/integration-page-template/integration-page-template.component';
 
 @Component({
-  selector: 'app-linear',
-  standalone: true,
-  imports: [IntegrationPageTemplateComponent],
-  templateUrl: './linear.component.html',
-  styleUrl: './linear.component.scss',
+    selector: 'app-linear',
+    imports: [IntegrationPageTemplateComponent],
+    templateUrl: './linear.component.html',
+    styleUrl: './linear.component.scss'
 })
 export class LinearComponent {
   private readonly linearService = inject(LinearService);

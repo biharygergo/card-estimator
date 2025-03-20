@@ -6,7 +6,6 @@ import { NgOptimizedImage } from '@angular/common';
     selector: 'planning-poker-features-preview',
     templateUrl: './features-preview.component.html',
     styleUrl: './features-preview.component.scss',
-    standalone: true,
     imports: [NgOptimizedImage, RouterLink]
 })
 export class FeaturesPreviewComponent {

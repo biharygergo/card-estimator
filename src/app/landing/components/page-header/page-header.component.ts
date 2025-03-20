@@ -2,8 +2,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-page-header',
-  template: `
+    selector: 'app-page-header',
+    template: `
 <header>
   <div class="title">
     <h1>{{ title }}</h1>
@@ -13,9 +13,8 @@ import { Component, Input, OnInit } from '@angular/core';
   </div>
 </header>
 `,
-  styleUrls: ['./page-header.component.scss'],
-  imports: [],
-  standalone: true,
+    styleUrls: ['./page-header.component.scss'],
+    imports: []
 })
 export class PageHeaderComponent implements OnInit {
   @Input() title: string;

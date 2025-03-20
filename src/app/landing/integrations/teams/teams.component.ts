@@ -15,24 +15,23 @@ import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component'
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
-  selector: 'app-teams',
-  templateUrl: './teams.component.html',
-  styleUrls: ['./teams.component.scss'],
-  standalone: true,
-  imports: [
-    PageHeaderWithCtaComponent,
-    FeaturesPreviewComponent,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    FeaturesItemsComponent,
-    RouterLink,
-    MatTabGroup,
-    MatTab,
-    StartPlanningCtaComponent,
-    CarbonAdComponent,
-    FaqSectionComponent
-  ],
+    selector: 'app-teams',
+    templateUrl: './teams.component.html',
+    styleUrls: ['./teams.component.scss'],
+    imports: [
+        PageHeaderWithCtaComponent,
+        FeaturesPreviewComponent,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        FeaturesItemsComponent,
+        RouterLink,
+        MatTabGroup,
+        MatTab,
+        StartPlanningCtaComponent,
+        CarbonAdComponent,
+        FaqSectionComponent
+    ]
 })
 export class TeamsComponent {
   selectedIndex = 0;

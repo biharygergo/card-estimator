@@ -18,18 +18,17 @@ import { AsyncPipe } from '@angular/common';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
-  selector: 'app-manage-email-modal',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule,
-  ],
-  templateUrl: './manage-email-modal.component.html',
-  styleUrl: './manage-email-modal.component.scss',
+    selector: 'app-manage-email-modal',
+    imports: [
+        AsyncPipe,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatInputModule,
+        MatFormFieldModule,
+    ],
+    templateUrl: './manage-email-modal.component.html',
+    styleUrl: './manage-email-modal.component.scss'
 })
 export class ManageEmailModalComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);

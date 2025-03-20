@@ -67,7 +67,6 @@ export const signUpOrLoginDialogCreator = (
     selector: 'app-sign-up-or-login-dialog',
     templateUrl: './sign-up-or-login-dialog.component.html',
     styleUrls: ['./sign-up-or-login-dialog.component.scss'],
-    standalone: true,
     imports: [
         MatDialogContent,
         ResizeMonitorDirective,
@@ -85,7 +84,7 @@ export const signUpOrLoginDialogCreator = (
         MatSuffix,
         MatError,
         AsyncPipe,
-    ],
+    ]
 })
 export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();

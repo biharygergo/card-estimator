@@ -21,7 +21,6 @@ type InvitationResult =
     selector: 'app-organization-invitation',
     templateUrl: './organization-invitation.component.html',
     styleUrls: ['./organization-invitation.component.scss'],
-    standalone: true,
     imports: [
         MatCard,
         MatCardHeader,
@@ -30,7 +29,7 @@ type InvitationResult =
         MatAnchor,
         RouterLink,
         MatButton,
-    ],
+    ]
 })
 export class OrganizationInvitationComponent implements OnInit, OnDestroy {
   result: Observable<InvitationResult> = this.activatedRoute.queryParamMap.pipe(

@@ -45,7 +45,6 @@ export const recurringMeetingsModalCreator = () =>
     selector: 'app-recurring-meetings-modal',
     templateUrl: './recurring-meetings-modal.component.html',
     styleUrls: ['./recurring-meetings-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
@@ -66,7 +65,7 @@ export const recurringMeetingsModalCreator = () =>
         MatDialogClose,
         AsyncPipe,
         DatePipe,
-    ],
+    ]
 })
 export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
   newMeetingForm = new FormGroup({

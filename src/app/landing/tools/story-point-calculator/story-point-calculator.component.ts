@@ -235,33 +235,32 @@ function estimateProjectTimeline(config: {
 }
 
 @Component({
-  selector: 'app-story-point-calculator',
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatButtonModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatTooltipModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    DatePipe,
-    BaseChartDirective,
-    RouterLink,
-    CarbonAdComponent,
-  ],
-  providers: [
-    provideNativeDateAdapter(),
-    provideCharts(withDefaultRegisterables()),
-  ],
-  templateUrl: './story-point-calculator.component.html',
-  styleUrl: './story-point-calculator.component.scss',
+    selector: 'app-story-point-calculator',
+    imports: [
+        PageHeaderComponent,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatButtonModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatTooltipModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        DatePipe,
+        BaseChartDirective,
+        RouterLink,
+        CarbonAdComponent,
+    ],
+    providers: [
+        provideNativeDateAdapter(),
+        provideCharts(withDefaultRegisterables()),
+    ],
+    templateUrl: './story-point-calculator.component.html',
+    styleUrl: './story-point-calculator.component.scss'
 })
 export class StoryPointCalculatorComponent {
   protected readonly parametersForm = new FormGroup({

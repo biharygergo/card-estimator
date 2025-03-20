@@ -39,7 +39,6 @@ type RequiredAuth = 'both' | 'password' | 'organization' | 'unknown';
     selector: 'app-room-authentication-modal',
     templateUrl: './room-authentication-modal.component.html',
     styleUrls: ['./room-authentication-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
@@ -54,7 +53,7 @@ type RequiredAuth = 'both' | 'password' | 'organization' | 'unknown';
         MatButton,
         MatDialogClose,
         AsyncPipe,
-    ],
+    ]
 })
 export class RoomAuthenticationModalComponent implements OnInit, OnDestroy {
   roomPassword = new FormControl('', [Validators.required]);

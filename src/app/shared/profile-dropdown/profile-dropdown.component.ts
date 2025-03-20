@@ -31,7 +31,6 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-profile-dropdown',
     templateUrl: './profile-dropdown.component.html',
     styleUrls: ['./profile-dropdown.component.scss'],
-    standalone: true,
     imports: [
         MatButton,
         MatMenuTrigger,
@@ -41,7 +40,7 @@ import { MatButton } from '@angular/material/button';
         RouterLink,
         MatDivider,
         AsyncPipe,
-    ],
+    ]
 })
 export class ProfileDropdownComponent implements OnInit {
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;

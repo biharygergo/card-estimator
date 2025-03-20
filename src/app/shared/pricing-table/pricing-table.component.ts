@@ -122,25 +122,24 @@ const PLANS: PurchaseOption[] = [
   },
 ];
 @Component({
-  selector: 'app-pricing-table',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTabsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatButtonToggleModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatCardModule,
-    MatTooltipModule,
-    NgOptimizedImage,
-    ReactiveFormsModule,
-    OrganizationSelectorComponent,
-  ],
-  templateUrl: './pricing-table.component.html',
-  styleUrl: './pricing-table.component.scss',
+    selector: 'app-pricing-table',
+    imports: [
+        CommonModule,
+        MatTabsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        MatButtonToggleModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatCardModule,
+        MatTooltipModule,
+        NgOptimizedImage,
+        ReactiveFormsModule,
+        OrganizationSelectorComponent,
+    ],
+    templateUrl: './pricing-table.component.html',
+    styleUrl: './pricing-table.component.scss'
 })
 export class PricingTableComponent implements OnInit {
   @Input({ required: true }) pageMode: 'modal' | 'page' = 'modal';

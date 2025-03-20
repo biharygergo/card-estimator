@@ -22,13 +22,12 @@ export const premiumInAppModalCreator =
     selector: 'app-premium-in-app-modal',
     templateUrl: './premium-in-app-modal.component.html',
     styleUrls: ['./premium-in-app-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogContent,
         MatIcon,
         MatDialogActions,
         MatButton,
-    ],
+    ]
 })
 export class PremiumInAppModalComponent {
   isRedirecting = false;

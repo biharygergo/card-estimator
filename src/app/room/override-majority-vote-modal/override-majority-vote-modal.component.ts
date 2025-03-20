@@ -40,11 +40,10 @@ export const overrideMajorityVodeModalCreator = (
   },
 ];
 @Component({
-  selector: 'app-override-majority-vote-modal',
-  standalone: true,
-  imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule],
-  templateUrl: './override-majority-vote-modal.component.html',
-  styleUrl: './override-majority-vote-modal.component.scss',
+    selector: 'app-override-majority-vote-modal',
+    imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule],
+    templateUrl: './override-majority-vote-modal.component.html',
+    styleUrl: './override-majority-vote-modal.component.scss'
 })
 export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
   cards: { key: string; value: string }[];

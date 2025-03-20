@@ -6,8 +6,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'file-upload-drag-drop',
     templateUrl: './file-upload-drag-drop.component.html',
     styleUrls: ['./file-upload-drag-drop.component.scss'],
-    standalone: true,
-    imports: [DragDropDirective, MatIcon],
+    imports: [DragDropDirective, MatIcon]
 })
 export class FileUploadDragDropComponent {
   @Output() onFileDropped = new EventEmitter<File>();

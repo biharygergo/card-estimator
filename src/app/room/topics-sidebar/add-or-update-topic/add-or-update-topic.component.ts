@@ -16,12 +16,11 @@ import { MatCard, MatCardContent } from '@angular/material/card';
     selector: 'add-or-update-topic',
     templateUrl: './add-or-update-topic.component.html',
     styleUrls: ['./add-or-update-topic.component.scss'],
-    standalone: true,
     imports: [
         MatCard,
         MatCardContent,
         TopicEditorComponent,
-    ],
+    ]
 })
 export class AddOrUpdateTopicComponent implements OnInit, OnChanges {
   @Input() roundNumber!: number;

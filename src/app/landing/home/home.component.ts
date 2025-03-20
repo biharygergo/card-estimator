@@ -50,29 +50,28 @@ const KNOWLEDGE_BASE_SAMPLES = [
 ];
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  standalone: true,
-  imports: [
-    PageHeaderWithCtaComponent,
-    FeaturesPreviewComponent,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    FeaturesItemsComponent,
-    MatFabButton,
-    MatIcon,
-    MatTabGroup,
-    MatTab,
-    MatAccordion,
-    MatButtonModule,
-    NgOptimizedImage,
-    CarbonAdComponent,
-    RouterLink,
-    FaqSectionComponent,
-  ],
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        PageHeaderWithCtaComponent,
+        FeaturesPreviewComponent,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        FeaturesItemsComponent,
+        MatFabButton,
+        MatIcon,
+        MatTabGroup,
+        MatTab,
+        MatAccordion,
+        MatButtonModule,
+        NgOptimizedImage,
+        CarbonAdComponent,
+        RouterLink,
+        FaqSectionComponent,
+    ]
 })
 export class HomeComponent implements OnInit {
   companies = [

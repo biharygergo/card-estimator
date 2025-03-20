@@ -18,7 +18,6 @@ import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card'
     selector: 'anonymous-user-banner',
     templateUrl: './anonymous-user-banner.component.html',
     styleUrls: ['./anonymous-user-banner.component.scss'],
-    standalone: true,
     imports: [
         MatCard,
         MatCardContent,
@@ -27,7 +26,7 @@ import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card'
         MatButton,
         MatTooltip,
         AsyncPipe,
-    ],
+    ]
 })
 export class AnonymousUserBannerComponent implements OnInit {
   isBusy = new BehaviorSubject<boolean>(false);

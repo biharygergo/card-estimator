@@ -39,11 +39,10 @@ function createCarbonSrc(placement: 'landing' | 'app') {
 }
 
 @Component({
-  selector: 'app-carbon-ad',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
-  templateUrl: './carbon-ad.component.html',
-  styleUrls: ['./carbon-ad.component.scss'],
+    selector: 'app-carbon-ad',
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
+    templateUrl: './carbon-ad.component.html',
+    styleUrls: ['./carbon-ad.component.scss']
 })
 export class CarbonAdComponent implements OnInit, OnDestroy {
   @Input({ required: true }) placement!: 'landing' | 'app';

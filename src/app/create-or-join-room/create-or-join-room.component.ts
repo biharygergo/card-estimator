@@ -132,30 +132,29 @@ const LOADING_MESSAGES = [
 ];
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ZoomAppBannerComponent,
-    AppConfigModule,
-    CarbonAdComponent,
-    ProfileDropdownComponent,
-    MatIcon,
-    MatCardModule,
-    MatOptionModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatProgressSpinnerModule,
-    ResizeMonitorDirective,
-    MatTooltipModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
-  selector: 'app-create-or-join-room',
-  templateUrl: './create-or-join-room.component.html',
-  styleUrls: ['./create-or-join-room.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation],
+    imports: [
+        CommonModule,
+        RouterModule,
+        ZoomAppBannerComponent,
+        AppConfigModule,
+        CarbonAdComponent,
+        ProfileDropdownComponent,
+        MatIcon,
+        MatCardModule,
+        MatOptionModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatProgressSpinnerModule,
+        ResizeMonitorDirective,
+        MatTooltipModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+    ],
+    selector: 'app-create-or-join-room',
+    templateUrl: './create-or-join-room.component.html',
+    styleUrls: ['./create-or-join-room.component.scss'],
+    animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation]
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl<string>('');

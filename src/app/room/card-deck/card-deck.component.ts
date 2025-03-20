@@ -32,7 +32,6 @@ import { MatIconButton, MatButton } from '@angular/material/button';
     templateUrl: './card-deck.component.html',
     styleUrls: ['./card-deck.component.scss'],
     animations: [fadeAnimation],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIconButton,
@@ -41,7 +40,7 @@ import { MatIconButton, MatButton } from '@angular/material/button';
         MatButtonToggle,
         MatIcon,
         AsyncPipe,
-    ],
+    ]
 })
 export class CardDeckComponent implements OnInit, OnDestroy {
   room = input.required<Room>();

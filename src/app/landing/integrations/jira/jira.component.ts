@@ -3,11 +3,10 @@ import { IntegrationConfig, IntegrationPageTemplateComponent } from '../shared/i
 import { JiraService } from 'src/app/services/jira.service';
 
 @Component({
-  selector: 'app-jira',
-  standalone: true,
-  imports: [IntegrationPageTemplateComponent],
-  templateUrl: './jira.component.html',
-  styleUrl: './jira.component.scss'
+    selector: 'app-jira',
+    imports: [IntegrationPageTemplateComponent],
+    templateUrl: './jira.component.html',
+    styleUrl: './jira.component.scss'
 })
 export class JiraComponent {
   private readonly jiraService = inject(JiraService);

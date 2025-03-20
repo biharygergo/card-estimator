@@ -54,28 +54,27 @@ import { ToastService } from 'src/app/services/toast.service';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
 @Component({
-  selector: 'planning-poker-room-controller-panel',
-  templateUrl: './room-controller-panel.component.html',
-  styleUrls: ['./room-controller-panel.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    MatCard,
-    MatCardContent,
-    MatIconButton,
-    MatTooltip,
-    MatIcon,
-    MatButton,
-    CountdownTimerComponent,
-    MatMenuTrigger,
-    MatMenu,
-    MatMenuItem,
-    MatDivider,
-    MatCheckbox,
-    NgClass,
-    AsyncPipe,
-  ],
+    selector: 'planning-poker-room-controller-panel',
+    templateUrl: './room-controller-panel.component.html',
+    styleUrls: ['./room-controller-panel.component.scss'],
+    animations: [fadeAnimation, delayedFadeAnimation],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        MatCard,
+        MatCardContent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        MatButton,
+        CountdownTimerComponent,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatDivider,
+        MatCheckbox,
+        NgClass,
+        AsyncPipe,
+    ]
 })
 export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   room = input.required<Room>();

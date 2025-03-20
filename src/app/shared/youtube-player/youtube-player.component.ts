@@ -11,11 +11,10 @@ import {
 import { YouTubePlayer } from '@angular/youtube-player';
 
 @Component({
-  selector: 'app-youtube-player',
-  standalone: true,
-  imports: [YouTubePlayer],
-  templateUrl: './youtube-player.component.html',
-  styleUrl: './youtube-player.component.scss',
+    selector: 'app-youtube-player',
+    imports: [YouTubePlayer],
+    templateUrl: './youtube-player.component.html',
+    styleUrl: './youtube-player.component.scss'
 })
 export class YoutubePlayerComponent implements AfterViewInit {
   youtubeVideoId = input.required<string>();

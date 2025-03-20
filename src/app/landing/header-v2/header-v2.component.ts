@@ -12,7 +12,6 @@ import { NgClass } from '@angular/common';
     selector: 'planning-poker-landing-header',
     templateUrl: './header-v2.component.html',
     styleUrls: ['./header-v2.component.scss'],
-    standalone: true,
     imports: [
         NgClass,
         MatButton,
@@ -24,7 +23,7 @@ import { NgClass } from '@angular/common';
         MatMenuItem,
         MatAnchor,
         MatIconButton,
-    ],
+    ]
 })
 export class HeaderV2Component implements OnInit {
   isOpen = false;

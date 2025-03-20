@@ -60,18 +60,17 @@ enum AuthAction {
 }
 
 @Component({
-  selector: 'app-auth-progress-dialog',
-  templateUrl: './auth-progress-dialog.component.html',
-  styleUrls: ['./auth-progress-dialog.component.scss'],
-  standalone: true,
-  imports: [
-    MatDialogContent,
-    MatProgressSpinner,
-    MatIcon,
-    MatDialogActions,
-    MatButton,
-    AsyncPipe,
-  ],
+    selector: 'app-auth-progress-dialog',
+    templateUrl: './auth-progress-dialog.component.html',
+    styleUrls: ['./auth-progress-dialog.component.scss'],
+    imports: [
+        MatDialogContent,
+        MatProgressSpinner,
+        MatIcon,
+        MatDialogActions,
+        MatButton,
+        AsyncPipe,
+    ]
 })
 export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   state = new BehaviorSubject<AuthProgressState>(AuthProgressState.IN_PROGRESS);

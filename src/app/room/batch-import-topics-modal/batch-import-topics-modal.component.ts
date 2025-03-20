@@ -156,26 +156,25 @@ interface FilterChip {
   valueControl: FormControl<string>;
 }
 @Component({
-  selector: 'app-batch-import-topics-modal',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatExpansionModule,
-    DragDropModule,
-    I18nPluralPipe,
-    MatProgressSpinnerModule,
-    RichTopicComponent,
-    MatMenuModule,
-    MatIconModule,
-  ],
-  templateUrl: './batch-import-topics-modal.component.html',
-  styleUrl: './batch-import-topics-modal.component.scss',
+    selector: 'app-batch-import-topics-modal',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatExpansionModule,
+        DragDropModule,
+        I18nPluralPipe,
+        MatProgressSpinnerModule,
+        RichTopicComponent,
+        MatMenuModule,
+        MatIconModule,
+    ],
+    templateUrl: './batch-import-topics-modal.component.html',
+    styleUrl: './batch-import-topics-modal.component.scss'
 })
 export class BatchImportTopicsModalComponent implements OnInit {
   readonly activeIntegration = toSignal(

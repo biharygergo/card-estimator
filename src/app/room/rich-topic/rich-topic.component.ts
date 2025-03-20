@@ -50,21 +50,20 @@ export function markedOptionsFactory(): MarkedOptions {
 }
 
 @Component({
-  selector: 'app-rich-topic',
-  templateUrl: './rich-topic.component.html',
-  styleUrls: ['./rich-topic.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [MatIconButton, MatTooltip, MatIcon, MarkdownComponent],
-  providers: [
-    provideMarkdown({
-      markedOptions: {
-        provide: MARKED_OPTIONS,
-        useFactory: markedOptionsFactory,
-      },
-    }),
-  ],
+    selector: 'app-rich-topic',
+    templateUrl: './rich-topic.component.html',
+    styleUrls: ['./rich-topic.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatIconButton, MatTooltip, MatIcon, MarkdownComponent],
+    providers: [
+        provideMarkdown({
+            markedOptions: {
+                provide: MARKED_OPTIONS,
+                useFactory: markedOptionsFactory,
+            },
+        }),
+    ]
 })
 export class RichTopicComponent {
   richTopic = input.required<RichTopic | null | undefined>();

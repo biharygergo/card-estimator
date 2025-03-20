@@ -215,18 +215,17 @@ type FaqCategory = {
 };
 
 @Component({
-  selector: 'app-faq',
-  templateUrl: './faq.component.html',
-  styleUrls: ['./faq.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  standalone: true,
-  imports: [
-    FaqRowComponent,
-    PageHeaderComponent,
-    MatAccordion,
-    StartPlanningCtaComponent,
-    CarbonAdComponent,
-  ],
+    selector: 'app-faq',
+    templateUrl: './faq.component.html',
+    styleUrls: ['./faq.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        FaqRowComponent,
+        PageHeaderComponent,
+        MatAccordion,
+        StartPlanningCtaComponent,
+        CarbonAdComponent,
+    ]
 })
 export class FaqComponent implements OnInit {
   categories: FaqCategory[] = Object.values(

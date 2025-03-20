@@ -51,18 +51,17 @@ const INTEGRATIONS = [
 ];
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    NgOptimizedImage,
-  ],
-  selector: 'zoom-app-banner',
-  templateUrl: './zoom-app-banner.component.html',
-  styleUrls: ['./zoom-app-banner.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        NgOptimizedImage,
+    ],
+    selector: 'zoom-app-banner',
+    templateUrl: './zoom-app-banner.component.html',
+    styleUrls: ['./zoom-app-banner.component.scss']
 })
 export class ZoomAppBannerComponent implements OnInit, OnDestroy {
   dialogContent = viewChild<TemplateRef<HTMLDivElement>>('dialogTemplate');

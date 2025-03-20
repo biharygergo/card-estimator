@@ -162,7 +162,6 @@ function createChipOptionForPermission(
     selector: 'app-room-configuration-modal',
     templateUrl: './room-configuration-modal.component.html',
     styleUrls: ['./room-configuration-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
@@ -189,7 +188,7 @@ function createChipOptionForPermission(
         MatDialogClose,
         AsyncPipe,
         TitleCasePipe,
-    ],
+    ]
 })
 export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   permissionConfiguration = {

@@ -17,25 +17,24 @@ import { CarbonAdComponent } from 'src/app/shared/carbon-ad/carbon-ad.component'
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
-  selector: 'app-zoom',
-  templateUrl: './zoom.component.html',
-  styleUrls: ['./zoom.component.scss'],
-  standalone: true,
-  imports: [
-    PageHeaderWithCtaComponent,
-    FeaturesPreviewComponent,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    FeaturesItemsComponent,
-    MatTabGroup,
-    MatTab,
-    MatDivider,
-    RouterLink,
-    StartPlanningCtaComponent,
-    CarbonAdComponent,
-    FaqSectionComponent
-  ],
+    selector: 'app-zoom',
+    templateUrl: './zoom.component.html',
+    styleUrls: ['./zoom.component.scss'],
+    imports: [
+        PageHeaderWithCtaComponent,
+        FeaturesPreviewComponent,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        FeaturesItemsComponent,
+        MatTabGroup,
+        MatTab,
+        MatDivider,
+        RouterLink,
+        StartPlanningCtaComponent,
+        CarbonAdComponent,
+        FaqSectionComponent
+    ]
 })
 export class ZoomComponent implements OnInit, OnDestroy {
   onInstallClicked = new Subject<void>();

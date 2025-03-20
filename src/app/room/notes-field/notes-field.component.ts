@@ -24,7 +24,6 @@ import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
     templateUrl: './notes-field.component.html',
     styleUrls: ['./notes-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         FormsModule,
         MatFormField,
@@ -33,7 +32,7 @@ import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
         CdkTextareaAutosize,
         ReactiveFormsModule,
         MatHint,
-    ],
+    ]
 })
 export class NotesFieldComponent implements OnInit, OnDestroy {
   room = signal<Room | undefined>(undefined);

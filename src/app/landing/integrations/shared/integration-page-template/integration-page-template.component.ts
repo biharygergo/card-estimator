@@ -38,18 +38,17 @@ export interface IntegrationConfig {
 }
 
 @Component({
-  selector: 'planning-poker-integration-page-template',
-  standalone: true,
-  imports: [
-    MatButton,
-    NgOptimizedImage,
-    StartPlanningCtaComponent,
-    CarbonAdComponent,
-    YoutubePlayerComponent,
-    FaqSectionComponent,
-  ],
-  templateUrl: './integration-page-template.component.html',
-  styleUrl: './integration-page-template.component.scss',
+    selector: 'planning-poker-integration-page-template',
+    imports: [
+        MatButton,
+        NgOptimizedImage,
+        StartPlanningCtaComponent,
+        CarbonAdComponent,
+        YoutubePlayerComponent,
+        FaqSectionComponent,
+    ],
+    templateUrl: './integration-page-template.component.html',
+    styleUrl: './integration-page-template.component.scss'
 })
 export class IntegrationPageTemplateComponent {
   config = input<IntegrationConfig>();

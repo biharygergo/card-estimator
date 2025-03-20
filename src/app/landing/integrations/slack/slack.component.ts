@@ -6,11 +6,10 @@ import {
 import { SlackService } from 'src/app/services/slack.service';
 
 @Component({
-  selector: 'app-slack',
-  standalone: true,
-  imports: [IntegrationPageTemplateComponent],
-  templateUrl: './slack.component.html',
-  styleUrl: './slack.component.scss',
+    selector: 'app-slack',
+    imports: [IntegrationPageTemplateComponent],
+    templateUrl: './slack.component.html',
+    styleUrl: './slack.component.scss'
 })
 export class SlackComponent {
   private readonly slackService = inject(SlackService);

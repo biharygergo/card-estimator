@@ -59,7 +59,6 @@ export const summaryModalCreator = ({
     selector: 'app-summary-modal',
     templateUrl: './summary-modal.component.html',
     styleUrls: ['./summary-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
@@ -68,7 +67,7 @@ export const summaryModalCreator = ({
         MatDialogActions,
         MatDialogClose,
         AsyncPipe,
-    ],
+    ]
 })
 export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   typewriter: Typed;

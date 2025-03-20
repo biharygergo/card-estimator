@@ -17,12 +17,11 @@ import { MatCard } from '@angular/material/card';
     templateUrl: './session-history.component.html',
     styleUrls: ['./session-history.component.scss'],
     animations: [],
-    standalone: true,
     imports: [
         MatCard,
         ResizeMonitorDirective,
         RoundHistoryTableComponent,
-    ],
+    ]
 })
 export class SessionHistoryComponent {
 

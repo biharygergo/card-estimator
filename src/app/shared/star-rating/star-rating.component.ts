@@ -12,7 +12,6 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-star-rating',
     templateUrl: './star-rating.component.html',
     styleUrls: ['./star-rating.component.scss'],
-    standalone: true,
     imports: [
         MatIcon,
         MatButton,
@@ -20,7 +19,7 @@ import { MatIcon } from '@angular/material/icon';
         MatInput,
         FormsModule,
         ReactiveFormsModule,
-    ],
+    ]
 })
 export class StarRatingComponent {
   rating = 0;

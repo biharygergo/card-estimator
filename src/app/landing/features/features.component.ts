@@ -9,7 +9,6 @@ import { PageHeaderComponent } from '../components/page-header/page-header.compo
     selector: 'app-features',
     templateUrl: './features.component.html',
     styleUrls: ['./features.component.scss'],
-    standalone: true,
     imports: [PageHeaderComponent, FeaturesItemsComponent, StartPlanningCtaComponent, CarbonAdComponent]
 })
 export class FeaturesComponent implements OnInit {

@@ -30,14 +30,13 @@ export const confirmDialogCreator = (
     selector: 'app-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
         MatDialogActions,
         MatButton,
         MatDialogClose,
-    ],
+    ]
 })
 export class ConfirmDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData) {}

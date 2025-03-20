@@ -13,14 +13,13 @@ export type AloneInRoomData = {
     selector: 'app-alone-in-room-modal',
     templateUrl: './alone-in-room-modal.component.html',
     styleUrls: ['./alone-in-room-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
         MatDialogActions,
         MatButton,
         MatIcon,
-    ],
+    ]
 })
 export class AloneInRoomModalComponent {
   constructor(

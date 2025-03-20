@@ -9,11 +9,10 @@ export type FaqRow = {
 };
 
 @Component({
-  selector: 'app-faq-section',
-  standalone: true,
-  imports: [FaqRowComponent, MatButtonModule, RouterLink],
-  templateUrl: './faq-section.component.html',
-  styleUrl: './faq-section.component.scss'
+    selector: 'app-faq-section',
+    imports: [FaqRowComponent, MatButtonModule, RouterLink],
+    templateUrl: './faq-section.component.html',
+    styleUrl: './faq-section.component.scss'
 })
 export class FaqSectionComponent {
   faqs = input.required<FaqRow[]>();

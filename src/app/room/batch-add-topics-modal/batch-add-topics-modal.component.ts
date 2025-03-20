@@ -47,7 +47,6 @@ function parseTopicsString(topicsInput: string) {
     selector: 'app-batch-add-topics-modal',
     templateUrl: './batch-add-topics-modal.component.html',
     styleUrls: ['./batch-add-topics-modal.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
@@ -62,7 +61,7 @@ function parseTopicsString(topicsInput: string) {
         MatIcon,
         MatDialogClose,
         AsyncPipe,
-    ],
+    ]
 })
 export class BatchAddTopicsModalComponent implements OnInit, OnDestroy {
   topics = new FormControl<string>('', {

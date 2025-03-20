@@ -6,7 +6,6 @@ import { RouterOutlet } from '@angular/router';
     selector: 'app-room-loading',
     templateUrl: './room-loading.component.html',
     styleUrls: ['./room-loading.component.scss'],
-    standalone: true,
     imports: [RouterOutlet, MatCardModule]
 })
 export class RoomLoadingComponent implements OnInit {

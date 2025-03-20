@@ -39,7 +39,6 @@ export const integrationsModalCreator =
     templateUrl: './integrations.component.html',
     styleUrls: ['./integrations.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
@@ -48,7 +47,7 @@ export const integrationsModalCreator =
         MatRadioGroup,
         MatRadioButton,
         AsyncPipe,
-    ],
+    ]
 })
 export class IntegrationsComponent {
   jiraIntegration$: Observable<JiraIntegration> = this.jiraService

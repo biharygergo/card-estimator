@@ -26,14 +26,13 @@ export const subscriptionResultModalCreator = (
     selector: 'app-subscription-result',
     templateUrl: './subscription-result.component.html',
     styleUrls: ['./subscription-result.component.scss'],
-    standalone: true,
     imports: [
         MatDialogTitle,
         MatDialogContent,
         MatDialogActions,
         MatButton,
         MatDialogClose,
-    ],
+    ]
 })
 export class SubscriptionResultComponent {
   subscriptionResult: SubscriptionResult;

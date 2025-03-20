@@ -33,7 +33,6 @@ import {
 import { JiraService } from 'src/app/services/jira.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { RichTopic } from 'src/app/types';
-import * as Sentry from '@sentry/angular-ivy';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { LinearService } from 'src/app/services/linear.service';
 import { AuthService } from 'src/app/services/auth.service';

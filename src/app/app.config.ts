@@ -45,7 +45,7 @@ import {
   initializeAnalytics,
 } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
-import * as Sentry from '@sentry/angular-ivy';
+import * as Sentry from '@sentry/angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [

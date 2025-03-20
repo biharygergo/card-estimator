@@ -1,5 +1,5 @@
 import { enableProdMode } from '@angular/core';
-import * as Sentry from '@sentry/angular-ivy';
+import * as Sentry from '@sentry/angular';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';

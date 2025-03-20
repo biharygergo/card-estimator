@@ -16,7 +16,7 @@ import {
 } from 'rxjs';
 import { RichTopic, IssueApiFilter, IssuesSearchApiResult } from '../types';
 import { ToastService } from './toast.service';
-import * as Sentry from '@sentry/angular-ivy';
+import * as Sentry from '@sentry/angular';
 
 interface IntegrationProvider {
   name: 'jira' | 'linear';

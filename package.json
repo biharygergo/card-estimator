@@ -42,7 +42,7 @@
     "@googleworkspace/meet-addons": "^1.0.0",
     "@microsoft/clarity": "^1.0.0",
     "@microsoft/teams-js": "^2.23.0",
-    "@sentry/angular-ivy": "^7.114.0",
+    "@sentry/angular": "^9.6.1",
     "@sentry/tracing": "^7.114.0",
     "@stripe/firestore-stripe-payments": "^0.0.6",
     "@zoom/appssdk": "^0.16.11",

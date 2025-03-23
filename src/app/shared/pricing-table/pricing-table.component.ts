@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   Inject,
   Input,
   OnInit,
@@ -15,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { LinkService } from 'src/app/services/link.service';
 import { PaymentService } from 'src/app/services/payment.service';
-import { BundleName } from 'src/app/types';
+import { BundleName, FaqItem } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
@@ -30,14 +31,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { combineLatest, defer, map, startWith } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
+import { Theme, ThemeService } from 'src/app/services/theme.service';
+import { FaqSectionComponent } from 'src/app/landing/faq/faq-section/faq-section.component';
 interface PricingDialogData {
   selectedTab?: 'credits' | 'premium' | 'org-credits';
 }
 
-export const pricingModalCreator = (config: PricingDialogData = {}): ModalCreator<PricingTableComponent> => [
+export const pricingModalCreator = (
+  config: PricingDialogData = {}
+): ModalCreator<PricingTableComponent> => [
   PricingTableComponent,
   {
     id: 'pricingModal',
@@ -45,7 +50,7 @@ export const pricingModalCreator = (config: PricingDialogData = {}): ModalCreato
     maxHeight: '100vh',
     width: '100%',
     panelClass: 'full-screen-modal',
-    data: config
+    data: config,
   },
 ];
 
@@ -121,29 +126,64 @@ const PLANS: PurchaseOption[] = [
     isSelectDisabled: false,
   },
 ];
+
+const FAQS: FaqItem[] = [
+  {
+    question: 'How do credits work in PlanningPoker.live?',
+    answer:
+      'Credits are our simple pay-as-you-go system. One credit allows you to create one planning poker room where your entire team can estimate stories together. Think of it like creating a meeting room - the creator needs a credit, but all participants can join for free!',
+  },
+  {
+    question: 'Do I need credits to join a planning poker session?',
+    answer:
+      'No! Only creating a new room requires a credit. Joining existing rooms is completely free for all team members. This means your entire team can participate in planning sessions without needing their own credits.',
+  },
+  {
+    question: 'Why use credits instead of a monthly subscription?',
+    answer:
+      'Credits offer more flexibility and cost-effectiveness than monthly subscriptions. You only pay for the planning sessions you actually conduct, making it perfect for teams with varying sprint schedules. Whether you plan weekly, bi-weekly, or monthly, you can purchase credits as needed without being locked into a recurring payment.',
+  },
+  {
+    question: 'How long do credits last?',
+    answer:
+      'Paid credits never expire - use them whenever you need them! Only the welcome bundle credits (5 free credits upon registration + 1 monthly) expire after two months to ensure fair usage of the free tier.',
+  },
+  {
+    question: "What's included in the welcome bundle?",
+    answer:
+      'The welcome bundle gives you 5 free credits to start with, plus 1 free credit every month. These starter credits let you try out the full functionality of PlanningPoker.live. Note that welcome bundle credits expire after two months and sessions include ads. For ad-free experience and never-expiring credits, check out our paid bundles!',
+  },
+  {
+    question: 'What are organization credits?',
+    answer:
+      'Organization credits are perfect for larger teams or companies. They can be shared across all members of your organization, making it easy to manage planning poker sessions across multiple teams. Organization admins can purchase and distribute credits as needed.',
+  },
+];
 @Component({
-    selector: 'app-pricing-table',
-    imports: [
-        CommonModule,
-        MatTabsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatButtonToggleModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatCardModule,
-        MatTooltipModule,
-        NgOptimizedImage,
-        ReactiveFormsModule,
-        OrganizationSelectorComponent,
-    ],
-    templateUrl: './pricing-table.component.html',
-    styleUrl: './pricing-table.component.scss'
+  selector: 'app-pricing-table',
+  imports: [
+    CommonModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatButtonToggleModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCardModule,
+    MatTooltipModule,
+    NgOptimizedImage,
+    ReactiveFormsModule,
+    OrganizationSelectorComponent,
+    FaqSectionComponent,
+  ],
+  templateUrl: './pricing-table.component.html',
+  styleUrl: './pricing-table.component.scss',
 })
 export class PricingTableComponent implements OnInit {
   @Input({ required: true }) pageMode: 'modal' | 'page' = 'modal';
 
+  readonly FAQS = FAQS;
   readonly PLANS = PLANS;
   isLoadingStripe = false;
   isLoadingStripeForBundle: string;
@@ -187,7 +227,8 @@ export class PricingTableComponent implements OnInit {
   selectedTabIndex = signal<number>(0);
 
   BundleName = BundleName;
-
+  theme = toSignal(inject(ThemeService).themeValue);
+  readonly Theme = Theme;
   constructor(
     private readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
@@ -195,13 +236,15 @@ export class PricingTableComponent implements OnInit {
     private readonly destroyRef: DestroyRef,
     private readonly changeDetectorRef: ChangeDetectorRef,
     @Inject(APP_CONFIG) public config: AppConfig,
-    @Optional() @Inject(MAT_DIALOG_DATA) private readonly dialogData: PricingDialogData,
+    @Optional()
+    @Inject(MAT_DIALOG_DATA)
+    private readonly dialogData: PricingDialogData
   ) {}
 
   ngOnInit() {
     if (this.dialogData?.selectedTab) {
       switch (this.dialogData.selectedTab) {
-        case 'credits': 
+        case 'credits':
           this.selectedTabIndex.set(0);
           break;
         case 'premium':

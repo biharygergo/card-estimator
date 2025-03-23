@@ -9,7 +9,7 @@ import { ConfigService } from './config.service';
 })
 export class ArticlesService {
   serverUrl =
-    this.configService.getCookie('useLocalArticles') === 'true'
+    (this.configService.getCookie('useLocalArticles') === 'true')
       ? 'http://localhost:4200/assets'
       : 'https://storage.googleapis.com/planning-poker-public-assets';
 

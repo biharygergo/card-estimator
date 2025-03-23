@@ -416,7 +416,7 @@ export class AuthService {
               !snapshot.metadata.fromCache &&
               !snapshot.metadata.hasPendingWrites
           ),
-          map((snapshot) => snapshot.data())
+          map((snapshot) => snapshot.data() as UserPreference)
         );
       }),
       catchError(() => {

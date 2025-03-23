@@ -647,7 +647,9 @@ export class EstimatorService {
 
     const q = query(ref, orderBy('createdAt', 'desc'));
 
-    return collectionData(q);
+    return collectionData(q).pipe(
+      map((data) => data as RoomSummary[])
+    );
   }
 
   generateRoomSummary(roomId: string, csvSummary: string) {

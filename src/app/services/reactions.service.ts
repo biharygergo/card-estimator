@@ -120,7 +120,7 @@ export class ReactionsService {
     const q = query(ref, where('createdAt', '>=', Timestamp.now()));
     return sortedChanges(q, { events: ['added'] }).pipe(
       filter((changes) => !!changes.length),
-      map((documentChange) => documentChange.pop().doc.data()),
+      map((documentChange) => documentChange.pop().doc.data() as Reaction),
       catchError(() => NEVER)
     );
   }

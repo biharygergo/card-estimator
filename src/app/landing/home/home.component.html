@@ -2,18 +2,23 @@
   <span>Our Slack integration is live in beta! <a routerLink="/integrations/slack">Try it</a> now and give us feedback.
     🚀</span>
 </div> -->
-<planning-poker-page-header-with-cta [config]="{
+<planning-poker-page-header-with-cta
+  [config]="{
   title: 'Planning Poker - Sprint Estimation for Agile Teams',
   description: 'Run planning poker sessions in your browser or directly in Teams, Zoom, Meet, or Webex. Sync story points to JIRA or Linear automatically. The most trusted planning poker tool for remote teams.',
   internalLink: '/create',
   ctaIcon: 'play_arrow',
   ctaTitle: 'Start Planning Poker Session',
   showPlatforms: true,
-}" />
+}"
+/>
 <section class="used-by-section">
   <div class="used-by-content">
-    <h3>The #1 planning poker tool trusted by agile teams worldwide</h3>
-    <p class="subtitle">Join thousands of Scrum teams using our planning poker app for accurate sprint estimations</p>
+    <h2>The #1 planning poker tool trusted by agile teams worldwide</h2>
+    <p class="subtitle">
+      Join thousands of Scrum teams using PlanningPoker.live for accurate sprint
+      estimations
+    </p>
     <div class="logo-carousel">
       <ul class="logo-carousel-track">
         @for (logo of logos; track $index; let i = $index) {
@@ -21,7 +26,11 @@
           <picture>
             <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
             <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
-            <img src="/assets/logos/{{ logo }}.png" alt="{{ companies[i] }} uses Planning Poker" loading="lazy" />
+            <img
+              src="/assets/logos/{{ logo }}.png"
+              alt="{{ companies[i] }} uses Planning Poker"
+              loading="lazy"
+            />
           </picture>
         </li>
         }
@@ -31,14 +40,21 @@
 </section>
 <section class="features-section">
   <div class="features-content">
-    <h3>Essential planning poker features for scrum teams</h3>
-    <p class="subtitle">Everything you need to run effective planning poker sessions</p>
+    <h2>Essential planning poker features for scrum teams</h2>
+    <p class="subtitle">
+      Everything you need to run effective planning poker sessions
+    </p>
     <planning-poker-features-preview />
   </div>
   <div class="see-more-features">
-    <mat-expansion-panel class="see-more-panel" (opened)="viewAllFeaturesOpened()">
+    <mat-expansion-panel
+      class="see-more-panel"
+      (opened)="viewAllFeaturesOpened()"
+    >
       <mat-expansion-panel-header class="see-more-panel-header">
-        <mat-panel-title class="see-more-panel-title">View All Planning Poker Features</mat-panel-title>
+        <mat-panel-title class="see-more-panel-title"
+          >View All Planning Poker Features</mat-panel-title
+        >
       </mat-expansion-panel-header>
       <planning-poker-features-items [loadVideos]="loadVideos" />
     </mat-expansion-panel>
@@ -46,15 +62,36 @@
 </section>
 <section class="demo-video-section">
   <div class="demo-video-section-content">
-    <h3>Start a planning poker session in seconds</h3>
-    <p class="subtitle">Watch how easy it is to run agile estimations with our planning poker tool</p>
+    <h2>Start a planning poker session in seconds</h2>
+    <p class="subtitle">
+      Watch how easy it is to run agile estimations with our planning poker tool
+    </p>
     <div class="video-container">
-      <video #video loop muted preload="none" (loadedmetadata)="video.muted = true" [controls]="!video.paused"
-        poster="/assets/video_poster.webp">
-        <source src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4" type="video/mp4" />
+      <video
+        #video
+        loop
+        muted
+        preload="none"
+        (loadedmetadata)="video.muted = true"
+        [controls]="!video.paused"
+        poster="/assets/video_poster.webp"
+      >
+        <source
+          src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
+          type="video/mp4"
+        />
       </video>
-      <div class="start-video-overlay" [class.hidden]="!video.paused" (click)="video.play()">
-        <button mat-fab color="primary" aria-label="Play demo video" (click)="video.play()">
+      <div
+        class="start-video-overlay"
+        [class.hidden]="!video.paused"
+        (click)="video.play()"
+      >
+        <button
+          mat-fab
+          color="primary"
+          aria-label="Play demo video"
+          (click)="video.play()"
+        >
           <mat-icon>play_arrow</mat-icon>
         </button>
       </div>
@@ -106,22 +143,31 @@
 <app-faq-section [faqs]="faqs" />
 <section class="knowledge-base-section">
   <div class="knowledge-base-section-content">
-    <h3>Learn more about agile techniques & SCRUM poker</h3>
+    <h2>Learn more about agile techniques & SCRUM poker</h2>
     <div class="knowledge-base-articles">
       @for(sample of knowledgeBaseSamples; track sample.slug) {
       <article class="knowledge-base-articles-card">
         <div class="knowledge-base-articles-card-image">
-          <img [ngSrc]="sample.imageId" placeholder [alt]="sample.imageAlt" fill sizes="10wv" />
+          <img
+            [ngSrc]="sample.imageId"
+            placeholder
+            [alt]="sample.imageAlt"
+            fill
+            sizes="10wv"
+          />
         </div>
         <div class="knowledge-base-articles-card-content">
-          <h4>{{ sample.title }}</h4>
+          <h3>{{ sample.title }}</h3>
           <p>{{ sample.description }}</p>
-          <a mat-stroked-button [routerLink]="'/knowledge-base/' + sample.slug">Read article</a>
+          <a mat-stroked-button [routerLink]="'/knowledge-base/' + sample.slug"
+            >Read article</a
+          >
         </div>
       </article>
       }
-      <a mat-stroked-button routerLink="/knowledge-base" class="view-all-button">View more articles in Knowledge
-        Base</a>
+      <a mat-stroked-button routerLink="/knowledge-base" class="view-all-button"
+        >View more articles in Knowledge Base</a
+      >
     </div>
   </div>
 </section>
@@ -131,50 +177,93 @@
       <mat-accordion multi>
         <mat-expansion-panel [expanded]="true" disabled hideToggle>
           <mat-expansion-panel-header>
-            <mat-panel-title>What is planning poker?</mat-panel-title>
+            <mat-panel-title><h3>What is planning poker?</h3></mat-panel-title>
           </mat-expansion-panel-header>
           <p>
             Planning poker, also called scrum poker or pointing poker, is a
-            consensus-based, gamified technique for estimating, mostly used to
-            estimate effort or relative size of development goals in software
-            development.
+            consensus-based, gamified technique for estimating effort or
+            relative size of development goals in software development. Agile
+            teams worldwide use planning poker to improve their sprint planning
+            process and create more accurate estimates for user stories and
+            tasks.
+          </p>
+          <p>
+            During a planning poker session, team members use numbered cards to
+            vote on the complexity of each user story, promoting equal
+            participation and reducing estimation bias. The Fibonacci sequence
+            (1, 2, 3, 5, 8, 13, 21) is commonly used in planning poker
+            estimation as it reflects the inherent uncertainty in larger
+            estimates and helps teams focus on relative sizing rather than
+            precise time estimates.
+          </p>
+          <p>
+            Planning poker estimation is particularly effective for remote and
+            distributed agile teams who need a structured approach to sprint
+            planning. By combining the wisdom of the entire team, planning poker
+            helps identify risks early, improves team communication, and leads
+            to more reliable sprint commitments. Many Scrum Masters and Product
+            Owners consider planning poker an essential part of their agile
+            estimation toolkit.
+          </p>
+          <p>
+            With PlanningPoker.live, teams can conduct efficient planning poker
+            sessions online with features like JIRA integration, custom card
+            sets, and anonymous voting - making the estimation process seamless
+            for both co-located and remote agile teams. Planning poker has
+            become the industry standard for agile estimation in companies of
+            all sizes, from startups to enterprises like Google, Amazon, and
+            Netflix.
           </p>
         </mat-expansion-panel>
         <mat-expansion-panel>
           <mat-expansion-panel-header>
-            <mat-panel-title>How to play?</mat-panel-title>
+            <mat-panel-title><h3>How to play?</h3></mat-panel-title>
           </mat-expansion-panel-header>
           <p>
-            In planning poker, members of the group make estimates by playing
-            numbered cards face-down to the table, instead of speaking them
-            aloud. The cards are revealed, and the estimates are then discussed.
-            By hiding the figures in this way, the group can avoid the cognitive
-            bias of anchoring, where the first number spoken aloud sets a
-            precedent for subsequent estimates.
+            During a planning poker session, team members estimate by
+            simultaneously revealing numbered cards rather than verbally sharing
+            estimates. This synchronized revelation technique effectively
+            eliminates anchoring bias—a cognitive phenomenon where initial
+            estimates unduly influence subsequent ones—resulting in more
+            accurate and independent assessments of user story complexity.
           </p>
           <p>
-            When played online, members are together in a real-time estimation
-            "room" or "session" and their cards are displayed on the screen. The
-            same rules apply, but everything is more convenient and automated.
+            In digital planning poker platforms like PlanningPoker.live,
+            participants join virtual estimation rooms where their selected
+            cards are displayed on screen once everyone has voted. This online
+            approach maintains the core methodology while enhancing efficiency
+            through automation and providing additional features for remote
+            agile teams.
           </p>
           <p>
-            A planning poker session is usually around 30 minutes, and is led
-            by a Scrum Master or team lead. The game allows each member to
-            contribute to project planning and encourages lively discussions.
+            Typically lasting 30-45 minutes, planning poker sessions are
+            facilitated by a Scrum Master or Product Owner who presents each
+            user story for estimation. This collaborative process encourages
+            meaningful discussions about requirements, potential risks, and
+            implementation approaches, ensuring all team members contribute
+            their expertise to sprint planning.
           </p>
           <p>
-            The game can be played with different card sets which denote story
-            points or developer hours, depending on the team's taste. Card sets
-            can be configured when the game starts.
+            Teams can customize their estimation experience by selecting from
+            various card sets, including the popular Fibonacci sequence (1, 2,
+            3, 5, 8, 13, 21), modified Fibonacci, T-shirt sizes, or custom
+            scales. These estimation units represent relative effort or
+            complexity rather than absolute time, helping teams create more
+            reliable sprint forecasts and velocity measurements.
           </p>
         </mat-expansion-panel>
         <mat-expansion-panel>
           <mat-expansion-panel-header>
-            <mat-panel-title>About this app</mat-panel-title>
+            <mat-panel-title><h3>About this app</h3></mat-panel-title>
           </mat-expansion-panel-header>
           <p>
             This is a free,
-            <a href="https://github.com/biharygergo/card-estimator" rel="noopener" target="_blank">open-source</a>
+            <a
+              href="https://github.com/biharygergo/card-estimator"
+              rel="noopener"
+              target="_blank"
+              >open-source</a
+            >
             application developed as a hobby project. It is running on Google
             Cloud servers hosted in the EU. The app is free to use with monthly
             credits that can be refilled if you use the app often.
@@ -182,26 +271,46 @@
           <p>
             If you have any issues, concerns, feature ideas or you'd just like
             to send someone an email, please message us at
-            <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a>.
+            <a href="mailto:info@planningpoker.live"
+              >info&#64;planningpoker.live</a
+            >.
           </p>
         </mat-expansion-panel>
       </mat-accordion>
       <div class="made-by">
         <p>Developed & Designed by:</p>
         <div class="authors">
-          <a class="made-by-box" href="https://gergelybihary.com" rel="noopener" target="_blank">
+          <a
+            class="made-by-box"
+            href="https://gergelybihary.com"
+            rel="noopener"
+            target="_blank"
+          >
             <picture>
               <source srcset="/assets/gergely-bihary.webp" type="image/webp" />
               <source srcset="/assets/gergely-bihary.jpeg" type="image/jpeg" />
-              <img src="/assets/gergely-bihary.jpeg" alt="A profile picture of Gergely Bihary" loading="lazy" />
+              <img
+                src="/assets/gergely-bihary.jpeg"
+                alt="A profile picture of Gergely Bihary"
+                loading="lazy"
+              />
             </picture>
             Gergely Bihary
           </a>
-          <a class="made-by-box" href="https://www.kristofnagy.com/" rel="noopener" target="_blank">
+          <a
+            class="made-by-box"
+            href="https://www.kristofnagy.com/"
+            rel="noopener"
+            target="_blank"
+          >
             <picture>
               <source srcset="/assets/kristof_nagy.webp" type="image/webp" />
               <source srcset="/assets/kristof_nagy.jpeg" type="image/jpeg" />
-              <img src="/assets/kristof_nagy.jpeg" alt="A profile picture of Kristóf Nagy" loading="lazy" />
+              <img
+                src="/assets/kristof_nagy.jpeg"
+                alt="A profile picture of Kristóf Nagy"
+                loading="lazy"
+              />
             </picture>
             Kristóf Nagy
           </a>
@@ -209,8 +318,13 @@
       </div>
     </div>
     <div class="about-section-right">
-      <img ngSrc="meeting_table" placeholder alt="People having a meeting around a table" fill
-        sizes="(max-width: 800px) 100vw, 50vw" />
+      <img
+        ngSrc="meeting_table"
+        placeholder
+        alt="People having a meeting around a table"
+        fill
+        sizes="(max-width: 800px) 100vw, 50vw"
+      />
     </div>
   </div>
 </section>

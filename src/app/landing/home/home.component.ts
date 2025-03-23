@@ -23,6 +23,13 @@ import { FaqSectionComponent } from '../faq/faq-section/faq-section.component';
 
 const KNOWLEDGE_BASE_SAMPLES = [
   {
+    title: 'How to Run a Planning Poker Session with PlanningPoker.live',
+    description: 'Learn how to run a smooth Agile estimation session using PlanningPoker.live. This tutorial covers everything from creating a room to revealing estimates and more. Watch the video to get started!',
+    imageId: 'Tutorial_1_thumbnail_jlpkbg',
+    imageAlt: 'Video thumbnail image showing Planning Poker tutorial',
+    slug: 'how-to-run-planning-poker-session-with-planningpoker-live',
+  },
+  {
     title:
       'The Definitive Guide to Planning Poker - Master Agile Estimation Poker Techniques',
     description:
@@ -100,7 +107,7 @@ export class HomeComponent implements OnInit {
   protected knowledgeBaseSamples = KNOWLEDGE_BASE_SAMPLES;
   faqs = [
     {
-      question: 'What is planning poker and how does it improve agile estimation?',
+      question: 'What is planning poker and how can it enhance our agile estimation process?',
       answer: 'Planning poker (also known as scrum poker) is an agile estimation technique where team members use numbered cards to vote on story complexity. Our planning poker app makes this process easy by enabling real-time voting, discussion, and consensus-building. Teams can estimate user stories more accurately while avoiding common biases. Check out our <a href="/features">full feature list</a> to learn more.',
     },
     {

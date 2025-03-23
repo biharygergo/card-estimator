@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
   <div class="title">
     <h1>{{ title }}</h1>
     @if (subtitle) {
-      <h3>{{ subtitle }}</h3>
+      <h2>{{ subtitle }}</h2>
     }
   </div>
 </header>

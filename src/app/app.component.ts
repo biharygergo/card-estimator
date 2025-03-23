@@ -35,6 +35,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 import { environment } from 'src/environments/environment';
 import Clarity from '@microsoft/clarity';
+import { SchemaTagService } from './services/schema-tag.service';
 
 @Component({
     selector: 'app-root',
@@ -99,7 +100,8 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     @Inject(APP_CONFIG) public readonly config: AppConfig,
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) private readonly platformId: Object
+    @Inject(PLATFORM_ID) private readonly platformId: Object,
+    private schemaTagService: SchemaTagService
   ) {}
 
   ngOnInit() {
@@ -170,6 +172,7 @@ export class AppComponent implements OnInit, OnDestroy {
         Clarity.init('qngk5xwpfw');
       }
     }
+    this.schemaTagService.setJsonLd(this.renderer, this.schemaTagService.currentSchema());
   }
 
   ngOnDestroy(): void {

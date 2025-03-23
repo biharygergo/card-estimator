@@ -576,3 +576,8 @@ export interface IssuesSearchApiResult {
   issues: RichTopic[];
   nextPage?: number | string;
 }
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}

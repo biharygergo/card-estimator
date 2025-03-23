@@ -55,6 +55,10 @@ main {
       }
     }
 
+    h2 {
+      font-size: 1.1rem;
+    }
+
     .recommendation {
       background: var(--light-blue);
       border-radius: 8px;
@@ -62,8 +66,10 @@ main {
       margin-bottom: 1rem;
       transition: background 300ms linear;
 
-      h5 {
+      h3 {
         margin: 0;
+        font-size: 1rem;
+        font-weight: 500;
       }
 
       &:hover {
@@ -88,6 +94,7 @@ main {
 
   .author {
     margin-bottom: 0.1rem;
+    display: block;
   }
 
   .cover-image {

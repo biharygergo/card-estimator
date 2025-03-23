@@ -13,9 +13,9 @@
       <div class="content">
         <div class="card-header">
           <h1>{{ article.title }}</h1>
-          <h3>{{ article.description }}</h3>
+          <p>{{ article.description }}</p>
           <div class="meta">
-            <h4 class="author">{{ article.author }}</h4>
+            <span class="author">{{ article.author }}</span>
             <small
               >Last updated:
               {{ article.lastUpdated | date : "mediumDate" }}</small
@@ -55,13 +55,13 @@
     </article>
     <div class="recommendations">
       <div class="recommendations-inner">
-        <h4>Learn more about agile techniques:</h4>
+        <h2>Learn more about agile techniques:</h2>
         <div class="recommendation-block">
           @for(recommendation of recommendations | async; track
           recommendation.slug){
           <div class="recommendation">
             <a [routerLink]="'/knowledge-base/' + recommendation.slug"
-              ><h5>{{ recommendation.title }}</h5></a
+              ><h3>{{ recommendation.title }}</h3></a
             >
           </div>
 

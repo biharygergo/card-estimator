@@ -2,12 +2,12 @@
   <div class="content">
     <div class="header">
       <h1>Knowledge base</h1>
-      <h2>
+      <p>
         Take a look at our knowledge base to learn best-practices about Planning
         Poker, agile estimation and related topics.
-      </h2>
+      </p>
     </div>
-    <h3>Tutorials</h3>
+    <h2>Tutorials</h2>
     <p>
       Learn how to use PlanningPoker.live with our in-depth tutorials covering
       basic usage, Jira/Linear integration and our embedded apps in Teams, Zoom,
@@ -20,7 +20,7 @@
       ></ng-container>
       }
     </div>
-    <h3>Planning poker techniques</h3>
+    <h2>Planning poker techniques</h2>
     <p>
       Learn how to estimate with Planning Poker, how to facilitate a session and
       how to use the app to get the most out of your estimation sessions.
@@ -32,7 +32,7 @@
       ></ng-container>
       }
     </div>
-    <h3>News & app updates</h3>
+    <h2>News & app updates</h2>
     <p>
       Read about our latest updates, new features and improvements to the app.
     </p>
@@ -62,10 +62,10 @@
     </div>
     <div class="article-preview">
       <h3>{{ article.title }}</h3>
-      <h5>
+      <span>
         {{ article.lastUpdated | date : "mediumDate" }},
         {{ article.author }}
-      </h5>
+      </span>
       <p>{{ article.description }}</p>
     </div>
   </a>

@@ -69,7 +69,7 @@
       </button>
       } @if (!room()?.isAsyncVotingEnabled) {
       <div
-        class="split-reveal-button-container"
+        class="split-action-button-container"
         [class.disabled]="
           !(permissionsService.canRevealResults() | async) ||
           (room()?.rounds)[currentRound()]?.show_results
@@ -96,7 +96,7 @@
           </div>
         </button>
         <div
-          class="split-reveal-button-container-side-button"
+          class="split-action-button-container-side-button"
           [class.enabled]="room().isAutoRevealEnabled"
         >
           <button

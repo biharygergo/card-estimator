@@ -125,10 +125,7 @@
               Webex Meetings
             </div>
           </a>
-          <a
-            routerLink="/integrations/jira"
-            mat-menu-item
-          >
+          <a routerLink="/integrations/jira" mat-menu-item>
             <div class="centered-menu-item" routerLinkActive="active">
               <img
                 class="integration-logo"
@@ -178,13 +175,18 @@
         >
       </li>
     </ul>
-    <a
-      mat-flat-button
-      color="primary"
-      routerLink="/create"
-      class="desktop-start-planning-link"
-      ><mat-icon>play_arrow</mat-icon>Start planning</a
-    >
+    <div class="split-action-button-container flat desktop-start-planning-link">
+      <a
+        mat-flat-button
+        color="primary"
+        routerLink="/create"
+        ><mat-icon>play_arrow</mat-icon>Start planning
+      </a>
+      <div class="split-action-button-container-side-button">
+        <app-profile-dropdown appearance="avatar"></app-profile-dropdown>
+      </div>
+    </div>
+
     <button
       mat-icon-button
       aria-label="Toggle navigation menu"

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -25,7 +25,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-profile-dropdown',
@@ -33,6 +33,7 @@ import { MatButton } from '@angular/material/button';
     styleUrls: ['./profile-dropdown.component.scss'],
     imports: [
         MatButton,
+        MatIconButton,
         MatMenuTrigger,
         MatIcon,
         MatMenu,
@@ -44,6 +45,8 @@ import { MatButton } from '@angular/material/button';
 })
 export class ProfileDropdownComponent implements OnInit {
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
+
+  appearance = input<'avatar' | 'button'>('button');
 
   currentUser = this.auth.user;
 

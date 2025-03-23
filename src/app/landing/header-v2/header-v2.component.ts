@@ -1,4 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { CookieService } from 'src/app/services/cookie.service';
 import { NavigationService } from 'src/app/services/navigation.service';
@@ -7,6 +8,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatAnchor, MatIconButton } from '@angular/material/button';
 import { NgClass } from '@angular/common';
+import { ProfileDropdownComponent } from 'src/app/shared/profile-dropdown/profile-dropdown.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'planning-poker-landing-header',
@@ -23,6 +26,7 @@ import { NgClass } from '@angular/common';
         MatMenuItem,
         MatAnchor,
         MatIconButton,
+        ProfileDropdownComponent,
     ]
 })
 export class HeaderV2Component implements OnInit {
@@ -30,6 +34,7 @@ export class HeaderV2Component implements OnInit {
   menuOpen = false;
 
   isEmbeddedApp = this.config.runningIn !== 'web';
+  user = toSignal(inject(AuthService).user);
 
   constructor(
     private readonly cookieService: CookieService,

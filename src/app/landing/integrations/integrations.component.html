@@ -2,10 +2,11 @@
   <div class="hero-header">
     <div class="header-intro">
       <h1>Integrate PlanningPoker.live for smoother team collaboration</h1>
-      <h2 class="header-description">
+      <p class="header-description">
         Bring PlanningPoker.live to your video calls and project tools in just a
-        few clicks—no setup hassle.
-      </h2>
+        few clicks—no setup hassle. Start planning poker sessions in Teams with
+        no context-switching.
+      </p>
       <div>
         <button
           (click)="scrollTo('video-conferencing')"
@@ -17,11 +18,13 @@
         <p class="header-subtitle">
           Jump to
           <a href="javascript:void(0)" (click)="scrollTo('video-conferencing')">
-            video conferencing
-          </a>,
+            video conferencing </a
+          >,
           <a href="javascript:void(0)" (click)="scrollTo('project-management')">
             project management</a
-          > or <a href="javascript:void(0)" (click)="scrollTo('messaging')">
+          >
+          or
+          <a href="javascript:void(0)" (click)="scrollTo('messaging')">
             messaging</a
           >.
         </p>
@@ -46,9 +49,9 @@
       <h2 class="title">Video conferencing</h2>
       <p class="details">
         Conduct efficient planning poker sessions directly within your video
-        conferences. Our embedded app integrates with popular platforms like
-        Teams, Zoom, Meet, and Webex, allowing you to estimate stories without
-        leaving your meeting.
+        conferences. Our embedded app lets you run planning poker in Zoom
+        meetings, and integrates with popular platforms like Teams, Meet, and
+        Webex, allowing you to estimate stories without leaving your meeting.
       </p>
       <div class="details-links">
         <a mat-stroked-button routerLink="/integrations/teams">Teams</a>
@@ -115,6 +118,9 @@
         "
       ></ng-container>
       }
+    </div>
+    <div class="banner-wrapper">
+      <start-planning-cta></start-planning-cta>
     </div>
   </section>
 </main>

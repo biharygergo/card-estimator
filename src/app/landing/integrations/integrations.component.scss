@@ -217,3 +217,10 @@
   display: flex;
   gap: 0.5rem;
 }
+
+.banner-wrapper {
+  max-width: 1200px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 5rem auto;
+}

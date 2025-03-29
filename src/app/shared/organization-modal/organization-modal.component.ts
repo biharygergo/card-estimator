@@ -17,6 +17,7 @@ import { isEqual } from 'lodash-es';
 import {
   BehaviorSubject,
   combineLatest,
+  delay,
   distinctUntilChanged,
   filter,
   from,
@@ -158,12 +159,18 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   invitations$ = this.organization$.pipe(
     switchMap((organization) => {
-      if (!organization) {
+      if (!organization || !organization.memberIds?.length) {
         return of({ invitations: [], organization });
       }
-      return this.organizationService
-        .getInvitations(organization.id)
-        .pipe(map((invitations) => ({ invitations, organization })));
+      // Add a delay before querying invitations to handle newly created organizations
+      return of(null).pipe(
+        delay(500), // 500ms delay
+        switchMap(() => 
+          this.organizationService
+            .getInvitations(organization.id)
+            .pipe(map((invitations) => ({ invitations, organization })))
+        )
+      );
     }),
     map(({ invitations }) =>
       invitations.filter((invite) => invite.status !== 'accepted')
@@ -291,7 +298,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       // No-op
     }
 
-    this.organizationService.createOrganization({
+    await this.organizationService.createOrganization({
       name: domain || `${user.displayName}'s Organization`,
       logoUrl: null,
     });

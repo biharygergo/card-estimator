@@ -6,7 +6,7 @@ import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 import {VertexAI} from "@google-cloud/vertexai";
 
 const cloudProjectName = process.env.GCLOUD_PROJECT;
-const location = "us-central1";
+const location = "europe-west1";
 
 // Initialize Vertex with your Cloud project and location
 const vertexAi = new VertexAI({

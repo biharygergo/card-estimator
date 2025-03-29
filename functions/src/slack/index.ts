@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import axios from "axios";
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import * as qs from "querystring";

@@ -9,6 +9,7 @@ import {
   Credit,
   MemberType,
   MemberStatus,
+  Organization,
 } from "../../../src/app/types";
 import {
   uniqueNamesGenerator,
@@ -23,11 +24,47 @@ import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 import {
   assignCreditsAsNeeded,
   getCreditForNewRoom,
-  updateCreditUsage,
 } from "../credits";
 import {getCurrentOrganization} from "../organizations";
 import {getAuth} from "firebase-admin/auth";
-import {CreateRoomPubSubMessage, sendGenericErrorMessage, sendOutOfCreditsMessage, sendRoomCreatedMessage} from "../slack/messaging";
+import {
+  CreateRoomPubSubMessage,
+  sendGenericErrorMessage,
+  sendOutOfCreditsMessage,
+  sendRoomCreatedMessage,
+} from "../slack/messaging";
+import {PubSub} from "@google-cloud/pubsub";
+
+export interface UpdateCreditUsagePubSubMessage {
+  credit: Credit;
+  userId: string;
+  roomId: string;
+}
+
+async function sendUpdateCreditUsagePubSubMessage(
+    credit: Credit,
+    userId: string,
+    roomId: string
+) {
+  const pubSub = new PubSub();
+  const topicName = "update-credit-usage";
+  const data: UpdateCreditUsagePubSubMessage = {
+    credit,
+    userId,
+    roomId,
+  };
+
+  const topic = await pubSub.topic(topicName).get({autoCreate: true});
+
+  return topic[0]
+      .publishMessage({json: data})
+      .then((messageId) => {
+        console.log(`Credit update message ${messageId} published.`);
+      })
+      .catch((error) => {
+        console.error(`Received error while publishing credit update: ${error.message}`);
+      });
+}
 
 export async function createRoomFromSlack(data: CreateRoomPubSubMessage) {
   const {userId, responseUrl} = data;
@@ -46,7 +83,11 @@ export async function createRoomFromSlack(data: CreateRoomPubSubMessage) {
       userId,
       member,
     });
-    await sendRoomCreatedMessage(responseUrl, createResult.room, data.platformUserId);
+    await sendRoomCreatedMessage(
+        responseUrl,
+        createResult.room,
+        data.platformUserId
+    );
   } catch (error) {
     console.error(error);
     console.error("Error creating room from Slack");
@@ -101,10 +142,12 @@ async function createRoomInternal(params: {
   recurringMeetingId?: string;
 }) {
   const {userId, member, recurringMeetingId} = params;
-  const isPremium = await isPremiumSubscriber(userId);
 
-  await assignCreditsAsNeeded(userId);
-  const creditToUse = await getCreditForNewRoom(userId);
+  // Run credit check and room ID generation in parallel
+  const [isPremium, creditToUse] = await Promise.all([
+    isPremiumSubscriber(userId),
+    assignCreditsAsNeeded(userId).then(() => getCreditForNewRoom(userId)),
+  ]);
 
   if (!creditToUse && !isPremium) {
     throw new OutOfCreditsError();
@@ -120,15 +163,16 @@ async function createRoomInternal(params: {
   let roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
 
   while (await doesRoomAlreadyExist(roomId)) {
-    roomId = uniqueNamesGenerator({...customConfig, length: 4}).replace(
-        " ",
-        "-"
-    );
+    roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
   }
 
+  // Get organization first since it's needed for subscription metadata
+  const organization = await getCurrentOrganization(userId);
   const subscriptionMetadata = await getSubscriptionMetadata(
       userId,
-      creditToUse
+      creditToUse,
+      isPremium,
+      organization
   );
 
   const room: Room = {
@@ -152,7 +196,7 @@ async function createRoomInternal(params: {
   await getFirestore().collection("rooms").doc(room.roomId).set(room);
 
   if (!isPremium) {
-    await updateCreditUsage(creditToUse!, userId, room.roomId);
+    await sendUpdateCreditUsagePubSubMessage(creditToUse!, userId, room.roomId);
   }
 
   return {room, member};
@@ -200,11 +244,10 @@ function createId(): string {
 
 async function getSubscriptionMetadata(
     userId: string,
-    credit: Credit | undefined
+    credit: Credit | undefined,
+    isPremium: boolean,
+    organization: Organization | undefined
 ): Promise<SubscriptionMetadata> {
-  const isPremium = await isPremiumSubscriber(userId);
-  const organization = await getCurrentOrganization(userId);
-
   const subscriptionMetadata: SubscriptionMetadata = {
     createdWithPlan: isPremium ?
       "premium" :

@@ -10,40 +10,42 @@ import {getFirestore} from "firebase-admin/firestore";
 import {initializeApp} from "firebase-admin/app";
 
 import {appCheck} from "firebase-admin";
-import * as cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import * as Sentry from "@sentry/node";
 import {IssueUpdateRequestData} from "./jira/updateIssue";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});
 
+const region = "europe-west1";
+
 Sentry.init({
   dsn: "https://cc711a2e5c854663a9feda8c1d4fcd3b@o200611.ingest.sentry.io/4504938995318784",
   tracesSampleRate: 0.7,
 });
 
-exports.authorizeZoomApp = onRequest({cors: true}, async (req, res) => {
+exports.authorizeZoomApp = onRequest({cors: true, region}, async (req, res) => {
   const {authorizeZoomApp} = await import("./zoom/routes");
   return cookieParser()(req, res, async () => authorizeZoomApp(req, res));
 });
 
-exports.zoomHome = onRequest({cors: true}, async (req, res) => {
+exports.zoomHome = onRequest({cors: true, region}, async (req, res) => {
   const {zoomHome} = await import("./zoom/routes");
   return cookieParser()(req, res, () => zoomHome(req, res));
 });
 
-exports.installZoomApp = onRequest({cors: true}, async (req, res) => {
+exports.installZoomApp = onRequest({cors: true, region}, async (req, res) => {
   const {installZoomApp} = await import("./zoom/routes");
   return installZoomApp(req, res);
 });
 
-exports.uninstallZoomApp = onRequest({cors: true}, async (req) => {
+exports.uninstallZoomApp = onRequest({cors: true, region}, async (req) => {
   console.log("Zoom App Uninstallation");
   console.log(req.body);
   return;
 });
 
-exports.fetchAppCheckToken = onCall({cors: true}, async () => {
+exports.fetchAppCheckToken = onCall({cors: true, region}, async () => {
   try {
     const result = await appCheck().createToken(
         "1:417578634660:web:3617c13e4d28109aa18531"
@@ -58,23 +60,23 @@ exports.fetchAppCheckToken = onCall({cors: true}, async () => {
   }
 });
 
-exports.generateCodeChallenge = onRequest({cors: true}, async (req, res) => {
+exports.generateCodeChallenge = onRequest({cors: true, region}, async (req, res) => {
   const {generateCodeChallenge} = await import("./zoom/routes");
   return cookieParser()(req, res, () => generateCodeChallenge(req, res));
 });
 
-exports.inClientOnAuthorized = onRequest({cors: true}, async (req, res) => {
+exports.inClientOnAuthorized = onRequest({cors: true, region}, async (req, res) => {
   const {inClientOnAuthorized} = await import("./zoom/routes");
   return cookieParser()(req, res, () => inClientOnAuthorized(req, res));
 });
 
-exports.startGoogleAuth = onRequest({cors: true}, async (req, res) => {
+exports.startGoogleAuth = onRequest({cors: true, region}, async (req, res) => {
   const {startGoogleOauthFlow} = await import("./zoom/googleAuth");
   return cookieParser()(req, res, () => startGoogleOauthFlow(req, res));
 });
 
 exports.onZoomAuthResponseRedirectToGoogle = onRequest(
-    {cors: true},
+    {cors: true, region},
     async (req, res) => {
       const {zoomAuthSuccess} = await import("./zoom/googleAuth");
       return cookieParser()(req, res, () => zoomAuthSuccess(req, res));
@@ -82,24 +84,24 @@ exports.onZoomAuthResponseRedirectToGoogle = onRequest(
 );
 
 exports.onGoogleAuthResponseDeeplink = onRequest(
-    {cors: true},
+    {cors: true, region},
     async (req, res) => {
       const {googleAuthSuccess} = await import("./zoom/googleAuth");
       return cookieParser()(req, res, () => googleAuthSuccess(req, res));
     }
 );
 
-exports.giveFeedback = onRequest({cors: true}, async (req, res) => {
+exports.giveFeedback = onRequest({cors: true, region}, async (req, res) => {
   return res.redirect("https://forms.gle/Rhd8mAQqCmewhfCR7");
 });
 
-exports.reportAnIssue = onRequest({cors: true}, async (req, res) => {
+exports.reportAnIssue = onRequest({cors: true, region}, async (req, res) => {
   return res.redirect(
       "mailto:info@planningpoker.live?subject=Issue%20Report%20-%20Planning%20Poker&body=Dear%20Developers%2C%0D%0A%0D%0AI%20have%20run%20into%20the%20following%20issue%20while%20using%20the%20Planning%20Poker%20app%3A%0D%0A%0D%0A%3CDescribe%20your%20issue%20in%20detail%20here%3E%0D%0A%0D%0AHave%20a%20great%20day%2C%0D%0A%3CYour%20name%3E"
   );
 });
 
-exports.sendEmail = onRequest({cors: true}, async (req, res) => {
+exports.sendEmail = onRequest({cors: true, region}, async (req, res) => {
   const subject = encodeURIComponent(
       (req.query.subject as string | undefined) || ""
   );
@@ -126,12 +128,12 @@ exports.onUserDetailsUpdate = onDocumentUpdated(
     }
 );
 
-exports.setRoomPassword = onCall({cors: true}, async (request) => {
+exports.setRoomPassword = onCall({cors: true, region}, async (request) => {
   const {setRoomPassword} = await import("./room/password-protection");
   return setRoomPassword(request);
 });
 
-exports.enterProtectedRoom = onCall({cors: true}, async (request) => {
+exports.enterProtectedRoom = onCall({cors: true, region}, async (request) => {
   const {enterProtectedRoom} = await import("./room/password-protection");
   return enterProtectedRoom(request);
 });
@@ -157,7 +159,7 @@ exports.onOrganizationInvitation = onDocumentCreated(
 );
 
 exports.acceptOrganizationInvitation = onRequest(
-    {cors: true},
+    {cors: true, region},
     async (req, res) => {
       const {acceptInvitation} = await import("./organizations/invitation");
       return cookieParser()(req, res, () => acceptInvitation(req));
@@ -184,22 +186,22 @@ exports.onUserSubscriptionUpdated = onDocumentUpdated(
     }
 );
 
-exports.startJiraAuth = onRequest({cors: true}, async (req, res) => {
+exports.startJiraAuth = onRequest({cors: true, region}, async (req, res) => {
   const {startJiraAuthFlow} = await import("./jira/oauth");
   return cookieParser()(req, res, () => startJiraAuthFlow(req, res));
 });
 
-exports.onJiraAuthResponse = onRequest({cors: true}, async (req, res) => {
+exports.onJiraAuthResponse = onRequest({cors: true, region}, async (req, res) => {
   const {onJiraAuthorizationReceived} = await import("./jira/oauth");
   return cookieParser()(req, res, () => onJiraAuthorizationReceived(req, res));
 });
 
-exports.queryJiraIssues = onCall({cors: true}, async (request) => {
+exports.queryJiraIssues = onCall({cors: true, region}, async (request) => {
   const {searchJira} = await import("./jira/search");
   return searchJira(request);
 });
 
-exports.updateIssue = onCall({cors: true}, async (req) => {
+exports.updateIssue = onCall({cors: true, region}, async (req) => {
   const {updateIssue} = await import("./jira/updateIssue");
   const {updateLinearIssue} = await import("./linear/updateIssue");
   return (req.data.updateRequest as IssueUpdateRequestData).provider ===
@@ -208,24 +210,24 @@ exports.updateIssue = onCall({cors: true}, async (req) => {
     updateIssue(req);
 });
 
-exports.startLinearAuth = onRequest({cors: true}, async (req, res) => {
+exports.startLinearAuth = onRequest({cors: true, region}, async (req, res) => {
   const {startLinearAuthFlow} = await import("./linear/oauth");
   return cookieParser()(req, res, () => startLinearAuthFlow(req, res));
 });
 
-exports.onLinearAuthResponse = onRequest({cors: true}, async (req, res) => {
+exports.onLinearAuthResponse = onRequest({cors: true, region}, async (req, res) => {
   const {onLinearAuthorizationReceived} = await import("./linear/oauth");
   return cookieParser()(req, res, () =>
     onLinearAuthorizationReceived(req, res)
   );
 });
 
-exports.queryLinearIssues = onCall({cors: true}, async (request) => {
+exports.queryLinearIssues = onCall({cors: true, region}, async (request) => {
   const {searchLinear} = await import("./linear/search");
   return searchLinear(request);
 });
 
-exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
+exports.safeRedirect = onRequest({cors: true, region}, async (req, res) => {
   const redirectTo = req.query.redirectTo;
   if (typeof redirectTo === "string") {
     return res.redirect(redirectTo);
@@ -233,7 +235,7 @@ exports.safeRedirect = onRequest({cors: true}, async (req, res) => {
   return;
 });
 
-exports.createSummary = onCall({cors: true}, async (req) => {
+exports.createSummary = onCall({cors: true, region}, async (req) => {
   const {createSummary} = await import("./summary");
   return createSummary(req);
 });
@@ -248,35 +250,35 @@ exports.onRoomUpdated = onDocumentUpdated("rooms/{roomId}", async (change) => {
   return onRoomUpdated(change);
 });
 
-exports.startTeamsGoogleAuth = onRequest({cors: true}, async (req, res) => {
+exports.startTeamsGoogleAuth = onRequest({cors: true, region}, async (req, res) => {
   const {startTeamsGoogleAuth} = await import("./ms-teams");
   return cookieParser()(req, res, () => startTeamsGoogleAuth(req, res));
 });
 
 exports.onTeamsGoogleAuthResult = onRequest(
-    {cors: true},
+    {cors: true, region},
     async (req, res) => {
       const {onTeamsGoogleAuthResult} = await import("./ms-teams");
       return cookieParser()(req, res, () => onTeamsGoogleAuthResult(req, res));
     }
 );
 
-exports.startOAuth = onRequest({cors: true}, async (req, res) => {
+exports.startOAuth = onRequest({cors: true, region}, async (req, res) => {
   const {startOAuth} = await import("./oauth");
   return cookieParser()(req, res, () => startOAuth(req, res));
 });
 
-exports.onOAuthResult = onRequest({cors: true}, async (req, res) => {
+exports.onOAuthResult = onRequest({cors: true, region}, async (req, res) => {
   const {onOAuthResult} = await import("./oauth");
   return cookieParser()(req, res, () => onOAuthResult(req, res));
 });
 
-exports.slack = onRequest({cors: true}, async (req, res) => {
+exports.slack = onRequest({cors: true, region}, async (req, res) => {
   const {slackMicroservice} = await import("./slack");
   return slackMicroservice(req, res);
 });
 
-exports.createRoom = onCall({cors: true}, async (req) => {
+exports.createRoom = onCall({cors: true, region}, async (req) => {
   const {createRoom} = await import("./room/new-room");
   return createRoom(req);
 });
@@ -286,8 +288,14 @@ exports.createRoomFromMessagingIntegration = onMessagePublished("create-room-fro
   return createRoomFromSlack(event.data.message.json);
 });
 
+exports.onUpdateCreditUsage = onMessagePublished("update-credit-usage", async (event) => {
+  const {updateCreditUsage} = await import("./credits");
+  const {credit, userId, roomId} = event.data.message.json;
+  return updateCreditUsage(credit, userId, roomId);
+});
+
 exports.getAllCreditsAndAssignWelcome = onCall(
-    {cors: true},
+    {cors: true, region},
     async (request) => {
       if (!request.auth?.uid) {
         throw new HttpsError(
@@ -324,7 +332,7 @@ exports.onUserPaymentUpdated = onDocumentUpdated(
 );
 
 exports.updateRoomsTableInBigQuery = onSchedule(
-    {schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB"},
+    {schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB", region},
     async () => {
       console.log("Scheduled room update function triggered.");
       const {updateRoomsTableInBigQuery} = await import("./room/bigquery");

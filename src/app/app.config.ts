@@ -113,6 +113,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideFunctions(() => {
       const functions = getFunctions();
+      functions.region = 'europe-west1';
       if (environment.useEmulators) {
         connectFunctionsEmulator(functions, 'localhost', 5001);
       }

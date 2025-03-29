@@ -1,6 +1,6 @@
 import {Filter, Timestamp, getFirestore} from "firebase-admin/firestore";
 import {Credit, BundleName, CreditBundle, BundleWithCredits} from "../types";
-import * as moment from "moment";
+import moment from "moment";
 import {getAuth} from "firebase-admin/auth";
 import {isAnonymousUser, isPremiumSubscriber} from "../shared/customClaims";
 import {sendEmail} from "../email";

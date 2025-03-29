@@ -13,117 +13,117 @@
         {
           "source": "/api/zoomHome",
           "function": "zoomHome",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/uninstallZoomApp",
           "function": "uninstallZoomApp",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/installZoomApp",
           "function": "installZoomApp",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/authorizeZoomApp",
           "function": "authorizeZoomApp",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/generateCodeChallenge",
           "function": "generateCodeChallenge",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/inClientOnAuthorized",
           "function": "inClientOnAuthorized",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/startGoogleAuth",
           "function": "startGoogleAuth",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/onZoomAuthResponseRedirectToGoogle",
           "function": "onZoomAuthResponseRedirectToGoogle",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/onGoogleAuthResponseDeeplink",
           "function": "onGoogleAuthResponseDeeplink",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/giveFeedback",
           "function": "giveFeedback",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/reportAnIssue",
           "function": "reportAnIssue",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/sendEmail",
           "function": "sendEmail",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/acceptOrganizationInvitation",
           "function": "acceptOrganizationInvitation",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/startJiraAuth",
           "function": "startJiraAuth",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/onJiraAuthResponse",
           "function": "onJiraAuthResponse",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/startLinearAuth",
           "function": "startLinearAuth",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/onLinearAuthResponse",
           "function": "onLinearAuthResponse",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/safeRedirect",
           "function": "safeRedirect",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/startTeamsGoogleAuth",
           "function": "startTeamsGoogleAuth",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/onTeamsGoogleAuthResult",
           "function": "onTeamsGoogleAuthResult",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/startOAuth",
           "function": "startOAuth",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/onOAuthResult/:provider",
           "function": "onOAuthResult",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/api/slack/**",
           "function": "slack",
-          "region": "us-central1"
+          "region": "europe-west1"
         },
         {
           "source": "/zoomverify/verifyzoom",
@@ -156,7 +156,7 @@
             },
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' 'nonce-hjkjsdf93aasdjfb33fbasjd' http://localhost:* *.planningpoker.live https://res.cloudinary.com https://us-central1-card-estimator.cloudfunctions.net https://us-central1-planning-poker-test-dc808.cloudfunctions.net https://card-estimator.firebaseapp.com/ *.eu.ngrok.io *.web.app https://*.clarity.ms https://c.bing.com *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ www.google.com *.google.com *.google.hu *.googletagmanager.com *.sentry.io *.gstatic.com *.dicebear.com *.doubleclick.net *.googlesyndication.com binaries.webex.com *.buysellads.net *.carbonads.net *.carbonads.com  data: youtube.com www.youtube.com *.ytimg.com;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com;frame-ancestors 'self' *.zoom.us *.zoom.com *.microsoft.com *.microsoft.us *.cloud.microsoft *.cloud.microsoft.com  *.office.com *.office.net *.webex.com *.cisco.com *.google.com"
+              "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' 'nonce-jafiansf83nasdfn38asdnf3' 'nonce-hsjdf73bfasdjfb33fbasjd' 'nonce-hjkjsdf93aasdjfb33fbasjd' http://localhost:* *.planningpoker.live https://res.cloudinary.com https://europe-west1-card-estimator.cloudfunctions.net https://europe-west1-planning-poker-test-dc808.cloudfunctions.net https://card-estimator.firebaseapp.com/ *.eu.ngrok.io *.web.app https://*.clarity.ms https://c.bing.com *.google-analytics.com *.googleapis.com https://fonts.googleapis.com/ https://fonts.gstatic.com/ www.google.com *.google.com *.google.hu *.googletagmanager.com *.sentry.io *.gstatic.com *.dicebear.com *.doubleclick.net *.googlesyndication.com binaries.webex.com *.buysellads.net *.carbonads.net *.carbonads.com  data: youtube.com www.youtube.com *.ytimg.com;font-src 'self' 'unsafe-inline' fonts.gstatic.com;style-src 'self' 'unsafe-inline' fonts.googleapis.com;frame-ancestors 'self' *.zoom.us *.zoom.com *.microsoft.com *.microsoft.us *.cloud.microsoft *.cloud.microsoft.com  *.office.com *.office.net *.webex.com *.cisco.com *.google.com"
             },
             {
               "key": "Referrer-Policy",

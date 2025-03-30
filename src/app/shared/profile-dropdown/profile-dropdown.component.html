@@ -55,6 +55,10 @@
       <mat-icon>history</mat-icon>
       <span>Previous sessions</span>
     </a>
+    <a mat-menu-item (click)="openRoomTemplatesModal()">
+      <mat-icon>bookmark</mat-icon>
+      <span>Room templates</span>
+    </a>
     <mat-divider></mat-divider>
     @if (!paymentService.isSubscriptionDisabled()) {
       <button mat-menu-item (click)="openPricingModal()">

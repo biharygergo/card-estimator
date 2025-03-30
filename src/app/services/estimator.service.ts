@@ -759,5 +759,5 @@ export class EstimatorService {
     if (isEnabled) {
       await this.updateRoom(roomId, { memberIds });
     }
-  }
+  }    
 }

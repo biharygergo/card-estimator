@@ -82,6 +82,7 @@ export const appConfig: ApplicationConfig = {
       const app = initializeApp(environment.firebase);
       const firestore = initializeFirestore(app, {
         experimentalAutoDetectLongPolling: true,
+        ignoreUndefinedProperties: true,
       });
       if (environment.useEmulators) {
         connectFirestoreEmulator(firestore, 'localhost', 8080);

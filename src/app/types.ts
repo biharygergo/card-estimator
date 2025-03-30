@@ -581,3 +581,20 @@ export interface FaqItem {
   question: string;
   answer: string;
 }
+
+export enum SlotId {
+  TemplateA = 'templateA',
+  TemplateB = 'templateB',
+  TemplateC = 'templateC',
+}
+
+export interface RoomTemplate {
+  slotId: SlotId;
+  name: string;
+  cardSetId: string;
+  isAsyncVotingEnabled?: boolean;
+  isAnonymousVotingEnabled?: boolean;
+  isChangeVoteAfterRevealEnabled?: boolean;
+  timerDuration?: number;
+  permissions?: PermissionsMap;
+}

@@ -26,6 +26,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { roomTemplatesModalCreator } from '../room-templates-modal/room-templates-modal.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -167,5 +168,9 @@ export class ProfileDropdownComponent implements OnInit {
 
   closeMenu() {
     this.menuTrigger.closeMenu();
+  }
+
+  openRoomTemplatesModal() {
+    this.dialog.open(...roomTemplatesModalCreator({}));
   }
 }

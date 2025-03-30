@@ -24,15 +24,20 @@ import {
   GoogleAuthProvider,
 } from '@angular/fire/auth';
 import {
+  collection,
+  deleteDoc,
   doc,
   docData,
   docSnapshots,
   DocumentReference,
   FieldValue,
   Firestore,
+  query,
+  getDocs,
   serverTimestamp,
   setDoc,
   updateDoc,
+  collectionSnapshots,
 } from '@angular/fire/firestore';
 import {
   catchError,
@@ -49,6 +54,8 @@ import {
   tap,
 } from 'rxjs';
 import {
+  RoomTemplate,
+  SlotId,
   UserDetails,
   UserPreference,
   UserProfile,
@@ -452,5 +459,52 @@ export class AuthService {
     return sendPasswordResetEmail(this.auth, email, {
       url: `${window.location.origin}/join`,
     });
+  }
+
+  createId() {
+    return doc(collection(this.firestore, '_')).id;
+  }
+
+  setRoomTemplate(slotId: SlotId, roomTemplate: RoomTemplate) {
+    return this.user.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(undefined);
+        }
+        return setDoc(
+          doc(this.firestore, `userDetails/${user.uid}/roomTemplates/${slotId}`),
+          roomTemplate,
+          { merge: true }
+        );
+      })
+    );
+  }
+
+  clearRoomTemplate(slotId: SlotId) {
+    return this.user.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(undefined);
+        }
+        return deleteDoc(
+          doc(this.firestore, `userDetails/${user.uid}/roomTemplates/${slotId}`)
+        );
+      })
+    );
+  }
+
+  getRoomTemplates(): Observable<RoomTemplate[]> {
+    return this.user.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of([]);
+        }
+        return collectionSnapshots(
+          query(collection(this.firestore, `userDetails/${user.uid}/roomTemplates`))
+        ).pipe(
+          map((snapshots) => snapshots.map((doc) => doc.data() as RoomTemplate))
+        );
+      })
+    );
   }
 }

@@ -2,7 +2,7 @@ import {Issuer, Client, generators, TokenSet} from "openid-client";
 import * as functions from "firebase-functions";
 import {getFirestore} from "firebase-admin/firestore";
 import {JiraIntegration, JiraResource} from "../types";
-
+import {Request} from "express";
 export class JiraClient {
   openIdHost = "https://auth.atlassian.com";
   issuer: Issuer | undefined;
@@ -54,7 +54,7 @@ export class JiraClient {
     });
   }
 
-  async getToken(req: functions.Request) {
+  async getToken(req: Request) {
     const params = this.client!.callbackParams(req);
 
     const tokenSet = await this.client!.oauthCallback(this.config.redirectUri, {

@@ -1,4 +1,3 @@
-import * as functions from "firebase-functions";
 import {getAuth} from "firebase-admin/auth";
 import {Timestamp, WriteResult, getFirestore} from "firebase-admin/firestore";
 import axios from "axios";
@@ -8,10 +7,11 @@ import {getSessionVariable} from "../zoom/routes";
 import {getHost} from "../config";
 import {captureError} from "../shared/errors";
 import {setSessionVariable} from "../zoom/zoomApi";
+import {Request, Response} from "express";
 
 export async function startJiraAuthFlow(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const userId = await getUserId(req, res);
   if (!userId) {
@@ -26,8 +26,8 @@ export async function startJiraAuthFlow(
 }
 
 export async function onJiraAuthorizationReceived(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const client = new JiraClient();
   await client.initializeClient();
@@ -100,8 +100,8 @@ export function saveJiraPreferenceForUser(
 }
 
 export async function getUserId(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ): Promise<string | false> {
   const tokenId =
     (req.query.token as string | undefined) ??

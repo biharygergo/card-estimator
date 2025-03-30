@@ -1,7 +1,7 @@
 import axios from "axios";
 import {isRunningInDevMode, getHost} from "../config";
-import * as functions from "firebase-functions";
 import {AuthIntent, getAuthIntent, getReturnToPath} from "../zoom/googleAuth";
+import {Request, Response} from "express";
 
 type TeamsOauthState = {
   oauthRedirectMethod: string;
@@ -12,8 +12,8 @@ type TeamsOauthState = {
 };
 
 export async function startTeamsGoogleAuth(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const oauthRedirectMethod = req.query.oauthRedirectMethod as
     | string
@@ -57,8 +57,8 @@ export async function startTeamsGoogleAuth(
 }
 
 export async function onTeamsGoogleAuthResult(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const state: Partial<TeamsOauthState> = req.query.state ?
     JSON.parse(req.query.state as string) :

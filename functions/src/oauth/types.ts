@@ -1,5 +1,5 @@
-import * as functions from "firebase-functions";
 import {Platform} from "../types";
+import {Request, Response} from "express";
 
 export enum AuthIntent {
   SIGN_IN = "signIn",
@@ -22,18 +22,18 @@ export interface OAuthState {
 
 export abstract class OAuthHandler {
   abstract startOauthFlow(
-    req: functions.Request,
+    req: Request,
     state: OAuthState
   ): string;
-  abstract onAuthSuccess(req: functions.Request, res?: functions.Response): Promise<string>;
+  abstract onAuthSuccess(req: Request, res?: Response): Promise<string>;
 }
 
-export function getAuthIntent(req: functions.Request): AuthIntent {
+export function getAuthIntent(req: Request): AuthIntent {
   return req.query.intent === AuthIntent.LINK_ACCOUNT ?
     AuthIntent.LINK_ACCOUNT :
     AuthIntent.SIGN_IN;
 }
 
-export function getReturnToPath(req: functions.Request): string | undefined {
+export function getReturnToPath(req: Request): string | undefined {
   return req.query.returnPath as string | undefined;
 }

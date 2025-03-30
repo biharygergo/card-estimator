@@ -29,7 +29,7 @@
     "cookie-parser": "^1.4.6",
     "express": "^4.21.2",
     "firebase-admin": "^11.11.1",
-    "firebase-functions": "^4.5.0",
+    "firebase-functions": "^6.3.2",
     "moment": "^2.29.4",
     "openai": "^3.2.1",
     "openid-client": "^5.4.0",
@@ -44,7 +44,7 @@
     "eslint": "^8.31.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.26.0",
-    "firebase-functions-test": "^3.0.0",
+    "firebase-functions-test": "^3.4.1",
     "typescript": "~5.2"
   },
   "private": true

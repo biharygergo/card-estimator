@@ -1,5 +1,4 @@
-import * as functions from "firebase-functions";
-
+import {Request} from "express";
 export const appConfig = {
   zoomClientId: process.env.ZOOM_CLIENT_ID || "",
   zoomClientIdDev: process.env.ZOOM_CLIENT_ID_DEV || "",
@@ -9,7 +8,7 @@ export const appConfig = {
   zoomRedirectUrl: process.env.ZOOM_REDIRECT_URL || "",
 };
 
-export function getHost(req: functions.Request) {
+export function getHost(req: Request) {
   const host = req.headers["x-forwarded-host"] as string;
   if (!host) {
     return "https://planningpoker.live";
@@ -19,7 +18,7 @@ export function getHost(req: functions.Request) {
   return `${protocol}${host}`;
 }
 
-export function isRunningInDevMode(req?: functions.Request) {
+export function isRunningInDevMode(req?: Request) {
   const host = req?.headers["x-forwarded-host"] as string | undefined;
   const isDev =
     process.env.FUNCTIONS_EMULATOR === "true" ||

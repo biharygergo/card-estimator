@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import {Response, Request} from "express"; // Import Response and Request from express
 import {
   getAuthIntent,
   getReturnToPath,
@@ -27,8 +27,8 @@ const HANDLERS: { [provider in OAuthProvider]: OAuthHandler } = {
 };
 
 export async function startOAuth(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const oauthRedirectMethod = req.query.oauthRedirectMethod as
     | string
@@ -68,8 +68,8 @@ export async function startOAuth(
 }
 
 export async function onOAuthResult(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const state: OAuthState | undefined = req.query.state ?
     JSON.parse(decodeURIComponent(req.query.state as string)) :

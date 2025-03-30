@@ -1,9 +1,9 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {sendEmail} from "../email";
-import * as functions from "firebase-functions";
 import {getAuth, UserRecord} from "firebase-admin/auth";
 import {getHost} from "../config";
 import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
+import {Request} from "express";
 
 // TODO: move to shared types package
 type InvitationData = {
@@ -17,7 +17,7 @@ type InvitationData = {
 };
 
 export async function acceptInvitation(
-    req: functions.Request,
+    req: Request,
 ) {
   console.log("<Accepting invitation>");
   const invitationId = req.query.invitationId;

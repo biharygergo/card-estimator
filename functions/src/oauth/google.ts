@@ -1,9 +1,9 @@
 import axios from "axios";
 import {OAuthHandler, OAuthState} from "./types";
-import * as functions from "firebase-functions";
 import {getHost, isRunningInDevMode} from "../config";
+import {Request} from "express";
 
-function getCredentials(req: functions.Request, isDev?: boolean) {
+function getCredentials(req: Request, isDev?: boolean) {
   console.log("dev creds", isDev || isRunningInDevMode(req));
   return isDev || isRunningInDevMode(req) ?
     {
@@ -17,7 +17,7 @@ function getCredentials(req: functions.Request, isDev?: boolean) {
 }
 
 export class GoogleOAuthHandler extends OAuthHandler {
-  startOauthFlow(req: functions.Request, state: OAuthState): string {
+  startOauthFlow(req: Request, state: OAuthState): string {
     const googleOAuthEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
     const params = {
       response_type: "code",
@@ -38,7 +38,7 @@ export class GoogleOAuthHandler extends OAuthHandler {
     return redirectUrl;
   }
 
-  async onAuthSuccess(req: functions.Request): Promise<string> {
+  async onAuthSuccess(req: Request): Promise<string> {
     const code = req.query.code;
     const state: OAuthState = JSON.parse(
         decodeURIComponent(req.query.state as string)

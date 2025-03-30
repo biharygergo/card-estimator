@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import {getFirestore} from "firebase-admin/firestore";
 import {isRunningInDevMode} from "../config";
 import {LinearIntegration} from "../types";
-
+import {Request} from "express";
 export class LinearOauthClient {
   openIdHost = "https://linear.app/oauth";
   issuer: Issuer | undefined;
@@ -64,7 +64,7 @@ export class LinearOauthClient {
     });
   }
 
-  async getToken(req: functions.Request) {
+  async getToken(req: Request) {
     const params = this.client!.callbackParams(req);
 
     const tokenSet = await this.client!.oauthCallback(this.config.redirectUri, {

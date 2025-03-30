@@ -1,14 +1,14 @@
-import * as functions from "firebase-functions";
 import {Timestamp, getFirestore} from "firebase-admin/firestore";
 import {LinearOauthClient} from "./client";
 import {LinearIntegration, UserPreference} from "../types";
 import {getHost} from "../config";
 import {captureError} from "../shared/errors";
 import {getUserId} from "../jira/oauth";
+import {Request, Response} from "express";
 
 export async function startLinearAuthFlow(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const userId = await getUserId(req, res);
   if (!userId) {
@@ -23,8 +23,8 @@ export async function startLinearAuthFlow(
 }
 
 export async function onLinearAuthorizationReceived(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const client = new LinearOauthClient();
   await client.initializeClient();

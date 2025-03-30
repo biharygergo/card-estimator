@@ -1,10 +1,10 @@
 import {Client, Issuer} from "openid-client";
 import {OAuthHandler, OAuthState} from "./types";
-import * as functions from "firebase-functions";
 import {getHost, isRunningInDevMode} from "../config";
 import axios from "axios";
+import {Request} from "express";
 
-function getCredentials(req: functions.Request, isDev?: boolean) {
+function getCredentials(req: Request, isDev?: boolean) {
   return isDev || isRunningInDevMode(req) ?
     {
       clientId: process.env.MICROSOFT_OAUTH_CLIENT_ID_DEV!,
@@ -23,7 +23,7 @@ class MicrosoftOAuthClient {
   client: Client;
   config: { clientId: string; clientSecret: string };
 
-  constructor(req: functions.Request, isDev?: boolean) {
+  constructor(req: Request, isDev?: boolean) {
     const config = getCredentials(req, isDev);
 
     if (!config.clientId || !config.clientSecret) {
@@ -55,7 +55,7 @@ class MicrosoftOAuthClient {
     });
   }
 
-  async getToken(req: functions.Request) {
+  async getToken(req: Request) {
     const params = this.client!.callbackParams(req);
 
     const tokenSet = await this.client!.callback(
@@ -69,12 +69,12 @@ class MicrosoftOAuthClient {
 }
 
 export class MicrosoftOAuthHandler extends OAuthHandler {
-  startOauthFlow(req: functions.Request, state: OAuthState): string {
+  startOauthFlow(req: Request, state: OAuthState): string {
     const client = new MicrosoftOAuthClient(req, state.isDev);
     return client.authorize(state);
   }
 
-  async onAuthSuccess(req: functions.Request): Promise<string> {
+  async onAuthSuccess(req: Request): Promise<string> {
     const code = req.query.code;
     const state: OAuthState = JSON.parse(
         decodeURIComponent(req.query.state as string)

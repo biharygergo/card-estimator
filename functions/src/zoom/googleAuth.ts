@@ -1,7 +1,6 @@
 import axios from "axios";
-import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
-
+import {Request, Response} from "express";
 import {getHost, isRunningInDevMode} from "../config";
 import {getSessionVariable} from "./routes";
 import {
@@ -26,17 +25,17 @@ export type AuthSession = {
   createdAt: firestore.Timestamp;
 };
 
-export function getAuthIntent(req: functions.Request): AuthIntent {
+export function getAuthIntent(req: Request): AuthIntent {
   return req.query.intent === AuthIntent.LINK_ACCOUNT ?
     AuthIntent.LINK_ACCOUNT :
     AuthIntent.SIGN_IN;
 }
 
-export function getReturnToPath(req: functions.Request): string | undefined {
+export function getReturnToPath(req: Request): string | undefined {
   return req.query.returnPath as string | undefined;
 }
 
-function getReturnUrlAfterZoomAuthorization(req: functions.Request): string {
+function getReturnUrlAfterZoomAuthorization(req: Request): string {
   const authIntent = getAuthIntent(req);
   const returnToPath = getReturnToPath(req);
 
@@ -48,8 +47,8 @@ returnToPath ? `&returnPath=${returnToPath}` : ""
 }
 
 export async function startGoogleOauthFlow(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const isDev = isRunningInDevMode(req);
 
@@ -65,8 +64,8 @@ export async function startGoogleOauthFlow(
 }
 
 export async function zoomAuthSuccess(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const code = req.query.code as string;
   const isDev = isRunningInDevMode(req);
@@ -120,8 +119,8 @@ export async function zoomAuthSuccess(
 }
 
 export async function googleAuthSuccess(
-    req: functions.Request,
-    res: functions.Response
+    req: Request,
+    res: Response
 ) {
   const state: Partial<AuthSession> = req.query.state ?
     JSON.parse(req.query.state as string) :

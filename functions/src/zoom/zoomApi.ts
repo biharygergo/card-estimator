@@ -2,7 +2,7 @@ import axios from "axios";
 import {URL} from "url";
 import {appConfig, getHost} from "../config";
 import * as crypto from "crypto";
-import * as functions from "firebase-functions";
+import {Request, Response} from "express";
 
 const rand = (format: BufferEncoding, depth = 32) =>
   crypto.randomBytes(depth).toString(format);
@@ -19,7 +19,7 @@ export function generateVerifier() {
 
 export function getInstallURL(
     isDev: boolean,
-    request: functions.Request,
+    request: Request,
     redirectUrlOverride?: string
 ) {
   const verifier = generateVerifier();
@@ -83,7 +83,7 @@ function apiRequest(
   }).then(({data}) => Promise.resolve(data));
 }
 
-function getRedirectUrl(request: functions.Request) {
+function getRedirectUrl(request: Request) {
   const host = getHost(request);
   const redirectUrl = `${host}${appConfig.zoomRedirectUrl}`;
   return redirectUrl;
@@ -93,7 +93,7 @@ export async function getToken(
     code: string,
     verifier: string | undefined,
     isDev: boolean,
-    request: functions.Request,
+    request: Request,
     redirectUriOverride?: string
 ) {
   if (!code || typeof code !== "string") {
@@ -122,7 +122,7 @@ export function getDeeplink(token: string, action?: any) {
 }
 
 export const setSessionVariable = (
-    res: functions.Response,
+    res: Response,
     verifier: string
 ) => {
   res.cookie("__session", verifier, {secure: true});

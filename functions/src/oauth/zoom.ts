@@ -1,9 +1,9 @@
 import {OAuthHandler} from "./types";
-import * as functions from "firebase-functions";
 import {getHost, isRunningInDevMode} from "../config";
 import {getToken} from "../zoom/zoomApi";
+import {Request} from "express";
 
-export function getZoomAccessCodeRedirectUrl(req: functions.Request) {
+export function getZoomAccessCodeRedirectUrl(req: Request) {
   const isDev = isRunningInDevMode(req);
   const queryString = [
     ...Object.entries(req.query),
@@ -31,7 +31,7 @@ export class ZoomOAuthHandler extends OAuthHandler {
   }
 
   async onAuthSuccess(
-      req: functions.Request,
+      req: Request,
   ): Promise<string> {
     const code = req.query.code;
     const isDev = isRunningInDevMode(req);

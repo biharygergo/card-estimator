@@ -27,6 +27,7 @@
     "axios": "^1.2.2",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^6.3.2",

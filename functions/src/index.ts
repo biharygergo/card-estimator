@@ -13,6 +13,7 @@ import {appCheck} from "firebase-admin";
 import cookieParser from "cookie-parser";
 import * as Sentry from "@sentry/node";
 import {IssueUpdateRequestData} from "./jira/updateIssue";
+import "dotenv/config";
 
 initializeApp();
 getFirestore().settings({ignoreUndefinedProperties: true});

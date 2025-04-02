@@ -11,7 +11,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { Subject, debounceTime, from, mergeMap, takeUntil } from 'rxjs';
+import { Subject, debounceTime, from, map, mergeMap, takeUntil } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
@@ -20,27 +20,28 @@ import {
   ReactionsService,
 } from 'src/app/services/reactions.service';
 import { fadeAnimation } from 'src/app/shared/animations';
-import { Room } from 'src/app/types';
+import { MemberType, Room } from 'src/app/types';
 import { AsyncPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
+import { RoomDataService } from '../room-data.service';
 
 @Component({
-    selector: 'app-card-deck',
-    templateUrl: './card-deck.component.html',
-    styleUrls: ['./card-deck.component.scss'],
-    animations: [fadeAnimation],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatIconButton,
-        MatTooltip,
-        MatButton,
-        MatButtonToggle,
-        MatIcon,
-        AsyncPipe,
-    ]
+  selector: 'app-card-deck',
+  templateUrl: './card-deck.component.html',
+  styleUrls: ['./card-deck.component.scss'],
+  animations: [fadeAnimation],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatIconButton,
+    MatTooltip,
+    MatButton,
+    MatButtonToggle,
+    MatIcon,
+    AsyncPipe,
+  ],
 })
 export class CardDeckComponent implements OnInit, OnDestroy {
   room = input.required<Room>();
@@ -62,11 +63,16 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   showReactions = signal<boolean>(true);
   onDestroy = new Subject<void>();
 
+  isObserver = this.roomDataService.activeMember$.pipe(
+    map((member) => member?.type === MemberType.OBSERVER)
+  );
+
   constructor(
     private analytics: AnalyticsService,
     private estimatorService: EstimatorService,
     public permissionsService: PermissionsService,
     private readonly reactionsService: ReactionsService,
+    private readonly roomDataService: RoomDataService
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +83,12 @@ export class CardDeckComponent implements OnInit, OnDestroy {
         takeUntil(this.onDestroy)
       )
       .subscribe();
+
+    this.isObserver.pipe(takeUntil(this.onDestroy)).subscribe(isObserver => {
+      if (isObserver && !this.isMinimized()) {
+        this.toggleMinimize();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -109,7 +121,6 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   }
 
   toggleMinimize() {
-    console.log(this.cardDeckContainer.nativeElement.offsetWidth)
     if (!this.isMinimized()) {
       this.cardDeckContainer.nativeElement.style.minWidth = `${this.cardDeckContainer.nativeElement.offsetWidth}px`;
     } else {

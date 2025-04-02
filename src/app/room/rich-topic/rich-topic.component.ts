@@ -36,9 +36,7 @@ import { Parser } from 'marked';
 // function that returns `MarkedOptions` with renderer override
 export function markedOptionsFactory(): MarkedOptions {
   const renderer = new MarkedRenderer();
-  const linkRenderer = renderer.link;
   renderer.link = (link) => {
-    const html = Parser.parse(link.tokens);
     return `<a target="_blank" rel="nofollow" href="${link.href}">${link.text}</a>`;
   };
 

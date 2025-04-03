@@ -18,7 +18,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     if (chunkFailedMessage.test(errorMessage)) {
       this.showErrorToast(
         error,
-        `There was an error while loading parts of the application. Please reload the page.`
+        `There was an error while loading parts of the application. Please reload the page, that will fix it.`
       );
     } else if (errorMessage?.includes('AppCheck')) {
       this.showErrorToast(

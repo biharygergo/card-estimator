@@ -118,14 +118,14 @@ export class PaymentService {
       checkoutDoc.metadata['organizationId'] = organizationId;
     }
 
-    if(creditCount) {
+    if (creditCount) {
       checkoutDoc.metadata['creditCount'] = creditCount;
     }
 
     const sessionRef = await addDoc(checkoutSessionsCollection, checkoutDoc);
 
     return new Promise((resolve, rejet) => {
-      docData(sessionRef).subscribe((session) => {
+      docData(sessionRef).subscribe(session => {
         if (session.url) {
           window.location.assign(session.url);
           resolve(true);
@@ -244,7 +244,7 @@ export class PaymentService {
     });
 
     return new Promise((resolve, rejet) => {
-      docData(sessionRef).subscribe((session) => {
+      docData(sessionRef).subscribe(session => {
         if (session.url) {
           window.location.assign(session.url);
           resolve(true);
@@ -312,7 +312,7 @@ export class PaymentService {
 
   getSubscription(): Observable<StripeSubscription | undefined> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user?.isAnonymous) {
           return of(undefined);
         }
@@ -326,7 +326,7 @@ export class PaymentService {
           where('status', 'in', ['trialing', 'active', 'past_due'])
         );
         return collectionData<StripeSubscription>(q).pipe(
-          map((subscriptions) => {
+          map(subscriptions => {
             return subscriptions?.length ? subscriptions[0] : undefined;
           })
         );
@@ -345,7 +345,7 @@ export class PaymentService {
     )();
 
     const bundles = ((result.data as any).bundles as BundleWithCredits[]).map(
-      (bundle) => ({
+      bundle => ({
         ...bundle,
         expiresAt: bundle.expiresAt
           ? Timestamp.fromDate(
@@ -355,19 +355,17 @@ export class PaymentService {
       })
     );
 
-    const credits = ((result.data as any).credits as Credit[]).map(
-      (credit) => ({
-        ...credit,
-        expiresAt: credit.expiresAt
-          ? Timestamp.fromDate(
-              new Date((credit.expiresAt as any)._seconds * 1000)
-            )
-          : null,
-      })
-    );
+    const credits = ((result.data as any).credits as Credit[]).map(credit => ({
+      ...credit,
+      expiresAt: credit.expiresAt
+        ? Timestamp.fromDate(
+            new Date((credit.expiresAt as any)._seconds * 1000)
+          )
+        : null,
+    }));
 
     const availableCredits = credits.filter(
-      (c) =>
+      c =>
         !c.usedForRoomId &&
         (!c.expiresAt || c.expiresAt.toDate().getTime() > Date.now())
     );

@@ -3,14 +3,13 @@ import { APP_CONFIG, AppConfig } from '../app-config.module';
 import { ZoomApiService } from './zoom-api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LinkService {
-
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
-    private readonly zoomService: ZoomApiService,
-  ) { }
+    private readonly zoomService: ZoomApiService
+  ) {}
 
   openUrl(url: string) {
     if (this.config.runningIn === 'zoom') {

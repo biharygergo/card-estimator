@@ -8,7 +8,11 @@ export class ConfigService {
   constructor() {}
 
   setCookie(key: string, value: string, expiresInDays: number = 365) {
-    Cookies.set(key, value, { expires: expiresInDays, sameSite: 'None', secure: true });
+    Cookies.set(key, value, {
+      expires: expiresInDays,
+      sameSite: 'None',
+      secure: true,
+    });
   }
 
   setSessionCookie(key: string, value: string) {
@@ -25,7 +29,7 @@ export class ConfigService {
     }
   }
 
-  getLocalStorage(key: string): string|undefined {
+  getLocalStorage(key: string): string | undefined {
     if (window.localStorage) {
       return window.localStorage.getItem(key);
     }

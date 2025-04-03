@@ -5,30 +5,33 @@
         <app-profile-dropdown class="profile-dropdown" #profileDropdown />
       </div>
       <div class="navbar-right">
-        @if(!(permissionsService.isPremiumSubscriber | async) && (isRoomCreator$
-        | async)) { @if(creditsText$ | async; as creditsText) {
-        <button
-          mat-stroked-button
-          @fadeAnimation
-          class="credits-button responsive-label-button"
-          [class.alert]="(availableCredits$ | async)?.length <= 1"
-          [matTooltip]="creditsText"
-          (click)="viewCredits()"
-        >
-          <mat-icon>toll</mat-icon>
-          {{ creditsText }}
-        </button>
-        } } @if ((user$ | async)?.isAnonymous) {
-        <button
-          mat-flat-button
-          class="create-account-button responsive-label-button"
-          matTooltip="Create an account to save your progress"
-          (click)="onCreateAccountClicked()"
-          @fadeAnimation
-        >
-          <mat-icon>account_circle</mat-icon>
-          Create an account
-        </button>
+        @if (
+          !(permissionsService.isPremiumSubscriber | async) &&
+          (isRoomCreator$ | async)
+        ) {
+          @if (creditsText$ | async; as creditsText) {
+            <button
+              mat-stroked-button
+              @fadeAnimation
+              class="credits-button responsive-label-button"
+              [class.alert]="(availableCredits$ | async)?.length <= 1"
+              [matTooltip]="creditsText"
+              (click)="viewCredits()">
+              <mat-icon>toll</mat-icon>
+              {{ creditsText }}
+            </button>
+          }
+        }
+        @if ((user$ | async)?.isAnonymous) {
+          <button
+            mat-flat-button
+            class="create-account-button responsive-label-button"
+            matTooltip="Create an account to save your progress"
+            (click)="onCreateAccountClicked()"
+            @fadeAnimation>
+            <mat-icon>account_circle</mat-icon>
+            Create an account
+          </button>
         }
       </div>
     </div>
@@ -38,54 +41,51 @@
           appearance="outlined"
           class="topic-container rounded-card"
           resizeMonitor
-          [verticalSpacing]="0"
-        >
+          [verticalSpacing]="0">
           <div>
             <mat-card-content>
               @if (!isEditingTopic()) {
-              <h2 class="topic-title">
-                @if (topicWithAnimation$ | async; as topicWithAnimation) {
-                <span [class]="topicWithAnimation.animationClass">
-                  {{ topicWithAnimation.topicName }}
-                </span>
-                }
+                <h2 class="topic-title">
+                  @if (topicWithAnimation$ | async; as topicWithAnimation) {
+                    <span [class]="topicWithAnimation.animationClass">
+                      {{ topicWithAnimation.topicName }}
+                    </span>
+                  }
 
-                <button
-                  mat-stroked-button
-                  [disabled]="!(permissionsService.canEditTopic() | async)"
-                  (click)="onTopicClicked()"
-                >
-                  <mat-icon>edit</mat-icon>
-                  Edit topic
-                </button>
-              </h2>
-              } @if (isEditingTopic()) {
-              <app-topic-editor
-                [roomTopic]="roomTopic$"
-                (topicUpdated)="topicBlur($event)"
-                (canceled)="isEditingTopic.set(false)"
-              />
-              } @if (!isEditingTopic()) {
-              <app-rich-topic
-                [richTopic]="(roomTopic$ | async)?.richTopic"
-                [roundStatistics]="roundStatistics()?.[currentRound()]"
-                [selectedEstimationCardSetValue]="
-                  selectedEstimationCardSetValue()
-                "
-              />
+                  <button
+                    mat-stroked-button
+                    [disabled]="!(permissionsService.canEditTopic() | async)"
+                    (click)="onTopicClicked()">
+                    <mat-icon>edit</mat-icon>
+                    Edit topic
+                  </button>
+                </h2>
+              }
+              @if (isEditingTopic()) {
+                <app-topic-editor
+                  [roomTopic]="roomTopic$"
+                  (topicUpdated)="topicBlur($event)"
+                  (canceled)="isEditingTopic.set(false)" />
+              }
+              @if (!isEditingTopic()) {
+                <app-rich-topic
+                  [richTopic]="(roomTopic$ | async)?.richTopic"
+                  [roundStatistics]="roundStatistics()?.[currentRound()]"
+                  [selectedEstimationCardSetValue]="
+                    selectedEstimationCardSetValue()
+                  " />
               }
             </mat-card-content>
           </div>
         </mat-card>
         @if ((isSmallScreen$ | async)?.matches === true) {
-        <ng-container *ngTemplateOutlet="controlPanel" />
+          <ng-container *ngTemplateOutlet="controlPanel" />
         }
         <mat-card
           appearance="outlined"
           class="members-card rounded-card"
           resizeMonitor
-          [verticalSpacing]="0"
-        >
+          [verticalSpacing]="0">
           <div>
             <mat-card-content>
               <app-round-results
@@ -96,8 +96,7 @@
                   selectedEstimationCardSetValue()
                 "
                 [userProfiles$]="userProfiles$"
-                [showMemberControls]="true"
-              />
+                [showMemberControls]="true" />
             </mat-card-content>
             <div class="card-footer-actions extra-padding">
               <app-notes-field />
@@ -105,32 +104,32 @@
           </div>
         </mat-card>
         @if ((isSmallScreen$ | async)?.matches === false) {
-        <ng-container *ngTemplateOutlet="anonymousBanner" />
+          <ng-container *ngTemplateOutlet="anonymousBanner" />
         }
       </div>
       <app-card-deck
         [room]="room()"
         [currentRound]="currentRound()"
         [estimationValues]="estimationValues()"
-        [currentEstimate]="currentEstimate()"
-      ></app-card-deck>
+        [currentEstimate]="currentEstimate()"></app-card-deck>
       @if ((isSmallScreen$ | async)?.matches === false) {
-      <ng-container *ngTemplateOutlet="controlPanel" />
-      } @if ((isSmallScreen$ | async)?.matches === true) {
-      <ng-container *ngTemplateOutlet="anonymousBanner" />
-      } @if (config.runningIn === 'web') {
-      <app-github-badge />
+        <ng-container *ngTemplateOutlet="controlPanel" />
+      }
+      @if ((isSmallScreen$ | async)?.matches === true) {
+        <ng-container *ngTemplateOutlet="anonymousBanner" />
+      }
+      @if (config.runningIn === 'web') {
+        <app-github-badge />
       }
     </div>
     @if (room()) {
-    <app-reactions-renderer [members]="members$" [roomId]="room().roomId" />
-    <app-carbon-ad
-      placement="app"
-      [isPremiumRoom]="
-        room().subscriptionMetadata?.createdWithPlan === 'premium' ||
-        room().subscriptionMetadata?.createdWithPlan === 'paid-credit'
-      "
-    />
+      <app-reactions-renderer [members]="members$" [roomId]="room().roomId" />
+      <app-carbon-ad
+        placement="app"
+        [isPremiumRoom]="
+          room().subscriptionMetadata?.createdWithPlan === 'premium' ||
+          room().subscriptionMetadata?.createdWithPlan === 'paid-credit'
+        " />
     }
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
@@ -140,17 +139,15 @@
       [rounds]="rounds()"
       [selectedEstimationCardSetValue]="selectedEstimationCardSetValue()"
       [currentRound]="currentRound()"
-      [roundStatistics]="roundStatistics()"
-    />
+      [roundStatistics]="roundStatistics()" />
   </mat-sidenav>
 </mat-sidenav-container>
 <ng-template #anonymousBanner>
   @if ((sessionCount$ | async) > 1) {
-  <anonymous-user-banner
-    [hideable]="true"
-    class="anonymous-user-banner"
-    @fadeAnimation
-  />
+    <anonymous-user-banner
+      [hideable]="true"
+      class="anonymous-user-banner"
+      @fadeAnimation />
   }
 </ng-template>
 <ng-template #controlPanel>
@@ -170,7 +167,6 @@
       (muteClicked)="toggleMute()"
       (inviteClicked)="copyRoomId()"
       (expandClicked)="toggleControlPane()"
-      #roomControllerPanel
-    />
+      #roomControllerPanel />
   </div>
 </ng-template>

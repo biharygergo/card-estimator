@@ -1,8 +1,4 @@
-import {
-  Component,
-  Renderer2,
-  inject,
-} from '@angular/core';
+import { Component, Renderer2, inject } from '@angular/core';
 import { Article } from '../types';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, Subject, combineLatest, map, tap } from 'rxjs';
@@ -18,31 +14,29 @@ import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-pl
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
 
 @Component({
-    selector: 'app-article',
-    templateUrl: './article.component.html',
-    styleUrls: ['./article.component.scss'],
-    imports: [
-        NgIf,
-        NgOptimizedImage,
-        MarkdownComponent,
-        StartPlanningCtaComponent,
-        RouterLink,
-        CarbonAdComponent,
-        AsyncPipe,
-        DatePipe,
-        YoutubePlayerComponent,
-        FaqSectionComponent,
-    ]
+  selector: 'app-article',
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
+  imports: [
+    NgIf,
+    NgOptimizedImage,
+    MarkdownComponent,
+    StartPlanningCtaComponent,
+    RouterLink,
+    CarbonAdComponent,
+    AsyncPipe,
+    DatePipe,
+    YoutubePlayerComponent,
+    FaqSectionComponent,
+  ],
 })
 export class ArticleComponent {
   private readonly metaService = inject(Meta);
   private readonly schemaTagService = inject(SchemaTagService);
   private readonly renderer2 = inject(Renderer2);
 
-  article: Observable<Article> = inject(
-    ActivatedRoute
-  ).data.pipe(
-    map((data) => ({
+  article: Observable<Article> = inject(ActivatedRoute).data.pipe(
+    map(data => ({
       ...data.article,
     })),
     tap((article: Article) => {
@@ -54,18 +48,27 @@ export class ArticleComponent {
       this.metaService.addTags([
         { name: 'keywords', content: article.tags.join(', ') },
         { name: 'author', content: article.author },
-        { property: 'og:url', content: `https://planningpoker.live/blog/${article.slug}` },
+        {
+          property: 'og:url',
+          content: `https://planningpoker.live/blog/${article.slug}`,
+        },
         { property: 'og:type', content: 'article' },
         { property: 'og:site_name', content: 'PlanningPoker.live' },
         { property: 'og:title', content: article.title },
         { property: 'og:description', content: article.description },
-        { property: 'og:image', content: `https://res.cloudinary.com/dtvhnllmc/image/upload/v1736183590/${article.coverImageId}` },
+        {
+          property: 'og:image',
+          content: `https://res.cloudinary.com/dtvhnllmc/image/upload/v1736183590/${article.coverImageId}`,
+        },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:site', content: '@PlanningPokerL' },
         { name: 'twitter:creator', content: '@PlanningPokerL' },
         { name: 'twitter:title', content: article.title },
         { name: 'twitter:description', content: article.description },
-        { name: 'twitter:image', content: `https://res.cloudinary.com/dtvhnllmc/image/upload/v1736183590/${article.coverImageId}` },
+        {
+          name: 'twitter:image',
+          content: `https://res.cloudinary.com/dtvhnllmc/image/upload/v1736183590/${article.coverImageId}`,
+        },
       ]);
 
       const schema: WithContext<SchemaArticle> = {
@@ -112,7 +115,7 @@ export class ArticleComponent {
   ]).pipe(
     map(([articles, currentArticle]) =>
       articles
-        .filter((article) => article.slug !== currentArticle.slug)
+        .filter(article => article.slug !== currentArticle.slug)
         .slice(0, 5)
     )
   );

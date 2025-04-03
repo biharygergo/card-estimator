@@ -38,23 +38,22 @@ import Clarity from '@microsoft/clarity';
 import { SchemaTagService } from './services/schema-tag.service';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    imports: [RouterOutlet]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit, OnDestroy {
   subscriptionResult$: Observable<SubscriptionResult> =
     this.activatedRoute.queryParamMap.pipe(
       map(
-        (params) =>
-          params.get('subscriptionResult') as SubscriptionResult | null
+        params => params.get('subscriptionResult') as SubscriptionResult | null
       ),
-      filter((result) => !!result)
+      filter(result => !!result)
     );
 
   onTitleUpdated$ = this.router.events.pipe(
-    filter((event) => event instanceof NavigationEnd),
+    filter(event => event instanceof NavigationEnd),
     map(() => {
       let route: ActivatedRoute = this.router.routerState.root;
       let routeTitle = '';
@@ -79,9 +78,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onThemeShouldChange$ = combineLatest([
     this.router.events.pipe(
-      filter((event) => event instanceof ActivationEnd),
+      filter(event => event instanceof ActivationEnd),
       map((data: ActivationEnd) => data.snapshot.data),
-      map((data) => !!data['supportsTheme']),
+      map(data => !!data['supportsTheme']),
       distinctUntilChanged()
     ),
     this.themeService.themeValue,
@@ -126,13 +125,19 @@ export class AppComponent implements OnInit, OnDestroy {
             content: 'noindex',
           });
         }
-        const canonicalLink = this.document.querySelector('link[rel="canonical"]');
-        this.renderer.setAttribute(canonicalLink, 'href', `${environment.domain}${this.router.url}`);
+        const canonicalLink = this.document.querySelector(
+          'link[rel="canonical"]'
+        );
+        this.renderer.setAttribute(
+          canonicalLink,
+          'href',
+          `${environment.domain}${this.router.url}`
+        );
       });
 
     this.subscriptionResult$
       .pipe(delay(500), takeUntil(this.destroyed))
-      .subscribe((result) => {
+      .subscribe(result => {
         const dialogRef = this.dialog.open(
           ...subscriptionResultModalCreator({ result })
         );
@@ -152,7 +157,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed))
       .subscribe(([supportsTheme, themeValue]) => {
         if (supportsTheme) {
-          Object.values(Theme).forEach((theme) => {
+          Object.values(Theme).forEach(theme => {
             this.renderer.removeClass(this.document.body, theme);
           });
 
@@ -168,11 +173,17 @@ export class AppComponent implements OnInit, OnDestroy {
         `running-in-${this.config.runningIn}`
       );
 
-      if (this.config.runningIn === 'web' && (window as any).Cypress === undefined) {
+      if (
+        this.config.runningIn === 'web' &&
+        (window as any).Cypress === undefined
+      ) {
         Clarity.init('qngk5xwpfw');
       }
     }
-    this.schemaTagService.setJsonLd(this.renderer, this.schemaTagService.currentSchema());
+    this.schemaTagService.setJsonLd(
+      this.renderer,
+      this.schemaTagService.currentSchema()
+    );
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 @if (!!room()?.roomId) {
-<app-velocity [room]="room$" [roomId]="room()?.roomId" />
+  <app-velocity [room]="room$" [roomId]="room()?.roomId" />
 }
 <div class="sidenav-actions">
   <button mat-button [matMenuTriggerFor]="importExportMenu">
@@ -24,8 +24,7 @@
         config.runningIn === 'zoom'
           ? 'Downloading results is only available on the web version of the app.'
           : ''
-      "
-    >
+      ">
       <button
         mat-menu-item
         aria-label="Download results as .csv"
@@ -34,8 +33,7 @@
           rounds().length <= 1 ||
           config.runningIn === 'zoom' ||
           !(permissionsService.canDownloadResults() | async)
-        "
-      >
+        ">
         <div class="menu-item-label-container">
           <mat-icon>download_for_offline</mat-icon>
           Download as .csv
@@ -51,178 +49,170 @@
 <div
   class="round-history-container"
   cdkDropList
-  (cdkDropListDropped)="drop($event)"
->
-  @for ( round of rounds(); track round.id; let roundNumber = $index) { @if
-  ((editedRound | async)?.round.id !== round.id) {
-  <mat-card
-    appearance="outlined"
-    class="topic-card"
-    (click)="detailsPanel.toggle()"
-    (keyup.enter)="detailsPanel.toggle()"
-    tabindex="0"
-    cdkDrag
-  >
-    <mat-card-content>
-      <div class="card-header">
-        <span class="card-round-number">
-          <mat-icon matTooltip="Drag to reorder round" cdkDragHandle
-            >drag_indicator</mat-icon
-          >
-          #{{ roundNumber + 1 }}
-          <mat-icon
-            [matTooltip]="
-              round.show_results
-                ? 'Results revealed'
-                : 'Results not yet revealed'
-            "
-            >{{
-              round.show_results ? "visibility" : "visibility_off"
-            }}</mat-icon
-          >
-          @if (roundNumber === currentRound() && showActiveRound()) {
-          <mat-icon class="active-round" matTooltip="Active round"
-            >play_arrow</mat-icon
-          >
-          }
-        </span>
-        <button
-          mat-icon-button
-          [matMenuTriggerFor]="menu"
-          (click)="$event.stopPropagation()"
-        >
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button
-            mat-menu-item
-            aria-label="Set selected round as active"
-            (click)="setActiveRound(roundNumber)"
-            [disabled]="
-              roundNumber === currentRound() ||
-              !(permissionsService.canCreateRounds() | async) ||
-              room().isAsyncVotingEnabled
-            "
-          >
-            <mat-icon>play_arrow</mat-icon>
-            Set as active round
-          </button>
-          <button
-            mat-menu-item
-            aria-label="Edit topic name of round"
-            (click)="editedRound.next({round, roundIndex: roundNumber})"
-            [disabled]="!(permissionsService.canEditTopic() | async)"
-          >
-            <mat-icon>edit</mat-icon>
-            Edit topic
-          </button>
-          <button
-            mat-menu-item
-            aria-label="Revote selected round"
-            (click)="revoteRound(roundNumber)"
-            [disabled]="!(permissionsService.canCreateRounds() | async)"
-          >
-            <mat-icon>clear_all</mat-icon>
-            Clear votes
-          </button>
-          <button
-            mat-menu-item
-            (click)="toggleReveal(roundNumber, !round.show_results)"
-            [disabled]="!(permissionsService.canRevealResults() | async)"
-          >
-            <mat-icon>{{
-              round.show_results ? "visibility_off" : "visibility"
-            }}</mat-icon>
-            {{ round.show_results ? "Hide votes" : "Reveal votes" }}
-          </button>
-          <mat-divider></mat-divider>
-          <button
-            mat-menu-item
-            aria-label="Delete round"
-            (click)="deleteRound(roundNumber)"
-            [disabled]="
-              !(permissionsService.canEditTopic() | async) ||
-              (roundNumber === 0 && rounds().length === 1) ||
-              room().isAsyncVotingEnabled
-            "
-          >
-            <mat-icon>delete</mat-icon>
-            Delete round
-          </button>
-        </mat-menu>
-      </div>
-      <h3 class="round-title" [class.active]="roundNumber === currentRound()">
-        {{ round.topic }}
-      </h3>
-      <mat-expansion-panel
-        class="flat-accordion mat-elevation-z"
-        (click)="$event.stopPropagation()"
-        #detailsPanel
-      >
-        <ng-template matExpansionPanelContent>
-          <div class="panel-content">
-            @if (round.richTopic) {
-            <div class="rich-topic-wrapper">
-              <app-rich-topic
-                [richTopic]="round.richTopic"
-                [roundStatistics]="roundStatistics()?.[roundNumber]"
-                [selectedEstimationCardSetValue]="
-                  selectedEstimationCardSetValue()
+  (cdkDropListDropped)="drop($event)">
+  @for (round of rounds(); track round.id; let roundNumber = $index) {
+    @if ((editedRound | async)?.round.id !== round.id) {
+      <mat-card
+        appearance="outlined"
+        class="topic-card"
+        (click)="detailsPanel.toggle()"
+        (keyup.enter)="detailsPanel.toggle()"
+        tabindex="0"
+        cdkDrag>
+        <mat-card-content>
+          <div class="card-header">
+            <span class="card-round-number">
+              <mat-icon matTooltip="Drag to reorder round" cdkDragHandle
+                >drag_indicator</mat-icon
+              >
+              #{{ roundNumber + 1 }}
+              <mat-icon
+                [matTooltip]="
+                  round.show_results
+                    ? 'Results revealed'
+                    : 'Results not yet revealed'
                 "
-              />
-            </div>
-            }
-
-            <app-round-results
-              [room]="room()"
-              [roundStatistics]="roundStatistics()"
-              [currentRound]="roundNumber"
-              [selectedEstimationCardSetValue]="
-                selectedEstimationCardSetValue()
-              "
-            >
-            </app-round-results>
-            <h3 matSubheader class="notes-subheader">Notes</h3>
-            <div class="note-wrapper">
-              <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
-            </div>
+                >{{
+                  round.show_results ? 'visibility' : 'visibility_off'
+                }}</mat-icon
+              >
+              @if (roundNumber === currentRound() && showActiveRound()) {
+                <mat-icon class="active-round" matTooltip="Active round"
+                  >play_arrow</mat-icon
+                >
+              }
+            </span>
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              (click)="$event.stopPropagation()">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button
+                mat-menu-item
+                aria-label="Set selected round as active"
+                (click)="setActiveRound(roundNumber)"
+                [disabled]="
+                  roundNumber === currentRound() ||
+                  !(permissionsService.canCreateRounds() | async) ||
+                  room().isAsyncVotingEnabled
+                ">
+                <mat-icon>play_arrow</mat-icon>
+                Set as active round
+              </button>
+              <button
+                mat-menu-item
+                aria-label="Edit topic name of round"
+                (click)="editedRound.next({ round, roundIndex: roundNumber })"
+                [disabled]="!(permissionsService.canEditTopic() | async)">
+                <mat-icon>edit</mat-icon>
+                Edit topic
+              </button>
+              <button
+                mat-menu-item
+                aria-label="Revote selected round"
+                (click)="revoteRound(roundNumber)"
+                [disabled]="!(permissionsService.canCreateRounds() | async)">
+                <mat-icon>clear_all</mat-icon>
+                Clear votes
+              </button>
+              <button
+                mat-menu-item
+                (click)="toggleReveal(roundNumber, !round.show_results)"
+                [disabled]="!(permissionsService.canRevealResults() | async)">
+                <mat-icon>{{
+                  round.show_results ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+                {{ round.show_results ? 'Hide votes' : 'Reveal votes' }}
+              </button>
+              <mat-divider></mat-divider>
+              <button
+                mat-menu-item
+                aria-label="Delete round"
+                (click)="deleteRound(roundNumber)"
+                [disabled]="
+                  !(permissionsService.canEditTopic() | async) ||
+                  (roundNumber === 0 && rounds().length === 1) ||
+                  room().isAsyncVotingEnabled
+                ">
+                <mat-icon>delete</mat-icon>
+                Delete round
+              </button>
+            </mat-menu>
           </div>
-        </ng-template>
-      </mat-expansion-panel>
-    </mat-card-content>
-  </mat-card>
-  } @else { @if (editedRound | async; as roundInfo) {
-  <div class="add-round-container update-round">
-    <add-or-update-topic
-      [roundNumber]="roundInfo.roundIndex + 1"
-      [topicInput]="{
-        topic: roundInfo.round.topic || '',
-        richTopic: roundInfo.round.richTopic
-      }"
-      (onSaveOrUpdate)="updateRoundConfirmed($event)"
-      (onCancel)="editedRound.next(undefined)"
-    ></add-or-update-topic>
-  </div>
-  } } }
+          <h3
+            class="round-title"
+            [class.active]="roundNumber === currentRound()">
+            {{ round.topic }}
+          </h3>
+          <mat-expansion-panel
+            class="flat-accordion mat-elevation-z"
+            (click)="$event.stopPropagation()"
+            #detailsPanel>
+            <ng-template matExpansionPanelContent>
+              <div class="panel-content">
+                @if (round.richTopic) {
+                  <div class="rich-topic-wrapper">
+                    <app-rich-topic
+                      [richTopic]="round.richTopic"
+                      [roundStatistics]="roundStatistics()?.[roundNumber]"
+                      [selectedEstimationCardSetValue]="
+                        selectedEstimationCardSetValue()
+                      " />
+                  </div>
+                }
+
+                <app-round-results
+                  [room]="room()"
+                  [roundStatistics]="roundStatistics()"
+                  [currentRound]="roundNumber"
+                  [selectedEstimationCardSetValue]="
+                    selectedEstimationCardSetValue()
+                  ">
+                </app-round-results>
+                <h3 matSubheader class="notes-subheader">Notes</h3>
+                <div class="note-wrapper">
+                  <p [innerText]="round.notes?.note || 'No notes taken.'"></p>
+                </div>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      @if (editedRound | async; as roundInfo) {
+        <div class="add-round-container update-round">
+          <add-or-update-topic
+            [roundNumber]="roundInfo.roundIndex + 1"
+            [topicInput]="{
+              topic: roundInfo.round.topic || '',
+              richTopic: roundInfo.round.richTopic,
+            }"
+            (onSaveOrUpdate)="updateRoundConfirmed($event)"
+            (onCancel)="editedRound.next(undefined)"></add-or-update-topic>
+        </div>
+      }
+    }
+  }
   <div class="add-round-container">
     @if (!isAddingRound()) {
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="addRound()"
-      class="add-round-button"
-      [disabled]="!(permissionsService.canCreateRounds() | async)"
-    >
-      <mat-icon>add</mat-icon>
-      Add round
-    </button>
-    } @if (isAddingRound()) {
-    <add-or-update-topic
-      [topicInput]="{ topic: '' }"
-      [roundNumber]="rounds().length + 1"
-      (onSaveOrUpdate)="addRoundConfirmed($event)"
-      (onCancel)="cancelAddingRound()"
-    />
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="addRound()"
+        class="add-round-button"
+        [disabled]="!(permissionsService.canCreateRounds() | async)">
+        <mat-icon>add</mat-icon>
+        Add round
+      </button>
+    }
+    @if (isAddingRound()) {
+      <add-or-update-topic
+        [topicInput]="{ topic: '' }"
+        [roundNumber]="rounds().length + 1"
+        (onSaveOrUpdate)="addRoundConfirmed($event)"
+        (onCancel)="cancelAddingRound()" />
     }
   </div>
 </div>

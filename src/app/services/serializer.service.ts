@@ -39,7 +39,7 @@ export function createRoundStatistics(
   }, {});
 
   const estimates = Object.entries(round.estimates)
-    .filter((estimate) => estimate[1] !== null)
+    .filter(estimate => estimate[1] !== null)
     .reduce((acc, [id, estimate]) => {
       acc[id] = converter.transform(estimate, cardSet, 'exact').toString();
       if (members[id] === undefined) {
@@ -53,7 +53,7 @@ export function createRoundStatistics(
       return acc;
     }, {});
   const estimateValues = Object.values(round.estimates).filter(
-    (estimate) => estimate !== null
+    estimate => estimate !== null
   );
   let mostPopularVoteCard = '';
   let mostPopularVoteKey = '';
@@ -118,7 +118,7 @@ export class ExportData {
     }, {});
 
     this.rows = Object.values(room.rounds)
-      .filter((round) => (onlyRevealedRounds ? round.show_results : true))
+      .filter(round => (onlyRevealedRounds ? round.show_results : true))
       .map((round, idx) => createRoundStatistics(idx, room));
   }
 }
@@ -135,16 +135,16 @@ export class SerializerService {
     const exportData = new ExportData(room);
     const members = Object.values(exportData.members);
     const headerRow = [...CSV_HEADERS_BEFORE_NAMES]
-      .concat(members.map((m) => padWithQuotes(m.name)))
+      .concat(members.map(m => padWithQuotes(m.name)))
       .concat(CSV_HEADERS_AFTER_NAMES);
 
     let csvContent = '';
     csvContent += headerRow.join(',') + '\n';
 
-    exportData.rows.forEach((row) => {
+    exportData.rows.forEach(row => {
       const content = [padWithQuotes(row.topic)];
 
-      members.forEach((member) => {
+      members.forEach(member => {
         content.push(padWithQuotes(row.estimates[member.id]));
       });
       content.push(padWithQuotes(row.average));

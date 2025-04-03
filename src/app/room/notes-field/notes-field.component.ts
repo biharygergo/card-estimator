@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   debounceTime,
@@ -20,19 +26,19 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-notes-field',
-    templateUrl: './notes-field.component.html',
-    styleUrls: ['./notes-field.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        FormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        CdkTextareaAutosize,
-        ReactiveFormsModule,
-        MatHint,
-    ]
+  selector: 'app-notes-field',
+  templateUrl: './notes-field.component.html',
+  styleUrls: ['./notes-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    CdkTextareaAutosize,
+    ReactiveFormsModule,
+    MatHint,
+  ],
 })
 export class NotesFieldComponent implements OnInit, OnDestroy {
   room = signal<Room | undefined>(undefined);
@@ -53,7 +59,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     private readonly permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private auth: AuthService,
-    private readonly roomDataService: RoomDataService,
+    private readonly roomDataService: RoomDataService
   ) {}
 
   ngOnInit(): void {
@@ -75,18 +81,16 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     this.permissionsService
       .canTakeNotes()
       .pipe(takeUntil(this.destroy))
-      .subscribe((canTakeNotes) => {
+      .subscribe(canTakeNotes => {
         this.hasPermission.set(canTakeNotes);
         !canTakeNotes
           ? this.noteValue.disable({ emitEvent: false })
           : this.noteValue.enable({ emitEvent: false });
       });
 
-    this.roomDataService.room$
-      .pipe(takeUntil(this.destroy))
-      .subscribe((room) => {
-        this.room.set(room);
-      });
+    this.roomDataService.room$.pipe(takeUntil(this.destroy)).subscribe(room => {
+      this.room.set(room);
+    });
 
     combineLatest([
       this.roomDataService.activeRound$,
@@ -108,7 +112,7 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
 
     return this.roomDataService.currentRoundNumber$
       .pipe(first())
-      .subscribe((currentRound) => {
+      .subscribe(currentRound => {
         this.estimatorService.setNoteEditor(
           this.room(),
           currentRound,
@@ -125,10 +129,16 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
 
     return this.roomDataService.currentRoundNumber$
       .pipe(first())
-      .subscribe((currentRound) => {
-        this.blurTimeout.set(window.setTimeout(() => {
-          this.estimatorService.setNoteEditor(this.room(), currentRound, null);
-        }, 500));
+      .subscribe(currentRound => {
+        this.blurTimeout.set(
+          window.setTimeout(() => {
+            this.estimatorService.setNoteEditor(
+              this.room(),
+              currentRound,
+              null
+            );
+          }, 500)
+        );
       });
   }
 
@@ -137,7 +147,8 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
       this.editedBy.set(currentRound.notes?.editedBy);
       this.isNoteDisabled.set(
         (this.editedBy() && this.editedBy().id !== this.auth.getUid()) ||
-        !this.hasPermission());
+          !this.hasPermission()
+      );
 
       this.isNoteDisabled()
         ? this.noteValue.disable({ emitEvent: false })

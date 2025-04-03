@@ -88,16 +88,16 @@ const MESSAGING_INTEGRATIONS: IntegrationRow[] = [
 ];
 
 @Component({
-    selector: 'app-integrations',
-    imports: [
-        NgOptimizedImage,
-        MatButtonModule,
-        RouterLink,
-        NgTemplateOutlet,
-        StartPlanningCtaComponent
-    ],
-    templateUrl: './integrations.component.html',
-    styleUrl: './integrations.component.scss'
+  selector: 'app-integrations',
+  imports: [
+    NgOptimizedImage,
+    MatButtonModule,
+    RouterLink,
+    NgTemplateOutlet,
+    StartPlanningCtaComponent,
+  ],
+  templateUrl: './integrations.component.html',
+  styleUrl: './integrations.component.scss',
 })
 export class IntegrationsComponent {
   protected readonly videoConferencingIntegrations: IntegrationRow[] =

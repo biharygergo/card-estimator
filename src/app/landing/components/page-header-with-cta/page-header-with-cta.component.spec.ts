@@ -8,10 +8,9 @@ describe('PageHeaderWithCtaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageHeaderWithCtaComponent]
-    })
-    .compileComponents();
-    
+      imports: [PageHeaderWithCtaComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PageHeaderWithCtaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,6 +1,6 @@
-@import "../common.scss";
+@import '../common.scss';
 
-$opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
+$opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 
 .join-container {
   min-height: 100%;
@@ -102,7 +102,8 @@ $opacityTransition: "opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)";
   width: 70px;
   height: 70px;
   border-radius: 12px;
-  box-shadow: rgba(5, 18, 37, 0.32) 0px 1px 4px,
+  box-shadow:
+    rgba(5, 18, 37, 0.32) 0px 1px 4px,
     rgba(5, 18, 37, 0.24) 0px 0px 8px;
   &.main-logo {
     view-transition-name: pp-logo;

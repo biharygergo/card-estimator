@@ -101,43 +101,41 @@
             </div>
             <h2
               class="monthly-price"
-              matTooltip="The subscription allows the facilitator to create rooms with Premium benefits. One license is enough for small/medium sized organizations."
-              >
-            €15 <span class="light">/team/month</span>
-          </h2>
-          <span class="free-trial">14 days free</span>
+              matTooltip="The subscription allows the facilitator to create rooms with Premium benefits. One license is enough for small/medium sized organizations.">
+              €15 <span class="light">/team/month</span>
+            </h2>
+            <span class="free-trial">14 days free</span>
+          </div>
+          <div class="yearly">
+            <span
+              ><span class="saving">Save €30</span> with annual billing</span
+            >
+            <span class="yearly-price">€150 /year</span>
+          </div>
         </div>
-        <div class="yearly">
-          <span
-          ><span class="saving">Save €30</span> with annual billing</span
-          >
-          <span class="yearly-price">€150 /year</span>
+        <div class="stripe">
+          <p class="description">Secure global payment and invoicing with</p>
+          <img src="/assets/stripe.png" class="stripe-logo" />
         </div>
-      </div>
-      <div class="stripe">
-        <p class="description">Secure global payment and invoicing with</p>
-        <img src="/assets/stripe.png" class="stripe-logo" />
-      </div>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="subscribeToPremium()"
-        [disabled]="isPremium$ | async"
-        class="stripe-button"
-        >
-        {{
-        isLoadingStripe ? "Redirecting to Stripe..." : "Start free trial"
-        }}
-      </button>
-      @if (promotionCodeFromParams) {
-        <p class="promotion discount">
-          Your promotion code will be automatically applied at checkout.
-        </p>
-      }
-      <button mat-button (click)="getQuote()">
-        Need a custom quote? Get in touch
-      </button>
-    </mat-card-content>
-  </mat-card>
-</div>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="subscribeToPremium()"
+          [disabled]="isPremium$ | async"
+          class="stripe-button">
+          {{
+            isLoadingStripe ? 'Redirecting to Stripe...' : 'Start free trial'
+          }}
+        </button>
+        @if (promotionCodeFromParams) {
+          <p class="promotion discount">
+            Your promotion code will be automatically applied at checkout.
+          </p>
+        }
+        <button mat-button (click)="getQuote()">
+          Need a custom quote? Get in touch
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

@@ -8,7 +8,7 @@ describe('RoundHistoryTableComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RoundHistoryTableComponent]
+      imports: [RoundHistoryTableComponent],
     });
     fixture = TestBed.createComponent(RoundHistoryTableComponent);
     component = fixture.componentInstance;

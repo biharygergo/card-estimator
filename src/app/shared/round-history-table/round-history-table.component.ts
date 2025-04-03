@@ -52,23 +52,23 @@ interface TableRow {
 }
 
 @Component({
-    selector: 'planning-poker-round-history-table',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatButtonModule,
-        MatTableModule,
-        MatInputModule,
-        MatPaginatorModule,
-        MatSnackBarModule,
-        MatProgressSpinnerModule,
-        RouterModule
-    ],
-    providers: [CdkColumnDef],
-    templateUrl: './round-history-table.component.html',
-    styleUrls: ['./round-history-table.component.scss']
+  selector: 'planning-poker-round-history-table',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    RouterModule,
+  ],
+  providers: [CdkColumnDef],
+  templateUrl: './round-history-table.component.html',
+  styleUrls: ['./round-history-table.component.scss'],
 })
 export class RoundHistoryTableComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -91,11 +91,9 @@ export class RoundHistoryTableComponent
 
   previousRounds: Observable<TableRow[]> = of(undefined).pipe(
     tap(() => this.isLoading.next(true)),
-    switchMap(() =>
-      this.estimatorService.getPreviousSessions()
-    ),
-    map((rooms) => {
-      const rounds = rooms.map((room) => {
+    switchMap(() => this.estimatorService.getPreviousSessions()),
+    map(rooms => {
+      const rounds = rooms.map(room => {
         const stats = new ExportData(room);
         return stats.rows.map(
           (statRow): TableRow => ({
@@ -133,19 +131,17 @@ export class RoundHistoryTableComponent
   }
 
   ngOnInit() {
-    this.previousRounds.pipe(takeUntil(this.destroy)).subscribe((rounds) => {
+    this.previousRounds.pipe(takeUntil(this.destroy)).subscribe(rounds => {
       this.dataSource.data = rounds;
     });
 
-    this.filter.valueChanges
-      .pipe(takeUntil(this.destroy))
-      .subscribe((filter) => {
-        this.dataSource.filter = filter;
+    this.filter.valueChanges.pipe(takeUntil(this.destroy)).subscribe(filter => {
+      this.dataSource.filter = filter;
 
-        if (this.dataSource.paginator) {
-          this.dataSource.paginator.firstPage();
-        }
-      });
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+    });
   }
 
   ngAfterViewInit() {

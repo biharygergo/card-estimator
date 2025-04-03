@@ -55,7 +55,7 @@ main {
         width: 100%;
 
         img {
-            border-radius: 20px 20px 0px 0px;
+          border-radius: 20px 20px 0px 0px;
         }
       }
     }
@@ -82,18 +82,18 @@ main {
 
 .play-icon {
   position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 60px;
-    width: 80px;
-    height: 80px;
-    background: var(--main-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
-    opacity: 0.8;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 60px;
+  width: 80px;
+  height: 80px;
+  background: var(--main-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+  opacity: 0.8;
 }

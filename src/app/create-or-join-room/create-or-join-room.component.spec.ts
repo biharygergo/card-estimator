@@ -8,9 +8,8 @@ describe('CreateOrJoinRoomComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [CreateOrJoinRoomComponent]
-})
-    .compileComponents();
+      imports: [CreateOrJoinRoomComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

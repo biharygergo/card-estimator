@@ -3,7 +3,7 @@ import { app, authentication, meeting, teamsCore } from '@microsoft/teams-js';
 import { Theme, ThemeService } from './theme.service';
 import { PaymentService } from './payment.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TeamsService {
   isInitialized = false;
 
@@ -29,7 +29,7 @@ export class TeamsService {
       }
 
       try {
-        teamsCore.registerOnLoadHandler((data) => {
+        teamsCore.registerOnLoadHandler(data => {
           try {
             app.notifySuccess();
           } catch {
@@ -37,7 +37,7 @@ export class TeamsService {
           }
         });
 
-        teamsCore.registerBeforeUnloadHandler((readyToUnload) => {
+        teamsCore.registerBeforeUnloadHandler(readyToUnload => {
           try {
             readyToUnload();
           } catch {
@@ -54,7 +54,7 @@ export class TeamsService {
   }
 
   async shareAppContentToStage(roomId: string): Promise<boolean> {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       const canShareToStage = await this.canShareToStage();
 
       if (!canShareToStage) {
@@ -77,7 +77,7 @@ export class TeamsService {
   }
 
   async canShareToStage() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const frameContext = app.getFrameContext();
       const isInMeeting =
         frameContext === 'sidePanel' || frameContext === 'meetingStage';

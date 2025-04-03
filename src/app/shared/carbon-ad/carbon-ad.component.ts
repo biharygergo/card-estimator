@@ -39,10 +39,10 @@ function createCarbonSrc(placement: 'landing' | 'app') {
 }
 
 @Component({
-    selector: 'app-carbon-ad',
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
-    templateUrl: './carbon-ad.component.html',
-    styleUrls: ['./carbon-ad.component.scss']
+  selector: 'app-carbon-ad',
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  templateUrl: './carbon-ad.component.html',
+  styleUrls: ['./carbon-ad.component.scss'],
 })
 export class CarbonAdComponent implements OnInit, OnDestroy {
   @Input({ required: true }) placement!: 'landing' | 'app';
@@ -75,19 +75,19 @@ export class CarbonAdComponent implements OnInit, OnDestroy {
           (window as any).Cypress === undefined
         );
       }),
-      map((showAds) => {
+      map(showAds => {
         return { showAds, carbonSrc: createCarbonSrc(this.placement) };
       })
     );
 
     this.vm
       .pipe(
-        filter((vm) => !!vm.showAds),
+        filter(vm => !!vm.showAds),
         delay(100),
         takeUntil(this.destroy)
       )
-      .subscribe((vm) =>
-        this.loadScript(vm.carbonSrc).catch((e) =>
+      .subscribe(vm =>
+        this.loadScript(vm.carbonSrc).catch(e =>
           console.error('Failed to load carbon ads script', e)
         )
       );

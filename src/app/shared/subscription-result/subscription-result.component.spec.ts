@@ -8,9 +8,8 @@ describe('SubscriptionResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [SubscriptionResultComponent]
-})
-    .compileComponents();
+      imports: [SubscriptionResultComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SubscriptionResultComponent);
     component = fixture.componentInstance;

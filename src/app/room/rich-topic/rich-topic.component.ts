@@ -36,7 +36,7 @@ import { Parser } from 'marked';
 // function that returns `MarkedOptions` with renderer override
 export function markedOptionsFactory(): MarkedOptions {
   const renderer = new MarkedRenderer();
-  renderer.link = (link) => {
+  renderer.link = link => {
     return `<a target="_blank" rel="nofollow" href="${link.href}">${link.text}</a>`;
   };
 
@@ -145,7 +145,7 @@ export class RichTopicComponent {
           this.isSavingToJira.set(false);
         })
       )
-      .subscribe((result) => {
+      .subscribe(result => {
         if (result.success) {
           this.toastService.showMessage(
             `Awesome! Majority vote is saved to ${providerName}.`

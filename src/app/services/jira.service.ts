@@ -87,7 +87,7 @@ export class JiraService {
 
   getIntegration(): Observable<JiraIntegration | undefined> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
@@ -105,7 +105,7 @@ export class JiraService {
 
   updateJiraResourceList(resourceList: JiraResource[]) {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
@@ -122,7 +122,7 @@ export class JiraService {
 
   removeJiraIntegration() {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
@@ -146,7 +146,7 @@ export class JiraService {
         this.functions,
         'queryJiraIssues'
       )({ search: query, filters, after }).then(
-        (response) => response.data as IssuesSearchApiResult
+        response => response.data as IssuesSearchApiResult
       )
     );
   }
@@ -160,7 +160,7 @@ export class JiraService {
         this.functions,
         'updateIssue'
       )({ updateRequest: { ...updateRequest, provider: 'jira' } }).then(
-        (response) => response.data as { success: boolean }
+        response => response.data as { success: boolean }
       )
     );
   }

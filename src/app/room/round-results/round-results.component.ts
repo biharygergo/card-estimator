@@ -63,31 +63,31 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { isEqual } from 'lodash';
 
 @Component({
-    selector: 'app-round-results',
-    templateUrl: './round-results.component.html',
-    styleUrls: ['./round-results.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatList,
-        MatListSubheaderCssMatStyler,
-        MatListItem,
-        MatChipSet,
-        MatChip,
-        MatChipAvatar,
-        MatIcon,
-        MatChipRemove,
-        MatTooltip,
-        NgIf,
-        MatIconButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuContent,
-        MatMenuItem,
-        MatDivider,
-        AsyncPipe,
-        DecimalPipe,
-        EstimateConverterPipe,
-    ]
+  selector: 'app-round-results',
+  templateUrl: './round-results.component.html',
+  styleUrls: ['./round-results.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatList,
+    MatListSubheaderCssMatStyler,
+    MatListItem,
+    MatChipSet,
+    MatChip,
+    MatChipAvatar,
+    MatIcon,
+    MatChipRemove,
+    MatTooltip,
+    NgIf,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+    MatDivider,
+    AsyncPipe,
+    DecimalPipe,
+    EstimateConverterPipe,
+  ],
 })
 export class RoundResultsComponent implements OnInit, OnDestroy {
   room = input.required<Room>();
@@ -108,19 +108,19 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   currentUserId = signal<string | undefined>(undefined);
 
   isAnonymousVotingEnabled = this.roomDataService.room$.pipe(
-    map((room) => room.isAnonymousVotingEnabled),
+    map(room => room.isAnonymousVotingEnabled),
     distinctUntilChanged()
   );
 
   members = this.roomDataService.activeMembersAnonymized$;
   recentlyActiveMembers: Signal<{ [memberId: string]: boolean }> = toSignal(
     this.roomDataService.room$.pipe(
-      map((room) => room.roomId),
+      map(room => room.roomId),
       distinctUntilChanged(),
-      switchMap((roomId) =>
+      switchMap(roomId =>
         this.estimatorService.getRecentlyActiveMemberIds(roomId)
       ),
-      map((memberIds) =>
+      map(memberIds =>
         memberIds.reduce((acc, curr) => ({ ...acc, [curr]: true }), {})
       ),
       distinctUntilChanged(isEqual),
@@ -143,17 +143,17 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userProfiles$()
       .pipe(takeUntil(this.destroyed))
-      .subscribe((profiles) => {
+      .subscribe(profiles => {
         this.userProfiles.set(profiles);
       });
 
     this.organization$
       .pipe(takeUntil(this.destroyed))
-      .subscribe((org) => this.organization.set(org));
+      .subscribe(org => this.organization.set(org));
 
     this.authService.user
       .pipe(takeUntil(this.destroyed))
-      .subscribe((user) => this.currentUserId.set(user?.uid));
+      .subscribe(user => this.currentUserId.set(user?.uid));
 
     this.onRevoteClicked.pipe(takeUntil(this.destroyed)).subscribe(() => {
       this.estimatorService.setActiveRound(

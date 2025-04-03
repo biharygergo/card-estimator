@@ -342,7 +342,7 @@ export class AuthService {
     await updateDoc(
       doc(this.firestore, USER_DETAILS_COLLECTION, userId),
       userDetails
-    ).catch((error) => {
+    ).catch(error => {
       console.error('Error while updating userDetails: ', error);
     });
   }
@@ -384,7 +384,7 @@ export class AuthService {
   updateUserPreference(preference: Partial<UserPreference>) {
     return this.user.pipe(
       take(1),
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return EMPTY;
         }
@@ -400,7 +400,7 @@ export class AuthService {
 
   getUserPreference(): Observable<UserPreference | undefined> {
     return this.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of(undefined);
         }
@@ -412,11 +412,11 @@ export class AuthService {
           ) as DocumentReference<UserPreference>
         ).pipe(
           filter(
-            (snapshot) =>
+            snapshot =>
               !snapshot.metadata.fromCache &&
               !snapshot.metadata.hasPendingWrites
           ),
-          map((snapshot) => snapshot.data() as UserPreference)
+          map(snapshot => snapshot.data() as UserPreference)
         );
       }),
       catchError(() => {
@@ -435,11 +435,11 @@ export class AuthService {
   }
 
   getUserProfiles(userIds: string[]): Observable<UserProfileMap> {
-    const userProfileObservables = userIds.map((userId) =>
-      this.getUserProfile(userId).pipe(map((profile) => ({ profile, userId })))
+    const userProfileObservables = userIds.map(userId =>
+      this.getUserProfile(userId).pipe(map(profile => ({ profile, userId })))
     );
     return combineLatest(userProfileObservables).pipe(
-      map((profiles) => {
+      map(profiles => {
         return profiles.reduce((acc, curr) => {
           acc[curr.userId] = curr.profile;
           return acc;

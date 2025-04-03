@@ -8,9 +8,8 @@ describe('FileUploadDragDropComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [FileUploadDragDropComponent]
-})
-    .compileComponents();
+      imports: [FileUploadDragDropComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FileUploadDragDropComponent);
     component = fixture.componentInstance;

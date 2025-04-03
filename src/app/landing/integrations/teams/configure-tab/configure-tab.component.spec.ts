@@ -8,7 +8,7 @@ describe('ConfigureTabComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ConfigureTabComponent]
+      imports: [ConfigureTabComponent],
     });
     fixture = TestBed.createComponent(ConfigureTabComponent);
     component = fixture.componentInstance;

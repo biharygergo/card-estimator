@@ -8,9 +8,8 @@ describe('ZoomComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ZoomComponent]
-})
-    .compileComponents();
+      imports: [ZoomComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,9 +8,8 @@ describe('RichTopicComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RichTopicComponent]
-})
-    .compileComponents();
+      imports: [RichTopicComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RichTopicComponent);
     component = fixture.componentInstance;

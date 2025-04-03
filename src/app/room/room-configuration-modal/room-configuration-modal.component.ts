@@ -1,6 +1,18 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  FormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import {
   BehaviorSubject,
   combineLatest,
@@ -159,36 +171,36 @@ function createChipOptionForPermission(
 }
 
 @Component({
-    selector: 'app-room-configuration-modal',
-    templateUrl: './room-configuration-modal.component.html',
-    styleUrls: ['./room-configuration-modal.component.scss'],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatButton,
-        MatTabGroup,
-        MatTab,
-        MatTooltip,
-        MatSlideToggle,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        FormsModule,
-        ReactiveFormsModule,
-        MatError,
-        MatIcon,
-        MatChipListbox,
-        MatChipOption,
-        MatDivider,
-        MatIconButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDialogActions,
-        MatDialogClose,
-        AsyncPipe,
-        TitleCasePipe,
-    ]
+  selector: 'app-room-configuration-modal',
+  templateUrl: './room-configuration-modal.component.html',
+  styleUrls: ['./room-configuration-modal.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatButton,
+    MatTabGroup,
+    MatTab,
+    MatTooltip,
+    MatSlideToggle,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatError,
+    MatIcon,
+    MatChipListbox,
+    MatChipOption,
+    MatDivider,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDialogActions,
+    MatDialogClose,
+    AsyncPipe,
+    TitleCasePipe,
+  ],
 })
 export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   permissionConfiguration = {
@@ -261,7 +273,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   room$ = this.roomDataService.room$;
 
   onConfigurationChanged$: Observable<RoomConfiguration> = this.room$.pipe(
-    map((room) => room.configuration),
+    map(room => room.configuration),
     distinctUntilChanged(isEqual),
     takeUntil(this.destroy)
   );
@@ -269,13 +281,13 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   members$: Observable<
     Array<Member & { isPermanent: boolean; isCreator: boolean }>
   > = this.room$.pipe(
-    map((room) => [room.members, room.memberIds, room.createdById]),
+    map(room => [room.members, room.memberIds, room.createdById]),
     distinctUntilChanged<[Member[], string[], string]>(isEqual),
     map<[Member[], string[], string], [Member[], string]>(
       ([members, memberIds, createdById]) => [
         members
           .filter(
-            (m) =>
+            m =>
               (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
               memberIds.includes(m.id)
           )
@@ -284,9 +296,9 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       ]
     ),
     switchMap(([members, createdById]) => {
-      return this.authService.getUserProfiles(members.map((m) => m.id)).pipe(
-        map((membersMap) =>
-          members.map((member) => ({
+      return this.authService.getUserProfiles(members.map(m => m.id)).pipe(
+        map(membersMap =>
+          members.map(member => ({
             ...member,
             isPermanent: !!membersMap[member.id],
             isCreator: member.id === createdById,
@@ -318,7 +330,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     map(([room, user]) => {
       return room.createdById === user.uid && !user.isAnonymous;
     }),
-    tap((hasAccess) => {
+    tap(hasAccess => {
       hasAccess ? this.roomPassword.enable() : this.roomPassword.disable();
     }),
     share(),
@@ -341,23 +353,23 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.room$.subscribe((room) => {
+    this.room$.subscribe(room => {
       this.room = room;
     });
 
-    this.authorizationMetadata$.subscribe((meta) => {
+    this.authorizationMetadata$.subscribe(meta => {
       this.authorizationMetadata = meta;
     });
 
     this.organization$
       .pipe(takeUntil(this.destroy))
-      .subscribe((org) => (this.organization = org));
+      .subscribe(org => (this.organization = org));
 
     this.hasConfigurationAccess$.subscribe(
-      (access) => (this.hasConfigurationAccess = access)
+      access => (this.hasConfigurationAccess = access)
     );
 
-    this.onConfigurationChanged$.subscribe((roomConfiguration) => {
+    this.onConfigurationChanged$.subscribe(roomConfiguration => {
       if (roomConfiguration) {
         Object.entries(roomConfiguration.permissions).forEach(
           ([permissionId, permissionValue]) => {
@@ -408,7 +420,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
       this.errorMessage.next(e.message);
     } finally {
       this.isBusy.next(false);
-      this.toastService.showMessage('Permissions updated')
+      this.toastService.showMessage('Permissions updated');
     }
     this.analyticsService.logClickedSavePermissions(updatedPermission);
   }
@@ -444,7 +456,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.authorizationMetadata$
       .pipe(
         first(),
-        switchMap((meta) =>
+        switchMap(meta =>
           of(
             this.estimatorService.togglePasswordProtection(
               this.room.roomId,
@@ -453,7 +465,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
           ).pipe(map(() => !meta?.passwordProtectionEnabled))
         )
       )
-      .subscribe((isEnabled) =>
+      .subscribe(isEnabled =>
         this.showMessage(
           isEnabled
             ? 'Password protection enabled'
@@ -467,7 +479,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     this.authorizationMetadata$
       .pipe(
         first(),
-        switchMap((meta) =>
+        switchMap(meta =>
           of(
             this.estimatorService.toggleOrganizationProtection(
               this.room.roomId,
@@ -477,7 +489,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
           ).pipe(map(() => !meta?.organizationProtection))
         )
       )
-      .subscribe((isEnabled) =>
+      .subscribe(isEnabled =>
         this.showMessage(
           isEnabled
             ? 'Organization protection enabled'

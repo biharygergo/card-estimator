@@ -8,9 +8,8 @@ describe('TopicsSidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [TopicsSidebarComponent]
-})
-    .compileComponents();
+      imports: [TopicsSidebarComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,8 +8,7 @@
       [dynamicHeight]="true"
       class="custom-tab-group"
       mat-align-tabs="center"
-      backgroundColor="primary"
-    >
+      backgroundColor="primary">
       <mat-tab label="Profile">
         <div class="tab-content">
           <div class="tab-section">
@@ -18,48 +17,46 @@
               <div class="profile-image">
                 <div class="avatar">
                   @if (user?.photoURL) {
-                  <img
-                    [src]="user?.photoURL"
-                    alt="The user's avatar"
-                    class="avatar-image"
-                  />
-                  } @if (!user?.photoURL) {
-                  <div class="avatar-text">
-                    {{ user?.displayName?.charAt(0) }}
-                  </div>
+                    <img
+                      [src]="user?.photoURL"
+                      alt="The user's avatar"
+                      class="avatar-image" />
+                  }
+                  @if (!user?.photoURL) {
+                    <div class="avatar-text">
+                      {{ user?.displayName?.charAt(0) }}
+                    </div>
                   }
                 </div>
               </div>
               <div class="profile-details">
                 @if (emailControl.value) {
-                <div class="data-item profile">
-                  <strong>E-mail</strong>
-                  <span id="user-email">{{ emailControl.value }}</span>
-                </div>
-                @if(false) {
-                <button
-                  mat-stroked-button
-                  class="change-email-button"
-                  (click)="openManageEmailModal()"
-                >
-                  Change e-mail
-                </button>
-                } }
+                  <div class="data-item profile">
+                    <strong>E-mail</strong>
+                    <span id="user-email">{{ emailControl.value }}</span>
+                  </div>
+                  @if (false) {
+                    <button
+                      mat-stroked-button
+                      class="change-email-button"
+                      (click)="openManageEmailModal()">
+                      Change e-mail
+                    </button>
+                  }
+                }
                 <mat-form-field class="name" appearance="outline">
                   <mat-label>Your name</mat-label>
                   <input
                     matInput
                     placeholder="Best Engineer"
                     [formControl]="displayNameForm"
-                    autocomplete="name"
-                  />
+                    autocomplete="name" />
                 </mat-form-field>
                 <button
                   mat-stroked-button
                   color="primary"
                   [disabled]="!isNameUpdated || (isSavingUser | async)"
-                  (click)="onClickUpdateUserName.next()"
-                >
+                  (click)="onClickUpdateUserName.next()">
                   <mat-icon>done</mat-icon>
                   Update name
                 </button>
@@ -78,54 +75,58 @@
                   <img src="/assets/credits_no_number.png" />
                 </div>
                 <div class="content">
-                  @if(creditBundles$ | async; as creditsAndBundles) {
-                  @if(subscription$ | async; as subscription) {
-                  <h3 class="title">Premium plan</h3>
-                  <div class="credit-status">
-                    <span>Unlimited credits available</span>
-                  </div>
+                  @if (creditBundles$ | async; as creditsAndBundles) {
+                    @if (subscription$ | async; as subscription) {
+                      <h3 class="title">Premium plan</h3>
+                      <div class="credit-status">
+                        <span>Unlimited credits available</span>
+                      </div>
+                    } @else {
+                      <h3 class="title">Pay as you go</h3>
+                      <div class="credit-status">
+                        <span
+                          >{{
+                            creditsAndBundles.availablePersonalCredits.length
+                          }}
+                          personal credits available</span
+                        >
+                      </div>
+                      <div class="credit-status">
+                        <span
+                          >{{
+                            creditsAndBundles.availableOrgCredits.length
+                          }}
+                          organization credits available</span
+                        >
+                      </div>
+                      @if (creditsAndBundles.nextBatchExpiring?.length) {
+                        <p class="next-expiry">
+                          {{
+                            creditsAndBundles.nextBatchExpiring.length
+                          }}
+                          credits will expire on
+                          {{
+                            creditsAndBundles.nextBatchExpiring[0].expiresAt.toDate()
+                              | date
+                          }}.
+                        </p>
+                      }
+                      <p class="next-credit">
+                        @if (!user?.isAnonymous) {
+                          Next free credit on
+                          {{ nextMonthStart | date }}
+                        } @else {
+                          Get one free credit every month by signing up for an
+                          account!
+                        }
+                      </p>
+                    }
                   } @else {
-                  <h3 class="title">Pay as you go</h3>
-                  <div class="credit-status">
-                    <span
-                      >{{
-                        creditsAndBundles.availablePersonalCredits.length
-                      }}
-                      personal credits available</span
-                    >
-                  </div>
-                  <div class="credit-status">
-                    <span
-                      >{{
-                        creditsAndBundles.availableOrgCredits.length
-                      }}
-                      organization credits available</span
-                    >
-                  </div>
-                  @if(creditsAndBundles.nextBatchExpiring?.length) {
-                  <p class="next-expiry">
-                    {{ creditsAndBundles.nextBatchExpiring.length }} credits
-                    will expire on
-                    {{
-                      creditsAndBundles.nextBatchExpiring[0].expiresAt.toDate()
-                        | date
-                    }}.
-                  </p>
-                  }
-                  <p class="next-credit">
-                    @if (!user?.isAnonymous) { Next free credit on
-                    {{ nextMonthStart | date }}
-                    } @else { Get one free credit every month by signing up for
-                    an account! }
-                  </p>
-
-                  } } @else {
-                  <div class="loading-spinner-container">
-                    <mat-progress-spinner
-                      mode="indeterminate"
-                      [diameter]="30"
-                    />
-                  </div>
+                    <div class="loading-spinner-container">
+                      <mat-progress-spinner
+                        mode="indeterminate"
+                        [diameter]="30" />
+                    </div>
                   }
                 </div>
               </div>
@@ -135,84 +136,82 @@
               mat-flat-button
               color="primary"
               (click)="openLearnMore()"
-              [disabled]="paymentsService.isSubscriptionDisabled()"
-            >
+              [disabled]="paymentsService.isSubscriptionDisabled()">
               {{
                 paymentsService.isSubscriptionDisabled()
-                  ? "Not available on Teams mobile"
-                  : "Buy more credits"
+                  ? 'Not available on Teams mobile'
+                  : 'Buy more credits'
               }}
             </button>
           </div>
           <div class="tab-section">
             <h2 class="section-title">Your plan</h2>
             @if (subscription$ | async; as subscription) {
-            <mat-chip class="subscription-chip"
-              ><span class="label">Premium</span></mat-chip
-            >
-            <div class="data-items">
-              <div class="data-item">
-                <strong>Status</strong>
-                <span>{{ subscription.status | titlecase }}</span>
+              <mat-chip class="subscription-chip"
+                ><span class="label">Premium</span></mat-chip
+              >
+              <div class="data-items">
+                <div class="data-item">
+                  <strong>Status</strong>
+                  <span>{{ subscription.status | titlecase }}</span>
+                </div>
+                <div class="data-item">
+                  <strong>Plan</strong>
+                  @if (activePlan$ | async; as plan) {
+                    <span
+                      >{{ plan?.amount / 100 }}
+                      {{ plan?.currency | uppercase }}/{{
+                        plan?.interval
+                      }}</span
+                    >
+                  }
+                </div>
+                <div class="data-item">
+                  <strong>Created at</strong>
+                  <span>{{
+                    subscription.created.toMillis() | date: 'medium'
+                  }}</span>
+                </div>
+                <div class="data-item">
+                  <strong>{{
+                    subscription.cancel_at_period_end
+                      ? 'Ends at'
+                      : 'Next payment at'
+                  }}</strong>
+                  <span>{{
+                    subscription.current_period_end.toMillis() | date: 'medium'
+                  }}</span>
+                </div>
               </div>
-              <div class="data-item">
-                <strong>Plan</strong>
-                @if (activePlan$ | async; as plan) {
-                <span
-                  >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
-                    plan?.interval
-                  }}</span
-                >
-                }
-              </div>
-              <div class="data-item">
-                <strong>Created at</strong>
-                <span>{{
-                  subscription.created.toMillis() | date : "medium"
-                }}</span>
-              </div>
-              <div class="data-item">
-                <strong>{{
-                  subscription.cancel_at_period_end
-                    ? "Ends at"
-                    : "Next payment at"
-                }}</strong>
-                <span>{{
-                  subscription.current_period_end.toMillis() | date : "medium"
-                }}</span>
-              </div>
-            </div>
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="redirectToCustomerPortal()"
-              [disabled]="isLoadingStripe"
-            >
-              <mat-icon>edit</mat-icon>
-              {{
-                isLoadingStripe
-                  ? "Redirecting you to Stripe..."
-                  : "Manage subscription"
-              }}
-            </button>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="redirectToCustomerPortal()"
+                [disabled]="isLoadingStripe">
+                <mat-icon>edit</mat-icon>
+                {{
+                  isLoadingStripe
+                    ? 'Redirecting you to Stripe...'
+                    : 'Manage subscription'
+                }}
+              </button>
             } @else {
-            <p>
-              You are currently on the free, pay as you go Basic plan. Subscribe
-              now for unlimited credits and priority support.
-            </p>
-            <button
-              mat-stroked-button
-              color="primary"
-              class="learn-more-button"
-              (click)="openPremiumModal()"
-              [disabled]="paymentsService.isSubscriptionDisabled()"
-            >
-              {{
-                paymentsService.isSubscriptionDisabled()
-                  ? "Not available on Teams mobile"
-                  : "Subscribe to Premium"
-              }}
-            </button>
+              <p>
+                You are currently on the free, pay as you go Basic plan.
+                Subscribe now for unlimited credits and priority support.
+              </p>
+              <button
+                mat-stroked-button
+                color="primary"
+                class="learn-more-button"
+                (click)="openPremiumModal()"
+                [disabled]="paymentsService.isSubscriptionDisabled()">
+                {{
+                  paymentsService.isSubscriptionDisabled()
+                    ? 'Not available on Teams mobile'
+                    : 'Subscribe to Premium'
+                }}
+              </button>
             }
           </div>
         </div>
@@ -244,17 +243,16 @@
                     aria-label="Facial hair options"
                     class="chip-selector"
                     multiple
-                    selectable
-                  >
+                    selectable>
                     @for (option of hairOptions; track option) {
-                    <mat-chip-option
-                      [selected]="selectedHairOptions[option.value] === true"
-                      (click)="
-                        selectedHairOptions[option.value] =
-                          !selectedHairOptions[option.value]
-                      "
-                      >{{ option.label }}</mat-chip-option
-                    >
+                      <mat-chip-option
+                        [selected]="selectedHairOptions[option.value] === true"
+                        (click)="
+                          selectedHairOptions[option.value] =
+                            !selectedHairOptions[option.value]
+                        "
+                        >{{ option.label }}</mat-chip-option
+                      >
                     }
                   </mat-chip-listbox>
                   <span>Hair color</span>
@@ -262,20 +260,19 @@
                     aria-label="Hair color options"
                     class="chip-selector"
                     multiple
-                    selectable
-                  >
+                    selectable>
                     @for (option of hairColorOptions; track option) {
-                    <mat-chip-option
-                      [selected]="
-                        selectedHairColorOptions[option.value] === true
-                      "
-                      (click)="
-                        selectedHairColorOptions[option.value] =
-                          !selectedHairColorOptions[option.value]
-                      "
-                      [style.backgroundColor]="'#' + option.value"
-                      >#{{ option.label }}</mat-chip-option
-                    >
+                      <mat-chip-option
+                        [selected]="
+                          selectedHairColorOptions[option.value] === true
+                        "
+                        (click)="
+                          selectedHairColorOptions[option.value] =
+                            !selectedHairColorOptions[option.value]
+                        "
+                        [style.backgroundColor]="'#' + option.value"
+                        >#{{ option.label }}</mat-chip-option
+                      >
                     }
                   </mat-chip-listbox>
                   <span>Skin tone</span>
@@ -283,20 +280,19 @@
                     aria-label="Skin tone options"
                     class="chip-selector"
                     multiple
-                    selectable
-                  >
+                    selectable>
                     @for (option of skinToneOptions; track option) {
-                    <mat-chip-option
-                      [selected]="
-                        selectedSkinToneOptions[option.value] === true
-                      "
-                      (click)="
-                        selectedSkinToneOptions[option.value] =
-                          !selectedSkinToneOptions[option.value]
-                      "
-                      [style.backgroundColor]="'#' + option.value"
-                      >#{{ option.label }}</mat-chip-option
-                    >
+                      <mat-chip-option
+                        [selected]="
+                          selectedSkinToneOptions[option.value] === true
+                        "
+                        (click)="
+                          selectedSkinToneOptions[option.value] =
+                            !selectedSkinToneOptions[option.value]
+                        "
+                        [style.backgroundColor]="'#' + option.value"
+                        >#{{ option.label }}</mat-chip-option
+                      >
                     }
                   </mat-chip-listbox>
                   <small>
@@ -310,8 +306,7 @@
                     <button
                       mat-flat-button
                       color="primary"
-                      (click)="randomizeAvatars()"
-                    >
+                      (click)="randomizeAvatars()">
                       Generate avatars
                     </button>
                   </mat-action-row>
@@ -325,19 +320,17 @@
                 </div>
               </div>
               @for (avatar of avatars; track avatar.url) {
-              <button
-                mat-icon-button
-                class="avatar-selector-item"
-                [class.selected]="user?.photoURL === avatar.url"
-                (click)="selectAvatar(avatar)"
-              >
-                <img
-                  [src]="avatar.url"
-                  class="avatar-image"
-                  loading="lazy"
-                  alt="A user's avatar"
-                />
-              </button>
+                <button
+                  mat-icon-button
+                  class="avatar-selector-item"
+                  [class.selected]="user?.photoURL === avatar.url"
+                  (click)="selectAvatar(avatar)">
+                  <img
+                    [src]="avatar.url"
+                    class="avatar-image"
+                    loading="lazy"
+                    alt="A user's avatar" />
+                </button>
               }
             </div>
           </div>
@@ -350,16 +343,19 @@
       <mat-icon>close</mat-icon>
       Close
     </button>
-    @if (selectedTabIndex === 0 && user) { @if (!user?.isAnonymous) {
-    <button mat-button color="warn" (click)="signOut()">
-      <mat-icon>logout</mat-icon>
-      Sign out
-    </button>
-    } } @if (selectedTabIndex === 2) {
-    <button mat-button (click)="randomizeAvatars()" color="primary">
-      <mat-icon>shuffle</mat-icon>
-      Generate new avatars
-    </button>
+    @if (selectedTabIndex === 0 && user) {
+      @if (!user?.isAnonymous) {
+        <button mat-button color="warn" (click)="signOut()">
+          <mat-icon>logout</mat-icon>
+          Sign out
+        </button>
+      }
+    }
+    @if (selectedTabIndex === 2) {
+      <button mat-button (click)="randomizeAvatars()" color="primary">
+        <mat-icon>shuffle</mat-icon>
+        Generate new avatars
+      </button>
     }
   </div>
 </div>

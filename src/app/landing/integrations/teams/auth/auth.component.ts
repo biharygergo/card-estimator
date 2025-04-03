@@ -5,16 +5,16 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TeamsService } from 'src/app/services/teams.service';
 
 @Component({
-    selector: 'app-auth',
-    imports: [CommonModule, MatDialogModule],
-    templateUrl: './auth.component.html',
-    styleUrls: ['./auth.component.scss']
+  selector: 'app-auth',
+  imports: [CommonModule, MatDialogModule],
+  templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
-    private readonly teamsService: TeamsService,
+    private readonly teamsService: TeamsService
   ) {}
 
   ngOnInit(): void {

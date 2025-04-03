@@ -9,8 +9,7 @@
         <button
           (click)="config().action()"
           mat-flat-button
-          class="install-button"
-        >
+          class="install-button">
           {{ config().header.buttonLabel }}
         </button>
       </div>
@@ -25,16 +24,14 @@
         playsinline
         (canplay)="video.play()"
         (loadedmetadata)="video.muted = true"
-        [style.aspect-ratio]="config().header.aspectRatio"
-      >
+        [style.aspect-ratio]="config().header.aspectRatio">
         <source
           [src]="
             'https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/' +
             config().header.videoId +
             '.mp4'
           "
-          type="video/mp4"
-        />
+          type="video/mp4" />
       </video>
     </div>
   </div>
@@ -50,9 +47,8 @@
           <div class="integration-details-step-youtube">
             <app-youtube-player
               class="integration-details-step-youtube"
-              [youtubeVideoId]="config().details.youtubeVideo.videoId"
-            />
-            </div>
+              [youtubeVideoId]="config().details.youtubeVideo.videoId" />
+          </div>
         </div>
       </div>
     }
@@ -60,35 +56,34 @@
     <p class="integration-details-title">
       {{ config().details.description }}
     </p>
-    @for (step of config().details.steps; track $index;) {
-    <div class="integration-details-step">
-      <div class="integration-details-step-left">
-        <h3 class="integration-details-step-title">{{ step.title }}</h3>
-        <p class="integration-details-step-description">
-          {{ step.text }}
-        </p>
+    @for (step of config().details.steps; track $index) {
+      <div class="integration-details-step">
+        <div class="integration-details-step-left">
+          <h3 class="integration-details-step-title">{{ step.title }}</h3>
+          <p class="integration-details-step-description">
+            {{ step.text }}
+          </p>
+        </div>
+        <div class="integration-details-step-right">
+          <img
+            class="integration-details-step-image"
+            [ngSrc]="step.imgId"
+            [alt]="step.alt"
+            placeholder
+            [width]="step.width"
+            [height]="step.height"
+            sizes="(max-width: 800px) 80vw, 60vw"
+            [priority]="$index === 0"
+            [class.not-app-screenshot]="step.notAppScreenshot" />
+        </div>
       </div>
-      <div class="integration-details-step-right">
-        <img
-          class="integration-details-step-image"
-          [ngSrc]="step.imgId"
-          [alt]="step.alt"
-          placeholder
-          [width]="step.width"
-          [height]="step.height"
-          sizes="(max-width: 800px) 80vw, 60vw"
-          [priority]="$index === 0"
-          [class.not-app-screenshot]="step.notAppScreenshot"
-        />
-      </div>
-    </div>
     }
   </div>
   <div class="integration-support" id="support">
     <h2 class="integration-support-title">Need help?</h2>
     <p class="integration-support-description">
-      Need help or have an issue with the integration? We're here for you!
-      You can create a
+      Need help or have an issue with the integration? We're here for you! You
+      can create a
       <a
         href="https://github.com/biharygergo/card-estimator/issues"
         target="_blank"

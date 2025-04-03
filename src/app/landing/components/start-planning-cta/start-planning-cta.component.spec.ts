@@ -8,9 +8,8 @@ describe('StartPlanningCtaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [StartPlanningCtaComponent]
-})
-    .compileComponents();
+      imports: [StartPlanningCtaComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StartPlanningCtaComponent);
     component = fixture.componentInstance;

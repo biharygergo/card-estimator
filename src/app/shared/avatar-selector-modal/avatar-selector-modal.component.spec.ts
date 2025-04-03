@@ -8,9 +8,8 @@ describe('AvatarSelectorModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AvatarSelectorModalComponent]
-})
-    .compileComponents();
+      imports: [AvatarSelectorModalComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

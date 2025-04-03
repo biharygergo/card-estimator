@@ -33,7 +33,7 @@ export class ZoomApiService {
         'sendAppInvitationToAllParticipants',
         'expandApp',
         'onMyUserContextChange',
-        'openUrl'
+        'openUrl',
       ],
     });
 
@@ -47,7 +47,7 @@ export class ZoomApiService {
 
   setAuthenticationListeners() {
     console.log('In-Client OAuth flow: onAuthorized event listener added');
-    zoomSdk.addEventListener('onAuthorized', (event) => {
+    zoomSdk.addEventListener('onAuthorized', event => {
       const { code } = event;
       console.log('3. onAuthorized event fired.');
       console.log(
@@ -75,7 +75,7 @@ export class ZoomApiService {
       });
     });
 
-    zoomSdk.addEventListener('onMyUserContextChange', (event) => {
+    zoomSdk.addEventListener('onMyUserContextChange', event => {
       console.log('onMyUserContextChange', event);
       this.userContextStatus.next(event.status);
       if (event.status === 'authorized') {
@@ -100,7 +100,7 @@ export class ZoomApiService {
     let codeChallengeResponse: { codeChallenge: string } | undefined;
     try {
       codeChallengeResponse = await fetch('/api/generateCodeChallenge').then(
-        (data) => data.json()
+        data => data.json()
       );
       console.log(codeChallengeResponse);
       if (!codeChallengeResponse || codeChallengeResponse.codeChallenge) {

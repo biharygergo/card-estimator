@@ -24,18 +24,18 @@ export const premiumLearnMoreModalCreator =
   ];
 
 @Component({
-    selector: 'app-premium-learn-more',
-    templateUrl: './premium-learn-more.component.html',
-    styleUrls: ['./premium-learn-more.component.scss'],
-    imports: [
-        MatButton,
-        MatDialogClose,
-        MatIcon,
-        MatCard,
-        MatCardContent,
-        MatTooltip,
-        AsyncPipe,
-    ]
+  selector: 'app-premium-learn-more',
+  templateUrl: './premium-learn-more.component.html',
+  styleUrls: ['./premium-learn-more.component.scss'],
+  imports: [
+    MatButton,
+    MatDialogClose,
+    MatIcon,
+    MatCard,
+    MatCardContent,
+    MatTooltip,
+    AsyncPipe,
+  ],
 })
 export class PremiumLearnMoreComponent {
   @Input() pageMode: 'modal' | 'page' = 'modal';
@@ -54,7 +54,10 @@ export class PremiumLearnMoreComponent {
   async subscribeToPremium() {
     this.isLoadingStripe = true;
     this.analyticsService.logClickedSubscribeToPremium('premium_learn_more');
-    await this.paymentService.startSubscriptionToPremium('eur', this.promotionCodeFromParams);
+    await this.paymentService.startSubscriptionToPremium(
+      'eur',
+      this.promotionCodeFromParams
+    );
   }
 
   getQuote() {

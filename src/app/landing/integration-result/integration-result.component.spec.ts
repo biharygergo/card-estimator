@@ -8,9 +8,8 @@ describe('IntegrationResultComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [IntegrationResultComponent]
-})
-    .compileComponents();
+      imports: [IntegrationResultComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IntegrationResultComponent);
     component = fixture.componentInstance;

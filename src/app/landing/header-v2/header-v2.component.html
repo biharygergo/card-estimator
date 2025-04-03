@@ -1,200 +1,181 @@
 <nav [ngClass]="{ open: isOpen }">
   <div class="header-container">
-    @if(isEmbeddedApp) {
-    <button mat-flat-button (click)="goBack()">
-      <mat-icon>chevron_left</mat-icon>Back
-    </button>
-
-    } @if(!isEmbeddedApp) {
-    <a routerLink="/" (click)="closeMenu()">
-      <div class="logo-container">
-        <picture>
-          <source srcset="/assets/logo.webp" type="image/webp" />
-          <source srcset="/assets/logo.png" type="image/png" />
-          <img
-            src="/assets/logo.png"
-            alt="Planning Poker logo"
-            loading="lazy"
-          />
-        </picture>
-        <span>PlanningPoker.live</span>
-      </div>
-    </a>
-    <ul>
-      <li>
-        <a
-          routerLink="/"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="closeMenu()"
-          class="navigation-button"
-          >Home</a
-        >
-      </li>
-      <li>
-        <a
-          routerLink="/features"
-          routerLinkActive="active"
-          (click)="closeMenu()"
-          class="navigation-button"
-          >Features</a
-        >
-      </li>
-      <li>
-        <div
-          class="navigation-button integrations-button split-button"
-          routerLinkActive="active"
-        >
-          <a class="split-button-left" routerLink="/integrations"
-            >Integrations</a
-          >
-          <button
-            class="split-button-right"
-            mat-icon-button
-            (menuOpened)="menuOpen = true"
-            (menuClosed)="menuOpen = false"
-            [matMenuTriggerFor]="menu"
-            aria-label="Expand integrations menu"
-          >
-            <mat-icon
-              class="rotating-icon"
-              [class.rotated]="menuOpen"
-              [inline]="true"
-              >expand_more</mat-icon
-            >
-          </button>
+    @if (isEmbeddedApp) {
+      <button mat-flat-button (click)="goBack()">
+        <mat-icon>chevron_left</mat-icon>Back
+      </button>
+    }
+    @if (!isEmbeddedApp) {
+      <a routerLink="/" (click)="closeMenu()">
+        <div class="logo-container">
+          <picture>
+            <source srcset="/assets/logo.webp" type="image/webp" />
+            <source srcset="/assets/logo.png" type="image/png" />
+            <img
+              src="/assets/logo.png"
+              alt="Planning Poker logo"
+              loading="lazy" />
+          </picture>
+          <span>PlanningPoker.live</span>
         </div>
-        <mat-menu #menu="matMenu" [class]="'rounded-nav-menu'">
-          <a
-            routerLink="/integrations/zoom"
-            id="header-zoom-link"
-            mat-menu-item
-            (click)="closeMenu()"
-          >
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/zoom-logo.png"
-                loading="lazy"
-              />
-              Zoom Meetings
-            </div>
-          </a>
-          <a
-            routerLink="/integrations/teams"
-            id="header-teams-link"
-            mat-menu-item
-            (click)="closeMenu()"
-          >
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/teams_logo.png"
-                loading="lazy"
-              />
-              Microsoft Teams
-            </div>
-          </a>
-          <a
-            routerLink="/integrations/meet"
-            mat-menu-item
-            id="header-meet-link"
-            (click)="closeMenu()"
-          >
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/meet_logo.png"
-                loading="lazy"
-              />
-              Google Meet™
-            </div>
-          </a>
-          <a
-            routerLink="/integrations/webex"
-            id="header-webex-link"
-            mat-menu-item
-            (click)="closeMenu()"
-          >
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/webex_logo.png"
-                loading="lazy"
-              />
-              Webex Meetings
-            </div>
-          </a>
-          <a routerLink="/integrations/jira" mat-menu-item>
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/jira.png"
-                loading="lazy"
-              />
-              Jira tickets
-            </div>
-          </a>
-          <a
-            routerLink="/integrations/linear"
-            mat-menu-item
-            (click)="closeMenu()"
-          >
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/linear.png"
-                loading="lazy"
-              />
-              Linear issues
-            </div>
-          </a>
-          <a
-            routerLink="/integrations/slack"
-            mat-menu-item
-            (click)="closeMenu()"
-          >
-            <div class="centered-menu-item" routerLinkActive="active">
-              <img
-                class="integration-logo"
-                src="/assets/slack.png"
-                loading="lazy"
-              />
-              Slack
-            </div>
-          </a>
-        </mat-menu>
-      </li>
-      <li>
-        <a
-          routerLink="/pricing"
-          routerLinkActive="active"
-          (click)="closeMenu()"
-          class="navigation-button"
-          >Pricing</a
-        >
-      </li>
-    </ul>
-    <div class="split-action-button-container flat desktop-start-planning-link">
-      <a
-        mat-flat-button
-        color="primary"
-        routerLink="/create"
-        ><mat-icon>play_arrow</mat-icon>Start planning
       </a>
-      <div class="split-action-button-container-side-button">
-        <app-profile-dropdown appearance="avatar"></app-profile-dropdown>
+      <ul>
+        <li>
+          <a
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMenu()"
+            class="navigation-button"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/features"
+            routerLinkActive="active"
+            (click)="closeMenu()"
+            class="navigation-button"
+            >Features</a
+          >
+        </li>
+        <li>
+          <div
+            class="navigation-button integrations-button split-button"
+            routerLinkActive="active">
+            <a class="split-button-left" routerLink="/integrations"
+              >Integrations</a
+            >
+            <button
+              class="split-button-right"
+              mat-icon-button
+              (menuOpened)="menuOpen = true"
+              (menuClosed)="menuOpen = false"
+              [matMenuTriggerFor]="menu"
+              aria-label="Expand integrations menu">
+              <mat-icon
+                class="rotating-icon"
+                [class.rotated]="menuOpen"
+                [inline]="true"
+                >expand_more</mat-icon
+              >
+            </button>
+          </div>
+          <mat-menu #menu="matMenu" [class]="'rounded-nav-menu'">
+            <a
+              routerLink="/integrations/zoom"
+              id="header-zoom-link"
+              mat-menu-item
+              (click)="closeMenu()">
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/zoom-logo.png"
+                  loading="lazy" />
+                Zoom Meetings
+              </div>
+            </a>
+            <a
+              routerLink="/integrations/teams"
+              id="header-teams-link"
+              mat-menu-item
+              (click)="closeMenu()">
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/teams_logo.png"
+                  loading="lazy" />
+                Microsoft Teams
+              </div>
+            </a>
+            <a
+              routerLink="/integrations/meet"
+              mat-menu-item
+              id="header-meet-link"
+              (click)="closeMenu()">
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/meet_logo.png"
+                  loading="lazy" />
+                Google Meet™
+              </div>
+            </a>
+            <a
+              routerLink="/integrations/webex"
+              id="header-webex-link"
+              mat-menu-item
+              (click)="closeMenu()">
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/webex_logo.png"
+                  loading="lazy" />
+                Webex Meetings
+              </div>
+            </a>
+            <a routerLink="/integrations/jira" mat-menu-item>
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/jira.png"
+                  loading="lazy" />
+                Jira tickets
+              </div>
+            </a>
+            <a
+              routerLink="/integrations/linear"
+              mat-menu-item
+              (click)="closeMenu()">
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/linear.png"
+                  loading="lazy" />
+                Linear issues
+              </div>
+            </a>
+            <a
+              routerLink="/integrations/slack"
+              mat-menu-item
+              (click)="closeMenu()">
+              <div class="centered-menu-item" routerLinkActive="active">
+                <img
+                  class="integration-logo"
+                  src="/assets/slack.png"
+                  loading="lazy" />
+                Slack
+              </div>
+            </a>
+          </mat-menu>
+        </li>
+        <li>
+          <a
+            routerLink="/pricing"
+            routerLinkActive="active"
+            (click)="closeMenu()"
+            class="navigation-button"
+            >Pricing</a
+          >
+        </li>
+      </ul>
+      <div
+        class="split-action-button-container flat desktop-start-planning-link">
+        <a mat-flat-button color="primary" routerLink="/create"
+          ><mat-icon>play_arrow</mat-icon>Start planning
+        </a>
+        <div class="split-action-button-container-side-button">
+          <app-profile-dropdown appearance="avatar"></app-profile-dropdown>
+        </div>
       </div>
-    </div>
 
-    <button
-      mat-icon-button
-      aria-label="Toggle navigation menu"
-      class="mobile-nav-toggle"
-      (click)="toggleMenu()"
-    >
-      <mat-icon>menu</mat-icon>
-    </button>
+      <button
+        mat-icon-button
+        aria-label="Toggle navigation menu"
+        class="mobile-nav-toggle"
+        (click)="toggleMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
     }
   </div>
 </nav>

@@ -27,11 +27,11 @@ export class ConfirmDialogService {
       ...confirmDialogCreator(openWithData)
     );
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       dialogRef
         .afterClosed()
         .pipe(first())
-        .subscribe((isSure) => resolve(isSure));
+        .subscribe(isSure => resolve(isSure));
     });
   }
 }

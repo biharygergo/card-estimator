@@ -1,13 +1,14 @@
 <planning-poker-page-header-with-cta
   [config]="{
-  title:'Planning Poker for Google Meet™',
-  description: 'Get accurate estimates for your next sprint with our app made for Google Meet™.',
-  externalLink: 'https://workspace.google.com/marketplace/app/planningpokerlive/417578634660',
-  ctaIcon: 'open_in_new',
-  ctaTitle: 'Add to Google Meet™',
-  showPlatforms: false,
-}"
-/>
+    title: 'Planning Poker for Google Meet™',
+    description:
+      'Get accurate estimates for your next sprint with our app made for Google Meet™.',
+    externalLink:
+      'https://workspace.google.com/marketplace/app/planningpokerlive/417578634660',
+    ctaIcon: 'open_in_new',
+    ctaTitle: 'Add to Google Meet™',
+    showPlatforms: false,
+  }" />
 <main>
   <div>
     <section class="integration-hero">
@@ -22,12 +23,10 @@
           muted
           playsinline
           (canplay)="video.play()"
-          (loadedmetadata)="video.muted = true"
-        >
+          (loadedmetadata)="video.muted = true">
           <source
             src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Meet_Youtube_1_yzwz5p.mp4"
-            type="video/mp4"
-          />
+            type="video/mp4" />
         </video>
       </div>
     </section>
@@ -41,8 +40,7 @@
       <div class="see-more-features">
         <mat-expansion-panel
           class="see-more-panel"
-          (opened)="loadVideos.next(true)"
-        >
+          (opened)="loadVideos.next(true)">
           <mat-expansion-panel-header class="see-more-panel-header">
             <mat-panel-title class="see-more-panel-title"
               >View all features</mat-panel-title
@@ -73,8 +71,7 @@
             width="2940"
             height="1594"
             sizes="(max-width: 800px) 100vw, 60vw"
-            [class.visible]="selectedIndex === 0"
-          />
+            [class.visible]="selectedIndex === 0" />
           <img
             ngSrc="Meet_3"
             alt="PlanningPoker.live running inside Meets"
@@ -82,8 +79,7 @@
             width="1920"
             height="1080"
             sizes="(max-width: 800px) 100vw, 60vw"
-            [class.visible]="selectedIndex === 1"
-          />
+            [class.visible]="selectedIndex === 1" />
           <img
             ngSrc="Meet_2"
             alt="Select custom card sets"
@@ -91,8 +87,7 @@
             width="1920"
             height="1080"
             sizes="(max-width: 800px) 100vw, 60vw"
-            [class.visible]="selectedIndex === 2"
-          />
+            [class.visible]="selectedIndex === 2" />
           <img
             ngSrc="Meet_1"
             alt="An ongoing planning session with participants in Meet™"
@@ -100,13 +95,11 @@
             width="1920"
             height="1080"
             sizes="(max-width: 800px) 100vw, 60vw"
-            [class.visible]="selectedIndex === 3"
-          />
+            [class.visible]="selectedIndex === 3" />
         </div>
         <mat-tab-group
           dynamicHeight
-          (selectedIndexChange)="selectedIndex = $event"
-        >
+          (selectedIndexChange)="selectedIndex = $event">
           <mat-tab label="1. Open Workspace Marketplace and install"
             ><div class="step-content">
               <p>

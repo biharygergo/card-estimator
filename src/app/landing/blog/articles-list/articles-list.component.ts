@@ -6,10 +6,17 @@ import { NgOptimizedImage, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-articles-list',
-    templateUrl: './articles-list.component.html',
-    styleUrls: ['./articles-list.component.scss'],
-    imports: [RouterLink, NgOptimizedImage, CarbonAdComponent, DatePipe, MatIcon, NgTemplateOutlet]
+  selector: 'app-articles-list',
+  templateUrl: './articles-list.component.html',
+  styleUrls: ['./articles-list.component.scss'],
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    CarbonAdComponent,
+    DatePipe,
+    MatIcon,
+    NgTemplateOutlet,
+  ],
 })
 export class ArticlesListComponent {
   articles: Article[] = inject(ActivatedRoute).snapshot.data.articles;

@@ -8,8 +8,8 @@ describe('BatchAddTopicsModalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [BatchAddTopicsModalComponent]
-});
+      imports: [BatchAddTopicsModalComponent],
+    });
     fixture = TestBed.createComponent(BatchAddTopicsModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

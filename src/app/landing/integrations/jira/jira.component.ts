@@ -1,12 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { IntegrationConfig, IntegrationPageTemplateComponent } from '../shared/integration-page-template/integration-page-template.component';
+import {
+  IntegrationConfig,
+  IntegrationPageTemplateComponent,
+} from '../shared/integration-page-template/integration-page-template.component';
 import { JiraService } from 'src/app/services/jira.service';
 
 @Component({
-    selector: 'app-jira',
-    imports: [IntegrationPageTemplateComponent],
-    templateUrl: './jira.component.html',
-    styleUrl: './jira.component.scss'
+  selector: 'app-jira',
+  imports: [IntegrationPageTemplateComponent],
+  templateUrl: './jira.component.html',
+  styleUrl: './jira.component.scss',
 })
 export class JiraComponent {
   private readonly jiraService = inject(JiraService);
@@ -23,30 +26,36 @@ export class JiraComponent {
       description:
         'Integrate PlanningPoker.live with Jira to select and view Jira issues directly from the planning poker session. Follow these steps to connect your Jira account and start estimating issues with your team:',
       youtubeVideo: {
-        title: 'Get started quickly with our tutorial video on integrating Jira with PlanningPoker.live',
+        title:
+          'Get started quickly with our tutorial video on integrating Jira with PlanningPoker.live',
         videoId: 'X5ox2EBk3Bs',
       },
       faqs: [
         {
           question: 'How do I set up the Jira integration?',
-          answer: 'Setting up Jira integration is straightforward. Click "Connect Jira" in your planning session, authorize through Atlassian (we only request minimal permissions to read issues and update story points), and you\'re ready to go. Works with both Jira Cloud and Data Center.',
+          answer:
+            'Setting up Jira integration is straightforward. Click "Connect Jira" in your planning session, authorize through Atlassian (we only request minimal permissions to read issues and update story points), and you\'re ready to go. Works with both Jira Cloud and Data Center.',
         },
         {
           question: 'Is the Jira integration free to use?',
-          answer: 'Yes! The Jira integration is completely free. You can import issues, estimate them with your team, and sync story points back to Jira at no additional cost. This includes unlimited issues and projects.',
+          answer:
+            'Yes! The Jira integration is completely free. You can import issues, estimate them with your team, and sync story points back to Jira at no additional cost. This includes unlimited issues and projects.',
         },
         {
           question: 'How does the Jira integration work?',
-          answer: 'Once connected, you can import issues from any of your Jira projects. During planning sessions, story points are automatically synced back to Jira when consensus is reached. You can also bulk import multiple issues for efficient sprint planning.',
+          answer:
+            'Once connected, you can import issues from any of your Jira projects. During planning sessions, story points are automatically synced back to Jira when consensus is reached. You can also bulk import multiple issues for efficient sprint planning.',
         },
         {
           question: 'What permissions does the Jira integration need?',
-          answer: 'We only request essential permissions: read access to view your issues and write access to update story points. We follow security best practices and don\'t request access to sensitive data or admin capabilities.',
+          answer:
+            "We only request essential permissions: read access to view your issues and write access to update story points. We follow security best practices and don't request access to sensitive data or admin capabilities.",
         },
         {
           question: 'Can I use Jira integration in video calls?',
-          answer: 'Yes! The Jira integration works seamlessly with our <a href="/integrations">video conferencing integrations</a>. Whether you\'re using Teams, Zoom, Meet, or Webex, you can import and estimate Jira issues directly in your meetings.',
-        }
+          answer:
+            'Yes! The Jira integration works seamlessly with our <a href="/integrations">video conferencing integrations</a>. Whether you\'re using Teams, Zoom, Meet, or Webex, you can import and estimate Jira issues directly in your meetings.',
+        },
       ],
       steps: [
         {
@@ -55,7 +64,7 @@ export class JiraComponent {
           imgId: 'jira-auth-screen',
           alt: 'Jira authentication screen',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
         {
           title: 'Step 2: Select and estimate Jira issues',
@@ -63,7 +72,7 @@ export class JiraComponent {
           imgId: 'jira-issues-dropdown',
           alt: 'Jira issues dropdown',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
         {
           title: 'Step 3: Import multiple tickets in batch',
@@ -71,7 +80,7 @@ export class JiraComponent {
           imgId: 'jira-batch-import-modal',
           alt: 'Jira batch import modal',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
         {
           title: 'Step 4: Collaborate and finalize estimates',
@@ -79,7 +88,7 @@ export class JiraComponent {
           imgId: 'jira-issue-selected',
           alt: 'Jira issue selected',
           width: 3656,
-          height: 2356
+          height: 2356,
         },
       ],
     },

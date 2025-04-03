@@ -24,7 +24,7 @@ export function convertInputToCards(input: string) {
   return (
     input
       ?.split(',')
-      .map((item) => item.replace(/ /g, ''))
-      .filter((item) => !!item) || []
+      .map(item => item.replace(/ /g, ''))
+      .filter(item => !!item) || []
   );
 }

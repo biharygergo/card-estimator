@@ -51,5 +51,4 @@ describe('Authentication', () => {
 
     cy.get('#welcome-back').should('be.visible');
   });
-
 });

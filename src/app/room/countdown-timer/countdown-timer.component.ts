@@ -39,20 +39,20 @@ const INITIAL_TIMER_STATE = {
 };
 
 @Component({
-    selector: 'countdown-timer',
-    templateUrl: './countdown-timer.component.html',
-    styleUrls: ['./countdown-timer.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        MatProgressBar,
-        MatButton,
-        MatIcon,
-        MatIconButton,
-        MatTooltip,
-        MatProgressSpinner,
-        AsyncPipe,
-    ]
+  selector: 'countdown-timer',
+  templateUrl: './countdown-timer.component.html',
+  styleUrls: ['./countdown-timer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    MatProgressBar,
+    MatButton,
+    MatIcon,
+    MatIconButton,
+    MatTooltip,
+    MatProgressSpinner,
+    AsyncPipe,
+  ],
 })
 export class CountdownTimerComponent implements OnInit, OnDestroy {
   room = input.required<Observable<Room>>();
@@ -67,8 +67,8 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   intervalHandle = signal<number | undefined>(undefined);
 
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
-    map((result) => result.matches),
-    tap((isSmallScreen) => this.isSmallScreen.set(isSmallScreen))
+    map(result => result.matches),
+    tap(isSmallScreen => this.isSmallScreen.set(isSmallScreen))
   );
   isSmallScreen = signal<boolean>(false);
 
@@ -84,10 +84,10 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.room()
       .pipe(
-        tap((room) => {
+        tap(room => {
           this._room.set(room);
         }),
-        map((room) => room.timer),
+        map(room => room.timer),
         distinctUntilChanged(isEqual),
         takeUntil(this.destroy)
       )

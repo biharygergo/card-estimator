@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CarbonAdComponent } from '../../shared/carbon-ad/carbon-ad.component';
 import { StartPlanningCtaComponent } from '../components/start-planning-cta/start-planning-cta.component';
-import {
-  MatAccordion,
-} from '@angular/material/expansion';
+import { MatAccordion } from '@angular/material/expansion';
 import { PageHeaderComponent } from '../components/page-header/page-header.component';
 import { FaqRowComponent } from './faq-row/faq-row.component';
 
@@ -215,17 +213,17 @@ type FaqCategory = {
 };
 
 @Component({
-    selector: 'app-faq',
-    templateUrl: './faq.component.html',
-    styleUrls: ['./faq.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        FaqRowComponent,
-        PageHeaderComponent,
-        MatAccordion,
-        StartPlanningCtaComponent,
-        CarbonAdComponent,
-    ]
+  selector: 'app-faq',
+  templateUrl: './faq.component.html',
+  styleUrls: ['./faq.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    FaqRowComponent,
+    PageHeaderComponent,
+    MatAccordion,
+    StartPlanningCtaComponent,
+    CarbonAdComponent,
+  ],
 })
 export class FaqComponent implements OnInit {
   categories: FaqCategory[] = Object.values(

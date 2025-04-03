@@ -6,7 +6,6 @@
     <app-topic-editor
       [roomTopic]="topicInput$"
       (topicUpdated)="onSaveOrUpdate.next($event)"
-      (canceled)="onCancel.next()"
-    ></app-topic-editor>
+      (canceled)="onCancel.next()"></app-topic-editor>
   </mat-card-content>
 </mat-card>

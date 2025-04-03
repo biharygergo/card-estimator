@@ -15,7 +15,12 @@ import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
-import { IssueApiFilter, IssuesSearchApiResult, LinearIntegration, RichTopic } from '../types';
+import {
+  IssueApiFilter,
+  IssuesSearchApiResult,
+  LinearIntegration,
+  RichTopic,
+} from '../types';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 
@@ -78,7 +83,7 @@ export class LinearService {
 
   getIntegration(): Observable<LinearIntegration | undefined> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
@@ -96,7 +101,7 @@ export class LinearService {
 
   removeLinearIntegration() {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
@@ -120,7 +125,7 @@ export class LinearService {
         this.functions,
         'queryLinearIssues'
       )({ search: query, filters, after }).then(
-        (response) => response.data as IssuesSearchApiResult
+        response => response.data as IssuesSearchApiResult
       )
     );
   }
@@ -134,7 +139,7 @@ export class LinearService {
         this.functions,
         'updateIssue'
       )({ updateRequest: { ...updateRequest, provider: 'linear' } }).then(
-        (response) => response.data as { success: boolean }
+        response => response.data as { success: boolean }
       )
     );
   }

@@ -14,7 +14,11 @@ import { ToastService } from 'src/app/services/toast.service';
 import { JiraIntegration, JiraResource } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { configureJiraModalCreator } from '../configure-jira-integration-modal/configure-jira-integration-modal.component';
-import { MatDialog, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogTitle,
+  MatDialogContent,
+} from '@angular/material/dialog';
 import { LinearService } from 'src/app/services/linear.service';
 import { AsyncPipe } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
@@ -35,19 +39,19 @@ export const integrationsModalCreator =
   ];
 
 @Component({
-    selector: 'app-integrations',
-    templateUrl: './integrations.component.html',
-    styleUrls: ['./integrations.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatAnchor,
-        MatButton,
-        MatRadioGroup,
-        MatRadioButton,
-        AsyncPipe,
-    ]
+  selector: 'app-integrations',
+  templateUrl: './integrations.component.html',
+  styleUrls: ['./integrations.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatAnchor,
+    MatButton,
+    MatRadioGroup,
+    MatRadioButton,
+    AsyncPipe,
+  ],
 })
 export class IntegrationsComponent {
   jiraIntegration$: Observable<JiraIntegration> = this.jiraService
@@ -68,8 +72,8 @@ export class IntegrationsComponent {
   onJiraProjectSelected(resource: JiraResource) {
     return this.jiraIntegration$
       .pipe(
-        switchMap((jiraIntegration) => {
-          jiraIntegration.jiraResources.forEach((r) => {
+        switchMap(jiraIntegration => {
+          jiraIntegration.jiraResources.forEach(r => {
             r.active = r.id === resource.id;
           });
           return this.jiraService.updateJiraResourceList(
@@ -92,13 +96,13 @@ export class IntegrationsComponent {
   onJiraProjectRemoveClicked(resource: JiraResource) {
     return this.jiraIntegration$
       .pipe(
-        switchMap((jiraIntegration) => {
+        switchMap(jiraIntegration => {
           if (!jiraIntegration) {
             return of(undefined);
           }
 
           jiraIntegration.jiraResources = jiraIntegration.jiraResources.filter(
-            (r) => r.id !== resource.id
+            r => r.id !== resource.id
           );
 
           if (jiraIntegration.jiraResources.length) {

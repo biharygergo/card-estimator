@@ -18,7 +18,7 @@
     gap: 2rem;
     justify-content: space-between;
 
-    @media screen and (max-width: 600px){
+    @media screen and (max-width: 600px) {
       flex-wrap: wrap;
     }
   }
@@ -77,7 +77,7 @@
       display: inline-flex;
       justify-content: space-between;
       align-items: center;
-      @media screen and (max-width: 600px){
+      @media screen and (max-width: 600px) {
         flex-wrap: wrap;
       }
     }

@@ -8,10 +8,9 @@ describe('OverrideMajorityVoteModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OverrideMajorityVoteModalComponent]
-    })
-    .compileComponents();
-    
+      imports: [OverrideMajorityVoteModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(OverrideMajorityVoteModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

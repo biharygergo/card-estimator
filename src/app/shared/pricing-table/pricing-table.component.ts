@@ -210,7 +210,7 @@ export class PricingTableComponent implements OnInit {
   currencyShortSymbol = defer(() =>
     this.currencyControl.valueChanges.pipe(
       startWith(this.currencyControl.value),
-      map((currency) => (currency === 'usd' ? '$' : '€'))
+      map(currency => (currency === 'usd' ? '$' : '€'))
     )
   );
 
@@ -257,7 +257,7 @@ export class PricingTableComponent implements OnInit {
     }
     this.creditTypeSelector.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((creditType) => {
+      .subscribe(creditType => {
         if (creditType === 'organization') {
           this.selectedTabIndex.set(0);
           this.changeDetectorRef.markForCheck();

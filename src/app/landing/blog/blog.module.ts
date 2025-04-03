@@ -26,7 +26,12 @@ const routes: Routes = [
     path: '',
     component: ArticlesListComponent,
     resolve: { articles: articlesResolver },
-    data: { title: 'Master Planning Poker: The Ultimate Knowledge Hub', disablePostfix: true, description: 'Get expert guides, tutorials & insider tips to make the most of PlanningPoker.live. Level up your estimation game!' },
+    data: {
+      title: 'Master Planning Poker: The Ultimate Knowledge Hub',
+      disablePostfix: true,
+      description:
+        'Get expert guides, tutorials & insider tips to make the most of PlanningPoker.live. Level up your estimation game!',
+    },
   },
   {
     path: '**',
@@ -46,8 +51,9 @@ const routes: Routes = [
     NgOptimizedImage,
     StartPlanningCtaComponent,
     CarbonAdComponent,
-    ArticleComponent, ArticlesListComponent,
+    ArticleComponent,
+    ArticlesListComponent,
   ],
   providers: [provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc')],
 })
-export class BlogModule { }
+export class BlogModule {}

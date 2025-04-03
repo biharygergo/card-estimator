@@ -6,17 +6,19 @@ import { FeaturesItemsComponent } from './features-items/features-items.componen
 import { PageHeaderComponent } from '../components/page-header/page-header.component';
 
 @Component({
-    selector: 'app-features',
-    templateUrl: './features.component.html',
-    styleUrls: ['./features.component.scss'],
-    imports: [PageHeaderComponent, FeaturesItemsComponent, StartPlanningCtaComponent, CarbonAdComponent]
+  selector: 'app-features',
+  templateUrl: './features.component.html',
+  styleUrls: ['./features.component.scss'],
+  imports: [
+    PageHeaderComponent,
+    FeaturesItemsComponent,
+    StartPlanningCtaComponent,
+    CarbonAdComponent,
+  ],
 })
 export class FeaturesComponent implements OnInit {
-
   readonly of = of;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

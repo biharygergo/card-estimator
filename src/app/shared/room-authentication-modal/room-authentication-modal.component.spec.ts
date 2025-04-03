@@ -8,9 +8,8 @@ describe('RoomAuthenticationModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RoomAuthenticationModalComponent]
-})
-    .compileComponents();
+      imports: [RoomAuthenticationModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RoomAuthenticationModalComponent);
     component = fixture.componentInstance;

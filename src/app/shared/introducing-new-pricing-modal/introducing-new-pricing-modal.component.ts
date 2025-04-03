@@ -17,9 +17,9 @@ export const introducingNewPricingModalCreator =
   ];
 
 @Component({
-    selector: 'app-introducing-new-pricing-modal',
-    imports: [CommonModule, MatDialogModule, MatButtonModule],
-    templateUrl: './introducing-new-pricing-modal.component.html',
-    styleUrl: './introducing-new-pricing-modal.component.scss'
+  selector: 'app-introducing-new-pricing-modal',
+  imports: [CommonModule, MatDialogModule, MatButtonModule],
+  templateUrl: './introducing-new-pricing-modal.component.html',
+  styleUrl: './introducing-new-pricing-modal.component.scss',
 })
 export class IntroducingNewPricingModalComponent {}

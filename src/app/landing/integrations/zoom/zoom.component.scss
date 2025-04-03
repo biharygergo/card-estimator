@@ -28,7 +28,7 @@ main {
   font-size: 1.5rem;
   line-height: 2.3rem;
   text-align: center;
-  
+
   &.small {
     max-width: 500px;
   }
@@ -99,7 +99,7 @@ main {
   width: 100%;
   --mdc-tab-indicator-active-indicator-color: white;
   --mat-tab-header-active-focus-indicator-color: white;
-  
+
   ::ng-deep .mdc-tab {
     .mdc-tab__text-label {
       color: #bfc6dc;

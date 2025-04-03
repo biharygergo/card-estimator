@@ -1,11 +1,11 @@
 @mixin extraSmallScreen {
-    @media screen and (max-width: 380px) {
-        @content;
-    }
+  @media screen and (max-width: 380px) {
+    @content;
+  }
 }
 
 @mixin smallScreen {
-    @media screen and (max-width: 800px) {
-        @content;
-    }
+  @media screen and (max-width: 800px) {
+    @content;
+  }
 }

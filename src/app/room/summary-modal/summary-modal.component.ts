@@ -6,7 +6,14 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import {
   BehaviorSubject,
   Observable,
@@ -56,18 +63,18 @@ export const summaryModalCreator = ({
 ];
 
 @Component({
-    selector: 'app-summary-modal',
-    templateUrl: './summary-modal.component.html',
-    styleUrls: ['./summary-modal.component.scss'],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatButton,
-        MatIcon,
-        MatDialogActions,
-        MatDialogClose,
-        AsyncPipe,
-    ]
+  selector: 'app-summary-modal',
+  templateUrl: './summary-modal.component.html',
+  styleUrls: ['./summary-modal.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatButton,
+    MatIcon,
+    MatDialogActions,
+    MatDialogClose,
+    AsyncPipe,
+  ],
 })
 export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   typewriter: Typed;
@@ -78,7 +85,7 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   isRoomProper$: Observable<boolean> = this.estimatorService
     .getRoomById(this.dialogData.roomId)
     .pipe(
-      map((room) => {
+      map(room => {
         const rounds = Object.values(room.rounds);
         return rounds.length > 1 && room.members.length > 1;
       }),
@@ -89,7 +96,7 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   remainingUsage$: Observable<number> = this.meteredUsageService
     .getMeteredUsage('chatgpt-query')
     .pipe(
-      map((usage) => {
+      map(usage => {
         return USAGE_LIMIT - usage.length;
       }),
       shareReplay()
@@ -137,7 +144,7 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   latestRoomSummary$: Observable<string | undefined> = this.estimatorService
     .getRoomSummaries(this.dialogData.roomId)
     .pipe(
-      map((summaries) => {
+      map(summaries => {
         return summaries.length ? summaries[0].summary : undefined;
       })
     );
@@ -161,10 +168,7 @@ export class SummaryModalComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    combineLatest([
-      this.latestRoomSummary$,
-      this.failedPrecondition$,
-    ])
+    combineLatest([this.latestRoomSummary$, this.failedPrecondition$])
       .pipe(first(), takeUntil(this.destroy))
       .subscribe(([summary, failedPrecondition]) => {
         if (summary) {

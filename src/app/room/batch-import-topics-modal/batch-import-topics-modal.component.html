@@ -5,161 +5,160 @@
     complex filters to batch import all issues from your next sprint or cycle.
   </p>
   <div class="tab-content">
-    @if(hasActiveIntegration()) {
-
-    <div class="tab-section">
-      <div class="issue-search">
-        <div class="filter-chips-container">
-          <button mat-button color="primary" [matMenuTriggerFor]="menu">
-            <mat-icon>filter_list</mat-icon>
-            Add filter
-          </button>
-          <mat-menu #menu="matMenu">
-            @for(filter of issueFilters(); track filter.fieldName) {
-            <button mat-menu-item (click)="addFilterChip(filter)">
-              {{ filter.label }}
+    @if (hasActiveIntegration()) {
+      <div class="tab-section">
+        <div class="issue-search">
+          <div class="filter-chips-container">
+            <button mat-button color="primary" [matMenuTriggerFor]="menu">
+              <mat-icon>filter_list</mat-icon>
+              Add filter
             </button>
-            }
-          </mat-menu>
-          @for(filterChip of filterChips(); track filterChip.id) {
-          <div class="filter-chip">
-            <div class="filter-chip__label">
-              {{ filterChip.filter.label }}
-            </div>
-            @if (filterChip.filter.fixedValue === undefined) {
-            <div class="filter-chip__comparator">
-              {{ filterChip.filter.comparator }}
-            </div>
-            <div class="filter-chip__input">
-              <input
-                [formControl]="filterChip.valueControl"
-                [placeholder]="filterChip.filter.placeholder || 'Set filter'"
-                (keyup.enter)="onSubmitSearch.next()"
-                #filterChipInput
-              />
-            </div>
-            }
-          </div>
-          }
-        </div>
-      </div>
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="onSubmitSearch.next()"
-        [disabled]="!filterChips().length"
-      >
-        <mat-icon>search</mat-icon>
-        Search
-      </button>
-      <button
-        mat-button
-        (click)="onClearSearch.next()"
-        [disabled]="!filterChips().length"
-      >
-        <mat-icon>close</mat-icon>
-        Clear
-      </button>
-    </div>
-    <div class="tab-section">
-      <div class="results">
-        <mat-chip-option
-          [selected]="isOnlySelectedToggled()"
-          (selectionChange)="
-            isOnlySelectedToggled.set(!isOnlySelectedToggled())
-          "
-          >Show selected issues</mat-chip-option
-        >
-
-        @if(isLoading()) {
-        <mat-progress-spinner
-          mode="indeterminate"
-          [diameter]="30"
-          class="spinner"
-        />
-        } @else {
-        <h4>{{ visibleIssues().label }}</h4>
-        @if(visibleIssues().subtitle) {
-        <p>{{ visibleIssues().subtitle }}</p>
-        } @if(visibleIssues().showSelectAll) {
-        <button mat-button (click)="selectAll()">Select all</button>
-        }
-
-        <div
-          cdkDropList
-          (cdkDropListDropped)="drop($event)"
-          [cdkDropListDisabled]="!isOnlySelectedToggled()"
-        >
-          @for(issue of visibleIssues().issues; track issue.key) {
-          <div class="issue-container" cdkDrag>
-            <mat-accordion class="issue-box">
-              <mat-expansion-panel class="issue-box--panel">
-                <mat-expansion-panel-header class="issue-box--panel-header">
-                  <div class="issue-box--content">
-                    <div class="issue-box--checkmark">
-                      <mat-checkbox
-                        [checked]="selectedIssueIdsMap()[issue.key]"
-                        (change)="toggleSelectedIssue(issue)"
-                        (click)="$event.stopPropagation()"
-                      />
-                    </div>
-                    <span class="issue-title"
-                      >{{ issue.key }}: {{ issue.summary }}</span
-                    >
+            <mat-menu #menu="matMenu">
+              @for (filter of issueFilters(); track filter.fieldName) {
+                <button mat-menu-item (click)="addFilterChip(filter)">
+                  {{ filter.label }}
+                </button>
+              }
+            </mat-menu>
+            @for (filterChip of filterChips(); track filterChip.id) {
+              <div class="filter-chip">
+                <div class="filter-chip__label">
+                  {{ filterChip.filter.label }}
+                </div>
+                @if (filterChip.filter.fixedValue === undefined) {
+                  <div class="filter-chip__comparator">
+                    {{ filterChip.filter.comparator }}
                   </div>
-                </mat-expansion-panel-header>
-                <ng-template matExpansionPanelContent>
-                  <app-rich-topic
-                    [richTopic]="issue"
-                    [hideUploadButton]="true"
-                  />
-                </ng-template>
-              </mat-expansion-panel>
-            </mat-accordion>
+                  <div class="filter-chip__input">
+                    <input
+                      [formControl]="filterChip.valueControl"
+                      [placeholder]="
+                        filterChip.filter.placeholder || 'Set filter'
+                      "
+                      (keyup.enter)="onSubmitSearch.next()"
+                      #filterChipInput />
+                  </div>
+                }
+              </div>
+            }
           </div>
-          } @empty {
-          <p>{{ visibleIssues().empty }}</p>
+        </div>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="onSubmitSearch.next()"
+          [disabled]="!filterChips().length">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+        <button
+          mat-button
+          (click)="onClearSearch.next()"
+          [disabled]="!filterChips().length">
+          <mat-icon>close</mat-icon>
+          Clear
+        </button>
+      </div>
+      <div class="tab-section">
+        <div class="results">
+          <mat-chip-option
+            [selected]="isOnlySelectedToggled()"
+            (selectionChange)="
+              isOnlySelectedToggled.set(!isOnlySelectedToggled())
+            "
+            >Show selected issues</mat-chip-option
+          >
+
+          @if (isLoading()) {
+            <mat-progress-spinner
+              mode="indeterminate"
+              [diameter]="30"
+              class="spinner" />
+          } @else {
+            <h4>{{ visibleIssues().label }}</h4>
+            @if (visibleIssues().subtitle) {
+              <p>{{ visibleIssues().subtitle }}</p>
+            }
+            @if (visibleIssues().showSelectAll) {
+              <button mat-button (click)="selectAll()">Select all</button>
+            }
+
+            <div
+              cdkDropList
+              (cdkDropListDropped)="drop($event)"
+              [cdkDropListDisabled]="!isOnlySelectedToggled()">
+              @for (issue of visibleIssues().issues; track issue.key) {
+                <div class="issue-container" cdkDrag>
+                  <mat-accordion class="issue-box">
+                    <mat-expansion-panel class="issue-box--panel">
+                      <mat-expansion-panel-header
+                        class="issue-box--panel-header">
+                        <div class="issue-box--content">
+                          <div class="issue-box--checkmark">
+                            <mat-checkbox
+                              [checked]="selectedIssueIdsMap()[issue.key]"
+                              (change)="toggleSelectedIssue(issue)"
+                              (click)="$event.stopPropagation()" />
+                          </div>
+                          <span class="issue-title"
+                            >{{ issue.key }}: {{ issue.summary }}</span
+                          >
+                        </div>
+                      </mat-expansion-panel-header>
+                      <ng-template matExpansionPanelContent>
+                        <app-rich-topic
+                          [richTopic]="issue"
+                          [hideUploadButton]="true" />
+                      </ng-template>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              } @empty {
+                <p>{{ visibleIssues().empty }}</p>
+              }
+            </div>
+
+            @if (nextPage()) {
+              <button
+                mat-button
+                (click)="onLoadMore.next()"
+                class="load-more-button">
+                <mat-icon>add</mat-icon>
+                Load more
+              </button>
+            }
           }
         </div>
-
-        @if(nextPage()) {
-        <button mat-button (click)="onLoadMore.next()" class="load-more-button">
-          <mat-icon>add</mat-icon>
-          Load more
-        </button>
-        } }
       </div>
-    </div>
     } @else {
-    <div class="tab-section">
-      <p>
-        To start, link your account to Jira or Linear. Then, choose the issues
-        you want to vote on and save your estimates back to your preferred task
-        management tool.
-      </p>
-      <div class="cta-buttons">
-        <button mat-button (click)="startProviderAuth('jira')">
-          Connect to Jira
-        </button>
-        <button mat-button (click)="startProviderAuth('linear')">
-          Connect to Linear
-        </button>
+      <div class="tab-section">
+        <p>
+          To start, link your account to Jira or Linear. Then, choose the issues
+          you want to vote on and save your estimates back to your preferred
+          task management tool.
+        </p>
+        <div class="cta-buttons">
+          <button mat-button (click)="startProviderAuth('jira')">
+            Connect to Jira
+          </button>
+          <button mat-button (click)="startProviderAuth('linear')">
+            Connect to Linear
+          </button>
+        </div>
       </div>
-    </div>
     }
   </div>
 </div>
 <mat-dialog-actions>
   <span class="selected-issues-text">
-    {{ selectedIssues().length | i18nPlural : issuesPlural }}
+    {{ selectedIssues().length | i18nPlural: issuesPlural }}
   </span>
   <button mat-button matDialogClose cdkFocusInitial>Cancel</button>
   <button
     mat-flat-button
     cdkFocusInitial
     [disabled]="selectedIssues().length === 0 || isSubmitting()"
-    (click)="onSubmitImport.next()"
-  >
+    (click)="onSubmitImport.next()">
     Import
   </button>
 </mat-dialog-actions>

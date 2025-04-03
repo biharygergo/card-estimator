@@ -8,9 +8,8 @@ describe('AloneInRoomModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AloneInRoomModalComponent]
-})
-    .compileComponents();
+      imports: [AloneInRoomModalComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

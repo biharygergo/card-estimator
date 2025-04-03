@@ -13,7 +13,10 @@ export class SitemapGenerator {
 
   private sitemapContent = '';
 
-  constructor(srcDirectory: string = "dist/estimator/browser", baseUrl: string = "https://planningpoker.live") {
+  constructor(
+    srcDirectory: string = 'dist/estimator/browser',
+    baseUrl: string = 'https://planningpoker.live'
+  ) {
     this.baseUrl = SitemapGenerator.withTrailingSlash(baseUrl);
     this.srcDirectory = SitemapGenerator.withTrailingSlash(srcDirectory);
   }
@@ -69,11 +72,11 @@ export class SitemapGenerator {
     });
 
     files
-      .filter((route) => {
+      .filter(route => {
         const content = fs.readFileSync(route, 'utf-8');
         return !content.includes('<meta name="robots" content="noindex">');
       })
-      .forEach((route) => this.addToSitemap(route));
+      .forEach(route => this.addToSitemap(route));
 
     this.writeSitemapToFile();
   }

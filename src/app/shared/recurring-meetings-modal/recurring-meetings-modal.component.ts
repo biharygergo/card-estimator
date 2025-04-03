@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { RecurringMeetingLinkService } from 'src/app/services/recurring-meeting-link.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationService } from 'src/app/services/organization.service';
@@ -32,40 +38,50 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
-import { MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  MatFormField,
+  MatLabel,
+  MatPrefix,
+  MatSuffix,
+} from '@angular/material/form-field';
+import {
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 
 export const recurringMeetingsModalCreator = () =>
   createModal(RecurringMeetingsModalComponent, {
     id: 'recurringMeetingsModal',
-    data: {  },
+    data: {},
   });
 
 @Component({
-    selector: 'app-recurring-meetings-modal',
-    templateUrl: './recurring-meetings-modal.component.html',
-    styleUrls: ['./recurring-meetings-modal.component.scss'],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        MatPrefix,
-        MatSuffix,
-        MatButton,
-        MatIconButton,
-        MatMenuTrigger,
-        MatIcon,
-        MatMenu,
-        MatMenuItem,
-        MatDialogActions,
-        MatDialogClose,
-        AsyncPipe,
-        DatePipe,
-    ]
+  selector: 'app-recurring-meetings-modal',
+  templateUrl: './recurring-meetings-modal.component.html',
+  styleUrls: ['./recurring-meetings-modal.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatPrefix,
+    MatSuffix,
+    MatButton,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatDialogActions,
+    MatDialogClose,
+    AsyncPipe,
+    DatePipe,
+  ],
 })
 export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
   newMeetingForm = new FormGroup({
@@ -85,27 +101,25 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       createdRooms: RecurringMeetingLinkCreatedRoom[];
       lastRoom: RecurringMeetingLinkCreatedRoom['createdAt'] | undefined;
     }[]
-  > = this.recurringMeetingsService
-    .getMyRecurringMeetingLinks()
-    .pipe(
-      switchMap((meetingLinks) => {
-        return combineLatest(
-          meetingLinks.map((link) =>
-            this.recurringMeetingsService
-              .getCreatedRoomsForMeetingLinkId(link.id)
-              .pipe(
-                map((createdRooms) => ({
-                  link,
-                  createdRooms,
-                  lastRoom: createdRooms.length
-                    ? createdRooms[0].createdAt
-                    : undefined,
-                }))
-              )
-          )
-        );
-      })
-    );
+  > = this.recurringMeetingsService.getMyRecurringMeetingLinks().pipe(
+    switchMap(meetingLinks => {
+      return combineLatest(
+        meetingLinks.map(link =>
+          this.recurringMeetingsService
+            .getCreatedRoomsForMeetingLinkId(link.id)
+            .pipe(
+              map(createdRooms => ({
+                link,
+                createdRooms,
+                lastRoom: createdRooms.length
+                  ? createdRooms[0].createdAt
+                  : undefined,
+              }))
+            )
+        )
+      );
+    })
+  );
 
   user: User | undefined = undefined;
 
@@ -129,7 +143,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authService.user
       .pipe(takeUntil(this.destroy))
-      .subscribe((user) => (this.user = user));
+      .subscribe(user => (this.user = user));
   }
 
   ngOnDestroy() {
@@ -147,7 +161,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       })
       .pipe(
         first(),
-        catchError((e) => {
+        catchError(e => {
           this.isSavingMeeting.next(false);
           return throwError(() => e);
         })
@@ -168,7 +182,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       })
       .pipe(
         first(),
-        catchError((e) => {
+        catchError(e => {
           this.isSavingMeeting.next(false);
           return throwError(() => e);
         })

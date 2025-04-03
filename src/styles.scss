@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@use "@angular/material" as mat;
-@import "./app/common.scss";
+@use '@angular/material' as mat;
+@import './app/common.scss';
 
 :root {
   --main-color: #1c4182;
@@ -111,7 +111,7 @@ $m3-light-theme: mat.define-theme(
 html,
 body {
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
   @include mat.all-component-themes($m3-light-theme);
 
   @include smallScreen {
@@ -506,7 +506,9 @@ body {
     font-size: 1.3rem;
     font-weight: 400;
     will-change: transform;
-    transition: transform 0.2s 50ms ease-in-out, background 100ms linear;
+    transition:
+      transform 0.2s 50ms ease-in-out,
+      background 100ms linear;
     margin: 0 0.3rem;
     --mdc-protected-button-container-shape: 8px;
     // --mdc-protected-button-label-text-color: black;
@@ -546,7 +548,9 @@ body {
 }
 
 .mat-mdc-menu-panel {
-  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
+  box-shadow:
+    0 5px 5px -3px #0003,
+    0 8px 10px 1px #00000024,
     0 3px 14px 2px #0000001f;
 }
 
@@ -630,7 +634,7 @@ body {
     }
 
     .shepherd-button {
-      font-family: "Roboto";
+      font-family: 'Roboto';
       font-weight: 500;
       border-radius: 24px;
       background: var(--mdc-filled-button-container-color);
@@ -649,8 +653,6 @@ body {
           background: none;
         }
       }
-
-      
     }
 
     .shepherd-footer {

@@ -40,10 +40,10 @@ export const overrideMajorityVodeModalCreator = (
   },
 ];
 @Component({
-    selector: 'app-override-majority-vote-modal',
-    imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule],
-    templateUrl: './override-majority-vote-modal.component.html',
-    styleUrl: './override-majority-vote-modal.component.scss'
+  selector: 'app-override-majority-vote-modal',
+  imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule],
+  templateUrl: './override-majority-vote-modal.component.html',
+  styleUrl: './override-majority-vote-modal.component.scss',
 })
 export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
   cards: { key: string; value: string }[];
@@ -67,7 +67,7 @@ export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.roomDataService.room$
       .pipe(
-        map((room) => {
+        map(room => {
           const stats: ExportedDataRow = createRoundStatistics(
             this.dialogData.roundId,
             room
@@ -77,7 +77,7 @@ export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
             room.rounds[this.dialogData.roundId]?.majorityOverride === undefined
               ? null
               : room.rounds[this.dialogData.roundId]?.majorityOverride;
-          
+
           return {
             majority: majority ? +majority : undefined,
             majorityOverride,
@@ -85,7 +85,7 @@ export class OverrideMajorityVoteModalComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroy)
       )
-      .subscribe((vm) => (this.viewModel = vm));
+      .subscribe(vm => (this.viewModel = vm));
   }
 
   ngOnDestroy(): void {

@@ -42,6 +42,8 @@ export class CookieService {
   }
 
   private isLikelyInEurope() {
-    return Intl.DateTimeFormat()?.resolvedOptions()?.timeZone?.includes('Europe');
+    return Intl.DateTimeFormat()
+      ?.resolvedOptions()
+      ?.timeZone?.includes('Europe');
   }
 }

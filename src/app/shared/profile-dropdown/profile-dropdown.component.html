@@ -1,43 +1,51 @@
 <ng-container>
   @if (appearance() === 'button') {
-  <button
-    mat-stroked-button
-    #menuTrigger="matMenuTrigger"
-    [matMenuTriggerFor]="menu"
-    class="menu-button responsive-label-button"
-    id="menu-button"
-  >
-    <mat-icon>more_vert</mat-icon>
-    Menu
-  </button>
-  } @else {
-  <button mat-icon-button #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
-  }
-  <mat-menu #menu="matMenu" xPosition="after" [hasBackdrop]="true" class="profile-menu">
-    @if (currentUser | async; as user) {
-    <button mat-menu-item (click)="openAvatarSelector()" id="account-menu-item">
-      <mat-icon>account_circle</mat-icon>
-      <span>My account</span>
-    </button>
-    <button mat-menu-item (click)="openOrganizationModal()">
-      <mat-icon>groups</mat-icon>
-      <span>My organization</span>
-    </button>
-    <button mat-menu-item (click)="openRecurringMeetingsModal()">
-      <mat-icon>event</mat-icon>
-      <span>My meeting links</span>
-    </button>
-    } @else {
     <button
-      mat-menu-item
-      (click)="openCreateAccountModal()"
-      id="sign-in-menu-item"
-    >
-      <mat-icon>account_circle</mat-icon>
-      <span>Sign in</span>
+      mat-stroked-button
+      #menuTrigger="matMenuTrigger"
+      [matMenuTriggerFor]="menu"
+      class="menu-button responsive-label-button"
+      id="menu-button">
+      <mat-icon>more_vert</mat-icon>
+      Menu
     </button>
+  } @else {
+    <button
+      mat-icon-button
+      #menuTrigger="matMenuTrigger"
+      [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  }
+  <mat-menu
+    #menu="matMenu"
+    xPosition="after"
+    [hasBackdrop]="true"
+    class="profile-menu">
+    @if (currentUser | async; as user) {
+      <button
+        mat-menu-item
+        (click)="openAvatarSelector()"
+        id="account-menu-item">
+        <mat-icon>account_circle</mat-icon>
+        <span>My account</span>
+      </button>
+      <button mat-menu-item (click)="openOrganizationModal()">
+        <mat-icon>groups</mat-icon>
+        <span>My organization</span>
+      </button>
+      <button mat-menu-item (click)="openRecurringMeetingsModal()">
+        <mat-icon>event</mat-icon>
+        <span>My meeting links</span>
+      </button>
+    } @else {
+      <button
+        mat-menu-item
+        (click)="openCreateAccountModal()"
+        id="sign-in-menu-item">
+        <mat-icon>account_circle</mat-icon>
+        <span>Sign in</span>
+      </button>
     }
     <button mat-menu-item (click)="openIntegrationsModal()">
       <mat-icon>extension</mat-icon>
@@ -49,51 +57,49 @@
     </a>
     <mat-divider></mat-divider>
     @if (!paymentService.isSubscriptionDisabled()) {
-    <button mat-menu-item (click)="openPricingModal()">
-      <mat-icon>toll</mat-icon>
-      <span>Buy credits</span>
-    </button>
-    } @if(!(isOnJoinOrCreateScreen$ | async)) {
-    <a mat-menu-item routerLink="/join">
-      <mat-icon>home</mat-icon>
-      <span>Home</span>
-    </a>
+      <button mat-menu-item (click)="openPricingModal()">
+        <mat-icon>toll</mat-icon>
+        <span>Buy credits</span>
+      </button>
+    }
+    @if (!(isOnJoinOrCreateScreen$ | async)) {
+      <a mat-menu-item routerLink="/join">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+      </a>
     }
     <mat-divider></mat-divider>
     @if (config.runningIn !== 'web') {
-    <button mat-menu-item (click)="openInBrowser()">
-      <mat-icon>public</mat-icon>
-      <span>Open in browser</span>
-    </button>
+      <button mat-menu-item (click)="openInBrowser()">
+        <mat-icon>public</mat-icon>
+        <span>Open in browser</span>
+      </button>
     }
     @if (appearance() === 'button') {
-    <button mat-menu-item [matMenuTriggerFor]="themeMenu">
-      <mat-icon>contrast</mat-icon>
-      <span>Theme</span>
-    </button>
+      <button mat-menu-item [matMenuTriggerFor]="themeMenu">
+        <mat-icon>contrast</mat-icon>
+        <span>Theme</span>
+      </button>
     }
     <mat-menu #themeMenu="matMenu">
       <button
         mat-menu-item
         (click)="setAutomaticTheme()"
-        [class.selected]="(currentTheme | async) === Theme.AUTOMATIC"
-      >
+        [class.selected]="(currentTheme | async) === Theme.AUTOMATIC">
         <mat-icon>schedule</mat-icon>
         <span>Automatic</span>
       </button>
       <button
         mat-menu-item
         (click)="setLightTheme()"
-        [class.selected]="(currentTheme | async) === Theme.DEFAULT"
-      >
+        [class.selected]="(currentTheme | async) === Theme.DEFAULT">
         <mat-icon>light_mode</mat-icon>
         <span>Light</span>
       </button>
       <button
         mat-menu-item
         (click)="setDarkTheme()"
-        [class.selected]="(currentTheme | async) === Theme.DARK"
-      >
+        [class.selected]="(currentTheme | async) === Theme.DARK">
         <mat-icon>dark_mode</mat-icon>
         <span>Dark</span>
       </button>

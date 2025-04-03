@@ -1,20 +1,18 @@
 <planning-poker-page-header-with-cta
   [config]="{
-  title:'Planning Poker for Zoom Meetings',
-  description: 'Get accurate estimates for your next sprint with our intuitive planning poker app for Zoom Meetings.',
-  externalLink: 'https://marketplace.zoom.us/apps/nqabdP6JSI-uoVffd6A5Vg',
-  ctaIcon: 'open_in_new',
-  ctaTitle: 'Download from Zoom App Marketplace',
-  showPlatforms: false,
-}"
-/>
+    title: 'Planning Poker for Zoom Meetings',
+    description:
+      'Get accurate estimates for your next sprint with our intuitive planning poker app for Zoom Meetings.',
+    externalLink: 'https://marketplace.zoom.us/apps/nqabdP6JSI-uoVffd6A5Vg',
+    ctaIcon: 'open_in_new',
+    ctaTitle: 'Download from Zoom App Marketplace',
+    showPlatforms: false,
+  }" />
 <main>
   <div>
     <section class="integration-hero">
       <div class="hero-header">
-        <h1 class="title">
-          The best planning poker experience for Zoom
-        </h1>
+        <h1 class="title">The best planning poker experience for Zoom</h1>
       </div>
       <div class="hero-video">
         <video
@@ -24,12 +22,10 @@
           muted
           playsinline
           (canplay)="video.play()"
-          (loadedmetadata)="video.muted = true"
-        >
+          (loadedmetadata)="video.muted = true">
           <source
             src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation.mp4"
-            type="video/mp4"
-          />
+            type="video/mp4" />
         </video>
       </div>
     </section>
@@ -41,7 +37,9 @@
         <planning-poker-features-preview />
       </div>
       <div class="see-more-features">
-        <mat-expansion-panel class="see-more-panel" (opened)="loadVideos.next(true)">
+        <mat-expansion-panel
+          class="see-more-panel"
+          (opened)="loadVideos.next(true)">
           <mat-expansion-panel-header class="see-more-panel-header">
             <mat-panel-title class="see-more-panel-title"
               >View all features</mat-panel-title
@@ -59,28 +57,23 @@
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_1.png"
             alt="Permissions screen when adding the app to Zoom"
-            [class.visible]="selectedIndex === 0"
-          />
+            [class.visible]="selectedIndex === 0" />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_2.png"
             alt="Apps screen inside Zoom"
-            [class.visible]="selectedIndex === 1"
-          />
+            [class.visible]="selectedIndex === 1" />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_3.png"
             alt="The app is running inside Zoom"
-            [class.visible]="selectedIndex === 2"
-          />
+            [class.visible]="selectedIndex === 2" />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_4.png"
             alt="An ongoing planning session with participants in Zoom"
-            [class.visible]="selectedIndex === 3"
-          />
+            [class.visible]="selectedIndex === 3" />
         </div>
         <mat-tab-group
           dynamicHeight
-          (selectedIndexChange)="selectedIndex = $event"
-        >
+          (selectedIndexChange)="selectedIndex = $event">
           <mat-tab label="1. Install the app in Zoom"
             ><div class="step-content">
               <p>

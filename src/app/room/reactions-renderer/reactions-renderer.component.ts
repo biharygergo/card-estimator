@@ -21,11 +21,11 @@ interface VisibleReaction {
 }
 
 @Component({
-    selector: 'app-reactions-renderer',
-    templateUrl: './reactions-renderer.component.html',
-    styleUrls: ['./reactions-renderer.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [LottieComponent]
+  selector: 'app-reactions-renderer',
+  templateUrl: './reactions-renderer.component.html',
+  styleUrls: ['./reactions-renderer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LottieComponent],
 })
 export class ReactionsRendererComponent implements OnInit, OnDestroy {
   members = input.required<Observable<Member[]>>();
@@ -39,13 +39,13 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly reactionsService: ReactionsService,
-    private readonly liveAnnouncer: LiveAnnouncer,
+    private readonly liveAnnouncer: LiveAnnouncer
   ) {}
 
   ngOnInit(): void {
     this.members()
       .pipe(takeUntil(this.destroy))
-      .subscribe((members) => {
+      .subscribe(members => {
         this.membersMap.set(
           members.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {})
         );
@@ -54,7 +54,7 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
     this.reactionsService
       .getReactionsStream(this.roomId())
       .pipe(
-        mergeMap((reaction) => {
+        mergeMap(reaction => {
           const reactionFromDict =
             this.reactionsService.reactionsMap[reaction.reactionId];
           const visibleReaction: VisibleReaction = {
@@ -79,10 +79,10 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroy)
       )
-      .subscribe((reactionToRemove) => {
+      .subscribe(reactionToRemove => {
         this.visibleReactions.set(
           this.visibleReactions().filter(
-            (reaction) => reaction.id !== reactionToRemove.id
+            reaction => reaction.id !== reactionToRemove.id
           )
         );
       });

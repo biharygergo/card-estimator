@@ -4,8 +4,7 @@
     matInput
     placeholder="Search for a topic name or room"
     [formControl]="filter"
-    autocomplete="off"
-  />
+    autocomplete="off" />
 </mat-form-field>
 <mat-table [dataSource]="dataSource" class="rounds-table">
   <ng-container matColumnDef="topicName">
@@ -25,7 +24,7 @@
   <ng-container matColumnDef="startedAt">
     <mat-header-cell *matHeaderCellDef>Started at</mat-header-cell>
     <mat-cell *matCellDef="let round" class="started-at-cell">{{
-      round.startedAt?.toMillis() | date : "medium"
+      round.startedAt?.toMillis() | date: 'medium'
     }}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="notes">
@@ -53,15 +52,14 @@
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   <div *matNoDataRow class="empty-state">
     @if (isLoading | async) {
-    <mat-spinner color="primary" [diameter]="30" />
+      <mat-spinner color="primary" [diameter]="30" />
     } @else {
-    <p>No rounds matching the filter.</p>
+      <p>No rounds matching the filter.</p>
     }
   </div>
 </mat-table>
 <mat-paginator
   [pageSizeOptions]="[10, 20, 50]"
   showFirstLastButtons
-  aria-label="Select page of rounds"
->
+  aria-label="Select page of rounds">
 </mat-paginator>

@@ -1,20 +1,22 @@
 <h1 mat-dialog-title>
-  {{ subscriptionResult === "success" ? "Success!" : "Oops!" }}
+  {{ subscriptionResult === 'success' ? 'Success!' : 'Oops!' }}
 </h1>
 <div mat-dialog-content>
   <div class="tab-section">
     @if (subscriptionResult === 'success') {
-    <p class="description">
-      Thanks for your purchase! It might take a couple of
-      seconds for everything to finalize, hold tight and refresh the page if
-      your credits/subscription does not show.
-    </p>
-    } @if (subscriptionResult === 'cancel') {
-    <p>
-      It seems like your payment process was cancelled. If you think something
-      has gone wrong, don't hesitate to email us at <br /><br />
-      <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a>.
-    </p>
+      <p class="description">
+        Thanks for your purchase! It might take a couple of seconds for
+        everything to finalize, hold tight and refresh the page if your
+        credits/subscription does not show.
+      </p>
+    }
+    @if (subscriptionResult === 'cancel') {
+      <p>
+        It seems like your payment process was cancelled. If you think something
+        has gone wrong, don't hesitate to email us at <br /><br />
+        <a href="mailto:info@planningpoker.live">info&#64;planningpoker.live</a
+        >.
+      </p>
     }
   </div>
 </div>

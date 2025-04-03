@@ -125,7 +125,7 @@ export class EstimatorService {
         ) as DocumentReference<Room>
       ).pipe(
         first(),
-        tap((room) => {
+        tap(room => {
           if (!room) {
             throw new RoomNotFoundError();
           }
@@ -157,13 +157,9 @@ export class EstimatorService {
     await this.signInAsMember(member);
 
     const existingRoom = await this.getRoom(roomId);
-    const isAlreadyMember = existingRoom.members.find(
-      (m) => m.id === member.id
-    );
+    const isAlreadyMember = existingRoom.members.find(m => m.id === member.id);
 
-    const updatedMembers = existingRoom.members.filter(
-      (m) => m.id !== member.id
-    );
+    const updatedMembers = existingRoom.members.filter(m => m.id !== member.id);
 
     updatedMembers.push(member);
 
@@ -184,7 +180,7 @@ export class EstimatorService {
   ) {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
-    const updatedMember = room.members.find((m) => m.id === member.id);
+    const updatedMember = room.members.find(m => m.id === member.id);
 
     updatedMember.status = status;
 
@@ -202,7 +198,7 @@ export class EstimatorService {
   ) {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
-    const updatedMember = room.members.find((m) => m.id === member.id);
+    const updatedMember = room.members.find(m => m.id === member.id);
 
     updatedMember.type = memberType;
 
@@ -232,7 +228,7 @@ export class EstimatorService {
         if (!room) {
           throw new RoomNotFoundError();
         }
-        const member = room.members.find((m) => m.id === user?.uid);
+        const member = room.members.find(m => m.id === user?.uid);
         if (!member) {
           throw new MemberNotFoundError();
         }
@@ -328,7 +324,7 @@ export class EstimatorService {
   }
 
   batchAddRounds(room: Room, topics: string[]) {
-    topics.forEach((topic) => {
+    topics.forEach(topic => {
       const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
 
       room.rounds[nextRoundId] = this.createRound(
@@ -342,7 +338,7 @@ export class EstimatorService {
   }
 
   batchImportTopics(room: Room, topics: RichTopic[]) {
-    topics.forEach((topic) => {
+    topics.forEach(topic => {
       const { nextRoundId, nextRoundNumber } = this.getRoundIds(room);
 
       room.rounds[nextRoundId] = this.createRound(
@@ -374,7 +370,7 @@ export class EstimatorService {
       {}
     );
     const newCurrentRound = rounds.findIndex(
-      (round) => round.id === activeRoundId
+      round => round.id === activeRoundId
     );
     return this.updateRoom(room.roomId, {
       rounds: newRounds,
@@ -440,7 +436,10 @@ export class EstimatorService {
     });
   }
 
-  toggleChangeVoteAfterReveal(roomId: string, isChangeVoteAfterRevealEnabled: boolean) {
+  toggleChangeVoteAfterReveal(
+    roomId: string,
+    isChangeVoteAfterRevealEnabled: boolean
+  ) {
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
       isChangeVoteAfterRevealEnabled,
     });
@@ -474,7 +473,7 @@ export class EstimatorService {
   }
 
   private revoteRound(round: Round): Round {
-    const {majorityOverride, ...rest} = round;
+    const { majorityOverride, ...rest } = round;
     return {
       ...rest,
       started_at: Timestamp.now(),
@@ -511,7 +510,7 @@ export class EstimatorService {
 
   updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
     const newMembers = [...room.members];
-    const member = newMembers.find((m) => m.id === this.activeMember.id);
+    const member = newMembers.find(m => m.id === this.activeMember.id);
     member.avatarUrl = avatarUrl;
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
@@ -520,7 +519,7 @@ export class EstimatorService {
 
   updateCurrentUserMemberName(room: Room, name: string) {
     const newMembers = [...room.members];
-    const member = newMembers.find((m) => m.id === this.activeMember.id);
+    const member = newMembers.find(m => m.id === this.activeMember.id);
     member.name = name;
     return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
@@ -587,7 +586,7 @@ export class EstimatorService {
 
   getPreviousSessions(historyLimit?: number): Observable<Room[]> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of([]);
         }
@@ -603,8 +602,8 @@ export class EstimatorService {
         );
 
         return collectionSnapshots<Room>(q).pipe(
-          filter((snapshots) => !snapshots.some((s) => s.metadata.fromCache)),
-          map((snapshots) => snapshots.map((s) => s.data()))
+          filter(snapshots => !snapshots.some(s => s.metadata.fromCache)),
+          map(snapshots => snapshots.map(s => s.data()))
         );
       })
     );
@@ -613,7 +612,7 @@ export class EstimatorService {
   submitFeedback(rating: number): Observable<DocumentReference<any>> {
     return from(this.authService.getUser()).pipe(
       take(1),
-      switchMap((user) => {
+      switchMap(user => {
         const userId = user.uid;
         return from(
           addDoc(collection(this.firestore, this.FEEDBACK_COLLECTION), {
@@ -647,9 +646,7 @@ export class EstimatorService {
 
     const q = query(ref, orderBy('createdAt', 'desc'));
 
-    return collectionData(q).pipe(
-      map((data) => data as RoomSummary[])
-    );
+    return collectionData(q).pipe(map(data => data as RoomSummary[]));
   }
 
   generateRoomSummary(roomId: string, csvSummary: string) {
@@ -698,7 +695,10 @@ export class EstimatorService {
         'metadata',
         'passwordProtection'
       ) as DocumentReference<any>
-    ).pipe(map((data) => !!data?.value), catchError(() => of(false)));
+    ).pipe(
+      map(data => !!data?.value),
+      catchError(() => of(false))
+    );
   }
 
   async togglePasswordProtection(roomId: string, isEnabled: boolean) {
@@ -740,7 +740,7 @@ export class EstimatorService {
     const organization = await firstValueFrom(
       this.organizationService.getOrganization(organizationId)
     );
-    const memberIds = currentRoom.memberIds.filter((memberId) =>
+    const memberIds = currentRoom.memberIds.filter(memberId =>
       organization.memberIds.includes(memberId)
     );
 

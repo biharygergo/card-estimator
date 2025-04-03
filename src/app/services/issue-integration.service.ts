@@ -38,7 +38,7 @@ export class IssueIntegrationService {
   private readonly selectedIssueIntegrationProvider$ = this.authService
     .getUserPreference()
     .pipe(
-      map((pref) => pref?.selectedIssueIntegrationProvider),
+      map(pref => pref?.selectedIssueIntegrationProvider),
       shareReplay(1)
     );
 
@@ -95,18 +95,18 @@ export class IssueIntegrationService {
           }
         )
       )
-      .subscribe((integration) => this.activeIntegration.next(integration));
+      .subscribe(integration => this.activeIntegration.next(integration));
   }
 
   getConnectedIntegrations(): Observable<{ jira: boolean; linear: boolean }> {
     return this.connectedIntegrations.pipe(
-      filter((integrations) => integrations !== null)
+      filter(integrations => integrations !== null)
     );
   }
 
   getActiveIntegration(): Observable<IntegrationProvider | undefined> {
     return this.activeIntegration.pipe(
-      filter((integration) => integration !== null)
+      filter(integration => integration !== null)
     );
   }
 
@@ -116,7 +116,7 @@ export class IssueIntegrationService {
     after?: number | string
   ): Observable<IssuesSearchApiResult> {
     return this.getActiveIntegration().pipe(
-      switchMap((integration) => {
+      switchMap(integration => {
         if (!integration) {
           return of({ issues: [] });
         }
@@ -129,25 +129,24 @@ export class IssueIntegrationService {
           return of({ issues: [] });
         }
 
-        return integration.service
-          .getIssues(query, filters, after);
+        return integration.service.getIssues(query, filters, after);
       }),
-      catchError((e) => this.handleError(e))
+      catchError(e => this.handleError(e))
     );
   }
 
   getRecentIssues(): Observable<RichTopic[]> {
     return this.getActiveIntegration().pipe(
-      switchMap((integration) => {
+      switchMap(integration => {
         if (!integration) {
           return of([]);
         }
 
         return integration.service
           .getIssues()
-          .pipe(map((result) => result.issues));
+          .pipe(map(result => result.issues));
       }),
-      catchError((e) => this.handleError(e).pipe(map((r) => r.issues)))
+      catchError(e => this.handleError(e).pipe(map(r => r.issues)))
     );
   }
 

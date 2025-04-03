@@ -67,7 +67,7 @@ function createTeamMember(member?: TeamMember) {
     contribution: new FormControl<number>(member?.contribution || 100),
     daysOffUntilEnd: new FormControl<number>(member?.daysOffUntilEnd || 0),
     daysOff: new FormArray(
-      member?.daysOff?.map((day) => new FormControl<Date>(day)) ?? []
+      member?.daysOff?.map(day => new FormControl<Date>(day)) ?? []
     ),
   });
 }
@@ -106,7 +106,7 @@ function findNearestAvailableWeekday(
   let currentDate = new Date(startDate);
   while (
     takenDates.some(
-      (takenDate) => takenDate.getTime() === currentDate.getTime()
+      takenDate => takenDate.getTime() === currentDate.getTime()
     ) ||
     currentDate.getDay() === 0 ||
     currentDate.getDay() === 6
@@ -176,7 +176,7 @@ function estimateProjectTimeline(config: {
       const availableHoursThisDay = teamMembers.length
         ? teamMembers.reduce((sum, member) => {
             if (
-              member.daysOff.some((dayOff) =>
+              member.daysOff.some(dayOff =>
                 isSameDay(new Date(dayOff), currentDate)
               )
             ) {
@@ -192,7 +192,10 @@ function estimateProjectTimeline(config: {
       );
       dailyBurndown.push({
         date: new Date(currentDate),
-        remainingStoryPoints: remainingStoryPoints - storyPointsThisDay <= 0 ? 0 : remainingStoryPoints,
+        remainingStoryPoints:
+          remainingStoryPoints - storyPointsThisDay <= 0
+            ? 0
+            : remainingStoryPoints,
         storyPointsCompleted: storyPointsThisDay,
       });
       remainingStoryPoints -= storyPointsThisDay;
@@ -235,41 +238,54 @@ function estimateProjectTimeline(config: {
 }
 
 @Component({
-    selector: 'app-story-point-calculator',
-    imports: [
-        PageHeaderComponent,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatButtonModule,
-        MatIconModule,
-        MatExpansionModule,
-        MatTooltipModule,
-        MatChipsModule,
-        ReactiveFormsModule,
-        DatePipe,
-        BaseChartDirective,
-        RouterLink,
-        CarbonAdComponent,
-    ],
-    providers: [
-        provideNativeDateAdapter(),
-        provideCharts(withDefaultRegisterables()),
-    ],
-    templateUrl: './story-point-calculator.component.html',
-    styleUrl: './story-point-calculator.component.scss'
+  selector: 'app-story-point-calculator',
+  imports: [
+    PageHeaderComponent,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatButtonModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+    DatePipe,
+    BaseChartDirective,
+    RouterLink,
+    CarbonAdComponent,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    provideCharts(withDefaultRegisterables()),
+  ],
+  templateUrl: './story-point-calculator.component.html',
+  styleUrl: './story-point-calculator.component.scss',
 })
 export class StoryPointCalculatorComponent {
   protected readonly parametersForm = new FormGroup({
-    storyPoints: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+    storyPoints: new FormControl<number>(0, [
+      Validators.required,
+      Validators.min(0),
+    ]),
     startDate: new FormControl<Date>(new Date(), [Validators.required]),
     storyPointToDays: new FormControl<number>(1, [Validators.required]),
-    targetVelocity: new FormControl<number>(80, [Validators.required, Validators.min(0), Validators.max(100)]),
-    staffing: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
-    bufferDays: new FormControl<number>(5, [Validators.required, Validators.min(0)]),
+    targetVelocity: new FormControl<number>(80, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(100),
+    ]),
+    staffing: new FormControl<number>(1, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+    bufferDays: new FormControl<number>(5, [
+      Validators.required,
+      Validators.min(0),
+    ]),
     teamMembers: new FormArray<FormGroup<TeamMemberForm>>([]),
   });
 
@@ -285,11 +301,11 @@ export class StoryPointCalculatorComponent {
           {
             label: 'Story points remaining',
             data: this.result().dailyBurndown.map(
-              (data) => data.remainingStoryPoints
+              data => data.remainingStoryPoints
             ),
           },
         ],
-        labels: this.result().dailyBurndown.map((data) =>
+        labels: this.result().dailyBurndown.map(data =>
           data.date.toISOString()
         ),
       };
@@ -306,13 +322,14 @@ export class StoryPointCalculatorComponent {
         type: 'time',
         time: {
           unit: 'day',
-          tooltipFormat:'yyyy-MM-dd', // <- HERE
+          tooltipFormat: 'yyyy-MM-dd', // <- HERE
         },
       },
     },
   };
 
-  protected readonly howToExpander = viewChild<MatExpansionPanel>('howToExpander');
+  protected readonly howToExpander =
+    viewChild<MatExpansionPanel>('howToExpander');
   protected readonly parametersExpander =
     viewChild<MatExpansionPanel>('parametersExpander');
   protected readonly teamMembersExpander = viewChild<MatExpansionPanel>(
@@ -331,9 +348,7 @@ export class StoryPointCalculatorComponent {
       this.parametersForm.setControl(
         'teamMembers',
         new FormArray(
-          (teamMembers as TeamMember[]).map((member) =>
-            createTeamMember(member)
-          )
+          (teamMembers as TeamMember[]).map(member => createTeamMember(member))
         )
       );
       this.teamMembersExpander().open();
@@ -341,7 +356,7 @@ export class StoryPointCalculatorComponent {
 
     this.parametersForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((formState) => {
+      .subscribe(formState => {
         const queryParams = new URLSearchParams(window.location.search);
         queryParams.set('formState', JSON.stringify(formState));
         const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
@@ -352,12 +367,12 @@ export class StoryPointCalculatorComponent {
       .pipe(
         distinctUntilChanged(
           (prev, curr) =>
-            prev.map((m) => m.daysOffUntilEnd).join(',') ===
-            curr.map((m) => m.daysOffUntilEnd).join(',')
+            prev.map(m => m.daysOffUntilEnd).join(',') ===
+            curr.map(m => m.daysOffUntilEnd).join(',')
         ),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe((teamMembers) => {
+      .subscribe(teamMembers => {
         teamMembers.forEach((member, index) => {
           const daysOff = member.daysOffUntilEnd;
           const daysOffArray =
@@ -394,7 +409,9 @@ export class StoryPointCalculatorComponent {
     }
 
     const timelineEstimate = estimateProjectTimeline({
-      startDate: setDateToStartOfDay(this.parametersForm.controls.startDate.value),
+      startDate: setDateToStartOfDay(
+        this.parametersForm.controls.startDate.value
+      ),
       teamMembers: this.parametersForm.controls.teamMembers
         .value as TeamMember[],
       staffing: this.parametersForm.controls.staffing.value,

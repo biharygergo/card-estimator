@@ -9,7 +9,12 @@ import {
   SignUpOrLoginIntent,
 } from 'src/app/shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { MatAnchor, MatButton } from '@angular/material/button';
-import { MatCard, MatCardHeader, MatCardContent, MatCardActions } from '@angular/material/card';
+import {
+  MatCard,
+  MatCardHeader,
+  MatCardContent,
+  MatCardActions,
+} from '@angular/material/card';
 
 type InvitationResult =
   | 'success'
@@ -18,22 +23,22 @@ type InvitationResult =
   | 'user-not-found';
 
 @Component({
-    selector: 'app-organization-invitation',
-    templateUrl: './organization-invitation.component.html',
-    styleUrls: ['./organization-invitation.component.scss'],
-    imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatAnchor,
-        RouterLink,
-        MatButton,
-    ]
+  selector: 'app-organization-invitation',
+  templateUrl: './organization-invitation.component.html',
+  styleUrls: ['./organization-invitation.component.scss'],
+  imports: [
+    MatCard,
+    MatCardHeader,
+    MatCardContent,
+    MatCardActions,
+    MatAnchor,
+    RouterLink,
+    MatButton,
+  ],
 })
 export class OrganizationInvitationComponent implements OnInit, OnDestroy {
   result: Observable<InvitationResult> = this.activatedRoute.queryParamMap.pipe(
-    map((params) => params.get('result') as InvitationResult)
+    map(params => params.get('result') as InvitationResult)
   );
 
   invitationId: string | undefined =
@@ -53,7 +58,7 @@ export class OrganizationInvitationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.result
       .pipe(takeUntil(this.destroy))
-      .subscribe((res) => (this.invitationResult = res));
+      .subscribe(res => (this.invitationResult = res));
   }
 
   ngOnDestroy(): void {

@@ -8,9 +8,8 @@ describe('SlackComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SlackComponent]
-    })
-    .compileComponents();
+      imports: [SlackComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SlackComponent);
     component = fixture.componentInstance;

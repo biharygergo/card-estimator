@@ -8,9 +8,8 @@ describe('AddCardDeckModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AddCardDeckModalComponent]
-})
-    .compileComponents();
+      imports: [AddCardDeckModalComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

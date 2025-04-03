@@ -8,9 +8,8 @@ describe('StoryPointCalculatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StoryPointCalculatorComponent]
-    })
-    .compileComponents();
+      imports: [StoryPointCalculatorComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StoryPointCalculatorComponent);
     component = fixture.componentInstance;

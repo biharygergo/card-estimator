@@ -51,17 +51,17 @@ const INTEGRATIONS = [
 ];
 
 @Component({
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatCardModule,
-        MatIconModule,
-        MatButtonModule,
-        NgOptimizedImage,
-    ],
-    selector: 'zoom-app-banner',
-    templateUrl: './zoom-app-banner.component.html',
-    styleUrls: ['./zoom-app-banner.component.scss']
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    NgOptimizedImage,
+  ],
+  selector: 'zoom-app-banner',
+  templateUrl: './zoom-app-banner.component.html',
+  styleUrls: ['./zoom-app-banner.component.scss'],
 })
 export class ZoomAppBannerComponent implements OnInit, OnDestroy {
   dialogContent = viewChild<TemplateRef<HTMLDivElement>>('dialogTemplate');
@@ -81,33 +81,35 @@ export class ZoomAppBannerComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly dialog: MatDialog,
     private readonly estimatorService: EstimatorService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.estimatorService.getPreviousSessions(1).pipe(take(1)).subscribe(prevSessions => {
-      if (
-        prevSessions.length > 0 &&
-        typeof window !== 'undefined' &&
-        window?.localStorage &&
-        !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY) &&
-        !!this.configService.getCookie(COOKIE_BEEN_HERE_BEFORE_KEY)
-      ) {
-        const ref = this.dialog.open(this.dialogContent(), {
-          width: '90%',
-          maxWidth: '800px',
-        });
-        ref
-          .afterClosed()
-          .pipe(takeUntil(this.destroy))
-          .subscribe(() => {
-            this.dialogRef().close();
-            window.localStorage.setItem(ZOOM_APP_PROMO_SEEN_KEY, '1');
-            this.analytics.logClickedCloseZoomAppBanner(this.bannerLocation);
+    this.estimatorService
+      .getPreviousSessions(1)
+      .pipe(take(1))
+      .subscribe(prevSessions => {
+        if (
+          prevSessions.length > 0 &&
+          typeof window !== 'undefined' &&
+          window?.localStorage &&
+          !window.localStorage.getItem(ZOOM_APP_PROMO_SEEN_KEY) &&
+          !!this.configService.getCookie(COOKIE_BEEN_HERE_BEFORE_KEY)
+        ) {
+          const ref = this.dialog.open(this.dialogContent(), {
+            width: '90%',
+            maxWidth: '800px',
           });
-        this.dialogRef.set(ref);
-      }
-    });
-    
+          ref
+            .afterClosed()
+            .pipe(takeUntil(this.destroy))
+            .subscribe(() => {
+              this.dialogRef().close();
+              window.localStorage.setItem(ZOOM_APP_PROMO_SEEN_KEY, '1');
+              this.analytics.logClickedCloseZoomAppBanner(this.bannerLocation);
+            });
+          this.dialogRef.set(ref);
+        }
+      });
 
     this.onInstallClicked
       .pipe(

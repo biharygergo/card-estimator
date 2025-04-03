@@ -55,7 +55,6 @@ describe('Authentication', () => {
     cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();
 
-
     cy.contains('Set a custom card deck').click();
 
     cy.get('#deck-name-input').type('My custom deck');
@@ -69,7 +68,7 @@ describe('Authentication', () => {
     cy.get('#card-sets-button').click();
 
     cy.contains('Saved card sets').click();
-    cy.contains('My custom deck').should('be.visible')
+    cy.contains('My custom deck').should('be.visible');
     cy.get('.delete-card-set-button:first').click();
     cy.contains('Delete').click();
     cy.contains('Card set deleted').should('be.visible');

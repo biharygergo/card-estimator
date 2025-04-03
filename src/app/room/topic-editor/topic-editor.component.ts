@@ -64,33 +64,33 @@ export interface TopicEditorInputOutput {
 }
 
 @Component({
-    selector: 'app-topic-editor',
-    templateUrl: './topic-editor.component.html',
-    styleUrls: ['./topic-editor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatFormField,
-        MatInput,
-        FormsModule,
-        MatAutocompleteTrigger,
-        ReactiveFormsModule,
-        MatSuffix,
-        MatProgressSpinner,
-        MatTooltip,
-        MatIconButton,
-        MatIcon,
-        MatAutocomplete,
-        MatOptgroup,
-        MatOption,
-        RichTopicComponent,
-        MatButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDivider,
-        AsyncPipe,
-    ]
+  selector: 'app-topic-editor',
+  templateUrl: './topic-editor.component.html',
+  styleUrls: ['./topic-editor.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatFormField,
+    MatInput,
+    FormsModule,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatSuffix,
+    MatProgressSpinner,
+    MatTooltip,
+    MatIconButton,
+    MatIcon,
+    MatAutocomplete,
+    MatOptgroup,
+    MatOption,
+    RichTopicComponent,
+    MatButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    AsyncPipe,
+  ],
 })
 export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   roomTopic = input.required<Observable<TopicEditorInputOutput>>();
@@ -108,14 +108,14 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   debouncedTopic$: Observable<string> = this.roundTopic.valueChanges.pipe(
     debounceTime(500),
-    map((topic) => this.displayFn(topic))
+    map(topic => this.displayFn(topic))
   );
 
   startJiraAuth = new Subject<void>();
   startLinearAuth = new Subject<void>();
 
   selectedIssueIntegrationProvider$ = this.authService.getUserPreference().pipe(
-    map((pref) => pref?.selectedIssueIntegrationProvider),
+    map(pref => pref?.selectedIssueIntegrationProvider),
     shareReplay(1)
   );
 
@@ -133,17 +133,17 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isFetchingRecents.set(true);
     }),
     switchMap(() => this.issueIntegrationService.getRecentIssues()),
-    tap(() => (this.isFetchingRecents.set(false)))
+    tap(() => this.isFetchingRecents.set(false))
   );
 
   issuesFromQuery$: Observable<RichTopic[]> = this.debouncedTopic$.pipe(
     tap(() => {
       this.isSearching.set(true);
     }),
-    switchMap((query) => {
+    switchMap(query => {
       return this.issueIntegrationService
         .searchIssues(query)
-        .pipe(map((r) => r.issues));
+        .pipe(map(r => r.issues));
     }),
     tap(() => {
       this.isSearching.set(false);
@@ -175,14 +175,14 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRichTopic.set(richTopic);
       });
 
-    this.issuesFromQuery$.pipe(takeUntil(this.destroy)).subscribe((issues) => {
+    this.issuesFromQuery$.pipe(takeUntil(this.destroy)).subscribe(issues => {
       this.issuesFromIntegration$.next({
         search: issues,
         recent: this.issuesFromIntegration$.value.recent,
       });
     });
 
-    this.recentIssues$.pipe(takeUntil(this.destroy)).subscribe((recents) => {
+    this.recentIssues$.pipe(takeUntil(this.destroy)).subscribe(recents => {
       this.issuesFromIntegration$.next({
         recent: recents,
         search: this.issuesFromIntegration$.value.search,
@@ -276,7 +276,7 @@ export class TopicEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openBatchAddModal() {
-    this.roomDataService.room$.pipe(take(1)).subscribe((room) => {
+    this.roomDataService.room$.pipe(take(1)).subscribe(room => {
       this.dialog.open(...batchAddModalCreator({ room }));
     });
   }

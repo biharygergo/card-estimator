@@ -8,9 +8,8 @@ describe('ProfileDropdownComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ProfileDropdownComponent]
-})
-    .compileComponents();
+      imports: [ProfileDropdownComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -94,50 +94,50 @@ interface OrganizationChecklist {
 }
 
 @Component({
-    selector: 'app-organization-modal',
-    templateUrl: './organization-modal.component.html',
-    styleUrls: ['./organization-modal.component.scss'],
-    animations: [fadeAnimation],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatCard,
-        MatCardContent,
-        MatIcon,
-        MatButton,
-        MatTabGroup,
-        MatTab,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormField,
-        MatInput,
-        MatHint,
-        FileUploadDragDropComponent,
-        MatIconButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatChipGrid,
-        MatChipRow,
-        MatChipRemove,
-        MatChipInput,
-        MatSuffix,
-        MatChipListbox,
-        MatChip,
-        MatTooltip,
-        MatProgressSpinner,
-        MatDialogActions,
-        MatDialogClose,
-        MatProgressBar,
-        MatChipSet,
-        AsyncPipe,
-        OrganizationSelectorComponent,
-    ]
+  selector: 'app-organization-modal',
+  templateUrl: './organization-modal.component.html',
+  styleUrls: ['./organization-modal.component.scss'],
+  animations: [fadeAnimation],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatCard,
+    MatCardContent,
+    MatIcon,
+    MatButton,
+    MatTabGroup,
+    MatTab,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    MatHint,
+    FileUploadDragDropComponent,
+    MatIconButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatChipGrid,
+    MatChipRow,
+    MatChipRemove,
+    MatChipInput,
+    MatSuffix,
+    MatChipListbox,
+    MatChip,
+    MatTooltip,
+    MatProgressSpinner,
+    MatDialogActions,
+    MatDialogClose,
+    MatProgressBar,
+    MatChipSet,
+    AsyncPipe,
+    OrganizationSelectorComponent,
+  ],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
   organization$ = this.organizationService.getMyOrganization().pipe(
-    tap((org) => (this.organization = org)),
-    tap((org) => {
+    tap(org => (this.organization = org)),
+    tap(org => {
       if (org) {
         this.organizationForm.setValue({
           name: org.name,
@@ -149,34 +149,34 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   );
 
   members$ = this.organization$.pipe(
-    map((organization) => organization.memberIds),
+    map(organization => organization.memberIds),
     distinctUntilChanged(isEqual),
-    switchMap((memberIds) => this.authService.getUserProfiles(memberIds)),
-    map((userProfilesMap) =>
-      Object.values(userProfilesMap).filter((profile) => !!profile)
+    switchMap(memberIds => this.authService.getUserProfiles(memberIds)),
+    map(userProfilesMap =>
+      Object.values(userProfilesMap).filter(profile => !!profile)
     )
   );
 
   invitations$ = this.organization$.pipe(
-    switchMap((organization) => {
+    switchMap(organization => {
       if (!organization || !organization.memberIds?.length) {
         return of({ invitations: [], organization });
       }
       // Add a delay before querying invitations to handle newly created organizations
       return of(null).pipe(
         delay(500), // 500ms delay
-        switchMap(() => 
+        switchMap(() =>
           this.organizationService
             .getInvitations(organization.id)
-            .pipe(map((invitations) => ({ invitations, organization })))
+            .pipe(map(invitations => ({ invitations, organization })))
         )
       );
     }),
     map(({ invitations }) =>
-      invitations.filter((invite) => invite.status !== 'accepted')
+      invitations.filter(invite => invite.status !== 'accepted')
     ),
-    map((invitations) =>
-      invitations.map((invite) => ({
+    map(invitations =>
+      invitations.map(invite => ({
         ...invite,
         tooltip: `Invite sent at: ${new Date(
           invite.createdAt?.seconds * 1000
@@ -196,7 +196,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       };
       return {
         items: checklistItems,
-        allCompleted: Object.values(checklistItems).every((item) => !!item),
+        allCompleted: Object.values(checklistItems).every(item => !!item),
       };
     })
   );
@@ -228,19 +228,19 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     combineLatest([
       from(this.paymentsService.getAndAssignCreditBundles()),
       this.organization$.pipe(
-        map((org) => org?.id),
-        filter((orgId) => !!orgId),
+        map(org => org?.id),
+        filter(orgId => !!orgId),
         distinctUntilChanged()
       ),
     ]).pipe(
       map(([{ credits }, orgId]) => {
         const organizationCredits = credits.filter(
-          (credit) => credit.organizationId === orgId
+          credit => credit.organizationId === orgId
         );
 
         const total = organizationCredits.length;
         const available = organizationCredits.filter(
-          (credit) => !credit.usedForRoomId
+          credit => !credit.usedForRoomId
         ).length;
         const used = total - available;
 
@@ -264,10 +264,10 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     this.organization$.pipe(takeUntil(this.destroy)).subscribe();
     this.organization$
       .pipe(
-        switchMap((organization) =>
+        switchMap(organization =>
           this.authService.user.pipe(
             map(
-              (user) =>
+              user =>
                 user && organization && user.uid === organization.createdById
             )
           )
@@ -275,7 +275,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe(
-        (isOrganizationCreator) =>
+        isOrganizationCreator =>
           (this.isOrganizationCreator = isOrganizationCreator)
       );
   }
@@ -412,7 +412,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
     if (value) {
       const emails: string[] = [
-        ...new Set(value.split(',').map((email) => email.trim())),
+        ...new Set(value.split(',').map(email => email.trim())),
       ];
       this.emailFormValues.push(...emails);
     }

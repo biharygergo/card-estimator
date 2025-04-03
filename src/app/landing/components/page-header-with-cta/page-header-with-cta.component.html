@@ -13,24 +13,22 @@
         >by 1000+ reviewers
       </p>
       <div>
-        @if(config.internalLink) {
-        <a
-          mat-flat-button
-          [routerLink]="config.internalLink"
-          class="start-planning-btn"
-        >
-          <mat-icon>{{ config.ctaIcon }}</mat-icon>
-          {{ config.ctaTitle }}
-        </a>
-        } @else if(config.externalLink) {
-        <a
-          mat-flat-button
-          [href]="config.externalLink"
-          class="start-planning-btn"
-        >
-          <mat-icon>{{ config.ctaIcon }}</mat-icon>
-          {{ config.ctaTitle }}
-        </a>
+        @if (config.internalLink) {
+          <a
+            mat-flat-button
+            [routerLink]="config.internalLink"
+            class="start-planning-btn">
+            <mat-icon>{{ config.ctaIcon }}</mat-icon>
+            {{ config.ctaTitle }}
+          </a>
+        } @else if (config.externalLink) {
+          <a
+            mat-flat-button
+            [href]="config.externalLink"
+            class="start-planning-btn">
+            <mat-icon>{{ config.ctaIcon }}</mat-icon>
+            {{ config.ctaTitle }}
+          </a>
         }
 
         <p class="header-meta">
@@ -41,15 +39,18 @@
             target="_blank"
             >open-source</a
           >
-          and used by thousands every day. @if(config.showPlatforms) { Works in
-          your browser & inside <a routerLink="/integrations/zoom">Zoom</a>,
-          <a routerLink="/integrations/teams">Teams</a>,
-          <a routerLink="/integrations/meet">Meet</a> and
-          <a routerLink="/integrations/webex">Webex</a>. } Seamlessly integrates with
+          and used by thousands every day.
+          @if (config.showPlatforms) {
+            Works in your browser & inside
+            <a routerLink="/integrations/zoom">Zoom</a>,
+            <a routerLink="/integrations/teams">Teams</a>,
+            <a routerLink="/integrations/meet">Meet</a> and
+            <a routerLink="/integrations/webex">Webex</a>.
+          }
+          Seamlessly integrates with
           <a routerLink="/integrations/jira">Jira</a>
           and
-          <a routerLink="/integrations/linear">Linear</a
-          >.
+          <a routerLink="/integrations/linear">Linear</a>.
         </p>
       </div>
     </div>
@@ -61,8 +62,7 @@
         placeholder
         width="1120"
         height="699"
-        sizes="(max-width: 800px) 100vw, 60vw"
-      />
+        sizes="(max-width: 800px) 100vw, 60vw" />
     </div>
   </div>
 </div>

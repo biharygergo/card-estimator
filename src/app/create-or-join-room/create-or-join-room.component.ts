@@ -132,29 +132,29 @@ const LOADING_MESSAGES = [
 ];
 
 @Component({
-    imports: [
-        CommonModule,
-        RouterModule,
-        ZoomAppBannerComponent,
-        AppConfigModule,
-        CarbonAdComponent,
-        ProfileDropdownComponent,
-        MatIcon,
-        MatCardModule,
-        MatOptionModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatProgressSpinnerModule,
-        ResizeMonitorDirective,
-        MatTooltipModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-    ],
-    selector: 'app-create-or-join-room',
-    templateUrl: './create-or-join-room.component.html',
-    styleUrls: ['./create-or-join-room.component.scss'],
-    animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation]
+  imports: [
+    CommonModule,
+    RouterModule,
+    ZoomAppBannerComponent,
+    AppConfigModule,
+    CarbonAdComponent,
+    ProfileDropdownComponent,
+    MatIcon,
+    MatCardModule,
+    MatOptionModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    ResizeMonitorDirective,
+    MatTooltipModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
+  selector: 'app-create-or-join-room',
+  templateUrl: './create-or-join-room.component.html',
+  styleUrls: ['./create-or-join-room.component.scss'],
+  animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   name = new FormControl<string>('');
@@ -186,8 +186,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   );
 
   roomIdFromParams: Observable<string> = this.activatedRoute.queryParamMap.pipe(
-    map((paramMap) => paramMap.get('roomId')),
-    tap((roomId) => {
+    map(paramMap => paramMap.get('roomId')),
+    tap(roomId => {
       if (roomId) {
         this.roomId.setValue(roomId);
         this.analytics.logAutoFilledRoomId();
@@ -197,17 +197,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   );
 
   flowFromParams$: Observable<string> = this.activatedRoute.queryParamMap.pipe(
-    map((paramMap) => paramMap.get('flow'))
+    map(paramMap => paramMap.get('flow'))
   );
 
   recurringMeetingId$: Observable<string | null> =
     this.activatedRoute.queryParamMap.pipe(
-      map((paramMap) => paramMap.get('recurringMeetingId'))
+      map(paramMap => paramMap.get('recurringMeetingId'))
     );
 
   recurringMeeting$: Observable<RecurringMeetingLink | undefined> =
     this.recurringMeetingId$.pipe(
-      switchMap((id) => {
+      switchMap(id => {
         return id
           ? this.recurringMeetingService.getRecurringMeeting(id)
           : of(undefined);
@@ -215,21 +215,21 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     );
 
   currentPath: Observable<string> = this.activatedRoute.url.pipe(
-    map((segments) => [...segments]?.pop()?.path)
+    map(segments => [...segments]?.pop()?.path)
   );
 
   pageMode: Observable<PageMode> = this.currentPath.pipe(
-    map((path) => {
+    map(path => {
       return path === 'create' ? PageMode.CREATE : PageMode.JOIN;
     })
   );
 
   recentlyLeftRoom$ = this.authService.getUserPreference().pipe(
     take(1),
-    filter((preference) => !!preference?.lastJoinedRoom),
-    map((preference) => preference.lastJoinedRoom),
+    filter(preference => !!preference?.lastJoinedRoom),
+    map(preference => preference.lastJoinedRoom),
     filter(
-      (lastJoinedRoom) =>
+      lastJoinedRoom =>
         (lastJoinedRoom.heartbeatAt as any).seconds * 1000 >
         Date.now() - 1000 * 60 * 5 // 5 minutes
     ),
@@ -238,7 +238,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   shouldAutoNavigateToRecentRoomInTeams$ = this.recentlyLeftRoom$.pipe(
     filter(
-      (room) =>
+      room =>
         this.config.runningIn === 'teams' &&
         (room.heartbeatAt as any).seconds * 1000 > Date.now() - 1000 * 60 * 2 && // 2 minutes
         !this.hideRecentlyLeftRoom
@@ -264,7 +264,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   );
 
   organization: Observable<Organization | undefined> = this.user.pipe(
-    switchMap((user) => {
+    switchMap(user => {
       if (!user?.isAnonymous) {
         return this.organizationService.getMyOrganization().pipe(first());
       } else {
@@ -356,7 +356,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         }),
         switchMap(() =>
           from(this.joinRoom()).pipe(
-            catchError((e) => {
+            catchError(e => {
               if (e.code !== 'permission-denied') {
                 this.showUnableToJoinRoom();
                 return of(false);
@@ -368,7 +368,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
                 );
                 return dialogRef.afterClosed().pipe(
                   first(),
-                  switchMap((result) => {
+                  switchMap(result => {
                     if (result !== '' && result?.joined) {
                       return from(this.joinRoom());
                     } else {
@@ -383,7 +383,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         tap(() => this.isBusy.next(false)),
         takeUntil(this.destroy)
       )
-      .subscribe((success) => {
+      .subscribe(success => {
         if (success) {
           this.navigateToRoom(this.roomId.value);
         }
@@ -395,12 +395,12 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           this.isBusy.next(true);
         }),
         switchMap(() => this.recurringMeetingId$),
-        switchMap((recurringMeetingId) =>
+        switchMap(recurringMeetingId =>
           from(this.createRoom(recurringMeetingId)).pipe(
-            catchError((e) => {
+            catchError(e => {
               return this.authService.user.pipe(
                 take(1),
-                switchMap((user) => {
+                switchMap(user => {
                   if (e.details === 'error-no-credits') {
                     const isAnonymous = user.isAnonymous;
                     const messagePart = isAnonymous
@@ -473,7 +473,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     this.flowFromParams$
       .pipe(takeUntil(this.destroy))
-      .subscribe(async (flowParam) => {
+      .subscribe(async flowParam => {
         if (flowParam === 'premium') {
           this.dialog.open(...pricingModalCreator());
         } else if (flowParam === 'manageSubscription') {
@@ -494,7 +494,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
     this.shouldAutoNavigateToRecentRoomInTeams$
       .pipe(takeUntil(this.destroy))
-      .subscribe((room) => {
+      .subscribe(room => {
         this.navigateToRoom(room.roomId);
         this.snackBar.open(
           "You've been automatically redirected to your last room in Teams",

@@ -70,7 +70,9 @@ nav {
         padding: 8px 24px;
         letter-spacing: initial;
 
-        transition: background 100ms linear, outline 50ms linear;
+        transition:
+          background 100ms linear,
+          outline 50ms linear;
 
         a {
           text-decoration: none;
@@ -102,7 +104,7 @@ nav {
             position: relative;
             padding-right: 12px;
             &:after {
-              content: "";
+              content: '';
               position: absolute;
               right: 0;
               top: -8px;
@@ -187,7 +189,9 @@ nav {
       padding-top: 1rem;
       z-index: -1;
       background: white;
-      transition: top 200ms ease-out, opacity 400ms ease-in-out;
+      transition:
+        top 200ms ease-out,
+        opacity 400ms ease-in-out;
       li {
         margin-right: 0;
         margin-bottom: 16px;

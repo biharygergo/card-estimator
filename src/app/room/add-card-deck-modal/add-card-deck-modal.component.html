@@ -10,8 +10,7 @@
             placeholder="Team deck #1"
             formControlName="cardDeckName"
             autocomplete="off"
-            id="deck-name-input"
-          />
+            id="deck-name-input" />
         </mat-form-field>
         <p class="hint">
           Name your card deck so you can find it among other decks
@@ -23,76 +22,79 @@
             placeholder="1,5,10,15,20"
             formControlName="cardDeckValues"
             autocomplete="off"
-            id="deck-values-input"
-          />
-          @if (cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength'])
-          {
-          <mat-error>
-            Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
-          </mat-error>
-          } @if
-          (cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates'])
-          {
-          <mat-error> All cards must be unique. </mat-error>
-          } 
-        </mat-form-field>
-        @if(numericCardValuesFormGroup.errors?.notAscending) {
-          <mat-error> Numeric values must be in ascending order. </mat-error>
+            id="deck-values-input" />
+          @if (
+            cardDeckForm.controls.cardDeckValues.errors?.['cardDeckLength']
+          ) {
+            <mat-error>
+              Maximum {{ MAX_CARD_DECK_SIZE }} cards can be set.
+            </mat-error>
           }
+          @if (
+            cardDeckForm.controls.cardDeckValues.errors?.['cardDeckDuplicates']
+          ) {
+            <mat-error> All cards must be unique. </mat-error>
+          }
+        </mat-form-field>
+        @if (numericCardValuesFormGroup.errors?.notAscending) {
+          <mat-error> Numeric values must be in ascending order. </mat-error>
+        }
         <p class="hint">
           Card values as a comma separated list in ascending order. You can use
           numbers or words as well. You can add up to 10 cards.
         </p>
-        @if(!(isAllNumeric()) && cardLabels().length) {
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Configure numeric values</mat-panel-title>
-            </mat-expansion-panel-header>
-            <p class="numeric-description">
-              Customize the default numeric values for each card. Each number
-              has to be unique and larger than the previous one. Numeric values
-              are used when saving estimates and calculating velocity. If you
-              modify the cards above, customization will be reset.
-            </p>
-            <div class="numeric-forms">
-              @for (card of cardLabels(); track card;) {
-              @if(numericCardValuesFormGroup.controls[card]) {
-              <mat-form-field
-                appearance="outline"
-                subscriptSizing="dynamic"
-                [id]="'numeric-value-input-' + $index"
-              >
-                <mat-label>Numeric value of: {{ card }}</mat-label>
-                <input
-                  type="number"
-                  matInput
-                  [formControl]="numericCardValuesFormGroup.controls[card]"
-                />
-              </mat-form-field>
-              } }
-            </div>
-            @if(numericCardValuesFormGroup.errors?.['duplicated']) {
-            <mat-error> All numeric values must be unique. </mat-error>
-            } @if(numericCardValuesFormGroup.errors?.['notAscending']) {
-
-            <mat-error> Numeric values must be in ascending order. </mat-error>
-            }
-          </mat-expansion-panel>
-        </mat-accordion>
-
+        @if (!isAllNumeric() && cardLabels().length) {
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>Configure numeric values</mat-panel-title>
+              </mat-expansion-panel-header>
+              <p class="numeric-description">
+                Customize the default numeric values for each card. Each number
+                has to be unique and larger than the previous one. Numeric
+                values are used when saving estimates and calculating velocity.
+                If you modify the cards above, customization will be reset.
+              </p>
+              <div class="numeric-forms">
+                @for (card of cardLabels(); track card) {
+                  @if (numericCardValuesFormGroup.controls[card]) {
+                    <mat-form-field
+                      appearance="outline"
+                      subscriptSizing="dynamic"
+                      [id]="'numeric-value-input-' + $index">
+                      <mat-label>Numeric value of: {{ card }}</mat-label>
+                      <input
+                        type="number"
+                        matInput
+                        [formControl]="
+                          numericCardValuesFormGroup.controls[card]
+                        " />
+                    </mat-form-field>
+                  }
+                }
+              </div>
+              @if (numericCardValuesFormGroup.errors?.['duplicated']) {
+                <mat-error> All numeric values must be unique. </mat-error>
+              }
+              @if (numericCardValuesFormGroup.errors?.['notAscending']) {
+                <mat-error>
+                  Numeric values must be in ascending order.
+                </mat-error>
+              }
+            </mat-expansion-panel>
+          </mat-accordion>
         }
       </form>
       <div class="preview-cards">
-        @for (card of cardPreview; track $index; let i = $index) { @if (i <
-        CARD_DECK_IDEAL_SIZE || card !== undefined) {
-        <mat-card
-          class="preview-card"
-          [ngClass]="{ filled: card !== undefined }"
-        >
-          {{ card ?? "?" }}
-        </mat-card>
-        } }
+        @for (card of cardPreview; track $index; let i = $index) {
+          @if (i < CARD_DECK_IDEAL_SIZE || card !== undefined) {
+            <mat-card
+              class="preview-card"
+              [ngClass]="{ filled: card !== undefined }">
+              {{ card ?? '?' }}
+            </mat-card>
+          }
+        }
       </div>
     </div>
   </div>
@@ -106,8 +108,7 @@
       color="primary"
       [disabled]="!cardDeckForm.valid || !numericCardValuesFormGroup.valid"
       (click)="onSaveClick()"
-      id="set-card-deck-button"
-    >
+      id="set-card-deck-button">
       <mat-icon>done</mat-icon>
       Set
     </button>

@@ -9,18 +9,17 @@ import {
 } from '@angular/core';
 
 import { BehaviorSubject, Subject } from 'rxjs';
-import { TopicEditorInputOutput, TopicEditorComponent } from '../../topic-editor/topic-editor.component';
+import {
+  TopicEditorInputOutput,
+  TopicEditorComponent,
+} from '../../topic-editor/topic-editor.component';
 import { MatCard, MatCardContent } from '@angular/material/card';
 
 @Component({
-    selector: 'add-or-update-topic',
-    templateUrl: './add-or-update-topic.component.html',
-    styleUrls: ['./add-or-update-topic.component.scss'],
-    imports: [
-        MatCard,
-        MatCardContent,
-        TopicEditorComponent,
-    ]
+  selector: 'add-or-update-topic',
+  templateUrl: './add-or-update-topic.component.html',
+  styleUrls: ['./add-or-update-topic.component.scss'],
+  imports: [MatCard, MatCardContent, TopicEditorComponent],
 })
 export class AddOrUpdateTopicComponent implements OnInit, OnChanges {
   @Input() roundNumber!: number;

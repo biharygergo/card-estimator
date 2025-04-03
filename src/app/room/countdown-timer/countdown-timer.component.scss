@@ -1,4 +1,4 @@
-@import "../../common.scss";
+@import '../../common.scss';
 
 .timer-container {
   display: flex;
@@ -64,10 +64,10 @@
 }
 
 .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
 }
 
 #timer-progress-bar.almost-done {

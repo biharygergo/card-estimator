@@ -8,7 +8,7 @@ describe('CarbonAdComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CarbonAdComponent]
+      imports: [CarbonAdComponent],
     });
     fixture = TestBed.createComponent(CarbonAdComponent);
     component = fixture.componentInstance;

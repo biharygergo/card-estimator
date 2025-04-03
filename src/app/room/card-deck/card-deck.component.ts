@@ -64,7 +64,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   onDestroy = new Subject<void>();
 
   isObserver = this.roomDataService.activeMember$.pipe(
-    map((member) => member?.type === MemberType.OBSERVER)
+    map(member => member?.type === MemberType.OBSERVER)
   );
 
   constructor(
@@ -79,7 +79,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
     this.onReaction
       .pipe(
         debounceTime(100),
-        mergeMap((reactionId) => from(this.sendReaction(reactionId))),
+        mergeMap(reactionId => from(this.sendReaction(reactionId))),
         takeUntil(this.onDestroy)
       )
       .subscribe();

@@ -8,66 +8,62 @@
           <strong>
             This room is protected by a password and it's only open for
             organization members. </strong
-            >If you keep seeing this screen, you are likely entering a wrong
-            password or you are not part of the organization.
-          </p>
+          >If you keep seeing this screen, you are likely entering a wrong
+          password or you are not part of the organization.
+        </p>
+      }
+      @if (authTypeRequired === 'password' || authTypeRequired === 'both') {
+        <p>
+          This room is protected by a password. Please enter it below to join
+          this planning session.
+        </p>
+        <mat-form-field class="room-password" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" [formControl]="roomPassword" />
+        </mat-form-field>
+        @if (errorMessage | async; as error) {
+          <div class="error">
+            {{ error }}
+          </div>
         }
-        @if (authTypeRequired === 'password' || authTypeRequired === 'both') {
-          <p>
-            This room is protected by a password. Please enter it below to join this
-            planning session.
-          </p>
-          <mat-form-field class="room-password" appearance="outline">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" [formControl]="roomPassword" />
-          </mat-form-field>
-          @if (errorMessage | async; as error) {
-            <div class="error">
-              {{ error }}
-            </div>
-          }
-        }
-        @if (authTypeRequired === 'organization') {
-          <p>
-            This room can only be joined by members of the creator's organization.
-            Ask the room creator to add you as an organization member to continue.
-          </p>
-        }
-        @if (authTypeRequired === 'unknown') {
-          <p>
-            There was an unknown error while joining this room. Please try again
-            later or report an issue and we'll try to fix it soon.
-          </p>
-        }
-      </div>
-    } @else {
-      <div class="loading">
-        <mat-progress-spinner
-          mode="indeterminate"
-          [diameter]="30"
-        ></mat-progress-spinner>
-      </div>
-    }
-  </div>
-  <div mat-dialog-actions>
-    @if (authTypeRequired === 'password' || authTypeRequired === 'both') {
-      <button
-        mat-flat-button
-        color="primary"
-        [disabled]="!roomPassword.valid || isJoiningRoom"
-        (click)="joinRoomWithPassword()"
-        >
-        {{ isJoiningRoom ? "Joining room..." : "Join room" }}
-      </button>
-    }
-    <button mat-button mat-dialog-close>Cancel</button>
-  </div>
-  <ng-template #loading>
+      }
+      @if (authTypeRequired === 'organization') {
+        <p>
+          This room can only be joined by members of the creator's organization.
+          Ask the room creator to add you as an organization member to continue.
+        </p>
+      }
+      @if (authTypeRequired === 'unknown') {
+        <p>
+          There was an unknown error while joining this room. Please try again
+          later or report an issue and we'll try to fix it soon.
+        </p>
+      }
+    </div>
+  } @else {
     <div class="loading">
       <mat-progress-spinner
         mode="indeterminate"
-        [diameter]="30"
-      ></mat-progress-spinner>
+        [diameter]="30"></mat-progress-spinner>
     </div>
-  </ng-template>
-  
+  }
+</div>
+<div mat-dialog-actions>
+  @if (authTypeRequired === 'password' || authTypeRequired === 'both') {
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!roomPassword.valid || isJoiningRoom"
+      (click)="joinRoomWithPassword()">
+      {{ isJoiningRoom ? 'Joining room...' : 'Join room' }}
+    </button>
+  }
+  <button mat-button mat-dialog-close>Cancel</button>
+</div>
+<ng-template #loading>
+  <div class="loading">
+    <mat-progress-spinner
+      mode="indeterminate"
+      [diameter]="30"></mat-progress-spinner>
+  </div>
+</ng-template>

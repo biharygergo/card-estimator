@@ -13,10 +13,7 @@ import {
 export class FileUploadService {
   constructor(private readonly storageService: Storage) {}
 
-  async uploadFile(
-    referencePath: string,
-    file: File,
-  ): Promise<string> {
+  async uploadFile(referencePath: string, file: File): Promise<string> {
     const reference = ref(this.storageService, referencePath);
 
     const snapshot = await uploadBytes(reference, file);

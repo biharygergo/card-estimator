@@ -6,10 +6,10 @@ import {
 import { SlackService } from 'src/app/services/slack.service';
 
 @Component({
-    selector: 'app-slack',
-    imports: [IntegrationPageTemplateComponent],
-    templateUrl: './slack.component.html',
-    styleUrl: './slack.component.scss'
+  selector: 'app-slack',
+  imports: [IntegrationPageTemplateComponent],
+  templateUrl: './slack.component.html',
+  styleUrl: './slack.component.scss',
 })
 export class SlackComponent {
   private readonly slackService = inject(SlackService);
@@ -53,9 +53,11 @@ export class SlackComponent {
             'Just type /create-room in any channel where you want to start planning. The bot will create a new room and post a message with a "Join Room" button. When team members click it, they\'ll be taken directly to the planning poker session.',
         },
         {
-          question: 'Why does the Slack page show that this app is not approved?',
-          answer: 'The Slack page shows that this app is not approved because it is not a verified app. This means that the app is not a part of the Slack App Directory. We are working on getting this app verified so that it can be used by more teams.',
-        }
+          question:
+            'Why does the Slack page show that this app is not approved?',
+          answer:
+            'The Slack page shows that this app is not approved because it is not a verified app. This means that the app is not a part of the Slack App Directory. We are working on getting this app verified so that it can be used by more teams.',
+        },
       ],
       steps: [
         {

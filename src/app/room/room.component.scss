@@ -1,4 +1,4 @@
-@import "../common.scss";
+@import '../common.scss';
 
 .sidenav-container {
   position: absolute;
@@ -189,7 +189,6 @@
   }
 }
 
-
 @keyframes appearBelowAnimation {
   from {
     opacity: 0;
@@ -214,7 +213,9 @@
 
 .topic-title {
   span {
-    transition: opacity 200ms linear, transform 200ms linear;
+    transition:
+      opacity 200ms linear,
+      transform 200ms linear;
 
     &.round-increase {
       animation: roundIncreaseAnimation 200ms ease-out;

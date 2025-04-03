@@ -17,7 +17,7 @@
     margin-bottom: 1rem;
 
     @include smallScreen {
-        margin-bottom: 2rem;
+      margin-bottom: 2rem;
     }
   }
 }
@@ -86,17 +86,17 @@
 }
 
 .result-chart {
-    margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 .howto {
-    color: white;
-    margin-bottom: 2rem;
-    p {
-        color: var(--landing-text-color);
-    }
+  color: white;
+  margin-bottom: 2rem;
+  p {
+    color: var(--landing-text-color);
+  }
 
-    a {
-        color: white;
-    }
+  a {
+    color: white;
+  }
 }

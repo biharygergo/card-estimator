@@ -8,9 +8,8 @@ describe('AuthProgressDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AuthProgressDialogComponent]
-})
-    .compileComponents();
+      imports: [AuthProgressDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -22,5 +21,4 @@ describe('AuthProgressDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });

@@ -14,14 +14,16 @@ export class GlobalErrorHandler implements ErrorHandler {
     const chunkFailedMessage = /Failed to fetch dynamically imported module/;
     console.error('Received an error', error);
     const errorMessage = typeof error === 'string' ? error : error.message;
-  
+
     if (chunkFailedMessage.test(errorMessage)) {
       this.showErrorToast(
-        error, `There was an error while loading parts of the application. Please reload the page.`
+        error,
+        `There was an error while loading parts of the application. Please reload the page.`
       );
     } else if (errorMessage?.includes('AppCheck')) {
       this.showErrorToast(
-        error, `We couldn't verify your identity with AppCheck and therefore your access was automatically blocked. ${error.code}`
+        error,
+        `We couldn't verify your identity with AppCheck and therefore your access was automatically blocked. ${error.code}`
       );
       return;
     } else if (
@@ -30,7 +32,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       errorMessage?.includes('network-request-failed')
     ) {
       this.showErrorToast(
-        error, 'Network issue detected. Please check your connection and try again.'
+        error,
+        'Network issue detected. Please check your connection and try again.'
       );
       return;
     } else {
@@ -45,7 +48,9 @@ export class GlobalErrorHandler implements ErrorHandler {
     const toastMessage =
       message ??
       `An error occured, please try again or report this issue. ${
-        errorMessage ? `The error message is: ${errorMessage.slice(0, 300)}` : ''
+        errorMessage
+          ? `The error message is: ${errorMessage.slice(0, 300)}`
+          : ''
       }`;
 
     const snackbarRef = this.toastService.showMessage(

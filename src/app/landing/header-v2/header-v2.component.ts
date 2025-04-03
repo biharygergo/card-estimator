@@ -12,22 +12,22 @@ import { ProfileDropdownComponent } from 'src/app/shared/profile-dropdown/profil
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-    selector: 'planning-poker-landing-header',
-    templateUrl: './header-v2.component.html',
-    styleUrls: ['./header-v2.component.scss'],
-    imports: [
-        NgClass,
-        MatButton,
-        MatIcon,
-        RouterLink,
-        RouterLinkActive,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatAnchor,
-        MatIconButton,
-        ProfileDropdownComponent,
-    ]
+  selector: 'planning-poker-landing-header',
+  templateUrl: './header-v2.component.html',
+  styleUrls: ['./header-v2.component.scss'],
+  imports: [
+    NgClass,
+    MatButton,
+    MatIcon,
+    RouterLink,
+    RouterLinkActive,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatAnchor,
+    MatIconButton,
+    ProfileDropdownComponent,
+  ],
 })
 export class HeaderV2Component implements OnInit {
   isOpen = false;

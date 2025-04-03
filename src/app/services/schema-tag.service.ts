@@ -64,9 +64,7 @@ const DEFAULT_DATA: WithContext<WebApplication> = {
 export class SchemaTagService {
   currentSchema = signal<WithContext<WebApplication>>(DEFAULT_DATA);
 
-  constructor(
-    @Inject(DOCUMENT) private _document: Document,
-  ) {}
+  constructor(@Inject(DOCUMENT) private _document: Document) {}
 
   public setJsonLd(renderer2: Renderer2, data: any): void {
     let script = renderer2.createElement('script');

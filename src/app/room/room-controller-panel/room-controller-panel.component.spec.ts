@@ -8,8 +8,8 @@ describe('RoomControllerPanelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [RoomControllerPanelComponent]
-});
+      imports: [RoomControllerPanelComponent],
+    });
     fixture = TestBed.createComponent(RoomControllerPanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

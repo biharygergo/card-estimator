@@ -2,8 +2,7 @@
   class="box"
   appDragDrop
   (files)="fileDropped($event)"
-  (click)="fileUpload.click()"
->
+  (click)="fileUpload.click()">
   <div class="box-input">
     <input
       class="box-file"
@@ -11,13 +10,10 @@
       id="file"
       #fileUpload
       accept="image/*"
-      (change)="onFileSelected($event)"
-    />
+      (change)="onFileSelected($event)" />
     <div class="icon-container">
       <mat-icon>upload</mat-icon>
     </div>
-    <label for="file"
-      > Click to upload or drag logo here</label
-    >
+    <label for="file"> Click to upload or drag logo here</label>
   </div>
 </div>

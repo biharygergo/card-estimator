@@ -15,9 +15,11 @@
     </p>
     <div class="articles">
       @for (article of articlesByCategory['guide']; track article.slug) {
-      <ng-container
-        *ngTemplateOutlet="articleCard; context: { $implicit: article }"
-      ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            articleCard;
+            context: { $implicit: article }
+          "></ng-container>
       }
     </div>
     <h2>Planning poker techniques</h2>
@@ -27,9 +29,11 @@
     </p>
     <div class="articles">
       @for (article of articlesByCategory['technique']; track article.slug) {
-      <ng-container
-        *ngTemplateOutlet="articleCard; context: { $implicit: article }"
-      ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            articleCard;
+            context: { $implicit: article }
+          "></ng-container>
       }
     </div>
     <h2>News & app updates</h2>
@@ -38,9 +42,11 @@
     </p>
     <div class="articles">
       @for (article of articlesByCategory['other']; track article.slug) {
-      <ng-container
-        *ngTemplateOutlet="articleCard; context: { $implicit: article }"
-      ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            articleCard;
+            context: { $implicit: article }
+          "></ng-container>
       }
     </div>
   </div>
@@ -54,16 +60,15 @@
         placeholder
         [alt]="article.coverImageAlt"
         fill
-        sizes="20wv"
-      />
+        sizes="20wv" />
       @if (article.youtubeVideoId) {
-      <mat-icon class="play-icon">play_arrow</mat-icon>
+        <mat-icon class="play-icon">play_arrow</mat-icon>
       }
     </div>
     <div class="article-preview">
       <h3>{{ article.title }}</h3>
       <span>
-        {{ article.lastUpdated | date : "mediumDate" }},
+        {{ article.lastUpdated | date: 'mediumDate' }},
         {{ article.author }}
       </span>
       <p>{{ article.description }}</p>

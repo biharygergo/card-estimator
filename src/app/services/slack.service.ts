@@ -1,15 +1,24 @@
 import { Inject, Injectable } from '@angular/core';
-import { deleteDoc, doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
+import {
+  deleteDoc,
+  doc,
+  docData,
+  DocumentReference,
+  Firestore,
+} from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
-import { signUpOrLoginDialogCreator, SignUpOrLoginIntent } from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import {
+  signUpOrLoginDialogCreator,
+  SignUpOrLoginIntent,
+} from '../shared/sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { firstValueFrom, from, Observable, of, switchMap } from 'rxjs';
 import { SlackIntegration } from '../types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SlackService {
   constructor(
@@ -18,9 +27,7 @@ export class SlackService {
     private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig
-  ) {
-
-  }
+  ) {}
 
   async startSlackAuthFlow() {
     const API_URL = `${window.location.origin}/api`;
@@ -67,7 +74,7 @@ export class SlackService {
 
   getIntegration(): Observable<SlackIntegration | undefined> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }
@@ -85,7 +92,7 @@ export class SlackService {
 
   removeSlackIntegration() {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of(undefined);
         }

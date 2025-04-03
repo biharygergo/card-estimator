@@ -21,13 +21,12 @@
                   chartData.voteCount +
                   (chartData.voteCount > 1 ? ' votes' : ' vote')
                 "
-                [matTooltipPosition]="'above'"
-              >
+                [matTooltipPosition]="'above'">
                 {{
                   chartData.cardKey
                     | estimateConverter
                       : selectedEstimationCardSetValue()
-                      : "exact"
+                      : 'exact'
                 }}
                 ({{ chartData.percentage }}%)
               </div>
@@ -64,8 +63,7 @@
                   [class.overridden]="
                     room()?.rounds?.[currentRound()]?.majorityOverride != null
                   "
-                  id="majority-vote-chip"
-                >
+                  id="majority-vote-chip">
                   @if (permissionsService.canOverrideMajorityVote() | async) {
                     <mat-icon
                       matChipRemove
@@ -85,7 +83,7 @@
                     )
                       | estimateConverter
                         : selectedEstimationCardSetValue()
-                        : "exact"
+                        : 'exact'
                   }}
                 </mat-chip>
               </mat-chip-set>
@@ -94,18 +92,17 @@
         </mat-list-item>
         <mat-list-item
           class="statistic-line"
-          *ngIf="!statistics.consensus.isConsensus"
-        >
+          *ngIf="!statistics.consensus.isConsensus">
           <h3 matLine class="statistic">
             <div class="statistic-title">Average</div>
             <mat-chip-set>
               <mat-chip>
                 {{
                   statistics.average
-                    | number: "1.0-1"
+                    | number: '1.0-1'
                     | estimateConverter
                       : selectedEstimationCardSetValue()
-                      : "rounded"
+                      : 'rounded'
                 }}
               </mat-chip>
             </mat-chip-set>
@@ -113,8 +110,7 @@
         </mat-list-item>
         <mat-list-item
           class="statistic-line"
-          *ngIf="!statistics.consensus.isConsensus"
-        >
+          *ngIf="!statistics.consensus.isConsensus">
           <h3 matLine class="statistic">
             <div class="statistic-title">Highest</div>
             <mat-chip-set>
@@ -128,7 +124,7 @@
                   statistics.highestVote.value
                     | estimateConverter
                       : selectedEstimationCardSetValue()
-                      : "exact"
+                      : 'exact'
                 }}
               </mat-chip>
             </mat-chip-set>
@@ -136,8 +132,7 @@
         </mat-list-item>
         <mat-list-item
           class="statistic-line"
-          *ngIf="!statistics.consensus.isConsensus"
-        >
+          *ngIf="!statistics.consensus.isConsensus">
           <h3 matLine class="statistic">
             <div class="statistic-title">Lowest</div>
             <mat-chip-set>
@@ -151,7 +146,7 @@
                   statistics.lowestVote.value
                     | estimateConverter
                       : selectedEstimationCardSetValue()
-                      : "exact"
+                      : 'exact'
                 }}
               </mat-chip>
             </mat-chip-set>
@@ -170,22 +165,20 @@
           <img
             [src]="member.avatarUrl"
             class="vote-avatar-image"
-            alt="A user's avatar"
-          />
+            alt="A user's avatar" />
         }
         @if (!member.avatarUrl) {
           <div class="vote-avatar-text">
-            {{ member.isAnonymous ? "?" : member.name?.charAt(0) }}
+            {{ member.isAnonymous ? '?' : member.name?.charAt(0) }}
           </div>
         }
         @if (
           member.id === currentUserId() &&
-          member.avatarUrl?.includes("avatars.dicebear.com")
+          member.avatarUrl?.includes('avatars.dicebear.com')
         ) {
           <div
             class="avatar-warning"
-            matTooltip="Please select a new avatar, previous selections no longer work due to an unforeseen API change. Sorry! 😞"
-          >
+            matTooltip="Please select a new avatar, previous selections no longer work due to an unforeseen API change. Sorry! 😞">
             <mat-icon>warning</mat-icon>
           </div>
         }
@@ -199,8 +192,7 @@
               [matMenuTriggerFor]="memberMenu"
               [matMenuTriggerData]="{ member }"
               class="member-options-button"
-              matTooltip="Member options"
-            >
+              matTooltip="Member options">
               <mat-icon>settings</mat-icon>
             </button>
           }
@@ -209,8 +201,7 @@
               mat-icon-button
               class="member-options-button"
               (click)="openAvatarSelectorModal(member.id)"
-              matTooltip="Change my avatar"
-            >
+              matTooltip="Change my avatar">
               <mat-icon>edit</mat-icon>
             </button>
           }
@@ -254,15 +245,14 @@
           <div class="vote vote-value">
             {{
               memberEstimate
-                | estimateConverter: selectedEstimationCardSetValue() : "exact"
+                | estimateConverter: selectedEstimationCardSetValue() : 'exact'
             }}
           </div>
         }
         @if (memberEstimate === undefined && round.show_results) {
           <div
             class="vote vote-none"
-            matTooltip="No vote cast - maybe next time?"
-          >
+            matTooltip="No vote cast - maybe next time?">
             <mat-icon>bedtime</mat-icon>
           </div>
         }
@@ -291,8 +281,7 @@
       mat-menu-item
       (click)="removeMember(member)"
       matTooltip="Removes the member from the room, but keeps their historical votes. They can rejoin anytime."
-      matTooltipPosition="above"
-    >
+      matTooltipPosition="above">
       <mat-icon>person_remove</mat-icon> Remove from room
     </button>
     <mat-divider />
@@ -305,8 +294,7 @@
             : organization()?.memberIds?.includes(member.id)
               ? 'Already a member'
               : ''
-      "
-    >
+      ">
       <button
         mat-menu-item
         [disabled]="
@@ -315,8 +303,7 @@
           organization().createdById !== currentUserId() ||
           !userProfiles()[member.id]
         "
-        (click)="addToOrganization(member.id)"
-      >
+        (click)="addToOrganization(member.id)">
         <mat-icon>group_add</mat-icon> Add to my organization
       </button>
     </span>

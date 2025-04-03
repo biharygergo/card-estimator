@@ -29,22 +29,14 @@
               "base": "dist/estimator"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/robots.txt",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/robots.txt", "src/assets"],
             "styles": [
               "src/styles.scss",
               "node_modules/shepherd.js/dist/css/shepherd.css"
             ],
-            "scripts": [
-              "node_modules/marked/marked.min.js"
-            ],
+            "scripts": ["node_modules/marked/marked.min.js"],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
@@ -177,9 +169,7 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },

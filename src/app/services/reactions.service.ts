@@ -70,7 +70,7 @@ const REACTIONS: Pick<ReactionOption, 'id' | 'alt' | 'tooltip'>[] = [
   },
 ];
 
-const REACTIONS_LIST: ReactionOption[] = REACTIONS.map((reaction) => ({
+const REACTIONS_LIST: ReactionOption[] = REACTIONS.map(reaction => ({
   ...reaction,
   svg: createSvgUrl(reaction.id),
   lottie: createLottieUrl(reaction.id),
@@ -119,8 +119,8 @@ export class ReactionsService {
     ) as CollectionReference<Reaction>;
     const q = query(ref, where('createdAt', '>=', Timestamp.now()));
     return sortedChanges(q, { events: ['added'] }).pipe(
-      filter((changes) => !!changes.length),
-      map((documentChange) => documentChange.pop().doc.data() as Reaction),
+      filter(changes => !!changes.length),
+      map(documentChange => documentChange.pop().doc.data() as Reaction),
       catchError(() => NEVER)
     );
   }

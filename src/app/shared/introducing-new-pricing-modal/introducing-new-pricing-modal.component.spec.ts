@@ -8,10 +8,9 @@ describe('IntroducingNewPricingModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IntroducingNewPricingModalComponent]
-    })
-    .compileComponents();
-    
+      imports: [IntroducingNewPricingModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(IntroducingNewPricingModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -36,7 +36,7 @@ export class RoomResolver {
   resolve(route: ActivatedRouteSnapshot): Observable<Room> {
     return this.authService.user.pipe(
       take(1),
-      switchMap((user) => {
+      switchMap(user => {
         const roomId = route.paramMap.get('roomId');
 
         if (!user?.uid) {
@@ -44,11 +44,11 @@ export class RoomResolver {
         }
         return this.estimatorService.getRoomById(roomId).pipe(
           first(),
-          map((room) => ({ room, user }))
+          map(room => ({ room, user }))
         );
       }),
       switchMap(({ room, user }) => {
-        const activeMember = room.members.find((m) => m.id === user.uid);
+        const activeMember = room.members.find(m => m.id === user.uid);
 
         if (!activeMember) {
           throw new MemberNotFoundError();
@@ -67,7 +67,7 @@ export class RoomResolver {
             switchMap(() =>
               this.estimatorService.getRoomById(room.roomId).pipe(first())
             ),
-            map((updatedRoom) => ({ room: updatedRoom, user }))
+            map(updatedRoom => ({ room: updatedRoom, user }))
           );
         }
 
@@ -77,7 +77,7 @@ export class RoomResolver {
         this.permissionsService.initializePermissions(room, user.uid);
       }),
       map(({ room }) => room),
-      catchError((error) => {
+      catchError(error => {
         if (error instanceof RoomNotFoundError) {
           this.showMessage(
             'Room not found. Please check the room ID or create a new room.'

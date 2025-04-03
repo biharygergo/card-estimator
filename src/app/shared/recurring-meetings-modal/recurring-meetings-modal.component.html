@@ -7,119 +7,115 @@
   </p>
   <div>
     @if (isInEditMode | async) {
-    <div class="tab-section">
-      <form [formGroup]="newMeetingForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input
-            formControlName="name"
-            matInput
-            placeholder="Monday's Planning meeting - Blue Team"
-            id="recurring-meeting-name-input"
-          />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Frequency</mat-label>
-          <input
-            formControlName="frequencyDays"
-            matInput
-            type="number"
-            min="1"
-            class="days-input"
-            id="recurring-meeting-frequency-input"
-          />
-          <span matTextPrefix>Repeats every</span>
-          <span matTextSuffix class="days-suffix">days</span>
-        </mat-form-field>
-      </form>
-      @if ((editedMeetingLink | async) === undefined) {
-      <button
-        mat-flat-button
-        color="primary"
-        [disabled]="isSavingMeeting | async"
-        (click)="createRecurringMeeting()"
-        id="recurring-meeting-create-button"
-      >
-        Save meeting
-      </button>
-      } @else {
-      <button
-        mat-flat-button
-        color="primary"
-        [disabled]="isSavingMeeting | async"
-        (click)="updateRecurringMeeting()"
-        id="recurring-meeting-update-button"
-      >
-        Update meeting
-      </button>
-      }
-      <button mat-button (click)="isInEditMode.next(false)">Cancel</button>
-    </div>
-    } @else { @for (recurringMeeting of myRecurringMeetingLinks$ | async; track
-    recurringMeeting.link) {
-    <div class="tab-section meeting-link-wrapper">
-      <h3 class="meeting-name">
-        {{ recurringMeeting.link.name }}
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
+      <div class="tab-section">
+        <form [formGroup]="newMeetingForm">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input
+              formControlName="name"
+              matInput
+              placeholder="Monday's Planning meeting - Blue Team"
+              id="recurring-meeting-name-input" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Frequency</mat-label>
+            <input
+              formControlName="frequencyDays"
+              matInput
+              type="number"
+              min="1"
+              class="days-input"
+              id="recurring-meeting-frequency-input" />
+            <span matTextPrefix>Repeats every</span>
+            <span matTextSuffix class="days-suffix">days</span>
+          </mat-form-field>
+        </form>
+        @if ((editedMeetingLink | async) === undefined) {
           <button
-            mat-menu-item
-            (click)="editMeetingLink(recurringMeeting.link)"
-            [disabled]="recurringMeeting.link.createdById !== user?.uid"
-          >
-            <mat-icon>edit</mat-icon>Edit
+            mat-flat-button
+            color="primary"
+            [disabled]="isSavingMeeting | async"
+            (click)="createRecurringMeeting()"
+            id="recurring-meeting-create-button">
+            Save meeting
           </button>
-          <!-- <button mat-menu-item>
+        } @else {
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="isSavingMeeting | async"
+            (click)="updateRecurringMeeting()"
+            id="recurring-meeting-update-button">
+            Update meeting
+          </button>
+        }
+        <button mat-button (click)="isInEditMode.next(false)">Cancel</button>
+      </div>
+    } @else {
+      @for (
+        recurringMeeting of myRecurringMeetingLinks$ | async;
+        track recurringMeeting.link
+      ) {
+        <div class="tab-section meeting-link-wrapper">
+          <h3 class="meeting-name">
+            {{ recurringMeeting.link.name }}
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button
+                mat-menu-item
+                (click)="editMeetingLink(recurringMeeting.link)"
+                [disabled]="recurringMeeting.link.createdById !== user?.uid">
+                <mat-icon>edit</mat-icon>Edit
+              </button>
+              <!-- <button mat-menu-item>
             <mat-icon>event_upcoming</mat-icon>Add to calendar
           </button> -->
-          <button
-            mat-menu-item
-            (click)="redirectToHistory(recurringMeeting.link)"
-          >
-            <mat-icon>history</mat-icon>Open meeting link
-          </button>
-        </mat-menu>
-      </h3>
-      <div class="metadata">
-        <p>
-          <span>Repeats: </span
-          ><span class="metadata-value"
-            >Every {{ recurringMeeting.link.frequencyDays }} days</span
-          >
-        </p>
-        <p>
-          <span>Last room created: </span
-          ><span class="metadata-value">{{
-            (recurringMeeting.lastRoom?.toMillis() | date : "medium") ??
-              "No room created yet"
-          }}</span>
-        </p>
-      </div>
-      <div class="buttons">
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="copyMeetingLinkToClipboard(recurringMeeting.link)"
-        >
-          <mat-icon>content_copy</mat-icon>Copy meeting link
-        </button>
-      </div>
-    </div>
-    } }
+              <button
+                mat-menu-item
+                (click)="redirectToHistory(recurringMeeting.link)">
+                <mat-icon>history</mat-icon>Open meeting link
+              </button>
+            </mat-menu>
+          </h3>
+          <div class="metadata">
+            <p>
+              <span>Repeats: </span
+              ><span class="metadata-value"
+                >Every {{ recurringMeeting.link.frequencyDays }} days</span
+              >
+            </p>
+            <p>
+              <span>Last room created: </span
+              ><span class="metadata-value">{{
+                (recurringMeeting.lastRoom?.toMillis() | date: 'medium') ??
+                  'No room created yet'
+              }}</span>
+            </p>
+          </div>
+          <div class="buttons">
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="copyMeetingLinkToClipboard(recurringMeeting.link)">
+              <mat-icon>content_copy</mat-icon>Copy meeting link
+            </button>
+          </div>
+        </div>
+      }
+    }
   </div>
 </div>
 <div mat-dialog-actions>
   @if (!(isInEditMode | async)) {
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="isInEditMode.next(true)"
-    id="create-new-recurring-meeting-button"
-  >
-    Add recurring meeting
-  </button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="isInEditMode.next(true)"
+      id="create-new-recurring-meeting-button">
+      Add recurring meeting
+    </button>
   }
 
   <button mat-button mat-dialog-close>Close</button>

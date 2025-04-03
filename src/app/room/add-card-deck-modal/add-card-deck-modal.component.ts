@@ -56,26 +56,26 @@ export type AddCardDeckModalData = {
 };
 
 @Component({
-    selector: 'app-add-card-deck-modal',
-    templateUrl: './add-card-deck-modal.component.html',
-    styleUrls: ['./add-card-deck-modal.component.scss'],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        MatError,
-        MatCard,
-        NgClass,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatIcon,
-        MatExpansionModule,
-    ]
+  selector: 'app-add-card-deck-modal',
+  templateUrl: './add-card-deck-modal.component.html',
+  styleUrls: ['./add-card-deck-modal.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatCard,
+    NgClass,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatIcon,
+    MatExpansionModule,
+  ],
 })
 export class AddCardDeckModalComponent implements OnInit {
   cardDeckForm = new FormGroup({
@@ -95,7 +95,7 @@ export class AddCardDeckModalComponent implements OnInit {
       const cards = convertInputToCards(
         this.cardDeckForm.get('cardDeckValues').value
       );
-      const values = cards.map((card) => control.value[card]);
+      const values = cards.map(card => control.value[card]);
 
       const isAnyDuplicated = new Set(values).size !== values.length;
       if (isAnyDuplicated) {
@@ -119,10 +119,8 @@ export class AddCardDeckModalComponent implements OnInit {
 
   readonly isAllNumeric = toSignal(
     this.cardDeckForm.controls.cardDeckValues.valueChanges.pipe(
-      map((formValue) => {
-        return convertInputToCards(formValue).every((value) =>
-          isNumeric(value)
-        );
+      map(formValue => {
+        return convertInputToCards(formValue).every(value => isNumeric(value));
       })
     )
   );
@@ -130,7 +128,7 @@ export class AddCardDeckModalComponent implements OnInit {
   readonly cardLabels = toSignal(
     this.cardDeckForm.get('cardDeckValues').valueChanges.pipe(
       debounceTime(50),
-      map((value) => convertInputToCards(value).slice(0, MAX_CARD_DECK_SIZE))
+      map(value => convertInputToCards(value).slice(0, MAX_CARD_DECK_SIZE))
     ),
     { initialValue: [] }
   );
@@ -156,11 +154,11 @@ export class AddCardDeckModalComponent implements OnInit {
     this.cardDeckForm
       .get('cardDeckValues')
       .valueChanges.pipe(debounceTime(50))
-      .subscribe((value) => {
+      .subscribe(value => {
         const cards = convertInputToCards(value);
-        const isAllNumeric = cards.every((value) => isNumeric(value));
+        const isAllNumeric = cards.every(value => isNumeric(value));
 
-        Object.keys(this.numericCardValuesFormGroup.controls).forEach((key) =>
+        Object.keys(this.numericCardValuesFormGroup.controls).forEach(key =>
           this.numericCardValuesFormGroup.removeControl(key)
         );
 
@@ -184,7 +182,7 @@ export class AddCardDeckModalComponent implements OnInit {
       this.cardDeckForm.get('cardDeckValues').value
     );
 
-    const isAllNumeric = cards.every((value) => isNumeric(value));
+    const isAllNumeric = cards.every(value => isNumeric(value));
 
     const customDeck: CardSetValue = {
       title: this.cardDeckForm.value['cardDeckName'],
@@ -210,7 +208,7 @@ export class AddCardDeckModalComponent implements OnInit {
       .pipe(
         switchMap(() => {
           return this.cardDeckService.saveCardDeck(customDeck).pipe(
-            catchError((error) => {
+            catchError(error => {
               if (error instanceof UnauthorizedError) {
                 // Nothing to do
                 return of({});

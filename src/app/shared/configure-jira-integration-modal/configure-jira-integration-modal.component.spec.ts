@@ -8,10 +8,9 @@ describe('ConfigureJiraIntegrationModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConfigureJiraIntegrationModalComponent]
-    })
-    .compileComponents();
-    
+      imports: [ConfigureJiraIntegrationModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ConfigureJiraIntegrationModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

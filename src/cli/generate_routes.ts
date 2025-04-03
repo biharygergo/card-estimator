@@ -9,7 +9,7 @@ function generateRoutes() {
 
   const allRoutes = [
     ...staticRoutes,
-    ...articles.map((article) => `/knowledge-base/${article.slug}`),
+    ...articles.map(article => `/knowledge-base/${article.slug}`),
   ].join('\n');
 
   const routesTxtPath = path.join(__dirname, '..', '..', 'routes.txt');

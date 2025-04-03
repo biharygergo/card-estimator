@@ -4,7 +4,7 @@ import * as path from 'path';
 
 export function getArticles(): Article[] {
   return readdirSync(path.join(__dirname, 'data'))
-    .map((fileName) => {
+    .map(fileName => {
       const FRONT_MATTER_REGEX = /---\n([\S\s]*)\n---\n([\S\s]*)/gm;
       try {
         const fileContent = readFileSync(
@@ -18,7 +18,7 @@ export function getArticles(): Article[] {
 
         const metaContent: Omit<Article, 'content'> = meta
           .split('\n')
-          .map((line) => ({
+          .map(line => ({
             fieldName: line.split(':')[0],
             content: line.split(':').slice(1).join(':').trim(),
           }))
@@ -41,7 +41,7 @@ export function getArticles(): Article[] {
         return undefined;
       }
     })
-    .filter((article) => !!article);
+    .filter(article => !!article);
 }
 
 function generateArticlesToAssets() {
@@ -53,7 +53,7 @@ function generateArticlesToAssets() {
   openSync(indexFilePath, 'w');
   writeFileSync(indexFilePath, JSON.stringify(articles));
 
-  articles.forEach((article) => {
+  articles.forEach(article => {
     const articlePath = path.join(assetsArticlesPath, `${article.slug}.json`);
     openSync(articlePath, 'w');
     writeFileSync(articlePath, JSON.stringify(article));

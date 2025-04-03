@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { app, pages } from '@microsoft/teams-js';
 
 @Component({
-    selector: 'app-configure-tab',
-    imports: [CommonModule],
-    templateUrl: './configure-tab.component.html',
-    styleUrls: ['./configure-tab.component.scss']
+  selector: 'app-configure-tab',
+  imports: [CommonModule],
+  templateUrl: './configure-tab.component.html',
+  styleUrls: ['./configure-tab.component.scss'],
 })
 export class ConfigureTabComponent implements OnInit {
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class ConfigureTabComponent implements OnInit {
        * This allows for the addition of query string parameters based on
        * the settings selected by the user.
        */
-      pages.config.registerOnSaveHandler((saveEvent) => {
+      pages.config.registerOnSaveHandler(saveEvent => {
         const baseUrl = `https://${window.location.hostname}:${window.location.port}`;
         pages.config
           .setConfig({

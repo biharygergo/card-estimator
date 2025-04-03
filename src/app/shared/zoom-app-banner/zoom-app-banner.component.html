@@ -10,29 +10,26 @@
           everything in one place.
         </p>
         <div class="install-buttons">
-          @for(integration of integrations; track integration.name) {
-          <a
-            class="install-button"
-            mat-stroked-button
-            [href]="integration.url"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div class="install-button-inner">
-              <img
-                class="integration-logo"
-                [src]="integration.logo"
-                [alt]="integration.alt"
-              />
-              Install in {{ integration.name }}
-            </div>
-          </a>
+          @for (integration of integrations; track integration.name) {
+            <a
+              class="install-button"
+              mat-stroked-button
+              [href]="integration.url"
+              target="_blank"
+              rel="noreferrer">
+              <div class="install-button-inner">
+                <img
+                  class="integration-logo"
+                  [src]="integration.logo"
+                  [alt]="integration.alt" />
+                Install in {{ integration.name }}
+              </div>
+            </a>
           }
           <button
             class="install-button"
             mat-button
-            (click)="dialogRef().close()"
-          >
+            (click)="dialogRef().close()">
             <mat-icon>public</mat-icon>
             Continue on the web
           </button>
@@ -49,8 +46,7 @@
           placeholder
           width="1200"
           height="2012"
-          sizes="(max-width: 800px) 80vw, 40vw"
-        />
+          sizes="(max-width: 800px) 80vw, 40vw" />
       </div>
     </div>
   </div>

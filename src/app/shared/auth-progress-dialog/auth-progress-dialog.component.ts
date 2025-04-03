@@ -60,17 +60,17 @@ enum AuthAction {
 }
 
 @Component({
-    selector: 'app-auth-progress-dialog',
-    templateUrl: './auth-progress-dialog.component.html',
-    styleUrls: ['./auth-progress-dialog.component.scss'],
-    imports: [
-        MatDialogContent,
-        MatProgressSpinner,
-        MatIcon,
-        MatDialogActions,
-        MatButton,
-        AsyncPipe,
-    ]
+  selector: 'app-auth-progress-dialog',
+  templateUrl: './auth-progress-dialog.component.html',
+  styleUrls: ['./auth-progress-dialog.component.scss'],
+  imports: [
+    MatDialogContent,
+    MatProgressSpinner,
+    MatIcon,
+    MatDialogActions,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   state = new BehaviorSubject<AuthProgressState>(AuthProgressState.IN_PROGRESS);
@@ -114,13 +114,13 @@ export class AuthProgressDialogComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.state.pipe(takeUntil(this.destroy)).subscribe((state) => {
+    this.state.pipe(takeUntil(this.destroy)).subscribe(state => {
       this.hasAction =
         state === AuthProgressState.ACCOUNT_EXISTS || !!this.returnPath;
     });
 
     if (this.dialogData.startAccountSetupOnOpen) {
-      this.onAuthAction.subscribe((authAction) =>
+      this.onAuthAction.subscribe(authAction =>
         this.handleAuthAction(authAction)
       );
       try {

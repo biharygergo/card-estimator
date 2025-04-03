@@ -1,6 +1,17 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogContent,
+} from '@angular/material/dialog';
 import {
   BehaviorSubject,
   catchError,
@@ -29,7 +40,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 import { AsyncPipe } from '@angular/common';
 import { MatInput } from '@angular/material/input';
-import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatLabel,
+  MatSuffix,
+  MatError,
+} from '@angular/material/form-field';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
@@ -42,7 +58,7 @@ export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 export enum SignUpOrLoginIntent {
   LINK_ACCOUNT,
   SIGN_IN,
-  CREATE_ACCOUNT
+  CREATE_ACCOUNT,
 }
 
 export interface SignUpOrLoginDialogData {
@@ -64,27 +80,27 @@ export const signUpOrLoginDialogCreator = (
 ];
 
 @Component({
-    selector: 'app-sign-up-or-login-dialog',
-    templateUrl: './sign-up-or-login-dialog.component.html',
-    styleUrls: ['./sign-up-or-login-dialog.component.scss'],
-    imports: [
-        MatDialogContent,
-        ResizeMonitorDirective,
-        MatProgressSpinner,
-        MatButton,
-        MatIcon,
-        MatDivider,
-        MatTabGroup,
-        MatTab,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        MatSuffix,
-        MatError,
-        AsyncPipe,
-    ]
+  selector: 'app-sign-up-or-login-dialog',
+  templateUrl: './sign-up-or-login-dialog.component.html',
+  styleUrls: ['./sign-up-or-login-dialog.component.scss'],
+  imports: [
+    MatDialogContent,
+    ResizeMonitorDirective,
+    MatProgressSpinner,
+    MatButton,
+    MatIcon,
+    MatDivider,
+    MatTabGroup,
+    MatTab,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSuffix,
+    MatError,
+    AsyncPipe,
+  ],
 })
 export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   onSignUpWithGoogleClicked = new Subject<void>();
@@ -135,7 +151,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authService.user.pipe(take(1)).subscribe((user) => {
+    this.authService.user.pipe(take(1)).subscribe(user => {
       if (user?.displayName) {
         this.form.patchValue({ name: user.displayName });
       }
@@ -157,13 +173,13 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         ),
         takeUntil(this.destroy)
       )
-      .subscribe((success) => {
+      .subscribe(success => {
         if (success) {
           this.dialogRef.close();
         }
       });
 
-      this.onSignUpWithMicrosoftClicked
+    this.onSignUpWithMicrosoftClicked
       .pipe(
         switchMap(() => {
           this.isBusy.next(true);
@@ -174,12 +190,12 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
             return this.signInWithMicrosoft();
           }
         }),
-        tap(() =>
-          {}// this.analyticsService.logClickedSignUpWithMicrosoft('sign-in-dialog')
+        tap(
+          () => {} // this.analyticsService.logClickedSignUpWithMicrosoft('sign-in-dialog')
         ),
         takeUntil(this.destroy)
       )
-      .subscribe((success) => {
+      .subscribe(success => {
         if (success) {
           this.dialogRef.close();
         }
@@ -200,11 +216,14 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
               password
             );
           } else {
-            signInPromise = this.authService.signInWithEmailAndPassword(email, password);
+            signInPromise = this.authService.signInWithEmailAndPassword(
+              email,
+              password
+            );
           }
           return from(signInPromise).pipe(
             map(() => true),
-            catchError((error) => {
+            catchError(error => {
               this.isBusy.next(false);
               return this.handleAccountError(error);
             })
@@ -213,7 +232,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         tap(() => this.analyticsService.logClickedSignIn('create')),
         takeUntil(this.destroy)
       )
-      .subscribe((success) => {
+      .subscribe(success => {
         if (success) {
           this.dialogRef.close();
         }
@@ -241,7 +260,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
           }
           return from(signInPromise).pipe(
             map(() => true),
-            catchError((error) => {
+            catchError(error => {
               this.isBusy.next(false);
               return this.handleAccountError(error);
             })
@@ -250,7 +269,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         tap(() => this.analyticsService.logClickedSignIn('create')),
         takeUntil(this.destroy)
       )
-      .subscribe((success) => {
+      .subscribe(success => {
         if (success) {
           this.dialogRef.close();
         }
@@ -281,7 +300,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
       const returnTo = this.route.snapshot.url.join('/');
       signInPromise = this.teamsService
         .getGoogleOauthToken(returnTo)
-        .then((token) => {
+        .then(token => {
           return this.authService.linkAccountWithGoogle(token);
         });
     } else {
@@ -292,7 +311,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         this.isBusy.next(false);
       }),
       map(() => true),
-      catchError((error) => this.handleAccountError(error))
+      catchError(error => this.handleAccountError(error))
     );
   }
 
@@ -334,7 +353,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     await this.zoomApiService.openUrl(
       this.authService.getApiAuthUrl(
         AuthIntent.LINK_ACCOUNT,
-        provider,
+        provider
         // this.activatedRoute.snapshot.toString()
       ),
       true
@@ -352,7 +371,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
       const returnTo = this.route.snapshot.url.join('/');
       signInPromise = this.teamsService
         .getGoogleOauthToken(returnTo)
-        .then((token) => {
+        .then(token => {
           return this.authService.signInWithGoogle(token);
         });
     } else {
@@ -363,7 +382,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         this.isBusy.next(false);
       }),
       map(() => true),
-      catchError((error) => {
+      catchError(error => {
         return this.handleAccountError(error);
       })
     );
@@ -400,7 +419,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
       signInPromise = this.teamsService
         .getMicrosoftAuthToken(returnTo)
-        .then((token) => {
+        .then(token => {
           return this.authService.linkAccountWithMicrosoft(token);
         });
     } else {
@@ -411,7 +430,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         this.isBusy.next(false);
       }),
       map(() => true),
-      catchError((error) => this.handleAccountError(error))
+      catchError(error => this.handleAccountError(error))
     );
   }
 
@@ -424,7 +443,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
       signInPromise = this.teamsService
         .getMicrosoftAuthToken(returnTo)
-        .then((token) => {
+        .then(token => {
           return this.authService.signInWithMicrosoft(token);
         });
     } else {
@@ -435,7 +454,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
         this.isBusy.next(false);
       }),
       map(() => true),
-      catchError((error) => {
+      catchError(error => {
         return this.handleAccountError(error);
       })
     );

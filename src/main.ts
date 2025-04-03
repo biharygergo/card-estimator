@@ -21,7 +21,7 @@ function bootstrap() {
     });
   }
 
-  bootstrapApplication(AppComponent, appConfig).catch((err) =>
+  bootstrapApplication(AppComponent, appConfig).catch(err =>
     console.error(err)
   );
 }

@@ -8,17 +8,17 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    imports: [
-        CommonModule,
-        RouterModule,
-        AnonymousUserBannerComponent,
-        SessionHistoryComponent,
-        MatIconModule,
-        MatButtonModule,
-    ],
-    selector: 'app-session-history-page',
-    templateUrl: './session-history-page.component.html',
-    styleUrls: ['./session-history-page.component.scss']
+  imports: [
+    CommonModule,
+    RouterModule,
+    AnonymousUserBannerComponent,
+    SessionHistoryComponent,
+    MatIconModule,
+    MatButtonModule,
+  ],
+  selector: 'app-session-history-page',
+  templateUrl: './session-history-page.component.html',
+  styleUrls: ['./session-history-page.component.scss'],
 })
 export class SessionHistoryPageComponent implements OnInit {
   constructor(private readonly navigationService: NavigationService) {}

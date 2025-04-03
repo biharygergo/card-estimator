@@ -16,8 +16,8 @@ export interface ResizeEventData {
 }
 
 @Directive({
-    selector: '[resizeMonitor]',
-    standalone: true,
+  selector: '[resizeMonitor]',
+  standalone: true,
 })
 export class ResizeMonitorDirective implements OnInit, OnDestroy {
   @Input() verticalSpacing: number;
@@ -34,7 +34,7 @@ export class ResizeMonitorDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (typeof window !== 'undefined' && window.ResizeObserver) {
-      this.resizeObserver = new ResizeObserver((entries) => {
+      this.resizeObserver = new ResizeObserver(entries => {
         this.zone.run(() => {
           if (entries.length && entries[0].contentRect) {
             const width = entries[0].contentRect.width;
@@ -51,8 +51,8 @@ export class ResizeMonitorDirective implements OnInit, OnDestroy {
 
     this.onSizeChange
       .pipe(
-        tap((data) => this.onResized.emit(data)),
-        tap((data) => {
+        tap(data => this.onResized.emit(data)),
+        tap(data => {
           (this.elementRef.nativeElement as HTMLDivElement).style.height =
             data.height + this.verticalSpacing + 'px';
         }),

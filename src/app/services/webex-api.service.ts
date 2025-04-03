@@ -21,10 +21,9 @@ export class WebexApiService {
     if (this.app.isShared) {
       return false;
     }
-    await this.app.setShareUrl(joinUrl, "", "Planning Poker");
+    await this.app.setShareUrl(joinUrl, '', 'Planning Poker');
     return true;
   }
-
 
   loadScript() {
     return new Promise((resolve, reject) => {

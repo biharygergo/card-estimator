@@ -1,13 +1,14 @@
-@if (vm | async; as viewModel) { @if (viewModel.showAds && !isHidden) {
-<div class="ad-container" id="ads-container">
-  <button
-    mat-icon-button
-    class="ads-close-button"
-    matTooltip="Running this app doesn't come for free. You can support this open-source project by checking out relevant sponsors from this banner. Ads are hidden for Premium subscribers and for rooms created with paid credits."
-    matTooltipPosition="left"
-    (click)="hideAd()"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
-} }
+@if (vm | async; as viewModel) {
+  @if (viewModel.showAds && !isHidden) {
+    <div class="ad-container" id="ads-container">
+      <button
+        mat-icon-button
+        class="ads-close-button"
+        matTooltip="Running this app doesn't come for free. You can support this open-source project by checking out relevant sponsors from this banner. Ads are hidden for Premium subscribers and for rooms created with paid credits."
+        matTooltipPosition="left"
+        (click)="hideAd()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+}

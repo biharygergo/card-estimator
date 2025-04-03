@@ -8,9 +8,8 @@ describe('IntegrationPageTemplateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IntegrationPageTemplateComponent]
-    })
-    .compileComponents();
+      imports: [IntegrationPageTemplateComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IntegrationPageTemplateComponent);
     component = fixture.componentInstance;

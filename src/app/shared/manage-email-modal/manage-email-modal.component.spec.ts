@@ -8,10 +8,9 @@ describe('ManageEmailModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManageEmailModalComponent]
-    })
-    .compileComponents();
-    
+      imports: [ManageEmailModalComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ManageEmailModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

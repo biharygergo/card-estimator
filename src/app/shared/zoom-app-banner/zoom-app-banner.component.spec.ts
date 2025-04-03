@@ -8,9 +8,8 @@ describe('ZoomAppBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ZoomAppBannerComponent]
-})
-    .compileComponents();
+      imports: [ZoomAppBannerComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

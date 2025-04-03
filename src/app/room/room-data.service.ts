@@ -40,12 +40,12 @@ import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.se
 })
 export class RoomDataService {
   roomSubject = new BehaviorSubject<Room | undefined>(undefined);
-  room$: Observable<Room> = this.roomSubject.pipe(filter((room) => !!room));
+  room$: Observable<Room> = this.roomSubject.pipe(filter(room => !!room));
 
   localActiveRound = new BehaviorSubject<number | undefined>(undefined);
 
   roomRoundNumber$ = this.room$.pipe(
-    map((room) => room.currentRound ?? 0),
+    map(room => room.currentRound ?? 0),
     distinctUntilChanged()
   );
 
@@ -67,13 +67,13 @@ export class RoomDataService {
     this.currentRoundNumber$,
   ]).pipe(
     map(([room, roundNumber]) => room.rounds[roundNumber]),
-    filter((round) => !!round),
+    filter(round => !!round),
     distinctUntilChanged(isEqual)
   );
 
   roomTopic$: Observable<{ topic: string; richTopic?: RichTopic | null }> =
     this.activeRound$.pipe(
-      map((activeRound) => {
+      map(activeRound => {
         return {
           topic: activeRound?.topic || '',
           richTopic: activeRound?.richTopic,
@@ -83,12 +83,12 @@ export class RoomDataService {
     );
 
   activeMembers$: Observable<Member[]> = this.room$.pipe(
-    map((room) => [room.members, room.memberIds]),
+    map(room => [room.members, room.memberIds]),
     distinctUntilChanged<[Member[], string[]]>(isEqual),
     map(([members, memberIds]) =>
       members
         .filter(
-          (m) =>
+          m =>
             (m.status === MemberStatus.ACTIVE || m.status === undefined) &&
             memberIds.includes(m.id)
         )
@@ -100,35 +100,35 @@ export class RoomDataService {
     Array<Member & { isAnonymous: boolean }>
   > = combineLatest([
     this.room$.pipe(
-      map((room) => room.isAnonymousVotingEnabled),
+      map(room => room.isAnonymousVotingEnabled),
       distinctUntilChanged()
     ),
     this.activeMembers$,
   ]).pipe(
     map(([isAnonymous, members]) => {
       if (!isAnonymous) {
-        return members.map((member) => ({ ...member, isAnonymous }));
+        return members.map(member => ({ ...member, isAnonymous }));
       }
 
       return members
-        .map((member) => ({
+        .map(member => ({
           ...member,
           name: 'Anonymous User',
           avatarUrl: '',
           isAnonymous,
         }))
-        .map((value) => ({ value, sort: Math.random() }))
+        .map(value => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value);
     })
   );
 
   activeMember$: Observable<Member> = combineLatest([
-    this.room$.pipe(map((room) => room.members)),
+    this.room$.pipe(map(room => room.members)),
     this.authService.user,
   ]).pipe(
     filter(([_members, user]) => !!user),
-    map(([members, user]) => members.find((m) => m.id === user.uid)),
+    map(([members, user]) => members.find(m => m.id === user.uid)),
     distinctUntilChanged(isEqual)
   );
 
@@ -142,14 +142,14 @@ export class RoomDataService {
 
   userProfiles$: Observable<UserProfileMap> = this.activeMembers$.pipe(
     distinctUntilChanged(isEqual),
-    switchMap((members) =>
-      this.authService.getUserProfiles(members?.map((m) => m.id) ?? [])
+    switchMap(members =>
+      this.authService.getUserProfiles(members?.map(m => m.id) ?? [])
     )
   );
 
   /* Events */
   onEstimatesUpdated$ = this.activeRound$.pipe(
-    map((round) => {
+    map(round => {
       return round.estimates;
     }),
     distinctUntilChanged(isEqual)
@@ -158,7 +158,7 @@ export class RoomDataService {
   onCardSetUpdated$: Observable<
     [CardSet | 'CUSTOM', CardSetValue | undefined]
   > = this.room$.pipe(
-    map((room) => [room.cardSet, room.customCardSetValue]),
+    map(room => [room.cardSet, room.customCardSetValue]),
     distinctUntilChanged<[CardSet, CardSetValue]>(isEqual)
   );
 
@@ -167,7 +167,7 @@ export class RoomDataService {
   );
 
   onPermissionsUpdated$ = this.room$.pipe(
-    map((room) => {
+    map(room => {
       return {
         permissions:
           room.configuration?.permissions ||
@@ -179,7 +179,7 @@ export class RoomDataService {
   );
 
   onRoomRoundCountUpdated$ = this.room$.pipe(
-    map((room) => Object.keys(room.rounds).length),
+    map(room => Object.keys(room.rounds).length),
     distinctUntilChanged()
   );
 
@@ -202,11 +202,11 @@ export class RoomDataService {
     this.roomSubscription = this.estimatorService
       .getRoomById(roomId)
       .pipe(
-        catchError((error) => {
+        catchError(error => {
           return this.onRoomUpdateError(error);
         })
       )
-      .subscribe((room) => {
+      .subscribe(room => {
         if (this.localActiveRound.value === undefined) {
           this.localActiveRound.next(room.currentRound ?? 0);
         }
@@ -230,7 +230,7 @@ export class RoomDataService {
         )
         .afterClosed()
         .pipe(
-          switchMap((result) => {
+          switchMap(result => {
             if (result && result?.joined) {
               return this.estimatorService.getRoomById(
                 this.roomSubject.value.roomId

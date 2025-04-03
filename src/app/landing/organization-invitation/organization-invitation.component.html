@@ -1,58 +1,64 @@
 <div class="page-container">
   <mat-card>
     @if (invitationResult === 'success') {
-    <mat-card-header>
-      <h1>Invitation accepted</h1>
-    </mat-card-header>
-    <mat-card-content>
-      <p>You are now a member of this organization, amazing!</p>
-      <p>
-        If you are using one of our integrations (eg.: Zoom, Meet, Teams or Webex),
-        after creating your account you'll need to log in with your new account
-        in the integrated app as well. You can do this by clicking "Menu > My
-        Account > Sign in".
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <a mat-flat-button color="primary" routerLink="/join">Join a room now</a>
-      <a mat-button color="primary" routerLink="/">Explore app</a>
-    </mat-card-actions>
-    } @if ( invitationResult === 'invitation-not-found' || invitationResult ===
-    'organization-not-found' ) {
-    <mat-card-header>
-      <h1>Invitation or Organization not found</h1>
-    </mat-card-header>
-    <mat-card-content>
-      <p>
-        Oh-oh, this invitation does not seem to be working. Please ask the
-        person who invited you to resend the invite.
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <a mat-button color="primary" routerLink="/">Explore app</a>
-    </mat-card-actions>
-    } @if (invitationResult === 'user-not-found') {
-    <mat-card-header>
-      <h1>Welcome to PlanningPoker.live!</h1>
-    </mat-card-header>
-    <mat-card-content>
-      <p>
-        It seems like the email address where you've received this invitation is
-        not yet registered with us. Please create an account with the invited
-        e-mail address by clicking on the button below.
-      </p>
-      <p>
-        If you are using one of our integrations (eg.: Zoom, Meet, Teams or Webex),
-        after creating your account you'll need to log in with your new account
-        in the integrated app as well. You can do this by clicking "Menu > My
-        Account > Sign in".
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-flat-button color="primary" (click)="openAuthModal()">
-        Create account
-      </button>
-    </mat-card-actions>
+      <mat-card-header>
+        <h1>Invitation accepted</h1>
+      </mat-card-header>
+      <mat-card-content>
+        <p>You are now a member of this organization, amazing!</p>
+        <p>
+          If you are using one of our integrations (eg.: Zoom, Meet, Teams or
+          Webex), after creating your account you'll need to log in with your
+          new account in the integrated app as well. You can do this by clicking
+          "Menu > My Account > Sign in".
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-flat-button color="primary" routerLink="/join"
+          >Join a room now</a
+        >
+        <a mat-button color="primary" routerLink="/">Explore app</a>
+      </mat-card-actions>
+    }
+    @if (
+      invitationResult === 'invitation-not-found' ||
+      invitationResult === 'organization-not-found'
+    ) {
+      <mat-card-header>
+        <h1>Invitation or Organization not found</h1>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Oh-oh, this invitation does not seem to be working. Please ask the
+          person who invited you to resend the invite.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-button color="primary" routerLink="/">Explore app</a>
+      </mat-card-actions>
+    }
+    @if (invitationResult === 'user-not-found') {
+      <mat-card-header>
+        <h1>Welcome to PlanningPoker.live!</h1>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          It seems like the email address where you've received this invitation
+          is not yet registered with us. Please create an account with the
+          invited e-mail address by clicking on the button below.
+        </p>
+        <p>
+          If you are using one of our integrations (eg.: Zoom, Meet, Teams or
+          Webex), after creating your account you'll need to log in with your
+          new account in the integrated app as well. You can do this by clicking
+          "Menu > My Account > Sign in".
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button color="primary" (click)="openAuthModal()">
+          Create account
+        </button>
+      </mat-card-actions>
     }
   </mat-card>
 </div>

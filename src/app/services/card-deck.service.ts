@@ -71,7 +71,7 @@ export class CardDeckService {
   deleteCardDeck(id: string) {
     return this.authService.user.pipe(
       first(),
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return throwError(() => new UnauthorizedError());
         }
@@ -86,7 +86,7 @@ export class CardDeckService {
 
   getMyCardDecks(): Observable<SavedCardSetValue[]> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of([]);
         }

@@ -16,8 +16,7 @@ provision:
 
   - uses: script # Set TAB_DOMAIN and TAB_ENDPOINT for local launch
     with:
-      run:
-        echo "::set-teamsfx-env TAB_DOMAIN=test.planningpoker.live";
+      run: echo "::set-teamsfx-env TAB_DOMAIN=test.planningpoker.live";
         echo "::set-teamsfx-env TAB_ENDPOINT=https://test.planningpoker.live";
   # Validate using manifest schema
   - uses: teamsApp/validateManifest

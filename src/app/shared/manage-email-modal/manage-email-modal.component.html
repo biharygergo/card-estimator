@@ -7,21 +7,18 @@
   <mat-form-field
     class="custom-field-control"
     appearance="outline"
-    subscriptSizing="dynamic"
-  >
+    subscriptSizing="dynamic">
     <mat-label>New e-mail</mat-label>
     <input
       matInput
       [formControl]="emailControl"
-      placeholder="amazing.engineer@you.com"
-    />
+      placeholder="amazing.engineer@you.com" />
   </mat-form-field>
   <p>To update your e-mail, you'll need to verify your current password:</p>
   <mat-form-field
     class="custom-field-control"
     appearance="outline"
-    subscriptSizing="dynamic"
-  >
+    subscriptSizing="dynamic">
     <mat-label>Current password</mat-label>
     <input matInput type="password" [formControl]="passwordControl" />
   </mat-form-field>
@@ -30,8 +27,7 @@
   <button
     mat-flat-button
     (click)="updateEmail()"
-    [disabled]="!(isSubmitEnabled | async)"
-  >
+    [disabled]="!(isSubmitEnabled | async)">
     Save
   </button>
   <button mat-button mat-dialog-close cdkFocusInitial>Close</button>

@@ -37,7 +37,7 @@ export class ThemeService {
     private readonly configService: ConfigService,
     private readonly mediaMatcher: MediaMatcher
   ) {
-    if(this.prefersDarkMatcher.addEventListener) {
+    if (this.prefersDarkMatcher.addEventListener) {
       this.prefersDarkMatcher.addEventListener(
         'change',
         (event: MediaQueryListEvent) => {
@@ -45,7 +45,6 @@ export class ThemeService {
         }
       );
     }
-   
 
     const themeFromCookie = this.configService.getCookie('preferredTheme');
     if (

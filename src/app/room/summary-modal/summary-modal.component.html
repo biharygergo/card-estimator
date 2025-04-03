@@ -8,41 +8,48 @@
   <div class="summary">
     <div class="summary-response">
       @if (failedPrecondition$ | async; as failedPrecondition) {
-      <div class="middle-text">
-        @if (failedPrecondition === 'room-size') {
-        <h2>Not enough data</h2>
-        <p>
-          To generate a meaningful summary, you must have at least two rounds
-          and another member in this room.
-        </p>
-        } @if (failedPrecondition === 'user') {
-        <h2>No user account</h2>
-        <p>
-          You need a permanent Planning Poker account to view or generate a
-          summary.
-        </p>
-        } @if ( failedPrecondition === 'credits' && (summaryResponse$ | async)
-        === undefined ) {
-        <h2>Oops!</h2>
-        <p>You are out of your monthly free credits.</p>
-        <p>Upgrade to Premium to get unlimited room summaries and much more!</p>
-        }
-      </div>
+        <div class="middle-text">
+          @if (failedPrecondition === 'room-size') {
+            <h2>Not enough data</h2>
+            <p>
+              To generate a meaningful summary, you must have at least two
+              rounds and another member in this room.
+            </p>
+          }
+          @if (failedPrecondition === 'user') {
+            <h2>No user account</h2>
+            <p>
+              You need a permanent Planning Poker account to view or generate a
+              summary.
+            </p>
+          }
+          @if (
+            failedPrecondition === 'credits' &&
+            (summaryResponse$ | async) === undefined
+          ) {
+            <h2>Oops!</h2>
+            <p>You are out of your monthly free credits.</p>
+            <p>
+              Upgrade to Premium to get unlimited room summaries and much more!
+            </p>
+          }
+        </div>
       }
       <div class="response-text" id="response-text"></div>
-      @if ( (summaryResponse$ | async) === undefined && (failedPrecondition$ |
-      async) === undefined ) {
-      <div class="loading-blocks">
-        <div class="loading-block"></div>
-      </div>
+      @if (
+        (summaryResponse$ | async) === undefined &&
+        (failedPrecondition$ | async) === undefined
+      ) {
+        <div class="loading-blocks">
+          <div class="loading-block"></div>
+        </div>
       }
     </div>
     <div class="summary-buttons">
       <button
         mat-button
         (click)="generateSummary()"
-        [disabled]="!!(failedPrecondition$ | async) || isLoadingResults"
-      >
+        [disabled]="!!(failedPrecondition$ | async) || isLoadingResults">
         <mat-icon>refresh</mat-icon>
         Regenerate
       </button>
@@ -54,8 +61,7 @@
       color="primary"
       (click)="copyToClipboard()"
       [disabled]="!(summaryResponse$ | async)?.text?.length"
-      cdkFocusInitial
-    >
+      cdkFocusInitial>
       <mat-icon>content_copy</mat-icon>
       Copy summary
     </button>

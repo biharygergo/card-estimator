@@ -8,9 +8,8 @@ describe('WrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [WrapperComponent]
-})
-    .compileComponents();
+      imports: [WrapperComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

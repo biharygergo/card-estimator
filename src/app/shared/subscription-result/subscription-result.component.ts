@@ -1,5 +1,12 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { SubscriptionResult } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
@@ -23,16 +30,16 @@ export const subscriptionResultModalCreator = (
 ];
 
 @Component({
-    selector: 'app-subscription-result',
-    templateUrl: './subscription-result.component.html',
-    styleUrls: ['./subscription-result.component.scss'],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-    ]
+  selector: 'app-subscription-result',
+  templateUrl: './subscription-result.component.html',
+  styleUrls: ['./subscription-result.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+  ],
 })
 export class SubscriptionResultComponent {
   subscriptionResult: SubscriptionResult;
@@ -41,10 +48,9 @@ export class SubscriptionResultComponent {
     public dialogRef: MatDialogRef<SubscriptionResultComponent>,
     @Inject(MAT_DIALOG_DATA)
     private readonly dialogData: SubscriptionResultModalData,
-    private readonly analytics: AnalyticsService,
+    private readonly analytics: AnalyticsService
   ) {
     this.subscriptionResult = dialogData.result;
     this.analytics.logSubscriptionResultReceived(dialogData.result);
   }
-
 }

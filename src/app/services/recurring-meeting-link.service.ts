@@ -58,7 +58,7 @@ export class RecurringMeetingLinkService {
     recurringMeetingLinkId: string
   ): Observable<RecurringMeetingLinkCreatedRoom[]> {
     return this.getRecurringMeeting(recurringMeetingLinkId).pipe(
-      switchMap((recurringMeetingLink) => {
+      switchMap(recurringMeetingLink => {
         if (!recurringMeetingLink || !recurringMeetingLink.isEnabled) {
           return of(undefined);
         }
@@ -87,7 +87,7 @@ export class RecurringMeetingLinkService {
     recurringMeetingLinkId: string
   ): Observable<string | undefined> {
     return this.getCreatedRoomsForMeetingLinkId(recurringMeetingLinkId).pipe(
-      map((rooms) => {
+      map(rooms => {
         return rooms.length ? rooms[0].roomId : undefined;
       })
     );
@@ -99,9 +99,7 @@ export class RecurringMeetingLinkService {
       'id' | 'createdById' | 'createdAt' | 'organizationId'
     >
   ) {
-    return combineLatest([
-      this.authService.user,
-    ]).pipe(
+    return combineLatest([this.authService.user]).pipe(
       first(),
       switchMap(([user]) => {
         if (!user) {
@@ -133,7 +131,7 @@ export class RecurringMeetingLinkService {
 
   getMyRecurringMeetingLinks(): Observable<RecurringMeetingLink[]> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of([]);
         }
@@ -156,7 +154,7 @@ export class RecurringMeetingLinkService {
     RecurringMeetingLink[]
   > {
     return this.organizationService.getMyOrganization().pipe(
-      switchMap((organization) => {
+      switchMap(organization => {
         if (!organization) {
           return of([]);
         }
@@ -172,7 +170,7 @@ export class RecurringMeetingLinkService {
 
         return collectionData<RecurringMeetingLink>(q);
       }),
-      catchError((e) => {
+      catchError(e => {
         console.log('got error loading links', e);
         return of([]);
       })

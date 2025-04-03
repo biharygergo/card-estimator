@@ -28,20 +28,20 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatButton, MatIconButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-profile-dropdown',
-    templateUrl: './profile-dropdown.component.html',
-    styleUrls: ['./profile-dropdown.component.scss'],
-    imports: [
-        MatButton,
-        MatIconButton,
-        MatMenuTrigger,
-        MatIcon,
-        MatMenu,
-        MatMenuItem,
-        RouterLink,
-        MatDivider,
-        AsyncPipe,
-    ]
+  selector: 'app-profile-dropdown',
+  templateUrl: './profile-dropdown.component.html',
+  styleUrls: ['./profile-dropdown.component.scss'],
+  imports: [
+    MatButton,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    RouterLink,
+    MatDivider,
+    AsyncPipe,
+  ],
 })
 export class ProfileDropdownComponent implements OnInit {
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
@@ -51,8 +51,8 @@ export class ProfileDropdownComponent implements OnInit {
   currentUser = this.auth.user;
 
   isOnJoinOrCreateScreen$: Observable<boolean> = this.activeRoute.url.pipe(
-    map((url) => {
-      const paths = url.map((segment) => segment.path);
+    map(url => {
+      const paths = url.map(segment => segment.path);
       return paths.includes('join') || paths.includes('create');
     })
   );

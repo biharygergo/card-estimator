@@ -34,29 +34,29 @@ type State = {
 };
 
 @Component({
-    selector: 'app-recurring-meeting',
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatCardModule,
-        MatProgressSpinnerModule,
-        ProfileDropdownComponent,
-        MatButtonModule,
-        AppConfigModule
-    ],
-    templateUrl: './recurring-meeting.component.html',
-    styleUrls: ['./recurring-meeting.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-recurring-meeting',
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    ProfileDropdownComponent,
+    MatButtonModule,
+    AppConfigModule,
+  ],
+  templateUrl: './recurring-meeting.component.html',
+  styleUrls: ['./recurring-meeting.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecurringMeetingComponent implements OnInit, OnDestroy {
   recurringMeetingLinkId: Observable<string> = this.route.paramMap.pipe(
-    map((params) => params.get('linkId'))
+    map(params => params.get('linkId'))
   );
 
   private readonly destroy = new Subject<void>();
 
   readonly roomId$ = this.recurringMeetingLinkId.pipe(
-    switchMap((linkId) => {
+    switchMap(linkId => {
       if (!linkId) {
         return of(undefined);
       }
@@ -68,7 +68,7 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
 
   readonly meetingLink$: Observable<RecurringMeetingLink> =
     this.recurringMeetingLinkId.pipe(
-      switchMap((linkId) => {
+      switchMap(linkId => {
         return this.recurringMeetingLinkService.getRecurringMeeting(linkId);
       })
     );
@@ -83,7 +83,7 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
         meetingLink.createdById === user?.uid ? 'creator' : 'member';
       return { roomId, userState, meetingLink, error: false };
     }),
-    catchError((e) => {
+    catchError(e => {
       console.error(e);
       return of({ error: true });
     }),
@@ -97,11 +97,11 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly recurringMeetingLinkService: RecurringMeetingLinkService,
     private readonly authService: AuthService,
-    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.state$.subscribe((state) => {
+    this.state$.subscribe(state => {
       this.state = state;
       this.changeDetectorRef.detectChanges();
     });

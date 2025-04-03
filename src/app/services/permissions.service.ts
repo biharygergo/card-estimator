@@ -32,8 +32,8 @@ export class PermissionsService {
 
     if (
       room.members
-        .filter((m) => m.type === MemberType.ESTIMATOR)
-        .map((m) => m.id)
+        .filter(m => m.type === MemberType.ESTIMATOR)
+        .map(m => m.id)
         .includes(userId)
     ) {
       userRoles.push(UserRole.ROOM_MEMBER_ESTIMATOR);
@@ -43,7 +43,7 @@ export class PermissionsService {
 
     const newPermissions = { ...this.userPermissions.value };
     Object.entries(permissions).forEach(([permissionId, permissionValue]) => {
-      newPermissions[permissionId] = !!permissionValue.value.filter((role) =>
+      newPermissions[permissionId] = !!permissionValue.value.filter(role =>
         userRoles.includes(role)
       ).length;
     });
@@ -56,12 +56,12 @@ export class PermissionsService {
   initializePremiumAccess() {
     this.paymentsService
       .isPremiumSubscriber()
-      .then((isPremium) => this.isPremiumSubscriber.next(isPremium));
+      .then(isPremium => this.isPremiumSubscriber.next(isPremium));
   }
 
   hasPermission(permissionId: RoomPermissionId): Observable<boolean> {
     return this.userPermissions.pipe(
-      map((permissions) => !!permissions[permissionId])
+      map(permissions => !!permissions[permissionId])
     );
   }
 

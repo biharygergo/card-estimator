@@ -109,8 +109,8 @@ export class OrganizationService {
     const q = query(collectionReference);
 
     return collectionSnapshots<InvitationData>(q).pipe(
-      map((snapshots) => {
-        return snapshots.flatMap((snapshot) => ({
+      map(snapshots => {
+        return snapshots.flatMap(snapshot => ({
           ...snapshot.data(),
           id: snapshot.id,
         }));
@@ -178,7 +178,7 @@ export class OrganizationService {
     ) as CollectionReference<Organization>;
 
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of([]);
         }
@@ -192,13 +192,13 @@ export class OrganizationService {
   getMyOrganization(): Observable<Organization | undefined> {
     return combineLatest([
       this.authService.getUserPreference().pipe(
-        map((pref) => pref?.activeOrganizationId),
+        map(pref => pref?.activeOrganizationId),
         distinctUntilChanged()
       ),
       this.getMyOrganizations(),
     ]).pipe(
       map(([activeOrgId, orgs]) => {
-        const selectedOrg = orgs.find((org) => org.id === activeOrgId);
+        const selectedOrg = orgs.find(org => org.id === activeOrgId);
         return selectedOrg ?? orgs?.[0];
       })
     );

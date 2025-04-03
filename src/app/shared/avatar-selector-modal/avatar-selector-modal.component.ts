@@ -125,10 +125,10 @@ const createAvatars = (
     facialHair = facialHairOptions[1].value;
   }
   if (hair === '') {
-    hair = hairOptions.map((option) => option.value).join(',');
+    hair = hairOptions.map(option => option.value).join(',');
   }
   if (skinTone === '') {
-    skinTone = skinToneOptions.map((option) => option.value).join(',');
+    skinTone = skinToneOptions.map(option => option.value).join(',');
   }
 
   for (let i = 0; i < count; i++) {
@@ -162,7 +162,7 @@ const hairOptions: SelectOption[] = [
   'straight01',
   'turban',
   'winterHat02',
-].map((value) => ({ label: value, value }));
+].map(value => ({ label: value, value }));
 
 const skinToneOptions: SelectOption[] = [
   '614335',
@@ -172,29 +172,29 @@ const skinToneOptions: SelectOption[] = [
   'f8d25c',
   'fd9841',
   'ffdbb4',
-].map((colorCode) => ({ value: colorCode, label: colorCode }));
+].map(colorCode => ({ value: colorCode, label: colorCode }));
 
 const hairColorOptions: SelectOption[] = [
   // Natural Hair Colors
-  "2c1b18",
-  "4a312c",
-  "724133",
-  "a55728",
-  "b58143",
-  "c93305",
-  "d6b370",
-  "e8e1e1",
-  "ecdcbf",
-  "f59797",
-  "ffffff",
+  '2c1b18',
+  '4a312c',
+  '724133',
+  'a55728',
+  'b58143',
+  'c93305',
+  'd6b370',
+  'e8e1e1',
+  'ecdcbf',
+  'f59797',
+  'ffffff',
 
-  "800080", // Purple
-  "0000ff", // Blue
-  "ff00ff", // Pink
-  "008000", // Green
-  "008080", // Teal
-  "ffa500", // Orange
-].map((colorCode) => ({ value: colorCode, label: colorCode }));
+  '800080', // Purple
+  '0000ff', // Blue
+  'ff00ff', // Pink
+  '008000', // Green
+  '008080', // Teal
+  'ffa500', // Orange
+].map(colorCode => ({ value: colorCode, label: colorCode }));
 
 const facialHairOptions: SelectOption[] = [
   {
@@ -216,39 +216,39 @@ interface SelectOption {
 export const AVATAR_SELECTOR_MODAL = 'avatar-selector-modal';
 const AVATAR_COUNT = 39;
 @Component({
-    selector: 'app-avatar-selector-modal',
-    templateUrl: './avatar-selector-modal.component.html',
-    styleUrls: ['./avatar-selector-modal.component.scss'],
-    imports: [
-        MatDialogTitle,
-        MatDialogContent,
-        MatTabGroup,
-        MatTab,
-        AnonymousUserBannerComponent,
-        MatButton,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        FormsModule,
-        ReactiveFormsModule,
-        MatIcon,
-        MatProgressSpinner,
-        MatChip,
-        MatAccordion,
-        MatExpansionPanel,
-        MatExpansionPanelHeader,
-        MatExpansionPanelTitle,
-        MatChipListbox,
-        MatChipOption,
-        MatExpansionPanelActionRow,
-        MatIconButton,
-        MatDialogActions,
-        MatDialogClose,
-        AsyncPipe,
-        UpperCasePipe,
-        TitleCasePipe,
-        DatePipe,
-    ]
+  selector: 'app-avatar-selector-modal',
+  templateUrl: './avatar-selector-modal.component.html',
+  styleUrls: ['./avatar-selector-modal.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatTabGroup,
+    MatTab,
+    AnonymousUserBannerComponent,
+    MatButton,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIcon,
+    MatProgressSpinner,
+    MatChip,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatChipListbox,
+    MatChipOption,
+    MatExpansionPanelActionRow,
+    MatIconButton,
+    MatDialogActions,
+    MatDialogClose,
+    AsyncPipe,
+    UpperCasePipe,
+    TitleCasePipe,
+    DatePipe,
+  ],
 })
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   selectedTabIndex = { profile: 0, subscription: 1, avatar: 2 }[
@@ -270,7 +270,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     return acc;
   }, {});
   selectedHairColorOptions = hairColorOptions.reduce((acc, curr, index) => {
-    acc[curr.value] =  index <= 10 ? true : false;
+    acc[curr.value] = index <= 10 ? true : false;
     return acc;
   }, {});
 
@@ -278,20 +278,20 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     AVATAR_COUNT,
     this.selectedFacialHairOption,
     Object.keys(this.selectedHairOptions)
-      .filter((key) => this.selectedHairOptions[key])
+      .filter(key => this.selectedHairOptions[key])
       .join(','),
     Object.keys(this.selectedSkinToneOptions)
-      .filter((key) => this.selectedSkinToneOptions[key])
+      .filter(key => this.selectedSkinToneOptions[key])
       .join(','),
     Object.keys(this.selectedHairColorOptions)
-      .filter((key) => this.selectedHairColorOptions[key])
+      .filter(key => this.selectedHairColorOptions[key])
       .join(',')
   );
   user: User | undefined;
 
   isUserSignedInWithEmail$ = this.auth.user.pipe(
     map(
-      (user) =>
+      user =>
         user?.providerData?.[0]?.providerId === EmailAuthProvider.PROVIDER_ID
     ),
     distinctUntilChanged()
@@ -310,7 +310,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     .pipe(shareReplay(1));
 
   activePlan$ = this.subscription$.pipe(
-    map((subscription) => subscription?.items?.[0]?.plan)
+    map(subscription => subscription?.items?.[0]?.plan)
   );
 
   nextMonthStart = moment().add(1, 'month').startOf('month').toDate();
@@ -334,26 +334,30 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     availableOrgCredits: Credit[];
     nextBatchExpiring?: Credit[];
   }> = from(this.paymentsService.getAndAssignCreditBundles()).pipe(
-    map((creditsAndBundles) => {
+    map(creditsAndBundles => {
       const { credits, bundles, availableCredits } = creditsAndBundles;
 
       const nextBatchExpiring = Object.entries(
         groupBy(
-          availableCredits.filter((c) => c.expiresAt),
-          (credit) => {
+          availableCredits.filter(c => c.expiresAt),
+          credit => {
             return credit.expiresAt!.seconds;
           }
         )
       ).sort((a, b) => Number(b[0]) - Number(a[0]))?.[0]?.[1];
 
-      const availableOrgCredits = availableCredits.filter(c => !!c.organizationId);
-      const availablePersonalCredits = availableCredits.filter(c => !c.organizationId);
+      const availableOrgCredits = availableCredits.filter(
+        c => !!c.organizationId
+      );
+      const availablePersonalCredits = availableCredits.filter(
+        c => !c.organizationId
+      );
       return {
         availableCredits,
         availableOrgCredits,
         availablePersonalCredits,
         nextBatchExpiring,
-        credits: credits.map((credit) => ({
+        credits: credits.map(credit => ({
           ...credit,
           expiresInReadable: credit.expiresAt
             ? moment(credit.expiresAt.toDate()).fromNow()
@@ -362,10 +366,10 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
             ? moment(credit.expiresAt.toDate()).isBefore(moment())
             : false,
         })),
-        bundles: bundles.map((bundle) => ({
+        bundles: bundles.map(bundle => ({
           ...bundle,
           title: bundle.displayName ?? getBundleTitle(bundle.name),
-          availableCredits: bundle.credits.filter((c) => !c.usedForRoomId),
+          availableCredits: bundle.credits.filter(c => !c.usedForRoomId),
           expiresInReadable: bundle.expiresAt
             ? moment(bundle.expiresAt.toDate()).fromNow()
             : '',
@@ -390,7 +394,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.auth.user.pipe(takeUntil(this.destroy)).subscribe((user) => {
+    this.auth.user.pipe(takeUntil(this.destroy)).subscribe(user => {
       this.user = user;
       this.displayNameForm.setValue(user?.displayName);
       this.accountTypeForm.setValue(
@@ -404,7 +408,7 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
         tap(() => this.isSavingUser.next(true)),
         switchMap(() =>
           from(this.updateName()).pipe(
-            catchError((error) => {
+            catchError(error => {
               this.snackBar.open(
                 'An error occured while updating your profile: ' +
                   error?.message,
@@ -442,13 +446,13 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       AVATAR_COUNT,
       this.selectedFacialHairOption,
       Object.keys(this.selectedHairOptions)
-        .filter((key) => this.selectedHairOptions[key])
+        .filter(key => this.selectedHairOptions[key])
         .join(','),
       Object.keys(this.selectedSkinToneOptions)
-        .filter((key) => this.selectedSkinToneOptions[key])
+        .filter(key => this.selectedSkinToneOptions[key])
         .join(','),
       Object.keys(this.selectedHairColorOptions)
-        .filter((key) => this.selectedHairColorOptions[key])
+        .filter(key => this.selectedHairColorOptions[key])
         .join(','),
       Math.random().toString()
     );

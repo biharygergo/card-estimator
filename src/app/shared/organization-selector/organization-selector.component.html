@@ -1,20 +1,19 @@
 <mat-form-field
   appearance="outline"
   subscriptSizing="dynamic"
-  class="org-selector"
->
+  class="org-selector">
   <mat-label>{{ label() }}</mat-label>
   <mat-select [formControl]="selectedOrganizationId">
-    @for(organization of organizations$ | async; track organization.id) {
-    <mat-option [value]="organization.id">{{ organization.name }}</mat-option>
+    @for (organization of organizations$ | async; track organization.id) {
+      <mat-option [value]="organization.id">{{ organization.name }}</mat-option>
     } @empty {
-    <mat-option [disabled]="true"
-      >You don't have any organizations. Create or join one in the "My Organization"
-      menu.</mat-option
-    >
+      <mat-option [disabled]="true"
+        >You don't have any organizations. Create or join one in the "My
+        Organization" menu.</mat-option
+      >
     }
   </mat-select>
   @if (hint()) {
-  <mat-hint>{{ hint() }}</mat-hint>
+    <mat-hint>{{ hint() }}</mat-hint>
   }
 </mat-form-field>

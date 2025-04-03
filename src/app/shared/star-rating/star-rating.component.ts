@@ -9,17 +9,17 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-star-rating',
-    templateUrl: './star-rating.component.html',
-    styleUrls: ['./star-rating.component.scss'],
-    imports: [
-        MatIcon,
-        MatButton,
-        MatFormField,
-        MatInput,
-        FormsModule,
-        ReactiveFormsModule,
-    ]
+  selector: 'app-star-rating',
+  templateUrl: './star-rating.component.html',
+  styleUrls: ['./star-rating.component.scss'],
+  imports: [
+    MatIcon,
+    MatButton,
+    MatFormField,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class StarRatingComponent {
   rating = 0;
@@ -46,7 +46,7 @@ export class StarRatingComponent {
     this.estimatorService
       .submitFeedback(this.rating)
       .pipe(first())
-      .subscribe((ref) => {
+      .subscribe(ref => {
         this.feedbackId = ref.id;
         this.submitted = true;
       });

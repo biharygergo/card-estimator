@@ -124,36 +124,36 @@ const CHARTING_COLORS = [
   '#d9e2ff',
 ];
 @Component({
-    selector: 'app-room',
-    templateUrl: './room.component.html',
-    styleUrls: ['./room.component.scss'],
-    animations: [fadeAnimation, delayedFadeAnimation],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatSidenavContainer,
-        MatSidenavContent,
-        ProfileDropdownComponent,
-        MatButton,
-        MatTooltip,
-        MatIcon,
-        MatCard,
-        ResizeMonitorDirective,
-        MatCardContent,
-        TopicEditorComponent,
-        RichTopicComponent,
-        NgTemplateOutlet,
-        RoundResultsComponent,
-        NotesFieldComponent,
-        CardDeckComponent,
-        GithubBadgeComponent,
-        ReactionsRendererComponent,
-        CarbonAdComponent,
-        MatSidenav,
-        TopicsSidebarComponent,
-        AnonymousUserBannerComponent,
-        RoomControllerPanelComponent,
-        AsyncPipe,
-    ]
+  selector: 'app-room',
+  templateUrl: './room.component.html',
+  styleUrls: ['./room.component.scss'],
+  animations: [fadeAnimation, delayedFadeAnimation],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatSidenavContainer,
+    MatSidenavContent,
+    ProfileDropdownComponent,
+    MatButton,
+    MatTooltip,
+    MatIcon,
+    MatCard,
+    ResizeMonitorDirective,
+    MatCardContent,
+    TopicEditorComponent,
+    RichTopicComponent,
+    NgTemplateOutlet,
+    RoundResultsComponent,
+    NotesFieldComponent,
+    CardDeckComponent,
+    GithubBadgeComponent,
+    ReactionsRendererComponent,
+    CarbonAdComponent,
+    MatSidenav,
+    TopicsSidebarComponent,
+    AnonymousUserBannerComponent,
+    RoomControllerPanelComponent,
+    AsyncPipe,
+  ],
 })
 export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenavContainer, { read: ElementRef })
@@ -266,7 +266,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     .pipe(first(), share(), takeUntil(this.destroy));
 
   sessionCount$ = this.previousSessions$.pipe(
-    map((sessions) => sessions.length),
+    map(sessions => sessions.length),
     share(),
     takeUntil(this.destroy)
   );
@@ -315,7 +315,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     map(([roundNumber, sessionCount, pref]) => {
       return roundNumber > 0 && sessionCount < 2 && !pref.aloneInRoomModalShown;
     }),
-    filter((shouldOpen) => !!shouldOpen)
+    filter(shouldOpen => !!shouldOpen)
   );
 
   shouldStartOnboardingTutorial$: Observable<{
@@ -364,17 +364,17 @@ export class RoomComponent implements OnInit, OnDestroy {
   availableCredits$ = from(
     this.paymentService.getAndAssignCreditBundles()
   ).pipe(
-    map((response) => response.availableCredits),
+    map(response => response.availableCredits),
     shareReplay(1)
   );
 
   creditsText$: Observable<string> = this.availableCredits$.pipe(
-    map((credits) => {
+    map(credits => {
       return credits.length === 0
         ? 'Out of credits'
         : credits.length === 1
-        ? '1 credit left'
-        : credits.length + ' credits';
+          ? '1 credit left'
+          : credits.length + ' credits';
     }),
     shareReplay(1)
   );
@@ -438,12 +438,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.meetService.configureApp(roomIdFromParams);
     }
 
-    this.room$.pipe(takeUntil(this.destroy)).subscribe((room) => {
+    this.room$.pipe(takeUntil(this.destroy)).subscribe(room => {
       this.room.set(room);
       this.rounds.set(Object.values(room.rounds));
     });
 
-    this.activeMember$.subscribe((member) => {
+    this.activeMember$.subscribe(member => {
       if (member?.status === MemberStatus.REMOVED_FROM_ROOM) {
         this.router.navigate(['join'], {
           queryParams: { reason: 'removed' },
@@ -453,7 +453,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.roundNumber$.pipe(takeUntil(this.destroy)).subscribe((roundNumber) => {
+    this.roundNumber$.pipe(takeUntil(this.destroy)).subscribe(roundNumber => {
       this.currentRound.set(roundNumber);
       this.playNotificationSound();
       this.reCalculateStatistics();
@@ -461,7 +461,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.roomDataService.onEstimatesUpdated$
       .pipe(takeUntil(this.destroy))
-      .subscribe((estimates) => {
+      .subscribe(estimates => {
         if (this.estimatorService.activeMember) {
           this.currentEstimate.set(
             estimates[this.estimatorService.activeMember.id]
@@ -478,11 +478,11 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.roomDataService.onNameUpdated$
       .pipe(takeUntil(this.destroy))
-      .subscribe((name) =>
+      .subscribe(name =>
         this.estimatorService.updateCurrentUserMemberName(this.room(), name)
       );
 
-    this.showFeedbackForm$.subscribe((shouldShow) => {
+    this.showFeedbackForm$.subscribe(shouldShow => {
       if (shouldShow) {
         this.openFeedbackSnackbar();
       }
@@ -499,7 +499,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.controlPanelExpandedDefaultState$
       .pipe(takeUntil(this.destroy))
-      .subscribe((shouldExapnd) => {
+      .subscribe(shouldExapnd => {
         if (this.isControlPaneExpansionSetByUser) return;
         this.isControlPaneExpanded.set(shouldExapnd);
       });
@@ -589,7 +589,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       });
 
     this.roomDataService.onRoomRoundCountUpdated$
-      .pipe(filter((count) => count >= ROOM_SIZE_LIMIT))
+      .pipe(filter(count => count >= ROOM_SIZE_LIMIT))
       .subscribe(() => {
         this.showRoomLimitReachedDialog();
       });
@@ -605,7 +605,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }, 10);
     });
 
-    this.shouldStartOnboardingTutorial$.subscribe(({small}) => {
+    this.shouldStartOnboardingTutorial$.subscribe(({ small }) => {
       this.startOnboarding(small);
     });
   }
@@ -765,7 +765,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     return this.permissionsService
       .hasPermission(RoomPermissionId.CAN_EDIT_TOPIC)
       .pipe(
-        map((hasPermission) => {
+        map(hasPermission => {
           if (hasPermission) {
             this.analytics.logClickedTopicName();
             this.isEditingTopic.set(true);
@@ -779,7 +779,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   reCalculateStatistics() {
     if (this.room()?.rounds) {
       const statistics: RoundStatistics[] = [
-        ...Object.values(this.room().rounds).map((round) =>
+        ...Object.values(this.room().rounds).map(round =>
           this.calculateRoundStatistics(round)
         ),
       ];
@@ -790,22 +790,22 @@ export class RoomComponent implements OnInit, OnDestroy {
   calculateRoundStatistics(round: Round) {
     const elapsed = getHumanReadableElapsedTime(round);
     const estimates = Object.keys(round.estimates)
-      .filter((member) =>
+      .filter(member =>
         this.room()
-          .members.map((m) => m.id)
+          .members.map(m => m.id)
           .includes(member)
       )
-      .map((member) => ({
+      .map(member => ({
         value: round.estimates[member],
-        voter: this.room().members.find((m) => m.id === member)?.name,
+        voter: this.room().members.find(m => m.id === member)?.name,
       }))
-      .filter((e) => e.value !== null)
+      .filter(e => e.value !== null)
       .sort((a, b) => a.value - b.value);
 
     if (estimates.length) {
       const average =
         estimates
-          .map((estimate) => estimate.value)
+          .map(estimate => estimate.value)
           .reduce((acc, curr) => acc + curr, 0) / estimates.length;
       const lowest = estimates[0];
       const highest = estimates[estimates.length - 1];
@@ -999,7 +999,9 @@ export class RoomComponent implements OnInit, OnDestroy {
             action: () => {
               this.shepherdService.cancel();
               this.analytics.logSkippedOnboarding();
-              this.authService.updateUserPreference({ onboardingTutorialShown: true }).subscribe();
+              this.authService
+                .updateUserPreference({ onboardingTutorialShown: true })
+                .subscribe();
             },
           },
           {
@@ -1007,7 +1009,9 @@ export class RoomComponent implements OnInit, OnDestroy {
             action: () => {
               this.shepherdService.next();
               this.analytics.logStartedOnboarding();
-              this.authService.updateUserPreference({ onboardingTutorialShown: true }).subscribe();
+              this.authService
+                .updateUserPreference({ onboardingTutorialShown: true })
+                .subscribe();
             },
           },
         ],
@@ -1061,7 +1065,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         title: 'Additional Configuration',
         text: `<p>Need more advanced settings? Access extra configuration options here, including different card sets, passwords, permissions, and a sidebar for managing rounds.</p><p>This section helps you tailor your experience to your team’s specific needs.</p>`,
         beforeShowPromise: () => {
-          return new Promise((resolve) => {
+          return new Promise(resolve => {
             this.roomControllerPanel.openMenu();
             resolve(true);
           });
@@ -1082,7 +1086,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         title: 'Access Your Account & Settings',
         text: `<p>All other account management features are found here—update your avatar, check your past sessions, monitor credits, or manage your organization in one convenient menu.</p><p>These tools help maintain a smooth and organized Planning Poker experience for you and your team.</p>`,
         beforeShowPromise: () => {
-          return new Promise((resolve) => {
+          return new Promise(resolve => {
             this.profileDropdown.openMenu();
             resolve(true);
           });

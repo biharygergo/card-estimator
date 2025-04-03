@@ -18,16 +18,16 @@ import { ToastService } from 'src/app/services/toast.service';
 import { JiraResource } from 'src/app/types';
 
 @Component({
-    selector: 'app-configure-jira-integration-modal',
-    imports: [
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatInputModule,
-        MatFormFieldModule,
-    ],
-    templateUrl: './configure-jira-integration-modal.component.html',
-    styleUrl: './configure-jira-integration-modal.component.scss'
+  selector: 'app-configure-jira-integration-modal',
+  imports: [
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+  ],
+  templateUrl: './configure-jira-integration-modal.component.html',
+  styleUrl: './configure-jira-integration-modal.component.scss',
 })
 export class ConfigureJiraIntegrationModalComponent {
   customFieldIdControl = new FormControl<string>(
@@ -47,9 +47,9 @@ export class ConfigureJiraIntegrationModalComponent {
       .getIntegration()
       .pipe(
         take(1),
-        switchMap((jiraIntegration) => {
+        switchMap(jiraIntegration => {
           const jiraResource = jiraIntegration.jiraResources.find(
-            (r) => r.id === this.dialogData.jiraResource.id
+            r => r.id === this.dialogData.jiraResource.id
           );
           if (!jiraResource) {
             this.toastService.showMessage(

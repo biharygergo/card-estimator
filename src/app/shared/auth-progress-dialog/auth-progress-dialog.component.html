@@ -3,7 +3,10 @@
     <div class="content-container">
       @if (state === AuthProgressState.IN_PROGRESS) {
         <mat-spinner diameter="40"></mat-spinner>
-        <p>Waiting for authentication with Zoom and the selected provider to finish.</p>
+        <p>
+          Waiting for authentication with Zoom and the selected provider to
+          finish.
+        </p>
       }
       @if (state === AuthProgressState.SUCCESS) {
         <mat-icon color="success">check</mat-icon>
@@ -19,46 +22,38 @@
           file an issue on Github if the problem persists.
         </p>
         <p>
-        The error is: <strong>{{ errorMessage }}</strong>
-      </p>
-    }
-    @if (state === AuthProgressState.ACCOUNT_EXISTS) {
-      <mat-icon>error</mat-icon>
-      <p>
-        A previous Planning Poker account has already been linked to these
-        credentials. We currently do not support linking multiple accounts,
-        but it is on the roadmap.
-      </p>
-      <p>
-        As a workaround, you can sign out of this anonymous account and sign
-        back in with your existing permanent account. You'll lose access to
-        rooms created with your current anonymous account. If you really need
-        the linking feature, put some friendly pressure on the developers and
-        file an issue on Github.
-      </p>
-    }
+          The error is: <strong>{{ errorMessage }}</strong>
+        </p>
+      }
+      @if (state === AuthProgressState.ACCOUNT_EXISTS) {
+        <mat-icon>error</mat-icon>
+        <p>
+          A previous Planning Poker account has already been linked to these
+          credentials. We currently do not support linking multiple accounts,
+          but it is on the roadmap.
+        </p>
+        <p>
+          As a workaround, you can sign out of this anonymous account and sign
+          back in with your existing permanent account. You'll lose access to
+          rooms created with your current anonymous account. If you really need
+          the linking feature, put some friendly pressure on the developers and
+          file an issue on Github.
+        </p>
+      }
+    </div>
   </div>
-</div>
-@if (hasAction) {
-  <div mat-dialog-actions>
-    @if (returnPath) {
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="returnToPrevious()"
-        >
-        Continue
-      </button>
-    }
-    @if (state === AuthProgressState.ACCOUNT_EXISTS) {
-      <button
-        mat-flat-button
-        color="error"
-        (click)="signOut()"
-        >
-        Sign out of temporary account
-      </button>
-    }
-  </div>
-}
+  @if (hasAction) {
+    <div mat-dialog-actions>
+      @if (returnPath) {
+        <button mat-flat-button color="primary" (click)="returnToPrevious()">
+          Continue
+        </button>
+      }
+      @if (state === AuthProgressState.ACCOUNT_EXISTS) {
+        <button mat-flat-button color="error" (click)="signOut()">
+          Sign out of temporary account
+        </button>
+      }
+    </div>
+  }
 }

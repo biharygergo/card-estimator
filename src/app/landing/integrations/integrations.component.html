@@ -11,8 +11,7 @@
         <button
           (click)="scrollTo('video-conferencing')"
           mat-flat-button
-          class="discover-integrations-button"
-        >
+          class="discover-integrations-button">
           Discover integrations
         </button>
         <p class="header-subtitle">
@@ -38,8 +37,7 @@
         placeholder
         width="1400"
         height="975"
-        sizes="(max-width: 800px) 100vw, 60vw"
-      />
+        sizes="(max-width: 800px) 100vw, 60vw" />
     </div>
   </div>
 </div>
@@ -62,13 +60,11 @@
     </div>
     <div class="integration-section-items">
       @for (integration of videoConferencingIntegrations; track $index) {
-      <ng-container
-        *ngTemplateOutlet="
-          integrationItem;
-          context: { integration: integration, index: $index }
-        "
-      ></ng-container>
-
+        <ng-container
+          *ngTemplateOutlet="
+            integrationItem;
+            context: { integration: integration, index: $index }
+          "></ng-container>
       }
     </div>
   </section>
@@ -88,12 +84,11 @@
     </div>
     <div class="integration-section-items">
       @for (integration of projectManagementIntegrations; track $index) {
-      <ng-container
-        *ngTemplateOutlet="
-          integrationItem;
-          context: { integration: integration, index: $index }
-        "
-      ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            integrationItem;
+            context: { integration: integration, index: $index }
+          "></ng-container>
       }
     </div>
   </section>
@@ -111,12 +106,11 @@
     </div>
     <div class="integration-section-items">
       @for (integration of messagingIntegrations; track $index) {
-      <ng-container
-        *ngTemplateOutlet="
-          integrationItem;
-          context: { integration: integration, index: $index }
-        "
-      ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            integrationItem;
+            context: { integration: integration, index: $index }
+          "></ng-container>
       }
     </div>
     <div class="banner-wrapper">
@@ -136,20 +130,20 @@
       </p>
       <div class="action-buttons">
         @if (integration.link) {
-        <a
-          [routerLink]="integration.link"
-          mat-stroked-button
-          class="learn-more-button"
-        >
-          Learn more </a
-        >} @if(integration.hasAction) {
-        <button
-          (click)="handleAction(integration.id)"
-          mat-button
-          class="learn-more-button"
-        >
-          Get started
-        </button>
+          <a
+            [routerLink]="integration.link"
+            mat-stroked-button
+            class="learn-more-button">
+            Learn more
+          </a>
+        }
+        @if (integration.hasAction) {
+          <button
+            (click)="handleAction(integration.id)"
+            mat-button
+            class="learn-more-button">
+            Get started
+          </button>
         }
       </div>
     </div>
@@ -163,16 +157,14 @@
         (canplay)="video.play()"
         (loadedmetadata)="video.muted = true"
         [class.video-big]="integration.isBigVideo"
-        [class.video-16-9]="integration.is169Video"
-      >
+        [class.video-16-9]="integration.is169Video">
         <source
           [src]="
             'https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/' +
             integration.videoId +
             '.mp4'
           "
-          type="video/mp4"
-        />
+          type="video/mp4" />
       </video>
     </div>
   </div>

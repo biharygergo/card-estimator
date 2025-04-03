@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, input, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   combineLatest,
   first,
@@ -21,15 +29,11 @@ interface Velocity {
 }
 
 @Component({
-    selector: 'app-velocity',
-    templateUrl: './velocity.component.html',
-    styleUrls: ['./velocity.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatIcon,
-        MatTooltip,
-        AsyncPipe,
-    ]
+  selector: 'app-velocity',
+  templateUrl: './velocity.component.html',
+  styleUrls: ['./velocity.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon, MatTooltip, AsyncPipe],
 })
 export class VelocityComponent implements OnInit, OnDestroy {
   room = input.required<Observable<Room>>();
@@ -75,7 +79,7 @@ export class VelocityComponent implements OnInit, OnDestroy {
     sessions: Room[]
   ) {
     const oneBeforeCurrentIndex =
-      sessions.findIndex((room) => room.roomId === this.roomId()) + 1;
+      sessions.findIndex(room => room.roomId === this.roomId()) + 1;
     if (oneBeforeCurrentIndex > sessions.length) {
       return undefined;
     }
@@ -104,14 +108,14 @@ export class VelocityComponent implements OnInit, OnDestroy {
     let total = undefined;
     const cards = exportData.rows
       .reverse()
-      .map((row) => {
+      .map(row => {
         return row.mostPopularVoteOrOverride;
       })
-      .filter((card) => !!card);
+      .filter(card => !!card);
 
     if (isAllNumericCardSet) {
       total = cards
-        .map((card) => {
+        .map(card => {
           return +card;
         })
         .reduce((acc, curr) => acc + curr, 0);

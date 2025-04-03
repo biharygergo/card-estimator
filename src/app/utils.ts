@@ -102,7 +102,7 @@ export function getSortedCardSetValues(
 ): { key: string; value: string }[] {
   return Object.keys(cardSet.values)
     .sort((a, b) => +a - +b)
-    .map((key) => {
+    .map(key => {
       return { key, value: cardSet.values[key] };
     });
 }

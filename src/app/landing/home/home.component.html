@@ -4,14 +4,14 @@
 </div> -->
 <planning-poker-page-header-with-cta
   [config]="{
-  title: 'Planning Poker - Sprint Estimation for Agile Teams',
-  description: 'Run planning poker sessions in your browser or directly in Teams, Zoom, Meet, or Webex. Sync story points to JIRA or Linear automatically. The most trusted planning poker tool for remote teams.',
-  internalLink: '/create',
-  ctaIcon: 'play_arrow',
-  ctaTitle: 'Start Planning Poker Session',
-  showPlatforms: true,
-}"
-/>
+    title: 'Planning Poker - Sprint Estimation for Agile Teams',
+    description:
+      'Run planning poker sessions in your browser or directly in Teams, Zoom, Meet, or Webex. Sync story points to JIRA or Linear automatically. The most trusted planning poker tool for remote teams.',
+    internalLink: '/create',
+    ctaIcon: 'play_arrow',
+    ctaTitle: 'Start Planning Poker Session',
+    showPlatforms: true,
+  }" />
 <section class="used-by-section">
   <div class="used-by-content">
     <h2>The #1 planning poker tool trusted by agile teams worldwide</h2>
@@ -22,17 +22,16 @@
     <div class="logo-carousel">
       <ul class="logo-carousel-track">
         @for (logo of logos; track $index; let i = $index) {
-        <li>
-          <picture>
-            <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
-            <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
-            <img
-              src="/assets/logos/{{ logo }}.png"
-              alt="{{ companies[i] }} uses Planning Poker"
-              loading="lazy"
-            />
-          </picture>
-        </li>
+          <li>
+            <picture>
+              <source srcset="/assets/logos/{{logo}}.webp" type="image/webp" />
+              <source srcset="/assets/logos/{{logo}}.png" type="image/png" />
+              <img
+                src="/assets/logos/{{ logo }}.png"
+                alt="{{ companies[i] }} uses Planning Poker"
+                loading="lazy" />
+            </picture>
+          </li>
         }
       </ul>
     </div>
@@ -49,8 +48,7 @@
   <div class="see-more-features">
     <mat-expansion-panel
       class="see-more-panel"
-      (opened)="viewAllFeaturesOpened()"
-    >
+      (opened)="viewAllFeaturesOpened()">
       <mat-expansion-panel-header class="see-more-panel-header">
         <mat-panel-title class="see-more-panel-title"
           >View All Planning Poker Features</mat-panel-title
@@ -74,24 +72,20 @@
         preload="none"
         (loadedmetadata)="video.muted = true"
         [controls]="!video.paused"
-        poster="/assets/video_poster.webp"
-      >
+        poster="/assets/video_poster.webp">
         <source
           src="https://storage.googleapis.com/card-estimator.appspot.com/landing_video.mp4"
-          type="video/mp4"
-        />
+          type="video/mp4" />
       </video>
       <div
         class="start-video-overlay"
         [class.hidden]="!video.paused"
-        (click)="video.play()"
-      >
+        (click)="video.play()">
         <button
           mat-fab
           color="primary"
           aria-label="Play demo video"
-          (click)="video.play()"
-        >
+          (click)="video.play()">
           <mat-icon>play_arrow</mat-icon>
         </button>
       </div>
@@ -145,25 +139,26 @@
   <div class="knowledge-base-section-content">
     <h2>Learn more about agile techniques & SCRUM poker</h2>
     <div class="knowledge-base-articles">
-      @for(sample of knowledgeBaseSamples; track sample.slug) {
-      <article class="knowledge-base-articles-card">
-        <div class="knowledge-base-articles-card-image">
-          <img
-            [ngSrc]="sample.imageId"
-            placeholder
-            [alt]="sample.imageAlt"
-            fill
-            sizes="10wv"
-          />
-        </div>
-        <div class="knowledge-base-articles-card-content">
-          <h3>{{ sample.title }}</h3>
-          <p>{{ sample.description }}</p>
-          <a mat-stroked-button [routerLink]="'/knowledge-base/' + sample.slug"
-            >Read article</a
-          >
-        </div>
-      </article>
+      @for (sample of knowledgeBaseSamples; track sample.slug) {
+        <article class="knowledge-base-articles-card">
+          <div class="knowledge-base-articles-card-image">
+            <img
+              [ngSrc]="sample.imageId"
+              placeholder
+              [alt]="sample.imageAlt"
+              fill
+              sizes="10wv" />
+          </div>
+          <div class="knowledge-base-articles-card-content">
+            <h3>{{ sample.title }}</h3>
+            <p>{{ sample.description }}</p>
+            <a
+              mat-stroked-button
+              [routerLink]="'/knowledge-base/' + sample.slug"
+              >Read article</a
+            >
+          </div>
+        </article>
       }
       <a mat-stroked-button routerLink="/knowledge-base" class="view-all-button"
         >View more articles in Knowledge Base</a
@@ -284,16 +279,14 @@
             class="made-by-box"
             href="https://gergelybihary.com"
             rel="noopener"
-            target="_blank"
-          >
+            target="_blank">
             <picture>
               <source srcset="/assets/gergely-bihary.webp" type="image/webp" />
               <source srcset="/assets/gergely-bihary.jpeg" type="image/jpeg" />
               <img
                 src="/assets/gergely-bihary.jpeg"
                 alt="A profile picture of Gergely Bihary"
-                loading="lazy"
-              />
+                loading="lazy" />
             </picture>
             Gergely Bihary
           </a>
@@ -301,16 +294,14 @@
             class="made-by-box"
             href="https://www.kristofnagy.com/"
             rel="noopener"
-            target="_blank"
-          >
+            target="_blank">
             <picture>
               <source srcset="/assets/kristof_nagy.webp" type="image/webp" />
               <source srcset="/assets/kristof_nagy.jpeg" type="image/jpeg" />
               <img
                 src="/assets/kristof_nagy.jpeg"
                 alt="A profile picture of Kristóf Nagy"
-                loading="lazy"
-              />
+                loading="lazy" />
             </picture>
             Kristóf Nagy
           </a>
@@ -323,8 +314,7 @@
         placeholder
         alt="People having a meeting around a table"
         fill
-        sizes="(max-width: 800px) 100vw, 50vw"
-      />
+        sizes="(max-width: 800px) 100vw, 50vw" />
     </div>
   </div>
 </section>

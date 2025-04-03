@@ -1,7 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import {
-  from,
-} from 'rxjs';
+import { from } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { PermissionsService } from 'src/app/services/permissions.service';
 
@@ -13,18 +11,13 @@ import { ResizeMonitorDirective } from '../directives/resize-monitor.directive';
 import { MatCard } from '@angular/material/card';
 
 @Component({
-    selector: 'session-history',
-    templateUrl: './session-history.component.html',
-    styleUrls: ['./session-history.component.scss'],
-    animations: [],
-    imports: [
-        MatCard,
-        ResizeMonitorDirective,
-        RoundHistoryTableComponent,
-    ]
+  selector: 'session-history',
+  templateUrl: './session-history.component.html',
+  styleUrls: ['./session-history.component.scss'],
+  animations: [],
+  imports: [MatCard, ResizeMonitorDirective, RoundHistoryTableComponent],
 })
 export class SessionHistoryComponent {
-
   constructor(
     public readonly permissionsService: PermissionsService,
     public readonly paymentsService: PaymentService,

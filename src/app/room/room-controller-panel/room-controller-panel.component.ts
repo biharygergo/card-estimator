@@ -54,27 +54,27 @@ import { ToastService } from 'src/app/services/toast.service';
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
 
 @Component({
-    selector: 'planning-poker-room-controller-panel',
-    templateUrl: './room-controller-panel.component.html',
-    styleUrls: ['./room-controller-panel.component.scss'],
-    animations: [fadeAnimation, delayedFadeAnimation],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatCard,
-        MatCardContent,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        MatButton,
-        CountdownTimerComponent,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDivider,
-        MatCheckbox,
-        NgClass,
-        AsyncPipe,
-    ]
+  selector: 'planning-poker-room-controller-panel',
+  templateUrl: './room-controller-panel.component.html',
+  styleUrls: ['./room-controller-panel.component.scss'],
+  animations: [fadeAnimation, delayedFadeAnimation],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MatButton,
+    CountdownTimerComponent,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    MatCheckbox,
+    NgClass,
+    AsyncPipe,
+  ],
 })
 export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   room = input.required<Room>();
@@ -102,8 +102,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   savedCardSets = signal<SavedCardSetValue[]>([]);
 
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)').pipe(
-    map((result) => result.matches),
-    tap((isSmallScreen) => this.isSmallScreen.set(isSmallScreen))
+    map(result => result.matches),
+    tap(isSmallScreen => this.isSmallScreen.set(isSmallScreen))
   );
   isSmallScreen = signal<boolean>(false);
 
@@ -152,9 +152,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
-    this.savedCardSets$.subscribe((cardSets) =>
-      this.savedCardSets.set(cardSets)
-    );
+    this.savedCardSets$.subscribe(cardSets => this.savedCardSets.set(cardSets));
   }
 
   ngOnDestroy(): void {}
@@ -248,7 +246,7 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       return '';
     }
     return getSortedCardSetValues(cardSet)
-      .map((item) => item.value)
+      .map(item => item.value)
       .join(', ');
   }
 
@@ -302,7 +300,9 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   }
 
   toggleChangeVoteAfterReveal() {
-    this.analytics.logToggleChangeVoteAfterReveal(!this.room().isChangeVoteAfterRevealEnabled);
+    this.analytics.logToggleChangeVoteAfterReveal(
+      !this.room().isChangeVoteAfterRevealEnabled
+    );
     this.estimatorService.toggleChangeVoteAfterReveal(
       this.room().roomId,
       !this.room().isChangeVoteAfterRevealEnabled

@@ -16,32 +16,25 @@ PP-125: Add helpful placeholder to textarea"
           rows="4"
           autofocus
           cdkFocusInitial
-          [formControl]="topics"
-        ></textarea>
+          [formControl]="topics"></textarea>
         @if ((topics.dirty || topics.touched) && topics.errors?.['maxTopics']) {
-          <mat-error
-            >You can add at most 20 topics</mat-error
-            >
-          }
-        </mat-form-field>
-      </div>
+          <mat-error>You can add at most 20 topics</mat-error>
+        }
+      </mat-form-field>
     </div>
-    <div mat-dialog-actions>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="onSubmit.next()"
-        [disabled]="!topics.valid"
-        >
-        <mat-icon>library_add</mat-icon>
-        Add rounds
-        @if (parsedTopics$ | async; as parsedTopics) {
-          <span
-            >({{ parsedTopics.length }})</span
-            >
-          }
-        </button>
-        <button mat-button mat-dialog-close>Cancel</button>
-      </div>
-    </div>
-    
+  </div>
+  <div mat-dialog-actions>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit.next()"
+      [disabled]="!topics.valid">
+      <mat-icon>library_add</mat-icon>
+      Add rounds
+      @if (parsedTopics$ | async; as parsedTopics) {
+        <span>({{ parsedTopics.length }})</span>
+      }
+    </button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</div>

@@ -16,7 +16,9 @@
     </li>
     <li>
       <mat-icon>check</mat-icon>
-      <span>Saved card sets, custom permissions, PokerBot AI and much more...</span>
+      <span
+        >Saved card sets, custom permissions, PokerBot AI and much more...</span
+      >
     </li>
   </ul>
 </div>
@@ -29,8 +31,7 @@
     mat-flat-button
     color="primary"
     (click)="onUpgradeClick()"
-    [disabled]="isRedirecting"
-  >
-    {{ isRedirecting ? "Opening Stripe..." : "Upgrade to Premium" }}
+    [disabled]="isRedirecting">
+    {{ isRedirecting ? 'Opening Stripe...' : 'Upgrade to Premium' }}
   </button>
 </div>

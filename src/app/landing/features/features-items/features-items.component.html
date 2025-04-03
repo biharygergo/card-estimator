@@ -1,6 +1,10 @@
 <div class="feature-grid-row">
   <div class="feature-grid-item feature-card fat image-only">
-    <img ngSrc="Simple_UI_zpjgli" placeholder alt="UI components laid out visually" fill
+    <img
+      ngSrc="Simple_UI_zpjgli"
+      placeholder
+      alt="UI components laid out visually"
+      fill
       sizes="(max-width: 800px) 100vw, 40vw" />
   </div>
   <div class="feature-grid-item feature-card">
@@ -9,8 +13,8 @@
       Simple user interface for delightful planning meetings
     </h3>
     <p class="details">
-      Create a room, invite your colleagues and start planning your next
-      sprint. No need to create an account and it's all free to use.
+      Create a room, invite your colleagues and start planning your next sprint.
+      No need to create an account and it's all free to use.
     </p>
   </div>
 </div>
@@ -20,21 +24,37 @@
     <h3 class="title">Adjust estimation units to fit your team</h3>
     <p class="details">
       Set up T-shirt sizing, Fibonacci values or all kinds of custom
-      combinations as voting options. Measure team velocity with
-      automatically collected historical data.
+      combinations as voting options. Measure team velocity with automatically
+      collected historical data.
     </p>
   </div>
   <div class="feature-grid-item feature-card fat video-only">
-    <video #video1 autoplay loop muted playsinline (canplay)="video1.play()" (loadedmetadata)="video1.muted = true">
-      <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/CardSet_Optimized_imkd0l.mp4"
+    <video
+      #video1
+      autoplay
+      loop
+      muted
+      playsinline
+      (canplay)="video1.play()"
+      (loadedmetadata)="video1.muted = true">
+      <source
+        data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/CardSet_Optimized_imkd0l.mp4"
         type="video/mp4" />
     </video>
   </div>
 </div>
 <div class="feature-grid-row">
   <div class="feature-grid-item feature-card fat video-only">
-    <video #video2 autoplay loop muted playsinline (canplay)="video2.play()" (loadedmetadata)="video2.muted = true">
-      <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Consensus_Optimized_b86ag7.mp4"
+    <video
+      #video2
+      autoplay
+      loop
+      muted
+      playsinline
+      (canplay)="video2.play()"
+      (loadedmetadata)="video2.muted = true">
+      <source
+        data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Consensus_Optimized_b86ag7.mp4"
         type="video/mp4" />
     </video>
   </div>
@@ -42,17 +62,25 @@
     <span class="header">Useful statistics</span>
     <h3 class="title">Find consensus and discuss edge cases</h3>
     <p class="details">
-      Join with an unlimited number of voters and find consensus on your
-      tickets or issues. The app will show averages and highlight edge cases
-      amongst the votes.
+      Join with an unlimited number of voters and find consensus on your tickets
+      or issues. The app will show averages and highlight edge cases amongst the
+      votes.
     </p>
   </div>
 </div>
 <div class="highlight">
   <div class="feature-grid-row">
     <div class="feature-grid-item feature-card video-only half">
-      <video #video3 autoplay loop muted playsinline (canplay)="video3.play()" (loadedmetadata)="video3.muted = true">
-        <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Zoom_Optimized_hlyfex.mp4"
+      <video
+        #video3
+        autoplay
+        loop
+        muted
+        playsinline
+        (canplay)="video3.play()"
+        (loadedmetadata)="video3.muted = true">
+        <source
+          data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Zoom_Optimized_hlyfex.mp4"
           type="video/mp4" />
       </video>
     </div>
@@ -60,25 +88,54 @@
       <span class="header">Planning Poker in Video Meetings</span>
       <h3 class="title">Estimate in Zoom, Teams, Meet and Webex Meetings</h3>
       <p class="details">
-        Use our Planning Poker app directly in your video meetings without switching context. 
-        Whether you need Planning Poker in Zoom meetings, Microsoft Teams sessions, Google Meet calls, 
-        or Webex conferences - we've got you covered. Available as a free embedded app for all major 
+        Use our Planning Poker app directly in your video meetings without
+        switching context. Whether you need Planning Poker in Zoom meetings,
+        Microsoft Teams sessions, Google Meet calls, or Webex conferences -
+        we've got you covered. Available as a free embedded app for all major
         video conferencing platforms.
       </p>
       <div class="feature-grid-buttons">
-        <a mat-stroked-button routerLink="/integrations/zoom" class="white-button">Zoom</a>
-        <a mat-stroked-button routerLink="/integrations/teams" class="white-button">Teams</a>
-        <a mat-stroked-button routerLink="/integrations/meet" class="white-button">Meet</a>
-        <a mat-stroked-button routerLink="/integrations/webex" class="white-button">Webex</a>
+        <a
+          mat-stroked-button
+          routerLink="/integrations/zoom"
+          class="white-button"
+          >Zoom</a
+        >
+        <a
+          mat-stroked-button
+          routerLink="/integrations/teams"
+          class="white-button"
+          >Teams</a
+        >
+        <a
+          mat-stroked-button
+          routerLink="/integrations/meet"
+          class="white-button"
+          >Meet</a
+        >
+        <a
+          mat-stroked-button
+          routerLink="/integrations/webex"
+          class="white-button"
+          >Webex</a
+        >
       </div>
     </div>
   </div>
 </div>
 <div class="feature-grid-row">
   <div class="feature-grid-item feature-card fat video-only">
-    <video #videoEmoji autoplay loop muted playsinline (canplay)="videoEmoji.play()"
+    <video
+      #videoEmoji
+      autoplay
+      loop
+      muted
+      playsinline
+      (canplay)="videoEmoji.play()"
       (loadedmetadata)="videoEmoji.muted = true">
-      <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Emoji_vevcgs.mp4" type="video/mp4" />
+      <source
+        data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Emoji_vevcgs.mp4"
+        type="video/mp4" />
     </video>
   </div>
   <div class="feature-grid-item feature-card">
@@ -86,8 +143,8 @@
     <h3 class="title">Send reactions to topics</h3>
     <p class="details">
       Express your thoughts and opinions on each topic, without having to
-      interrupt the meeting. Improve meeting participation and engagement,
-      and make planning poker more fun and enjoyable for everyone involved.
+      interrupt the meeting. Improve meeting participation and engagement, and
+      make planning poker more fun and enjoyable for everyone involved.
     </p>
   </div>
 </div>
@@ -97,14 +154,22 @@
     <h3 class="title">Use PlanningPoker.live asynchronously</h3>
     <p class="details">
       Asynchronous planning meetings help teams plan more efficiently by
-      allowing participants to prepare for and vote on topics at their own
-      pace, before meeting to discuss the results and make decisions.
+      allowing participants to prepare for and vote on topics at their own pace,
+      before meeting to discuss the results and make decisions.
     </p>
   </div>
   <div class="feature-grid-item feature-card fat video-only">
-    <video #videoAsync autoplay loop muted playsinline (canplay)="videoAsync.play()"
+    <video
+      #videoAsync
+      autoplay
+      loop
+      muted
+      playsinline
+      (canplay)="videoAsync.play()"
       (loadedmetadata)="videoAsync.muted = true">
-      <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Async_btgxf6.mp4" type="video/mp4" />
+      <source
+        data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Async_btgxf6.mp4"
+        type="video/mp4" />
     </video>
   </div>
 </div>
@@ -112,35 +177,53 @@
   <div class="feature-grid-row vertical">
     <div class="feature-grid-item text-center">
       <span class="header">Jira Integration for Planning Poker</span>
-      <h3 class="title small">
-        Estimate Jira Issues with Planning Poker
-      </h3>
+      <h3 class="title small">Estimate Jira Issues with Planning Poker</h3>
       <p class="details small">
-        Our <a routerLink="/integrations/jira">Planning Poker Jira integration</a> streamlines your estimation process: 
-        import tickets directly from your Jira backlog and start estimating immediately. After your team reaches consensus, 
-        story point estimates are automatically synchronized back to Jira issues, eliminating manual updates and 
-        keeping your backlog organized.
+        Our
+        <a routerLink="/integrations/jira">Planning Poker Jira integration</a>
+        streamlines your estimation process: import tickets directly from your
+        Jira backlog and start estimating immediately. After your team reaches
+        consensus, story point estimates are automatically synchronized back to
+        Jira issues, eliminating manual updates and keeping your backlog
+        organized.
       </p>
     </div>
     <div class="feature-grid-item feature-card full video-only">
-      <video #video4 autoplay loop muted playsinline (canplay)="video4.play()" (loadedmetadata)="video4.muted = true">
-        <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Jira_Optimized_2_tugns9.mp4"
+      <video
+        #video4
+        autoplay
+        loop
+        muted
+        playsinline
+        (canplay)="video4.play()"
+        (loadedmetadata)="video4.muted = true">
+        <source
+          data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Jira_Optimized_2_tugns9.mp4"
           type="video/mp4" />
       </video>
     </div>
   </div>
   <div class="feature-grid-row" id="linear">
     <div class="feature-grid-item feature-card image-only half">
-      <img ngSrc="linear-integration" placeholder alt="Linear tickets in topic editor" fill
+      <img
+        ngSrc="linear-integration"
+        placeholder
+        alt="Linear tickets in topic editor"
+        fill
         sizes="(max-width: 800px) 100vw, 40vw" />
     </div>
     <div class="feature-grid-item half center">
       <span class="header">Linear Integration for Agile Teams</span>
       <h3 class="title">Estimate Linear Issues with Planning Poker</h3>
       <p class="details">
-        Our powerful <a routerLink="/integrations/linear">Planning Poker Linear integration</a> enables seamless story point estimation. 
-        Search and import Linear issues directly into your planning sessions, conduct estimations with your team, 
-        and automatically sync the agreed estimates back to Linear. Perfect for agile teams using Linear for project management.
+        Our powerful
+        <a routerLink="/integrations/linear"
+          >Planning Poker Linear integration</a
+        >
+        enables seamless story point estimation. Search and import Linear issues
+        directly into your planning sessions, conduct estimations with your
+        team, and automatically sync the agreed estimates back to Linear.
+        Perfect for agile teams using Linear for project management.
       </p>
     </div>
   </div>
@@ -149,24 +232,37 @@
       <span class="header">Access control</span>
       <h3 class="title">Password protection & permissions</h3>
       <p class="details">
-        Create private rooms protected by a password and adjust room
-        permissions to your preferences. Manage your organization with
-        unlimited members.
+        Create private rooms protected by a password and adjust room permissions
+        to your preferences. Manage your organization with unlimited members.
       </p>
     </div>
     <div class="feature-grid-item feature-card video-only half">
-      <video #premiumVideo autoplay loop muted playsinline (canplay)="premiumVideo.play()"
+      <video
+        #premiumVideo
+        autoplay
+        loop
+        muted
+        playsinline
+        (canplay)="premiumVideo.play()"
         (loadedmetadata)="premiumVideo.muted = true">
-        <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Room_Settings_Optimized_car8sa.mp4"
+        <source
+          data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/Room_Settings_Optimized_car8sa.mp4"
           type="video/mp4" />
       </video>
     </div>
   </div>
   <div class="feature-grid-row">
     <div class="feature-grid-item feature-card video-only half">
-      <video #pokerbotVideo autoplay loop muted playsinline (canplay)="pokerbotVideo.play()"
+      <video
+        #pokerbotVideo
+        autoplay
+        loop
+        muted
+        playsinline
+        (canplay)="pokerbotVideo.play()"
         (loadedmetadata)="pokerbotVideo.muted = true">
-        <source data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/PokerBot_Optimized_2_ibodub.mp4"
+        <source
+          data-src="https://res.cloudinary.com/dtvhnllmc/video/upload/q_auto/PokerBot_Optimized_2_ibodub.mp4"
           type="video/mp4" />
       </video>
     </div>
@@ -174,10 +270,10 @@
       <span class="header">Experimental features</span>
       <h3 class="title">PokerBot, your AI SCRUM master</h3>
       <p class="details">
-        Our newest employee is here to help with your planning sessions.
-        Once your planning session is over, PokerBot will create a summary
-        of the events, votes and highlights of your meeting. Send it to your
-        team for a motivated sprint!
+        Our newest employee is here to help with your planning sessions. Once
+        your planning session is over, PokerBot will create a summary of the
+        events, votes and highlights of your meeting. Send it to your team for a
+        motivated sprint!
       </p>
     </div>
   </div>
@@ -190,8 +286,13 @@
       Something seems odd or a feature is missing? Add it! This app is
       open-source and welcomes contributions from our users.
     </p>
-    <a mat-stroked-button href="https://github.com/biharygergo/card-estimator" target="_blank" rel="nofollow"
-      class="white-button">GitHub
+    <a
+      mat-stroked-button
+      href="https://github.com/biharygergo/card-estimator"
+      target="_blank"
+      rel="nofollow"
+      class="white-button"
+      >GitHub
       <mat-icon>launch</mat-icon>
     </a>
   </div>

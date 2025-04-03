@@ -8,9 +8,8 @@ describe('GithubBadgeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [GithubBadgeComponent]
-})
-    .compileComponents();
+      imports: [GithubBadgeComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

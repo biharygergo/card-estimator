@@ -7,101 +7,100 @@
   <div class="tab-section">
     <div class="integrations-list">
       @if (['teams', 'web'].includes(config.runningIn)) {
-      <div class="integration">
-        <div class="integration-main">
-          <div class="details">
-            <div class="title">
-              <img class="integration-logo" src="/assets/teams_logo.png" />
-              <h4>Teams</h4>
+        <div class="integration">
+          <div class="integration-main">
+            <div class="details">
+              <div class="title">
+                <img class="integration-logo" src="/assets/teams_logo.png" />
+                <h4>Teams</h4>
+              </div>
+              <p>Use Planning Poker directly in the Teams app.</p>
             </div>
-            <p>Use Planning Poker directly in the Teams app.</p>
-          </div>
-          <div class="actions">
-            <a
-              mat-flat-button
-              color="primary"
-              [disabled]="config.runningIn === 'teams'"
-              href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ config.runningIn === "teams" ? "Installed" : "Install" }}
-            </a>
+            <div class="actions">
+              <a
+                mat-flat-button
+                color="primary"
+                [disabled]="config.runningIn === 'teams'"
+                href="https://appsource.microsoft.com/en-us/product/office/WA200005858?tab=Overview"
+                target="_blank"
+                rel="noreferrer">
+                {{ config.runningIn === 'teams' ? 'Installed' : 'Install' }}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-      } @if (['zoom', 'web'].includes(config.runningIn)) {
-      <div class="integration">
-        <div class="integration-main">
-          <div class="details">
-            <div class="title">
-              <img class="integration-logo" src="/assets/zoom.png" />
-              <h4>Zoom</h4>
+      }
+      @if (['zoom', 'web'].includes(config.runningIn)) {
+        <div class="integration">
+          <div class="integration-main">
+            <div class="details">
+              <div class="title">
+                <img class="integration-logo" src="/assets/zoom.png" />
+                <h4>Zoom</h4>
+              </div>
+              <p>Use Planning Poker directly in the Zoom Meetings app.</p>
             </div>
-            <p>Use Planning Poker directly in the Zoom Meetings app.</p>
-          </div>
-          <div class="actions">
-            <a
-              mat-flat-button
-              color="primary"
-              [disabled]="config.runningIn === 'zoom'"
-              href="https://planningpoker.live/api/installZoomApp"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ config.runningIn === "zoom" ? "Installed" : "Install" }}
-            </a>
+            <div class="actions">
+              <a
+                mat-flat-button
+                color="primary"
+                [disabled]="config.runningIn === 'zoom'"
+                href="https://planningpoker.live/api/installZoomApp"
+                target="_blank"
+                rel="noreferrer">
+                {{ config.runningIn === 'zoom' ? 'Installed' : 'Install' }}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-      } @if (['webex', 'web'].includes(config.runningIn)) {
-      <div class="integration">
-        <div class="integration-main">
-          <div class="details">
-            <div class="title">
-              <img class="integration-logo" src="/assets/webex_logo.png" />
-              <h4>Webex</h4>
+      }
+      @if (['webex', 'web'].includes(config.runningIn)) {
+        <div class="integration">
+          <div class="integration-main">
+            <div class="details">
+              <div class="title">
+                <img class="integration-logo" src="/assets/webex_logo.png" />
+                <h4>Webex</h4>
+              </div>
+              <p>Use Planning Poker directly in the Webex Meetings app.</p>
             </div>
-            <p>Use Planning Poker directly in the Webex Meetings app.</p>
-          </div>
-          <div class="actions">
-            <a
-              mat-flat-button
-              color="primary"
-              [disabled]="config.runningIn === 'webex'"
-              href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ config.runningIn === "webex" ? "Installed" : "Install" }}
-            </a>
+            <div class="actions">
+              <a
+                mat-flat-button
+                color="primary"
+                [disabled]="config.runningIn === 'webex'"
+                href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
+                target="_blank"
+                rel="noreferrer">
+                {{ config.runningIn === 'webex' ? 'Installed' : 'Install' }}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-      } @if (['meet', 'web'].includes(config.runningIn)) {
-      <div class="integration">
-        <div class="integration-main">
-          <div class="details">
-            <div class="title">
-              <img class="integration-logo" src="/assets/meet_logo.png" />
-              <h4>Google Meet™</h4>
+      }
+      @if (['meet', 'web'].includes(config.runningIn)) {
+        <div class="integration">
+          <div class="integration-main">
+            <div class="details">
+              <div class="title">
+                <img class="integration-logo" src="/assets/meet_logo.png" />
+                <h4>Google Meet™</h4>
+              </div>
+              <p>Use Planning Poker directly in the Google Meet™ app.</p>
             </div>
-            <p>Use Planning Poker directly in the Google Meet™ app.</p>
-          </div>
-          <div class="actions">
-            <a
-              mat-flat-button
-              color="primary"
-              [disabled]="config.runningIn === 'meet'"
-              href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ config.runningIn === "meet" ? "Installed" : "Install" }}
-            </a>
+            <div class="actions">
+              <a
+                mat-flat-button
+                color="primary"
+                [disabled]="config.runningIn === 'meet'"
+                href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
+                target="_blank"
+                rel="noreferrer">
+                {{ config.runningIn === 'meet' ? 'Installed' : 'Install' }}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
       }
       <div class="integration">
         <div class="integration-main">
@@ -117,41 +116,42 @@
           </div>
           <div class="actions">
             <button mat-flat-button color="primary" (click)="startJiraAuth()">
-              {{ (jiraIntegration$ | async) ? "Reconnect" : "Connect" }}
+              {{ (jiraIntegration$ | async) ? 'Reconnect' : 'Connect' }}
             </button>
           </div>
         </div>
         <div class="integration-preferences">
           @if ((jiraIntegration$ | async)?.jiraResources; as projectList) {
-          <mat-radio-group
-            aria-label="Select the active Jira project"
-            class="jira-list"
-          >
-            @for (project of projectList; track project) {
-            <mat-radio-button
-              [value]="project"
-              color="primary"
-              [checked]="project.active"
-              (click)="projectList.length > 1 && onJiraProjectSelected(project)"
-              ><span class="jira-list-label">
-                {{ project.url }}
-              </span>
-            </mat-radio-button>
-            <div class="jira-actions">
-              <button mat-button (click)="configureJiraResource(project)">
-                Configure
-              </button>
-              <button
-                mat-button
-                (click)="
-                  onJiraProjectRemoveClicked(project); $event.stopPropagation()
-                "
-              >
-                Remove
-              </button>
-            </div>
-            }
-          </mat-radio-group>
+            <mat-radio-group
+              aria-label="Select the active Jira project"
+              class="jira-list">
+              @for (project of projectList; track project) {
+                <mat-radio-button
+                  [value]="project"
+                  color="primary"
+                  [checked]="project.active"
+                  (click)="
+                    projectList.length > 1 && onJiraProjectSelected(project)
+                  "
+                  ><span class="jira-list-label">
+                    {{ project.url }}
+                  </span>
+                </mat-radio-button>
+                <div class="jira-actions">
+                  <button mat-button (click)="configureJiraResource(project)">
+                    Configure
+                  </button>
+                  <button
+                    mat-button
+                    (click)="
+                      onJiraProjectRemoveClicked(project);
+                      $event.stopPropagation()
+                    ">
+                    Remove
+                  </button>
+                </div>
+              }
+            </mat-radio-group>
           }
         </div>
       </div>
@@ -169,13 +169,15 @@
           </div>
           <div class="actions">
             <button mat-flat-button color="primary" (click)="startLinearAuth()">
-              {{ (linearIntegration$ | async) ? "Reconnect" : "Connect" }}
+              {{ (linearIntegration$ | async) ? 'Reconnect' : 'Connect' }}
             </button>
           </div>
         </div>
         <div class="integration-preferences">
           @if (linearIntegration$ | async) {
-          <button mat-button (click)="removeLinearIntegration()">Remove</button>
+            <button mat-button (click)="removeLinearIntegration()">
+              Remove
+            </button>
           }
         </div>
       </div>
@@ -193,13 +195,15 @@
           </div>
           <div class="actions">
             <button mat-flat-button color="primary" (click)="startSlackAuth()">
-              {{ slackIntegration() ? "Reconnect" : "Connect" }}
+              {{ slackIntegration() ? 'Reconnect' : 'Connect' }}
             </button>
           </div>
         </div>
         <div class="integration-preferences">
           @if (slackIntegration()) {
-          <button mat-button (click)="removeSlackIntegration()">Remove</button>
+            <button mat-button (click)="removeSlackIntegration()">
+              Remove
+            </button>
           }
         </div>
       </div>

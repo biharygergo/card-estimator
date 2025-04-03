@@ -8,9 +8,8 @@ describe('AddOrUpdateTopicComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AddOrUpdateTopicComponent]
-})
-    .compileComponents();
+      imports: [AddOrUpdateTopicComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

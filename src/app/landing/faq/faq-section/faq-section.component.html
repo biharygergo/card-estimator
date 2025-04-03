@@ -1,17 +1,22 @@
 <section class="faq-section" [class.inverse]="inverse()">
   <div class="faq-content">
     @if (!hideTitle()) {
-    <h3>Frequently Asked Questions</h3>
+      <h3>Frequently Asked Questions</h3>
     }
     <div class="faq-grid">
       @for (faq of faqs(); track faq.question) {
-      <app-faq-row [question]="faq.question" [answer]="faq.answer" [inverse]="inverse()" />
+        <app-faq-row
+          [question]="faq.question"
+          [answer]="faq.answer"
+          [inverse]="inverse()" />
       }
     </div>
     @if (!hideMoreButton()) {
-    <div class="view-all-faqs">
-      <a mat-stroked-button color="primary" routerLink="/faq">View all FAQs</a>
-    </div>
+      <div class="view-all-faqs">
+        <a mat-stroked-button color="primary" routerLink="/faq"
+          >View all FAQs</a
+        >
+      </div>
     }
   </div>
 </section>

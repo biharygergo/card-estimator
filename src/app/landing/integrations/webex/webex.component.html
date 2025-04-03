@@ -1,4 +1,6 @@
-<app-page-header title="Planning Poker for Webex Meetings" subtitle="Install our embedded app in your favorite video conferencing tool"></app-page-header>
+<app-page-header
+  title="Planning Poker for Webex Meetings"
+  subtitle="Install our embedded app in your favorite video conferencing tool"></app-page-header>
 <main>
   <div>
     <section class="integration-hero">
@@ -15,8 +17,7 @@
             mat-stroked-button
             color="primary"
             href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
-            class="white-button"
-          >
+            class="white-button">
             <mat-icon>open_in_new</mat-icon>
             View in Webex App Hub
           </a>
@@ -30,12 +31,10 @@
           muted
           playsinline
           (canplay)="video.play()"
-          (loadedmetadata)="video.muted = true"
-        >
+          (loadedmetadata)="video.muted = true">
           <source
-          src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation_Webex.mp4"
-          type="video/mp4"
-          />
+            src="https://storage.googleapis.com/card-estimator.appspot.com/Planning_Poker_Animation_Webex.mp4"
+            type="video/mp4" />
         </video>
       </div>
     </section>
@@ -47,57 +46,52 @@
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_1.png"
             alt="AppHub landing page for Planning Poker"
-            [class.visible]="selectedIndex === 0"
-          />
+            [class.visible]="selectedIndex === 0" />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_2.png"
             alt="Apps screen inside Webex"
-            [class.visible]="selectedIndex === 1"
-          />
+            [class.visible]="selectedIndex === 1" />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_3.png"
             alt="The app is running inside Webex"
-            [class.visible]="selectedIndex === 2"
-          />
+            [class.visible]="selectedIndex === 2" />
           <img
             src="https://storage.googleapis.com/card-estimator.appspot.com/Instruction_Webex_4.png"
             alt="An ongoing planning session with participants in Webex"
-            [class.visible]="selectedIndex === 3"
-          />
+            [class.visible]="selectedIndex === 3" />
         </div>
         <mat-tab-group
           dynamicHeight
-          (selectedIndexChange)="selectedIndex = $event"
-        >
+          (selectedIndexChange)="selectedIndex = $event">
           <mat-tab label="1. Open AppHub and install"
             ><div class="step-content">
               <p>
                 To add the app to your Webex account, open
-            <a
-              href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
-              target="_blank"
-              >App Hub</a
-            >
-            and click the install button. You might need to ask your Workspace
-            administrator to whitelist the app for use.
+                <a
+                  href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
+                  target="_blank"
+                  >App Hub</a
+                >
+                and click the install button. You might need to ask your
+                Workspace administrator to whitelist the app for use.
               </p>
             </div>
           </mat-tab>
           <mat-tab label="2. Open the app inside Webex"
             ><div class="step-content">
               <p>
-                Once the app is installed, you can open it from the "Apps" menu in
-            Webex. The app will appear in the side-panel of your meeting.
+                Once the app is installed, you can open it from the "Apps" menu
+                in Webex. The app will appear in the side-panel of your meeting.
               </p>
             </div>
           </mat-tab>
           <mat-tab label="3. Invite your colleagues in the meeting"
             ><div class="step-content">
               <p>
-                After you've created a planning poker session, just click "Invite"
-                and an "Open for all" button will appear below the app. Click the
-                button and the app will open for everybody in the meeting with the
-                correct room ID already shared.
+                After you've created a planning poker session, just click
+                "Invite" and an "Open for all" button will appear below the app.
+                Click the button and the app will open for everybody in the
+                meeting with the correct room ID already shared.
               </p>
             </div>
           </mat-tab>
@@ -106,8 +100,8 @@
               <p>
                 Once you are all in the same meeting and the app is open for
                 everyone, you can start planning your project. Set a topic by
-                clicking "Edit topic" next to "Topic of Round #1" and decide which
-                card set you want to use.
+                clicking "Edit topic" next to "Topic of Round #1" and decide
+                which card set you want to use.
               </p>
               <p>
                 Each member votes on their own, and once all votes are cast the

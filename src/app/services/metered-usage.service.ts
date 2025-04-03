@@ -16,14 +16,17 @@ import {
   providedIn: 'root',
 })
 export class MeteredUsageService {
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: Firestore,
+    private authService: AuthService
+  ) {}
 
   getMeteredUsage(
     usageType: 'chatgpt-query',
     period = 'monthly'
   ): Observable<MeteredUsage[]> {
     return this.authService.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user || user.isAnonymous) {
           return of([]);
         }

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Inject, input, Input, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  input,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
@@ -43,33 +51,33 @@ import { VelocityComponent } from '../velocity/velocity.component';
 import { batchImportTopicsModalCreator } from '../batch-import-topics-modal/batch-import-topics-modal.component';
 
 @Component({
-    selector: 'app-topics-sidebar',
-    templateUrl: './topics-sidebar.component.html',
-    styleUrls: ['./topics-sidebar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        VelocityComponent,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        CdkDropList,
-        MatCard,
-        CdkDrag,
-        MatCardContent,
-        CdkDragHandle,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
-        MatDivider,
-        MatExpansionPanel,
-        MatExpansionPanelContent,
-        RichTopicComponent,
-        RoundResultsComponent,
-        MatListSubheaderCssMatStyler,
-        AddOrUpdateTopicComponent,
-        MatButton,
-        AsyncPipe,
-    ]
+  selector: 'app-topics-sidebar',
+  templateUrl: './topics-sidebar.component.html',
+  styleUrls: ['./topics-sidebar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    VelocityComponent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    CdkDropList,
+    MatCard,
+    CdkDrag,
+    MatCardContent,
+    CdkDragHandle,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatDivider,
+    MatExpansionPanel,
+    MatExpansionPanelContent,
+    RichTopicComponent,
+    RoundResultsComponent,
+    MatListSubheaderCssMatStyler,
+    AddOrUpdateTopicComponent,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class TopicsSidebarComponent implements OnInit {
   room = input.required<Room>();

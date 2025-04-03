@@ -109,7 +109,7 @@ const LINEAR_FILTER_FIELDS: FilterField[] = [
     fieldName: 'parent',
     comparator: 'is',
     fixedValue: null,
-  }
+  },
 ];
 
 const JIRA_FILTER_FIELDS: FilterField[] = [
@@ -156,25 +156,25 @@ interface FilterChip {
   valueControl: FormControl<string>;
 }
 @Component({
-    selector: 'app-batch-import-topics-modal',
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatCheckboxModule,
-        MatButtonModule,
-        MatChipsModule,
-        MatExpansionModule,
-        DragDropModule,
-        I18nPluralPipe,
-        MatProgressSpinnerModule,
-        RichTopicComponent,
-        MatMenuModule,
-        MatIconModule,
-    ],
-    templateUrl: './batch-import-topics-modal.component.html',
-    styleUrl: './batch-import-topics-modal.component.scss'
+  selector: 'app-batch-import-topics-modal',
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatExpansionModule,
+    DragDropModule,
+    I18nPluralPipe,
+    MatProgressSpinnerModule,
+    RichTopicComponent,
+    MatMenuModule,
+    MatIconModule,
+  ],
+  templateUrl: './batch-import-topics-modal.component.html',
+  styleUrl: './batch-import-topics-modal.component.scss',
 })
 export class BatchImportTopicsModalComponent implements OnInit {
   readonly activeIntegration = toSignal(
@@ -289,12 +289,12 @@ export class BatchImportTopicsModalComponent implements OnInit {
           this.isLoadingSearch.set(false);
         }),
         takeUntilDestroyed(this.destroyRef),
-        catchError((e) => {
+        catchError(e => {
           this.isLoadingSearch.set(false);
           throw e;
         })
       )
-      .subscribe((result) => {
+      .subscribe(result => {
         this.nextPage.set(result.nextPage);
         this.searchedIssues.set(result.issues);
       });
@@ -310,12 +310,12 @@ export class BatchImportTopicsModalComponent implements OnInit {
           this.isLoadingSearch.set(false);
         }),
         takeUntilDestroyed(this.destroyRef),
-        catchError((e) => {
+        catchError(e => {
           this.isLoadingSearch.set(false);
           throw e;
         })
       )
-      .subscribe((result) => {
+      .subscribe(result => {
         this.nextPage.set(result.nextPage);
         this.searchedIssues.set([...this.searchedIssues(), ...result.issues]);
       });
@@ -355,11 +355,11 @@ export class BatchImportTopicsModalComponent implements OnInit {
     this.analytics.logClickedBatchImportIssue();
     if (
       this.selectedIssues()
-        .map((i) => i.key)
+        .map(i => i.key)
         .includes(richTopic.key)
     ) {
       this.selectedIssues.set(
-        this.selectedIssues().filter((i) => i.key !== richTopic.key)
+        this.selectedIssues().filter(i => i.key !== richTopic.key)
       );
     } else {
       this.selectedIssues.set([...this.selectedIssues(), richTopic]);
@@ -411,7 +411,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
 
   private searchIssues(nextPage?: number | string) {
     const { query } = this.searchForm.value;
-    const filters = this.filterChips().map((chip) => {
+    const filters = this.filterChips().map(chip => {
       const filterValue = chip.filter.convertToNumber
         ? Number(chip.valueControl.value)
         : chip.valueControl.value;
@@ -426,7 +426,10 @@ export class BatchImportTopicsModalComponent implements OnInit {
 
       return {
         fieldName: chip.filter.fieldName,
-        value: chip.filter.fixedValue === undefined ? filterValue : chip.filter.fixedValue,
+        value:
+          chip.filter.fixedValue === undefined
+            ? filterValue
+            : chip.filter.fixedValue,
         comparator: chip.filter.comparator,
       };
     });

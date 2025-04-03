@@ -14,11 +14,11 @@ export interface HeaderConfig {
   showPlatforms: boolean;
 }
 @Component({
-    selector: 'planning-poker-page-header-with-cta',
-    templateUrl: './page-header-with-cta.component.html',
-    styleUrl: './page-header-with-cta.component.scss',
-    imports: [MatIcon, MatAnchor, RouterLink, NgOptimizedImage]
+  selector: 'planning-poker-page-header-with-cta',
+  templateUrl: './page-header-with-cta.component.html',
+  styleUrl: './page-header-with-cta.component.scss',
+  imports: [MatIcon, MatAnchor, RouterLink, NgOptimizedImage],
 })
 export class PageHeaderWithCtaComponent {
-  @Input({required: true}) config!: HeaderConfig;
+  @Input({ required: true }) config!: HeaderConfig;
 }

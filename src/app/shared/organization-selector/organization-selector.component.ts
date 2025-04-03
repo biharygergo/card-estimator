@@ -13,22 +13,22 @@ import { skip, skipWhile, take } from 'rxjs';
 import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
-    selector: 'planning-poker-organization-selector',
-    imports: [
-        AsyncPipe,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-    ],
-    templateUrl: './organization-selector.component.html',
-    styleUrl: './organization-selector.component.scss',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            multi: true,
-            useExisting: OrganizationSelectorComponent,
-        },
-    ]
+  selector: 'planning-poker-organization-selector',
+  imports: [
+    AsyncPipe,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
+  templateUrl: './organization-selector.component.html',
+  styleUrl: './organization-selector.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: OrganizationSelectorComponent,
+    },
+  ],
 })
 export class OrganizationSelectorComponent
   implements OnInit, ControlValueAccessor
@@ -48,10 +48,10 @@ export class OrganizationSelectorComponent
   ngOnInit() {
     this.selectedOrganizationId.valueChanges
       .pipe(
-        skipWhile((val) => val === ''),
+        skipWhile(val => val === ''),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe((orgId) => {
+      .subscribe(orgId => {
         this.organizationService.setSelectedOrganization(orgId);
         this.onChange?.(orgId);
       });
@@ -59,7 +59,7 @@ export class OrganizationSelectorComponent
     this.organizationService
       .getMyOrganization()
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe((org) => {
+      .subscribe(org => {
         this.selectedOrganizationId.setValue(org?.id ?? '');
       });
   }

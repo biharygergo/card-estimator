@@ -3,11 +3,7 @@
     {
       "target": "estimator",
       "public": "dist/estimator/browser",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "trailingSlash": false,
       "rewrites": [
         {
@@ -171,11 +167,11 @@
         {
           "source": "/**",
           "headers": [
-           {
-             "key": "Cache-Control",
-             "value": "no-cache, no-store, must-revalidate"
-           }
-         ]
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            }
+          ]
         },
         {
           "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|eot|otf|ttf|ttc|woff|woff2|font.css)",
@@ -184,7 +180,7 @@
               "key": "Cache-Control",
               "value": "max-age=31536000"
             }
-         ]
+          ]
         }
       ],
       "redirects": [

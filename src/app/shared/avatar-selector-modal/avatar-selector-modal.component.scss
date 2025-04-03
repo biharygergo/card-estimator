@@ -1,4 +1,4 @@
-@import "../../common.scss";
+@import '../../common.scss';
 
 .dialog-content {
   display: flex;
@@ -189,7 +189,8 @@
     font-size: 0.8rem;
   }
 
-  .next-expiry, .next-credit {
+  .next-expiry,
+  .next-credit {
     font-size: 0.8rem;
     line-height: 1rem;
     color: #808ca1;

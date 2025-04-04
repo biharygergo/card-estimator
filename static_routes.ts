@@ -17,6 +17,7 @@ export const routes = [
   '/integrations/linear',
   '/history',
   '/pricing',
+  '/printable-planning-poker-cards',
   '/recurringMeeting',
   '/organizationInvitation',
   '/integration',

@@ -1,0 +1,183 @@
+<main>
+  <app-page-header
+    centered="true"
+    title="Free Printable Planning Poker Cards"
+    subtitle="Get your free, professionally designed planning poker cards for agile estimation sessions. Perfect for teams who prefer physical cards or need a backup for in-person meetings." />
+
+  <section class="download-section">
+    <div class="download-content">
+      <div class="download-card">
+        <div class="preview-images">
+          <div class="preview-image-container">
+            <img
+              ngSrc="cards-template-front"
+              placeholder
+              alt="Preview of planning poker cards"
+              width="3000"
+              height="2100"
+              priority />
+            <p>Front</p>
+          </div>
+          <div class="preview-image-container">
+            <img
+              ngSrc="cards-template-back"
+              placeholder
+              alt="Preview of planning poker cards"
+              width="3000"
+              height="2100"
+              priority />
+            <p>Back</p>
+          </div>
+        </div>
+        <div class="download-info">
+          <p>
+            Download our free printable planning poker cards featuring the
+            complete Fibonacci sequence (0, 1, 2, 3, 5, 8, 13) plus a "coffee"
+            card for uncertain estimates. These high-quality agile estimation
+            cards are perfectly formatted for A4 paper with clear cutting
+            guides.
+          </p>
+          <p>
+            Ideal for scrum teams, sprint planning, and agile workshops - use
+            them for in-person meetings or as a backup for your digital planning
+            poker sessions.
+          </p>
+          <div class="download-buttons">
+            <a
+              mat-flat-button
+              class="download-button"
+              color="primary"
+              href="/assets/free-printable-planning-poker-cards.pdf"
+              download="planning-poker-cards.pdf">
+              Download Planning Poker Cards PDF
+            </a>
+            <a
+              download="planning-poker-cards-rounded-corners.pdf"
+              href="/assets/free-printable-planning-poker-cards-rounded-corners.pdf"
+              >Alternate Version with Rounded Corners</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="included-section">
+    <div class="included-content">
+      <h2>What's Included?</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <mat-icon>check_circle</mat-icon>
+          <h3>Complete Fibonacci Sequence</h3>
+          <p>
+            Cards from 0 to 13, plus special cards for unknown and uncertain
+            estimates
+          </p>
+        </div>
+        <div class="feature">
+          <mat-icon>check_circle</mat-icon>
+          <h3>Professional Design</h3>
+          <p>Clean, easy-to-read cards with clear numbering</p>
+        </div>
+        <div class="feature">
+          <mat-icon>check_circle</mat-icon>
+          <h3>Print-Ready Format</h3>
+          <p>
+            Optimized for A4 paper with cutting guides in 300 dpi resolution for
+            high quality print
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="usage-section">
+    <div class="usage-content">
+      <h2>How to Use Printed Cards?</h2>
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Download free PDF</h3>
+          <p>
+            You can just click download above and save the high-quality PDF file
+            to your computer.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Print the cards</h3>
+          <p>
+            Print the cards on A4 paper. To get the best quality print, we
+            recommend printing on thicker paper. You can do this at home or a
+            local print shop.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Laminate the cards</h3>
+          <p>
+            Laminate the cards to protect them from wear and tear. Laminating
+            will make the cards feel more durable and easier to use.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Cut the cards</h3>
+          <p>
+            Cut the cards along the cutting guides. For rounded corners, you can
+            use a special corner cutter or a rounded corner punch.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">5</div>
+          <h3>Distribute the cards</h3>
+          <p>
+            Distribute the cards to your team members. Everyone should have
+            their own set.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">6</div>
+          <h3>Estimate and Discuss</h3>
+          <p>
+            When the team is meeting in person, use the cards to estimate and
+            discuss. When the team is remote, use PlanningPoker.live to estimate
+            and discuss.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="digital-section">
+    <div class="digital-content">
+      <h2>Why Go Digital with PlanningPoker.live?</h2>
+      <div class="digital-features">
+        <div class="digital-feature">
+          <mat-icon>sync</mat-icon>
+          <h3>Real-time Collaboration</h3>
+          <p>Work together seamlessly, whether in-person or remote</p>
+        </div>
+        <div class="digital-feature">
+          <mat-icon>integration_instructions</mat-icon>
+          <h3>Project Management Integration</h3>
+          <p>Connect with Jira, Linear, and other tools</p>
+        </div>
+        <div class="digital-feature">
+          <mat-icon>history</mat-icon>
+          <h3>Estimation History</h3>
+          <p>Track and analyze your team's estimation patterns</p>
+        </div>
+      </div>
+      <div class="cta-container">
+        <start-planning-cta />
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="faq-content">
+      <app-faq-section [faqs]="faqs"></app-faq-section>
+    </div>
+  </section>
+</main>

@@ -4,7 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
   selector: 'app-page-header',
   template: `
     <header>
-      <div class="title">
+      <div class="title" [class.centered]="centered">
         <h1>{{ title }}</h1>
         @if (subtitle) {
           <h2>{{ subtitle }}</h2>
@@ -18,6 +18,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class PageHeaderComponent implements OnInit {
   @Input() title: string;
   @Input() subtitle: string = '';
+  @Input() centered: boolean = false;
   constructor() {}
 
   ngOnInit(): void {}

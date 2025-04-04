@@ -197,6 +197,18 @@ const routes: Routes = [
     loadChildren: () => import('./blog/blog.module').then(m => m.BlogModule),
   },
   {
+    path: 'printable-planning-poker-cards',
+    loadComponent: () =>
+      import(
+        './printable-planning-poker-cards/printable-planning-poker-cards.component'
+      ).then(m => m.PrintablePlanningPokerCardsComponent),
+    data: {
+      title: 'Free Printable Planning Poker Cards',
+      description:
+        'Get your free, professionally designed planning poker cards for agile estimation sessions. Perfect for teams who prefer physical cards or need a backup for in-person meetings.',
+    },
+  },
+  {
     path: 'tools/story-point-calculator',
     loadComponent: () =>
       import(

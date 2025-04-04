@@ -1,5 +1,5 @@
 header {
-  height: 300px;
+  height: 400px;
   padding: 0 2rem;
   color: white;
   background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
@@ -8,7 +8,7 @@ header {
   text-align: center;
 
   .title {
-    max-width: 1200px;
+    max-width: 1000px;
     width: 100%;
     margin: 0 auto;
 
@@ -19,8 +19,8 @@ header {
       margin-top: 0;
     }
 
-    h3 {
-      font-size: 1rem;
+    h2 {
+      font-size: 1.3rem;
     }
   }
 

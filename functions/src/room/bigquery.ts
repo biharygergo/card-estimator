@@ -13,6 +13,28 @@ const FIRESTORE_BATCH_SIZE = 1000;
 const client = new bigquery.BigQuery();
 const dataset = client.dataset(datasetId);
 
+// Define a TypeScript interface that matches the BigQuery schema
+interface RoomBigQuerySchema {
+  id: string;
+  roomId: string;
+  members: string; // JSON string
+  rounds: string; // JSON string
+  currentRound: number;
+  isOpen: boolean;
+  createdAt: bigquery.BigQueryTimestamp;
+  cardSet: string;
+  showPassOption: boolean;
+  customCardSetValue: string;
+  createdById: string;
+  memberIds: string[];
+  timer: string; // JSON string
+  configuration: string; // JSON string
+  subscriptionMetadata: string; // JSON string
+  relatedRecurringMeetingLinkId?: string;
+  isAsyncVotingEnabled?: boolean;
+  isAnonymousVotingEnabled?: boolean;
+}
+
 export async function createTable() {
   const schema: bigquery.TableField[] = [
     {name: "id", type: "STRING"},
@@ -44,7 +66,7 @@ export async function createTable() {
   });
 }
 
-async function insertIntoBigQuery(roomData: any[]) {
+async function insertIntoBigQuery(roomData: RoomBigQuerySchema[]) {
   // Insert data in batches to improve performance
   try {
     const batchSize = 500;
@@ -56,7 +78,14 @@ async function insertIntoBigQuery(roomData: any[]) {
   } catch (e: any) {
     console.error("Error uploading rooms...");
     if (e.errors) {
-      e.errors.forEach((error: any) => console.error(error));
+      e.errors.forEach((error: any) => {
+        if (error.row && error?.errors?.[0]?.reason !== "stopped") {
+          console.error("Error details:", JSON.stringify(error, null, 2));
+          console.error("Problematic row:", JSON.stringify(error.row, null, 2));
+        }
+      });
+    } else {
+      console.error("Full error:", JSON.stringify(e, null, 2));
     }
     return;
   }
@@ -64,66 +93,80 @@ async function insertIntoBigQuery(roomData: any[]) {
 
 export async function updateRoomsTableInBigQuery() {
   try {
-    await dataset.table(tableId).get();
-    console.log("Table exists...");
-    // If table exists, delete all rows
-    const deleteQuery = `DELETE FROM \`${datasetId}.${tableId}\` WHERE true`;
-    await client.query(deleteQuery);
-    console.log("Deleting all rows...");
-  } catch (e) {
-    console.error(e);
-    console.error("Table does not exist...");
-    return;
-  }
-
-  const db = getFirestore();
-  const roomsRef = db.collection("rooms");
-  let startAfter = null;
-  let processed = 0;
-  let rooms = [];
-
-  /* eslint-disable no-constant-condition */
-  while (true) {
-    let query = roomsRef.limit(FIRESTORE_BATCH_SIZE);
-    if (startAfter) {
-      query = query.startAfter(startAfter);
-    }
-    const snapshot = await query.get();
-    console.log("Got data from firestore for batch: ", processed);
-    if (snapshot.empty || processed > 200000) {
-      break;
+    // Drop the table if it exists
+    try {
+      console.log(`Dropping table ${tableId} if it exists...`);
+      await dataset.table(tableId).delete();
+      console.log(`Table ${tableId} dropped successfully.`);
+    } catch (e) {
+      console.log(`Table ${tableId} does not exist or could not be dropped:`, e);
     }
 
-    startAfter = snapshot.docs[snapshot.docs.length - 1];
-    console.log("Starting next batch at:", startAfter.id);
+    // Create a new table
+    console.log(`Creating new table ${tableId}...`);
+    await createTable();
 
-    for (const doc of snapshot.docs) {
-      const room = doc.data() as Room;
-      rooms.push({
-        ...room,
-        createdAt: new bigquery.BigQueryTimestamp(
-            new Date((room.createdAt as any)._seconds * 1000)
-        ),
-        members: JSON.stringify(room.members),
-        rounds: JSON.stringify(room.rounds),
-        timer: JSON.stringify(room.timer),
-        configuration: JSON.stringify(room.configuration),
-        subscriptionMetadata: JSON.stringify(room.subscriptionMetadata),
-        customCardSetValue: JSON.stringify(room.customCardSetValue),
-      });
+    const db = getFirestore();
+    const roomsRef = db.collection("rooms");
+    let startAfter = null;
+    let processed = 0;
+    let rooms: RoomBigQuerySchema[] = [];
+
+    /* eslint-disable no-constant-condition */
+    while (true) {
+      let query = roomsRef.limit(FIRESTORE_BATCH_SIZE);
+      if (startAfter) {
+        query = query.startAfter(startAfter);
+      }
+      const snapshot = await query.get();
+      console.log("Got data from firestore for batch: ", processed);
+      if (snapshot.empty || processed > 200000) {
+        break;
+      }
+
+      startAfter = snapshot.docs[snapshot.docs.length - 1];
+      console.log("Starting next batch at:", startAfter.id);
+
+      for (const doc of snapshot.docs) {
+        const room = doc.data() as Room;
+        rooms.push({
+          id: room.id,
+          roomId: room.roomId,
+          members: JSON.stringify(room.members),
+          rounds: JSON.stringify(room.rounds),
+          currentRound: room.currentRound ?? 0,
+          isOpen: room.isOpen ?? true,
+          createdAt: new bigquery.BigQueryTimestamp(
+              new Date((room.createdAt as any)._seconds * 1000)
+          ),
+          cardSet: room.cardSet ?? "DEFAULT",
+          showPassOption: room.showPassOption ?? false,
+          customCardSetValue: room.customCardSetValue ? JSON.stringify(room.customCardSetValue) : "",
+          createdById: room.createdById,
+          memberIds: (Array.isArray(room.memberIds) && room.memberIds.length > 0 ? room.memberIds : room.members.map((member) => member.id)) || [],
+          timer: room.timer ? JSON.stringify(room.timer) : "",
+          configuration: room.configuration ? JSON.stringify(room.configuration) : "",
+          subscriptionMetadata: room.subscriptionMetadata ? JSON.stringify(room.subscriptionMetadata) : "",
+          relatedRecurringMeetingLinkId: room.relatedRecurringMeetingLinkId ?? "",
+          isAsyncVotingEnabled: room.isAsyncVotingEnabled ?? false,
+          isAnonymousVotingEnabled: room.isAnonymousVotingEnabled ?? false,
+        });
+      }
+
+      processed += snapshot.size;
+
+      if (rooms.length >= FIRESTORE_BATCH_SIZE) {
+        await insertIntoBigQuery(rooms);
+        rooms = [];
+      }
     }
 
-    processed += snapshot.size;
-
-    if (rooms.length >= FIRESTORE_BATCH_SIZE) {
+    if (rooms.length > 0) {
       await insertIntoBigQuery(rooms);
-      rooms = [];
     }
-  }
 
-  if (rooms.length > 0) {
-    await insertIntoBigQuery(rooms);
+    console.log("Successfully uploaded rooms to BigQuery.");
+  } catch (e) {
+    console.error("Error updating rooms table:", e);
   }
-
-  console.log("Successfully uploaded rooms to BigQuery.");
 }

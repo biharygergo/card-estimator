@@ -101,9 +101,7 @@
                       </div>
                       @if (creditsAndBundles.nextBatchExpiring?.length) {
                         <p class="next-expiry">
-                          {{
-                            creditsAndBundles.nextBatchExpiring.length
-                          }}
+                          {{ creditsAndBundles.nextBatchExpiring.length }}
                           credits will expire on
                           {{
                             creditsAndBundles.nextBatchExpiring[0].expiresAt.toDate()

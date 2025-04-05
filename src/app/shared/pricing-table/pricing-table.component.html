@@ -1,10 +1,10 @@
 <div class="page-wrapper">
   @if (pageMode === 'modal') {
-    <div class="close-button">
-      <button mat-button mat-dialog-close>
-        <mat-icon>arrow_back</mat-icon>Back
-      </button>
-    </div>
+  <div class="close-button">
+    <button mat-button mat-dialog-close>
+      <mat-icon>arrow_back</mat-icon>Back
+    </button>
+  </div>
   }
   <div class="content">
     <h1 class="title">Pricing</h1>
@@ -48,130 +48,126 @@
       (selectedIndexChange)="selectedTabIndex.set($event)">
       <mat-tab label="Pay-as-you-go">
         @if (creditTypeSelector.value === 'personal') {
-          <div class="options-wrapper">
-            @for (plan of PLANS; track plan.id) {
-              <div class="option">
-                <div class="plan-image-and-title">
-                  <div class="image-wrapper">
-                    @if (config.runningIn !== 'web') {
-                      <img class="plan-image" [src]="plan.imageUrl" />
-                    } @else {
-                      <img
-                        class="plan-image"
-                        [ngSrc]="plan.cloudinaryId"
-                        [alt]="plan.creditAmount + ' pieces of poker chips'"
-                        placeholder
-                        width="675"
-                        height="675" />
-                    }
-                  </div>
-                  <h3 class="plan-title">{{ plan.title }}</h3>
-                </div>
-                <p class="plan-description">
-                  <strong>{{ plan.creditAmount }} credits</strong>
-                  {{ plan.description }}
-                </p>
-                <div class="plan-price">
-                  <span class="price-amount"
-                    >{{ currencyControl.value === 'eur' ? '€' : '$'
-                    }}{{ plan.priceEuro }}</span
-                  >
-                  <span class="price-description">{{
-                    plan.priceDescription
-                  }}</span>
-                </div>
-                <button
-                  mat-flat-button
-                  color="primary"
-                  class="select-plan"
-                  [disabled]="
-                    plan.isSelectDisabled ||
-                    (isLoadingStripeForBundle &&
-                      isLoadingStripeForBundle === plan.bundleName)
-                  "
-                  (click)="buyBundle(plan.bundleName)">
-                  {{
-                    isLoadingStripeForBundle &&
-                    isLoadingStripeForBundle === plan.bundleName
-                      ? 'Redirecting to Stripe...'
-                      : 'Buy'
-                  }}
-                </button>
+        <div class="options-wrapper">
+          @for (plan of PLANS; track plan.id) {
+          <div class="option">
+            <div class="plan-image-and-title">
+              <div class="image-wrapper">
+                @if (config.runningIn !== 'web') {
+                <img class="plan-image" [src]="plan.imageUrl" />
+                } @else {
+                <img
+                  class="plan-image"
+                  [ngSrc]="plan.cloudinaryId"
+                  [alt]="plan.creditAmount + ' pieces of poker chips'"
+                  placeholder
+                  width="675"
+                  height="675" />
+                }
               </div>
-            }
+              <h3 class="plan-title">{{ plan.title }}</h3>
+            </div>
+            <p class="plan-description">
+              <strong>{{ plan.creditAmount }} credits</strong>
+              {{ plan.description }}
+            </p>
+            <div class="plan-price">
+              <span class="price-amount"
+                >{{ currencyControl.value === 'eur' ? '€' : '$'
+                }}{{ plan.priceEuro }}</span
+              >
+              <span class="price-description">{{ plan.priceDescription }}</span>
+            </div>
+            <button
+              mat-flat-button
+              color="primary"
+              class="select-plan"
+              [disabled]="
+                plan.isSelectDisabled ||
+                (isLoadingStripeForBundle &&
+                  isLoadingStripeForBundle === plan.bundleName)
+              "
+              (click)="buyBundle(plan.bundleName)">
+              {{
+                isLoadingStripeForBundle &&
+                isLoadingStripeForBundle === plan.bundleName
+                  ? 'Redirecting to Stripe...'
+                  : 'Buy'
+              }}
+            </button>
           </div>
+          }
+        </div>
         } @else {
-          <mat-card appearance="outlined" class="org-price-configurator">
-            <mat-card-content>
-              <div class="org-price-configurator-content">
-                <div class="org-price-configurator-image">
-                  <div class="image-wrapper">
-                    <img
-                      class="plan-image"
-                      src="/assets/credits_no_number.png" />
-                  </div>
-                </div>
-                <div class="org-price-configurator-config">
-                  <h3 class="plan-title">Organization bundle</h3>
-                  <p class="plan-description">
-                    Simplify planning poker for your entire organization with
-                    bulk credits. This option is perfect for teams with multiple
-                    SCRUM Masters using PlanningPoker.live. Enjoy shared credits
-                    that never expire, ad-free rooms for focused sessions, and
-                    cost-effective team-wide planning.
-                  </p>
-                  <div class="purchase-form" [formGroup]="purchaseForm">
-                    <planning-poker-organization-selector
-                      label="Select organization"
-                      hint="Credits will be assigned to this org."
-                      formControlName="organizationId"
-                      class="organization-selector" />
-                    <mat-form-field
-                      appearance="outline"
-                      subscriptSizing="dynamic">
-                      <mat-label>Select credit amount</mat-label>
-                      <mat-select formControlName="creditCount">
-                        <mat-option [value]="150">150 credits</mat-option>
-                        <mat-option [value]="300">300 credits</mat-option>
-                        <mat-option [value]="500">500 credits</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                    <div class="summary">
-                      <span class="summary-count">{{
-                        orgCreditAmountLabel$ | async
-                      }}</span>
-                      <span class="summary-total">{{
-                        orgCreditTotalLabel$ | async
-                      }}</span>
-                    </div>
-                    <span class="hint"
-                      >Do you have a coupon code? You can apply it on the Stripe
-                      checkout page.</span
-                    >
-                    <button
-                      mat-flat-button
-                      color="primary"
-                      class="select-plan"
-                      [disabled]="
-                        purchaseForm.invalid ||
-                        (isLoadingStripeForBundle &&
-                          isLoadingStripeForBundle ===
-                            BundleName.ORGANIZATION_BUNDLE)
-                      "
-                      (click)="buyOrganizationBundle()">
-                      {{
-                        isLoadingStripeForBundle &&
-                        isLoadingStripeForBundle ===
-                          BundleName.ORGANIZATION_BUNDLE
-                          ? 'Redirecting to Stripe...'
-                          : 'Purchase'
-                      }}
-                    </button>
-                  </div>
+        <mat-card appearance="outlined" class="org-price-configurator">
+          <mat-card-content>
+            <div class="org-price-configurator-content">
+              <div class="org-price-configurator-image">
+                <div class="image-wrapper">
+                  <img class="plan-image" src="/assets/credits_no_number.png" />
                 </div>
               </div>
-            </mat-card-content>
-          </mat-card>
+              <div class="org-price-configurator-config">
+                <h3 class="plan-title">Organization bundle</h3>
+                <p class="plan-description">
+                  Simplify planning poker for your entire organization with bulk
+                  credits. This option is perfect for teams with multiple SCRUM
+                  Masters using PlanningPoker.live. Enjoy shared credits that
+                  never expire, ad-free rooms for focused sessions, and
+                  cost-effective team-wide planning.
+                </p>
+                <div class="purchase-form" [formGroup]="purchaseForm">
+                  <planning-poker-organization-selector
+                    label="Select organization"
+                    hint="Credits will be assigned to this org."
+                    formControlName="organizationId"
+                    class="organization-selector" />
+                  <mat-form-field
+                    appearance="outline"
+                    subscriptSizing="dynamic">
+                    <mat-label>Select credit amount</mat-label>
+                    <mat-select formControlName="creditCount">
+                      <mat-option [value]="150">150 credits</mat-option>
+                      <mat-option [value]="300">300 credits</mat-option>
+                      <mat-option [value]="500">500 credits</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="summary">
+                    <span class="summary-count">{{
+                      orgCreditAmountLabel$ | async
+                    }}</span>
+                    <span class="summary-total">{{
+                      orgCreditTotalLabel$ | async
+                    }}</span>
+                  </div>
+                  <span class="hint"
+                    >Do you have a coupon code? You can apply it on the Stripe
+                    checkout page.</span
+                  >
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="select-plan"
+                    [disabled]="
+                      purchaseForm.invalid ||
+                      (isLoadingStripeForBundle &&
+                        isLoadingStripeForBundle ===
+                          BundleName.ORGANIZATION_BUNDLE)
+                    "
+                    (click)="buyOrganizationBundle()">
+                    {{
+                      isLoadingStripeForBundle &&
+                      isLoadingStripeForBundle ===
+                        BundleName.ORGANIZATION_BUNDLE
+                        ? 'Redirecting to Stripe...'
+                        : 'Purchase'
+                    }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
         }
       </mat-tab>
       <mat-tab
@@ -231,7 +227,7 @@
           </div>
           <div class="feature-details">
             <h5>Unlimited members</h5>
-            Invite everyone to the room and vote on all of your topics
+            Invite everyone to the room and vote on all of your topics.
           </div>
         </li>
         <li>
@@ -241,7 +237,7 @@
           <div class="feature-details">
             <h5>Video conferencing</h5>
             The most convenient planning app lives right in your meeting.
-            Download our extension for Teams, Zoom or Webex.
+            Download our extension for Teams, Zoom, Google Meet or Webex.
           </div>
         </li>
         <li>
@@ -307,6 +303,15 @@
           <div class="feature-details">
             <h5>Anonymous voting</h5>
             Reduce bias by hiding voters' identites for more balanced estimates.
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <mat-icon>bookmark</mat-icon>
+          </div>
+          <div class="feature-details">
+            <h5>Room templates</h5>
+            Save your room settings as a template and apply them to new rooms.
           </div>
         </li>
         <li>

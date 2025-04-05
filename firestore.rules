@@ -113,6 +113,10 @@ service cloud.firestore {
         allow read: if request.auth.uid == userId;
         allow write: if false;
       }
+
+      match /roomTemplates/{templateId} {
+        allow read, write: if request.auth.uid == userId;
+      }
     }
 
     match /userPreferences/{userId} {

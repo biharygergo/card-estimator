@@ -1,0 +1,130 @@
+<h2 mat-dialog-title>Room templates</h2>
+<mat-dialog-content>
+  <p class="tab-section description">
+    Save your current room settings as a template or apply a previously saved
+    template to quickly set up your room.
+  </p>
+
+  <div class="templates-container">
+    @for (slotId of SLOT_IDS; track slotId) { @if (templates()[slotId]; as
+    template) {
+    <mat-card
+      class="template-slot filled"
+      appearance="outlined"
+      [id]="'slot-' + slotId">
+      <mat-card-header class="header">
+        <mat-card-title>{{ template.name }}</mat-card-title>
+        <div class="template-actions">
+          <span
+            [matTooltip]="
+              canApplyTemplates()
+                ? 'Apply template'
+                : 'You don\'t have permission to apply templates'
+            ">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="applyTemplate(template)"
+              [disabled]="!canApplyTemplates()"
+              class="apply-template-button">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+          </span>
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="saveAsTemplate(slotId)"
+            matTooltip="Refresh from current room"
+            class="refresh-template-button">
+            <mat-icon>sync</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="clearTemplate(slotId)"
+            matTooltip="Delete template"
+            class="delete-template-button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="template-details">
+          <div class="detail-row">
+            <span class="label">Card set:</span>
+            <span class="value">{{
+              getCardSetValues(template.cardSetId, template.customCardSetValue)
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Show pass option:</span>
+            <span class="value">{{
+              template.showPassOption ? 'On' : 'Off'
+            }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Async voting:</span>
+            <span class="value">{{
+              template.isAsyncVotingEnabled ? 'On' : 'Off'
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Anonymous voting:</span>
+            <span class="value">{{
+              template.isAnonymousVotingEnabled ? 'On' : 'Off'
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Change vote after reveal:</span>
+            <span class="value">{{
+              template.isChangeVoteAfterRevealEnabled ? 'On' : 'Off'
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Auto reveal votes:</span>
+            <span class="value">{{
+              template.isAutoRevealEnabled ? 'On' : 'Off'
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Room permissions:</span>
+            <span class="value">{{
+              template.permissions ? 'Custom' : 'Default'
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Timer:</span>
+            <span class="value">
+              @if (template.timerDuration) {
+              {{ template.timerDuration }}s } @else { Default }
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    } @else {
+    <mat-card
+      class="template-slot empty"
+      (click)="saveAsTemplate(slotId)"
+      (keydown.enter)="saveAsTemplate(slotId)"
+      tabindex="0"
+      appearance="outlined"
+      role="button"
+      [id]="'empty-slot-' + slotId">
+      <mat-card-header class="header">
+        <mat-card-title
+          >Template {{ slotId.replace('template', '') }}</mat-card-title
+        >
+      </mat-card-header>
+      <mat-card-content class="empty-state">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Click to save current room as a template</span>
+      </mat-card-content>
+    </mat-card>
+    } }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button matDialogClose>Close</button>
+</mat-dialog-actions>

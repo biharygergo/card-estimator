@@ -1,0 +1,75 @@
+.templates-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.template-slot {
+  transition: all 0.2s ease-in-out;
+
+  &.filled {
+    background-color: var(--light-background-color);
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+
+  &.empty {
+    background-color: var(--light-background-color);
+    border-style: dashed;
+    border-color: rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+
+    &:hover {
+      border-color: rgba(0, 0, 0, 0.24);
+      background-color: var(--highlight-background-color);
+    }
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+
+  mat-card-title {
+    font-size: 1.2rem;
+  }
+}
+
+.template-actions {
+  display: flex;
+}
+
+.template-details {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.detail-row {
+  flex: 1 1 50%;
+  min-width: 200px;
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+
+  .value {
+    font-weight: 500;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  span {
+    font-size: 14px;
+  }
+}

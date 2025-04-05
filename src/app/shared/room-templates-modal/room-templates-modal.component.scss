@@ -10,11 +10,6 @@
   &.filled {
     background-color: var(--light-background-color);
     border-color: rgba(0, 0, 0, 0.12);
-
-    &:hover {
-      background-color: var(--highlight-background-color);
-      border-color: rgba(0, 0, 0, 0.24);
-    }
   }
 
   &.empty {
@@ -47,10 +42,12 @@
 
 .template-details {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .detail-row {
+  flex: 1 1 50%;
+  min-width: 200px;
   display: flex;
   gap: 4px;
   font-size: 12px;
@@ -65,7 +62,6 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 24px 0;
 
   mat-icon {
     font-size: 24px;

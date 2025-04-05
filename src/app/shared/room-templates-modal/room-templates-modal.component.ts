@@ -130,6 +130,7 @@ export class RoomTemplatesModalComponent {
       isAutoRevealEnabled: room.isAutoRevealEnabled,
       timerDuration: room.timer?.countdownLength,
       permissions: room.configuration?.permissions,
+      showPassOption: room.showPassOption,
     };
 
     await firstValueFrom(this.authService.setRoomTemplate(slotId, template));
@@ -172,6 +173,7 @@ export class RoomTemplatesModalComponent {
           room.isChangeVoteAfterRevealEnabled,
         isAutoRevealEnabled:
           template.isAutoRevealEnabled ?? room.isAutoRevealEnabled,
+        showPassOption: template.showPassOption ?? room.showPassOption,
         timer: template.timerDuration
           ? {
               ...room.timer,

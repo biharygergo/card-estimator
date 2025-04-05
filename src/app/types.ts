@@ -608,4 +608,5 @@ export interface RoomTemplate {
   isAutoRevealEnabled?: boolean;
   timerDuration?: number;
   permissions?: PermissionsMap;
+  showPassOption?: boolean;
 }

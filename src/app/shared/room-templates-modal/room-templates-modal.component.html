@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Room Templates</h2>
+<h2 mat-dialog-title>Room templates</h2>
 <mat-dialog-content>
   <p class="tab-section description">
     Save your current room settings as a template or apply a previously saved
@@ -8,7 +8,10 @@
   <div class="templates-container">
     @for (slotId of SLOT_IDS; track slotId) { @if (templates()[slotId]; as
     template) {
-    <mat-card class="template-slot filled" appearance="outlined">
+    <mat-card
+      class="template-slot filled"
+      appearance="outlined"
+      [id]="'slot-' + slotId">
       <mat-card-header class="header">
         <mat-card-title>{{ template.name }}</mat-card-title>
         <div class="template-actions">
@@ -24,6 +27,7 @@
               color="primary"
               (click)="applyTemplate(template)"
               [disabled]="!canApplyTemplates()"
+              class="apply-template-button"
             >
               <mat-icon>check_circle</mat-icon>
             </button>
@@ -33,6 +37,7 @@
             color="primary"
             (click)="saveAsTemplate(slotId)"
             matTooltip="Refresh from current room"
+            class="refresh-template-button"
           >
             <mat-icon>sync</mat-icon>
           </button>
@@ -41,6 +46,7 @@
             color="warn"
             (click)="clearTemplate(slotId)"
             matTooltip="Delete template"
+            class="delete-template-button"
           >
             <mat-icon>delete</mat-icon>
           </button>
@@ -99,6 +105,7 @@
       class="template-slot empty"
       (click)="saveAsTemplate(slotId)"
       appearance="outlined"
+      [id]="'empty-slot-' + slotId"
     >
       <mat-card-header class="header">
         <mat-card-title

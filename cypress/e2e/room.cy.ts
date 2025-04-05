@@ -118,6 +118,7 @@ describe('Inside the room', () => {
     cy.get('.round-title').should('exist');
 
     cy.get('body').click(10, 10);
+    cy.get('body').click(10, 10);
 
     cy.get('#expand-button').click();
     cy.contains('New round').should('be.visible');
@@ -236,5 +237,26 @@ describe('Inside the room', () => {
     cy.contains('Leave room').click();
 
     cy.contains('Create a new room').should('be.visible');
+  });
+
+  it('can use room templates', () => {
+    cy.get('#menu-button').click();
+    cy.contains('Room templates').click();
+
+    cy.get('#empty-slot-templateA').click();
+    cy.contains('Template saved successfully').should('be.visible');
+
+    cy.get('#slot-templateA')
+      .contains('1, 2, 3, 5, 8, 13')
+      .should('be.visible');
+
+    cy.get('.apply-template-button').click();
+    cy.get('#confirm-dialog-confirm-button').click();
+
+    cy.contains('Template applied successfully').should('be.visible');
+    cy.get('.delete-template-button').click();
+    cy.get('#confirm-dialog-confirm-button').click();
+  
+    cy.contains('Template deleted').should('be.visible');
   });
 });

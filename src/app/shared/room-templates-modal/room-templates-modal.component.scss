@@ -8,7 +8,7 @@
   transition: all 0.2s ease-in-out;
 
   &.filled {
-    background-color: var(--on-light-background-color);
+    background-color: var(--light-background-color);
     border-color: rgba(0, 0, 0, 0.12);
 
     &:hover {
@@ -18,7 +18,7 @@
   }
 
   &.empty {
-    background-color: var(--on-light-background-color);
+    background-color: var(--light-background-color);
     border-style: dashed;
     border-color: rgba(0, 0, 0, 0.12);
     cursor: pointer;
@@ -34,30 +34,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  padding: 1rem;
+
+  mat-card-title {
+    font-size: 1.2rem;
+  }
 }
 
 .template-actions {
   display: flex;
-  gap: 4px;
 }
 
 .template-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .detail-row {
   display: flex;
-  gap: 8px;
-  font-size: 14px;
-
-  .label {
-    min-width: 100px;
-  }
+  gap: 4px;
+  font-size: 12px;
 
   .value {
+    font-weight: 500;
   }
 }
 

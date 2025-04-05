@@ -258,6 +258,11 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
             RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE
           )
       ),
+    [RoomPermissionId.CAN_APPLY_TEMPLATES]: createChipOptionForPermission(
+      RoomPermissionId.CAN_APPLY_TEMPLATES,
+      'bookmark',
+      () => this.saveRoomConfiguration(RoomPermissionId.CAN_APPLY_TEMPLATES)
+    ),
   };
 
   permissionForms = Object.values(this.permissionConfiguration);

@@ -12,19 +12,35 @@
       <mat-card-header class="header">
         <mat-card-title>{{ template.name }}</mat-card-title>
         <div class="template-actions">
+          <span
+            [matTooltip]="
+              canApplyTemplates()
+                ? 'Apply template'
+                : 'You don\'t have permission to apply templates'
+            "
+          >
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="applyTemplate(template)"
+              [disabled]="!canApplyTemplates()"
+            >
+              <mat-icon>check_circle</mat-icon>
+            </button>
+          </span>
           <button
             mat-icon-button
             color="primary"
-            (click)="applyTemplate(template)"
-            matTooltip="Apply template"
+            (click)="saveAsTemplate(slotId)"
+            matTooltip="Refresh from current room"
           >
-            <mat-icon>check_circle</mat-icon>
+            <mat-icon>sync</mat-icon>
           </button>
           <button
             mat-icon-button
             color="warn"
             (click)="clearTemplate(slotId)"
-            matTooltip="Clear template"
+            matTooltip="Delete template"
           >
             <mat-icon>delete</mat-icon>
           </button>
@@ -34,36 +50,66 @@
         <div class="template-details">
           <div class="detail-row">
             <span class="label">Card Set:</span>
-            <span class="value">{{ template.cardSetId }}</span>
+            <span class="value">{{
+              getCardSetValues(template.cardSetId, template.customCardSetValue)
+            }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">Voting Settings:</span>
-            <span class="value">
-              @if (template.isAsyncVotingEnabled) { Async } @if
-              (template.isAnonymousVotingEnabled) { Anonymous } @if
-              (template.isChangeVoteAfterRevealEnabled) { Change After Reveal }
-            </span>
+            <span class="label">Async voting:</span>
+            <span class="value">{{
+              template.isAsyncVotingEnabled ? "On" : "Off"
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Anonymous voting:</span>
+            <span class="value">{{
+              template.isAnonymousVotingEnabled ? "On" : "Off"
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Change after reveal:</span>
+            <span class="value">{{
+              template.isChangeVoteAfterRevealEnabled ? "On" : "Off"
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Auto reveal:</span>
+            <span class="value">{{
+              template.isAutoRevealEnabled ? "On" : "Off"
+            }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Permissions:</span>
+            <span class="value">{{
+              template.permissions ? "Custom" : "Default"
+            }}</span>
           </div>
           <div class="detail-row">
             <span class="label">Timer:</span>
             <span class="value">
               @if (template.timerDuration) {
-              {{ template.timerDuration }}s } @else { Disabled }
+              {{ template.timerDuration }}s } @else { Default }
             </span>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
     } @else {
-    <div class="template-slot empty" (click)="saveAsTemplate(slotId)">
-      <div class="template-header">
-        <h3>Template {{ slotId.replace("template", "") }}</h3>
-      </div>
-      <div class="empty-state">
+    <mat-card
+      class="template-slot empty"
+      (click)="saveAsTemplate(slotId)"
+      appearance="outlined"
+    >
+      <mat-card-header class="header">
+        <mat-card-title
+          >Template {{ slotId.replace("template", "") }}</mat-card-title
+        >
+      </mat-card-header>
+      <mat-card-content class="empty-state">
         <mat-icon>add_circle_outline</mat-icon>
-        <span>Click to save current room settings</span>
-      </div>
-    </div>
+        <span>Click to save current room as a template</span>
+      </mat-card-content>
+    </mat-card>
     } }
   </div>
 </mat-dialog-content>

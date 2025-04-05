@@ -169,6 +169,7 @@ export enum RoomPermissionId {
   CAN_CHANGE_CARD_SETS = 'CAN_CHANGE_CARD_SETS',
   CAN_SET_TIMER = 'CAN_SET_TIMER',
   CAN_OVERRIDE_MAJORITY_VOTE = 'CAN_OVERRIDE_MAJORITY_VOTE',
+  CAN_APPLY_TEMPLATES = 'CAN_APPLY_TEMPLATES',
 }
 
 export interface RoomPermission {
@@ -226,6 +227,10 @@ export const PERMISSIONS_CATALOG: RoomPermission[] = [
     id: RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE,
     label: 'Override majority vote',
   },
+  {
+    id: RoomPermissionId.CAN_APPLY_TEMPLATES,
+    label: 'Apply templates',
+  },
 ];
 
 export const PERMISSIONS_CATALOG_MAP: {
@@ -281,6 +286,10 @@ export const DEFAULT_PERMISSIONS: PermissionsMap = {
   [RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE]: {
     permissionId: RoomPermissionId.CAN_OVERRIDE_MAJORITY_VOTE,
     value: [UserRole.ROOM_CREATOR],
+  },
+  [RoomPermissionId.CAN_APPLY_TEMPLATES]: {
+    permissionId: RoomPermissionId.CAN_APPLY_TEMPLATES,
+    value: ALL_ROLES_ALLOWED,
   },
 };
 
@@ -591,10 +600,12 @@ export enum SlotId {
 export interface RoomTemplate {
   slotId: SlotId;
   name: string;
-  cardSetId: string;
+  cardSetId: CardSetOrCustom;
+  customCardSetValue?: CardSetValue;
   isAsyncVotingEnabled?: boolean;
   isAnonymousVotingEnabled?: boolean;
   isChangeVoteAfterRevealEnabled?: boolean;
+  isAutoRevealEnabled?: boolean;
   timerDuration?: number;
   permissions?: PermissionsMap;
 }

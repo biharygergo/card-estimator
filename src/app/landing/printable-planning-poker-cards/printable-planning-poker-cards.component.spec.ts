@@ -8,9 +8,8 @@ describe('PrintablePlanningPokerCardsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PrintablePlanningPokerCardsComponent]
-    })
-    .compileComponents();
+      imports: [PrintablePlanningPokerCardsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PrintablePlanningPokerCardsComponent);
     component = fixture.componentInstance;

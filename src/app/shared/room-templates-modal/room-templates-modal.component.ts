@@ -83,11 +83,14 @@ export class RoomTemplatesModalComponent {
 
   templates = toSignal(
     this.authService.getRoomTemplates().pipe(
-      map((templates) => {
-        const result = templates.reduce((acc, template) => {
-          acc[template.slotId] = template;
-          return acc;
-        }, {} as { [key: string]: RoomTemplate | null });
+      map(templates => {
+        const result = templates.reduce(
+          (acc, template) => {
+            acc[template.slotId] = template;
+            return acc;
+          },
+          {} as { [key: string]: RoomTemplate | null }
+        );
         return result;
       })
     ),
@@ -106,7 +109,7 @@ export class RoomTemplatesModalComponent {
     private roomDataService: RoomDataService,
     private estimatorService: EstimatorService,
     private confirmService: ConfirmDialogService,
-    private permissionsService: PermissionsService,
+    private permissionsService: PermissionsService
   ) {}
 
   async saveAsTemplate(slotId: SlotId) {
@@ -198,7 +201,7 @@ export class RoomTemplatesModalComponent {
     const values = CARD_SETS[cardSetId] ?? customCardSetValue;
 
     return getSortedCardSetValues(values)
-      .map((item) => item.value)
+      .map(item => item.value)
       .join(', ');
   }
 }

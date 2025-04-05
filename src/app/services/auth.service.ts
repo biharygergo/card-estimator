@@ -467,12 +467,15 @@ export class AuthService {
 
   setRoomTemplate(slotId: SlotId, roomTemplate: RoomTemplate) {
     return this.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of(undefined);
         }
         return setDoc(
-          doc(this.firestore, `userDetails/${user.uid}/roomTemplates/${slotId}`),
+          doc(
+            this.firestore,
+            `userDetails/${user.uid}/roomTemplates/${slotId}`
+          ),
           roomTemplate,
           { merge: true }
         );
@@ -482,7 +485,7 @@ export class AuthService {
 
   clearRoomTemplate(slotId: SlotId) {
     return this.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of(undefined);
         }
@@ -495,14 +498,16 @@ export class AuthService {
 
   getRoomTemplates(): Observable<RoomTemplate[]> {
     return this.user.pipe(
-      switchMap((user) => {
+      switchMap(user => {
         if (!user) {
           return of([]);
         }
         return collectionSnapshots(
-          query(collection(this.firestore, `userDetails/${user.uid}/roomTemplates`))
+          query(
+            collection(this.firestore, `userDetails/${user.uid}/roomTemplates`)
+          )
         ).pipe(
-          map((snapshots) => snapshots.map((doc) => doc.data() as RoomTemplate))
+          map(snapshots => snapshots.map(doc => doc.data() as RoomTemplate))
         );
       })
     );

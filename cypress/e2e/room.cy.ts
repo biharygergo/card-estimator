@@ -256,7 +256,7 @@ describe('Inside the room', () => {
     cy.contains('Template applied successfully').should('be.visible');
     cy.get('.delete-template-button').click();
     cy.get('#confirm-dialog-confirm-button').click();
-  
+
     cy.contains('Template deleted').should('be.visible');
   });
 });

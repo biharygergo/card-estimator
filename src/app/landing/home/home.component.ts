@@ -149,6 +149,11 @@ export class HomeComponent implements OnInit {
       answer:
         'As a Scrum Master, start by ensuring all participants understand the user story and acceptance criteria before voting. Use our timer feature to keep discussions focused, and leverage the statistics feature to prompt meaningful discussions about estimate differences. For distributed teams, use our video integration features to maintain face-to-face communication. Check out our <a href="/knowledge-base/planning-poker-guide-agile-estimation-techniques">Scrum Master\'s guide</a> for more facilitation tips.',
     },
+    {
+      question: 'Can I play Planning Poker when my team is meeting in person?',
+      answer:
+        'Yes! Planning Poker.live is designed for both remote and in-person teams. You can use it to facilitate planning poker sessions when your team is meeting in person by sharing the room link with your team and joining from the room from your phone or tablet. If you want to use Planning Poker.live for in-person sessions, you can use our <a href="/create">create a room here</a>. If you want to go old school, you can print out our <a href="/printable-planning-poker-cards">free planning poker cards</a> and use them as physical cards.',
+    },
   ];
   constructor() {}
 

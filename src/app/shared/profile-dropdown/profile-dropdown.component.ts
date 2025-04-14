@@ -27,6 +27,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { roomTemplatesModalCreator } from '../room-templates-modal/room-templates-modal.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-profile-dropdown',

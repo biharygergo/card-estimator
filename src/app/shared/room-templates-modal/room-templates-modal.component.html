@@ -5,6 +5,7 @@
     template to quickly set up your room.
   </p>
 
+  @if (hasActiveRoom()) {
   <div class="templates-container">
     @for (slotId of SLOT_IDS; track slotId) { @if (templates()[slotId]; as
     template) {
@@ -124,6 +125,15 @@
     </mat-card>
     } }
   </div>
+  } @else {
+  <div class="templates-container">
+    <mat-card appearance="outlined">
+      <mat-card-content class="empty-state">
+        <span>You need to be in a room to save or apply a template</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  }
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button matDialogClose>Close</button>

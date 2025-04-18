@@ -111,27 +111,27 @@ export class HomeComponent implements OnInit {
       question:
         'What is planning poker and how can it enhance our agile estimation process?',
       answer:
-        'Planning poker (also known as scrum poker) is an agile estimation technique where team members use numbered cards to vote on story complexity. Our planning poker app makes this process easy by enabling real-time voting, discussion, and consensus-building. Teams can estimate user stories more accurately while avoiding common biases. Check out our <a href="/features">full feature list</a> to learn more.',
+        'Planning poker (also known as scrum poker) is an agile estimation technique where team members use numbered cards to vote on story complexity. Our planning poker app makes this process easy by enabling real-time voting, discussion, and consensus-building. Teams can estimate user stories more accurately while avoiding common biases. Check out our <a href="/what-is-planning-poker">complete guide to planning poker</a> to learn more.',
     },
     {
       question: 'Why do Scrum teams choose our planning poker tool?',
       answer:
-        'Our planning poker app is trusted by agile teams at companies like Google, Netflix, and Amazon because it offers a complete solution for sprint planning and estimation. Features include JIRA integration, custom card sets, anonymous voting, and seamless integration with video conferencing tools. Teams report more accurate estimates and more engaged planning sessions.',
+        'Our planning poker app is trusted by agile teams at companies like Google, Netflix, and Amazon because it offers a complete solution for sprint planning and estimation. Features include <a href="/integrations/jira">JIRA integration</a>, custom card sets, anonymous voting, and seamless <a href="/integrations">integration with video conferencing tools</a>. Teams report more accurate estimates and more engaged planning sessions.',
     },
     {
       question: 'Why should teams use planning poker for estimating?',
       answer:
-        "Planning poker helps teams estimate more accurately by reducing bias and encouraging participation from all team members. It's trusted by agile teams at companies like Google, Netflix, Amazon, and Siemens because it leads to better estimates, more engaged discussions, and helps identify potential risks early in the planning process.",
+        'Planning poker helps teams estimate more accurately by reducing bias and encouraging participation from all team members. It\'s trusted by agile teams at companies like Google, Netflix, Amazon, and Siemens because it <a href="/what-is-planning-poker">leads to better estimates</a>, more engaged discussions, and helps identify potential risks early in the planning process.',
     },
     {
       question: 'How do I run a planning poker session with my remote team?',
       answer:
-        'Start by clicking "Start planning" or <a href="/create">create a room here</a>. Share the room link with your team - no registration required. Rooms are public by default for easy access, but can be password-protected or restricted to organization members. Use our integrations with Microsoft Teams, Google Meet, Zoom, or Webex to make remote planning sessions seamless.',
+        'Start by clicking "Start planning" or <a href="/create">create a room here</a>. Share the room link with your team - no registration required. Rooms are public by default for easy access, but can be password-protected or restricted to organization members. Use our <a href="/integrations">integrations with Microsoft Teams, Google Meet, Zoom, or Webex</a> to make remote planning sessions seamless.',
     },
     {
       question: 'Can I use planning poker with Jira or other agile tools?',
       answer:
-        'Yes! PlanningPoker.live integrates directly with Jira and Linear. You can import user stories, conduct estimation sessions, and automatically sync story points back to your project management tool. Visit our <a href="/integrations">integrations page</a> to connect your favorite tools.',
+        'Yes! PlanningPoker.live integrates directly with <a href="/integrations/jira">Jira</a> and <a href="/integrations/linear">Linear</a>. You can import user stories, conduct estimation sessions, and automatically sync story points back to your project management tool. Visit our <a href="/integrations">integrations page</a> to connect your favorite tools.',
     },
     {
       question: 'What story point scales are available in planning poker?',

@@ -1,0 +1,69 @@
+@import 'src/app/common.scss';
+main {
+  background: white;
+}
+
+section.content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+p {
+  line-height: 1.3rem;
+
+  a {
+    color: var(--main-dark-color);
+    text-decoration: underline;
+  }
+}
+
+.article-image {
+  width: 100%;
+  max-height: 400px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+  margin: 4rem -0.5rem;
+
+  &.tall {
+    max-height: 600px;
+  }
+
+  @include smallScreen {
+    margin: 2rem -0.5rem;
+  }
+}
+
+.video-container {
+  width: 80%;
+  margin: 4rem auto;
+  border-radius: 16px;
+
+  @include smallScreen {
+    width: 100%;
+  }
+}
+
+.tldr {
+  background: var(--light-blue);
+  padding: 1rem;
+  border-radius: 16px;
+  margin: 4rem auto;
+  width: 80%;
+
+  a {
+    color: var(--main-dark-color);
+    text-decoration: underline;
+  }
+
+  @include smallScreen {
+    width: 100%;
+  }
+}
+
+.cta-container {
+  margin: 4rem auto;
+  border-radius: 24px;
+  overflow: hidden;
+}

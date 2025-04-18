@@ -18,6 +18,7 @@ export const routes = [
   '/history',
   '/pricing',
   '/printable-planning-poker-cards',
+  '/what-is-planning-poker',
   '/recurringMeeting',
   '/organizationInvitation',
   '/integration',

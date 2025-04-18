@@ -209,6 +209,18 @@ const routes: Routes = [
     },
   },
   {
+    path: 'what-is-planning-poker',
+    loadComponent: () =>
+      import(
+        './what-is-planning-poker/what-is-planning-poker.component'
+      ).then(m => m.WhatIsPlanningPokerComponent),
+    data: {
+      title: 'What is Planning Poker?',
+      description:
+        'Learn how Planning Poker works and why it is a great tool for agile teams.',
+    },
+  },
+  {
     path: 'tools/story-point-calculator',
     loadComponent: () =>
       import(

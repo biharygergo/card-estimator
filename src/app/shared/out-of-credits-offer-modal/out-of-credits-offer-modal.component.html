@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>
+  @if (dialogData.state === 'almost-out-of-credits') { Running low on credits 📉
+  } @else { Time for more credits? 🃏 }
+</h1>
+<div mat-dialog-content class="container">
+  <div class="text">
+    @if (dialogData.state === 'almost-out-of-credits') {
+    <p>
+      You're down to your last credit! Don't let a lack of credits interrupt
+      your team's next planning session. We recommend topping up soon.
+    </p>
+    <p>
+      To keep the estimates flowing, here's a little boost. Use the coupon code
+      <strong class="coupon">ALMOSTOUTOFCREDITS</strong> to get 15% off your
+      first credit purchase. ✨
+    </p>
+    } @else {
+    <p>
+      Looks like your team's planning poker sessions have used up all your
+      credits! To continue pointing stories and create new rooms, you can
+      purchase more credits or switch to an unlimited plan.
+    </p>
+    <p>
+      To help you get back to estimating smoothly, we've dealt you a special
+      offer. Use the coupon code
+      <strong class="coupon">OUTOFCREDITS</strong> for 30% off your first
+      purchase. 🎁
+    </p>
+    }
+  </div>
+  <div class="cards">
+    <img src="/assets/header_cards.webp" />
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button (click)="openPricing()">View pricing</button>
+  <button mat-button (click)="dialogRef.close()">Close</button>
+</div>

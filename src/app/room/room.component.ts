@@ -111,6 +111,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
 import { ShepherdService } from 'angular-shepherd';
+import { outOfCreditsOfferModalCreator } from '../shared/out-of-credits-offer-modal/out-of-credits-offer-modal.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
@@ -373,8 +374,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       return credits.length === 0
         ? 'Out of credits'
         : credits.length === 1
-          ? '1 credit left'
-          : credits.length + ' credits';
+        ? '1 credit left'
+        : credits.length + ' credits';
     }),
     shareReplay(1)
   );
@@ -562,30 +563,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.creditsAlert$
       .pipe(withLatestFrom(this.user$), takeUntil(this.destroy))
       .subscribe(([credits, user]) => {
-        let message = '';
-        const creditMessage = user.isAnonymous
-          ? 'Get one free credit every month when you create a permanent account.'
-          : 'Top up your credits or choose our unlimited subscription.';
         if (credits === 1) {
-          message = 'You have just 1 credit remaining. ' + creditMessage;
+          this.dialog.open(
+            ...outOfCreditsOfferModalCreator('almost-out-of-credits')
+          );
         } else if (credits === 0) {
-          message = 'You ran out of credits. ' + creditMessage;
+          this.dialog.open(...outOfCreditsOfferModalCreator('out-of-credits'));
         }
-
-        const ref = this.toastService.showMessage(
-          message,
-          10000,
-          'info',
-          this.paymentService.isSubscriptionDisabled()
-            ? undefined
-            : 'Top up credits'
-        );
-        ref
-          .onAction()
-          .pipe(take(1))
-          .subscribe(() => {
-            this.dialog.open(...pricingModalCreator());
-          });
       });
 
     this.roomDataService.onRoomRoundCountUpdated$

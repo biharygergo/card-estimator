@@ -1,0 +1,47 @@
+@import 'src/app/common.scss';
+
+.cards {
+  flex: 1;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    object-fit: contain;
+    width: 100%;
+  }
+
+  @include smallScreen {
+    height: 100px;
+    flex-basis: 150px;
+
+    img {
+      height: 100%;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  @include smallScreen {
+    flex-direction: column;
+  }
+}
+
+.text {
+  flex: 3;
+}
+
+.coupon {
+  background: var(--light-blue);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 2px;
+  letter-spacing: 0.1em;
+}

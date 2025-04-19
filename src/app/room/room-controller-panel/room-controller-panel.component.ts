@@ -276,18 +276,6 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   async toggleAutoReveal() {
     this.analytics.logToggleAutoReveal(!this.room().isAutoRevealEnabled);
-    const confirmed =
-      this.room().isAutoRevealEnabled ||
-      (await this.confirmService.openConfirmationDialog({
-        title: 'Are you sure you want to toggle auto reveal?',
-        content:
-          'This will automatically reveal all votes when all members have voted. Make sure you enable this once all members have joined the room. \n\n This is a new feature, please report any issues you find.',
-        positiveText: 'Enable',
-        negativeText: 'Cancel',
-      }));
-    if (!confirmed) {
-      return;
-    }
     this.estimatorService.toggleAutoReveal(
       this.room().roomId,
       !this.room().isAutoRevealEnabled

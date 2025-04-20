@@ -95,6 +95,12 @@
             }}</span>
           </div>
           <div class="detail-row">
+            <span class="label">Organization protection:</span>
+            <span class="value">{{
+              template.organizationProtection ? 'On' : 'Off'
+            }}</span>
+          </div>
+          <div class="detail-row">
             <span class="label">Timer:</span>
             <span class="value">
               @if (template.timerDuration) {

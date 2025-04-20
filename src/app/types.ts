@@ -609,4 +609,5 @@ export interface RoomTemplate {
   timerDuration?: number;
   permissions?: PermissionsMap;
   showPassOption?: boolean;
+  organizationProtection?: string;
 }

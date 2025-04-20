@@ -115,6 +115,10 @@ export class RoomTemplatesModalComponent {
 
   async saveAsTemplate(slotId: SlotId) {
     const room = await firstValueFrom(this.roomDataService.room$.pipe(take(1)));
+    const authorizationMetadata = await firstValueFrom(
+      this.estimatorService.getAuthorizationMetadata(room.roomId)
+    );
+
     if (!room) {
       this.toastService.showMessage('No room found');
       return;
@@ -132,6 +136,8 @@ export class RoomTemplatesModalComponent {
       timerDuration: room.timer?.countdownLength,
       permissions: room.configuration?.permissions,
       showPassOption: room.showPassOption,
+      organizationProtection:
+        authorizationMetadata?.organizationProtection ?? undefined,
     };
 
     await firstValueFrom(this.authService.setRoomTemplate(slotId, template));
@@ -192,6 +198,20 @@ export class RoomTemplatesModalComponent {
       };
 
       await this.estimatorService.updateRoom(room.roomId, updatedRoom);
+
+      if (template.organizationProtection) {
+        await this.estimatorService.toggleOrganizationProtection(
+          room.roomId,
+          true,
+          template.organizationProtection
+        );
+      } else {
+        await this.estimatorService.toggleOrganizationProtection(
+          room.roomId,
+          false,
+          ''
+        );
+      }
 
       this.toastService.showMessage('Template applied successfully');
     }

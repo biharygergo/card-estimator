@@ -737,27 +737,41 @@ export class EstimatorService {
     };
 
     const currentRoom = await this.getRoom(roomId);
-    const organization = await firstValueFrom(
-      this.organizationService.getOrganization(organizationId)
-    );
-    const memberIds = currentRoom.memberIds.filter(memberId =>
-      organization.memberIds.includes(memberId)
-    );
 
-    await setDoc(
-      doc(
-        this.firestore,
-        this.ROOMS_COLLECTION,
-        roomId,
-        'metadata',
-        'authorization'
-      ),
-      meta
-    );
-
-    // Update room members to be organization-only
     if (isEnabled) {
-      await this.updateRoom(roomId, { memberIds });
+      const organization = await firstValueFrom(
+        this.organizationService.getOrganization(organizationId)
+      );
+      const memberIds = currentRoom.memberIds.filter(memberId =>
+        organization.memberIds.includes(memberId)
+      );
+
+      await setDoc(
+        doc(
+          this.firestore,
+          this.ROOMS_COLLECTION,
+          roomId,
+          'metadata',
+          'authorization'
+        ),
+        meta
+      );
+
+      // Update room members to be organization-only
+      if (isEnabled) {
+        await this.updateRoom(roomId, { memberIds });
+      }
+    } else {
+      await setDoc(
+        doc(
+          this.firestore,
+          this.ROOMS_COLLECTION,
+          roomId,
+          'metadata',
+          'authorization'
+        ),
+        meta
+      );
     }
   }
 }

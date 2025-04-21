@@ -20,6 +20,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         error,
         `There was an error while loading parts of the application. Please reload the page, that will fix it.`
       );
+      return;
     } else if (errorMessage?.includes('AppCheck')) {
       this.showErrorToast(
         error,

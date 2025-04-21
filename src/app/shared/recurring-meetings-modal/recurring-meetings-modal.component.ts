@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import { RecurringMeetingLinkService } from 'src/app/services/recurring-meeting-link.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { OrganizationService } from 'src/app/services/organization.service';
 import {
   BehaviorSubject,
   Observable,
@@ -23,7 +22,6 @@ import {
   throwError,
 } from 'rxjs';
 import {
-  Organization,
   RecurringMeetingLink,
   RecurringMeetingLinkCreatedRoom,
 } from 'src/app/types';
@@ -50,6 +48,8 @@ import {
   MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export const recurringMeetingsModalCreator = () =>
   createModal(RecurringMeetingsModalComponent, {
@@ -81,6 +81,8 @@ export const recurringMeetingsModalCreator = () =>
     MatDialogClose,
     AsyncPipe,
     DatePipe,
+    MatCheckbox,
+    MatProgressSpinner
   ],
 })
 export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
@@ -91,6 +93,9 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
     }),
     frequencyDays: new FormControl<number>(7, {
       validators: [Validators.required],
+      nonNullable: true,
+    }),
+    allowOthersToCreateRooms: new FormControl<boolean>(false, {
       nonNullable: true,
     }),
   });
@@ -118,7 +123,8 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
             )
         )
       );
-    })
+    }),
+    tap(() => this.isLoading.next(false))
   );
 
   user: User | undefined = undefined;
@@ -128,6 +134,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
   editedMeetingLink = new BehaviorSubject<RecurringMeetingLink | undefined>(
     undefined
   );
+  isLoading = new BehaviorSubject<boolean>(true);
 
   readonly destroy = new Subject<void>();
 
@@ -158,6 +165,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
         name: this.newMeetingForm.value.name,
         frequencyDays: this.newMeetingForm.value.frequencyDays,
         isEnabled: true,
+        allowOthersToCreateRooms: this.newMeetingForm.value.allowOthersToCreateRooms,
       })
       .pipe(
         first(),
@@ -179,6 +187,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       .updateRecurringMeeting(this.editedMeetingLink.value.id, {
         name: this.newMeetingForm.value.name,
         frequencyDays: this.newMeetingForm.value.frequencyDays,
+        allowOthersToCreateRooms: this.newMeetingForm.value.allowOthersToCreateRooms,
       })
       .pipe(
         first(),
@@ -198,6 +207,7 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
     this.newMeetingForm.setValue({
       name: link.name,
       frequencyDays: link.frequencyDays,
+      allowOthersToCreateRooms: link.allowOthersToCreateRooms ?? false,
     });
     this.editedMeetingLink.next(link);
     this.isInEditMode.next(true);

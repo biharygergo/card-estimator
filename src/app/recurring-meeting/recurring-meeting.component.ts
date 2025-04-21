@@ -31,6 +31,7 @@ type State = {
   userState?: string;
   meetingLink?: RecurringMeetingLink;
   error: boolean;
+  hasCreatePermission?: boolean;
 };
 
 @Component({
@@ -81,7 +82,14 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
     map(([roomId, meetingLink, user]) => {
       const userState =
         meetingLink.createdById === user?.uid ? 'creator' : 'member';
-      return { roomId, userState, meetingLink, error: false };
+      return {
+        roomId,
+        userState,
+        meetingLink,
+        error: false,
+        hasCreatePermission:
+          userState === 'creator' || meetingLink.allowOthersToCreateRooms,
+      };
     }),
     catchError(e => {
       console.error(e);

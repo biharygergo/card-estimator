@@ -459,6 +459,7 @@ export type RecurringMeetingLink = {
   isEnabled: boolean;
   frequencyDays: number;
   name: string;
+  allowOthersToCreateRooms?: boolean;
 };
 
 export type RecurringMeetingLinkCreatedRoom = {

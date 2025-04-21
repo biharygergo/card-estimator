@@ -933,9 +933,9 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   async showRoomLimitReachedDialog() {
     const confirmed = await this.confirmDialogService.openConfirmationDialog({
-      title: '🤯 Room size limit reached',
+      title: '🤯 Room rounds limit reached',
       content:
-        "Looks like you've created a room bigger than our server's imagination. Please start a new session, unless you enjoy staring at this error message appear often.",
+        "You've reached the 100 rounds limit for this room. To continue your planning poker session, you'll need to create a new room. This limit helps maintain optimal performance for all users.",
       disableClose: true,
       positiveText: 'Go to Create/Join page',
       negativeText: 'Close',

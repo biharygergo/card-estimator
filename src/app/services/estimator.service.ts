@@ -46,6 +46,7 @@ import {
   RoomSummary,
   MemberType,
   MemberStats,
+  RoomTemplate,
 } from './../types';
 import {
   collection,
@@ -758,9 +759,7 @@ export class EstimatorService {
       );
 
       // Update room members to be organization-only
-      if (isEnabled) {
-        await this.updateRoom(roomId, { memberIds });
-      }
+      await this.updateRoom(roomId, { memberIds });
     } else {
       await setDoc(
         doc(
@@ -772,6 +771,51 @@ export class EstimatorService {
         ),
         meta
       );
+    }
+  }
+
+  async applyTemplate(room: Room, template: RoomTemplate) {
+    const updatedRoom: Room = {
+      ...room,
+      cardSet: template.cardSetId ?? room.cardSet,
+      customCardSetValue:
+        template.customCardSetValue ?? room.customCardSetValue,
+      isAsyncVotingEnabled:
+        template.isAsyncVotingEnabled ?? room.isAsyncVotingEnabled,
+      isAnonymousVotingEnabled:
+        template.isAnonymousVotingEnabled ?? room.isAnonymousVotingEnabled,
+      isChangeVoteAfterRevealEnabled:
+        template.isChangeVoteAfterRevealEnabled ??
+        room.isChangeVoteAfterRevealEnabled,
+      isAutoRevealEnabled:
+        template.isAutoRevealEnabled ?? room.isAutoRevealEnabled,
+      showPassOption: template.showPassOption ?? room.showPassOption,
+      timer: template.timerDuration
+        ? {
+            ...room.timer,
+            countdownLength: template.timerDuration,
+            initialCountdownLength: template.timerDuration,
+          }
+        : room.timer,
+      configuration: room.configuration
+        ? {
+            ...room.configuration,
+            permissions:
+              template.permissions ?? room.configuration?.permissions,
+          }
+        : undefined,
+    };
+
+    await this.updateRoom(room.roomId, updatedRoom);
+
+    if (template.organizationProtection) {
+      await this.toggleOrganizationProtection(
+        room.roomId,
+        true,
+        template.organizationProtection
+      );
+    } else {
+      await this.toggleOrganizationProtection(room.roomId, false, '');
     }
   }
 }

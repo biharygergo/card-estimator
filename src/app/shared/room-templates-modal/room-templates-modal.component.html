@@ -5,7 +5,6 @@
     template to quickly set up your room.
   </p>
 
-  @if (hasActiveRoom()) {
   <div class="templates-container">
     @for (slotId of SLOT_IDS; track slotId) { @if (templates()[slotId]; as
     template) {
@@ -14,7 +13,23 @@
       appearance="outlined"
       [id]="'slot-' + slotId">
       <mat-card-header class="header">
-        <mat-card-title>{{ template.name }}</mat-card-title>
+        <mat-card-title>
+          {{ template.name }}
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="
+              defaultRoomTemplateId() === slotId
+                ? clearDefaultTemplate()
+                : setDefaultTemplate(slotId)
+            "
+            matTooltip="Set as default template when creating a new room"
+            class="set-default-template-button">
+            <mat-icon>{{
+              defaultRoomTemplateId() === slotId ? 'star' : 'star_outline'
+            }}</mat-icon>
+          </button>
+        </mat-card-title>
         <div class="template-actions">
           <span
             [matTooltip]="
@@ -26,7 +41,7 @@
               mat-icon-button
               color="primary"
               (click)="applyTemplate(template)"
-              [disabled]="!canApplyTemplates()"
+              [disabled]="!canApplyTemplates() || !hasActiveRoom()"
               class="apply-template-button">
               <mat-icon>check_circle</mat-icon>
             </button>
@@ -36,6 +51,7 @@
             color="primary"
             (click)="saveAsTemplate(slotId)"
             matTooltip="Refresh from current room"
+            [disabled]="!hasActiveRoom()"
             class="refresh-template-button">
             <mat-icon>sync</mat-icon>
           </button>
@@ -113,8 +129,9 @@
     } @else {
     <mat-card
       class="template-slot empty"
-      (click)="saveAsTemplate(slotId)"
-      (keydown.enter)="saveAsTemplate(slotId)"
+      [class.disabled]="!hasActiveRoom()"
+      (click)="hasActiveRoom() ? saveAsTemplate(slotId) : null"
+      (keydown.enter)="hasActiveRoom() ? saveAsTemplate(slotId) : null"
       tabindex="0"
       appearance="outlined"
       role="button"
@@ -126,20 +143,15 @@
       </mat-card-header>
       <mat-card-content class="empty-state">
         <mat-icon>add_circle_outline</mat-icon>
-        <span>Click to save current room as a template</span>
+        <span>{{
+          hasActiveRoom()
+            ? 'Click to save current room as a template'
+            : 'You need to be in a room to save a template'
+        }}</span>
       </mat-card-content>
     </mat-card>
     } }
   </div>
-  } @else {
-  <div class="templates-container">
-    <mat-card appearance="outlined">
-      <mat-card-content class="empty-state">
-        <span>You need to be in a room to save or apply a template</span>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  }
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button matDialogClose>Close</button>

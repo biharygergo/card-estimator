@@ -17,6 +17,7 @@ import { CookieService } from '../services/cookie.service';
 import {
   BehaviorSubject,
   combineLatest,
+  firstValueFrom,
   from,
   interval,
   Observable,
@@ -558,6 +559,30 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       newMember,
       recurringMeetingId
     );
+
+    try {
+      const userPreference = await firstValueFrom(
+        this.authService.getUserPreference()
+      );
+
+      if (userPreference?.defaultRoomTemplateId) {
+        const template = await firstValueFrom(
+          this.authService.getRoomTemplates().pipe(
+            map(templates =>
+              templates.find(
+                t => t.slotId === userPreference.defaultRoomTemplateId
+              )
+            )
+          )
+        );
+
+        if (template) {
+          await this.estimatorService.applyTemplate(room, template);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     this.analytics.logClickedCreateNewRoom();
     return this.navigateToRoom(room.roomId);

@@ -520,6 +520,7 @@ export interface UserPreference {
   selectedIssueIntegrationProvider?: 'jira' | 'linear';
   activeOrganizationId?: string;
   onboardingTutorialShown?: boolean;
+  defaultRoomTemplateId?: SlotId | null;
 }
 
 export interface Credit {

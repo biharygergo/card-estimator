@@ -102,6 +102,12 @@ export class RoomTemplatesModalComponent {
     this.permissionsService.hasPermission(RoomPermissionId.CAN_APPLY_TEMPLATES)
   );
 
+  defaultRoomTemplateId = toSignal(
+    this.authService
+      .getUserPreference()
+      .pipe(map(userPreference => userPreference?.defaultRoomTemplateId))
+  );
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomTemplatesModalData,
     private dialogRef: MatDialogRef<RoomTemplatesModalComponent>,
@@ -151,6 +157,9 @@ export class RoomTemplatesModalComponent {
     });
     if (result) {
       await firstValueFrom(this.authService.clearRoomTemplate(slotId));
+      if (this.defaultRoomTemplateId() === slotId) {
+        this.clearDefaultTemplate();
+      }
       this.toastService.showMessage('Template deleted');
     }
   }
@@ -165,54 +174,7 @@ export class RoomTemplatesModalComponent {
       const room = await firstValueFrom(
         this.roomDataService.room$.pipe(take(1))
       );
-
-      const updatedRoom: Room = {
-        ...room,
-        cardSet: template.cardSetId ?? room.cardSet,
-        customCardSetValue:
-          template.customCardSetValue ?? room.customCardSetValue,
-        isAsyncVotingEnabled:
-          template.isAsyncVotingEnabled ?? room.isAsyncVotingEnabled,
-        isAnonymousVotingEnabled:
-          template.isAnonymousVotingEnabled ?? room.isAnonymousVotingEnabled,
-        isChangeVoteAfterRevealEnabled:
-          template.isChangeVoteAfterRevealEnabled ??
-          room.isChangeVoteAfterRevealEnabled,
-        isAutoRevealEnabled:
-          template.isAutoRevealEnabled ?? room.isAutoRevealEnabled,
-        showPassOption: template.showPassOption ?? room.showPassOption,
-        timer: template.timerDuration
-          ? {
-              ...room.timer,
-              countdownLength: template.timerDuration,
-              initialCountdownLength: template.timerDuration,
-            }
-          : room.timer,
-        configuration: room.configuration
-          ? {
-              ...room.configuration,
-              permissions:
-                template.permissions ?? room.configuration?.permissions,
-            }
-          : undefined,
-      };
-
-      await this.estimatorService.updateRoom(room.roomId, updatedRoom);
-
-      if (template.organizationProtection) {
-        await this.estimatorService.toggleOrganizationProtection(
-          room.roomId,
-          true,
-          template.organizationProtection
-        );
-      } else {
-        await this.estimatorService.toggleOrganizationProtection(
-          room.roomId,
-          false,
-          ''
-        );
-      }
-
+      await this.estimatorService.applyTemplate(room, template);
       this.toastService.showMessage('Template applied successfully');
     }
   }
@@ -226,5 +188,21 @@ export class RoomTemplatesModalComponent {
     return getSortedCardSetValues(values)
       .map(item => item.value)
       .join(', ');
+  }
+
+  setDefaultTemplate(slotId: SlotId) {
+    this.authService
+      .updateUserPreference({
+        defaultRoomTemplateId: slotId,
+      })
+      .subscribe();
+  }
+
+  clearDefaultTemplate() {
+    this.authService
+      .updateUserPreference({
+        defaultRoomTemplateId: null,
+      })
+      .subscribe();
   }
 }

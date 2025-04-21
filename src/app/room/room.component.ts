@@ -34,6 +34,7 @@ import {
   takeUntil,
   tap,
   timeInterval,
+  timer,
   withLatestFrom,
 } from 'rxjs';
 import {
@@ -362,9 +363,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   isRoomCreator$ = this.roomDataService.isRoomCreator$;
 
-  availableCredits$ = from(
-    this.paymentService.getAndAssignCreditBundles()
-  ).pipe(
+  availableCredits$ = timer(5000).pipe(
+    switchMap(() => from(this.paymentService.getAndAssignCreditBundles())),
     map(response => response.availableCredits),
     shareReplay(1)
   );

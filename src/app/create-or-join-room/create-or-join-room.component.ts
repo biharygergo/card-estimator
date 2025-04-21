@@ -78,6 +78,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { outOfCreditsOfferModalCreator } from '../shared/out-of-credits-offer-modal/out-of-credits-offer-modal.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -403,36 +404,9 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
                 take(1),
                 switchMap(user => {
                   if (e.details === 'error-no-credits') {
-                    const isAnonymous = user.isAnonymous;
-                    const messagePart = isAnonymous
-                      ? 'Create a free permanent PlanningPoker.live account to get one free credit every month. Register now and try creating a room again.'
-                      : 'Please top up your credits or wait for your next free monthly bundle to create new rooms.';
-                    const actionMessage = isAnonymous
-                      ? 'Create an account'
-                      : 'View my credits';
-                    this.toastService
-                      .showMessage(
-                        '🤯 Oh-oh, it looks like you ran out of credits. ' +
-                          messagePart,
-                        10000,
-                        'error',
-                        actionMessage
-                      )
-                      .onAction()
-                      .pipe()
-                      .subscribe(() => {
-                        if (isAnonymous) {
-                          this.dialog.open(
-                            ...signUpOrLoginDialogCreator({
-                              intent: SignUpOrLoginIntent.LINK_ACCOUNT,
-                            })
-                          );
-                        } else {
-                          this.dialog.open(
-                            ...avatarModalCreator({ openAtTab: 'subscription' })
-                          );
-                        }
-                      });
+                    this.dialog.open(
+                      ...outOfCreditsOfferModalCreator('out-of-credits')
+                    );
                   } else {
                     this.toastService.showMessage(
                       `An error occured: ${e.message}. Please try again or report this is issue.`,
@@ -567,13 +541,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
       if (userPreference?.defaultRoomTemplateId) {
         const template = await firstValueFrom(
-          this.authService.getRoomTemplates().pipe(
-            map(templates =>
-              templates.find(
-                t => t.slotId === userPreference.defaultRoomTemplateId
+          this.authService
+            .getRoomTemplates()
+            .pipe(
+              map(templates =>
+                templates.find(
+                  t => t.slotId === userPreference.defaultRoomTemplateId
+                )
               )
             )
-          )
         );
 
         if (template) {

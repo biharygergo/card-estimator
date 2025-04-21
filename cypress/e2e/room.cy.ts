@@ -220,10 +220,6 @@ describe('Inside the room', () => {
     cy.get('#new-round-button').click();
 
     cy.get('#auto-reveal-button').click();
-    cy.contains('Are you sure you want to toggle auto reveal?').should(
-      'be.visible'
-    );
-    cy.get('#confirm-dialog-confirm-button').click();
 
     cy.contains('1').click();
     cy.contains('Votes revealed').should('be.visible');

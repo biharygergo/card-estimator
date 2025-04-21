@@ -27,6 +27,7 @@ import { MatButtonToggle } from '@angular/material/button-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { RoomDataService } from '../room-data.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-card-deck',
@@ -57,6 +58,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   isMinimized = signal(false);
 
   readonly reactions: ReactionOption[] = this.reactionsService.reactionsList;
+  readonly clickCounter = signal(0);
 
   onReaction = new Subject<string>();
 
@@ -72,7 +74,8 @@ export class CardDeckComponent implements OnInit, OnDestroy {
     private estimatorService: EstimatorService,
     public permissionsService: PermissionsService,
     private readonly reactionsService: ReactionsService,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -133,5 +136,15 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   private async sendReaction(reactionId: string) {
     await this.reactionsService.sendReaction(reactionId, this.room().roomId);
     this.analytics.logClickedReaction(reactionId);
+  }
+
+  disabledClick() {
+    this.clickCounter.set(this.clickCounter() + 1);
+    if (this.clickCounter() === 3) {
+      this.toastService.showMessage(
+        'You cannot change your vote after the results are revealed. You can configure this in Room settings > Voting options.',
+        5000
+      );
+    }
   }
 }

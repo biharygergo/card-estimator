@@ -775,8 +775,7 @@ export class EstimatorService {
   }
 
   async applyTemplate(room: Room, template: RoomTemplate) {
-    const updatedRoom: Room = {
-      ...room,
+    const updatedRoom: Partial<Room> = {
       cardSet: template.cardSetId ?? room.cardSet,
       customCardSetValue:
         template.customCardSetValue ?? room.customCardSetValue,

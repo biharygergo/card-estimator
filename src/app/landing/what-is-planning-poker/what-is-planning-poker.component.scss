@@ -67,3 +67,49 @@ p {
   border-radius: 24px;
   overflow: hidden;
 }
+
+.highlight-box {
+  background-color: var(--light-background-color);
+  border-left: 4px solid var(--main-color);
+  padding: 1em 1.5em;
+  margin: 2em 0;
+  font-style: italic;
+}
+
+.highlight-box p {
+  margin: 0;
+}
+
+.toc {
+  background-color: var(--light-background-color);
+  border: 1px solid var(--main-color);
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  margin: 2em 0;
+}
+
+.toc h3 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.2em;
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.toc li {
+  margin-bottom: 0.5em;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--text-secondary);
+}
+
+.toc a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}

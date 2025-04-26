@@ -84,10 +84,13 @@ export class RoomTemplatesModalComponent {
   templates = toSignal(
     this.authService.getRoomTemplates().pipe(
       map(templates => {
-        const result = templates.reduce((acc, template) => {
-          acc[template.slotId] = template;
-          return acc;
-        }, {} as { [key: string]: RoomTemplate | null });
+        const result = templates.reduce(
+          (acc, template) => {
+            acc[template.slotId] = template;
+            return acc;
+          },
+          {} as { [key: string]: RoomTemplate | null }
+        );
         return result;
       })
     ),

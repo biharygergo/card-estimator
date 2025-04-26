@@ -374,8 +374,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       return credits.length === 0
         ? 'Out of credits'
         : credits.length === 1
-        ? '1 credit left'
-        : credits.length + ' credits';
+          ? '1 credit left'
+          : credits.length + ' credits';
     }),
     shareReplay(1)
   );

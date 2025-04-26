@@ -39,7 +39,7 @@ describe('Authentication', () => {
     cy.get('#password-protection-toggle').click();
     cy.contains('Password protection enabled').should('be.visible');
 
-    cy.contains('Permissions').click({force: true});
+    cy.contains('Permissions').click({ force: true });
     cy.get('#CAN_VOTE-0').click();
 
     cy.get('#CAN_VOTE-0').should('have.class', 'mat-mdc-chip-selected');

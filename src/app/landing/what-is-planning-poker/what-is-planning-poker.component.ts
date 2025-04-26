@@ -5,10 +5,13 @@ import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-pl
 import { StartPlanningCtaComponent } from '../components/start-planning-cta/start-planning-cta.component';
 @Component({
   selector: 'app-what-is-planning-poker',
-  imports: [PageHeaderComponent, NgOptimizedImage, YoutubePlayerComponent, StartPlanningCtaComponent],
+  imports: [
+    PageHeaderComponent,
+    NgOptimizedImage,
+    YoutubePlayerComponent,
+    StartPlanningCtaComponent,
+  ],
   templateUrl: './what-is-planning-poker.component.html',
-  styleUrl: './what-is-planning-poker.component.scss'
+  styleUrl: './what-is-planning-poker.component.scss',
 })
-export class WhatIsPlanningPokerComponent {
-
-}
+export class WhatIsPlanningPokerComponent {}

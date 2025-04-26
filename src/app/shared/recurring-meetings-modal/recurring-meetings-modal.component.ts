@@ -82,7 +82,7 @@ export const recurringMeetingsModalCreator = () =>
     AsyncPipe,
     DatePipe,
     MatCheckbox,
-    MatProgressSpinner
+    MatProgressSpinner,
   ],
 })
 export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
@@ -165,7 +165,8 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
         name: this.newMeetingForm.value.name,
         frequencyDays: this.newMeetingForm.value.frequencyDays,
         isEnabled: true,
-        allowOthersToCreateRooms: this.newMeetingForm.value.allowOthersToCreateRooms,
+        allowOthersToCreateRooms:
+          this.newMeetingForm.value.allowOthersToCreateRooms,
       })
       .pipe(
         first(),
@@ -187,7 +188,8 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
       .updateRecurringMeeting(this.editedMeetingLink.value.id, {
         name: this.newMeetingForm.value.name,
         frequencyDays: this.newMeetingForm.value.frequencyDays,
-        allowOthersToCreateRooms: this.newMeetingForm.value.allowOthersToCreateRooms,
+        allowOthersToCreateRooms:
+          this.newMeetingForm.value.allowOthersToCreateRooms,
       })
       .pipe(
         first(),

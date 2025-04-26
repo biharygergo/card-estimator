@@ -8,9 +8,8 @@ describe('OutOfCreditsOfferModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OutOfCreditsOfferModalComponent]
-    })
-    .compileComponents();
+      imports: [OutOfCreditsOfferModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OutOfCreditsOfferModalComponent);
     component = fixture.componentInstance;

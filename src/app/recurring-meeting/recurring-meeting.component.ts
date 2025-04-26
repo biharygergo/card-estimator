@@ -88,7 +88,7 @@ export class RecurringMeetingComponent implements OnInit, OnDestroy {
         meetingLink,
         error: false,
         hasCreatePermission:
-          userState === 'creator' || meetingLink.allowOthersToCreateRooms,
+          userState === 'creator' || !!meetingLink.allowOthersToCreateRooms,
       };
     }),
     catchError(e => {

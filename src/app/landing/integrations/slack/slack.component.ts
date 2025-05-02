@@ -38,9 +38,9 @@ export class SlackComponent {
             "Installing the Slack integration takes just a few clicks. Add our small bot to your Slack workspace, authorize with minimal permissions (we only need to respond to the /create-room command), and you're ready to start creating rooms.",
         },
         {
-          question: 'What does the Slack bot do?',
+          question: 'What does the bot for Slack do?',
           answer:
-            'The Slack bot has one simple purpose - it creates new planning poker rooms when you use the /create-room command. It responds with a button that team members can click to join the room, making it quick and easy to get everyone into the same session.',
+            'The bot for Slack has one simple purpose - it creates new planning poker rooms when you use the /create-room command. It responds with a button that team members can click to join the room, making it quick and easy to get everyone into the same session.',
         },
         {
           question: 'Is the Slack integration free to use?',

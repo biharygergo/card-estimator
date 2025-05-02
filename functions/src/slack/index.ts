@@ -9,6 +9,8 @@ import {getUserId} from "../jira/oauth";
 import {getSlackConfig} from "./config";
 import {createActionMessage, sendCreateRoomPubSubMessage} from "./messaging";
 
+const SLACK_OAUTH_STATES = "slackOAuthStates"; // Firestore collection name
+
 const slackMicroservice = express();
 slackMicroservice.use(express.json());
 slackMicroservice.use(cookieParser());
@@ -29,6 +31,15 @@ async function handlePlanningPokerCommand(
     req: express.Request,
     res: express.Response
 ) {
+  const commandText = req.body.text as string | undefined;
+  if (commandText?.trim() === "help") {
+    res.json({
+      response_type: "ephemeral",
+      text: "Use the `/create-room` command to start a new PlanningPoker.live session.\nSimply type `/create-room` and press Enter. I will create a room and provide a link to join.",
+    });
+    return;
+  }
+
   const slackUserId = req.body.user_id as string;
   const teamId = req.body.team_id as string;
 
@@ -69,7 +80,16 @@ async function handleSlackInstall(req: express.Request, res: express.Response) {
     return;
   }
 
-  res.redirect(getSlackAccessTokenRedirectUrl(req));
+  const state = crypto.randomBytes(16).toString("hex");
+
+  // Store state and userId in Firestore with a TTL (e.g., 10 minutes)
+  const expires = Timestamp.fromMillis(Date.now() + 10 * 60 * 1000);
+  await getFirestore().collection(SLACK_OAUTH_STATES).doc(state).set({
+    userId,
+    expires,
+  });
+
+  res.redirect(getSlackAccessTokenRedirectUrl(req, state));
 }
 
 async function handleSlackOAuthSuccess(
@@ -77,11 +97,33 @@ async function handleSlackOAuthSuccess(
     res: express.Response
 ) {
   const code = req.query.code as string;
-  const userId = await getUserId(req, res);
-  if (!userId) {
-    res.status(401).send("Not signed in.");
+  const receivedState = req.query.state as string;
+
+  if (!receivedState) {
+    res.status(400).send("Missing state parameter.");
     return;
   }
+
+  const stateRef = getFirestore().collection(SLACK_OAUTH_STATES).doc(receivedState);
+  const stateDoc = await stateRef.get();
+
+  if (!stateDoc.exists) {
+    res.status(403).send("Invalid state parameter.");
+    return;
+  }
+
+  const stateData = stateDoc.data() as { userId: string; expires: Timestamp };
+
+  // Delete the state document immediately after retrieval
+  await stateRef.delete();
+
+  if (stateData.expires.toMillis() < Date.now()) {
+    res.status(403).send("State parameter expired.");
+    return;
+  }
+
+  const userId = stateData.userId;
+  // We have the validated userId, proceed with OAuth token exchange
 
   const result = await getAccessToken(req, code);
 
@@ -122,9 +164,9 @@ async function handleBlockInteraction(
   return;
 }
 
-function getSlackAccessTokenRedirectUrl(request: express.Request): string {
+function getSlackAccessTokenRedirectUrl(request: express.Request, state: string): string {
   const config = getSlackConfig(request);
-  return `https://slack.com/oauth/v2/authorize?scope=commands&client_id=${config.clientId}&redirect_uri=${config.redirectUri}`;
+  return `https://slack.com/oauth/v2/authorize?scope=commands&client_id=${config.clientId}&redirect_uri=${config.redirectUri}&state=${state}`;
 }
 
 async function getAccessToken(

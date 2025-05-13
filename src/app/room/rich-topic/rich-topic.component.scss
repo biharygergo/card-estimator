@@ -5,7 +5,8 @@
   background: var(--light-background-color);
   margin: 1rem 0;
   border-radius: 18px;
-  max-height: 300px;
+  height: 200px;
+  resize: vertical;
   overflow-y: auto;
   margin-bottom: 0;
 

@@ -84,7 +84,7 @@ $m3-light-theme: mat.define-theme(
   --text-on-highlight: #efefef;
   --text-on-white: #efefef;
   --title-on-light: #efefef;
-  --ad-background: var(--mdc-dialog-container-color);
+  --ad-background: black;
 
   &.running-in-teams {
     --background-dark: #1f1f1f;

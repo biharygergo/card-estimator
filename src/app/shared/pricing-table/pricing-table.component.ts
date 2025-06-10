@@ -35,7 +35,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
-import { FaqSectionComponent } from 'src/app/landing/faq/faq-section/faq-section.component';
 interface PricingDialogData {
   selectedTab?: 'credits' | 'premium' | 'org-credits';
 }
@@ -175,7 +174,6 @@ const FAQS: FaqItem[] = [
     NgOptimizedImage,
     ReactiveFormsModule,
     OrganizationSelectorComponent,
-    FaqSectionComponent,
   ],
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss',

@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { LinkService } from 'src/app/services/link.service';
 import { PaymentService } from 'src/app/services/payment.service';
+import { OrganizationService } from 'src/app/services/organization.service';
 import { BundleName, FaqItem } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -30,11 +31,12 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
-import { combineLatest, defer, map, startWith } from 'rxjs';
+import { combineLatest, defer, map, startWith, take } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
+
 interface PricingDialogData {
   selectedTab?: 'credits' | 'premium' | 'org-credits';
 }
@@ -186,6 +188,7 @@ export class PricingTableComponent implements OnInit {
   isLoadingStripe = false;
   isLoadingStripeForBundle: string;
   isPremium$ = this.paymentService.isPremiumSubscriber();
+  organizations$ = this.organizationService.getMyOrganizations();
   currencyControl = new FormControl<'eur' | 'usd'>('usd', {
     nonNullable: true,
   });
@@ -212,15 +215,35 @@ export class PricingTableComponent implements OnInit {
     )
   );
 
+  private calculateMultiplier(count: number): number {
+    if (count === 25) {
+      return 1.5;
+    }
+    if (count === 75) {
+      return 1.2;
+    }
+    if (count === 150) {
+      return 1;
+    }
+    if (count === 300) {
+      return 0.8;
+    }
+
+    return 1;
+  }
+
   orgCreditAmountLabel$ = combineLatest([
     this.currencyShortSymbol,
     this.purchaseForm.controls.creditCount.valueChanges.pipe(startWith(150)),
-  ]).pipe(map(([currency, count]) => `1${currency} x ${count} credits`));
+  ]).pipe(map(([currency, count]) => `${this.calculateMultiplier(count)}${currency} x ${count} credits`));
 
   orgCreditTotalLabel$ = combineLatest([
     this.currencyShortSymbol,
     this.purchaseForm.controls.creditCount.valueChanges.pipe(startWith(150)),
-  ]).pipe(map(([currency, count]) => `${count}${currency}`));
+  ]).pipe(map(([currency, count]) => {
+    const total = this.calculateMultiplier(count) * count;
+    return `${total}${currency}`;
+  }));
 
   selectedTabIndex = signal<number>(0);
 
@@ -236,7 +259,8 @@ export class PricingTableComponent implements OnInit {
     @Inject(APP_CONFIG) public config: AppConfig,
     @Optional()
     @Inject(MAT_DIALOG_DATA)
-    private readonly dialogData: PricingDialogData
+    private readonly dialogData: PricingDialogData,
+    private readonly organizationService: OrganizationService
   ) {}
 
   ngOnInit() {
@@ -253,6 +277,16 @@ export class PricingTableComponent implements OnInit {
           break;
       }
     }
+
+    // Check if user has organizations and default to organization credits if they do
+    this.organizations$
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(organizations => {
+        if (organizations.length > 0 && !this.dialogData?.selectedTab) {
+          this.creditTypeSelector.setValue('organization');
+        }
+      });
+
     this.creditTypeSelector.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(creditType => {

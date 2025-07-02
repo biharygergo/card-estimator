@@ -53,7 +53,7 @@ export class PaymentService {
     private readonly confirmService: ConfirmDialogService
   ) {}
 
-  private getPriceIdForBundle(bundleName: BundleName, currency: 'eur' | 'usd') {
+  private getPriceIdForBundle(bundleName: BundleName, currency: 'eur' | 'usd', creditCount?: number) {
     switch (bundleName) {
       case BundleName.SMALL_BUNDLE:
         return currency === 'eur'
@@ -68,9 +68,26 @@ export class PaymentService {
           ? environment.megaBundlePriceId
           : environment.megaBundlePriceIdUsd;
       case BundleName.ORGANIZATION_BUNDLE:
-        return currency === 'eur'
-          ? environment.orgBundlePriceId
-          : environment.orgBundlePriceIdUsd;
+        if (creditCount === 25) {
+          return currency === 'eur'
+            ? environment.orgBundleSmallestPriceId
+            : environment.orgBundleSmallestPriceIdUsd;
+        }
+        if (creditCount === 75) {
+          return currency === 'eur'
+            ? environment.orgBundleSmallPriceId
+            : environment.orgBundleSmallPriceIdUsd;
+        }
+        if (creditCount === 150) {
+          return currency === 'eur'
+            ? environment.orgBundlePriceId
+            : environment.orgBundlePriceIdUsd;
+        }
+        if (creditCount === 300) {
+          return currency === 'eur'
+            ? environment.orgBundleLargestPriceId
+            : environment.orgBundleLargestPriceIdUsd;
+        }
       default:
         throw new Error(`No price id for ${bundleName}.`);
     }
@@ -99,7 +116,7 @@ export class PaymentService {
     const checkoutDoc = {
       line_items: [
         {
-          price: this.getPriceIdForBundle(bundleName, currency),
+          price: this.getPriceIdForBundle(bundleName, currency, creditCount),
           quantity: creditCount ?? 1,
         },
       ],

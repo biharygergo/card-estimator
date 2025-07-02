@@ -168,7 +168,7 @@ service cloud.firestore {
 
       match /checkout_sessions/{id} {
         allow read: if request.auth.uid == uid;
-        allow write: if request.auth.uid == uid && (!('creditCount' in request.resource.data.metadata) || request.resource.data.metadata.creditCount > 100)
+        allow write: if request.auth.uid == uid && (!('creditCount' in request.resource.data.metadata) || request.resource.data.metadata.creditCount in [25, 75, 150, 300])
       }
       match /subscriptions/{id} {
         allow read: if request.auth.uid == uid;

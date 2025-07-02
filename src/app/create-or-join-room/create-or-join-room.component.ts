@@ -400,25 +400,15 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         switchMap(recurringMeetingId =>
           from(this.createRoom(recurringMeetingId)).pipe(
             catchError(e => {
-              return this.authService.user.pipe(
-                take(1),
-                switchMap(user => {
-                  if (e.details === 'error-no-credits') {
-                    this.dialog.open(
-                      ...outOfCreditsOfferModalCreator('out-of-credits')
-                    );
-                  } else {
-                    this.toastService.showMessage(
-                      `An error occured: ${e.message}. Please try again or report this is issue.`,
-                      10000,
-                      'error'
-                    );
-                    console.error(e);
-                  }
-                  this.isBusy.next(false);
-                  return of({});
-                })
-              );
+              if (e.details === 'error-no-credits') {
+                this.dialog.open(
+                  ...outOfCreditsOfferModalCreator('out-of-credits')
+                );
+              } else {
+                throw e;
+              }
+              this.isBusy.next(false);
+              return of({});
             })
           )
         ),

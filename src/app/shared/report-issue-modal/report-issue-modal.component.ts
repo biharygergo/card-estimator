@@ -24,6 +24,7 @@ import { ToastService } from 'src/app/services/toast.service';
 
 export interface ReportIssueModalData {
   // Add any data you want to pass to the modal
+  errorMessage?: string;
 }
 
 export const reportIssueModalCreator = (
@@ -59,7 +60,15 @@ export const reportIssueModalCreator = (
   styleUrl: './report-issue-modal.component.scss',
 })
 export class ReportIssueModalComponent {
-  issueDetails = new FormControl('', [Validators.required]);
+  issueDetails = new FormControl(
+    this.data.errorMessage
+      ? `Issue details:
+
+Attached error message:
+${this.data.errorMessage}`
+      : '',
+    [Validators.required]
+  );
   emailAddress = new FormControl('', [Validators.email]);
   isSubmitting = false;
 

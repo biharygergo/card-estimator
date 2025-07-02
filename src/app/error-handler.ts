@@ -2,12 +2,15 @@ import { ErrorHandler, Injectable } from '@angular/core';
 import { ToastService } from './services/toast.service';
 import * as Sentry from '@sentry/angular';
 import { LinkService } from './services/link.service';
+import { MatDialog } from '@angular/material/dialog';
+import { reportIssueModalCreator } from './shared/report-issue-modal/report-issue-modal.component';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(
     private toastService: ToastService,
-    private readonly linkService: LinkService
+    private readonly linkService: LinkService,
+    private readonly dialog: MatDialog
   ) {}
 
   handleError(error: any): void {
@@ -61,8 +64,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       'Send bug report'
     );
     snackbarRef.onAction().subscribe(() => {
-      const apiUrl = window.origin + '/api/reportAnIssue';
-      this.linkService.openUrl(apiUrl);
+      this.dialog.open(...reportIssueModalCreator({ errorMessage }));
     });
   }
 }

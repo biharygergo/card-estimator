@@ -1,0 +1,52 @@
+<h1 mat-dialog-title class="dialog-title">Report an Issue</h1>
+<div mat-dialog-content>
+  <p class="tab-section description">
+    Help us improve PlanningPoker.live by reporting any issues you encounter.
+    We'll use your email to follow up with you if we need more details.
+  </p>
+  <div class="tab-content">
+    <div class="tab-section">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Issue details</mat-label>
+        <textarea
+          matInput
+          placeholder="Please describe the issue you encountered in detail. Include steps to reproduce, what you expected to happen, and what actually happened."
+          rows="6"
+          autofocus
+          cdkFocusInitial
+          [formControl]="issueDetails"></textarea>
+        @if ((issueDetails.dirty || issueDetails.touched) &&
+        issueDetails.errors?.['required']) {
+        <mat-error>Please describe the issue</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Your email address</mat-label>
+        <input
+          matInput
+          type="email"
+          placeholder="your.email@example.com"
+          [formControl]="emailAddress" />
+        @if ((emailAddress.dirty || emailAddress.touched) &&
+        emailAddress.errors?.['required']) {
+        <mat-error>Email is required</mat-error>
+        } @if ((emailAddress.dirty || emailAddress.touched) &&
+        emailAddress.errors?.['email']) {
+        <mat-error>Please enter a valid email address</mat-error>
+        }
+        <mat-hint>We'll use this to follow up with you if needed</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submitIssue()"
+    [disabled]="!isFormValid() || isSubmitting">
+    @if (isSubmitting) { Submitting... } @else { Submit Report }
+  </button>
+  <button mat-button mat-dialog-close [disabled]="isSubmitting">Cancel</button>
+</div>

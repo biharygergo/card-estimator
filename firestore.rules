@@ -159,7 +159,11 @@ service cloud.firestore {
       allow list, update, delete, create, get: if false;
     }
 
-     match /feedbacks/{feedbackId} {
+    match /feedbacks/{feedbackId} {
+      allow write, read: if request.auth.uid == request.resource.data.userId;
+    }
+
+    match /issueReports/{reportId} {
       allow write, read: if request.auth.uid == request.resource.data.userId;
     }
 

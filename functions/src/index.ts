@@ -167,6 +167,39 @@ exports.acceptOrganizationInvitation = onRequest(
     }
 );
 
+exports.getOrganizationMembers = onCall({cors: true, region}, async (request) => {
+  const {getOrganizationMembers} = await import("./organizations");
+  const {organizationId} = request.data;
+
+  if (!request.auth?.uid) {
+    throw new Error("Unauthorized");
+  }
+
+  return getOrganizationMembers(organizationId);
+});
+
+exports.updateOrganizationMemberRole = onCall({cors: true, region}, async (request) => {
+  const {updateMemberRole} = await import("./organizations");
+  const {organizationId, memberId, newRole} = request.data;
+
+  if (!request.auth?.uid) {
+    throw new Error("Unauthorized");
+  }
+
+  return updateMemberRole(organizationId, memberId, newRole, request.auth.uid);
+});
+
+exports.removeOrganizationMember = onCall({cors: true, region}, async (request) => {
+  const {removeMemberFromOrganization} = await import("./organizations");
+  const {organizationId, memberId} = request.data;
+
+  if (!request.auth?.uid) {
+    throw new Error("Unauthorized");
+  }
+
+  return removeMemberFromOrganization(organizationId, memberId, request.auth.uid);
+});
+
 exports.onUserSubscriptionCreated = onDocumentCreated(
     "customers/{customerId}/subscriptions/{subscriptionId}",
     async (snap) => {

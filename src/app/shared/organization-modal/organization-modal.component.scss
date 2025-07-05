@@ -127,11 +127,27 @@ planning-poker-organization-selector {
         margin-bottom: 0;
         margin-top: 8px;
       }
+
+      .member-email {
+        margin-top: -2px;
+        display: block;
+      }
     }
 
     .member-menu-button {
       margin-left: auto;
     }
+  }
+}
+
+.role-management-section {
+  .menu-section-title {
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    color: var(--mat-app-text-color);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 }
 

@@ -334,7 +334,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         shouldOpen:
           previousSessions.length === 1 &&
           previousSessions[0].createdById === user?.uid &&
-          !pref.onboardingTutorialShown,
+          !pref?.onboardingTutorialShown,
         small: isSmallScreen.matches,
       };
     }),

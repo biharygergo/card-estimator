@@ -19,7 +19,7 @@ import {
   collectionSnapshots,
   deleteDoc,
 } from '@angular/fire/firestore';
-import { InvitationData, Organization } from '../types';
+import { InvitationData, Organization, OrganizationMember, OrganizationRole } from '../types';
 import {
   map,
   Observable,
@@ -30,6 +30,7 @@ import {
 } from 'rxjs';
 import { FileUploadService } from './file-upload.service';
 import { PaymentService } from './payment.service';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 
 const ORGANIZATION_COLLECTION = 'organizations';
 
@@ -41,7 +42,8 @@ export class OrganizationService {
     private firestore: Firestore,
     private authService: AuthService,
     private fileUploadService: FileUploadService,
-    private readonly paymentService: PaymentService
+    private readonly paymentService: PaymentService,
+    private functions: Functions
   ) {}
 
   private createId() {
@@ -59,6 +61,7 @@ export class OrganizationService {
       id: this.createId(),
       createdById: user.uid,
       memberIds: [user.uid],
+      memberRoles: { [user.uid]: OrganizationRole.ADMIN },
       createdAt: serverTimestamp(),
       activePlan: isPremium ? 'premium' : 'basic',
     };
@@ -163,12 +166,35 @@ export class OrganizationService {
   }
 
   async removeMember(organizationId: string, memberId: string) {
-    await updateDoc(
-      doc(this.firestore, ORGANIZATION_COLLECTION, organizationId),
-      {
-        memberIds: arrayRemove(memberId),
-      }
-    );
+    const removeMemberFunction = httpsCallable(this.functions, 'removeOrganizationMember');
+    await removeMemberFunction({ organizationId, memberId });
+  }
+
+  getOrganizationMembers(organizationId: string): Observable<OrganizationMember[]> {
+    const getMembersFunction = httpsCallable(this.functions, 'getOrganizationMembers');
+    return new Observable(observer => {
+      getMembersFunction({ organizationId }).then((result: any) => {
+        observer.next(result.data);
+        observer.complete();
+      }).catch(error => {
+        observer.error(error);
+      });
+    });
+  }
+
+  async updateMemberRole(organizationId: string, memberId: string, newRole: OrganizationRole): Promise<void> {
+    const updateRoleFunction = httpsCallable(this.functions, 'updateOrganizationMemberRole');
+    await updateRoleFunction({ organizationId, memberId, newRole });
+  }
+
+  isUserAdmin(organization: Organization, userId: string): boolean {
+    const memberRoles = organization.memberRoles || {};
+    return memberRoles[userId] === OrganizationRole.ADMIN || organization.createdById === userId;
+  }
+
+  getUserRole(organization: Organization, userId: string): OrganizationRole {
+    const memberRoles = organization.memberRoles || {};
+    return memberRoles[userId] || (organization.createdById === userId ? OrganizationRole.ADMIN : OrganizationRole.MEMBER);
   }
 
   getMyOrganizations(): Observable<Organization[]> {

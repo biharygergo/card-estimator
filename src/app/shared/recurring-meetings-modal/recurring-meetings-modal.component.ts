@@ -16,6 +16,7 @@ import {
   combineLatest,
   first,
   map,
+  of,
   switchMap,
   takeUntil,
   tap,
@@ -108,6 +109,10 @@ export class RecurringMeetingsModalComponent implements OnInit, OnDestroy {
     }[]
   > = this.recurringMeetingsService.getMyRecurringMeetingLinks().pipe(
     switchMap(meetingLinks => {
+      console.log('meetingLinks', meetingLinks);
+      if (meetingLinks.length === 0) {
+        return of([]);
+      }
       return combineLatest(
         meetingLinks.map(link =>
           this.recurringMeetingsService

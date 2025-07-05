@@ -222,7 +222,7 @@
                     [disabled]="
                       !organization ||
                       organization.memberIds.includes(member.id) ||
-                      organization.createdById !== (user$ | async)?.uid ||
+                      !organizationService.isUserAdmin(organization, (user$ | async)?.uid) ||
                       !member.isPermanent
                     "
                     (click)="addToOrganization(member.id)">

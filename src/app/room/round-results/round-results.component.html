@@ -300,7 +300,7 @@
         [disabled]="
           !organization() ||
           organization().memberIds.includes(member.id) ||
-          organization().createdById !== currentUserId() ||
+          !organizationService.isUserAdmin(organization(), currentUserId()) ||
           !userProfiles()[member.id]
         "
         (click)="addToOrganization(member.id)">

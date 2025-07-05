@@ -4,6 +4,7 @@ import {getAuth, UserRecord} from "firebase-admin/auth";
 import {getHost} from "../config";
 import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
 import {Request} from "express";
+import {OrganizationRole} from "../types";
 
 // TODO: move to shared types package
 type InvitationData = {
@@ -62,9 +63,15 @@ export async function acceptInvitation(
   }
 
   const updatedMemberIds = [...organization.memberIds, user.uid];
+  const memberRoles = organization.memberRoles || {};
+  memberRoles[user.uid] = OrganizationRole.MEMBER; // Default role for invited members
+
   await getFirestore()
       .doc(`organizations/${organizationId}`)
-      .update({memberIds: updatedMemberIds});
+      .update({
+        memberIds: updatedMemberIds,
+        memberRoles: memberRoles,
+      });
 
   await getFirestore()
       .doc(`organizations/${organizationId}/memberInvitations/${invitationId}`)

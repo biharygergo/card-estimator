@@ -131,7 +131,9 @@ service cloud.firestore {
     match /organizations/{organizationId} {
       allow read: if request.auth.uid in resource.data.memberIds;
       allow write: if request.auth.uid == request.resource.data.createdById;
-      allow update: if request.auth.uid == resource.data.createdById;
+      allow update: if request.auth.uid == resource.data.createdById || 
+                      (request.auth.uid in resource.data.memberIds && 
+                       resource.data.memberRoles[request.auth.uid] == 'ADMIN');
                                                                                      
       match /memberInvitations/{invitationId} {
         allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;

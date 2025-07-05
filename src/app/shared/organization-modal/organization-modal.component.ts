@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -37,7 +37,7 @@ import { OrganizationService } from 'src/app/services/organization.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { InvitationData, Organization } from 'src/app/types';
+import { InvitationData, Organization, OrganizationMember, OrganizationRole } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import {
   signUpOrLoginDialogCreator,
@@ -71,6 +71,7 @@ import { OrganizationSelectorComponent } from '../organization-selector/organiza
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
+import { MatDivider } from '@angular/material/divider';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -132,6 +133,7 @@ interface OrganizationChecklist {
     MatChipSet,
     AsyncPipe,
     OrganizationSelectorComponent,
+    MatDivider,
   ],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
@@ -149,12 +151,15 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   );
 
   members$ = this.organization$.pipe(
-    map(organization => organization.memberIds),
-    distinctUntilChanged(isEqual),
-    switchMap(memberIds => this.authService.getUserProfiles(memberIds)),
-    map(userProfilesMap =>
-      Object.values(userProfilesMap).filter(profile => !!profile)
-    )
+    map(org => org?.id),
+    distinctUntilChanged(),
+    switchMap(organizationId => {
+      if (!organizationId) {
+        return of([]);
+      }
+      return this.organizationService.getOrganizationMembers(organizationId);
+    }),
+    shareReplay(1)
   );
 
   invitations$ = this.organization$.pipe(
@@ -220,7 +225,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-  isOrganizationCreator = false;
+  isAdmin = signal(false);
   emailFormValues: string[] = [];
   readonly inviteProgress = new BehaviorSubject<string>('');
 
@@ -249,6 +254,10 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     )
   );
 
+  // New properties for role management
+  readonly OrganizationRole = OrganizationRole;
+  currentUserId$ = this.authService.user.pipe(map(user => user?.uid));
+
   constructor(
     private readonly organizationService: OrganizationService,
     public readonly authService: AuthService,
@@ -268,15 +277,17 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
           this.authService.user.pipe(
             map(
               user =>
-                user && organization && user.uid === organization.createdById
+                user && organization && this.organizationService.isUserAdmin(organization, user.uid)
             )
           )
         ),
         takeUntil(this.destroy)
       )
       .subscribe(
-        isOrganizationCreator =>
-          (this.isOrganizationCreator = isOrganizationCreator)
+        isAdmin =>
+        {
+          this.isAdmin.set(isAdmin);
+        }
       );
   }
 
@@ -322,7 +333,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async onLogoDropped(file: File) {
-    if (!this.isOrganizationCreator) {
+    if (!this.isAdmin) {
       return;
     }
     this.toastService.showMessage('Uploading logo...');
@@ -373,8 +384,14 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async removeFromOrganization(memberId: string) {
-    await this.organizationService.removeMember(this.organization.id, memberId);
-    this.toastService.showMessage('Member removed!');
+    if (!this.organization) return;
+
+    try {
+      await this.organizationService.removeMember(this.organization.id, memberId);
+      this.toastService.showMessage('Member removed successfully');
+    } catch (error: any) {
+      this.toastService.showMessage(error.message || 'Failed to remove member', 3000, 'error');
+    }
   }
 
   openCreateAccountModal() {
@@ -427,5 +444,57 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
 
   purchaseCredits() {
     this.dialog.open(...pricingModalCreator({ selectedTab: 'org-credits' }));
+  }
+
+  async updateMemberRole(memberId: string, newRole: OrganizationRole) {
+    if (!this.organization) return;
+
+    try {
+      await this.organizationService.updateMemberRole(this.organization.id, memberId, newRole);
+      this.toastService.showMessage('Member role updated successfully');
+    } catch (error: any) {
+      this.toastService.showMessage(error.message || 'Failed to update member role', 3000, 'error');
+    }
+  }
+
+  isUserAdmin(organization: Organization, userId: string): boolean {
+    return this.organizationService.isUserAdmin(organization, userId);
+  }
+
+  getUserRole(organization: Organization, userId: string): OrganizationRole {
+    return this.organizationService.getUserRole(organization, userId);
+  }
+
+  canManageMember(organization: Organization, currentUserId: string, targetMemberId: string): boolean {
+    if (!this.isUserAdmin(organization, currentUserId)) {
+      return false;
+    }
+    
+    // Admins can't remove themselves if they're the last admin
+    if (currentUserId === targetMemberId) {
+      const memberRoles = organization.memberRoles || {};
+      const adminMembers = Object.entries(memberRoles)
+        .filter(([_, role]) => role === OrganizationRole.ADMIN)
+        .map(([memberId, _]) => memberId);
+      
+      if (!memberRoles[organization.createdById]) {
+        adminMembers.push(organization.createdById);
+      }
+      
+      return adminMembers.length > 1;
+    }
+    
+    return true;
+  }
+
+  getRoleDisplayName(role: OrganizationRole): string {
+    switch (role) {
+      case OrganizationRole.ADMIN:
+        return 'Admin';
+      case OrganizationRole.MEMBER:
+        return 'Member';
+      default:
+        return 'Member';
+    }
   }
 }

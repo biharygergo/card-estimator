@@ -351,7 +351,7 @@ export class RoomConfigurationModalComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private dialog: MatDialog,
     public readonly authService: AuthService,
-    private readonly organizationService: OrganizationService,
+    public readonly organizationService: OrganizationService,
     public readonly paymentService: PaymentService,
     private readonly analyticsService: AnalyticsService,
     @Inject(MAT_DIALOG_DATA) private dialogData: RoomConfigurationModalData

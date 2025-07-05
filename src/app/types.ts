@@ -333,8 +333,22 @@ export interface Organization {
   createdAt: FieldValue;
   createdById: string;
   memberIds: string[];
+  memberRoles?: { [memberId: string]: OrganizationRole };
   logoUrl: string;
   activePlan: 'basic' | 'premium';
+}
+
+export enum OrganizationRole {
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
+}
+
+export interface OrganizationMember {
+  id: string;
+  displayName: string;
+  email: string;
+  role: OrganizationRole;
+  joinedAt: FieldValue;
 }
 
 export enum SubscriptionResult {

@@ -135,7 +135,7 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly dialog: MatDialog,
     private readonly toastService: ToastService,
-    private readonly organizationService: OrganizationService,
+    readonly organizationService: OrganizationService,
     public readonly permissionsService: PermissionsService,
     private readonly roomDataService: RoomDataService
   ) {}

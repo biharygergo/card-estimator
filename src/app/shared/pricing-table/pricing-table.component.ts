@@ -36,6 +36,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface PricingDialogData {
   selectedTab?: 'credits' | 'premium' | 'org-credits';
@@ -260,29 +261,37 @@ export class PricingTableComponent implements OnInit {
     @Optional()
     @Inject(MAT_DIALOG_DATA)
     private readonly dialogData: PricingDialogData,
-    private readonly organizationService: OrganizationService
+    private readonly organizationService: OrganizationService,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    // Handle query parameters for page mode
+    if (this.pageMode === 'page') {
+      this.activatedRoute.queryParams
+        .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+        .subscribe(params => {
+          const tabParam = params['tab'] as string;
+          if (tabParam) {
+            this.selectTabFromParam(tabParam);
+          }
+        });
+    }
+
+    // Handle dialog data for modal mode
     if (this.dialogData?.selectedTab) {
-      switch (this.dialogData.selectedTab) {
-        case 'credits':
-          this.selectedTabIndex.set(0);
-          break;
-        case 'premium':
-          this.selectedTabIndex.set(1);
-          break;
-        case 'org-credits':
-          this.creditTypeSelector.setValue('organization');
-          break;
-      }
+      this.selectTabFromParam(this.dialogData.selectedTab);
     }
 
     // Check if user has organizations and default to organization credits if they do
+    // Only if no specific tab was selected via query param or dialog data
     this.organizations$
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(organizations => {
-        if (organizations.length > 0 && !this.dialogData?.selectedTab) {
+        const hasExplicitTabSelection = this.dialogData?.selectedTab || 
+          (this.pageMode === 'page' && this.activatedRoute.snapshot.queryParams['tab']);
+        
+        if (organizations.length > 0 && !hasExplicitTabSelection) {
           this.creditTypeSelector.setValue('organization');
         }
       });
@@ -295,6 +304,20 @@ export class PricingTableComponent implements OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+  }
+
+  private selectTabFromParam(tab: string) {
+    switch (tab) {
+      case 'credits':
+        this.selectedTabIndex.set(0);
+        break;
+      case 'premium':
+        this.selectedTabIndex.set(1);
+        break;
+      case 'org-credits':
+        this.creditTypeSelector.setValue('organization');
+        break;
+    }
   }
 
   async buyBundle(bundleName: BundleName) {

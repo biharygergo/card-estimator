@@ -1,5 +1,5 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
-import {addContact} from "../email";
+import {addContact, sendWelcomeEmail} from "../email";
 import {FirestoreEvent, QueryDocumentSnapshot, Change} from "firebase-functions/v2/firestore";
 
 const PROFILES_COLLECTION = "userProfiles";
@@ -36,6 +36,7 @@ export async function onUserDetailsCreate(
   const userDetails = snap.data?.data() as UserDetails;
   try {
     await addContact({email: userDetails.email, name: userDetails.displayName});
+    await sendWelcomeEmail({email: userDetails.email, name: userDetails.displayName});
   } catch (e) {
     console.error("Error adding customer to mailing list", e);
   }

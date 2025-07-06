@@ -209,6 +209,18 @@ const routes: Routes = [
     },
   },
   {
+    path: 'getting-started',
+    loadComponent: () =>
+      import('./getting-started/getting-started.component').then(
+        m => m.GettingStartedComponent
+      ),
+    data: {
+      title: 'Getting Started with PlanningPoker.live - Complete Tutorial Guide',
+      description:
+        'Learn how to use PlanningPoker.live with our comprehensive getting started guide. Step-by-step tutorial for running your first planning poker session.',
+    },
+  },
+  {
     path: 'what-is-planning-poker',
     loadComponent: () =>
       import('./what-is-planning-poker/what-is-planning-poker.component').then(

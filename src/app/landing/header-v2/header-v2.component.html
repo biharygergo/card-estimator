@@ -21,139 +21,226 @@
       </a>
       <ul>
         <li>
-          <a
-            routerLink="/"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            (click)="closeMenu()"
-            class="navigation-button"
-            >Home</a
-          >
-        </li>
-        <li>
-          <a
-            routerLink="/features"
-            routerLinkActive="active"
-            (click)="closeMenu()"
-            class="navigation-button"
-            >Features</a
-          >
-        </li>
-        <li>
           <div
-            class="navigation-button integrations-button split-button"
-            routerLinkActive="active">
-            <a class="split-button-left" routerLink="/integrations"
-              >Integrations</a
+            class="navigation-button features-button split-button"
+            routerLinkActive="active"
+            (mouseenter)="onDropdownMouseEnter('features')"
+            (mouseleave)="onDropdownMouseLeave()">
+            <a class="split-button-left" routerLink="/features"
+              >Features</a
             >
             <button
               class="split-button-right"
               mat-icon-button
-              (menuOpened)="menuOpen = true"
-              (menuClosed)="menuOpen = false"
-              [matMenuTriggerFor]="menu"
-              aria-label="Expand integrations menu">
+              (click)="toggleFeaturesDropdown()"
+              [attr.aria-expanded]="openDropdown === 'features'"
+              aria-label="Expand features menu">
               <mat-icon
                 class="rotating-icon"
-                [class.rotated]="menuOpen"
+                [class.rotated]="openDropdown === 'features'"
                 [inline]="true"
                 >expand_more</mat-icon
               >
             </button>
           </div>
-          <mat-menu #menu="matMenu" [class]="'rounded-nav-menu'">
-            <a
-              routerLink="/integrations/zoom"
-              id="header-zoom-link"
-              mat-menu-item
-              (click)="closeMenu()">
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/zoom-logo.png"
-                  loading="lazy" />
-                Zoom Meetings
+          <div class="navbar-features-dropdown-panel" 
+               [class.open]="openDropdown === 'features'"
+               (mouseenter)="onDropdownContentMouseEnter()"
+               (mouseleave)="onDropdownContentMouseLeave()">
+              <div class="navbar-features-dropdown-content">
+                <div class="navbar-features-section">
+                  <h3>Learn & Get Started</h3>
+                  <div class="navbar-features-grid">
+                    <a routerLink="/getting-started" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>school</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Getting Started Guide</h4>
+                        <p>Complete tutorial for new users</p>
+                      </div>
+                    </a>
+                    <a routerLink="/what-is-planning-poker" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>help</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>What is Planning Poker?</h4>
+                        <p>Learn the basics of agile estimation</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="navbar-features-section">
+                  <h3>Resources & Support</h3>
+                  <div class="navbar-features-grid">
+                    <a routerLink="/features" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>book</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Features</h4>
+                        <p>Learn about the features of Planning Poker.live</p>
+                      </div>
+                    </a>
+                    <a routerLink="/knowledge-base" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>library_books</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Knowledge Base</h4>
+                        <p>Advanced guides and tutorials</p>
+                      </div>
+                    </a>
+                    <a routerLink="/faq" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>question_answer</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>FAQ</h4>
+                        <p>Answers to common questions</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="navbar-features-highlight">
+                  <div class="navbar-highlight-content">
+                    <h4>🚀 Ready to start?</h4>
+                    <p>Create your first planning poker session in seconds</p>
+                    <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
+                      Start Planning
+                    </a>
+                  </div>
+                </div>
               </div>
-            </a>
-            <a
-              routerLink="/integrations/teams"
-              id="header-teams-link"
-              mat-menu-item
-              (click)="closeMenu()">
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/teams_logo.png"
-                  loading="lazy" />
-                Microsoft Teams
+            </div>
+        </li>
+        <li>
+          <div
+            class="navigation-button integrations-button split-button"
+            routerLinkActive="active"
+            (mouseenter)="onDropdownMouseEnter('integrations')"
+            (mouseleave)="onDropdownMouseLeave()">
+            <a class="split-button-left" routerLink="/integrations">Integrations</a>
+            <button
+              class="split-button-right"
+              mat-icon-button
+              (click)="toggleIntegrationsDropdown()"
+              [attr.aria-expanded]="openDropdown === 'integrations'"
+              aria-label="Expand integrations menu">
+              <mat-icon
+                class="rotating-icon"
+                [class.rotated]="openDropdown === 'integrations'"
+                [inline]="true"
+                >expand_more</mat-icon
+              >
+            </button>
+          </div>
+          <div class="navbar-features-dropdown-panel" 
+               [class.open]="openDropdown === 'integrations'"
+               (mouseenter)="onDropdownContentMouseEnter()"
+               (mouseleave)="onDropdownContentMouseLeave()">
+              <div class="navbar-features-dropdown-content">
+                <div class="navbar-features-section">
+                  <h3>Video Conferencing</h3>
+                  <div class="navbar-features-grid">
+                    <a routerLink="/integrations/zoom" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/zoom-logo.png" alt="Zoom" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Zoom Meetings</h4>
+                        <p>Built-in Planning Poker for Zoom calls</p>
+                      </div>
+                    </a>
+                    <a routerLink="/integrations/teams" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/teams_logo.png" alt="Microsoft Teams" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Microsoft Teams</h4>
+                        <p>Seamless Planning Poker in Teams</p>
+                      </div>
+                    </a>
+                    <a routerLink="/integrations/meet" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/meet_logo.png" alt="Google Meet" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Google Meet™</h4>
+                        <p>Planning Poker integrated with Meet</p>
+                      </div>
+                    </a>
+                    <a routerLink="/integrations/webex" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/webex_logo.png" alt="Webex" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Webex Meetings</h4>
+                        <p>Planning Poker within Webex</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="navbar-features-section">
+                  <h3>Project Management</h3>
+                  <div class="navbar-features-grid">
+                    <a routerLink="/integrations/jira" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/jira.png" alt="Jira" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Jira Tickets</h4>
+                        <p>Sync issues and estimates with Jira</p>
+                      </div>
+                    </a>
+                    <a routerLink="/integrations/linear" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/linear.png" alt="Linear" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Linear Issues</h4>
+                        <p>Import issues and push estimates back</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="navbar-features-section">
+                  <h3>Communication</h3>
+                  <div class="navbar-features-grid">
+                    <a routerLink="/integrations/slack" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <img src="/assets/slack.png" alt="Slack" loading="lazy" />
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Slack</h4>
+                        <p>Start sessions with Slack commands</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="navbar-features-highlight">
+                  <div class="navbar-highlight-content">
+                    <h4>🚀 Ready to start?</h4>
+                    <p>Create your first planning poker session in seconds</p>
+                    <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
+                      Start Planning
+                    </a>
+                  </div>
+                </div>
               </div>
-            </a>
-            <a
-              routerLink="/integrations/meet"
-              mat-menu-item
-              id="header-meet-link"
-              (click)="closeMenu()">
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/meet_logo.png"
-                  loading="lazy" />
-                Google Meet™
-              </div>
-            </a>
-            <a
-              routerLink="/integrations/webex"
-              id="header-webex-link"
-              mat-menu-item
-              (click)="closeMenu()">
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/webex_logo.png"
-                  loading="lazy" />
-                Webex Meetings
-              </div>
-            </a>
-            <a routerLink="/integrations/jira" mat-menu-item>
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/jira.png"
-                  loading="lazy" />
-                Jira tickets
-              </div>
-            </a>
-            <a
-              routerLink="/integrations/linear"
-              mat-menu-item
-              (click)="closeMenu()">
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/linear.png"
-                  loading="lazy" />
-                Linear issues
-              </div>
-            </a>
-            <a
-              routerLink="/integrations/slack"
-              mat-menu-item
-              (click)="closeMenu()">
-              <div class="centered-menu-item" routerLinkActive="active">
-                <img
-                  class="integration-logo"
-                  src="/assets/slack.png"
-                  loading="lazy" />
-                Slack
-              </div>
-            </a>
-          </mat-menu>
+            </div>
         </li>
         <li>
           <a
             routerLink="/pricing"
             routerLinkActive="active"
-            (click)="closeMenu()"
+            (click)="closeAllDropdowns(); closeMenu()"
             class="navigation-button"
             >Pricing</a
           >
@@ -177,5 +264,84 @@
         <mat-icon>menu</mat-icon>
       </button>
     }
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" [class.open]="isOpen" (click)="closeMenu()">
+    <div class="mobile-menu-content" [class.open]="isOpen" (click)="$event.stopPropagation()">
+      <div class="mobile-menu-header">
+        <div class="mobile-logo">
+          <img src="/assets/logo.png" alt="PlanningPoker.live" />
+          <span>PlanningPoker.live</span>
+        </div>
+        <button class="mobile-close" (click)="closeMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="mobile-menu-items">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>home</mat-icon>
+          </div>
+          <span class="mobile-menu-text">Home</span>
+        </a>
+
+        <a routerLink="/getting-started" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>rocket_launch</mat-icon>
+          </div>
+          <span class="mobile-menu-text">Getting Started</span>
+        </a>
+
+        <a routerLink="/what-is-planning-poker" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>help_outline</mat-icon>
+          </div>
+          <span class="mobile-menu-text">What is Planning Poker?</span>
+        </a>
+
+        <a routerLink="/features" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>star</mat-icon>
+          </div>
+          <span class="mobile-menu-text">Features</span>
+        </a>
+
+        <a routerLink="/integrations" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>integration_instructions</mat-icon>
+          </div>
+          <span class="mobile-menu-text">Integrations</span>
+        </a>
+
+        <a routerLink="/pricing" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>payments</mat-icon>
+          </div>
+          <span class="mobile-menu-text">Pricing</span>
+        </a>
+
+        <a routerLink="/blog" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>article</mat-icon>
+          </div>
+          <span class="mobile-menu-text">Blog</span>
+        </a>
+
+        <a routerLink="/faq" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+          <div class="mobile-menu-icon">
+            <mat-icon>question_answer</mat-icon>
+          </div>
+          <span class="mobile-menu-text">FAQ</span>
+        </a>
+
+        <div class="mobile-menu-divider"></div>
+
+        <a routerLink="/create-or-join-room" class="mobile-cta" (click)="closeAllDropdowns(); closeMenu()">
+          Start Planning
+        </a>
+      </div>
+    </div>
   </div>
 </nav>

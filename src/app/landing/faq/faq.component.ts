@@ -15,7 +15,13 @@ const faqs: FaqRow[] = [
   {
     question: 'How can I start a new planning poker session?',
     answer:
-      'To start a new planning poker session, click on "Start planning" in the header or just <a href="/create">click here to start a new session</a>. This will take you to the session creation page where you can set up your session details and choose your participation mode.',
+      'To start a new planning poker session, click on "Start planning" in the header or just <a href="/create">click here to start a new session</a>. This will take you to the session creation page where you can set up your session details and choose your participation mode. For a complete walkthrough, check out our <a href="/getting-started">Getting Started Guide</a>.',
+    category: 'Registration',
+  },
+  {
+    question: 'I\'m new to PlanningPoker.live. Where should I start?',
+    answer:
+      'Welcome! We recommend starting with our comprehensive <a href="/getting-started">Getting Started Guide</a> which walks you through everything from creating your first room to running a successful planning poker session. It includes step-by-step instructions, tips for success, and links to additional resources.',
     category: 'Registration',
   },
   {

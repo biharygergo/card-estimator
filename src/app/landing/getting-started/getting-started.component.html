@@ -1,0 +1,479 @@
+<app-page-header
+  centered="true"
+  title="Getting Started with PlanningPoker.live"
+  subtitle="Welcome to PlanningPoker.live! This comprehensive guide will walk you through everything you need to know to run your first planning poker session. Whether you're a Scrum Master, Product Owner, or team member, you'll be up and running in minutes." />
+<main>
+  <section class="content">
+    <div class="tldr">
+      <h2>Quick Start</h2>
+      <ul>
+        <li>
+          <strong>Create a room:</strong> Click "Start Planning Poker Session"
+          above or visit <a routerLink="/create">/create</a>
+        </li>
+        <li>
+          <strong>Invite your team:</strong> Share the room link with your team
+          members
+        </li>
+        <li>
+          <strong>Add topics:</strong> Create rounds for the user stories you
+          want to estimate
+        </li>
+        <li>
+          <strong>Vote and discuss:</strong> Team members vote simultaneously,
+          then discuss differences
+        </li>
+        <li>
+          <strong>Export results:</strong> Download results or sync to
+          JIRA/Linear automatically
+        </li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>💡 Pro Tip:</strong> PlanningPoker.live works great for both
+        remote and in-person teams. For remote teams, use our
+        <a routerLink="/integrations">video conferencing integrations</a> to run
+        sessions directly in Zoom, Teams, or Google Meet.
+      </p>
+    </div>
+
+    <nav class="toc" aria-labelledby="toc-heading">
+      <h3 id="toc-heading">On this page:</h3>
+      <ul>
+        <li><a routerLink="." fragment="step-1">Step 1: Create a Planning Poker Room</a></li>
+        <li><a routerLink="." fragment="step-2">Step 2: Invite Your Team</a></li>
+        <li><a routerLink="." fragment="step-3">Step 3: Set Up Your Session</a></li>
+        <li><a routerLink="." fragment="step-4">Step 4: Run Your Planning Poker Session</a></li>
+        <li><a routerLink="." fragment="step-5">Step 5: Review Results and Export</a></li>
+        <li><a routerLink="." fragment="tips">Tips for a Successful Session</a></li>
+        <li><a routerLink="." fragment="next-steps">Next Steps</a></li>
+      </ul>
+    </nav>
+
+    <img
+      ngSrc="jira-issue-selected"
+      placeholder
+      alt="Planning Poker session interface showing voting cards and team members"
+      width="1200"
+      height="800"
+      class="article-image"
+      priority />
+
+    <h2 id="step-1">Step 1: Create a Planning Poker Room</h2>
+    <p>
+      Getting started with PlanningPoker.live is incredibly simple. You don't
+      need to create an account or install any software - just click the "Start
+      Planning Poker Session" button above or visit our
+      <a routerLink="/create">room creation page</a>.
+    </p>
+
+    <div class="step-details">
+      <h3>What happens when you create a room:</h3>
+      <ul>
+        <li>
+          A unique room URL is generated (e.g., planningpoker.live/abc123)
+        </li>
+        <li>
+          You become the room moderator with full control over the session
+        </li>
+        <li>The room is ready for team members to join immediately</li>
+        <li>You can customize settings like card sets and room security</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>🔒 Room Security</h4>
+      <p>
+        By default, rooms are protected by obfuscation (hard-to-guess URLs). For
+        additional security, you can:
+      </p>
+      <ul>
+        <li>Enable password protection</li>
+        <li>Restrict access to organization members only</li>
+        <li>Set up recurring meetings with secure links</li>
+      </ul>
+      <p>
+        Learn more about
+        <a
+          routerLink="/features#security"
+          >room security best practices</a
+        >.
+      </p>
+    </div>
+
+    <h2 id="step-2">Step 2: Invite Your Team</h2>
+    <p>
+      Once your room is created, it's time to invite your team members.
+      PlanningPoker.live makes this process seamless with multiple invitation
+      options.
+    </p>
+
+    <div class="step-details">
+      <h3>Invitation methods:</h3>
+      <ul>
+        <li>
+          <strong>Copy the room URL:</strong> Simply share the room link from
+          your browser's address bar
+        </li>
+        <li>
+          <strong>Use the "Invite others" button:</strong> Click this button in
+          your room to copy the invitation link
+        </li>
+        <li>
+          <strong>Email integration:</strong> Send invitations directly from the
+          room interface
+        </li>
+        <li>
+          <strong>Video conferencing integrations:</strong> Use our
+          <a routerLink="/integrations">integrations</a> to run sessions
+          directly in Zoom, Teams, or Google Meet
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>👥 Team Size</h4>
+      <p>
+        There's no limit to the number of participants who can join a
+        PlanningPoker.live session. Whether you have 3 team members or 30,
+        everyone can participate in the estimation process.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <h4>🌐 Remote Team Support</h4>
+      <p>
+        PlanningPoker.live is designed for remote and distributed teams. Team
+        members can join from anywhere in the world using any device with a web
+        browser. No downloads or installations required!
+      </p>
+    </div>
+
+    <h2 id="step-3">Step 3: Set Up Your Session</h2>
+    <p>
+      Before starting your estimation session, take a few minutes to configure
+      your room settings for the best experience.
+    </p>
+
+    <div class="step-details">
+      <h3>Essential setup steps:</h3>
+      <ul>
+        <li>
+          <strong>Choose your card set:</strong> Select from Fibonacci, T-shirt
+          sizes, or create custom cards
+        </li>
+        <li>
+          <strong>Add your topics:</strong> Create rounds for the user stories
+          you want to estimate
+        </li>
+        <li>
+          <strong>Configure integrations:</strong> Connect with JIRA or Linear
+          to import issues
+        </li>
+        <li>
+          <strong>Set room permissions:</strong> Decide who can start rounds and
+          reveal votes
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>🎴 Card Sets</h4>
+      <p>PlanningPoker.live offers several default card sets:</p>
+      <ul>
+        <li>
+          <strong>Fibonacci:</strong> 0, 1, 2, 3, 5, 8, 13, 20, 40, 100 (most
+          popular)
+        </li>
+        <li><strong>T-shirt sizes:</strong> XS, S, M, L, XL, XXL</li>
+        <li><strong>Custom:</strong> Create your own estimation scale</li>
+      </ul>
+      <p>
+        Learn more about
+        <a
+          routerLink="/knowledge-base/maximize-estimation-with-different-card-sets-in-planningpoker-live"
+          >choosing the right card set</a
+        >
+        for your team.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <h4>🔗 JIRA & Linear Integration</h4>
+      <p>Connect your project management tools to streamline your workflow:</p>
+      <ul>
+        <li>Import user stories directly from JIRA or Linear</li>
+        <li>Automatically sync story points back to your project</li>
+        <li>Batch import multiple issues at once</li>
+        <li>Maintain context with issue descriptions and links</li>
+      </ul>
+      <p>
+        Set up <a routerLink="/integrations/jira">JIRA integration</a> or
+        <a routerLink="/integrations/linear">Linear integration</a> in just a
+        few clicks.
+      </p>
+    </div>
+
+    <h2 id="step-4">Step 4: Run Your Planning Poker Session</h2>
+    <p>
+      Now it's time to run your planning poker session! This is where the magic
+      happens as your team collaborates to estimate user stories.
+    </p>
+
+    <div class="step-details">
+      <h3>Session workflow:</h3>
+      <ol>
+        <li>
+          <strong>Present the user story:</strong> Read the story and discuss
+          acceptance criteria
+        </li>
+        <li>
+          <strong>Team members vote:</strong> Everyone selects their estimate
+          simultaneously
+        </li>
+        <li>
+          <strong>Reveal votes:</strong> Show all estimates at once to avoid
+          anchoring bias
+        </li>
+        <li>
+          <strong>Discuss differences:</strong> Talk about why estimates vary
+          and share knowledge
+        </li>
+        <li>
+          <strong>Reach consensus:</strong> Either agree on an estimate or
+          revote after discussion
+        </li>
+        <li>
+          <strong>Move to next story:</strong> Repeat the process for remaining
+          user stories
+        </li>
+      </ol>
+    </div>
+
+    <div class="info-box">
+      <h4>⏱️ Timer Feature</h4>
+      <p>
+        Use the built-in countdown timer to keep your session on track. The
+        timer helps ensure discussions stay focused and prevents sessions from
+        running too long. You can set custom durations or use the default
+        30-second timer.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <h4>📝 Notes & Collaboration</h4>
+      <p>
+        Take notes during your session to capture important discussions, risks,
+        or clarifications. Notes are shared with all participants and can be
+        exported with your results.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <h4>🎭 Anonymous Voting</h4>
+      <p>
+        PlanningPoker.live supports anonymous voting to reduce bias and
+        encourage honest estimates. Team members can vote anonymously while
+        still participating in discussions.
+      </p>
+    </div>
+
+    <h2 id="step-5">Step 5: Review Results and Export</h2>
+    <p>
+      After completing your estimation session, review the results and export
+      them to your project management tools or save them for future reference.
+    </p>
+
+    <div class="step-details">
+      <h3>Export options:</h3>
+      <ul>
+        <li>
+          <strong>CSV download:</strong> Export results as a spreadsheet for
+          analysis
+        </li>
+        <li>
+          <strong>JIRA/Linear sync:</strong> Automatically update story points
+          in your project
+        </li>
+        <li>
+          <strong>Session history:</strong> Access past sessions and results
+          anytime
+        </li>
+        <li>
+          <strong>Velocity tracking:</strong> Monitor your team's estimation
+          patterns over time
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>📊 Velocity & Analytics</h4>
+      <p>
+        PlanningPoker.live automatically calculates your team's velocity based
+        on completed stories. This helps you make more accurate sprint
+        commitments and identify estimation patterns.
+      </p>
+    </div>
+
+    <h2 id="tips">Tips for a Successful Session</h2>
+    <p>
+      Follow these best practices to ensure your planning poker sessions are
+      productive and engaging.
+    </p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h4>🎯 Prepare Your Stories</h4>
+        <p>
+          Ensure user stories are well-defined with clear acceptance criteria
+          before the session. This reduces confusion and leads to more accurate
+          estimates.
+        </p>
+      </div>
+
+      <div class="tip-card">
+        <h4>⏰ Time Management</h4>
+        <p>
+          Keep sessions to 30-45 minutes to maintain team engagement. Use the
+          timer feature to stay on track and avoid decision fatigue.
+        </p>
+      </div>
+
+      <div class="tip-card">
+        <h4>🗣️ Encourage Discussion</h4>
+        <p>
+          When estimates differ significantly, encourage team members to explain
+          their reasoning. This knowledge sharing improves future estimates.
+        </p>
+      </div>
+
+      <div class="tip-card">
+        <h4>📱 Use Integrations</h4>
+        <p>
+          Leverage our
+          <a routerLink="/integrations">video conferencing integrations</a> for
+          seamless remote sessions. This keeps everyone engaged and maintains
+          face-to-face communication.
+        </p>
+      </div>
+
+      <div class="tip-card">
+        <h4>🔄 Regular Practice</h4>
+        <p>
+          Run planning poker sessions regularly to improve team estimation
+          skills. Consistent practice leads to more accurate estimates over
+          time.
+        </p>
+      </div>
+
+      <div class="tip-card">
+        <h4>📈 Review & Improve</h4>
+        <p>
+          After each sprint, review actual vs. estimated effort to calibrate
+          your team's estimation accuracy.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h4>🎓 Learning Resources</h4>
+      <p>
+        Want to dive deeper into planning poker techniques? Check out our
+        comprehensive guides:
+      </p>
+      <ul>
+        <li>
+          <a routerLink="/what-is-planning-poker">What is Planning Poker?</a> -
+          Complete overview of the technique
+        </li>
+        <li>
+          <a
+            routerLink="/knowledge-base/planning-poker-guide-agile-estimation-techniques"
+            >Planning Poker Guide</a
+          >
+          - Advanced techniques and best practices
+        </li>
+        <li>
+          <a routerLink="/knowledge-base/planning-poker-and-the-scrum-roles"
+            >Scrum Roles in Planning Poker</a
+          >
+          - Understanding team responsibilities
+        </li>
+        <li><a routerLink="/faq">FAQ</a> - Answers to common questions</li>
+      </ul>
+    </div>
+
+    <h2 id="next-steps">Next Steps</h2>
+    <p>
+      Congratulations! You're now ready to run your first planning poker
+      session. Here are some next steps to enhance your experience:
+    </p>
+
+    <div class="next-steps-grid">
+      <div class="next-step-card">
+        <h4>🚀 Create Your First Room</h4>
+        <p>
+          Ready to get started?
+          <a routerLink="/create">Create your first planning poker room</a> and
+          invite your team!
+        </p>
+      </div>
+
+      <div class="next-step-card">
+        <h4>🔗 Set Up Integrations</h4>
+        <p>
+          Connect with your favorite tools:
+          <a routerLink="/integrations/jira">JIRA</a>,
+          <a routerLink="/integrations/linear">Linear</a>,
+          <a routerLink="/integrations/teams">Teams</a>,
+          <a routerLink="/integrations/zoom">Zoom</a>, and more.
+        </p>
+      </div>
+
+      <div class="next-step-card">
+        <h4>👥 Create an Organization</h4>
+        <p>
+          Set up an organization to manage recurring meetings and team
+          permissions more effectively.
+        </p>
+      </div>
+
+      <div class="next-step-card">
+        <h4>📚 Explore Knowledge Base</h4>
+        <p>
+          Dive into our <a routerLink="/knowledge-base">knowledge base</a> for
+          advanced techniques, troubleshooting, and best practices.
+        </p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>💡 Did you know?</strong> PlanningPoker.live is used by teams at
+        companies like Google, Netflix, Amazon, and thousands of other
+        organizations worldwide. Join them in improving your agile estimation
+        process!
+      </p>
+    </div>
+
+    <div class="cta-section">
+      <h3>Ready to plan your next sprint?</h3>
+      <p>
+        Create a new PlanningPoker.live room now and invite your team to
+        experience the most trusted planning poker tool for agile teams.
+      </p>
+      <a
+        mat-raised-button
+        color="primary"
+        routerLink="/create"
+        class="cta-button">
+        <mat-icon>play_arrow</mat-icon>
+        Start Planning Poker Session
+      </a>
+    </div>
+  </section>
+</main>
+
+<start-planning-cta></start-planning-cta>

@@ -590,6 +590,10 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
     this.shouldStartOnboardingTutorial$.subscribe(({ small }) => {
+      // There is a bug in Google Meet where the onboarding tutorial is not shown
+      if (this.config.runningIn === 'meet') {
+        return;
+      }
       this.startOnboarding(small);
     });
   }

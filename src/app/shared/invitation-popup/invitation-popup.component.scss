@@ -1,0 +1,182 @@
+.fun-invitation-container {
+  margin-bottom: 16px;
+
+  .fun-invitation-display {
+    position: relative;
+    background: var(--light-blue);
+    color: black;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 16px;
+    padding-right: 48px;
+    display: flex;
+    align-items: flex-start;
+    min-height: 60px;
+
+    .invitation-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .invitation-message {
+        word-break: break-word;
+        line-height: 1.5;
+        white-space: pre-line;
+      }
+
+      .invitation-url {
+        word-break: break-all;
+        line-height: 1.4;
+
+        opacity: 0.9;
+      }
+    }
+
+    .copy-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: black;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}
+
+.or-divider {
+  text-align: center;
+  margin: 16px 0 8px 0;
+  color: var(--mat-card-subtitle-text-color);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  .link-button {
+    font-size: 0.875rem;
+    color: var(--mat-card-subtitle-text-color);
+    text-decoration: underline;
+    padding: 0;
+    min-width: auto;
+    line-height: 1;
+    height: auto;
+  }
+}
+
+.url-container {
+  margin-bottom: 16px;
+
+  .url-display {
+    position: relative;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 12px;
+    padding-right: 48px;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+
+    span {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.875rem;
+      word-break: break-all;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .copy-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.integration-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 100px;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.installation-note {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  color: var(--mat-card-subtitle-text-color);
+}
+
+.room-id-display {
+  margin-bottom: 16px;
+
+  .room-id-text {
+    position: relative;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 12px;
+    padding-right: 48px;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+
+    span {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      flex: 1;
+    }
+
+    .copy-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.integration-icon-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.integration-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .integration-buttons {
+    button {
+      min-width: calc(50% - 4px);
+    }
+  }
+} 

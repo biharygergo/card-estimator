@@ -24,7 +24,7 @@ describe('Creating a room as a new user', () => {
     cy.contains('Menu').click();
     cy.contains('My account').click();
     cy.contains('Credits').click();
-    cy.contains('4 personal credits available').should('be.visible');
+    cy.contains('4 credits').should('be.visible');
   });
 });
 
@@ -44,10 +44,14 @@ describe('Creating a room as a returning user', () => {
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
 
+    // Shows room invitation popup
+    cy.contains('Invite others to join').should('be.visible');
+    cy.contains('Close').click();
+
     // It uses a credit
     cy.contains('Menu').click();
     cy.contains('My account').click();
     cy.contains('Credits').click();
-    cy.contains('3 personal credits available').should('be.visible');
+    cy.contains('3 credits').should('be.visible');
   });
 });

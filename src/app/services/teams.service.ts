@@ -76,7 +76,7 @@ export class TeamsService {
     });
   }
 
-  async canShareToStage() {
+  async canShareToStage(): Promise<boolean> {
     return new Promise(resolve => {
       const frameContext = app.getFrameContext();
       const isInMeeting =

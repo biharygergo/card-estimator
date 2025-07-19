@@ -113,6 +113,7 @@ import { MatButton } from '@angular/material/button';
 import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
 import { ShepherdService } from 'angular-shepherd';
 import { outOfCreditsOfferModalCreator } from '../shared/out-of-credits-offer-modal/out-of-credits-offer-modal.component';
+import { invitationPopupCreator } from '../shared/invitation-popup/invitation-popup.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
@@ -337,9 +338,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           !pref?.onboardingTutorialShown,
         small: isSmallScreen.matches,
       };
-    }),
-    filter(({ shouldOpen }) => !!shouldOpen),
-    take(1)
+    })
   );
 
   shouldOpenExistingUserPricingModal$: Observable<boolean> = combineLatest([
@@ -353,6 +352,33 @@ export class RoomComponent implements OnInit, OnDestroy {
         releaseDate.getTime() >
           new Date(user.metadata.creationTime).getTime() &&
         !pref.updatedPricingModalShown
+      );
+    }),
+    map(() => true),
+    first()
+  );
+
+  shouldShowInvitationPopup$: Observable<boolean> = combineLatest([
+    this.room$,
+    this.user$,
+    this.shouldStartOnboardingTutorial$,
+  ]).pipe(
+    filter(([room, user, shouldStartOnboardingTutorial]) => {
+      // Show popup if:
+      // 1. User is the room creator
+      // 2. Room has only one round (first interaction)
+      // 3. Room was created recently (within last 5 minutes)
+      // 4. Onboarding tutorial has been seen (to avoid conflicts)
+      const isCreator = room.createdById === user?.uid;
+      const isFirstInteraction = Object.keys(room.rounds).length <= 1;
+      const isRecentlyCreated =
+        room.createdAt &&
+        Date.now() - (room.createdAt as any).seconds * 1000 < 5 * 60 * 1000; // 5 minutes
+      return (
+        isCreator &&
+        isFirstInteraction &&
+        isRecentlyCreated &&
+        !shouldStartOnboardingTutorial.shouldOpen
       );
     }),
     map(() => true),
@@ -374,8 +400,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       return credits.length === 0
         ? 'Out of credits'
         : credits.length === 1
-          ? '1 credit left'
-          : credits.length + ' credits';
+        ? '1 credit left'
+        : credits.length + ' credits';
     }),
     shareReplay(1)
   );
@@ -577,6 +603,18 @@ export class RoomComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.showRoomLimitReachedDialog();
       });
+
+    this.shouldShowInvitationPopup$
+      .pipe(first(),takeUntil(this.destroy))
+      .subscribe(() => {
+        const roomUrl = `${window.location.origin}/room/${this.room().roomId}`;
+        this.dialog.open(
+          ...invitationPopupCreator({
+            roomId: this.room().roomId,
+            roomUrl: roomUrl,
+          })
+        );
+      });
   }
 
   ngAfterViewInit() {
@@ -589,13 +627,18 @@ export class RoomComponent implements OnInit, OnDestroy {
       }, 10);
     });
 
-    this.shouldStartOnboardingTutorial$.subscribe(({ small }) => {
-      // There is a bug in Google Meet where the onboarding tutorial is not shown
-      if (this.config.runningIn === 'meet') {
-        return;
-      }
-      this.startOnboarding(small);
-    });
+    this.shouldStartOnboardingTutorial$
+      .pipe(
+        filter(({ shouldOpen }) => !!shouldOpen),
+        take(1)
+      )
+      .subscribe(({ small }) => {
+        // There is a bug in Google Meet where the onboarding tutorial is not shown
+        if (this.config.runningIn === 'meet') {
+          return;
+        }
+        this.startOnboarding(small);
+      });
   }
 
   ngOnDestroy(): void {

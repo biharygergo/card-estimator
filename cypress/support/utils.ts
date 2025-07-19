@@ -7,7 +7,7 @@ export function clearFirebaseLocalStorage() {
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
 }
 
-export function createNewRoom(userName: string) {
+export function createNewRoom(userName: string, skipInvitationPopup: boolean = false) {
   clearFirebaseLocalStorage();
   cy.visit('/create');
 

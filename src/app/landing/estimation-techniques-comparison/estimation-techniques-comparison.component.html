@@ -1,0 +1,427 @@
+<app-page-header
+  centered="true"
+  title="Comparing Agile Estimation Techniques: Planning Poker vs Other Methods"
+  subtitle="Discover the strengths and weaknesses of different agile estimation techniques. Learn when to use Planning Poker, T-Shirt Sizing, Bucket System, and other methods to improve your team's estimation accuracy." />
+<main>
+  <section class="content">
+    <div class="tldr">
+      <h2>Quick Overview</h2>
+      <ul>
+        <li>
+          <strong>Planning Poker:</strong> Consensus-based technique using numbered cards for collaborative estimation
+        </li>
+        <li>
+          <strong>T-Shirt Sizing:</strong> Simple relative sizing using XS, S, M, L, XL categories
+        </li>
+        <li>
+          <strong>Bucket System:</strong> Grouping items into predefined effort buckets for quick categorization
+        </li>
+        <li>
+          <strong>Magic Estimation:</strong> Rapid relative sizing through silent sorting and grouping
+        </li>
+        <li>
+          <strong>Three-Point Estimation:</strong> Statistical approach using optimistic, pessimistic, and most likely scenarios
+        </li>
+        <li>
+          <strong>Dot Voting:</strong> Democratic prioritization using limited dots for quick decisions
+        </li>
+        <li>
+          <strong>Choose wisely:</strong> Each technique has specific use cases and team scenarios where it excels
+        </li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>💡 Pro Tip:</strong> Most teams benefit from using multiple estimation techniques. Use Planning Poker for detailed sprint planning, T-Shirt Sizing for high-level backlog refinement, and Magic Estimation for rapid initial assessments.
+      </p>
+    </div>
+
+    <nav class="toc" aria-labelledby="toc-heading">
+      <h3 id="toc-heading">On this page:</h3>
+      <ul>
+        <li><a routerLink="." fragment="overview">Overview of Planning Poker</a></li>
+        <li><a routerLink="." fragment="other-techniques">Other Estimation Techniques</a></li>
+        <li><a routerLink="." fragment="comparison-table">Comparison Table</a></li>
+        <li><a routerLink="." fragment="when-to-use">When to Use Each Technique</a></li>
+        <li><a routerLink="." fragment="conclusion">Conclusion</a></li>
+      </ul>
+    </nav>
+
+    <img
+      ngSrc="planning-poker-session"
+      placeholder
+      alt="Team members participating in a planning poker session with cards and discussion"
+      width="1200"
+      height="600"
+      class="article-image"
+      priority />
+
+    <h2 id="overview">Overview of Planning Poker</h2>
+    <p>
+      Planning Poker is a consensus-based estimation technique that combines the wisdom of the entire team to arrive at accurate story point estimates. Developed by James Grenning in 2002 and popularized by Mike Cohn, it has become the gold standard for agile estimation.
+    </p>
+
+    <div class="step-details">
+      <h3>How Planning Poker Works:</h3>
+      <ol>
+        <li>Product Owner presents a user story to the team</li>
+        <li>Team discusses requirements and asks clarifying questions</li>
+        <li>Each member privately selects a card representing their estimate</li>
+        <li>All cards are revealed simultaneously to avoid anchoring bias</li>
+        <li>If estimates differ significantly, team discusses reasoning</li>
+        <li>Process repeats until consensus is reached</li>
+      </ol>
+    </div>
+
+    <div class="info-box">
+      <h4>🎴 Card Sets</h4>
+      <p>Planning Poker typically uses the Fibonacci sequence (1, 2, 3, 5, 8, 13, 21) or modified Fibonacci (0, 1, 2, 3, 5, 8, 13, 20, 40, 100) to reflect the increasing uncertainty of larger estimates.</p>
+      <p>Learn more about <a routerLink="/what-is-planning-poker">Planning Poker fundamentals</a> and <a routerLink="/getting-started">how to get started</a>.</p>
+    </div>
+
+    <div class="resources-box">
+      <h4>🛠️ Planning Poker Tools</h4>
+      <p><strong>PlanningPoker.live</strong> - The most comprehensive Planning Poker tool with JIRA/Linear integration, video conferencing apps, and advanced features for remote teams.</p>
+      <p>Other popular tools: <a href="https://www.planningpoker.com/" target="_blank" rel="noopener noreferrer">PlanningPoker.com</a>, <a href="https://www.planningpokeronline.com/" target="_blank" rel="noopener noreferrer">PlanningPokerOnline.com</a>, and <a href="https://www.atlassian.com/software/jira" target="_blank" rel="noopener noreferrer">Jira's built-in estimation</a>.</p>
+    </div>
+
+    <h2 id="other-techniques">Other Estimation Techniques</h2>
+    <p>
+      While Planning Poker is highly effective, it's not always the best choice for every situation. Understanding alternative techniques helps teams choose the right approach for their specific needs.
+    </p>
+
+    <h3>T-Shirt Sizing</h3>
+    <p>
+      T-Shirt Sizing is a simple, intuitive estimation technique that uses familiar clothing sizes to categorize work items. It's particularly effective for teams new to agile estimation or when working with non-technical stakeholders.
+    </p>
+
+    <div class="technique-details">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Items are categorized as XS, S, M, L, XL, or XXL</li>
+        <li>Team compares items to each other rather than absolute values</li>
+        <li>Quick visual sorting on a whiteboard or digital tool</li>
+        <li>Can be converted to story points later if needed</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>👕 T-Shirt Sizing Benefits</h4>
+      <p><strong>Pros:</strong> Easy to understand, quick to implement, reduces analysis paralysis, great for high-level estimation</p>
+      <p><strong>Cons:</strong> Less precise than Planning Poker, harder to track velocity, limited granularity</p>
+    </div>
+
+    <div class="resources-box">
+      <h4>🛠️ T-Shirt Sizing Tools</h4>
+      <p><strong>PlanningPoker.live</strong> - Supports T-shirt sizing cards (XS, S, M, L, XL, XXL) alongside traditional Planning Poker, making it perfect for teams that want flexibility.</p>
+      <p>Other tools: <a href="https://www.atlassian.com/software/jira" target="_blank" rel="noopener noreferrer">Jira</a>, <a href="https://www.azuredevops.com/" target="_blank" rel="noopener noreferrer">Azure DevOps</a>, and <a href="https://www.miro.com/" target="_blank" rel="noopener noreferrer">Miro</a> for visual T-shirt sizing boards.</p>
+    </div>
+
+    <h3>Bucket System</h3>
+    <p>
+      The Bucket System (also known as Bucket Estimation) groups work items into predefined effort categories or "buckets." This technique is excellent for quickly processing large numbers of items or when teams need to establish baseline effort categories.
+    </p>
+
+    <div class="technique-details">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Create 3-5 buckets (e.g., Small, Medium, Large, Extra Large)</li>
+        <li>Team sorts items into appropriate buckets</li>
+        <li>Can be done individually or as a group</li>
+        <li>Each bucket represents a range of effort</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>🪣 Bucket System Benefits</h4>
+      <p><strong>Pros:</strong> Very fast, good for large backlogs, reduces cognitive load, easy to scale</p>
+      <p><strong>Cons:</strong> Less accurate than detailed estimation, limited discussion opportunities, may miss nuances</p>
+    </div>
+
+    <div class="resources-box">
+      <h4>🛠️ Bucket System Tools</h4>
+      <p><strong>PlanningPoker.live</strong> - While primarily a Planning Poker tool, it can be adapted for bucket estimation by using custom card sets with bucket categories.</p>
+      <p>Other tools: <a href="https://www.miro.com/" target="_blank" rel="noopener noreferrer">Miro</a> for visual bucket boards, <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">Figma</a> for collaborative bucket sorting, and <a href="https://www.atlassian.com/software/jira" target="_blank" rel="noopener noreferrer">Jira's story point fields</a> for bucket categorization.</p>
+    </div>
+
+    <h3>Magic Estimation / Affinity Mapping</h3>
+    <p>
+      Magic Estimation, also known as Affinity Mapping or Silent Estimation, is a rapid technique that combines individual assessment with group consensus. It's particularly effective for teams that want to avoid groupthink and need to process many items quickly. The technique was popularized by Mike Cohn and is often used for large backlogs.
+    </p>
+
+    <div class="technique-details">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Team members silently sort items into effort categories</li>
+        <li>Items are placed on a wall or board in relative positions</li>
+        <li>Team discusses and adjusts positions collaboratively</li>
+        <li>Final positions determine effort estimates</li>
+        <li>Uses logarithmic scale similar to Planning Poker</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>✨ Magic Estimation Benefits</h4>
+      <p><strong>Pros:</strong> Very fast, visual representation, reduces bias, good for large groups</p>
+      <p><strong>Cons:</strong> Less precise than Planning Poker, requires physical space, harder to track digitally</p>
+    </div>
+
+    <div class="resources-box">
+      <h4>🛠️ Magic Estimation Tools</h4>
+      <p><strong>PlanningPoker.live</strong> - While designed for Planning Poker, it can support rapid estimation through its quick voting features and visual result displays.</p>
+      <p>Other tools: <a href="https://www.miro.com/" target="_blank" rel="noopener noreferrer">Miro</a> for virtual affinity mapping, <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">Figma</a> for collaborative sorting, <a href="https://www.mentimeter.com/" target="_blank" rel="noopener noreferrer">Mentimeter</a> for rapid voting, and <a href="https://www.stickies.io/" target="_blank" rel="noopener noreferrer">Stickies.io</a> for digital sticky notes.</p>
+    </div>
+
+    <h3>Three-Point Estimation</h3>
+    <p>
+      Three-Point Estimation (also known as PERT - Program Evaluation and Review Technique) provides a more nuanced view by considering best-case, worst-case, and most likely scenarios. This technique is particularly valuable for complex projects with high uncertainty and is widely used in project management.
+    </p>
+
+    <div class="technique-details">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Team estimates optimistic (O), pessimistic (P), and most likely (M) effort</li>
+        <li>Uses weighted average formula: (O + 4M + P) / 6</li>
+        <li>Calculates standard deviation: (P - O) / 6</li>
+        <li>Provides confidence intervals and risk assessment</li>
+        <li>Can be combined with other techniques</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>📊 Three-Point Estimation Benefits</h4>
+      <p><strong>Pros:</strong> Accounts for uncertainty, provides confidence ranges, good for complex projects</p>
+      <p><strong>Cons:</strong> Time-consuming, requires statistical understanding, may overcomplicate simple tasks</p>
+    </div>
+
+    <div class="resources-box">
+      <h4>🛠️ Three-Point Estimation Tools</h4>
+      <p><strong>PlanningPoker.live</strong> - Can be adapted for three-point estimation by using multiple voting rounds for optimistic, pessimistic, and most likely estimates.</p>
+      <p>Other tools: <a href="https://www.microsoft.com/en-us/microsoft-365/project/project-management-software" target="_blank" rel="noopener noreferrer">Microsoft Project</a> for PERT analysis, <a href="https://www.smartsheet.com/" target="_blank" rel="noopener noreferrer">Smartsheet</a> for three-point estimation templates, and <a href="https://www.atlassian.com/software/jira" target="_blank" rel="noopener noreferrer">Jira</a> with custom fields for tracking estimates.</p>
+    </div>
+
+    <h3>Dot Voting</h3>
+    <p>
+      Dot Voting is a simple, democratic technique where team members allocate a limited number of "dots" to indicate their preferences or estimates. It's excellent for prioritizing work or making quick decisions in large groups.
+    </p>
+
+    <div class="technique-details">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Each team member receives a limited number of dots (usually 3-5)</li>
+        <li>Members place dots on items they want to prioritize or estimate</li>
+        <li>Items with the most dots receive highest priority</li>
+        <li>Can be used for both prioritization and effort estimation</li>
+        <li>Very quick and visual process</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h4>🔴 Dot Voting Benefits</h4>
+      <p><strong>Pros:</strong> Very fast, democratic, visual, good for large groups, reduces bias</p>
+      <p><strong>Cons:</strong> Less precise than detailed estimation, may not capture complexity nuances</p>
+    </div>
+
+    <div class="resources-box">
+      <h4>🛠️ Dot Voting Tools</h4>
+      <p><strong>PlanningPoker.live</strong> - While primarily for Planning Poker, it can support dot voting through its reaction system and visual voting displays.</p>
+      <p>Other tools: <a href="https://www.miro.com/" target="_blank" rel="noopener noreferrer">Miro</a> for virtual dot voting boards, <a href="https://www.mentimeter.com/" target="_blank" rel="noopener noreferrer">Mentimeter</a> for real-time voting, <a href="https://www.slido.com/" target="_blank" rel="noopener noreferrer">Slido</a> for interactive voting, and <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">Figma</a> for collaborative dot placement.</p>
+    </div>
+
+    <h2 id="comparison-table">Comparison Table</h2>
+    <p>
+      Use this comparison table to quickly evaluate which estimation technique best fits your team's needs, project complexity, and time constraints.
+    </p>
+
+    <div class="table-container">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Effort & Time</th>
+            <th>Accuracy</th>
+            <th>Team Engagement</th>
+            <th>When to Use?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Planning Poker</strong></td>
+            <td>Medium (15-30 min per story)</td>
+            <td>High</td>
+            <td>High</td>
+            <td>Sprint planning, detailed estimation, complex stories</td>
+          </tr>
+          <tr>
+            <td><strong>T-Shirt Sizing</strong></td>
+            <td>Low (5-10 min per story)</td>
+            <td>Medium</td>
+            <td>Medium</td>
+            <td>High-level estimation, new teams, non-technical stakeholders</td>
+          </tr>
+          <tr>
+            <td><strong>Bucket System</strong></td>
+            <td>Very Low (2-5 min per story)</td>
+            <td>Low-Medium</td>
+            <td>Low</td>
+            <td>Large backlogs, initial triage, resource planning</td>
+          </tr>
+          <tr>
+            <td><strong>Magic Estimation</strong></td>
+            <td>Low (10-15 min for multiple stories)</td>
+            <td>Medium</td>
+            <td>High</td>
+            <td>Rapid estimation, large groups, visual learners</td>
+          </tr>
+          <tr>
+            <td><strong>Three-Point Estimation</strong></td>
+            <td>High (20-40 min per story)</td>
+            <td>Very High</td>
+            <td>Medium</td>
+            <td>Complex projects, high uncertainty, risk assessment</td>
+          </tr>
+          <tr>
+            <td><strong>Dot Voting</strong></td>
+            <td>Very Low (5-10 min for multiple items)</td>
+            <td>Low-Medium</td>
+            <td>High</td>
+            <td>Prioritization, large groups, quick decisions</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="when-to-use">When to Use Each Technique</h2>
+    <p>
+      The key to successful estimation is choosing the right technique for the right situation. Here's a guide to help you decide:
+    </p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h4>🎯 Use Planning Poker When:</h4>
+        <ul>
+          <li>You need accurate sprint planning estimates</li>
+          <li>Team has mixed experience levels</li>
+          <li>Stories have significant complexity or uncertainty</li>
+          <li>You want to encourage team discussion and knowledge sharing</li>
+          <li>You're estimating 5-15 stories per session</li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>👕 Use T-Shirt Sizing When:</h4>
+        <ul>
+          <li>You're new to agile estimation</li>
+          <li>Working with non-technical stakeholders</li>
+          <li>Need quick high-level estimates</li>
+          <li>Team prefers simple, intuitive approaches</li>
+          <li>You're doing initial backlog refinement</li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>🪣 Use Bucket System When:</h4>
+        <ul>
+          <li>You have a large backlog to process quickly</li>
+          <li>Need to establish baseline effort categories</li>
+          <li>Team is overwhelmed by detailed estimation</li>
+          <li>You're doing resource planning or capacity analysis</li>
+          <li>Time is extremely limited</li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>✨ Use Magic Estimation When:</h4>
+        <ul>
+          <li>You have a large team (8+ people)</li>
+          <li>Want to avoid groupthink and bias</li>
+          <li>Need visual representation of effort distribution</li>
+          <li>Team members prefer silent individual work</li>
+          <li>You're doing rapid backlog triage</li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>📊 Use Three-Point Estimation When:</h4>
+        <ul>
+          <li>Projects have high uncertainty or risk</li>
+          <li>You need confidence intervals for planning</li>
+          <li>Stakeholders require detailed risk assessment</li>
+          <li>Team has experience with statistical estimation</li>
+          <li>You're estimating complex, novel work</li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>🔴 Use Dot Voting When:</h4>
+        <ul>
+          <li>You need to prioritize a large backlog quickly</li>
+          <li>Working with large groups (10+ people)</li>
+          <li>Making democratic decisions about priorities</li>
+          <li>You want a visual, engaging process</li>
+          <li>Time is extremely limited</li>
+        </ul>
+      </div>
+
+      <div class="tip-card">
+        <h4>🔄 Hybrid Approaches:</h4>
+        <ul>
+          <li>Use T-Shirt Sizing for initial backlog refinement</li>
+          <li>Follow with Planning Poker for sprint planning</li>
+          <li>Use Bucket System for quarterly planning</li>
+          <li>Apply Three-Point Estimation for high-risk items</li>
+          <li>Use Dot Voting for backlog prioritization</li>
+          <li>Combine techniques based on story complexity</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h4>🎓 Learning Resources</h4>
+      <p>Want to dive deeper into these techniques? Check out our comprehensive guides:</p>
+      <ul>
+        <li><a routerLink="/what-is-planning-poker">What is Planning Poker?</a> - Complete overview of the technique</li>
+        <li><a routerLink="/knowledge-base/planning-poker-guide-agile-estimation-techniques">Planning Poker Guide</a> - Advanced techniques and best practices</li>
+        <li><a routerLink="/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning">Planning Poker in Sprint Planning</a> - Practical implementation guide</li>
+        <li><a routerLink="/getting-started">Getting Started Guide</a> - Step-by-step tutorial</li>
+      </ul>
+    </div>
+
+    <h2 id="conclusion">Conclusion</h2>
+    <p>
+      No single estimation technique is perfect for every situation. The most successful agile teams understand multiple techniques and choose the right one based on their specific context, team composition, and project requirements.
+    </p>
+
+    <p>
+      Planning Poker remains the most popular choice for detailed sprint planning due to its balance of accuracy, team engagement, and structured discussion. However, T-Shirt Sizing excels for high-level estimation, Bucket System for rapid processing, Magic Estimation for large groups, and Three-Point Estimation for complex, uncertain work.
+    </p>
+
+    <p>
+      The key is to start with what works for your team and gradually experiment with other techniques. Many teams find that using a combination of approaches—such as T-Shirt Sizing for initial backlog refinement followed by Planning Poker for sprint planning—provides the best results.
+    </p>
+
+    <div class="highlight-box">
+      <p>
+        <strong>💡 Remember:</strong> The goal of estimation is not perfect accuracy, but rather improved planning, better team communication, and more realistic commitments. Choose the technique that helps your team achieve these goals most effectively.
+      </p>
+    </div>
+
+    <div class="cta-section">
+      <h3>Ready to improve your team's estimation process?</h3>
+      <p>
+        Start with Planning Poker using PlanningPoker.live—the most trusted tool for agile teams worldwide. Create your first session and experience the difference that structured, collaborative estimation can make.
+      </p>
+      <a
+        mat-raised-button
+        color="primary"
+        routerLink="/create"
+        class="cta-button">
+        <mat-icon>play_arrow</mat-icon>
+        Start Planning Poker Session
+      </a>
+    </div>
+  </section>
+</main>
+
+<start-planning-cta></start-planning-cta> 

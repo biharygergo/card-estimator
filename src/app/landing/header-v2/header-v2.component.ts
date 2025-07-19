@@ -37,6 +37,9 @@ export class HeaderV2Component implements OnInit {
   openDropdown: 'features' | 'integrations' | null = null;
   dropdownHoverTimer: any = null;
   dropdownLeaveTimer: any = null;
+  
+  // Mobile submenu state
+  mobileSubmenuOpen: 'resources' | null = null;
 
   isEmbeddedApp = this.config.runningIn !== 'web';
   user = toSignal(inject(AuthService).user);
@@ -120,6 +123,7 @@ export class HeaderV2Component implements OnInit {
 
   closeAllDropdowns() {
     this.openDropdown = null;
+    this.mobileSubmenuOpen = null;
     // Clear any timers
     if (this.dropdownHoverTimer) {
       clearTimeout(this.dropdownHoverTimer);
@@ -129,6 +133,18 @@ export class HeaderV2Component implements OnInit {
       clearTimeout(this.dropdownLeaveTimer);
       this.dropdownLeaveTimer = null;
     }
+  }
+
+  toggleMobileSubmenu(submenu: 'resources') {
+    if (this.mobileSubmenuOpen === submenu) {
+      this.mobileSubmenuOpen = null;
+    } else {
+      this.mobileSubmenuOpen = submenu;
+    }
+  }
+
+  closeMobileSubmenu() {
+    this.mobileSubmenuOpen = null;
   }
 
   @HostListener('document:click', ['$event'])

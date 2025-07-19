@@ -37,20 +37,6 @@ header {
       max-width: 800px;
       margin: 0 auto;
     }
-
-    // Decorative elements
-    &::before {
-      content: '';
-      position: absolute;
-      top: -1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
-      border-radius: 2px;
-      animation: fadeInUp 0.6s ease-out 0.2s both;
-    }
   }
 
   @media screen and (max-width: 800px) {

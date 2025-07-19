@@ -69,6 +69,15 @@
                         <p>Learn the basics of agile estimation</p>
                       </div>
                     </a>
+                    <a routerLink="/estimation-techniques-comparison" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>compare</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Estimation Techniques Comparison</h4>
+                        <p>Planning Poker vs T-Shirt Sizing & more</p>
+                      </div>
+                    </a>
                   </div>
                 </div>
                 
@@ -308,33 +317,71 @@
           <span class="mobile-menu-text">Pricing</span>
         </a>
 
-        <a routerLink="/getting-started" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
+        <!-- Resources Submenu -->
+        <div class="mobile-menu-item mobile-submenu-trigger" (click)="toggleMobileSubmenu('resources')">
           <div class="mobile-menu-icon">
-            <mat-icon>rocket_launch</mat-icon>
+            <mat-icon>library_books</mat-icon>
           </div>
-          <span class="mobile-menu-text">Getting Started</span>
-        </a>
+          <span class="mobile-menu-text">Resources</span>
+          <mat-icon class="mobile-submenu-arrow" [class.rotated]="mobileSubmenuOpen === 'resources'">chevron_right</mat-icon>
+        </div>
 
-        <a routerLink="/what-is-planning-poker" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
-          <div class="mobile-menu-icon">
-            <mat-icon>help_outline</mat-icon>
-          </div>
-          <span class="mobile-menu-text">What is Planning Poker?</span>
-        </a>
+        <!-- Hidden links for crawlers -->
+        <div class="mobile-menu-hidden-links" aria-hidden="true">
+          <a routerLink="/getting-started">Getting Started</a>
+          <a routerLink="/what-is-planning-poker">What is Planning Poker?</a>
+          <a routerLink="/estimation-techniques-comparison">Estimation Techniques Comparison</a>
+          <a routerLink="/blog">Blog</a>
+          <a routerLink="/faq">FAQ</a>
+        </div>
 
-        <a routerLink="/blog" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
-          <div class="mobile-menu-icon">
-            <mat-icon>article</mat-icon>
+        <!-- Resources Submenu Content -->
+        <div class="mobile-submenu" [class.open]="mobileSubmenuOpen === 'resources'">
+          <div class="mobile-submenu-header">
+            <button class="mobile-submenu-back" (click)="closeMobileSubmenu()">
+              <mat-icon>chevron_left</mat-icon>
+              <span>Back</span>
+            </button>
+            <span class="mobile-submenu-title">Resources</span>
           </div>
-          <span class="mobile-menu-text">Blog</span>
-        </a>
+          
+          <div class="mobile-submenu-items">
+            <a routerLink="/getting-started" routerLinkActive="active" class="mobile-submenu-item" (click)="closeAllDropdowns(); closeMenu()">
+              <div class="mobile-submenu-icon">
+                <mat-icon>rocket_launch</mat-icon>
+              </div>
+              <span class="mobile-submenu-text">Getting Started</span>
+            </a>
 
-        <a routerLink="/faq" routerLinkActive="active" class="mobile-menu-item" (click)="closeAllDropdowns(); closeMenu()">
-          <div class="mobile-menu-icon">
-            <mat-icon>question_answer</mat-icon>
+            <a routerLink="/what-is-planning-poker" routerLinkActive="active" class="mobile-submenu-item" (click)="closeAllDropdowns(); closeMenu()">
+              <div class="mobile-submenu-icon">
+                <mat-icon>help_outline</mat-icon>
+              </div>
+              <span class="mobile-submenu-text">What is Planning Poker?</span>
+            </a>
+
+            <a routerLink="/estimation-techniques-comparison" routerLinkActive="active" class="mobile-submenu-item" (click)="closeAllDropdowns(); closeMenu()">
+              <div class="mobile-submenu-icon">
+                <mat-icon>compare</mat-icon>
+              </div>
+              <span class="mobile-submenu-text">Estimation Techniques Comparison</span>
+            </a>
+
+            <a routerLink="/blog" routerLinkActive="active" class="mobile-submenu-item" (click)="closeAllDropdowns(); closeMenu()">
+              <div class="mobile-submenu-icon">
+                <mat-icon>article</mat-icon>
+              </div>
+              <span class="mobile-submenu-text">Blog</span>
+            </a>
+
+            <a routerLink="/faq" routerLinkActive="active" class="mobile-submenu-item" (click)="closeAllDropdowns(); closeMenu()">
+              <div class="mobile-submenu-icon">
+                <mat-icon>question_answer</mat-icon>
+              </div>
+              <span class="mobile-submenu-text">FAQ</span>
+            </a>
           </div>
-          <span class="mobile-menu-text">FAQ</span>
-        </a>
+        </div>
 
         <div class="mobile-menu-divider"></div>
 

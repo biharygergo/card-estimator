@@ -233,6 +233,18 @@ const routes: Routes = [
     },
   },
   {
+    path: 'estimation-techniques-comparison',
+    loadComponent: () =>
+      import('./estimation-techniques-comparison/estimation-techniques-comparison.component').then(
+        m => m.EstimationTechniquesComparisonComponent
+      ),
+    data: {
+      title: 'Planning Poker vs Other Estimation Techniques - Complete Comparison Guide',
+      description:
+        'Compare Planning Poker with T-Shirt Sizing, Bucket System, Magic Estimation, and other agile estimation techniques. Learn when to use each method for better team estimation.',
+    },
+  },
+  {
     path: 'tools/story-point-calculator',
     loadComponent: () =>
       import(

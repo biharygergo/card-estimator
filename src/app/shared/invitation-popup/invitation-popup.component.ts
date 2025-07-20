@@ -125,7 +125,7 @@ export const invitationPopupCreator = (data: InvitationPopupData) =>
     width: '90%',
     maxWidth: '500px',
     maxHeight: '90vh',
-    panelClass: 'invitation-popup-dialog',
+    panelClass: 'custom-dialog',
     data,
     disableClose: false,
   });

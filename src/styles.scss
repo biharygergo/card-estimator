@@ -475,14 +475,15 @@ body {
 
 @include extraSmallScreen {
   .cdk-overlay-pane.custom-dialog {
-    width: 99% !important;
+    width: 95% !important;
+    --mat-dialog-container-min-width: 260px;
 
     .mdc-dialog .mdc-dialog__content {
       padding: 0.5rem;
     }
 
     .mat-mdc-dialog-title {
-      padding: 0.5rem;
+      // padding: 0.5rem;
     }
   }
 }

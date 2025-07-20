@@ -175,8 +175,10 @@
 // Responsive design
 @media (max-width: 600px) {
   .integration-buttons {
+
     button {
-      min-width: calc(50% - 4px);
+        flex: 1;
+        height: 40px;
     }
   }
 } 

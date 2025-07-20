@@ -1,5 +1,10 @@
 import { createNewRoom, setAppCheckCookie } from '../support/utils';
 
+function assertInvitationPopup() {
+  cy.contains('Invite others to join').should('be.visible');
+  cy.contains('Close').click();
+}
+
 describe('Inside the room', () => {
   let roomUrl;
   before(() => {
@@ -45,10 +50,13 @@ describe('Inside the room', () => {
     cy.contains('Access Your Account & Settings').should('be.visible');
     cy.contains('Finish').click();
 
+    assertInvitationPopup();
+
     cy.contains('Test User').should('be.visible');
   });
 
   it('can cast votes', () => {
+    assertInvitationPopup();
     cy.contains('Test User').should('be.visible');
     cy.get('.vote-waiting').should('be.visible');
 

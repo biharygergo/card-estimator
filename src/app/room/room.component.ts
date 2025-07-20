@@ -605,15 +605,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       });
 
     this.shouldShowInvitationPopup$
-      .pipe(first(),takeUntil(this.destroy))
+      .pipe(first(), takeUntil(this.destroy))
       .subscribe(() => {
-        const roomUrl = `${window.location.origin}/room/${this.room().roomId}`;
-        this.dialog.open(
-          ...invitationPopupCreator({
-            roomId: this.room().roomId,
-            roomUrl: roomUrl,
-          })
-        );
+        this.showInvitationPopup();
       });
   }
 
@@ -646,6 +640,16 @@ export class RoomComponent implements OnInit, OnDestroy {
     clearTimeout(this.inactiveTimeoutHandle);
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  showInvitationPopup() {
+    const roomUrl = `${window.location.origin}/room/${this.room().roomId}`;
+    this.dialog.open(
+      ...invitationPopupCreator({
+        roomId: this.room().roomId,
+        roomUrl: roomUrl,
+      })
+    );
   }
 
   toggleControlPane() {
@@ -1033,6 +1037,7 @@ export class RoomComponent implements OnInit, OnDestroy {
               this.authService
                 .updateUserPreference({ onboardingTutorialShown: true })
                 .subscribe();
+              this.showInvitationPopup();
             },
           },
           {
@@ -1134,6 +1139,7 @@ export class RoomComponent implements OnInit, OnDestroy {
               this.profileDropdown.closeMenu();
               this.shepherdService.complete();
               this.analytics.logCompletedOnboarding();
+              this.showInvitationPopup();
             },
           },
         ],

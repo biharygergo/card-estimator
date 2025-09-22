@@ -599,7 +599,7 @@ export interface IssueApiFilter {
 
 export interface IssuesSearchApiResult {
   issues: RichTopic[];
-  nextPage?: number | string;
+  nextPage?: string;
 }
 
 export interface FaqItem {

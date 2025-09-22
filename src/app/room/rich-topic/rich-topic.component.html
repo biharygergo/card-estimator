@@ -54,8 +54,12 @@
       </div>
       <h5 class="info-block-title standalone">Description</h5>
       <div class="markdown-content">
-        <markdown [data]="cleanedMarkdown() ?? 'No description available'">
-        </markdown>
+        @if (richTopic().provider === 'jira') {
+          <div [innerHTML]="richTopic().description ?? 'No description available'"></div>
+        } @else {
+          <markdown [data]="cleanedMarkdown() ?? 'No description available'">
+          </markdown>
+        }
       </div>
     </div>
   </div>

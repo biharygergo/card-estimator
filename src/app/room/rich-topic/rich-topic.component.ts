@@ -18,7 +18,6 @@ import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import { CardSetValue, RichTopic, RoundStatistics } from 'src/app/types';
 import { finalize } from 'rxjs/operators';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import jira2md from 'jira2md';
 import { LinearService } from 'src/app/services/linear.service';
 import {
   MARKED_OPTIONS,
@@ -75,10 +74,8 @@ export class RichTopicComponent {
 
   cleanedMarkdown = computed<string>(() => {
     const newTopic = this.richTopic();
-    if (newTopic?.description) {
-      return newTopic.provider === 'jira'
-        ? jira2md.to_markdown(newTopic.description)
-        : newTopic.description;
+    if (newTopic?.description && newTopic.provider !== 'jira') {
+      return newTopic.description;
     }
     return '';
   });

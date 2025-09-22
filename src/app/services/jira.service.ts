@@ -139,13 +139,13 @@ export class JiraService {
   getIssues(
     query?: string,
     filters?: IssueApiFilter[],
-    after?: number
+    nextPageToken?: string
   ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
         this.functions,
         'queryJiraIssues'
-      )({ search: query, filters, after }).then(
+      )({ search: query, filters, nextPageToken }).then(
         response => response.data as IssuesSearchApiResult
       )
     );

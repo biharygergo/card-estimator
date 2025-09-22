@@ -3,6 +3,8 @@ import * as functions from "firebase-functions";
 import {getFirestore} from "firebase-admin/firestore";
 import {JiraIntegration, JiraResource} from "../types";
 import {Request} from "express";
+import {isRunningInDevMode} from "../config";
+
 export class JiraClient {
   openIdHost = "https://auth.atlassian.com";
   issuer: Issuer | undefined;
@@ -11,9 +13,15 @@ export class JiraClient {
 
   constructor() {
     const config = {
-      clientId: process.env.JIRA_CLIENT_ID || "",
-      clientSecret: process.env.JIRA_CLIENT_SECRET || "",
-      redirectUri: process.env.JIRA_REDIRECT_URI || "",
+      clientId: (isRunningInDevMode() ?
+        process.env.JIRA_CLIENT_ID_DEV :
+        process.env.JIRA_CLIENT_ID) || "",
+      clientSecret: (isRunningInDevMode() ?
+        process.env.JIRA_CLIENT_SECRET_DEV :
+        process.env.JIRA_CLIENT_SECRET) || "",
+      redirectUri: (isRunningInDevMode() ?
+        process.env.JIRA_REDIRECT_URI_DEV :
+        process.env.JIRA_REDIRECT_URI) || "",
     };
 
     if (!config.clientId || !config.clientSecret || !config.redirectUri) {

@@ -118,13 +118,13 @@ export class LinearService {
   getIssues(
     query?: string,
     filters?: IssueApiFilter[],
-    after?: string
+    nextPageToken?: string
   ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
         this.functions,
         'queryLinearIssues'
-      )({ search: query, filters, after }).then(
+      )({ search: query, filters, nextPageToken }).then(
         response => response.data as IssuesSearchApiResult
       )
     );

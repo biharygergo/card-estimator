@@ -48,7 +48,7 @@ export async function searchLinear(
 ): Promise<IssuesSearchApiResult> {
   const query = request.data.search;
   const filters = request.data.filters as IssueApiFilter[] | undefined;
-  const after = request.data.after as string | undefined;
+  const nextPageToken = request.data.nextPageToken as string | undefined;
 
   const keyMatch = extractLinearKeyNumber(query ?? "");
 
@@ -105,7 +105,7 @@ export async function searchLinear(
         } :
         {
           filter: complexFilter,
-          after: after?.toString(),
+          after: nextPageToken?.toString(),
         }
     );
 

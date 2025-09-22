@@ -191,7 +191,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
   );
 
   readonly searchedIssues = signal<RichTopic[]>([]);
-  readonly nextPage = signal<number | string | undefined>(undefined);
+  readonly nextPage = signal<string | undefined>(undefined);
 
   readonly recentIssues = toSignal(
     this.issueIntegrationService.getRecentIssues(),
@@ -414,7 +414,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
     this.selectedIssues.set([...new Set(allIssues)]);
   }
 
-  private searchIssues(nextPage?: number | string) {
+  private searchIssues(nextPageToken?: string) {
     const { query } = this.searchForm.value;
     const filters = this.filterChips().map(chip => {
       const filterValue = chip.filter.convertToNumber
@@ -439,7 +439,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
       };
     });
     return this.issueIntegrationService
-      .searchIssues(query, filters, nextPage)
+      .searchIssues(query, filters, nextPageToken)
       .pipe(take(1));
   }
 }

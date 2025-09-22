@@ -15,12 +15,13 @@ function createComplexFilterString(filters: IssueApiFilter[]): string {
       .join(" ");
 }
 
+
 export async function searchJira(
     request: CallableRequest
-): Promise<{ issues: RichTopic[]; nextPage?: number }> {
+): Promise<{ issues: RichTopic[]; nextPage?: string }> {
   const query = request.data.search;
   const filters = request.data.filters as IssueApiFilter[] | undefined;
-  const after = request.data.after as number | undefined;
+  const nextPageToken = request.data.nextPageToken as string | undefined;
 
   const userId = request.auth?.uid;
   if (!userId) {
@@ -48,8 +49,8 @@ export async function searchJira(
         createComplexFilterString(filters) :
         `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
       "issue in issueHistory()";
-    const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/search?jql=${searchFilter}&maxResults=25&fields=summary,description,status,assignee,id,key${
-      after ? `&startAt=${after}` : ""
+    const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search/jql?jql=${searchFilter}&maxResults=25&fields=summary,description,status,assignee,id,key&expand=renderedFields${
+      nextPageToken ? `&nextPageToken=${nextPageToken}` : ""
     }`;
 
     const results = await axios
@@ -60,14 +61,14 @@ export async function searchJira(
         })
         .then((response) => response.data);
 
-    const hasMore = results.startAt + results.maxResults < results.total;
-    const nextPage = hasMore ? results.startAt + results.maxResults : undefined;
+    const nextPage = results.nextPageToken || undefined;
 
     return {
       issues: results.issues.map(
           (issue: any): RichTopic => ({
             summary: issue.fields.summary,
-            description: issue.fields.description,
+            // Use HTML-rendered description directly, fallback to plain description if not available
+            description: issue.renderedFields?.description || issue.fields.description,
             status: issue.fields.status?.name,
             assignee: issue.fields.assignee?.displayName,
             id: issue.id,

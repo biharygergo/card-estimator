@@ -24,7 +24,7 @@ interface IntegrationProvider {
     getIssues: (
       query?: string,
       filters?: IssueApiFilter[],
-      after?: number | string
+      nextPageToken?: string
     ) => Observable<IssuesSearchApiResult>;
   };
 }
@@ -113,7 +113,7 @@ export class IssueIntegrationService {
   searchIssues(
     query: string,
     filters?: IssueApiFilter[],
-    after?: number | string
+    nextPageToken?: string
   ): Observable<IssuesSearchApiResult> {
     return this.getActiveIntegration().pipe(
       switchMap(integration => {
@@ -129,7 +129,7 @@ export class IssueIntegrationService {
           return of({ issues: [] });
         }
 
-        return integration.service.getIssues(query, filters, after);
+        return integration.service.getIssues(query, filters, nextPageToken);
       }),
       catchError(e => this.handleError(e))
     );

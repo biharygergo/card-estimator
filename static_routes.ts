@@ -25,4 +25,6 @@ export const routes = [
   '/integrations/teams/configure',
   '/knowledge-base',
   '/tools/story-point-calculator',
+  '/getting-started',
+  '/estimation-techniques-comparison',
 ];

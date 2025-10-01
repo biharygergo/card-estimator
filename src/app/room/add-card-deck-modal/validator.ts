@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export const CARD_DECK_IDEAL_SIZE = 6;
-export const MAX_CARD_DECK_SIZE = 10;
+export const MAX_CARD_DECK_SIZE = 20;
 
 export function cardDeckValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {

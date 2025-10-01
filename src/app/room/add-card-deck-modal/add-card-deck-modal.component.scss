@@ -26,6 +26,7 @@
   justify-content: center;
   flex-wrap: wrap;
   padding: 1rem;
+  gap: 8px;
 }
 
 @keyframes scaleIn {
@@ -46,7 +47,6 @@
   padding: 20px 12px;
   border-radius: 12px;
   border: 1px solid #fefefe;
-  margin-right: 8px;
   opacity: 0.3;
 
   &.filled {

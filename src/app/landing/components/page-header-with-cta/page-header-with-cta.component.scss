@@ -9,10 +9,6 @@
 
 .hero-header-section {
   @include heroBackground();
-  
-  &:hover .header-cards img {
-    transform: scale(1.03) translateY(-6px);
-  }
 }
 
 .hero-header {

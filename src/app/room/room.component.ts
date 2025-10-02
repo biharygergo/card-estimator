@@ -50,6 +50,7 @@ import {
   RoundStatistics,
   UserProfileMap,
   CardSetValue,
+  UserPreference,
 } from '../types';
 import { MatDialog } from '@angular/material/dialog';
 import { AloneInRoomModalComponent } from './alone-in-room-modal/alone-in-room-modal.component';
@@ -274,7 +275,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy)
   );
 
-  userPreferences$ = this.authService.getUserPreference().pipe(share());
+  userPreferences$: Observable<UserPreference> = this.authService
+    .getUserPreference()
+    .pipe(
+      filter(preference => !!preference),
+      share()
+    );
+
   userProfiles$: Observable<UserProfileMap> =
     this.roomDataService.userProfiles$.pipe(takeUntil(this.destroy));
 

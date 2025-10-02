@@ -15,6 +15,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any): void {
     const chunkFailedMessage = /Failed to fetch dynamically imported module/;
+    const viewTransitionSkippedMessage = /View transition was skipped because document visibility state is hidden/;
     console.error('Received an error', error);
     const errorMessage = typeof error === 'string' ? error : error.message;
 
@@ -23,6 +24,11 @@ export class GlobalErrorHandler implements ErrorHandler {
         error,
         `There was an error while loading parts of the application. Please reload the page, that will fix it.`
       );
+      return;
+    } else if (viewTransitionSkippedMessage.test(errorMessage)) {
+      // View transition was skipped due to document being hidden (e.g., tab in background)
+      // This is expected behavior and not an actual error, so we just log it and return
+      console.info('View transition skipped due to document visibility state being hidden');
       return;
     } else if (errorMessage?.includes('AppCheck')) {
       this.showErrorToast(

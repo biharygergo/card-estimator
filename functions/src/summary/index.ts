@@ -13,7 +13,7 @@ const vertexAi = new VertexAI({
   project: cloudProjectName ?? "card-estimator",
   location,
 });
-const model = "gemini-1.5-flash-002";
+const model = "gemini-2.0-flash-lite";
 
 // Instantiate the models
 const generativeModel = vertexAi.preview.getGenerativeModel({

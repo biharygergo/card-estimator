@@ -3,6 +3,7 @@ import {
   createNewRoom,
   setAppCheckCookie,
 } from '../support/utils';
+import { assertInvitationPopup } from './room.cy';
 
 describe('Authentication', () => {
   const testEmail = `test+${Date.now()}@company.com`;
@@ -16,8 +17,11 @@ describe('Authentication', () => {
 
   it('can link an account with email', () => {
     createNewRoom('Test Bela');
+
     // Skip onboarding
     cy.contains('No thanks').click();
+    
+    assertInvitationPopup();
 
     cy.get('#menu-button').click();
     cy.get('#account-menu-item').click();

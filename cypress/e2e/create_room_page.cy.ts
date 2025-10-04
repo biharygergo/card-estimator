@@ -1,4 +1,5 @@
 import { clearFirebaseLocalStorage, setAppCheckCookie } from '../support/utils';
+import { assertInvitationPopup } from './room.cy';
 
 describe('Creating a room as a new user', () => {
   beforeEach(() => {
@@ -20,6 +21,8 @@ describe('Creating a room as a new user', () => {
     // Skip onboarding
     cy.contains('No thanks').click();
 
+    assertInvitationPopup();
+  
     // It uses a credit
     cy.contains('Menu').click();
     cy.contains('My account').click();

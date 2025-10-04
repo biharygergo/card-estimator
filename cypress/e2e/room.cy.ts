@@ -1,6 +1,6 @@
 import { createNewRoom, setAppCheckCookie } from '../support/utils';
 
-function assertInvitationPopup() {
+export function assertInvitationPopup() {
   cy.contains('Invite others to join').should('be.visible');
   cy.contains('Close').click();
 }
@@ -105,7 +105,7 @@ describe('Inside the room', () => {
 
     cy.contains('13').should('be.visible');
 
-    cy.get('#pass-option-card').should('be.visible');
+    cy.get('#pass-option-card').scrollIntoView().should('be.visible');
   });
 
   it('can use minimized panel', () => {

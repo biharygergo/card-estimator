@@ -246,8 +246,6 @@ export class PricingTableComponent implements OnInit {
     return `${total}${currency}`;
   }));
 
-  selectedTabIndex = signal<number>(0);
-
   BundleName = BundleName;
   theme = toSignal(inject(ThemeService).themeValue);
   readonly Theme = Theme;
@@ -300,7 +298,6 @@ export class PricingTableComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(creditType => {
         if (creditType === 'organization') {
-          this.selectedTabIndex.set(0);
           this.changeDetectorRef.markForCheck();
         }
       });
@@ -308,12 +305,6 @@ export class PricingTableComponent implements OnInit {
 
   private selectTabFromParam(tab: string) {
     switch (tab) {
-      case 'credits':
-        this.selectedTabIndex.set(0);
-        break;
-      case 'premium':
-        this.selectedTabIndex.set(1);
-        break;
       case 'org-credits':
         this.creditTypeSelector.setValue('organization');
         break;

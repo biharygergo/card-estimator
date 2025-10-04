@@ -63,158 +63,6 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Credits">
-        <div class="tab-content">
-          <div class="tab-section">
-            <h2 class="section-title">Your credits</h2>
-            <div class="bundle-wrap">
-              <div class="bundle-content">
-                <div class="image-wrap">
-                  <img src="/assets/credits_no_number.png" />
-                </div>
-                <div class="content">
-                  @if (creditBundles$ | async; as creditsAndBundles) { @if
-                  (subscription$ | async; as subscription) {
-                  <h3 class="title">Premium plan</h3>
-                  <div class="credit-status">
-                    <span>Unlimited credits available</span>
-                  </div>
-                  } @else {
-                  <h3 class="title">Pay as you go</h3>
-                  <span>Available credits:</span>
-                  <ul class="credit-status">
-                    <li>
-                      <span
-                        ><strong>Personal:</strong>
-                        {{
-                          creditsAndBundles.availablePersonalCredits.length
-                        }}
-                        credits</span
-                      >
-                    </li>
-                    <li>
-                      <span
-                        ><strong>Organization:</strong>
-                        {{ creditsAndBundles.availableOrgCredits.length }}
-                        credits</span
-                      >
-                    </li>
-                  </ul>
-                  @if (creditsAndBundles.nextBatchExpiring?.length) {
-                  <p class="next-expiry">
-                    {{ creditsAndBundles.nextBatchExpiring.length }}
-                    {{
-                      creditsAndBundles.nextBatchExpiring.length === 1
-                        ? 'credit'
-                        : 'credits'
-                    }}
-                    will expire on
-                    {{
-                      creditsAndBundles.nextBatchExpiring[0].expiresAt.toDate()
-                        | date
-                    }}.
-                  </p>
-                  }
-                  <p class="next-credit">
-                    @if (!user?.isAnonymous) { Next free credit on
-                    {{ nextMonthStart | date }}
-                    } @else { Get one free credit every month by signing up for
-                    an account! }
-                  </p>
-                  } } @else {
-                  <div class="loading-spinner-container">
-                    <mat-progress-spinner
-                      mode="indeterminate"
-                      [diameter]="30" />
-                  </div>
-                  }
-                </div>
-              </div>
-              <div class="actions"></div>
-            </div>
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="openLearnMore()"
-              [disabled]="paymentsService.isSubscriptionDisabled()">
-              {{
-                paymentsService.isSubscriptionDisabled()
-                  ? 'Not available on Teams mobile'
-                  : 'Buy more credits'
-              }}
-            </button>
-          </div>
-          <div class="tab-section">
-            <h2 class="section-title">Your plan</h2>
-            @if (subscription$ | async; as subscription) {
-            <mat-chip class="subscription-chip"
-              ><span class="label">Premium</span></mat-chip
-            >
-            <div class="data-items">
-              <div class="data-item">
-                <strong>Status</strong>
-                <span>{{ subscription.status | titlecase }}</span>
-              </div>
-              <div class="data-item">
-                <strong>Plan</strong>
-                @if (activePlan$ | async; as plan) {
-                <span
-                  >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
-                    plan?.interval
-                  }}</span
-                >
-                }
-              </div>
-              <div class="data-item">
-                <strong>Created at</strong>
-                <span>{{
-                  subscription.created.toMillis() | date : 'medium'
-                }}</span>
-              </div>
-              <div class="data-item">
-                <strong>{{
-                  subscription.cancel_at_period_end
-                    ? 'Ends at'
-                    : 'Next payment at'
-                }}</strong>
-                <span>{{
-                  subscription.current_period_end.toMillis() | date : 'medium'
-                }}</span>
-              </div>
-            </div>
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="redirectToCustomerPortal()"
-              [disabled]="isLoadingStripe">
-              <mat-icon>edit</mat-icon>
-              {{
-                isLoadingStripe
-                  ? 'Redirecting you to Stripe...'
-                  : 'Manage subscription'
-              }}
-            </button>
-            } @else {
-            <p>
-              You are currently on the free, pay as you go Basic plan. Subscribe
-              now for unlimited credits and priority support.
-            </p>
-            <button
-              mat-stroked-button
-              color="primary"
-              class="learn-more-button"
-              (click)="openPremiumModal()"
-              [disabled]="paymentsService.isSubscriptionDisabled()">
-              {{
-                paymentsService.isSubscriptionDisabled()
-                  ? 'Not available on Teams mobile'
-                  : 'Subscribe to Premium'
-              }}
-            </button>
-            }
-          </div>
-        </div>
-      </mat-tab>
       <mat-tab label="Avatar">
         <div class="tab-content">
           <div class="tab-section">
@@ -335,6 +183,140 @@
           </div>
         </div>
       </mat-tab>
+      <mat-tab label="Credits">
+        <div class="tab-content">
+          <div class="tab-section">
+            <h2 class="section-title">Your credits</h2>
+            <div class="bundle-wrap">
+              <div class="bundle-content">
+                <div class="image-wrap">
+                  <img src="/assets/credits_no_number.png" />
+                </div>
+                <div class="content">
+                  @if (creditBundles$ | async; as creditsAndBundles) { @if
+                  (subscription$ | async; as subscription) {
+                  <h3 class="title">Premium plan</h3>
+                  <div class="credit-status">
+                    <span>Unlimited credits available</span>
+                  </div>
+                  } @else {
+                  <h3 class="title">Pay as you go</h3>
+                  <span>Available credits:</span>
+                  <ul class="credit-status">
+                    <li>
+                      <span
+                        ><strong>Personal:</strong>
+                        {{ creditsAndBundles.availablePersonalCredits.length }}
+                        credits</span
+                      >
+                    </li>
+                    <li>
+                      <span
+                        ><strong>Organization:</strong>
+                        {{ creditsAndBundles.availableOrgCredits.length }}
+                        credits</span
+                      >
+                    </li>
+                  </ul>
+                  @if (creditsAndBundles.nextBatchExpiring?.length) {
+                  <p class="next-expiry">
+                    {{ creditsAndBundles.nextBatchExpiring.length }}
+                    {{
+                      creditsAndBundles.nextBatchExpiring.length === 1
+                        ? 'credit'
+                        : 'credits'
+                    }}
+                    will expire on
+                    {{
+                      creditsAndBundles.nextBatchExpiring[0].expiresAt.toDate()
+                        | date
+                    }}.
+                  </p>
+                  }
+                  <p class="next-credit">
+                    @if (!user?.isAnonymous) { Next free credit on
+                    {{ nextMonthStart | date }}
+                    } @else { Get one free credit every month by signing up for
+                    an account! }
+                  </p>
+                  } } @else {
+                  <div class="loading-spinner-container">
+                    <mat-progress-spinner
+                      mode="indeterminate"
+                      [diameter]="30" />
+                  </div>
+                  }
+                </div>
+              </div>
+              <div class="actions"></div>
+            </div>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="openLearnMore()"
+              [disabled]="paymentsService.isSubscriptionDisabled()">
+              {{
+                paymentsService.isSubscriptionDisabled()
+                  ? 'Not available on Teams mobile'
+                  : 'Buy more credits'
+              }}
+            </button>
+          </div>
+          @if (subscription$ | async; as subscription) {
+          <div class="tab-section">
+            <h2 class="section-title">Your plan</h2>
+
+            <mat-chip class="subscription-chip"
+              ><span class="label">Premium</span></mat-chip
+            >
+            <div class="data-items">
+              <div class="data-item">
+                <strong>Status</strong>
+                <span>{{ subscription.status | titlecase }}</span>
+              </div>
+              <div class="data-item">
+                <strong>Plan</strong>
+                @if (activePlan$ | async; as plan) {
+                <span
+                  >{{ plan?.amount / 100 }} {{ plan?.currency | uppercase }}/{{
+                    plan?.interval
+                  }}</span
+                >
+                }
+              </div>
+              <div class="data-item">
+                <strong>Created at</strong>
+                <span>{{
+                  subscription.created.toMillis() | date : 'medium'
+                }}</span>
+              </div>
+              <div class="data-item">
+                <strong>{{
+                  subscription.cancel_at_period_end
+                    ? 'Ends at'
+                    : 'Next payment at'
+                }}</strong>
+                <span>{{
+                  subscription.current_period_end.toMillis() | date : 'medium'
+                }}</span>
+              </div>
+            </div>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="redirectToCustomerPortal()"
+              [disabled]="isLoadingStripe">
+              <mat-icon>edit</mat-icon>
+              {{
+                isLoadingStripe
+                  ? 'Redirecting you to Stripe...'
+                  : 'Manage subscription'
+              }}
+            </button>
+          </div>
+          }
+        </div>
+      </mat-tab>
     </mat-tab-group>
   </div>
   <div mat-dialog-actions>
@@ -347,7 +329,7 @@
       <mat-icon>logout</mat-icon>
       Sign out
     </button>
-    } } @if (selectedTabIndex === 2) {
+    } } @if (selectedTabIndex === 1) {
     <button mat-button (click)="randomizeAvatars()" color="primary">
       <mat-icon>shuffle</mat-icon>
       Generate new avatars

@@ -251,7 +251,7 @@ const AVATAR_COUNT = 39;
   ],
 })
 export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
-  selectedTabIndex = { profile: 0, subscription: 1, avatar: 2 }[
+  selectedTabIndex = { profile: 0,  avatar: 1, subscription: 2, }[
     this.dialogData.openAtTab ?? 'profile'
   ];
 

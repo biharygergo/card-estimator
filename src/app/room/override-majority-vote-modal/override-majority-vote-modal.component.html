@@ -2,29 +2,29 @@
 <mat-dialog-content>
   <div class="estimator-buttons">
     @for (item of cards; track item.key) {
-      <div class="estimator-button-container">
-        <button
-          mat-raised-button
-          class="estimator-button"
-          [id]="'override-vote-button-' + item.key"
-          (click)="setOverride(item.key)"
-          [class.majority-override]="+item.key === viewModel.majorityOverride"
-          [class.majority]="+item.key === viewModel.majority">
-          {{ item.value }}
-        </button>
-      </div>
+    <div class="estimator-button-container">
+      <button
+        mat-raised-button
+        class="estimator-button"
+        [id]="'override-vote-button-' + item.key"
+        (click)="setOverride(item.key)"
+        [class.majority-override]="+item.key === viewModel.majorityOverride"
+        [class.majority]="+item.key === viewModel.majority">
+        {{ item.value }}
+      </button>
+    </div>
     }
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button color="primary" matDialogClose cdkFocusInitial>
-    Close
-  </button>
   <button
     mat-button
     color="secondary"
     [disabled]="viewModel.majorityOverride === null"
     (click)="setOverride(null)">
     Clear override
+  </button>
+  <button mat-flat-button color="primary" matDialogClose cdkFocusInitial>
+    Close
   </button>
 </mat-dialog-actions>

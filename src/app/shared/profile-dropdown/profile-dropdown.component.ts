@@ -158,6 +158,10 @@ export class ProfileDropdownComponent implements OnInit {
     this.linkService.openUrl(currentUrl);
   }
 
+  openKnlowledgeBase() {
+    this.linkService.openUrl('https://planningpoker.live/knowledge-base');
+  }
+
   openRecurringMeetingsModal() {
     this.dialog.open(...recurringMeetingsModalCreator());
   }

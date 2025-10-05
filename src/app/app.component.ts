@@ -5,7 +5,7 @@ import {
   OnInit,
   PLATFORM_ID,
   Renderer2,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Meta, Title } from '@angular/platform-browser';
@@ -37,6 +37,7 @@ import { APP_CONFIG, AppConfig } from './app-config.module';
 import { environment } from 'src/environments/environment';
 import Clarity from '@microsoft/clarity';
 import { SchemaTagService } from './services/schema-tag.service';
+import Cookies from 'js-cookie';
 
 @Component({
   selector: 'app-root',
@@ -51,6 +52,12 @@ export class AppComponent implements OnInit, OnDestroy {
         params => params.get('subscriptionResult') as SubscriptionResult | null
       ),
       filter(result => !!result)
+    );
+
+  referralCode$: Observable<string | null> =
+    this.activatedRoute.queryParamMap.pipe(
+      map(params => params.get('referral') as string | null),
+      filter(code => !!code)
     );
 
   onTitleUpdated$ = this.router.events.pipe(
@@ -154,6 +161,12 @@ export class AppComponent implements OnInit, OnDestroy {
           });
       });
 
+    this.referralCode$.pipe(takeUntil(this.destroyed)).subscribe(code => {
+      if (code) {
+        this.handleReferralTracking(code);
+      }
+    });
+
     this.onThemeShouldChange$
       .pipe(takeUntil(this.destroyed))
       .subscribe(([supportsTheme, themeValue]) => {
@@ -190,5 +203,27 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  private handleReferralTracking(referralCode: string): void {
+    if (referralCode) {
+      // Only set cookie if one doesn't already exist (first-touch attribution)
+      const existingCookie = Cookies.get('pp_referral');
+      if (!existingCookie) {
+        // Store referral code in cookie (60 days) and localStorage
+        Cookies.set('pp_referral', referralCode, {
+          expires: 60,
+          sameSite: 'Lax',
+        });
+        if (typeof window !== 'undefined' && window?.localStorage) {
+          localStorage.setItem('pp_referral', referralCode);
+        }
+        console.log('Referral code stored:', referralCode);
+      } else {
+        console.log(
+          'Referral code already exists, keeping first-touch attribution'
+        );
+      }
+    }
   }
 }

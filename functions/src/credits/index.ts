@@ -194,9 +194,10 @@ export async function createBundle(
     userId: string,
     paymentId: string | null,
     displayName?: string,
-    createdAt?: Date
+    createdAt?: Date,
+    customCreditCount?: number
 ) {
-  const creditCount = getCreditCountForBundle(bundleName);
+  const creditCount = customCreditCount ? customCreditCount : getCreditCountForBundle(bundleName);
 
   const newBundleRef = await getFirestore()
       .collection(`userDetails/${userId}/${BUNDLES_COLLECTION}`)
@@ -317,6 +318,8 @@ function getCreditCountForBundle(bundleType: BundleName) {
       return 50;
     case BundleName.MONTHLY_BUNDLE:
       return 1;
+    case BundleName.REFERRAL_BUNDLE:
+      return 3;
     default:
       throw new Error("Unknown BundleName");
   }

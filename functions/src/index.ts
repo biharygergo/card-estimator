@@ -115,7 +115,15 @@ exports.onUserDetailsCreate = onDocumentCreated(
       const {onUserDetailsCreate} = await import(
           "./profile/onUserCreateUpdate"
       );
-      return onUserDetailsCreate(snap);
+      const {onUserDetailsCreatedReferral} = await import(
+          "./referral/onUserDetailsCreated"
+      );
+
+      // Run both handlers
+      await Promise.all([
+        onUserDetailsCreate(snap),
+        onUserDetailsCreatedReferral(snap),
+      ]);
     }
 );
 
@@ -137,6 +145,11 @@ exports.setRoomPassword = onCall({cors: true, region}, async (request) => {
 exports.enterProtectedRoom = onCall({cors: true, region}, async (request) => {
   const {enterProtectedRoom} = await import("./room/password-protection");
   return enterProtectedRoom(request);
+});
+
+exports.getReferralStats = onCall({cors: true, region}, async (request) => {
+  const {getReferralStats} = await import("./referral/getReferralStats");
+  return getReferralStats(request);
 });
 
 exports.onOrganizationCreated = onDocumentCreated(

@@ -43,6 +43,7 @@ import {
   signUpOrLoginDialogCreator,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { manageEmailModalCreator } from '../manage-email-modal/manage-email-modal.component';
+import { referralDialogCreator } from '../referral-dialog/referral-dialog.component';
 import {
   AsyncPipe,
   UpperCasePipe,
@@ -492,6 +493,11 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
   openLearnMore() {
     this.analytics.logClickedLearnMorePremium('profile');
     this.dialog.open(...pricingModalCreator());
+  }
+
+  openReferralDialog() {
+    this.dialog.open(...referralDialogCreator());
+    this.analytics.logClickedOpenReferralDialog('my_account');
   }
 
   openPremiumModal() {

@@ -30,35 +30,19 @@
   <!-- Room URL section -->
   <div class="tab-section">
     <h3>Copy link to join</h3>
-
-    <p>Share this irresistible invitation with your team:</p>
-    <div class="fun-invitation-container">
-      <div class="fun-invitation-display">
-        <div class="invitation-content">
-          <span class="invitation-message">{{ getInvitationMessage() }}</span>
-          <span class="invitation-url">{{ data.roomUrl }}</span>
-        </div>
+    <p>Share this link with your colleagues:</p>
+    <div class="room-id-display">
+      <div class="room-id-text">
+        <span>{{ data.roomUrl }}</span>
         <button
           mat-icon-button
           class="copy-button"
-          (click)="copyFunInvitation()"
-          matTooltip="Copy irresistible invitation">
+          (click)="copyRoomUrl()"
+          matTooltip="Copy room URL">
           <mat-icon>content_copy</mat-icon>
         </button>
       </div>
     </div>
-
-    <p class="or-divider">
-      — or
-      <button
-        mat-button
-        class="link-button"
-        (click)="copyRoomUrl()"
-        matTooltip="Copy room URL">
-        just the link
-      </button>
-      —
-    </p>
   </div>
 
   <!-- Integration links for web -->

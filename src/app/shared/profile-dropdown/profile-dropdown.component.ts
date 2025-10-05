@@ -28,6 +28,7 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { roomTemplatesModalCreator } from '../room-templates-modal/room-templates-modal.component';
 import { reportIssueModalCreator } from '../report-issue-modal/report-issue-modal.component';
+import { referralDialogCreator } from '../referral-dialog/referral-dialog.component';
 
 @Component({
   selector: 'app-profile-dropdown',
@@ -176,5 +177,10 @@ export class ProfileDropdownComponent implements OnInit {
 
   openRoomTemplatesModal() {
     this.dialog.open(...roomTemplatesModalCreator({}));
+  }
+
+  openReferralDialog() {
+    this.dialog.open(...referralDialogCreator());
+    this.analytics.logClickedOpenReferralDialog('profile_dropdown');
   }
 }

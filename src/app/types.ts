@@ -150,6 +150,8 @@ export type UserDetails = {
   avatarUrl: string | null;
   email: string;
   createdAt: FieldValue;
+  referralCode?: string;
+  referredByCode?: string | null;
 };
 
 export enum UserRole {
@@ -572,6 +574,7 @@ export enum BundleName {
   MEGA_BUNDLE = 'MEGA_BUNDLE',
   MONTHLY_BUNDLE = 'MONTHLY_BUNDLE',
   ORGANIZATION_BUNDLE = 'ORGANIZATION_BUNDLE',
+  REFERRAL_BUNDLE = 'REFERRAL_BUNDLE',
 }
 
 export function getBundleTitle(bundleName: BundleName) {
@@ -626,4 +629,25 @@ export interface RoomTemplate {
   permissions?: PermissionsMap;
   showPassOption?: boolean;
   organizationProtection?: string;
+}
+
+export interface Referral {
+  id: string;
+  referrerId: string;
+  refereeId: string;
+  referralCode: string;
+  signedUpAt: Timestamp;
+  refereePurchasedAt: Timestamp | null;
+  referrerPendingCredits: number;
+  refereePendingCredits: number;
+  referrerCreditAwarded: boolean;
+  refereeCreditAwarded: boolean;
+}
+
+export interface ReferralStats {
+  totalReferred: number;
+  totalCreditsEarned: number;
+  pendingCredits: number;
+  pendingCreditsAsReferee: number;
+  referrals: Referral[];
 }

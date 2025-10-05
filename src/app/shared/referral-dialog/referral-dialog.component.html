@@ -17,7 +17,7 @@
     </div>
   }
 
-  @if (!isLoading && (user$ | async)?.isAnonymous) {
+  @if (!isLoading && isAnonymous()) {
     <div class="tab-section anonymous-prompt">
       <h5 class="section-title">
         <mat-icon>account_circle</mat-icon> Create an account to start earning credits

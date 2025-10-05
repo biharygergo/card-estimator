@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatDialogRef,
@@ -17,13 +17,14 @@ import { ReferralStats } from '../../types';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../services/auth.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { MatDialog } from '@angular/material/dialog';
 import {
   signUpOrLoginDialogCreator,
   SignUpOrLoginIntent,
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export const referralDialogCreator = (): ModalCreator<ReferralDialogComponent> => [
   ReferralDialogComponent,
@@ -59,6 +60,7 @@ export class ReferralDialogComponent implements OnInit {
   error: string | null = null;
   referralLink = '';
   user$: Observable<User | null>;
+  isAnonymous = toSignal(this.authService.user.pipe(map(user => user?.isAnonymous || !user)));
 
   constructor(
     private dialogRef: MatDialogRef<ReferralDialogComponent>,

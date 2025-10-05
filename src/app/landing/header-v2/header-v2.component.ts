@@ -3,11 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { CookieService } from 'src/app/services/cookie.service';
 import { NavigationService } from 'src/app/services/navigation.service';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatAnchor, MatIconButton } from '@angular/material/button';
-import { NgClass, NgOptimizedImage } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ProfileDropdownComponent } from 'src/app/shared/profile-dropdown/profile-dropdown.component';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -18,14 +17,10 @@ import { AuthService } from 'src/app/services/auth.service';
 
   imports: [
     NgClass,
-    NgOptimizedImage,
     MatButton,
     MatIcon,
     RouterLink,
     RouterLinkActive,
-    MatMenuTrigger,
-    MatMenu,
-    MatMenuItem,
     MatAnchor,
     MatIconButton,
     ProfileDropdownComponent,
@@ -37,7 +32,7 @@ export class HeaderV2Component implements OnInit {
   openDropdown: 'features' | 'integrations' | null = null;
   dropdownHoverTimer: any = null;
   dropdownLeaveTimer: any = null;
-  
+
   // Mobile submenu state
   mobileSubmenuOpen: 'resources' | null = null;
 
@@ -154,7 +149,7 @@ export class HeaderV2Component implements OnInit {
     const isFeaturesButton = target.closest('.features-button');
     const isIntegrationsButton = target.closest('.integrations-button');
     const isDropdownContent = target.closest('.navbar-features-dropdown-panel');
-    
+
     // Close dropdowns if clicking outside both buttons and dropdown content
     if (!isFeaturesButton && !isIntegrationsButton && !isDropdownContent) {
       this.closeAllDropdowns();
@@ -167,9 +162,12 @@ export class HeaderV2Component implements OnInit {
     if (event.key === 'Escape') {
       this.closeAllDropdowns();
     }
-    
+
     // Handle arrow key navigation when dropdown is open
-    if (this.openDropdown && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+    if (
+      this.openDropdown &&
+      (event.key === 'ArrowDown' || event.key === 'ArrowUp')
+    ) {
       event.preventDefault();
       // Focus management could be added here for keyboard navigation within dropdown
     }

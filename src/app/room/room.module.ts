@@ -24,7 +24,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoomControllerPanelComponent } from './room-controller-panel/room-controller-panel.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReactionsRendererComponent } from './reactions-renderer/reactions-renderer.component';
-import { AnimationLoader, provideLottieOptions } from 'ngx-lottie';
 import { CarbonAdComponent } from '../shared/carbon-ad/carbon-ad.component';
 
 const routes: Routes = [
@@ -66,11 +65,7 @@ const routes: Routes = [
     ReactionsRendererComponent,
   ],
   providers: [
-    AnimationLoader,
     provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
-    provideLottieOptions({
-      player: () => player,
-    }),
   ],
 })
 export class RoomModule {}

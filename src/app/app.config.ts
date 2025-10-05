@@ -47,6 +47,7 @@ import {
 } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
 import * as Sentry from '@sentry/angular';
+import { provideLottieOptions } from 'ngx-lottie';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -119,6 +120,9 @@ export const appConfig: ApplicationConfig = {
         connectFunctionsEmulator(functions, 'localhost', 5001);
       }
       return functions;
+    }),
+    provideLottieOptions({
+      player: () => import('lottie-web'),
     }),
   ],
 };

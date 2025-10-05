@@ -56,8 +56,8 @@ import {
   setDoc,
   Timestamp,
   updateDoc,
+  DocumentReference,
 } from '@angular/fire/firestore';
-import { DocumentReference } from 'rxfire/firestore/interfaces';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
 import { OrganizationService } from './organization.service';

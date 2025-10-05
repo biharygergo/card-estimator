@@ -1,74 +1,76 @@
-<div class="join-container" *ngIf="!isServer">
-  @if (!(isLoadingUser | async)) {
-    <div class="navbar">
-      @if (vm | async; as viewModel) {
-        <div class="navbar-left">
-          <app-profile-dropdown></app-profile-dropdown>
-        </div>
-        <div class="navbar-right">
-          @if (!viewModel.user) {
-            <button
-              mat-button
-              class="sign-in-button"
-              #tooltip="matTooltip"
-              matTooltip="Created a permanent account before? Jump right back."
-              matTooltipPosition="right"
-              (click)="onSignInClicked.next()"
-              id="sign-in-button">
-              <mat-icon>account_circle</mat-icon>
-              Sign in
-            </button>
-          }
-        </div>
-      }
-    </div>
-  }
-  <div class="logos">
-    <img src="/assets/logo.png" class="logo main-logo" />
-    @if (organization | async; as org) {
-      <div class="organization-logo-container">
-        <mat-icon @delayedFadeAnimation>add</mat-icon>
-        @if (org.logoUrl) {
-          <img
-            [src]="org.logoUrl"
-            class="logo organization-logo"
-            @slideInRightAnimation />
-        }
-        @if (!org.logoUrl) {
-          <div class="logo organization-logo text-only" @slideInRightAnimation>
-            <p>{{ org.name }}</p>
+@if (!isServer) {
+  <div class="join-container">
+    @if (!(isLoadingUser | async)) {
+      <div class="navbar">
+        @if (vm | async; as viewModel) {
+          <div class="navbar-left">
+            <app-profile-dropdown></app-profile-dropdown>
+          </div>
+          <div class="navbar-right">
+            @if (!viewModel.user) {
+              <button
+                mat-button
+                class="sign-in-button"
+                #tooltip="matTooltip"
+                matTooltip="Created a permanent account before? Jump right back."
+                matTooltipPosition="right"
+                (click)="onSignInClicked.next()"
+                id="sign-in-button">
+                <mat-icon>account_circle</mat-icon>
+                Sign in
+              </button>
+            }
           </div>
         }
       </div>
     }
+    <div class="logos">
+      <img src="/assets/logo.webp" class="logo main-logo" />
+      @if (organization | async; as org) {
+        <div class="organization-logo-container">
+          <mat-icon @delayedFadeAnimation>add</mat-icon>
+          @if (org.logoUrl) {
+            <img
+              [src]="org.logoUrl"
+              class="logo organization-logo"
+              @slideInRightAnimation />
+          }
+          @if (!org.logoUrl) {
+            <div class="logo organization-logo text-only" @slideInRightAnimation>
+              <p>{{ org.name }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+    @if ((vm | async)?.user) {
+      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
+    } @else {
+      <ng-container *ngTemplateOutlet="newUserWelcome"></ng-container>
+    }
+    @if (pageMode | async; as pageMode) {
+      <mat-card
+        appearance="outlined"
+        class="action-card main-card"
+        resizeMonitor
+        [verticalSpacing]="36">
+        <div class="transitioning-container" @delayedFadeAnimation>
+          @if (pageMode === PageMode.CREATE) {
+            <ng-container *ngTemplateOutlet="create"></ng-container>
+          }
+          @if (pageMode === PageMode.JOIN) {
+            <ng-container *ngTemplateOutlet="join"></ng-container>
+          }
+        </div>
+      </mat-card>
+    }
+    <ng-container *ngTemplateOutlet="recent" />
+    <ng-container *ngTemplateOutlet="links"></ng-container>
+    @if (config.runningIn === 'web') {
+      <zoom-app-banner bannerLocation="banner_join" />
+    }
   </div>
-  @if ((vm | async)?.user) {
-    <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
-  } @else {
-    <ng-container *ngTemplateOutlet="newUserWelcome"></ng-container>
-  }
-  @if (pageMode | async; as pageMode) {
-    <mat-card
-      appearance="outlined"
-      class="action-card main-card"
-      resizeMonitor
-      [verticalSpacing]="36">
-      <div class="transitioning-container" @delayedFadeAnimation>
-        @if (pageMode === PageMode.CREATE) {
-          <ng-container *ngTemplateOutlet="create"></ng-container>
-        }
-        @if (pageMode === PageMode.JOIN) {
-          <ng-container *ngTemplateOutlet="join"></ng-container>
-        }
-      </div>
-    </mat-card>
-  }
-  <ng-container *ngTemplateOutlet="recent" />
-  <ng-container *ngTemplateOutlet="links"></ng-container>
-  @if (config.runningIn === 'web') {
-    <zoom-app-banner bannerLocation="banner_join" />
-  }
-</div>
+}
 <ng-template #create>
   @if (vm | async; as viewModel) {
     @if (!(isBusy | async)) {
@@ -96,7 +98,7 @@
       <mat-card-content>
         <mat-progress-spinner
           mode="indeterminate"
-          [diameter]="30"></mat-progress-spinner>
+        [diameter]="30"></mat-progress-spinner>
         <span class="create-room-loading">{{ loadingMessage | async }} </span>
       </mat-card-content>
     }
@@ -104,7 +106,7 @@
     <mat-card-content>
       <mat-progress-spinner
         mode="indeterminate"
-        [diameter]="30"></mat-progress-spinner>
+      [diameter]="30"></mat-progress-spinner>
     </mat-card-content>
   }
 </ng-template>
@@ -143,14 +145,14 @@
       <mat-card-content>
         <mat-progress-spinner
           mode="indeterminate"
-          [diameter]="30"></mat-progress-spinner>
+        [diameter]="30"></mat-progress-spinner>
       </mat-card-content>
     }
   } @else {
     <mat-card-content>
       <mat-progress-spinner
         mode="indeterminate"
-        [diameter]="30"></mat-progress-spinner>
+      [diameter]="30"></mat-progress-spinner>
     </mat-card-content>
   }
 </ng-template>
@@ -160,139 +162,141 @@
     @if ((pageMode | async) === PageMode.JOIN) {
       <a mat-flat-button routerLink="/create"
         ><mat-icon>add</mat-icon>Create a new room</a
-      >
-      <button
-        mat-flat-button
-        (click)="clearRoomIdParam()"
-        *ngIf="
+        >
+        @if (
           (pageMode | async) === PageMode.JOIN && (roomIdFromParams | async)
-        ">
-        <mat-icon>close</mat-icon>
-        Join a different room
-      </button>
-    }
-    @if ((pageMode | async) === PageMode.CREATE) {
-      <a mat-flat-button routerLink="/join">
-        <mat-icon>login</mat-icon>
-        Join an existing room</a
-      >
-    }
-  </div>
-</ng-template>
-<ng-template #welcomeBack>
-  <div class="welcome-name-container">
-    <h1 id="welcome-back">
-      {{ greeting }}
-    </h1>
-    @if (recurringMeeting$ | async; as meeting) {
-      <p>You are creating a room for "{{ meeting.name }}"</p>
-    }
-  </div>
-</ng-template>
-<ng-template #newUserWelcome>
-  @if (vm | async) {
-    <div class="welcome-name-container">
-      <h1 id="welcome-back">
-        {{
-          (pageMode | async) === PageMode.JOIN
+          ) {
+          <button
+            mat-flat-button
+            (click)="clearRoomIdParam()"
+            >
+            <mat-icon>close</mat-icon>
+            Join a different room
+          </button>
+        }
+      }
+      @if ((pageMode | async) === PageMode.CREATE) {
+        <a mat-flat-button routerLink="/join">
+          <mat-icon>login</mat-icon>
+          Join an existing room</a
+          >
+        }
+      </div>
+    </ng-template>
+    <ng-template #welcomeBack>
+      <div class="welcome-name-container">
+        <h1 id="welcome-back">
+          {{ greeting }}
+        </h1>
+        @if (recurringMeeting$ | async; as meeting) {
+          <p>You are creating a room for "{{ meeting.name }}"</p>
+        }
+      </div>
+    </ng-template>
+    <ng-template #newUserWelcome>
+      @if (vm | async) {
+        <div class="welcome-name-container">
+          <h1 id="welcome-back">
+            {{
+            (pageMode | async) === PageMode.JOIN
             ? "Welcome! 👋 Set your name and the room you want to join and you'll be planning in no time."
             : 'Welcome! 👋 Set your name, create a new room and invite your team to start planning.'
-        }}
-      </h1>
-    </div>
-  }
-</ng-template>
-<ng-template #invitedToRoomText>
-  <h4 class="card-subheader">
-    You've been invited to join room: <br />
-    <strong>{{ (vm | async)?.roomId }}</strong>
-  </h4>
-</ng-template>
-<ng-template #recent>
-  @if (
-    !hideRecentlyLeftRoom && recentlyLeftRoom$ | async;
-    as recentlyLeftRoom
-  ) {
-    <mat-card
-      class="recent-card action-card"
-      @delayedFadeAnimation
-      appearance="outlined">
-      <mat-card-content>
-        <p>
-          Continue where you left off? <br />
-          Your last room was {{ recentlyLeftRoom.roomId }}
-        </p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="navigateToRoom(recentlyLeftRoom.roomId)">
-          <mat-icon>play_arrow</mat-icon>
-          Continue
-        </button>
-        <button mat-button (click)="hideRecentlyLeftRoom = true">
-          Start fresh
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  }
-</ng-template>
-<ng-template #terms>
-  <div class="terms">
-    <small
-      >By using this app you accept the
-      <a routerLink="/policies/terms">Terms</a> and the
-      <a routerLink="/policies/privacy">Privacy Policy</a>.</small
-    >
-  </div>
-</ng-template>
-<ng-template #roomIdTemplate>
-  <mat-form-field class="room-id" appearance="outline">
-    <mat-label>Room ID</mat-label>
-    <input
-      matInput
-      placeholder="existing-room-id"
-      [formControl]="roomId"
-      (blur)="onRoomIdBlur()"
-      (keyup.enter)="onJoinRoomClicked.next()"
-      autocomplete="off"
-      spellcheck="false"
-      required
-      id="room-id" />
-  </mat-form-field>
-</ng-template>
-<ng-template #nameTemplate>
-  <mat-form-field class="name" appearance="outline">
-    <mat-label>Your name</mat-label>
-    <input
-      matInput
-      placeholder="Best Engineer"
-      [formControl]="name"
-      autocomplete="name"
-      (blur)="onNameBlur()"
-      required
-      id="name" />
-  </mat-form-field>
-</ng-template>
-<ng-template #joinMode>
-  <mat-form-field appearance="outline">
-    <mat-label>Join as an</mat-label>
-    <mat-select [formControl]="joinAs">
-      <mat-option [value]="MemberType.ESTIMATOR">Estimator</mat-option>
-      <mat-option [value]="MemberType.OBSERVER">Observer</mat-option>
-    </mat-select>
-  </mat-form-field>
-  @if (joinAs.value === MemberType.OBSERVER) {
-    <mat-card class="observer-info" appearance="outlined">
-      <mat-card-content>
-        <small>
-          Observers have access to all room features, but they can not vote.
-          Choose this if you are the facilitator, but not part of the estimation
-          process.
-        </small>
-      </mat-card-content>
-    </mat-card>
-  }
-</ng-template>
-<app-carbon-ad placement="landing" />
+            }}
+          </h1>
+        </div>
+      }
+    </ng-template>
+    <ng-template #invitedToRoomText>
+      <h4 class="card-subheader">
+        You've been invited to join room: <br />
+        <strong>{{ (vm | async)?.roomId }}</strong>
+      </h4>
+    </ng-template>
+    <ng-template #recent>
+      @if (
+        !hideRecentlyLeftRoom && recentlyLeftRoom$ | async;
+        as recentlyLeftRoom
+        ) {
+        <mat-card
+          class="recent-card action-card"
+          @delayedFadeAnimation
+          appearance="outlined">
+          <mat-card-content>
+            <p>
+              Continue where you left off? <br />
+              Your last room was {{ recentlyLeftRoom.roomId }}
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="navigateToRoom(recentlyLeftRoom.roomId)">
+              <mat-icon>play_arrow</mat-icon>
+              Continue
+            </button>
+            <button mat-button (click)="hideRecentlyLeftRoom = true">
+              Start fresh
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </ng-template>
+    <ng-template #terms>
+      <div class="terms">
+        <small
+          >By using this app you accept the
+          <a routerLink="/policies/terms">Terms</a> and the
+          <a routerLink="/policies/privacy">Privacy Policy</a>.</small
+          >
+        </div>
+      </ng-template>
+      <ng-template #roomIdTemplate>
+        <mat-form-field class="room-id" appearance="outline">
+          <mat-label>Room ID</mat-label>
+          <input
+            matInput
+            placeholder="existing-room-id"
+            [formControl]="roomId"
+            (blur)="onRoomIdBlur()"
+            (keyup.enter)="onJoinRoomClicked.next()"
+            autocomplete="off"
+            spellcheck="false"
+            required
+            id="room-id" />
+        </mat-form-field>
+      </ng-template>
+      <ng-template #nameTemplate>
+        <mat-form-field class="name" appearance="outline">
+          <mat-label>Your name</mat-label>
+          <input
+            matInput
+            placeholder="Best Engineer"
+            [formControl]="name"
+            autocomplete="name"
+            (blur)="onNameBlur()"
+            required
+            id="name" />
+        </mat-form-field>
+      </ng-template>
+      <ng-template #joinMode>
+        <mat-form-field appearance="outline">
+          <mat-label>Join as an</mat-label>
+          <mat-select [formControl]="joinAs">
+            <mat-option [value]="MemberType.ESTIMATOR">Estimator</mat-option>
+            <mat-option [value]="MemberType.OBSERVER">Observer</mat-option>
+          </mat-select>
+        </mat-form-field>
+        @if (joinAs.value === MemberType.OBSERVER) {
+          <mat-card class="observer-info" appearance="outlined">
+            <mat-card-content>
+              <small>
+                Observers have access to all room features, but they can not vote.
+                Choose this if you are the facilitator, but not part of the estimation
+                process.
+              </small>
+            </mat-card-content>
+          </mat-card>
+        }
+      </ng-template>
+      <app-carbon-ad placement="landing" />

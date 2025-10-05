@@ -45,7 +45,7 @@ import {
   MatMenuItem,
 } from '@angular/material/menu';
 import { MatIconButton } from '@angular/material/button';
-import { NgIf, AsyncPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -77,7 +77,6 @@ import { isEqual } from 'lodash';
     MatIcon,
     MatChipRemove,
     MatTooltip,
-    NgIf,
     MatIconButton,
     MatMenuTrigger,
     MatMenu,
@@ -86,8 +85,8 @@ import { isEqual } from 'lodash';
     MatDivider,
     AsyncPipe,
     DecimalPipe,
-    EstimateConverterPipe,
-  ],
+    EstimateConverterPipe
+],
 })
 export class RoundResultsComponent implements OnInit, OnDestroy {
   room = input.required<Room>();

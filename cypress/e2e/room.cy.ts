@@ -1,9 +1,4 @@
-import { createNewRoom, setAppCheckCookie } from '../support/utils';
-
-export function assertInvitationPopup() {
-  cy.contains('Invite others to join').should('be.visible');
-  cy.contains('Close').click();
-}
+import { assertInvitationPopup, createNewRoom, setAppCheckCookie } from '../support/utils';
 
 describe('Inside the room', () => {
   let roomUrl;

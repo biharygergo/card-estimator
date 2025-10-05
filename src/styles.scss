@@ -56,12 +56,12 @@ $m3-light-theme: mat.define-theme(
   &.running-in-meet,
   &.running-in-webex {
     --background-dark: white;
-    --main-dark-color: var(--mdc-outlined-card-container-color);
+    --main-dark-color: var(--mat-card-outlined-container-color);
     --main-color: white;
     --text-on-main: #3f4759;
     --card-border-color: lightgray;
     --secondary-text-on-main: lightgray;
-    --ad-background: var(--mdc-outlined-card-container-color);
+    --ad-background: var(--mat-card-outlined-container-color);
   }
 
   &.running-in-teams {
@@ -72,7 +72,7 @@ $m3-light-theme: mat.define-theme(
 
 .dark-theme {
   @include mat.all-component-colors($m3-dark-theme);
-  --mdc-outlined-card-container-color: #2a2929 !important;
+  --mat-card-outlined-container-color: #2a2929 !important;
   --background-dark: black;
   --main-dark-color: black;
   --main-dark-highlight-color: black;
@@ -93,7 +93,7 @@ $m3-light-theme: mat.define-theme(
   }
 
   &.running-in-zoom {
-    --mdc-outlined-card-container-color: #1d1d1d !important;
+    --mat-card-outlined-container-color: #1d1d1d !important;
     --background-dark: #242424;
     --main-color: #242424;
   }
@@ -303,8 +303,8 @@ body {
 
 .responsive-label-button {
   @media screen and (max-width: 500px) {
-    --mat-outlined-button-icon-offset: 0;
-    --mat-filled-button-icon-offset: 0;
+    --mat-button-outlined-icon-offset: 0;
+    --mat-button-filled-icon-offset: 0;
 
     .mdc-button__label {
       display: none;
@@ -315,8 +315,8 @@ body {
   }
 
   &.forced {
-    --mat-outlined-button-icon-offset: 0;
-    --mat-filled-button-icon-offset: 0;
+    --mat-button-outlined-icon-offset: 0;
+    --mat-button-filled-icon-offset: 0;
 
     .mdc-button__label {
       display: none;
@@ -433,7 +433,7 @@ body {
 
 .full-screen-modal {
   border-radius: 0;
-  --mdc-dialog-container-shape: 0;
+  --mat-dialog-container-shape: 0;
 }
 
 .snackbar-error {
@@ -511,15 +511,15 @@ body {
       transform 0.2s 50ms ease-in-out,
       background 100ms linear;
     margin: 0 0.3rem;
-    --mdc-protected-button-container-shape: 8px;
-    // --mdc-protected-button-label-text-color: black;
+    --mat-button-protected-container-shape: 8px;
+    // --mat-button-protected-label-text-color: black;
 
     &.selected {
-      --mdc-protected-button-container-color: var(
-        --mdc-filled-button-container-color
+      --mat-button-protected-container-color: var(
+        --mat-button-filled-container-color
       );
-      --mdc-protected-button-label-text-color: var(
-        --mdc-filled-button-label-text-color
+      --mat-button-protected-label-text-color: var(
+        --mat-button-filled-label-text-color
       );
     }
 
@@ -536,8 +536,8 @@ body {
       color: #efefef;
 
       &.selected {
-        --mdc-protected-button-disabled-container-color: var(
-          --mdc-filled-button-container-color
+        --mat-button-protected-disabled-container-color: var(
+          --mat-button-filled-container-color
         );
       }
     }
@@ -556,7 +556,7 @@ body {
 }
 
 .feedback-panel {
-  --mdc-snackbar-container-color: var(--mdc-dialog-container-color);
+  --mat-snackbar-container-color: var(--mat-dialog-container-color);
 }
 
 .see-more-features {
@@ -638,8 +638,8 @@ body {
       font-family: 'Roboto';
       font-weight: 500;
       border-radius: 24px;
-      background: var(--mdc-filled-button-container-color);
-      color: var(--mdc-filled-button-label-text-color);
+      background: var(--mat-button-filled-container-color);
+      color: var(--mat-button-filled-label-text-color);
       transition: background 50ms linear;
 
       &:hover {
@@ -648,7 +648,7 @@ body {
 
       &.shepherd-button-secondary {
         background: none;
-        color: var(--mdc-outlined-button-label-text-color);
+        color: var(--mat-button-outlined-label-text-color);
 
         &:hover {
           background: none;
@@ -672,7 +672,7 @@ body {
   .main-split-button {
     flex: 1 1 90%;
     z-index: 1;
-    background-color: var(--mdc-outlined-card-container-color);
+    background-color: var(--mat-card-outlined-container-color);
   }
 
   .split-action-button-container-side-button {
@@ -680,19 +680,19 @@ body {
     align-items: center;
     justify-content: center;
     height: 100%;
-    border: 1px solid var(--mdc-outlined-button-outline-color);
+    border: 1px solid var(--mat-button-outlined-outline-color);
     border-left: none;
-    border-top-right-radius: var(--mdc-outlined-button-container-shape);
-    border-bottom-right-radius: var(--mdc-outlined-button-container-shape);
+    border-top-right-radius: var(--mat-button-outlined-container-shape);
+    border-bottom-right-radius: var(--mat-button-outlined-container-shape);
     margin-left: -1.4rem;
     padding-left: 1.4rem;
     background-color: var(--on-light-background-color);
     transition: background 300ms linear;
 
     &.enabled {
-      background-color: var(--mdc-filled-button-container-color);
+      background-color: var(--mat-button-filled-container-color);
       button {
-        color: var(--mdc-outlined-card-container-color);
+        color: var(--mat-card-outlined-container-color);
       }
     }
   }
@@ -704,6 +704,6 @@ body {
   }
 
   &.disabled .split-action-button-container-side-button {
-    border-color: var(--mdc-outlined-button-disabled-outline-color);
+    border-color: var(--mat-button-outlined-disabled-outline-color);
   }
 }

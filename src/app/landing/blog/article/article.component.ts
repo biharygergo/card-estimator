@@ -7,7 +7,7 @@ import { ArticlesService } from 'src/app/services/articles.service';
 import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component';
 import { StartPlanningCtaComponent } from '../../components/start-planning-cta/start-planning-cta.component';
 import { MarkdownComponent } from 'ngx-markdown';
-import { NgIf, NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
+import { NgOptimizedImage, AsyncPipe, DatePipe } from '@angular/common';
 import { SchemaTagService } from 'src/app/services/schema-tag.service';
 import type { Article as SchemaArticle, WithContext } from 'schema-dts';
 import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-player.component';
@@ -18,7 +18,6 @@ import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.scss'],
   imports: [
-    NgIf,
     NgOptimizedImage,
     MarkdownComponent,
     StartPlanningCtaComponent,
@@ -27,8 +26,8 @@ import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component
     AsyncPipe,
     DatePipe,
     YoutubePlayerComponent,
-    FaqSectionComponent,
-  ],
+    FaqSectionComponent
+],
 })
 export class ArticleComponent {
   private readonly metaService = inject(Meta);
@@ -87,7 +86,7 @@ export class ArticleComponent {
           name: 'PlanningPoker.live',
           logo: {
             '@type': 'ImageObject',
-            url: 'https://planningpoker.live/assets/logo.png',
+            url: 'https://planningpoker.live/assets/logo.webp',
           },
         },
         image: `https://res.cloudinary.com/dtvhnllmc/image/upload/v1736183590/${article.coverImageId}`,

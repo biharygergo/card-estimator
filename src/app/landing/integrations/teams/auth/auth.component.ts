@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TeamsService } from 'src/app/services/teams.service';
 
 @Component({
   selector: 'app-auth',
-  imports: [CommonModule, MatDialogModule],
+  imports: [MatDialogModule],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })

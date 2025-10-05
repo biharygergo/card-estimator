@@ -17,3 +17,8 @@ export function createNewRoom(userName: string, skipInvitationPopup: boolean = f
   cy.wait(1000);
   cy.url().as('roomUrl');
 }
+
+export function assertInvitationPopup() {
+  cy.contains('Invite others to join').should('be.visible');
+  cy.contains('Close').click();
+}

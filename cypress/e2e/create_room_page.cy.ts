@@ -1,5 +1,4 @@
-import { clearFirebaseLocalStorage, setAppCheckCookie } from '../support/utils';
-import { assertInvitationPopup } from './room.cy';
+import { assertInvitationPopup, clearFirebaseLocalStorage, setAppCheckCookie } from '../support/utils';
 
 describe('Creating a room as a new user', () => {
   beforeEach(() => {

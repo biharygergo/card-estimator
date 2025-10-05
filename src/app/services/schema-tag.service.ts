@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, Renderer2, signal } from '@angular/core';
+
+import { Inject, Injectable, Renderer2, signal, DOCUMENT } from '@angular/core';
 import { WebApplication, WithContext } from 'schema-dts';
 import { FaqItem } from '../types';
 

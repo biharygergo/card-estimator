@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { app, pages } from '@microsoft/teams-js';
 
 @Component({
   selector: 'app-configure-tab',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './configure-tab.component.html',
   styleUrls: ['./configure-tab.component.scss'],
 })

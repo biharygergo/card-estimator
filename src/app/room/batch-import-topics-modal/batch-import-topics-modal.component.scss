@@ -88,8 +88,8 @@
 
   .filter-chip {
     display: flex;
-    background: var(--mdc-chip-elevated-selected-container-color);
-    border: 1px solid var(--mdc-chip-elevated-selected-container-color);
+    background: var(--mat-chip-elevated-selected-container-color);
+    border: 1px solid var(--mat-chip-elevated-selected-container-color);
     border-radius: 24px;
     overflow: hidden;
     font-size: 13px;
@@ -122,8 +122,8 @@
         padding: 6px 8px;
         height: 100%;
         border: none;
-        background: var(--mdc-chip-elevated-selected-container-color);
-        color: var(--mdc-dialog-supporting-text-color);
+        background: var(--mat-chip-elevated-selected-container-color);
+        color: var(--mat-dialog-supporting-text-color);
         font-family: 'Roboto';
         font-weight: 500;
         font-size: 13px;

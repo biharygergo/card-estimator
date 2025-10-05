@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NavigationService } from '../services/navigation.service';
@@ -9,13 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   imports: [
-    CommonModule,
     RouterModule,
     AnonymousUserBannerComponent,
     SessionHistoryComponent,
     MatIconModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
   selector: 'app-session-history-page',
   templateUrl: './session-history-page.component.html',
   styleUrls: ['./session-history-page.component.scss'],

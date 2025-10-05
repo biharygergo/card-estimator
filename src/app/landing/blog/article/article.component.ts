@@ -86,7 +86,7 @@ export class ArticleComponent {
           name: 'PlanningPoker.live',
           logo: {
             '@type': 'ImageObject',
-            url: 'https://planningpoker.live/assets/logo.png',
+            url: 'https://planningpoker.live/assets/logo.webp',
           },
         },
         image: `https://res.cloudinary.com/dtvhnllmc/image/upload/v1736183590/${article.coverImageId}`,

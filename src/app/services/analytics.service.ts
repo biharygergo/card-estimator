@@ -407,4 +407,8 @@ export class AnalyticsService {
       change_vote_after_reveal_enabled: arg0,
     });
   }
+
+  logClickedOpenReferralDialog(source: string) {
+    this.logEventInternal('clicked_open_referral_dialog', { source });
+  }
 }

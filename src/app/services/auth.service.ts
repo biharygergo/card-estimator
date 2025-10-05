@@ -334,6 +334,13 @@ export class AuthService {
       createdAt: serverTimestamp(),
     };
 
+    // Check for referral code from cookie or localStorage
+    const referralCode = this.getReferralCode();
+    if (referralCode) {
+      userDetails.referredByCode = referralCode;
+      console.log('User signed up with referral code:', referralCode);
+    }
+
     if (user.displayName !== userDetails.displayName) {
       await updateProfile(user, { displayName: userDetails.displayName });
       await this.auth.currentUser.reload();
@@ -343,6 +350,22 @@ export class AuthService {
       doc(this.firestore, USER_DETAILS_COLLECTION, user.uid),
       userDetails
     );
+  }
+
+  private getReferralCode(): string | null {
+    // Try to get from cookie first
+    const cookieValue = Cookies.get('pp_referral');
+    if (cookieValue) {
+      return cookieValue;
+    }
+
+    // Fallback to localStorage
+    try {
+      return localStorage.getItem('pp_referral');
+    } catch (e) {
+      console.error('Error reading referral from localStorage:', e);
+      return null;
+    }
   }
 
   async updateUserDetails(userId: string, userDetails: Partial<UserDetails>) {

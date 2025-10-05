@@ -29,6 +29,21 @@ export async function getReferralStats(
     ...doc.data(),
   } as Referral));
 
+  // Check if this user was referred by someone
+  const refereeSnapshot = await db
+      .collection(REFERRALS_COLLECTION)
+      .where("refereeId", "==", userId)
+      .limit(1)
+      .get();
+
+  let refereePendingCredits = 0;
+  if (!refereeSnapshot.empty) {
+    const refereeReferral = refereeSnapshot.docs[0].data() as Referral;
+    if (!refereeReferral.refereeCreditAwarded) {
+      refereePendingCredits = refereeReferral.refereePendingCredits;
+    }
+  }
+
   // Calculate stats
   const totalReferred = referrals.length;
   const totalCreditsEarned = referrals
@@ -42,7 +57,8 @@ export async function getReferralStats(
     referralCode,
     totalReferred,
     totalCreditsEarned,
-    pendingCredits,
+    pendingCredits, // Credits from people you referred who haven't purchased yet
+    pendingCreditsAsReferee: refereePendingCredits, // Credits you'll get when you make your first purchase
     referrals,
   };
 }

@@ -62,7 +62,12 @@
       <mat-icon>toll</mat-icon>
       <span>Buy credits</span>
     </button>
-    } @if (!(isOnJoinOrCreateScreen$ | async)) {
+    }
+    <button mat-menu-item (click)="openReferralDialog()">
+      <mat-icon>card_giftcard</mat-icon>
+      <span>Refer & Earn</span>
+    </button>
+    @if (!(isOnJoinOrCreateScreen$ | async)) {
     <a mat-menu-item routerLink="/join">
       <mat-icon>home</mat-icon>
       <span>Home</span>

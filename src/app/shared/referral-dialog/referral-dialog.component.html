@@ -1,0 +1,120 @@
+<h1 mat-dialog-title class="dialog-title">Refer & earn credits</h1>
+<div mat-dialog-content>
+  @if (isLoading) {
+    <div class="tab-section loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading your referral information...</p>
+    </div>
+  }
+  
+  @if (error) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-flat-button color="primary" (click)="loadReferralStats()">
+        Retry
+      </button>
+    </div>
+  }
+
+  @if (!isLoading && (user$ | async)?.isAnonymous) {
+    <div class="tab-section anonymous-prompt">
+      <h5 class="section-title">
+        <mat-icon>account_circle</mat-icon> Create an account to start earning credits
+      </h5>
+      <p>
+        Create a free account to get your unique referral link. Share it with other teams 
+        and scrum masters in your network, and earn 3 credits for each person who makes 
+        their first purchase!
+      </p>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="openCreateAccountModal()"
+        class="create-account-button">
+        Create an account
+      </button>
+    </div>
+  }
+  
+  @if (!isLoading && !error && stats && !(user$ | async)?.isAnonymous) {
+    <!-- How it works section -->
+    <div class="tab-section">
+      <h5 class="section-title">
+        <mat-icon>lightbulb</mat-icon> How it works
+      </h5>
+      <ul class="benefits-list">
+        <li>Share your link with other teams, scrum masters, or agile coaches in your network</li>
+        <li>When they make their first purchase, you both earn <strong>3 credits</strong></li>
+        <li>Credits are awarded immediately after their purchase</li>
+      </ul>
+    </div>
+
+    <!-- Referral link section -->
+    <div class="tab-section">
+      <h5 class="section-title">
+        <mat-icon>link</mat-icon> Your Referral Link
+      </h5>
+      <div class="link-container">
+        <input 
+          type="text" 
+          readonly 
+          [value]="referralLink"
+          class="link-input"
+          (click)="copyReferralLink()"
+        />
+        <button 
+          mat-icon-button 
+          color="primary" 
+          (click)="copyReferralLink()"
+          matTooltip="Copy to clipboard"
+        >
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats section -->
+    <div class="tab-section">
+      <h5 class="section-title">
+        <mat-icon>analytics</mat-icon> Your Referral Stats
+      </h5>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.totalReferred }}</div>
+          <div class="stat-label">Total Referrals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.pendingCredits + stats.pendingCreditsAsReferee }}</div>
+          <div class="stat-label">Pending Credits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ stats.totalCreditsEarned }}</div>
+          <div class="stat-label">Credits Earned</div>
+        </div>
+      </div>
+      
+      @if (stats.pendingCredits > 0 || stats.pendingCreditsAsReferee > 0) {
+        <div class="pending-info-container">
+          @if (stats.pendingCredits > 0) {
+            <p class="pending-info">
+              <mat-icon>info</mat-icon>
+              You have {{ stats.pendingCredits }} pending credits from referrals 
+              who signed up but haven't made a purchase yet.
+            </p>
+          }
+          @if (stats.pendingCreditsAsReferee > 0) {
+            <p class="pending-info">
+              <mat-icon>card_giftcard</mat-icon>
+              You have {{ stats.pendingCreditsAsReferee }} pending credits waiting for you! 
+              Make your first purchase to unlock them.
+            </p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+</div>

@@ -250,17 +250,27 @@
               </div>
               <div class="actions"></div>
             </div>
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="openLearnMore()"
-              [disabled]="paymentsService.isSubscriptionDisabled()">
-              {{
-                paymentsService.isSubscriptionDisabled()
-                  ? 'Not available on Teams mobile'
-                  : 'Buy more credits'
-              }}
-            </button>
+            <div class="credit-actions">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openLearnMore()"
+                [disabled]="paymentsService.isSubscriptionDisabled()">
+                {{
+                  paymentsService.isSubscriptionDisabled()
+                    ? 'Not available on Teams mobile'
+                    : 'Buy more credits'
+                }}
+              </button>
+              @if (!user?.isAnonymous) {
+              <button
+                mat-button
+                color="primary"
+                (click)="openReferralDialog()">
+                Refer & earn
+              </button>
+              }
+            </div>
           </div>
           @if (subscription$ | async; as subscription) {
           <div class="tab-section">

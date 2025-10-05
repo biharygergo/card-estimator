@@ -174,8 +174,8 @@
     display: flex;
     justify-content: center;
     color: #bfc6dc;
-    --mdc-tab-indicator-active-indicator-color: white;
-    --mat-tab-header-active-focus-indicator-color: white;
+    --mat-tab-active-indicator-color: white;
+    --mat-tab-active-focus-indicator-color: white;
 
     .mdc-tab {
       .mdc-tab__text-label {

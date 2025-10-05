@@ -8,17 +8,17 @@
 
   .estimator-button {
     &.majority {
-      --mdc-protected-button-container-color: var(
-        --mdc-filled-button-container-color
+      --mat-button-protected-container-color: var(
+        --mat-button-filled-container-color
       );
-      --mdc-protected-button-label-text-color: var(
-        --mdc-filled-button-label-text-color
+      --mat-button-protected-label-text-color: var(
+        --mat-button-filled-label-text-color
       );
     }
 
     &.majority-override {
-      --mdc-protected-button-container-color: var(--accent-color);
-      --mdc-protected-button-label-text-color: white;
+      --mat-button-protected-container-color: var(--accent-color);
+      --mat-button-protected-label-text-color: white;
     }
   }
 }

@@ -89,13 +89,13 @@ nav {
         &.split-button {
           display: flex;
           align-items: center;
-          --mdc-icon-button-state-layer-size: 33px;
-          --mdc-icon-button-icon-size: 0.9rem;
+          --mat-icon-button-state-layer-size: 33px;
+          --mat-icon-button-icon-size: 0.9rem;
           padding-right: 8px;
 
           @media screen and (max-width: 800px) {
-            --mdc-icon-button-state-layer-size: 33px;
-            --mdc-icon-button-icon-size: 0.9rem;
+            --mat-icon-button-state-layer-size: 33px;
+            --mat-icon-button-icon-size: 0.9rem;
           }
 
           .split-button-left {

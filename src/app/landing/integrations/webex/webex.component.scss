@@ -54,7 +54,7 @@ main {
   width: fit-content;
   font-size: 1.3rem;
   padding: 1.5rem 2rem;
-  --mdc-outlined-button-label-text-color: #d9e2ff;
+  --mat-button-outlined-label-text-color: #d9e2ff;
 }
 
 .banner-wrapper {
@@ -96,8 +96,8 @@ main {
   max-width: 1000px;
   margin: 0 auto;
   width: 100%;
-  --mdc-tab-indicator-active-indicator-color: white;
-  --mat-tab-header-active-focus-indicator-color: white;
+  --mat-tab-active-indicator-color: white;
+  --mat-tab-active-focus-indicator-color: white;
 
   ::ng-deep .mdc-tab {
     .mdc-tab__text-label {

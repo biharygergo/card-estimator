@@ -15,7 +15,7 @@
   flex-direction: column;
 
   .spinner {
-    --mdc-circular-progress-active-indicator-color: var(--text-on-main);
+    --mat-progress-spinner-active-indicator-color: var(--text-on-main);
     margin-bottom: 1rem;
   }
 }

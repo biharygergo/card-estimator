@@ -1,9 +1,10 @@
 import {
+  assertInvitationPopup,
   clearFirebaseLocalStorage,
   createNewRoom,
   setAppCheckCookie,
 } from '../support/utils';
-import { assertInvitationPopup } from './room.cy';
+
 
 describe('Authentication', () => {
   const testEmail = `test+${Date.now()}@company.com`;
@@ -29,8 +30,8 @@ describe('Authentication', () => {
     cy.get('#create-account-button-banner').click();
 
     // Account modal appears
-    cy.get('#email-input').click().type(testEmail);
-    cy.get('#password-input').click().type(testPassword);
+    cy.get('#email-input').click().type(testEmail, { delay: 1});
+    cy.get('#password-input').click().type(testPassword, { delay: 1});
     cy.get('#create-account-button').click();
     cy.wait(1000);
 
@@ -44,8 +45,8 @@ describe('Authentication', () => {
     cy.get('#sign-in-button').click();
 
     // Account modal appears
-    cy.get('#email-input').click().type(testEmail);
-    cy.get('#password-input').click().type(testPassword);
+    cy.get('#email-input').click().type(testEmail, { delay: 10});
+    cy.get('#password-input').click().type(testPassword, { delay: 1});
     cy.get('#create-account-button').click();
     cy.wait(1000);
 

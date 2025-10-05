@@ -12,7 +12,7 @@ import {
 import Stripe from "stripe";
 import {getCurrentOrganization} from "../organizations";
 import {captureError} from "../shared/errors";
-import { awardReferralCreditsOnPurchase } from "../referral/awardReferralCredits";
+import {awardReferralCreditsOnPurchase} from "../referral/awardReferralCredits";
 
 export async function onCustomerPaymentCreated(
     snap: FirestoreEvent<QueryDocumentSnapshot | undefined>

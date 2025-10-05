@@ -84,7 +84,6 @@ async function awardCreditsToUser(
     relatedPaymentId: string,
     recipientType: "referee" | "referrer"
 ): Promise<void> {
-
   const createdAt = Timestamp.now().toDate();
   const displayName = recipientType === "referee" ?
     "Referral Bonus (Welcome!)" :

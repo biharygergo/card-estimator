@@ -139,6 +139,16 @@ exports.enterProtectedRoom = onCall({cors: true, region}, async (request) => {
   return enterProtectedRoom(request);
 });
 
+exports.onOrganizationCreated = onDocumentCreated(
+    "organizations/{organizationId}",
+    async (snap) => {
+      const {onOrganizationCreated} = await import(
+          "./organizations/onOrganizationCreated"
+      );
+      return onOrganizationCreated(snap);
+    }
+);
+
 exports.onOrganizationUpdated = onDocumentUpdated(
     "organizations/{organizationId}",
     async (change) => {

@@ -1,6 +1,7 @@
 import {Resend, CreateEmailOptions} from "resend";
 import {GeneralNotificationEmail} from "../emails/general-notification";
 import {WelcomeEmail} from "../emails/welcome";
+import {OrganizationWelcomeEmail} from "../emails/organization-welcome";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 export interface EmailProps {
@@ -42,6 +43,23 @@ export function sendWelcomeEmail(props: { email: string; name: string }) {
     from: FROM,
     // eslint-disable-next-line new-cap
     react: WelcomeEmail(),
+  });
+}
+
+export function sendOrganizationWelcomeEmail(props: {
+  email: string;
+  organizationName: string;
+}) {
+  return sendResendEmail({
+    to: props.email,
+    subject: "Welcome to PlanningPoker.live Organizations! 🎉",
+    from: FROM,
+    // eslint-disable-next-line new-cap
+    react: OrganizationWelcomeEmail({
+      organizationName: props.organizationName,
+      buttonLabel: "Manage Your Organization",
+      buttonUrl: "https://planningpoker.live/create",
+    }),
   });
 }
 

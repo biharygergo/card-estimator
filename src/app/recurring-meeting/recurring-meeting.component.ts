@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppConfigModule } from '../app-config.module';
 import { RecurringMeetingLinkService } from '../services/recurring-meeting-link.service';
@@ -37,14 +37,13 @@ type State = {
 @Component({
   selector: 'app-recurring-meeting',
   imports: [
-    CommonModule,
     RouterModule,
     MatCardModule,
     MatProgressSpinnerModule,
     ProfileDropdownComponent,
     MatButtonModule,
-    AppConfigModule,
-  ],
+    AppConfigModule
+],
   templateUrl: './recurring-meeting.component.html',
   styleUrls: ['./recurring-meeting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

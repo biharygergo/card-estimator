@@ -1,78 +1,79 @@
 <main>
   <div class="layout">
-    <article *ngIf="article | async as article">
-      <div class="breadcrumbs">
-        <a routerLink="/">Home</a>
-        <span>></span>
-        <a routerLink="/knowledge-base">Knowledge base</a>
-        <span>></span>
-        <a routerLink="/knowledge-base/{{ article.slug }}">{{
-          article.title
-        }}</a>
-      </div>
-      <div class="content">
-        <div class="card-header">
-          <h1>{{ article.title }}</h1>
-          <p>{{ article.description }}</p>
-          <div class="meta">
-            <span class="author">{{ article.author }}</span>
-            <small
-              >Last updated:
-              {{ article.lastUpdated | date: 'mediumDate' }}</small
-            >
-          </div>
+    @if (article | async; as article) {
+      <article>
+        <div class="breadcrumbs">
+          <a routerLink="/">Home</a>
+          <span>></span>
+          <a routerLink="/knowledge-base">Knowledge base</a>
+          <span>></span>
+          <a routerLink="/knowledge-base/{{ article.slug }}">{{
+            article.title
+          }}</a>
         </div>
-        @if (!article.youtubeVideoId) {
-          <div class="cover-image">
-            <img
-              [ngSrc]="article.coverImageId"
-              placeholder
-              [alt]="article.coverImageAlt"
-              fill
-              sizes="90wv"
-              priority />
-          </div>
-        } @else {
-          <app-youtube-player [youtubeVideoId]="article.youtubeVideoId" />
-        }
-        <div>
-          <markdown [data]="article.content" />
-          <div class="tag-cloud">
-            @for (tag of article.tags; track $index) {
-              <span class="tag">{{ tag }}</span>
-            }
-          </div>
-        </div>
-
-        @if (article.faqs?.length > 0) {
-          <app-faq-section
-            [faqs]="article.faqs"
-            [inverse]="true"
-            [hideMoreButton]="true"
-            [hideTitle]="true" />
-        }
-        <div class="banner-wrapper">
-          <start-planning-cta></start-planning-cta>
-        </div>
-      </div>
-    </article>
-    <div class="recommendations">
-      <div class="recommendations-inner">
-        <h2>Learn more about agile techniques:</h2>
-        <div class="recommendation-block">
-          @for (
-            recommendation of recommendations | async;
-            track recommendation.slug
-          ) {
-            <div class="recommendation">
-              <a [routerLink]="'/knowledge-base/' + recommendation.slug"
-                ><h3>{{ recommendation.title }}</h3></a
-              >
+        <div class="content">
+          <div class="card-header">
+            <h1>{{ article.title }}</h1>
+            <p>{{ article.description }}</p>
+            <div class="meta">
+              <span class="author">{{ article.author }}</span>
+              <small
+                >Last updated:
+                {{ article.lastUpdated | date: 'mediumDate' }}</small
+                >
+              </div>
             </div>
-          }
+            @if (!article.youtubeVideoId) {
+              <div class="cover-image">
+                <img
+                  [ngSrc]="article.coverImageId"
+                  placeholder
+                  [alt]="article.coverImageAlt"
+                  fill
+                  sizes="90wv"
+                  priority />
+              </div>
+            } @else {
+              <app-youtube-player [youtubeVideoId]="article.youtubeVideoId" />
+            }
+            <div>
+              <markdown [data]="article.content" />
+              <div class="tag-cloud">
+                @for (tag of article.tags; track $index) {
+                  <span class="tag">{{ tag }}</span>
+                }
+              </div>
+            </div>
+            @if (article.faqs?.length > 0) {
+              <app-faq-section
+                [faqs]="article.faqs"
+                [inverse]="true"
+                [hideMoreButton]="true"
+                [hideTitle]="true" />
+            }
+            <div class="banner-wrapper">
+              <start-planning-cta></start-planning-cta>
+            </div>
+          </div>
+        </article>
+      }
+      <div class="recommendations">
+        <div class="recommendations-inner">
+          <h2>Learn more about agile techniques:</h2>
+          <div class="recommendation-block">
+            @for (
+              recommendation of recommendations | async;
+              track recommendation.slug
+              ) {
+              <div class="recommendation">
+                <a [routerLink]="'/knowledge-base/' + recommendation.slug"
+                  ><h3>{{ recommendation.title }}</h3></a
+                  >
+                </div>
+              }
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</main>
-<app-carbon-ad placement="landing" />
+    </main>
+    <app-carbon-ad placement="landing" />

@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {
   Component,
   Input,
@@ -52,13 +52,12 @@ const INTEGRATIONS = [
 
 @Component({
   imports: [
-    CommonModule,
     RouterModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    NgOptimizedImage,
-  ],
+    NgOptimizedImage
+],
   selector: 'zoom-app-banner',
   templateUrl: './zoom-app-banner.component.html',
   styleUrls: ['./zoom-app-banner.component.scss'],

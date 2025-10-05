@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -41,7 +41,7 @@ export const overrideMajorityVodeModalCreator = (
 ];
 @Component({
   selector: 'app-override-majority-vote-modal',
-  imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule],
+  imports: [MatDialogModule, MatButtonModule, MatIconModule],
   templateUrl: './override-majority-vote-modal.component.html',
   styleUrl: './override-majority-vote-modal.component.scss',
 })

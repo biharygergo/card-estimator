@@ -5,6 +5,7 @@ import {
   OnInit,
   PLATFORM_ID,
   Renderer2,
+  DOCUMENT
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Meta, Title } from '@angular/platform-browser';
@@ -31,7 +32,7 @@ import { NavigationService } from './services/navigation.service';
 import { subscriptionResultModalCreator } from './shared/subscription-result/subscription-result.component';
 import { SubscriptionResult } from './types';
 import { Theme, ThemeService } from './services/theme.service';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 import { environment } from 'src/environments/environment';
 import Clarity from '@microsoft/clarity';

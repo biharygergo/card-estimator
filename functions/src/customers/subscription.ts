@@ -12,6 +12,7 @@ import {
 import Stripe from "stripe";
 import {getCurrentOrganization} from "../organizations";
 import {captureError} from "../shared/errors";
+import { awardReferralCreditsOnPurchase } from "../referral/awardReferralCredits";
 
 export async function onCustomerPaymentCreated(
     snap: FirestoreEvent<QueryDocumentSnapshot | undefined>
@@ -79,6 +80,14 @@ async function handlePaymentIntentForBundle(paymentIntent: Stripe.PaymentIntent 
     await handleOrganizationBundleCreation(paymentIntent, userId);
   } else {
     await createBundle(bundleName, userId, paymentIntent.id);
+  }
+
+  // Award referral credits if applicable (for both individual and org purchases)
+  try {
+    await awardReferralCreditsOnPurchase(userId, paymentIntent.id);
+  } catch (error) {
+    console.error("Error awarding referral credits:", error);
+    // Don't throw - we don't want referral credit errors to break the purchase flow
   }
 }
 

@@ -49,14 +49,178 @@
       </div>
     </div>
     <div class="header-cards">
-      <img
-        ngSrc="header_cards_cut"
-        alt="Two planning poker cards for agile estimation"
-        priority
-        placeholder
-        width="1120"
-        height="699"
-        sizes="(max-width: 800px) 100vw, 30vw" />
+      @if (isBrowser()) {
+      <div class="cards-container">
+        <!-- Jira Ticket / Results Overlay -->
+        <div class="ticket-card" 
+             [class.show]="state().showTicket" 
+             [class.show-results]="state().showResults"
+             [class.hidden]="state().hideOverlay">
+          @if (!state().showResults) {
+          <div class="ticket-content">
+            <div class="ticket-header">
+              <mat-icon class="ticket-icon">description</mat-icon>
+              <span class="ticket-id">PP-1</span>
+            </div>
+            <div class="ticket-title">Redesign homepage</div>
+            <div class="ticket-meta">Ready for estimation</div>
+            
+            <div class="estimators">
+              <div class="estimator" [class.show]="state().showEstimator1">
+                <div class="avatar-wrapper">
+                  <div class="avatar">A</div>
+                  <div class="vote-indicator" [class.show]="state().showVote1">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+                </div>
+                <span>Alice</span>
+              </div>
+              <div class="estimator" [class.show]="state().showEstimator2">
+                <div class="avatar-wrapper">
+                  <div class="avatar">B</div>
+                  <div class="vote-indicator" [class.show]="state().showVote2">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+                </div>
+                <span>Bob</span>
+              </div>
+              <div class="estimator" [class.show]="state().showEstimator3">
+                <div class="avatar-wrapper">
+                  <div class="avatar">C</div>
+                  <div class="vote-indicator" [class.show]="state().showVote3">
+                    <mat-icon>check_circle</mat-icon>
+                  </div>
+                </div>
+                <span>Carol</span>
+              </div>
+            </div>
+          </div>
+          } @else {
+          <div class="results-content">
+            <div class="results-header">
+              <mat-icon class="results-icon">poll</mat-icon>
+              <span class="results-title">Estimation Complete</span>
+            </div>
+            <div class="results-stats">
+              <div class="stat">
+                <div class="stat-label">Average</div>
+                <div class="stat-value">3.7</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Majority</div>
+                <div class="stat-value">3</div>
+              </div>
+            </div>
+            <div class="votes-list">
+              <div class="vote-item">Alice: <strong>3</strong></div>
+              <div class="vote-item">Bob: <strong>3</strong></div>
+              <div class="vote-item">Carol: <strong>5</strong></div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Card 1 (Alice - 3) -->
+        <div class="card-wrapper card-1" [class.flipped]="state().cardsFlipped">
+          <div class="card-inner">
+            <div class="card card-back">
+              <div class="card-back-pattern">
+                <div class="pattern-grid"></div>
+              </div>
+            </div>
+            <div class="card card-front">
+              <svg class="card-border" viewBox="0 0 200 280" preserveAspectRatio="none">
+                <rect x="4" y="4" width="192" height="272" rx="10" ry="10" 
+                      fill="none" stroke="currentColor" stroke-width="1" 
+                      stroke-dasharray="4 4" opacity="0.3"/>
+              </svg>
+              <span class="corner-number top-left">3</span>
+              <span class="corner-number top-right">3</span>
+              <span class="corner-number bottom-left">3</span>
+              <span class="corner-number bottom-right">3</span>
+              <span class="center-number">3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 (Bob - 3) -->
+        <div class="card-wrapper card-3" [class.flipped]="state().cardsFlipped">
+          <div class="card-inner">
+            <div class="card card-back">
+              <div class="card-back-pattern">
+                <div class="pattern-grid"></div>
+              </div>
+            </div>
+            <div class="card card-front">
+              <svg class="card-border" viewBox="0 0 200 280" preserveAspectRatio="none">
+                <rect x="4" y="4" width="192" height="272" rx="10" ry="10" 
+                      fill="none" stroke="currentColor" stroke-width="1" 
+                      stroke-dasharray="4 4" opacity="0.3"/>
+              </svg>
+              <span class="corner-number top-left">3</span>
+              <span class="corner-number top-right">3</span>
+              <span class="corner-number bottom-left">3</span>
+              <span class="corner-number bottom-right">3</span>
+              <span class="center-number">3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 (Carol - 5) -->
+        <div class="card-wrapper card-5" [class.flipped]="state().cardsFlipped">
+          <div class="card-inner">
+            <div class="card card-back">
+              <div class="card-back-pattern">
+                <div class="pattern-grid"></div>
+              </div>
+            </div>
+            <div class="card card-front">
+              <svg class="card-border" viewBox="0 0 200 280" preserveAspectRatio="none">
+                <rect x="4" y="4" width="192" height="272" rx="10" ry="10" 
+                      fill="none" stroke="currentColor" stroke-width="1" 
+                      stroke-dasharray="4 4" opacity="0.3"/>
+              </svg>
+              <span class="corner-number top-left">5</span>
+              <span class="corner-number top-right">5</span>
+              <span class="corner-number bottom-left">5</span>
+              <span class="corner-number bottom-right">5</span>
+              <span class="center-number">5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="cards-container">
+        <!-- Static cards for SSR -->
+        <div class="card-wrapper card-1">
+          <div class="card-inner">
+            <div class="card card-back">
+              <div class="card-back-pattern">
+                <div class="pattern-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-wrapper card-3">
+          <div class="card-inner">
+            <div class="card card-back">
+              <div class="card-back-pattern">
+                <div class="pattern-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-wrapper card-5">
+          <div class="card-inner">
+            <div class="card card-back">
+              <div class="card-back-pattern">
+                <div class="pattern-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
     </div>
   </div>
 </div>

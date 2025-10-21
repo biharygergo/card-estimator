@@ -8,8 +8,8 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { Observable, Subject, delay, mergeMap, of, takeUntil } from 'rxjs';
-import { ReactionsService } from 'src/app/services/reactions.service';
+import { Observable, Subject, delay, mergeMap, of, takeUntil, filter } from 'rxjs';
+import { ReactionsService, NUDGE_REACTION_ID } from 'src/app/services/reactions.service';
 import { Member } from 'src/app/types';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
@@ -54,6 +54,8 @@ export class ReactionsRendererComponent implements OnInit, OnDestroy {
     this.reactionsService
       .getReactionsStream(this.roomId())
       .pipe(
+        // Filter out nudge reactions - they're handled separately by the nudge overlay
+        filter(reaction => reaction.reactionId !== NUDGE_REACTION_ID),
         mergeMap(reaction => {
           const reactionFromDict =
             this.reactionsService.reactionsMap[reaction.reactionId];

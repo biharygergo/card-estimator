@@ -189,17 +189,14 @@
               </div>
             }
             @if (showMemberControls()) {
-              @if (
-                member.id !== currentUserId() &&
-                room().createdById === currentUserId()
-                ) {
+              @if (member.id !== currentUserId()) {
                 <button
                   mat-icon-button
                   [matMenuTriggerFor]="memberMenu"
                   [matMenuTriggerData]="{ member }"
                   class="member-options-button"
                   matTooltip="Member options">
-                  <mat-icon>settings</mat-icon>
+                  <mat-icon>{{ room().createdById === currentUserId() ? 'settings' : 'more_horiz' }}</mat-icon>
                 </button>
               }
               @if (member.id === currentUserId()) {
@@ -285,33 +282,52 @@
           <ng-template matMenuContent let-member="member">
             <button
               mat-menu-item
-              (click)="removeMember(member)"
-              matTooltip="Removes the member from the room, but keeps their historical votes. They can rejoin anytime."
+              [disabled]="!canNudgeMember(member)"
+              (click)="nudgeMember(member)"
+              [matTooltip]="
+                canNudgeMember(member)
+                  ? 'Nudge ' + member.name + ' to vote'
+                  : member.type !== MemberType.ESTIMATOR
+                    ? 'Cannot nudge observers'
+                    : !room()?.rounds?.[currentRound()] || room()?.rounds?.[currentRound()]?.show_results
+                      ? 'Cannot nudge after results are shown'
+                      : 'Member has already voted'
+              "
               matTooltipPosition="above">
-              <mat-icon>person_remove</mat-icon> Remove from room
+              <mat-icon>notifications_active</mat-icon> Nudge
             </button>
-            <mat-divider />
-            <span
-      [matTooltip]="
-        !organization
-          ? 'You have no organization'
-          : !userProfiles()[member.id]
-            ? 'Anonymous users can not be added to an organization'
-            : organization()?.memberIds?.includes(member.id)
-              ? 'Already a member'
-              : ''
-      ">
+            @if (room().createdById === currentUserId()) {
+              <mat-divider />
               <button
                 mat-menu-item
-        [disabled]="
-          !organization() ||
-          organization().memberIds.includes(member.id) ||
-          !organizationService.isUserAdmin(organization(), currentUserId()) ||
-          !userProfiles()[member.id]
-        "
-                (click)="addToOrganization(member.id)">
-                <mat-icon>group_add</mat-icon> Add to my organization
+                (click)="removeMember(member)"
+                matTooltip="Removes the member from the room, but keeps their historical votes. They can rejoin anytime."
+                matTooltipPosition="above">
+                <mat-icon>person_remove</mat-icon> Remove from room
               </button>
-            </span>
+              <mat-divider />
+              <span
+        [matTooltip]="
+          !organization
+            ? 'You have no organization'
+            : !userProfiles()[member.id]
+              ? 'Anonymous users can not be added to an organization'
+              : organization()?.memberIds?.includes(member.id)
+                ? 'Already a member'
+                : ''
+        ">
+                <button
+                  mat-menu-item
+          [disabled]="
+            !organization() ||
+            organization().memberIds.includes(member.id) ||
+            !organizationService.isUserAdmin(organization(), currentUserId()) ||
+            !userProfiles()[member.id]
+          "
+                  (click)="addToOrganization(member.id)">
+                  <mat-icon>group_add</mat-icon> Add to my organization
+                </button>
+              </span>
+            }
           </ng-template>
         </mat-menu>

@@ -22,6 +22,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { ReactionsService } from 'src/app/services/reactions.service';
 import { avatarModalCreator } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
 import {
   CardSetValue,
@@ -136,7 +137,8 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     readonly organizationService: OrganizationService,
     public readonly permissionsService: PermissionsService,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
+    private readonly reactionsService: ReactionsService
   ) {}
 
   ngOnInit() {
@@ -199,5 +201,26 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
         selectedCardSet: this.selectedEstimationCardSetValue(),
       })
     );
+  }
+
+  async nudgeMember(member: Member) {
+    await this.reactionsService.sendNudge(member.id, this.room().roomId);
+    this.toastService.showMessage(`Nudged ${member.name}!`);
+  }
+
+  canNudgeMember(member: Member): boolean {
+    // Can nudge if:
+    // 1. Not yourself
+    // 2. Member is an estimator (not observer)
+    // 3. Member hasn't voted yet in current round
+    // 4. Results not shown yet
+    const round = this.room()?.rounds?.[this.currentRound()];
+    if (!round || round.show_results) return false;
+    
+    if (member.id === this.currentUserId()) return false;
+    if (member.type !== MemberType.ESTIMATOR) return false;
+    
+    const memberEstimate = round?.estimates?.[member.id];
+    return memberEstimate === undefined; // Only nudge if they haven't voted
   }
 }

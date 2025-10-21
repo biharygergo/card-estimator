@@ -102,6 +102,7 @@
               <app-notes-field />
             </div>
           </div>
+          <app-nudge-overlay [nudges]="currentNudges()" />
         </mat-card>
         @if ((isSmallScreen$ | async)?.matches === false) {
           <ng-container *ngTemplateOutlet="anonymousBanner" />

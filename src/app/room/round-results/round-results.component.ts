@@ -17,6 +17,8 @@ import {
   Subject,
   switchMap,
   takeUntil,
+  pairwise,
+  filter,
 } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -106,6 +108,9 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
 
   userProfiles = signal<UserProfileMap>({});
   currentUserId = signal<string | undefined>(undefined);
+  showNudgeButtons = signal<boolean>(false);
+  
+  private nudgeTimerHandle?: ReturnType<typeof setTimeout>;
 
   isAnonymousVotingEnabled = this.roomDataService.room$.pipe(
     map(room => room.isAnonymousVotingEnabled),
@@ -113,6 +118,10 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   );
 
   members = this.roomDataService.activeMembersAnonymized$;
+  membersSignal: Signal<Member[]> = toSignal(
+    this.roomDataService.activeMembersAnonymized$,
+    { initialValue: [] }
+  );
   recentlyActiveMembers: Signal<{ [memberId: string]: boolean }> = toSignal(
     this.roomDataService.room$.pipe(
       map(room => room.roomId),
@@ -163,9 +172,79 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
         true
       );
     });
+
+    // Watch for first vote in current round to start nudge timer
+    this.roomDataService.room$
+      .pipe(
+        map(room => {
+          const round = room?.rounds?.[this.currentRound()];
+          if (!round || round.show_results) return null;
+          
+          const estimates = round.estimates || {};
+          const estimateCount = Object.keys(estimates).length;
+          return { roundId: this.currentRound(), estimateCount, showResults: round.show_results };
+        }),
+        distinctUntilChanged((prev, curr) => 
+          prev?.roundId === curr?.roundId && 
+          prev?.estimateCount === curr?.estimateCount &&
+          prev?.showResults === curr?.showResults
+        ),
+        pairwise(),
+        filter(([prev, curr]) => 
+          // First vote came in: previous had 0 votes, current has 1+ votes
+          curr !== null && 
+          prev?.estimateCount === 0 && 
+          curr.estimateCount > 0 &&
+          !curr.showResults
+        ),
+        takeUntil(this.destroyed)
+      )
+      .subscribe(() => {
+        // Clear any existing timer
+        if (this.nudgeTimerHandle) {
+          clearTimeout(this.nudgeTimerHandle);
+        }
+        
+        // Reset button visibility
+        this.showNudgeButtons.set(false);
+        
+        // Start 10-second timer
+        this.nudgeTimerHandle = setTimeout(() => {
+          // Check if there are still non-voters
+          const nonVoters = this.getNonVoters();
+          if (nonVoters.length > 0) {
+            this.showNudgeButtons.set(true);
+          }
+        }, 10000); // 10 seconds
+      });
+
+    // Reset button when results are shown or round changes
+    this.roomDataService.room$
+      .pipe(
+        map(room => ({
+          roundId: this.currentRound(),
+          showResults: room?.rounds?.[this.currentRound()]?.show_results
+        })),
+        distinctUntilChanged((prev, curr) => 
+          prev.roundId === curr.roundId && prev.showResults === curr.showResults
+        ),
+        takeUntil(this.destroyed)
+      )
+      .subscribe(({ showResults }) => {
+        if (showResults) {
+          // Clear timer and hide buttons when results are shown
+          if (this.nudgeTimerHandle) {
+            clearTimeout(this.nudgeTimerHandle);
+          }
+          this.showNudgeButtons.set(false);
+        }
+      });
   }
 
   ngOnDestroy(): void {
+    if (this.nudgeTimerHandle) {
+      clearTimeout(this.nudgeTimerHandle);
+    }
     this.destroyed.next();
     this.destroyed.complete();
   }
@@ -222,5 +301,24 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     
     const memberEstimate = round?.estimates?.[member.id];
     return memberEstimate === undefined; // Only nudge if they haven't voted
+  }
+
+  getNonVoters(): Member[] {
+    const round = this.room()?.rounds?.[this.currentRound()];
+    if (!round || round.show_results) return [];
+
+    return this.membersSignal().filter(member => {
+      if (member.id === this.currentUserId()) return false;
+      if (member.type !== MemberType.ESTIMATOR) return false;
+      const memberEstimate = round?.estimates?.[member.id];
+      return memberEstimate === undefined;
+    });
+  }
+
+  canShowNudgeButton(member: Member): boolean {
+    // Show nudge button if:
+    // 1. Timer has elapsed (showNudgeButtons is true)
+    // 2. Member can be nudged (using existing canNudgeMember logic)
+    return this.showNudgeButtons() && this.canNudgeMember(member);
   }
 }

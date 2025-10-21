@@ -260,8 +260,21 @@
                   </div>
                 }
                 @if (memberEstimate === undefined && !round.show_results) {
-                  <div class="vote vote-waiting" matTooltip="Waiting to vote">
-                    <mat-icon class="hourglass">hourglass_bottom</mat-icon>
+                  <div class="vote-waiting-container">
+                    @if (canShowNudgeButton(member)) {
+                      <button
+                        mat-icon-button
+                        class="nudge-button"
+                        (click)="nudgeMember(member)"
+                        [matTooltip]="'Nudge ' + member.name + ' to vote'"
+                        matTooltipPosition="above">
+                        <mat-icon>notifications_active</mat-icon>
+                      </button>
+                    }
+                    <div class="vote vote-waiting" matTooltip="Waiting to vote">
+                      <mat-icon class="hourglass">hourglass_bottom</mat-icon>
+                    </div>
+                    
                   </div>
                 }
                 @if (memberEstimate !== undefined && !round.show_results) {

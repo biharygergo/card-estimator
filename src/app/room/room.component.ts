@@ -511,8 +511,13 @@ export class RoomComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy)
       )
       .subscribe(nudgeData => {
-        // Add the new nudge to the array
-        this.currentNudges.set([...this.currentNudges(), nudgeData]);
+        // Remove any existing nudge from the same sender
+        const existingNudges = this.currentNudges().filter(
+          n => n.fromMember.id !== nudgeData.fromMember.id
+        );
+        
+        // Add the new nudge (replaces previous nudge from same sender)
+        this.currentNudges.set([...existingNudges, nudgeData]);
         
         // Auto-dismiss this specific nudge after 5 seconds
         setTimeout(() => {

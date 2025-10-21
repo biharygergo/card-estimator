@@ -213,6 +213,13 @@ mat-list-item.statistic-line {
     }
   }
 
+  .vote-waiting-container {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .vote {
     background: var(--main-dark-highlight-color);
     border-radius: 32px;
@@ -240,6 +247,30 @@ mat-list-item.statistic-line {
       height: 15px;
       width: 15px;
       font-size: 15px;
+    }
+  }
+
+  .nudge-button {    
+    animation: popIn 200ms ease-in;
+    animation-fill-mode: forwards;
+    transition: background 200ms ease-out, color 200ms ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    --mat-icon-button-touch-target-size: 32px !important;
+  
+    mat-icon {
+      height: 18px;
+      width: 18px;
+      font-size: 18px;
+    }
+
+    &:hover {
+      background: var(--accent-color-hover, var(--accent-color));
+      color: white;
+      transform: scale(1.05);
     }
   }
 

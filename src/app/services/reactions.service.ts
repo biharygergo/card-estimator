@@ -25,6 +25,7 @@ export interface Reaction {
   reactionId: string;
   userId: string;
   createdAt: Timestamp;
+  targetUserId?: string; // For nudge reactions - the user being nudged
 }
 
 const createSvgUrl = (id: string) =>
@@ -81,6 +82,9 @@ const REACTIONS_MAP: { [id: string]: ReactionOption } = REACTIONS_LIST.reduce(
   {}
 );
 
+// Special reaction ID for nudges
+export const NUDGE_REACTION_ID = 'nudge';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -110,6 +114,22 @@ export class ReactionsService {
     );
   }
 
+  async sendNudge(targetUserId: string, roomId: string) {
+    const user = await this.authService.getUser();
+    const reaction: Reaction = {
+      id: this.createId(),
+      reactionId: NUDGE_REACTION_ID,
+      userId: user.uid,
+      targetUserId,
+      createdAt: Timestamp.now(),
+    };
+
+    return setDoc(
+      doc(this.firestore, 'rooms', roomId, 'reactions', reaction.id),
+      reaction
+    );
+  }
+
   getReactionsStream(roomId: string): Observable<Reaction> {
     const ref = collection(
       this.firestore,
@@ -118,6 +138,26 @@ export class ReactionsService {
       'reactions'
     ) as CollectionReference<Reaction>;
     const q = query(ref, where('createdAt', '>=', Timestamp.now()));
+    return sortedChanges(q, { events: ['added'] }).pipe(
+      filter(changes => !!changes.length),
+      map(documentChange => documentChange.pop().doc.data() as Reaction),
+      catchError(() => NEVER)
+    );
+  }
+
+  getNudgesStream(roomId: string, userId: string): Observable<Reaction> {
+    const ref = collection(
+      this.firestore,
+      'rooms',
+      roomId,
+      'reactions'
+    ) as CollectionReference<Reaction>;
+    const q = query(
+      ref,
+      where('createdAt', '>=', Timestamp.now()),
+      where('reactionId', '==', NUDGE_REACTION_ID),
+      where('targetUserId', '==', userId)
+    );
     return sortedChanges(q, { events: ['added'] }).pipe(
       filter(changes => !!changes.length),
       map(documentChange => documentChange.pop().doc.data() as Reaction),

@@ -1,0 +1,28 @@
+@if (nudges().length > 0) {
+  <div class="nudge-overlay" @overlayAnimation>
+    <div class="nudge-content" @contentAnimation>
+      <div class="nudge-avatars-container">
+        @for (nudge of nudges(); track nudge.timestamp; let index = $index) {
+          @if (index < 5) {
+            <div class="nudge-avatar-wrapper" [style.z-index]="nudges().length - index">
+              @if (nudge.fromMember.avatarUrl) {
+                <img
+                  [src]="nudge.fromMember.avatarUrl"
+                  class="nudge-avatar-image"
+                  alt="Avatar" />
+              } @else {
+                <div class="nudge-avatar-initials">
+                  {{ getInitials(nudge.fromMember.name) }}
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+      <div class="nudge-message">
+        {{ getNudgeText() }}
+      </div>
+    </div>
+  </div>
+}
+

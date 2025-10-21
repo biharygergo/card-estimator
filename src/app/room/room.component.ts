@@ -61,6 +61,7 @@ import {
   getSortedCardSetValues,
 } from '../utils';
 import { getRoomCardSetValue } from '../pipes/estimate-converter.pipe';
+import { ReactionsService } from '../services/reactions.service';
 import {
   MatSidenavContainer,
   MatSidenavContent,
@@ -115,6 +116,7 @@ import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dro
 import { ShepherdService } from 'angular-shepherd';
 import { outOfCreditsOfferModalCreator } from '../shared/out-of-credits-offer-modal/out-of-credits-offer-modal.component';
 import { invitationPopupCreator } from '../shared/invitation-popup/invitation-popup.component';
+import { NudgeOverlayComponent, NudgeData } from './nudge-overlay/nudge-overlay.component';
 
 const ALONE_IN_ROOM_MODAL = 'alone-in-room';
 const ROOM_SIZE_LIMIT = 100;
@@ -156,6 +158,7 @@ const CHARTING_COLORS = [
     TopicsSidebarComponent,
     AnonymousUserBannerComponent,
     RoomControllerPanelComponent,
+    NudgeOverlayComponent,
     AsyncPipe,
   ],
 })
@@ -192,6 +195,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   isControlPaneExpanded = signal<boolean>(true);
   isControlPaneExpansionSetByUser = false;
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
+  currentNudges = signal<NudgeData[]>([]);
+  private originalPageTitle: string = '';
+  private titleFlashInterval?: ReturnType<typeof setInterval>;
 
   room$: Observable<Room> = this.roomDataService.room$.pipe(
     takeUntil(this.destroy)
@@ -449,7 +455,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly themeService: ThemeService,
     private readonly roomDataService: RoomDataService,
     private readonly confirmDialogService: ConfirmDialogService,
-    private readonly shepherdService: ShepherdService
+    private readonly shepherdService: ShepherdService,
+    private readonly reactionsService: ReactionsService
   ) {}
 
   ngOnInit(): void {
@@ -486,6 +493,44 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.joinAsObserver();
       }
     });
+
+    // Listen for nudges directed at the current user
+    // Get room and user once, then maintain a single stream subscription
+    combineLatest([this.room$, this.authService.user])
+      .pipe(
+        filter(([room, user]) => !!room && !!user),
+        take(1), // Only take the first emission to get roomId and userId
+        switchMap(([room, user]) => {
+          // Subscribe to nudges stream once and keep it alive
+          return this.reactionsService.getNudgesStream(room.roomId, user.uid);
+        }),
+        withLatestFrom(this.members$), // Get latest members for each nudge
+        map(([nudge, members]) => {
+          const fromMember = members.find(m => m.id === nudge.userId);
+          return fromMember ? { fromMember, timestamp: Date.now() } : null;
+        }),
+        filter(data => !!data),
+        takeUntil(this.destroy)
+      )
+      .subscribe(nudgeData => {
+        // Remove any existing nudge from the same sender
+        const existingNudges = this.currentNudges().filter(
+          n => n.fromMember.id !== nudgeData.fromMember.id
+        );
+        
+        // Add the new nudge (replaces previous nudge from same sender)
+        this.currentNudges.set([...existingNudges, nudgeData]);
+        
+        // Show browser notification if tab is not visible
+        this.showNudgeNotification(nudgeData.fromMember.name);
+        
+        // Auto-dismiss this specific nudge after 5 seconds
+        setTimeout(() => {
+          this.currentNudges.set(
+            this.currentNudges().filter(n => n.timestamp !== nudgeData.timestamp)
+          );
+        }, 5000);
+      });
 
     this.roundNumber$.pipe(takeUntil(this.destroy)).subscribe(roundNumber => {
       this.currentRound.set(roundNumber);
@@ -645,8 +690,53 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.roomDataService.leaveRoom();
     clearTimeout(this.inactiveTimeoutHandle);
+    this.stopTitleFlashing();
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  private showNudgeNotification(fromMemberName: string): void {
+    // Check if page is hidden (user is on another tab)
+    const isPageHidden = document.hidden;
+
+    if (isPageHidden) {
+      // Flash page title to get user's attention
+      this.startTitleFlashing(`👋 ${fromMemberName} nudged you!`);
+    }
+  }
+
+  private startTitleFlashing(message: string): void {
+    if (!this.originalPageTitle) {
+      this.originalPageTitle = document.title;
+    }
+
+    // Clear any existing flash interval
+    this.stopTitleFlashing();
+
+    let isOriginalTitle = true;
+    this.titleFlashInterval = setInterval(() => {
+      document.title = isOriginalTitle ? message : this.originalPageTitle;
+      isOriginalTitle = !isOriginalTitle;
+    }, 1000);
+
+    // Stop flashing when user returns to tab
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        this.stopTitleFlashing();
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  }
+
+  private stopTitleFlashing(): void {
+    if (this.titleFlashInterval) {
+      clearInterval(this.titleFlashInterval);
+      this.titleFlashInterval = undefined;
+    }
+    if (this.originalPageTitle) {
+      document.title = this.originalPageTitle;
+    }
   }
 
   showInvitationPopup() {

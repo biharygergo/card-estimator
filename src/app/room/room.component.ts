@@ -196,6 +196,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   isControlPaneExpansionSetByUser = false;
   isSmallScreen$ = this.breakpointObserver.observe('(max-width: 800px)');
   currentNudges = signal<NudgeData[]>([]);
+  private originalPageTitle: string = '';
+  private titleFlashInterval?: ReturnType<typeof setInterval>;
 
   room$: Observable<Room> = this.roomDataService.room$.pipe(
     takeUntil(this.destroy)
@@ -519,6 +521,9 @@ export class RoomComponent implements OnInit, OnDestroy {
         // Add the new nudge (replaces previous nudge from same sender)
         this.currentNudges.set([...existingNudges, nudgeData]);
         
+        // Show browser notification if tab is not visible
+        this.showNudgeNotification(nudgeData.fromMember.name);
+        
         // Auto-dismiss this specific nudge after 5 seconds
         setTimeout(() => {
           this.currentNudges.set(
@@ -685,8 +690,53 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.roomDataService.leaveRoom();
     clearTimeout(this.inactiveTimeoutHandle);
+    this.stopTitleFlashing();
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  private showNudgeNotification(fromMemberName: string): void {
+    // Check if page is hidden (user is on another tab)
+    const isPageHidden = document.hidden;
+
+    if (isPageHidden) {
+      // Flash page title to get user's attention
+      this.startTitleFlashing(`👋 ${fromMemberName} nudged you!`);
+    }
+  }
+
+  private startTitleFlashing(message: string): void {
+    if (!this.originalPageTitle) {
+      this.originalPageTitle = document.title;
+    }
+
+    // Clear any existing flash interval
+    this.stopTitleFlashing();
+
+    let isOriginalTitle = true;
+    this.titleFlashInterval = setInterval(() => {
+      document.title = isOriginalTitle ? message : this.originalPageTitle;
+      isOriginalTitle = !isOriginalTitle;
+    }, 1000);
+
+    // Stop flashing when user returns to tab
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        this.stopTitleFlashing();
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  }
+
+  private stopTitleFlashing(): void {
+    if (this.titleFlashInterval) {
+      clearInterval(this.titleFlashInterval);
+      this.titleFlashInterval = undefined;
+    }
+    if (this.originalPageTitle) {
+      document.title = this.originalPageTitle;
+    }
   }
 
   showInvitationPopup() {

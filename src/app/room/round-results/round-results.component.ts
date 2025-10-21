@@ -65,6 +65,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { isEqual } from 'lodash';
 
+const NUDGE_TIMER_DURATION = 20000; // 20 seconds
 @Component({
   selector: 'app-round-results',
   templateUrl: './round-results.component.html',
@@ -208,14 +209,14 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
         // Reset button visibility
         this.showNudgeButtons.set(false);
         
-        // Start 10-second timer
+        // Start 20-second timer
         this.nudgeTimerHandle = setTimeout(() => {
           // Check if there are still non-voters
           const nonVoters = this.getNonVoters();
           if (nonVoters.length > 0) {
             this.showNudgeButtons.set(true);
           }
-        }, 10000); // 10 seconds
+        }, NUDGE_TIMER_DURATION); // 20 seconds
       });
 
     // Reset button when results are shown or round changes
@@ -228,11 +229,16 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
         distinctUntilChanged((prev, curr) => 
           prev.roundId === curr.roundId && prev.showResults === curr.showResults
         ),
+        startWith(null),
+        pairwise(),
         takeUntil(this.destroyed)
       )
-      .subscribe(({ showResults }) => {
-        if (showResults) {
-          // Clear timer and hide buttons when results are shown
+      .subscribe(([prev, curr]) => {
+        if (!curr) return;
+        
+        // Clear timer and hide buttons when results are shown or round changes
+        const roundChanged = prev && prev.roundId !== curr.roundId;
+        if (curr.showResults || roundChanged) {
           if (this.nudgeTimerHandle) {
             clearTimeout(this.nudgeTimerHandle);
           }
@@ -319,6 +325,19 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     // Show nudge button if:
     // 1. Timer has elapsed (showNudgeButtons is true)
     // 2. Member can be nudged (using existing canNudgeMember logic)
-    return this.showNudgeButtons() && this.canNudgeMember(member);
+    // 3. At least one vote has been cast in current round (to avoid flash on new round)
+    
+    if (!this.showNudgeButtons() || !this.canNudgeMember(member)) {
+      return false;
+    }
+    
+    const round = this.room()?.rounds?.[this.currentRound()];
+    if (!round) return false;
+    
+    const estimates = round.estimates || {};
+    const estimateCount = Object.keys(estimates).length;
+    
+    // Only show if at least one vote has been cast (timer should have started)
+    return estimateCount > 0;
   }
 }

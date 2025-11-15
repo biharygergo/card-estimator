@@ -1,5 +1,5 @@
 main {
-  padding: 50px 10%;
+  padding: 50px 1rem;
   max-width: 1200px;
   margin: 0 auto;
   // Scroll padding to offset fixed header when using hash links
@@ -50,8 +50,7 @@ main {
     }
 
     .glossary-term {
-      // Offset for fixed navigation header (89px) + page header component + breathing room
-      scroll-margin-top: 120px;
+      position: relative;
       padding: 1.5rem;
       background: rgba(217, 226, 255, 0.05);
       border-radius: 12px;
@@ -62,27 +61,44 @@ main {
         background: rgba(217, 226, 255, 0.08);
       }
 
+      // Invisible anchor target positioned above the content to offset for navbar
+      .term-anchor-target {
+        position: absolute;
+        top: -120px; // Offset for fixed navigation header + breathing room
+        left: 0;
+        width: 1px;
+        height: 1px;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
       h3 {
         font-size: 1.8rem;
         color: #d9e2ff;
         margin-bottom: 1rem;
         margin-top: 0;
+        padding-left: 1.5rem; // Make room for the hash symbol
 
         .term-anchor {
+          position: relative;
           color: #d9e2ff;
           text-decoration: none;
           transition: color 0.3s ease;
 
-          &:hover {
-            color: #4f7cff;
-            text-decoration: underline;
-          }
-
+          // Style for the hash symbol that appears before term names
           &::before {
             content: '#';
             margin-right: 0.5rem;
             color: rgba(217, 226, 255, 0.3);
             font-weight: normal;
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+          }
+
+          &:hover {
+            color: #4f7cff;
+            text-decoration: underline;
           }
         }
       }
@@ -197,8 +213,10 @@ main {
 
     .glossary-section {
       .glossary-term {
-        // Smaller scroll margin on mobile
-        scroll-margin-top: 60px;
+        // Adjust invisible anchor offset for smaller mobile header
+        .term-anchor-target {
+          top: -60px; // Smaller offset for mobile header
+        }
 
         h3 {
           font-size: 1.5rem;

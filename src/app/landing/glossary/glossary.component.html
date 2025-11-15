@@ -18,7 +18,8 @@
     
     <div class="glossary-terms">
       @for (term of terms; track term.term) {
-        <div class="glossary-term" [id]="getTermId(term.term)">
+        <div class="glossary-term">
+          <span class="term-anchor-target" [id]="getTermId(term.term)"></span>
           <h3>
             <a [routerLink]="['/glossary']" [fragment]="getTermId(term.term)" class="term-anchor">
               {{ term.term }}

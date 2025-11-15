@@ -27,5 +27,6 @@ export const routes = [
   '/knowledge-base',
   '/tools/story-point-calculator',
   '/getting-started',
+  '/glossary',
   '/estimation-techniques-comparison',
 ];

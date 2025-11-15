@@ -1,5 +1,5 @@
-<nav [ngClass]="{ open: isOpen }">
-  <div class="header-container">
+<nav [ngClass]="{ open: isOpen, scrolled: isScrolled }">
+  <div class="header-container" [ngClass]="{ scrolled: isScrolled }">
     @if (isEmbeddedApp) {
       <button mat-flat-button (click)="goBack()">
         <mat-icon>chevron_left</mat-icon>Back
@@ -19,7 +19,7 @@
           <span>PlanningPoker.live</span>
         </div>
       </a>
-      <ul>
+      <ul [ngClass]="{ hidden: isScrolled }">
         <li>
           <div
             class="navigation-button features-button split-button"

@@ -32,6 +32,7 @@ export class HeaderV2Component implements OnInit {
   openDropdown: 'features' | 'integrations' | null = null;
   dropdownHoverTimer: any = null;
   dropdownLeaveTimer: any = null;
+  isScrolled = false;
 
   // Mobile submenu state
   mobileSubmenuOpen: 'resources' | null = null;
@@ -170,6 +171,18 @@ export class HeaderV2Component implements OnInit {
     ) {
       event.preventDefault();
       // Focus management could be added here for keyboard navigation within dropdown
+    }
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    // Show compact navbar after scrolling down 100px
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    this.isScrolled = scrollPosition > 100;
+    
+    // Close dropdowns when scrolling for better UX
+    if (this.isScrolled && this.openDropdown) {
+      this.closeAllDropdowns();
     }
   }
 

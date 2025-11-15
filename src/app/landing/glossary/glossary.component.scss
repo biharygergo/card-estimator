@@ -2,8 +2,8 @@ main {
   padding: 50px 1rem;
   max-width: 1200px;
   margin: 0 auto;
-  // Scroll padding to offset fixed header when using hash links
-  scroll-padding-top: 120px;
+  // Scroll padding to offset fixed header when using hash links (80px navbar + 20px breathing room)
+  scroll-padding-top: 100px;
 
   .intro-section {
     margin-bottom: 3rem;
@@ -64,7 +64,7 @@ main {
       // Invisible anchor target positioned above the content to offset for navbar
       .term-anchor-target {
         position: absolute;
-        top: -120px; // Offset for fixed navigation header + breathing room
+        top: -100px; // Offset for fixed navigation header (80px) + breathing room (20px)
         left: 0;
         width: 1px;
         height: 1px;
@@ -199,8 +199,8 @@ main {
 @media screen and (max-width: 800px) {
   main {
     padding: 30px 5%;
-    // Smaller scroll padding on mobile for smaller header
-    scroll-padding-top: 60px;
+    // Scroll padding on mobile (80px navbar + 10px breathing room)
+    scroll-padding-top: 90px;
 
     .intro-section,
     .glossary-section,
@@ -213,9 +213,9 @@ main {
 
     .glossary-section {
       .glossary-term {
-        // Adjust invisible anchor offset for smaller mobile header
+        // Adjust invisible anchor offset for mobile header (80px navbar + 10px breathing room)
         .term-anchor-target {
-          top: -60px; // Smaller offset for mobile header
+          top: -90px;
         }
 
         h3 {

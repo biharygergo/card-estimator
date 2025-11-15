@@ -1,9 +1,8 @@
 .content {
-  // TODO: fix this!
-  padding-top: 89px;
+  padding-top: 80px; // Match navbar height
 
   @media screen and (max-width: 800px) {
-    padding-top: 48px;
+    padding-top: 80px; // Mobile navbar stays at 80px
   }
 }
 

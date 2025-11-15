@@ -1,0 +1,214 @@
+main {
+  padding: 50px 10%;
+  max-width: 1200px;
+  margin: 0 auto;
+  // Scroll padding to offset fixed header when using hash links
+  scroll-padding-top: 120px;
+
+  .intro-section {
+    margin-bottom: 3rem;
+    color: #bfc6dc;
+    font-size: 1.1rem;
+    line-height: 1.6;
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    .search-tip {
+      background: rgba(217, 226, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #4f7cff;
+
+      kbd {
+        background: rgba(217, 226, 255, 0.2);
+        border: 1px solid rgba(217, 226, 255, 0.3);
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+    }
+  }
+
+  .glossary-section {
+    margin-bottom: 4rem;
+
+    > h2 {
+      font-size: 2.5rem;
+      color: #d9e2ff;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid rgba(217, 226, 255, 0.2);
+      padding-bottom: 1rem;
+    }
+
+    .glossary-terms {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .glossary-term {
+      // Offset for fixed navigation header (89px) + page header component + breathing room
+      scroll-margin-top: 120px;
+      padding: 1.5rem;
+      background: rgba(217, 226, 255, 0.05);
+      border-radius: 12px;
+      border-left: 4px solid #4f7cff;
+      transition: background 0.3s ease, border-color 0.3s ease;
+
+      &:hover {
+        background: rgba(217, 226, 255, 0.08);
+      }
+
+      h3 {
+        font-size: 1.8rem;
+        color: #d9e2ff;
+        margin-bottom: 1rem;
+        margin-top: 0;
+
+        .term-anchor {
+          color: #d9e2ff;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: #4f7cff;
+            text-decoration: underline;
+          }
+
+          &::before {
+            content: '#';
+            margin-right: 0.5rem;
+            color: rgba(217, 226, 255, 0.3);
+            font-weight: normal;
+          }
+        }
+      }
+
+      .term-definition {
+        color: #bfc6dc;
+        font-size: 1.1rem;
+        line-height: 1.8;
+
+        .internal-link {
+          color: #4f7cff;
+          text-decoration: none;
+          font-weight: 500;
+          border-bottom: 1px dotted rgba(79, 124, 255, 0.5);
+          transition: border-color 0.3s ease;
+
+          &:hover {
+            border-bottom-color: #4f7cff;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+
+  .additional-resources-section,
+  .conclusion-section {
+    margin-bottom: 4rem;
+    color: #bfc6dc;
+    line-height: 1.8;
+
+    h2 {
+      font-size: 2.5rem;
+      color: #d9e2ff;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid rgba(217, 226, 255, 0.2);
+      padding-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+
+      li {
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+        position: relative;
+
+        &::before {
+          content: '→';
+          position: absolute;
+          left: 0;
+          color: #4f7cff;
+        }
+
+        a {
+          color: #4f7cff;
+          text-decoration: none;
+          font-weight: 500;
+          border-bottom: 1px dotted rgba(79, 124, 255, 0.5);
+          transition: border-color 0.3s ease;
+
+          &:hover {
+            border-bottom-color: #4f7cff;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    a {
+      color: #4f7cff;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted rgba(79, 124, 255, 0.5);
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        border-bottom-color: #4f7cff;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.cta-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 800px) {
+  main {
+    padding: 30px 5%;
+    // Smaller scroll padding on mobile for smaller header
+    scroll-padding-top: 60px;
+
+    .intro-section,
+    .glossary-section,
+    .additional-resources-section,
+    .conclusion-section {
+      h2 {
+        font-size: 2rem;
+      }
+    }
+
+    .glossary-section {
+      .glossary-term {
+        // Smaller scroll margin on mobile
+        scroll-margin-top: 60px;
+
+        h3 {
+          font-size: 1.5rem;
+        }
+
+        .term-definition {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+

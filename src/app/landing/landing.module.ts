@@ -38,6 +38,17 @@ const routes: Routes = [
     },
   },
   {
+    path: 'glossary',
+    loadComponent: () =>
+      import('./glossary/glossary.component').then(mod => mod.GlossaryComponent),
+    data: {
+      title: 'Planning Poker & Agile Estimation Glossary',
+      description:
+        'Comprehensive glossary of Planning Poker and Agile estimation terms. Learn definitions for story points, velocity, Fibonacci sequence, affinity estimation, and more planning poker terminology.',
+      disablePostfix: true,
+    },
+  },
+  {
     path: 'policies/privacy',
     loadComponent: () =>
       import('./privacy/privacy.component').then(mod => mod.PrivacyComponent),

@@ -8,9 +8,9 @@ const routes: Routes = [
     loadComponent: () =>
       import('./home/home.component').then(mod => mod.HomeComponent),
     data: {
-      title: 'Planning Poker – The #1 Agile Estimation Tool for Remote Teams',
+      title: 'Planning Poker Online Free - Scrum Poker & Agile Estimation Tool',
       description:
-        'Looking for the best planning poker tool? Get real-time estimates, seamless Jira/Linear integration, and anonymous voting—no sign-up required! Try it now.',
+        'Free online planning poker tool for agile teams. Run scrum poker sessions in your browser with JIRA/Linear integration, custom cards, and anonymous voting. No sign-up required! Start your estimation poker session now.',
       disablePostfix: true,
     },
   },
@@ -21,9 +21,9 @@ const routes: Routes = [
         mod => mod.FeaturesComponent
       ),
     data: {
-      title: 'Unlock Powerful Planning Poker Features (JIRA, Teams & More)',
+      title: 'Planning Poker Features - Free Online Scrum Estimation Tool',
       description:
-        'Discover game-changing Planning Poker features—custom card sets, JIRA integration, video conferencing & more. See what’s inside!',
+        'Discover powerful planning poker features: custom card sets, JIRA/Linear integration, Zoom/Teams support, anonymous voting, and more. Best free agile estimation tool for remote teams.',
     },
   },
   {
@@ -34,6 +34,17 @@ const routes: Routes = [
       title: 'Got Questions? Here’s Everything About Planning Poker',
       description:
         'Confused about how Planning Poker works? Get answers to the most frequently asked questions in one place.',
+      disablePostfix: true,
+    },
+  },
+  {
+    path: 'glossary',
+    loadComponent: () =>
+      import('./glossary/glossary.component').then(mod => mod.GlossaryComponent),
+    data: {
+      title: 'Planning Poker & Agile Estimation Glossary',
+      description:
+        'Comprehensive glossary of Planning Poker and Agile estimation terms. Learn definitions for story points, velocity, Fibonacci sequence, affinity estimation, and more planning poker terminology.',
       disablePostfix: true,
     },
   },
@@ -64,9 +75,9 @@ const routes: Routes = [
         mod => mod.ZoomComponent
       ),
     data: {
-      title: 'Planning Poker for Zoom Meetings',
+      title: 'Zoom Planning Poker - Free Scrum Poker App for Zoom Meetings',
       description:
-        'Install our embedded app for Zoom Meetings, the most convenient way to estimate stories.',
+        'Run planning poker directly in Zoom meetings with our free embedded app. Install the best scrum estimation tool for Zoom and estimate stories without leaving your video call.',
       disablePostfix: true,
     },
   },
@@ -90,10 +101,10 @@ const routes: Routes = [
         mod => mod.TeamsComponent
       ),
     data: {
-      title: 'Planning Poker for Microsoft Teams',
+      title: 'Planning Poker for Microsoft Teams - Free Scrum Poker App',
       disablePostfix: true,
       description:
-        'Install our embedded app for Microsoft Teams, the most convenient way to estimate stories. Plugin made for Microsoft Teams.',
+        'Install free planning poker for Microsoft Teams. Run scrum estimation sessions directly in Teams meetings. Best agile poker app for Teams with instant setup.',
     },
   },
   {
@@ -103,10 +114,10 @@ const routes: Routes = [
         mod => mod.MeetComponent
       ),
     data: {
-      title: 'Planning Poker for Google Meet',
+      title: 'Google Meet Planning Poker - Free Scrum Estimation Extension',
       disablePostfix: true,
       description:
-        'Install our integration for Google Meet, the simplest way to estimate stories.',
+        'Run planning poker in Google Meet with our free extension. Estimate stories without leaving your video call. Simple setup for agile teams using Meet.',
     },
   },
   {
@@ -129,10 +140,10 @@ const routes: Routes = [
         mod => mod.JiraComponent
       ),
     data: {
-      title: 'Estimate JIRA Issues with PlanningPoker.live',
+      title: 'JIRA Planning Poker - Free Online Scrum Poker for JIRA',
       disablePostfix: true,
       description:
-        'Connect your JIRA account with PlanningPoker.live to estimate issues directly from your backlog.',
+        'Connect JIRA with PlanningPoker.live for seamless story point estimation. Import issues, run planning poker sessions, and sync estimates back to JIRA automatically. Free tool for agile teams.',
     },
   },
   {
@@ -142,10 +153,10 @@ const routes: Routes = [
         mod => mod.LinearComponent
       ),
     data: {
-      title: 'Estimate Linear tickets with PlanningPoker.live',
+      title: 'Linear Planning Poker - Free Agile Estimation for Linear',
       disablePostfix: true,
       description:
-        'Connect your Linear account with PlanningPoker.live to estimate issues directly from your backlog.',
+        'Connect Linear with PlanningPoker.live for effortless story point estimation. Import issues, run scrum poker sessions, and sync estimates back to Linear. Free integration for agile teams.',
     },
   },
   {
@@ -178,10 +189,10 @@ const routes: Routes = [
     loadComponent: () =>
       import('./premium/premium.component').then(mod => mod.PremiumComponent),
     data: {
-      title: 'Planning Poker Pricing: Simple, No Hidden Fees (See Plans)',
+      title: 'Planning Poker Pricing - Free Online Tool with Paid Plans',
       disablePostfix: true,
       description:
-        'Get free monthly credits or go unlimited with a subscription. See the full pricing breakdown—no hidden charges.',
+        'Free planning poker online with monthly credits. Upgrade for unlimited sessions, advanced features, and priority support. Simple pricing with no hidden fees for agile teams.',
     },
   },
   {
@@ -203,9 +214,9 @@ const routes: Routes = [
         './printable-planning-poker-cards/printable-planning-poker-cards.component'
       ).then(m => m.PrintablePlanningPokerCardsComponent),
     data: {
-      title: 'Free Printable Planning Poker Cards',
+      title: 'Free Printable Planning Poker Cards - Download PDF',
       description:
-        'Get your free, professionally designed planning poker cards for agile estimation sessions. Perfect for teams who prefer physical cards or need a backup for in-person meetings.',
+        'Download free printable planning poker cards for scrum estimation. Professionally designed cards with Fibonacci sequence. Perfect for in-person agile sessions or as backup cards.',
     },
   },
   {
@@ -215,9 +226,9 @@ const routes: Routes = [
         m => m.GettingStartedComponent
       ),
     data: {
-      title: 'Getting Started with PlanningPoker.live - Complete Tutorial Guide',
+      title: 'How to Play Planning Poker Online - Free Tutorial & Getting Started Guide',
       description:
-        'Learn how to use PlanningPoker.live with our comprehensive getting started guide. Step-by-step tutorial for running your first planning poker session.',
+        'Learn how to run online planning poker sessions with our step-by-step tutorial. Complete getting started guide with video tutorials for scrum poker estimation. Free for agile teams.',
     },
   },
   {
@@ -227,9 +238,9 @@ const routes: Routes = [
         m => m.WhatIsPlanningPokerComponent
       ),
     data: {
-      title: 'What is Planning Poker?',
+      title: 'What is Planning Poker? Complete Guide to Scrum Poker Estimation',
       description:
-        'Learn how Planning Poker works and why it is a great tool for agile teams.',
+        'Learn what planning poker is and how this scrum estimation technique works. Discover why agile teams use planning poker cards for story point estimation. Complete guide with examples.',
     },
   },
   {

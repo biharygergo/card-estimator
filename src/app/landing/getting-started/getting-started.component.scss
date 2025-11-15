@@ -158,6 +158,48 @@ p {
   }
 }
 
+.video-container {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin-bottom: 1.5rem;
+    color: #495057;
+  }
+
+  &.featured-video {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2.5rem;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+
+    h3 {
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.05rem;
+    }
+  }
+}
+
 .info-box {
   background: var(--light-blue);
   border: 1px solid #bee5eb;
@@ -381,8 +423,13 @@ p {
   }
 
   .info-box,
-  .step-details {
+  .step-details,
+  .video-container {
     padding: 1rem;
+
+    &.featured-video {
+      padding: 1.5rem;
+    }
   }
 
   .tip-card,

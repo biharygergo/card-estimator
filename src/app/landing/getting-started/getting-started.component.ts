@@ -5,6 +5,7 @@ import { StartPlanningCtaComponent } from '../components/start-planning-cta/star
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { YoutubePlayerComponent } from '../../shared/youtube-player/youtube-player.component';
 
 @Component({
   selector: 'app-getting-started',
@@ -15,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
     RouterLink,
     MatIcon,
     MatButtonModule,
+    YoutubePlayerComponent,
   ],
   templateUrl: './getting-started.component.html',
   styleUrl: './getting-started.component.scss',

@@ -1,6 +1,7 @@
 export const routes = [
   '/',
   '/faq',
+  '/glossary',
   '/features',
   '/policies/terms',
   '/policies/privacy',

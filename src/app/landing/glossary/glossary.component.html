@@ -1,0 +1,84 @@
+<app-page-header title="Planning Poker & Agile Estimation Glossary"></app-page-header>
+<main>
+  <div class="intro-section">
+    <p>
+      Welcome to the comprehensive glossary of Planning Poker and Agile estimation terms. 
+      Whether you're new to Agile methodologies or looking to deepen your understanding, 
+      this glossary provides clear definitions for key concepts, techniques, and terminology 
+      used in Planning Poker and Agile software development.
+    </p>
+    <p class="search-tip">
+      💡 <strong>Tip:</strong> Use <kbd>Ctrl</kbd> + <kbd>F</kbd> (or <kbd>Cmd</kbd> + <kbd>F</kbd> on Mac) 
+      to quickly find specific terms, or scroll through the glossary below.
+    </p>
+  </div>
+
+  <div #glossarySection class="glossary-section">
+    <h2>Glossary</h2>
+    
+    <div class="glossary-terms">
+      @for (term of terms; track term.term) {
+        <div class="glossary-term">
+          <span class="term-anchor-target" [id]="getTermId(term.term)"></span>
+          <h3>
+            <a [routerLink]="['/glossary']" [fragment]="getTermId(term.term)" class="term-anchor">
+              {{ term.term }}
+            </a>
+          </h3>
+          <div class="term-definition" [innerHTML]="linkifyTerm(term.definition)"></div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="additional-resources-section">
+    <h2>Additional Resources</h2>
+    <p>
+      Want to learn more about Planning Poker and Agile estimation? Check out our recommended resources:
+    </p>
+    <ul>
+      <li>
+        <a routerLink="/what-is-planning-poker">What is Planning Poker?</a> - 
+        A comprehensive guide to Planning Poker and how it works
+      </li>
+      <li>
+        <a routerLink="/getting-started">Getting Started Guide</a> - 
+        Step-by-step instructions for running your first Planning Poker session
+      </li>
+      <li>
+        <a routerLink="/estimation-techniques-comparison">Estimation Techniques Comparison</a> - 
+        Compare different Agile estimation methods
+      </li>
+      <li>
+        <a routerLink="/features">Planning Poker Features</a> - 
+        Learn about advanced features and integrations
+      </li>
+      <li>
+        <a routerLink="/faq">Frequently Asked Questions</a> - 
+        Common questions about PlanningPoker.live
+      </li>
+    </ul>
+  </div>
+
+  <div class="conclusion-section">
+    <h2>Conclusion</h2>
+    <p>
+      Understanding Planning Poker and Agile estimation terminology is essential for effective 
+      team collaboration and accurate project planning. This glossary provides a foundation 
+      for clear communication about estimation techniques, Agile practices, and project management 
+      concepts. Bookmark this page for quick reference, and don't hesitate to explore the 
+      additional resources to deepen your knowledge.
+    </p>
+    <p>
+      Ready to put your knowledge into practice? 
+      <a routerLink="/create">Start a Planning Poker session</a> and experience 
+      these concepts in action!
+    </p>
+  </div>
+
+  <div class="cta-wrapper">
+    <start-planning-cta></start-planning-cta>
+  </div>
+</main>
+<app-carbon-ad placement="landing" />
+

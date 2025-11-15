@@ -1,5 +1,5 @@
-<nav [ngClass]="{ open: isOpen }">
-  <div class="header-container">
+<nav [ngClass]="{ open: isOpen, scrolled: isScrolled }">
+  <div class="header-container" [ngClass]="{ scrolled: isScrolled }">
     @if (isEmbeddedApp) {
       <button mat-flat-button (click)="goBack()">
         <mat-icon>chevron_left</mat-icon>Back
@@ -19,7 +19,7 @@
           <span>PlanningPoker.live</span>
         </div>
       </a>
-      <ul>
+      <ul [ngClass]="{ hidden: isScrolled }">
         <li>
           <div
             class="navigation-button features-button split-button"
@@ -76,6 +76,15 @@
                       <div class="navbar-feature-content">
                         <h4>Estimation Techniques Comparison</h4>
                         <p>Planning Poker vs T-Shirt Sizing & more</p>
+                      </div>
+                    </a>
+                    <a routerLink="/glossary" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>menu_book</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Glossary</h4>
+                        <p>Agile & Planning Poker terminology</p>
                       </div>
                     </a>
                   </div>

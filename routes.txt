@@ -1,5 +1,6 @@
 /
 /faq
+/glossary
 /features
 /policies/terms
 /policies/privacy
@@ -24,6 +25,9 @@
 /integrations/teams/configure
 /knowledge-base
 /tools/story-point-calculator
+/getting-started
+/glossary
+/estimation-techniques-comparison
 /knowledge-base/planning-poker-and-the-scrum-roles
 /knowledge-base/comparing-agile-estimation-techniques
 /knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning

@@ -88,6 +88,7 @@
 
   .filter-chip {
     display: flex;
+    align-items: center;
     background: var(--mat-chip-elevated-selected-container-color);
     border: 1px solid var(--mat-chip-elevated-selected-container-color);
     border-radius: 24px;
@@ -117,8 +118,6 @@
       align-items: center;
       input {
         width: 130px;
-        border-top-right-radius: 24px;
-        border-bottom-right-radius: 24px;
         padding: 6px 8px;
         height: 100%;
         border: none;
@@ -127,6 +126,35 @@
         font-family: 'Roboto';
         font-weight: 500;
         font-size: 13px;
+      }
+    }
+
+    &__remove {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      padding: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      
+      ::ng-deep .mat-mdc-button-touch-target {
+        width: 32px;
+        height: 32px;
+      }
+      
+      ::ng-deep .mat-mdc-button-persistent-ripple {
+        border-radius: 50%;
+      }
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
       }
     }
 

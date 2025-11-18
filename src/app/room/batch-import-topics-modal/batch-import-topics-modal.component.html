@@ -39,6 +39,13 @@
                       #filterChipInput />
                   </div>
                 }
+                <button
+                  mat-icon-button
+                  class="filter-chip__remove"
+                  (click)="removeFilterChip(filterChip.id)"
+                  aria-label="Remove filter">
+                  <mat-icon>close</mat-icon>
+                </button>
               </div>
             }
           </div>

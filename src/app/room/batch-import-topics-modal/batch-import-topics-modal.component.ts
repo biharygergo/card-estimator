@@ -405,6 +405,12 @@ export class BatchImportTopicsModalComponent implements OnInit {
     });
   }
 
+  removeFilterChip(chipId: string) {
+    this.filterChips.set(
+      this.filterChips().filter(chip => chip.id !== chipId)
+    );
+  }
+
   selectAll() {
     const allIssues = [
       ...this.selectedIssues(),

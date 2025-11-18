@@ -12,7 +12,7 @@ function createComplexFilterString(filters: IssueApiFilter[]): string {
           filter.value
         }`;
       })
-      .join(" ");
+      .join(" AND ");
 }
 
 

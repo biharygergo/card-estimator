@@ -388,12 +388,25 @@ exports.onUserPaymentUpdated = onDocumentUpdated(
     }
 );
 
+// Weekly full sync - drops and recreates entire table
+exports.fullSyncRoomsToBigQuery = onSchedule(
+    {schedule: "every sunday 03:00", timeoutSeconds: 3600, memory: "2GiB", region},
+    async () => {
+      console.log("Scheduled full room sync triggered.");
+      const {fullSyncRoomsToBigQuery} = await import("./room/bigquery");
+      await fullSyncRoomsToBigQuery();
+      console.log("Full room sync completed.");
+      return;
+    }
+);
+
+// Backward compatibility - deprecated, use incrementalSyncRoomsToBigQuery instead
 exports.updateRoomsTableInBigQuery = onSchedule(
     {schedule: "every day 06:00", timeoutSeconds: 1000, memory: "1GiB", region},
     async () => {
-      console.log("Scheduled room update function triggered.");
-      const {updateRoomsTableInBigQuery} = await import("./room/bigquery");
-      await updateRoomsTableInBigQuery();
+      console.log("Scheduled room update function triggered (deprecated, using incremental sync).");
+      const {incrementalSyncRoomsToBigQuery} = await import("./room/bigquery");
+      await incrementalSyncRoomsToBigQuery();
       console.log("Room update completed.");
       return;
     }

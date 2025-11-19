@@ -49,6 +49,7 @@ export async function searchLinear(
   const query = request.data.search;
   const filters = request.data.filters as IssueApiFilter[] | undefined;
   const nextPageToken = request.data.nextPageToken as string | undefined;
+  const sortBy = request.data.sortBy as {field: string; direction: "asc" | "desc"} | undefined;
 
   const keyMatch = extractLinearKeyNumber(query ?? "");
 
@@ -61,6 +62,14 @@ export async function searchLinear(
 
   const complexFilter = createNestedFilter(filters || []);
 
+  // Build Linear's sort structure: array of objects with field as key
+  // e.g., [{ priority: { order: "Ascending" } }]
+  const sort = sortBy ? [{
+    [sortBy.field]: {
+      order: sortBy.direction === "asc" ? "Ascending" : "Descending",
+    },
+  }] : undefined;
+
   try {
     const {tokenSet} = await getActiveLinearIntegration(userId);
     const client = new LinearClient({
@@ -69,8 +78,8 @@ export async function searchLinear(
 
     const issues = await client.client.rawRequest(
         `
-        query fetchIssues($filter: IssueFilter, $after: String) {
-            issues(filter: $filter, first: 25, after: $after) {
+        query fetchIssues($filter: IssueFilter, $after: String, $sort: [IssueSortInput!]) {
+            issues(filter: $filter, first: 25, after: $after, sort: $sort) {
                 nodes {
                   title
                   description
@@ -102,10 +111,12 @@ export async function searchLinear(
               ...(keyMatch ? [{number: {eq: keyMatch}}] : []),
             ],
           },
+          ...(sort ? {sort} : {}),
         } :
         {
           filter: complexFilter,
           after: nextPageToken?.toString(),
+          ...(sort ? {sort} : {}),
         }
     );
 

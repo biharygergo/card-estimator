@@ -20,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   catchError,
   map,
@@ -31,7 +32,7 @@ import {
 } from 'rxjs';
 import { IssueIntegrationService } from 'src/app/services/issue-integration.service';
 import { createModal } from 'src/app/shared/avatar-selector-modal/avatar-selector-modal.component';
-import { RichTopic } from 'src/app/types';
+import { RichTopic, IssueSortOption, JIRA_SORT_FIELDS, LINEAR_SORT_FIELDS } from 'src/app/types';
 import { RichTopicComponent } from '../rich-topic/rich-topic.component';
 import {
   CdkDragDrop,
@@ -177,6 +178,7 @@ interface FilterChip {
     RichTopicComponent,
     MatMenuModule,
     MatIconModule,
+    MatTooltipModule,
   ],
   templateUrl: './batch-import-topics-modal.component.html',
   styleUrl: './batch-import-topics-modal.component.scss',
@@ -270,6 +272,47 @@ export class BatchImportTopicsModalComponent implements OnInit {
       : LINEAR_FILTER_FIELDS;
   });
   readonly filterChips = signal<FilterChip[]>([]);
+  readonly selectedSortField = signal<string | undefined>(undefined);
+  readonly selectedSortDirection = signal<'asc' | 'desc'>('asc');
+
+  readonly availableSortFields = computed(() => {
+    const integration = this.activeIntegration();
+    if (!integration) return [];
+
+    if (integration.name === 'jira') {
+      return [
+        { field: JIRA_SORT_FIELDS.RANK, label: 'Rank' },
+        { field: JIRA_SORT_FIELDS.PRIORITY, label: 'Priority' },
+        { field: JIRA_SORT_FIELDS.KEY, label: 'Key' },
+        { field: JIRA_SORT_FIELDS.UPDATED_AT, label: 'Updated at' },
+      ];
+    } else {
+      return [
+        { field: LINEAR_SORT_FIELDS.PRIORITY, label: 'Priority' },
+        { field: LINEAR_SORT_FIELDS.UPDATED_AT, label: 'Updated at' },
+      ];
+    }
+  });
+
+  readonly isSortCustomized = computed(() => {
+    return this.selectedSortField() !== undefined;
+  });
+
+  readonly selectedSort = computed<IssueSortOption | undefined>(() => {
+    const field = this.selectedSortField();
+    const direction = this.selectedSortDirection();
+    return field ? { field, direction } : undefined;
+  });
+
+  readonly sortButtonLabel = computed(() => {
+    const field = this.selectedSortField();
+    if (!field) {
+      return 'Sort';
+    }
+    const sortField = this.availableSortFields().find(f => f.field === field);
+    return sortField?.label || 'Sort';
+  });
+
   @ViewChildren('filterChipInput') filterChipElements: QueryList<ElementRef>;
 
   constructor(
@@ -332,6 +375,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
         this.searchedIssues.set([]);
         this.filterChips.set([]);
         this.nextPage.set(undefined);
+        this.resetSort();
       });
 
     this.onSubmitImport
@@ -409,6 +453,25 @@ export class BatchImportTopicsModalComponent implements OnInit {
     this.filterChips.set(
       this.filterChips().filter(chip => chip.id !== chipId)
     );
+    if (!this.filterChips().length) {
+      this.resetSort();
+      this.isSearchShown.set(false);
+      this.searchedIssues.set([]);
+      this.nextPage.set(undefined);
+    }
+  }
+
+  setSortField(field: string) {
+    this.selectedSortField.set(field);
+  }
+
+  toggleSortDirection() {
+    this.selectedSortDirection.update(dir => dir === 'asc' ? 'desc' : 'asc');
+  }
+
+  resetSort() {
+    this.selectedSortField.set(undefined);
+    this.selectedSortDirection.set('asc');
   }
 
   selectAll() {
@@ -445,7 +508,7 @@ export class BatchImportTopicsModalComponent implements OnInit {
       };
     });
     return this.issueIntegrationService
-      .searchIssues(query, filters, nextPageToken)
+      .searchIssues(query, filters, nextPageToken, this.selectedSort())
       .pipe(take(1));
   }
 }

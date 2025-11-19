@@ -8,9 +8,9 @@ import {IssueApiFilter, RichTopic} from "../types";
 function createComplexFilterString(filters: IssueApiFilter[]): string {
   return filters
       .map((filter) => {
-        return `${filter.fieldName} ${filter.comparator === "is" ? "=" : "~"} ${
+        return `${filter.fieldName} ${filter.comparator === "is" ? "=" : "~"} "${
           filter.value
-        }`;
+        }"`;
       })
       .join(" AND ");
 }
@@ -22,6 +22,7 @@ export async function searchJira(
   const query = request.data.search;
   const filters = request.data.filters as IssueApiFilter[] | undefined;
   const nextPageToken = request.data.nextPageToken as string | undefined;
+  const sortBy = request.data.sortBy as {field: string; direction: "asc" | "desc"} | undefined;
 
   const userId = request.auth?.uid;
   if (!userId) {
@@ -44,11 +45,18 @@ export async function searchJira(
 
     const isFetchingRecents = !query && !filters;
 
-    const searchFilter = !isFetchingRecents ?
+    let searchFilter = !isFetchingRecents ?
       filters ?
         createComplexFilterString(filters) :
         `text ~ "${filteredQuery.trimEnd()}*"${keyPart}` :
       "issue in issueHistory()";
+
+    // Add ORDER BY clause if sortBy is provided and we have filters
+    if (sortBy && filters) {
+      const direction = sortBy.direction.toUpperCase();
+      searchFilter += ` ORDER BY ${sortBy.field} ${direction}`;
+    }
+
     const resourceEndpoint = `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search/jql?jql=${searchFilter}&maxResults=25&fields=summary,description,status,assignee,id,key&expand=renderedFields${
       nextPageToken ? `&nextPageToken=${nextPageToken}` : ""
     }`;

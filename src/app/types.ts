@@ -600,6 +600,23 @@ export interface IssueApiFilter {
   comparator: 'contains' | 'is';
 }
 
+export interface IssueSortOption {
+  field: string;
+  direction: 'asc' | 'desc';
+}
+
+export const JIRA_SORT_FIELDS = {
+  RANK: 'rank',
+  PRIORITY: 'priority',
+  KEY: 'key',
+  UPDATED_AT: 'updated',
+} as const;
+
+export const LINEAR_SORT_FIELDS = {
+  PRIORITY: 'priority',
+  UPDATED_AT: 'updatedAt',
+} as const;
+
 export interface IssuesSearchApiResult {
   issues: RichTopic[];
   nextPage?: string;

@@ -8,7 +8,7 @@
     @if (hasActiveIntegration()) {
       <div class="tab-section">
         <div class="issue-search">
-          <div class="filter-chips-container">
+          <div class="filter-controls">
             <button mat-button color="primary" [matMenuTriggerFor]="menu">
               <mat-icon>filter_list</mat-icon>
               Add filter
@@ -20,35 +20,68 @@
                 </button>
               }
             </mat-menu>
-            @for (filterChip of filterChips(); track filterChip.id) {
-              <div class="filter-chip">
-                <div class="filter-chip__label">
-                  {{ filterChip.filter.label }}
-                </div>
-                @if (filterChip.filter.fixedValue === undefined) {
-                  <div class="filter-chip__comparator">
-                    {{ filterChip.filter.comparator }}
-                  </div>
-                  <div class="filter-chip__input">
-                    <input
-                      [formControl]="filterChip.valueControl"
-                      [placeholder]="
-                        filterChip.filter.placeholder || 'Set filter'
-                      "
-                      (keyup.enter)="onSubmitSearch.next()"
-                      #filterChipInput />
-                  </div>
-                }
-                <button
-                  mat-icon-button
-                  class="filter-chip__remove"
-                  (click)="removeFilterChip(filterChip.id)"
-                  aria-label="Remove filter">
-                  <mat-icon>close</mat-icon>
+            <button 
+              mat-button 
+              [color]="isSortCustomized() ? 'primary' : undefined"
+              [matMenuTriggerFor]="sortMenu"
+              [disabled]="!filterChips().length">
+              <mat-icon>sort</mat-icon>
+              {{ sortButtonLabel() }}
+            </button>
+            <mat-menu #sortMenu="matMenu">
+              <button mat-menu-item (click)="resetSort()">
+                <mat-icon>{{ !isSortCustomized() ? 'check' : '' }}</mat-icon>
+                Default
+              </button>
+              @for (sortField of availableSortFields(); track sortField.field) {
+                <button mat-menu-item (click)="setSortField(sortField.field)">
+                  <mat-icon>{{ isSortCustomized() && (selectedSortField()) === sortField.field ? 'check' : '' }}</mat-icon>
+                  {{ sortField.label }}
                 </button>
-              </div>
-            }
+              }
+            </mat-menu>
+            <button 
+              mat-icon-button 
+              [color]="isSortCustomized() ? 'primary' : undefined"
+              class="direction-button"
+              (click)="toggleSortDirection()"
+              [disabled]="!filterChips().length"
+              [matTooltip]="selectedSortDirection() === 'asc' ? 'Ascending' : 'Descending'">
+              <mat-icon class="direction-icon">{{ selectedSortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            </button>
           </div>
+          @if (filterChips().length > 0) {
+            <div class="filter-chips-container">
+              @for (filterChip of filterChips(); track filterChip.id) {
+                <div class="filter-chip">
+                  <div class="filter-chip__label">
+                    {{ filterChip.filter.label }}
+                  </div>
+                  @if (filterChip.filter.fixedValue === undefined) {
+                    <div class="filter-chip__comparator">
+                      {{ filterChip.filter.comparator }}
+                    </div>
+                    <div class="filter-chip__input">
+                      <input
+                        [formControl]="filterChip.valueControl"
+                        [placeholder]="
+                          filterChip.filter.placeholder || 'Set filter'
+                        "
+                        (keyup.enter)="onSubmitSearch.next()"
+                        #filterChipInput />
+                    </div>
+                  }
+                  <button
+                    mat-icon-button
+                    class="filter-chip__remove"
+                    (click)="removeFilterChip(filterChip.id)"
+                    aria-label="Remove filter">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
         </div>
         <button
           mat-stroked-button

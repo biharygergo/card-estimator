@@ -14,7 +14,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { RichTopic, IssueApiFilter, IssuesSearchApiResult } from '../types';
+import { RichTopic, IssueApiFilter, IssuesSearchApiResult, IssueSortOption } from '../types';
 import { ToastService } from './toast.service';
 import * as Sentry from '@sentry/angular';
 
@@ -24,7 +24,8 @@ interface IntegrationProvider {
     getIssues: (
       query?: string,
       filters?: IssueApiFilter[],
-      nextPageToken?: string
+      nextPageToken?: string,
+      sortBy?: IssueSortOption
     ) => Observable<IssuesSearchApiResult>;
   };
 }
@@ -113,7 +114,8 @@ export class IssueIntegrationService {
   searchIssues(
     query: string,
     filters?: IssueApiFilter[],
-    nextPageToken?: string
+    nextPageToken?: string,
+    sortBy?: IssueSortOption
   ): Observable<IssuesSearchApiResult> {
     return this.getActiveIntegration().pipe(
       switchMap(integration => {
@@ -129,7 +131,7 @@ export class IssueIntegrationService {
           return of({ issues: [] });
         }
 
-        return integration.service.getIssues(query, filters, nextPageToken);
+        return integration.service.getIssues(query, filters, nextPageToken, sortBy);
       }),
       catchError(e => this.handleError(e))
     );

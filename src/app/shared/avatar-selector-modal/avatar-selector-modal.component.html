@@ -262,14 +262,6 @@
                     : 'Buy more credits'
                 }}
               </button>
-              @if (!user?.isAnonymous) {
-              <button
-                mat-button
-                color="primary"
-                (click)="openReferralDialog()">
-                Refer & earn
-              </button>
-              }
             </div>
           </div>
           @if (subscription$ | async; as subscription) {

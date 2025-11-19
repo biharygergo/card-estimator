@@ -22,28 +22,28 @@ describe('Inside the room', () => {
   it('shows onboarding tutorial', () => {
     cy.wait(1000);
 
-    cy.contains('Greetings and Welcome to PlanningPoker.live 🎉').should(
+    cy.contains('Welcome to PlanningPoker.live').should(
       'be.visible'
     );
-    cy.contains('Next').click();
+    cy.contains('Show me around').click();
 
-    cy.contains('Define Your Topic').should('be.visible');
+    cy.contains('Set What You\'re Estimating').should('be.visible');
     cy.contains('Next').click({ force: true });
 
-    cy.contains('View Room Participants').should('be.visible');
+    cy.contains('Team Members').should('be.visible');
     cy.contains('Next').click({ force: true });
 
-    cy.contains('Poker Card Deck').should('be.visible');
+    cy.contains('Your Card Deck').should('be.visible');
     cy.contains('Next').click({ force: true });
 
-    cy.contains('Manage the Room').should('be.visible');
+    cy.contains('Room Controls').should('be.visible');
     cy.contains('Next').click({ force: true });
 
-    cy.contains('Additional Configuration').should('be.visible');
+    cy.contains('Additional Settings').should('be.visible');
     cy.contains('Next').click({ force: true });
 
-    cy.contains('Access Your Account & Settings').should('be.visible');
-    cy.contains('Finish').click();
+    cy.contains('Your Account').should('be.visible');
+    cy.contains('Got it').click();
 
     assertInvitationPopup();
 

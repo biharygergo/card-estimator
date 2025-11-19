@@ -396,6 +396,26 @@ export class AnalyticsService {
     this.logEventInternal('skipped_onboarding');
   }
 
+  logCompletedMemberOnboarding() {
+    this.logEventInternal('completed_member_onboarding');
+  }
+
+  logClickedBackMemberOnboarding() {
+    this.logEventInternal('clicked_back_member_onboarding');
+  }
+
+  logClickedNextMemberOnboarding() {
+    this.logEventInternal('clicked_next_member_onboarding');
+  }
+
+  logStartedMemberOnboarding() {
+    this.logEventInternal('started_member_onboarding');
+  }
+
+  logSkippedMemberOnboarding() {
+    this.logEventInternal('skipped_member_onboarding');
+  }
+
   logToggleAutoReveal(arg0: boolean) {
     this.logEventInternal('toggled_auto_reveal', {
       auto_reveal_enabled: arg0,

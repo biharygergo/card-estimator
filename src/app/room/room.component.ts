@@ -354,6 +354,32 @@ export class RoomComponent implements OnInit, OnDestroy {
     })
   );
 
+  shouldStartMemberOnboardingTutorial$: Observable<{
+    shouldOpen: boolean;
+    small: boolean;
+  }> = combineLatest([
+    this.room$,
+    this.previousSessions$,
+    this.user$,
+    this.userPreferences$.pipe(first()),
+    this.isSmallScreen$,
+  ]).pipe(
+    map(([room, previousSessions, user, pref, isSmallScreen]) => {
+      // Show member onboarding if:
+      // 1. User is NOT the room creator
+      // 2. User hasn't seen any onboarding before
+      // 3. It's their very first session
+      const isNotCreator = room.createdById !== user?.uid;
+      const isFirstSession = previousSessions.length === 1;
+      const hasNotSeenOnboarding = !pref?.onboardingTutorialShown;
+      
+      return {
+        shouldOpen: isNotCreator && isFirstSession && hasNotSeenOnboarding,
+        small: isSmallScreen.matches,
+      };
+    })
+  );
+
   shouldOpenExistingUserPricingModal$: Observable<boolean> = combineLatest([
     this.user$,
     this.userPreferences$.pipe(first()),
@@ -684,6 +710,18 @@ export class RoomComponent implements OnInit, OnDestroy {
           return;
         }
         this.startOnboarding(small);
+      });
+
+    this.shouldStartMemberOnboardingTutorial$
+      .pipe(
+        filter(({ shouldOpen }) => !!shouldOpen),
+        take(1)
+      )
+      .subscribe(({ small }) => {
+        if (this.config.runningIn === 'meet') {
+          return;
+        }
+        this.startMemberOnboarding(small);
       });
   }
 
@@ -1122,11 +1160,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.shepherdService.addSteps([
       {
         id: 'welcome',
-        title: 'Greetings and Welcome to PlanningPoker.live 🎉',
-        text: `<p>Get ready to streamline your estimation sessions! This brief guide will introduce you to the key features available in your virtual Planning Poker room.</p><p>If you're a Scrum Master, this tour will show you how to guide your team effectively. Let's get started!</p>`,
+        title: 'Welcome to PlanningPoker.live',
+        text: `<p>You just created your first room. This quick tour will show you the key features so you can run estimation sessions smoothly.</p><p>Ready to get started?</p>`,
         buttons: [
           {
-            text: 'No thanks',
+            text: 'Skip tour',
             secondary: true,
             action: () => {
               this.shepherdService.cancel();
@@ -1138,7 +1176,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             },
           },
           {
-            text: 'Next',
+            text: 'Show me around',
             action: () => {
               this.shepherdService.next();
               this.analytics.logStartedOnboarding();
@@ -1151,8 +1189,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       },
       {
         id: 'topic-selector',
-        title: 'Define Your Topic',
-        text: `<p>Use this area to set the focal point for your team’s discussion—whether it's a story, bug, or task. You can easily edit the topic at any time or link it directly from Jira or Linear.</p><p>Clear topics help keep everyone on the same page throughout each round.</p>`,
+        title: 'Set What You\'re Estimating',
+        text: `<p>This is where you tell your team what they're voting on. Type in a story name, paste a ticket, or connect Jira/Linear to pull issues directly.</p><p>Clear topics lead to better estimates.</p>`,
         attachTo: {
           element: '.topic-container',
           on: 'bottom',
@@ -1161,8 +1199,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       },
       {
         id: 'room-members',
-        title: 'View Room Participants',
-        text: `<p>Team members who join this room will appear here, ready to cast their estimates. Once everyone has voted, the results and statistics will also be displayed here.</p><p>There is also a built-in notes section—perfect for capturing key conversations and action points relevant to each topic.</p>`,
+        title: 'Team Members',
+        text: `<p>As teammates join, they'll appear here. After everyone votes, you'll see the results and statistics to identify any outliers.</p><p>There's also a notes section below for capturing important discussion points.</p>`,
         attachTo: {
           element: '.members-card',
           on: isSmallScreen ? 'top' : 'right',
@@ -1171,8 +1209,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       },
       {
         id: 'card-deck',
-        title: 'Poker Card Deck',
-        text: `<p>Here you can select your estimate by choosing a card that reflects the complexity or effort of the round's topic. Once all teammates have selected their cards, you can reveal everyone's estimates for transparent discussion.</p><p>You can even switch card sets later if you prefer a different estimation scale.</p>`,
+        title: 'Your Card Deck',
+        text: `<p>Select a card that matches your sense of the complexity or effort required. Once everyone's voted, you can reveal all the cards for discussion.</p><p>You can switch to different card sets (like T-shirt sizes) anytime from the settings.</p>`,
         attachTo: {
           element: '.card-deck-container',
           on: 'top',
@@ -1181,8 +1219,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       },
       {
         id: 'room-control',
-        title: 'Manage the Room',
-        text: `<p>Control your workflow from this panel—start a round, reveal results, invite team members, or set a timer to keep discussions focused. Keeping all controls in one area makes it easy to moderate sessions.</p><p>Use these features to ensure smooth estimation cycles.</p>`,
+        title: 'Room Controls',
+        text: `<p>Use this panel to invite teammates, reveal votes, start new rounds, or set a timer to keep discussions focused.</p><p>All the tools you need to facilitate sessions are right here.</p>`,
         attachTo: {
           element: '.estimate-container .big-panel',
           on: isSmallScreen ? 'top' : 'right',
@@ -1195,8 +1233,8 @@ export class RoomComponent implements OnInit, OnDestroy {
           element: '.mat-mdc-menu-panel',
           on: isSmallScreen ? 'top' : 'left',
         },
-        title: 'Additional Configuration',
-        text: `<p>Need more advanced settings? Access extra configuration options here, including different card sets, passwords, permissions, and a sidebar for managing rounds.</p><p>This section helps you tailor your experience to your team’s specific needs.</p>`,
+        title: 'Additional Settings',
+        text: `<p>Find more customization options here: change card sets, add passwords, manage permissions, or open the rounds sidebar to work with multiple topics.</p><p>Tailor the room to match your team's workflow.</p>`,
         beforeShowPromise: () => {
           return new Promise(resolve => {
             this.roomControllerPanel.openMenu();
@@ -1216,8 +1254,8 @@ export class RoomComponent implements OnInit, OnDestroy {
           element: '.profile-menu',
           on: isSmallScreen ? 'top' : 'right',
         },
-        title: 'Access Your Account & Settings',
-        text: `<p>All other account management features are found here—update your avatar, check your past sessions, monitor credits, or manage your organization in one convenient menu.</p><p>These tools help maintain a smooth and organized Planning Poker experience for you and your team.</p>`,
+        title: 'Your Account',
+        text: `<p>Access your personal settings here—customize your avatar, review past sessions, manage credits, and handle organization settings.</p><p>That's it! You're ready to start estimating.</p>`,
         beforeShowPromise: () => {
           return new Promise(resolve => {
             this.profileDropdown.openMenu();
@@ -1231,12 +1269,130 @@ export class RoomComponent implements OnInit, OnDestroy {
         },
         buttons: [
           {
-            text: 'Finish',
+            text: 'Got it',
             action: () => {
               this.profileDropdown.closeMenu();
               this.shepherdService.complete();
               this.analytics.logCompletedOnboarding();
               this.showInvitationPopup();
+            },
+          },
+        ],
+      },
+    ]);
+    this.shepherdService.start();
+  }
+
+  private startMemberOnboarding(isSmallScreen = true) {
+    this.shepherdService.modal = true;
+    this.shepherdService.defaultStepOptions = {
+      classes: 'shepherd-theme-custom',
+      scrollTo: { behavior: 'smooth' },
+    };
+
+    const nextAndBackButtons = [
+      {
+        text: 'Back',
+        secondary: true,
+        action: () => {
+          this.shepherdService.back();
+          this.analytics.logClickedBackMemberOnboarding();
+        },
+      },
+      {
+        text: 'Next',
+        action: () => {
+          this.shepherdService.next();
+          this.analytics.logClickedNextMemberOnboarding();
+        },
+      },
+    ];
+
+    this.shepherdService.addSteps([
+      {
+        id: 'welcome',
+        title: 'Welcome to the Session',
+        text: `<p>You've been invited to participate in a Planning Poker session. This quick tour will show you how everything works.</p><p>Ready?</p>`,
+        buttons: [
+          {
+            text: 'Skip tour',
+            secondary: true,
+            action: () => {
+              this.shepherdService.cancel();
+              this.analytics.logSkippedMemberOnboarding();
+              this.authService
+                .updateUserPreference({ onboardingTutorialShown: true })
+                .subscribe();
+            },
+          },
+          {
+            text: 'Show me around',
+            action: () => {
+              this.shepherdService.next();
+              this.analytics.logStartedMemberOnboarding();
+              this.authService
+                .updateUserPreference({ onboardingTutorialShown: true })
+                .subscribe();
+            },
+          },
+        ],
+      },
+      {
+        id: 'topic-display',
+        title: 'What You\'re Estimating',
+        text: `<p>This shows the story or task you're voting on. The facilitator sets this, so you can focus on providing your estimate.</p><p>Take a moment to read it before casting your vote.</p>`,
+        attachTo: {
+          element: '.topic-container',
+          on: 'bottom',
+        },
+        buttons: nextAndBackButtons,
+      },
+      {
+        id: 'card-deck',
+        title: 'Select Your Card',
+        text: `<p>Click a card that represents your sense of the complexity or effort. Your vote stays hidden until the facilitator reveals everyone's cards.</p><p>Trust your judgment—there's no wrong answer.</p>`,
+        attachTo: {
+          element: '.card-deck-container',
+          on: 'top',
+        },
+        buttons: nextAndBackButtons,
+      },
+      {
+        id: 'room-members',
+        title: 'Session Participants',
+        text: `<p>Everyone in the session appears here. You'll see who has voted, but not what they voted, until all cards are revealed.</p><p>Once revealed, you can discuss any notable differences in the estimates.</p>`,
+        attachTo: {
+          element: '.members-card',
+          on: isSmallScreen ? 'top' : 'right',
+        },
+        buttons: nextAndBackButtons,
+      },
+      {
+        id: 'profile-menu',
+        attachTo: {
+          element: '.profile-menu',
+          on: isSmallScreen ? 'top' : 'right',
+        },
+        title: 'Your Settings',
+        text: `<p>Access your personal settings here to change your avatar or review your session history.</p><p>That's all you need to know. You're ready to start voting.</p>`,
+        beforeShowPromise: () => {
+          return new Promise(resolve => {
+            this.profileDropdown.openMenu();
+            resolve(true);
+          });
+        },
+        when: {
+          hide: () => {
+            this.profileDropdown.closeMenu();
+          },
+        },
+        buttons: [
+          {
+            text: 'Got it',
+            action: () => {
+              this.profileDropdown.closeMenu();
+              this.shepherdService.complete();
+              this.analytics.logCompletedMemberOnboarding();
             },
           },
         ],

@@ -22,121 +22,6 @@
       <ul [ngClass]="{ hidden: isScrolled }">
         <li>
           <div
-            class="navigation-button features-button split-button"
-            routerLinkActive="active"
-            (mouseenter)="onDropdownMouseEnter('features')"
-            (mouseleave)="onDropdownMouseLeave()">
-            <a class="split-button-left" routerLink="/features"
-              >Features</a
-            >
-            <button
-              class="split-button-right"
-              mat-icon-button
-              (click)="toggleFeaturesDropdown()"
-              [attr.aria-expanded]="openDropdown === 'features'"
-              aria-label="Expand features menu">
-              <mat-icon
-                class="rotating-icon"
-                [class.rotated]="openDropdown === 'features'"
-                [inline]="true"
-                >expand_more</mat-icon
-              >
-            </button>
-          </div>
-          <div class="navbar-features-dropdown-panel" 
-               [class.open]="openDropdown === 'features'"
-               (mouseenter)="onDropdownContentMouseEnter()"
-               (mouseleave)="onDropdownContentMouseLeave()">
-              <div class="navbar-features-dropdown-content">
-                <div class="navbar-features-section">
-                  <h3>Learn & Get Started</h3>
-                  <div class="navbar-features-grid">
-                    <a routerLink="/getting-started" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>school</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Getting Started Guide</h4>
-                        <p>Complete tutorial for new users</p>
-                      </div>
-                    </a>
-                    <a routerLink="/what-is-planning-poker" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>help</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>What is Planning Poker?</h4>
-                        <p>Learn the basics of agile estimation</p>
-                      </div>
-                    </a>
-                    <a routerLink="/estimation-techniques-comparison" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>compare</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Estimation Techniques Comparison</h4>
-                        <p>Planning Poker vs T-Shirt Sizing & more</p>
-                      </div>
-                    </a>
-                    <a routerLink="/glossary" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>menu_book</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Glossary</h4>
-                        <p>Agile & Planning Poker terminology</p>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                
-                <div class="navbar-features-section">
-                  <h3>Resources & Support</h3>
-                  <div class="navbar-features-grid">
-                    <a routerLink="/features" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>book</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Features</h4>
-                        <p>Learn about the features of Planning Poker.live</p>
-                      </div>
-                    </a>
-                    <a routerLink="/knowledge-base" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>library_books</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Knowledge Base</h4>
-                        <p>Advanced guides and tutorials</p>
-                      </div>
-                    </a>
-                    <a routerLink="/faq" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <mat-icon>question_answer</mat-icon>
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>FAQ</h4>
-                        <p>Answers to common questions</p>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                
-                <div class="navbar-features-highlight">
-                  <div class="navbar-highlight-content">
-                    <h4>🚀 Ready to start?</h4>
-                    <p>Create your first planning poker session in seconds</p>
-                    <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
-                      Start Planning
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </li>
-        <li>
-          <div
             class="navigation-button integrations-button split-button"
             routerLinkActive="active"
             (mouseenter)="onDropdownMouseEnter('integrations')"
@@ -161,7 +46,8 @@
                (mouseenter)="onDropdownContentMouseEnter()"
                (mouseleave)="onDropdownContentMouseLeave()">
               <div class="navbar-features-dropdown-content">
-                <div class="navbar-features-section">
+                <div class="navbar-features-content">
+                  <div class="navbar-features-section">
                   <h3>Video Conferencing</h3>
                   <div class="navbar-features-grid">
                     <a routerLink="/integrations/zoom" class="navbar-feature-card" (click)="closeAllDropdowns()" id="header-zoom-link">
@@ -202,50 +88,168 @@
                     </a>
                   </div>
                 </div>
-                
-                <div class="navbar-features-section">
-                  <h3>Project Management</h3>
-                  <div class="navbar-features-grid">
-                    <a routerLink="/integrations/jira" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <img src="/assets/jira.png" alt="Jira" loading="lazy" />
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Jira Tickets</h4>
-                        <p>Sync issues and estimates with Jira</p>
-                      </div>
-                    </a>
-                    <a routerLink="/integrations/linear" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <img src="/assets/linear.png" alt="Linear" loading="lazy" />
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Linear Issues</h4>
-                        <p>Import issues and push estimates back</p>
-                      </div>
-                    </a>
+                  
+                  <div class="navbar-features-section">
+                    <h3>Project Management</h3>
+                    <div class="navbar-features-grid">
+                      <a routerLink="/integrations/jira" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                        <div class="navbar-feature-icon">
+                          <img src="/assets/jira.png" alt="Jira" loading="lazy" />
+                        </div>
+                        <div class="navbar-feature-content">
+                          <h4>Jira Tickets</h4>
+                          <p>Sync issues and estimates with Jira</p>
+                        </div>
+                      </a>
+                      <a routerLink="/integrations/linear" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                        <div class="navbar-feature-icon">
+                          <img src="/assets/linear.png" alt="Linear" loading="lazy" />
+                        </div>
+                        <div class="navbar-feature-content">
+                          <h4>Linear Issues</h4>
+                          <p>Import issues and push estimates back</p>
+                        </div>
+                      </a>
+                    </div>
                   </div>
-                </div>
 
-                <div class="navbar-features-section">
-                  <h3>Communication</h3>
-                  <div class="navbar-features-grid">
-                    <a routerLink="/integrations/slack" class="navbar-feature-card" (click)="closeAllDropdowns()">
-                      <div class="navbar-feature-icon">
-                        <img src="/assets/slack.png" alt="Slack" loading="lazy" />
-                      </div>
-                      <div class="navbar-feature-content">
-                        <h4>Slack</h4>
-                        <p>Start sessions with Slack commands</p>
-                      </div>
-                    </a>
+                  <div class="navbar-features-section">
+                    <h3>Communication</h3>
+                    <div class="navbar-features-grid">
+                      <a routerLink="/integrations/slack" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                        <div class="navbar-feature-icon">
+                          <img src="/assets/slack.png" alt="Slack" loading="lazy" />
+                        </div>
+                        <div class="navbar-feature-content">
+                          <h4>Slack</h4>
+                          <p>Start sessions with Slack commands</p>
+                        </div>
+                      </a>
+                    </div>
                   </div>
                 </div>
                 
                 <div class="navbar-features-highlight">
                   <div class="navbar-highlight-content">
-                    <h4>🚀 Ready to start?</h4>
-                    <p>Create your first planning poker session in seconds</p>
+                    <h4>Plan faster with your team</h4>
+                    <p>Launch a collaborative Planning Poker session in seconds and keep work flowing.</p>
+                    <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
+                      Start Planning
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </li>
+        <li>
+          <div
+            class="navigation-button features-button split-button"
+            routerLinkActive="active"
+            (mouseenter)="onDropdownMouseEnter('features')"
+            (mouseleave)="onDropdownMouseLeave()">
+            <a class="split-button-left" routerLink="/features"
+              >Features</a
+            >
+            <button
+              class="split-button-right"
+              mat-icon-button
+              (click)="toggleFeaturesDropdown()"
+              [attr.aria-expanded]="openDropdown === 'features'"
+              aria-label="Expand resources menu">
+              <mat-icon
+                class="rotating-icon"
+                [class.rotated]="openDropdown === 'features'"
+                [inline]="true"
+                >expand_more</mat-icon
+              >
+            </button>
+          </div>
+          <div class="navbar-features-dropdown-panel" 
+               [class.open]="openDropdown === 'features'"
+               (mouseenter)="onDropdownContentMouseEnter()"
+               (mouseleave)="onDropdownContentMouseLeave()">
+              <div class="navbar-features-dropdown-content">
+                <div class="navbar-features-content">
+                  <div class="navbar-features-section">
+                  <h3>Learn & Get Started</h3>
+                  <div class="navbar-features-grid">
+                    <a routerLink="/getting-started" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>school</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Getting Started Guide</h4>
+                        <p>Complete tutorial for new users</p>
+                      </div>
+                    </a>
+                    <a routerLink="/what-is-planning-poker" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>help</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>What is Planning Poker?</h4>
+                        <p>Learn the basics of agile estimation</p>
+                      </div>
+                    </a>
+                    <a routerLink="/estimation-techniques-comparison" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>compare</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Estimation Techniques Comparison</h4>
+                        <p>Planning Poker vs T-Shirt Sizing & more</p>
+                      </div>
+                    </a>
+                    <a routerLink="/glossary" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                      <div class="navbar-feature-icon">
+                        <mat-icon>menu_book</mat-icon>
+                      </div>
+                      <div class="navbar-feature-content">
+                        <h4>Glossary</h4>
+                        <p>Agile & Planning Poker terminology</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                  
+                  <div class="navbar-features-section">
+                    <h3>Resources & Support</h3>
+                    <div class="navbar-features-grid">
+                      <a routerLink="/features" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                        <div class="navbar-feature-icon">
+                          <mat-icon>book</mat-icon>
+                        </div>
+                        <div class="navbar-feature-content">
+                          <h4>Product Features</h4>
+                          <p>Overview of PlanningPoker.live capabilities</p>
+                        </div>
+                      </a>
+                      <a routerLink="/knowledge-base" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                        <div class="navbar-feature-icon">
+                          <mat-icon>library_books</mat-icon>
+                        </div>
+                        <div class="navbar-feature-content">
+                          <h4>Knowledge Base</h4>
+                          <p>Advanced guides and tutorials</p>
+                        </div>
+                      </a>
+                      <a routerLink="/faq" class="navbar-feature-card" (click)="closeAllDropdowns()">
+                        <div class="navbar-feature-icon">
+                          <mat-icon>question_answer</mat-icon>
+                        </div>
+                        <div class="navbar-feature-content">
+                          <h4>FAQ</h4>
+                          <p>Answers to common questions</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="navbar-features-highlight">
+                  <div class="navbar-highlight-content">
+                    <h4>Plan faster with your team</h4>
+                    <p>Jump into Planning Poker with ready-made decks, facilitation tools, and rich guidance.</p>
                     <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
                       Start Planning
                     </a>

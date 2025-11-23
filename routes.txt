@@ -44,4 +44,5 @@
 /knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live
 /knowledge-base/maximize-estimation-with-different-card-sets-in-planningpoker-live
 /knowledge-base/planningpoker-live-2024-year-in-review
+/knowledge-base/ai-tools-for-scrum-masters
 /knowledge-base/benefits-of-planning-poker

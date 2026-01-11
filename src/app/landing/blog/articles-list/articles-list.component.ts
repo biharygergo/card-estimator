@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CarbonAdComponent } from '../../../shared/carbon-ad/carbon-ad.component';
 import { NgOptimizedImage, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 
 @Component({
   selector: 'app-articles-list',
@@ -16,6 +17,7 @@ import { MatIcon } from '@angular/material/icon';
     DatePipe,
     MatIcon,
     NgTemplateOutlet,
+    PageHeaderComponent,
   ],
 })
 export class ArticlesListComponent {

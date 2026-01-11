@@ -7,6 +7,132 @@
   background: var(--light-background);
   overflow-y: auto;
   width: 100%;
+
+  // Dark theme variant for landing page style
+  // Background is provided by the landing wrapper, we just adjust colors
+  &.dark-theme {
+    background: transparent;
+
+    .title {
+      color: white;
+    }
+
+    .description {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .pricing-configurator {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      
+      .pricing-configurator-row {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      mat-form-field {
+        --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.3);
+        --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.5);
+        --mdc-outlined-text-field-focus-outline-color: rgba(255, 255, 255, 0.7);
+        --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.7);
+        --mdc-outlined-text-field-input-text-color: white;
+        --mat-select-trigger-text-color: white;
+        --mat-select-enabled-arrow-color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    .option {
+      .plan-title {
+        color: white;
+      }
+
+      .plan-description {
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .plan-price {
+        .price-amount {
+          color: white;
+        }
+
+        .price-description {
+          color: rgba(255, 255, 255, 0.7);
+        }
+      }
+    }
+
+    .image-wrapper {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .org-price-configurator {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+
+      .plan-title {
+        color: white;
+      }
+
+      .plan-description {
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .purchase-form {
+        .hint {
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .summary {
+          border-color: rgba(255, 255, 255, 0.2);
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        mat-form-field {
+          --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.3);
+          --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, 0.5);
+          --mdc-outlined-text-field-focus-outline-color: rgba(255, 255, 255, 0.7);
+          --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.7);
+          --mdc-outlined-text-field-input-text-color: white;
+          --mat-select-trigger-text-color: white;
+          --mat-select-enabled-arrow-color: rgba(255, 255, 255, 0.7);
+        }
+      }
+    }
+
+    .premium-features-list {
+      li {
+        .icon {
+          background: rgba(255, 255, 255, 0.12);
+          color: white;
+        }
+
+        .feature-details {
+          color: rgba(255, 255, 255, 0.85);
+
+          h5 {
+            color: white;
+          }
+        }
+      }
+    }
+
+    .select-plan {
+      background: white !important;
+      color: var(--main-dark-color) !important;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.9) !important;
+      }
+
+      &:disabled {
+        background: rgba(255, 255, 255, 0.3) !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+    }
+
+    .features-list-container {
+      padding-bottom: 8rem;
+    }
+  }
 }
 
 .content {

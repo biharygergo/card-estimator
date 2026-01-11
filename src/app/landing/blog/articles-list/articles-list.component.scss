@@ -1,17 +1,23 @@
 main {
-  background: white;
-  padding: 2rem 1rem;
-  min-height: 80vh;
-  .header {
-    margin-bottom: 2rem;
+  background: transparent;
+  padding: 2rem 1rem 4rem;
+  min-height: 60vh;
 
-    h1 {
-      font-size: 2rem;
-    }
-  }
   .content {
     max-width: 1000px;
     margin: 0 auto;
+  }
+
+  h2 {
+    color: white;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  > .content > p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
   }
 
   .articles {
@@ -21,20 +27,21 @@ main {
   }
 
   .article {
-    margin: 1rem 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--light-blue);
-    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
     overflow: hidden;
     text-decoration: none;
-    color: inherit;
-    margin-bottom: 2rem;
-
-    transition: background 200ms ease-out;
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
 
     &:hover {
-      background: var(--light-blue);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
     }
 
     @media screen and (max-width: 800px) {
@@ -43,33 +50,45 @@ main {
 
     .article-image {
       flex: 2;
-      min-height: 200px;
+      min-height: 180px;
       position: relative;
+      
       img {
         object-fit: cover;
-        border-radius: 20px 20px 0px 0px;
       }
 
       @media screen and (max-width: 800px) {
         flex: 0;
         width: 100%;
-
-        img {
-          border-radius: 20px 20px 0px 0px;
-        }
+        min-height: 150px;
       }
     }
 
     .article-preview {
       flex: 5;
-      padding: 1rem;
-      font-size: 1rem;
-
+      padding: 1.25rem;
+      font-size: 0.95rem;
       display: flex;
       flex-direction: column;
 
       h3 {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        color: white;
+      }
+
+      span {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 0.75rem;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
       }
 
       .read-more {
@@ -86,14 +105,21 @@ main {
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  font-size: 60px;
-  width: 80px;
-  height: 80px;
-  background: var(--main-color);
+  font-size: 48px;
+  width: 64px;
+  height: 64px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
-  opacity: 0.8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+
+  .article:hover & {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }

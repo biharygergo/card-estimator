@@ -3,22 +3,22 @@
 }
 
 main {
-  background: white;
+  background: transparent;
 }
 
 .content {
   max-width: 1200px;
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 4rem;
   margin: 0 auto;
 }
 
 .tldr {
-  background: var(--main-color);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
 
   h2 {
     margin-top: 0;
@@ -35,6 +35,11 @@ main {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+
+      strong {
+        color: white;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -44,40 +49,41 @@ main {
 }
 
 .highlight-box {
-  background: #f8f9ff;
-  border-left: 4px solid #667eea;
+  background: rgba(255, 255, 255, 0.06);
+  border-left: 4px solid rgba(128, 194, 242, 0.6);
   padding: 1.5rem;
   margin: 2rem 0;
-  border-radius: 0 8px 8px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 0 12px 12px 0;
 
   p {
     margin: 0;
     line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
   }
 
   a {
-    color: #667eea;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
 
 .toc {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 2rem 0;
 
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #495057;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 1.1rem;
   }
 
@@ -89,12 +95,13 @@ main {
       margin-bottom: 0.5rem;
 
       a {
-        color: #667eea;
+        color: #80c2f2;
         text-decoration: none;
         line-height: 1.5;
 
         &:hover {
           text-decoration: underline;
+          color: #9dd5ff;
         }
       }
     }
@@ -104,17 +111,18 @@ main {
 .article-image {
   width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 16px;
   margin: 2rem 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 h2 {
-  color: #2c3e50;
+  color: white;
   font-size: 2rem;
   font-weight: 600;
   margin: 3rem 0 1.5rem 0;
   padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 
   &:first-of-type {
     border-top: none;
@@ -123,7 +131,7 @@ h2 {
 }
 
 h3 {
-  color: #2c3e50;
+  color: white;
   font-size: 1.5rem;
   font-weight: 600;
   margin: 2rem 0 1rem 0;
@@ -131,20 +139,21 @@ h3 {
 
 p {
   line-height: 1.7;
-  color: #495057;
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 1.5rem;
 }
 
 .step-details {
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 1.5rem 0;
 
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.2rem;
   }
 
@@ -155,7 +164,11 @@ p {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
-      color: #495057;
+      color: rgba(255, 255, 255, 0.85);
+
+      strong {
+        color: white;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -165,15 +178,16 @@ p {
 }
 
 .technique-details {
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 1.5rem 0;
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
@@ -185,7 +199,11 @@ p {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
-      color: #495057;
+      color: rgba(255, 255, 255, 0.85);
+
+      strong {
+        color: white;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -195,23 +213,23 @@ p {
 }
 
 .info-box {
-  background: var(--light-blue);
-  border: 1px solid #bee5eb;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 1.5rem 0;
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #0c5460;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
 
   p {
     margin-bottom: 1rem;
-    color: #0c5460;
+    color: rgba(255, 255, 255, 0.85);
 
     &:last-child {
       margin-bottom: 0;
@@ -225,7 +243,11 @@ p {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
-      color: #0c5460;
+      color: rgba(255, 255, 255, 0.85);
+
+      strong {
+        color: white;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -234,34 +256,35 @@ p {
   }
 
   a {
-    color: #0056b3;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
 
 .resources-box {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 1.5rem 0;
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #495057;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
 
   p {
     margin-bottom: 1rem;
-    color: #495057;
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.6;
 
     &:last-child {
@@ -270,12 +293,13 @@ p {
   }
 
   a {
-    color: #667eea;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
@@ -283,8 +307,7 @@ p {
 .table-container {
   overflow-x: auto;
   margin: 2rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
   max-width: 100%;
 }
 
@@ -292,31 +315,37 @@ p {
   width: 100%;
   min-width: 800px;
   border-collapse: collapse;
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
   font-size: 0.95rem;
+  border-radius: 12px;
+  overflow: hidden;
 
   th, td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   th {
-    background: #f8f9fa;
+    background: rgba(255, 255, 255, 0.08);
     font-weight: 600;
-    color: #2c3e50;
+    color: white;
     position: sticky;
     top: 0;
     z-index: 10;
   }
 
+  td {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
   tr:hover {
-    background: #f8f9ff;
+    background: rgba(255, 255, 255, 0.03);
   }
 
   td:first-child {
     font-weight: 600;
-    color: #2c3e50;
+    color: white;
   }
 
   @media (max-width: 768px) {
@@ -337,22 +366,22 @@ p {
 }
 
 .tip-card {
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
@@ -364,7 +393,7 @@ p {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
-      color: #495057;
+      color: rgba(255, 255, 255, 0.85);
 
       &:last-child {
         margin-bottom: 0;
@@ -373,12 +402,13 @@ p {
   }
 
   a {
-    color: #667eea;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
@@ -392,48 +422,50 @@ p {
 }
 
 .next-step-card {
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
 
   p {
     margin: 0;
-    color: #495057;
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
   }
 
   a {
-    color: #667eea;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
 
 .cta-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: white;
   padding: 3rem 2rem;
-  border-radius: 12px;
+  border-radius: 20px;
   text-align: center;
   margin: 3rem 0;
 
@@ -449,24 +481,24 @@ p {
     margin-bottom: 2rem;
     font-size: 1.1rem;
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .cta-button {
     background: white;
-    color: #667eea;
+    color: #1c4182;
     font-weight: 600;
     padding: 0.75rem 2rem;
-    border-radius: 8px;
+    border-radius: 12px;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
 
     mat-icon {
@@ -507,4 +539,4 @@ p {
       padding: 0.5rem;
     }
   }
-} 
+}

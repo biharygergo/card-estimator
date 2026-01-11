@@ -25,7 +25,29 @@
   --background-dark: #001a43;
   --light-background: white;
 
-  --landing-text-color: #bfc6dc;
+  --landing-text-color: white;
+}
+
+// Modern highlighter effect - used across landing pages
+.highlight-marker {
+  position: relative;
+  display: inline;
+  white-space: nowrap;
+  color: #fafafa;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: -0.1em;
+    right: -0.1em;
+    bottom: 0.05em;
+    height: 0.35em;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 2px;
+    z-index: -1;
+    transform: skewX(-3deg) rotate(-0.5deg);
+    opacity: 0.9;
+  }
 }
 
 $m3-dark-theme: mat.define-theme(
@@ -577,7 +599,7 @@ body {
   .see-more-panel-header {
     max-width: 320px;
     margin: 0 auto;
-    --mat-expansion-header-indicator-color: #bfc6dc;
+    --mat-expansion-header-indicator-color: white;
 
     .mat-expansion-indicator {
       margin-top: -6px;
@@ -589,7 +611,7 @@ body {
   }
 
   .see-more-panel-title {
-    color: #bfc6dc;
+    color: white;
   }
 }
 

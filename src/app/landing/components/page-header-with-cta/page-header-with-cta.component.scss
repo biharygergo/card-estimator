@@ -1,10 +1,7 @@
 @mixin heroBackground() {
-  background: linear-gradient(90deg, #345ca8 30.32%, #80c2f2 100%);
+  background: transparent;
   overflow: hidden;
-
-  @media screen and (max-width: 800px) {
-    background: linear-gradient(180deg, #345ca8 30.32%, #80c2f2 100%);
-  }
+  position: relative;
 }
 
 .hero-header-section {
@@ -41,11 +38,15 @@
 
     h1 {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: clamp(2.5rem, 5vw, 3.5rem);
-      line-height: 1.2;
-      font-weight: 700;
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      line-height: 1.15;
+      font-weight: 800;
       margin: 0;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
+      
+      span {
+        display: inline;
+      }
     }
 
     .header-description {
@@ -135,16 +136,16 @@
       position: absolute;
       bottom: 40px;
       left: 50%;
-      transform: translate(-50%, 0) translateZ(100px) scale(0.8);
+      transform: translate(-50%, 20px) translateZ(100px) scale(0.9);
       width: 340px;
       background: white;
-      border-radius: 12px;
-      padding: 18px 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
       opacity: 0;
-      transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 10;
-      border-left: 4px solid #0052CC;
+      border-left: 4px solid #3b82f6;
 
       &.show {
         opacity: 1;
@@ -153,7 +154,7 @@
 
       &.show-results {
         transform: translate(-50%, 0) translateZ(100px) scale(1);
-        border-left-color: #36B37E;
+        border-left-color: #22c55e;
       }
 
       &.hidden {
@@ -208,12 +209,12 @@
           align-items: center;
           gap: 6px;
           opacity: 0;
-          transform: scale(0.5);
-          transition: all 0.3s ease-out;
+          transform: scale(0.7) translateY(10px);
+          transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 
           &.show {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
           }
 
           .avatar-wrapper {
@@ -366,17 +367,17 @@
       width: 50%;
       max-width: 320px;
       aspect-ratio: 5 / 7;
-      transition: transform 0.3s ease-out;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
       &:hover .card {
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
       }
 
       .card-inner {
         position: relative;
         width: 100%;
         height: 100%;
-        transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         transform-style: preserve-3d;
       }
 

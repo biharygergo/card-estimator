@@ -17,6 +17,7 @@ export class SlackComponent {
     header: {
       title:
         'Estimate Stories Faster with the PlanningPoker.live Slack Integration',
+      platformName: 'Slack',
       description:
         'Start planning poker sessions directly in Slack to keep your team aligned and productive—no extra tools required.',
       buttonLabel: 'Add to Slack',

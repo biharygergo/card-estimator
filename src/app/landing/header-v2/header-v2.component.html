@@ -134,7 +134,7 @@
                     <h4>Plan faster with your team</h4>
                     <p>Launch a collaborative Planning Poker session in seconds and keep work flowing.</p>
                     <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
-                      Start Planning
+                      Start Estimating
                     </a>
                   </div>
                 </div>
@@ -251,7 +251,7 @@
                     <h4>Plan faster with your team</h4>
                     <p>Jump into Planning Poker with ready-made decks, facilitation tools, and rich guidance.</p>
                     <a mat-stroked-button routerLink="/create" (click)="closeAllDropdowns()">
-                      Start Planning
+                      Start Estimating
                     </a>
                   </div>
                 </div>
@@ -268,12 +268,12 @@
           >
         </li>
       </ul>
-      <div
-        class="split-action-button-container flat desktop-start-planning-link">
-        <a mat-flat-button color="primary" routerLink="/create"
-          ><mat-icon>play_arrow</mat-icon>Start planning
+      <div class="header-cta-group">
+        <a routerLink="/create" class="header-cta-button">
+          <mat-icon>play_arrow</mat-icon>
+          Start Estimating
         </a>
-        <div class="split-action-button-container-side-button">
+        <div class="header-profile-dropdown">
           <app-profile-dropdown appearance="avatar"></app-profile-dropdown>
         </div>
       </div>
@@ -399,7 +399,7 @@
         <div class="mobile-menu-divider"></div>
 
         <a routerLink="/create" class="mobile-cta" (click)="closeAllDropdowns(); closeMenu()">
-          Start Planning
+          Start Estimating
         </a>
       </div>
     </div>

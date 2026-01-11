@@ -16,6 +16,7 @@ export class LinearComponent {
   config: IntegrationConfig = {
     header: {
       title: 'Estimate Linear Issues with PlanningPoker.live',
+      platformName: 'Linear',
       description:
         'Connect your PlanningPoker.live account with Linear to seamlessly estimate issues from your workspace. Quickly import issues from your backlog to your planning poker sessions for collaborative estimation.',
       buttonLabel: 'Connect to Linear',

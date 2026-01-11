@@ -12,6 +12,7 @@ import {
 export interface IntegrationConfig {
   header: {
     title: string;
+    platformName: string; // The platform name to highlight (e.g., "Jira", "Linear", "Slack")
     description: string;
     buttonLabel: string;
     videoId: string;
@@ -37,6 +38,12 @@ export interface IntegrationConfig {
   action: () => void;
 }
 
+// Title segment with highlight info
+interface TitleSegment {
+  text: string;
+  highlighted: boolean;
+}
+
 @Component({
   selector: 'planning-poker-integration-page-template',
   imports: [
@@ -52,4 +59,32 @@ export interface IntegrationConfig {
 })
 export class IntegrationPageTemplateComponent {
   config = input<IntegrationConfig>();
+  
+  // Computed title segments for highlighting the platform name
+  get titleSegments(): TitleSegment[] {
+    const cfg = this.config();
+    if (!cfg?.header.platformName) {
+      return [{ text: cfg?.header.title || '', highlighted: false }];
+    }
+    
+    const segments: TitleSegment[] = [];
+    const title = cfg.header.title;
+    const platform = cfg.header.platformName;
+    const index = title.indexOf(platform);
+    
+    if (index === -1) {
+      return [{ text: title, highlighted: false }];
+    }
+    
+    if (index > 0) {
+      segments.push({ text: title.substring(0, index), highlighted: false });
+    }
+    segments.push({ text: platform, highlighted: true });
+    const remaining = title.substring(index + platform.length);
+    if (remaining) {
+      segments.push({ text: remaining, highlighted: false });
+    }
+    
+    return segments;
+  }
 }

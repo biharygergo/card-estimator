@@ -35,7 +35,7 @@ main {
 }
 
 .details {
-  color: #bfc6dc;
+  color: white;
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.8rem;
@@ -93,7 +93,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: #bfc6dc;
+  color: white;
   max-width: 1000px;
   margin: 0 auto;
   width: 100%;
@@ -102,7 +102,7 @@ main {
 
   ::ng-deep .mdc-tab {
     .mdc-tab__text-label {
-      color: #bfc6dc;
+      color: white;
       font-size: 1.1rem;
     }
 
@@ -115,7 +115,7 @@ main {
   }
 
   ::ng-deep .mat-mdc-tab-header-pagination-chevron {
-    border-color: #bfc6dc;
+    border-color: white;
   }
 
   ::ng-deep .mat-mdc-tab-header {
@@ -124,7 +124,7 @@ main {
 
   .step-content {
     padding: 2rem 0;
-    color: #bfc6dc;
+    color: white;
     text-align: center;
     max-width: 500px;
     margin: 0 auto;

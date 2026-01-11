@@ -3,28 +3,50 @@
   flex-direction: row;
   flex-wrap: wrap;
 
-  gap: 32px;
+  gap: 24px;
   .feature-card {
     height: 450px;
-    padding: 50px 40px;
+    padding: 36px 32px;
     color: #d9e2ff;
-    background: #18325d;
+    background: rgba(24, 50, 93, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
     border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
-    flex: 1 1 calc(40% - 32px);
+    flex: 1 1 calc(40% - 24px);
+    
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
 
     &.wide {
-      flex: 1 1 calc(60% - 32px);
+      flex: 1 1 calc(60% - 24px);
     }
 
     h3 {
-      font-size: 1.5rem;
-      font-weight: bold;
+      font-size: 1.4rem;
+      font-weight: 700;
       position: relative;
       z-index: 1;
       margin-top: 0;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    
+    .feature-subtitle {
+      font-size: 0.95rem;
+      color: white;
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      line-height: 1.5;
     }
 
     img {
@@ -40,10 +62,11 @@
     a {
       color: white;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
 
       &:hover {
         text-decoration: underline;
+        color: #afc6ff;
       }
     }
   }
@@ -54,9 +77,18 @@
     .feature-card {
       height: 350px;
       flex: 1 1 100%;
+      padding: 28px 24px;
 
       &.wide {
         flex: 1 1 100%;
+      }
+      
+      h3 {
+        font-size: 1.2rem;
+      }
+      
+      .feature-subtitle {
+        font-size: 0.85rem;
       }
     }
   }

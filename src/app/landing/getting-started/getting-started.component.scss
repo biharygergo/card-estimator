@@ -3,23 +3,22 @@
 }
 
 main {
-background: white;
-
+  background: transparent;
 }
 
 .content {
-    max-width: 1200px;
-    padding: 2rem 1rem;
-    margin: 0 auto;
+  max-width: 1200px;
+  padding: 2rem 1rem 4rem;
+  margin: 0 auto;
 }
 
 .tldr {
-  background: var(--main-color);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
 
   h2 {
     margin-top: 0;
@@ -36,49 +35,55 @@ background: white;
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
 
       &:last-child {
         margin-bottom: 0;
+      }
+
+      strong {
+        color: white;
       }
     }
   }
 }
 
 .highlight-box {
-  background: #f8f9ff;
-  border-left: 4px solid #667eea;
+  background: rgba(255, 255, 255, 0.06);
+  border-left: 4px solid rgba(128, 194, 242, 0.6);
   padding: 1.5rem;
   margin: 2rem 0;
-  border-radius: 0 8px 8px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 0 12px 12px 0;
 
   p {
     margin: 0;
     line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
   }
 
   a {
-    color: #667eea;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
 
 .toc {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 2rem 0;
 
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #495057;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 1.1rem;
   }
 
@@ -90,12 +95,13 @@ background: white;
       margin-bottom: 0.5rem;
 
       a {
-        color: #667eea;
+        color: #80c2f2;
         text-decoration: none;
         line-height: 1.5;
 
         &:hover {
           text-decoration: underline;
+          color: #9dd5ff;
         }
       }
     }
@@ -105,17 +111,18 @@ background: white;
 .article-image {
   width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 16px;
   margin: 2rem 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 h2 {
-  color: #2c3e50;
+  color: white;
   font-size: 2rem;
   font-weight: 600;
   margin: 3rem 0 1.5rem 0;
   padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 
   &:first-of-type {
     border-top: none;
@@ -125,20 +132,21 @@ h2 {
 
 p {
   line-height: 1.7;
-  color: #495057;
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 1.5rem;
 }
 
 .step-details {
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 1.5rem 0;
 
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.2rem;
   }
 
@@ -149,7 +157,11 @@ p {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
-      color: #495057;
+      color: rgba(255, 255, 255, 0.85);
+
+      strong {
+        color: white;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -159,31 +171,29 @@ p {
 }
 
 .video-container {
-  background: #f8f9fa;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   padding: 2rem;
   margin: 2rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.3rem;
     font-weight: 600;
   }
 
   p {
     margin-bottom: 1.5rem;
-    color: #495057;
+    color: rgba(255, 255, 255, 0.8);
   }
 
   &.featured-video {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 2.5rem;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.1);
 
     h3 {
       color: white;
@@ -194,30 +204,30 @@ p {
     }
 
     p {
-      color: rgba(255, 255, 255, 0.95);
+      color: rgba(255, 255, 255, 0.9);
       font-size: 1.05rem;
     }
   }
 }
 
 .info-box {
-  background: var(--light-blue);
-  border: 1px solid #bee5eb;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 1.5rem;
   margin: 1.5rem 0;
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #0c5460;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
 
   p {
     margin-bottom: 1rem;
-    color: #0c5460;
+    color: rgba(255, 255, 255, 0.85);
 
     &:last-child {
       margin-bottom: 0;
@@ -231,7 +241,11 @@ p {
     li {
       margin-bottom: 0.5rem;
       line-height: 1.6;
-      color: #0c5460;
+      color: rgba(255, 255, 255, 0.85);
+
+      strong {
+        color: white;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -240,12 +254,13 @@ p {
   }
 
   a {
-    color: #0056b3;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
@@ -258,39 +273,40 @@ p {
 }
 
 .tip-card {
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   h4 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: white;
     font-size: 1.1rem;
     font-weight: 600;
   }
 
   p {
     margin: 0;
-    color: #495057;
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
   }
 
   a {
-    color: #667eea;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
@@ -303,15 +319,17 @@ p {
 }
 
 .next-step-card {
-  background: var(--main-dark-color);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
   }
 
@@ -320,66 +338,67 @@ p {
     margin-bottom: 1rem;
     font-size: 1.1rem;
     font-weight: 600;
+    color: white;
   }
 
   p {
     margin: 0;
     line-height: 1.6;
-    opacity: 0.9;
-    color: white;
+    color: rgba(255, 255, 255, 0.8);
   }
 
   a {
-    color: white;
+    color: #80c2f2;
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: #9dd5ff;
     }
   }
 }
 
 .cta-section {
-  background: var(--main-color);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: white;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 3rem 2rem;
   text-align: center;
   margin: 3rem 0;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
 
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 2rem;
     font-weight: 600;
+    color: white;
   }
 
   p {
     margin-bottom: 2rem;
     font-size: 1.1rem;
-    opacity: 0.9;
-    color: white;
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .cta-button {
     background: white;
-    color: black;
+    color: #1c4182;
     padding: 1rem 2rem;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1.1rem;
     font-weight: 600;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
       text-decoration: none;
     }
 
@@ -436,4 +455,4 @@ p {
   .next-step-card {
     padding: 1rem;
   }
-} 
+}

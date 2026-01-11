@@ -6,6 +6,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 export interface HeaderConfig {
   title: string;
+  titleHighlights?: string[];
   description: string;
   internalLink?: string;
   externalLink?: string;
@@ -34,6 +35,12 @@ interface AnimationStep {
   updates: Partial<AnimationState>;
 }
 
+// Title segment with highlight info
+interface TitleSegment {
+  text: string;
+  highlighted: boolean;
+}
+
 @Component({
   selector: 'planning-poker-page-header-with-cta',
   templateUrl: './page-header-with-cta.component.html',
@@ -42,6 +49,33 @@ interface AnimationStep {
 })
 export class PageHeaderWithCtaComponent implements OnDestroy {
   @Input({ required: true }) config!: HeaderConfig;
+  
+  // Computed title segments for highlighting
+  get titleSegments(): TitleSegment[] {
+    if (!this.config.titleHighlights?.length) {
+      return [{ text: this.config.title, highlighted: false }];
+    }
+    
+    const segments: TitleSegment[] = [];
+    let remaining = this.config.title;
+    
+    for (const highlight of this.config.titleHighlights) {
+      const index = remaining.indexOf(highlight);
+      if (index === -1) continue;
+      
+      if (index > 0) {
+        segments.push({ text: remaining.substring(0, index), highlighted: false });
+      }
+      segments.push({ text: highlight, highlighted: true });
+      remaining = remaining.substring(index + highlight.length);
+    }
+    
+    if (remaining) {
+      segments.push({ text: remaining, highlighted: false });
+    }
+    
+    return segments;
+  }
   
   private platformId = inject(PLATFORM_ID);
   
@@ -65,21 +99,18 @@ export class PageHeaderWithCtaComponent implements OnDestroy {
   
   private timeouts: ReturnType<typeof setTimeout>[] = [];
   
-  // Animation timeline in milliseconds
+  // Animation timeline in milliseconds - slower, more elegant timing
   private readonly ANIMATION_TIMELINE: AnimationStep[] = [
-    { delay: 800, updates: { showTicket: true } },
-    { delay: 1800, updates: { showEstimator1: true } },
-    { delay: 2200, updates: { showEstimator2: true } },
-    { delay: 2600, updates: { showEstimator3: true } },
-    { delay: 3800, updates: { showVote1: true } },
-    { delay: 4100, updates: { showVote2: true } },
-    { delay: 4400, updates: { showVote3: true } },
-    { delay: 5700, updates: { cardsFlipped: true } },
-    { delay: 6500, updates: { showResults: true } },
-    { delay: 9000, updates: { hideOverlay: true } },
+    { delay: 1200, updates: { showTicket: true } },
+    { delay: 2600, updates: { showEstimator1: true } },
+    { delay: 3200, updates: { showEstimator2: true } },
+    { delay: 3800, updates: { showEstimator3: true } },
+    { delay: 5200, updates: { showVote1: true } },
+    { delay: 5700, updates: { showVote2: true } },
+    { delay: 6200, updates: { showVote3: true } },
+    { delay: 8000, updates: { cardsFlipped: true } },
+    { delay: 9200, updates: { showResults: true } },
   ];
-  
-  private readonly LOOP_DURATION = 9500;
   
   constructor() {
     afterNextRender(() => {
@@ -95,36 +126,13 @@ export class PageHeaderWithCtaComponent implements OnDestroy {
   }
   
   private startAnimation() {
-    // Schedule all animation steps
+    // Schedule all animation steps - runs once, no looping for a cleaner experience
     this.ANIMATION_TIMELINE.forEach(step => {
       const timeout = setTimeout(() => {
         this.animationState.update(state => ({ ...state, ...step.updates }));
       }, step.delay);
       this.timeouts.push(timeout);
     });
-    
-    // Schedule reset and loop
-    const loopTimeout = setTimeout(() => {
-      this.resetAnimation();
-      this.startAnimation();
-    }, this.LOOP_DURATION);
-    this.timeouts.push(loopTimeout);
-  }
-  
-  private resetAnimation() {
-    this.animationState.set({
-      showTicket: false,
-      showEstimator1: false,
-      showEstimator2: false,
-      showEstimator3: false,
-      showVote1: false,
-      showVote2: false,
-      showVote3: false,
-      cardsFlipped: false,
-      showResults: false,
-      hideOverlay: false,
-    });
-    this.timeouts = [];
   }
   
   private clearAllTimeouts() {

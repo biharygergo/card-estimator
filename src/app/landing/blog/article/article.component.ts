@@ -1,4 +1,4 @@
-import { Component, Renderer2, inject } from '@angular/core';
+import { Component, Renderer2, inject, computed } from '@angular/core';
 import { Article } from '../types';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, Subject, combineLatest, map, tap } from 'rxjs';
@@ -12,6 +12,8 @@ import { SchemaTagService } from 'src/app/services/schema-tag.service';
 import type { Article as SchemaArticle, WithContext } from 'schema-dts';
 import { YoutubePlayerComponent } from 'src/app/shared/youtube-player/youtube-player.component';
 import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component';
+import { PageHeaderComponent, Breadcrumb } from '../../components/page-header/page-header.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article',
@@ -26,7 +28,8 @@ import { FaqSectionComponent } from '../../faq/faq-section/faq-section.component
     AsyncPipe,
     DatePipe,
     YoutubePlayerComponent,
-    FaqSectionComponent
+    FaqSectionComponent,
+    PageHeaderComponent,
 ],
 })
 export class ArticleComponent {

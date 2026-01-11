@@ -1,7 +1,13 @@
 <div class="hero-header-section">
   <div class="hero-header">
     <div class="header-intro">
-      <h1>{{ config.title }}</h1>
+      <h1>@for (segment of titleSegments; track segment.text) {
+        @if (segment.highlighted) {
+          <span class="highlight-marker">{{ segment.text }}</span>
+        } @else {
+          <span>{{ segment.text }}</span>
+        }
+      }</h1>
       <p class="header-description">
         {{ config.description }}
       </p>

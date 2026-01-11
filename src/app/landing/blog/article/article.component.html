@@ -1,28 +1,26 @@
+@if (article | async; as article) {
+  <app-page-header
+    [title]="article.title"
+    [subtitle]="article.description"
+    [compact]="true"
+    [centered]="true"
+    [breadcrumbs]="[
+      { label: 'Home', url: '/' },
+      { label: 'Knowledge Base', url: '/knowledge-base' }
+    ]"
+  >
+    <div class="article-meta">
+      <span class="author">{{ article.author }}</span>
+      <span class="separator">•</span>
+      <span class="date">{{ article.lastUpdated | date: 'mediumDate' }}</span>
+    </div>
+  </app-page-header>
+}
 <main>
   <div class="layout">
     @if (article | async; as article) {
       <article>
-        <div class="breadcrumbs">
-          <a routerLink="/">Home</a>
-          <span>></span>
-          <a routerLink="/knowledge-base">Knowledge base</a>
-          <span>></span>
-          <a routerLink="/knowledge-base/{{ article.slug }}">{{
-            article.title
-          }}</a>
-        </div>
         <div class="content">
-          <div class="card-header">
-            <h1>{{ article.title }}</h1>
-            <p>{{ article.description }}</p>
-            <div class="meta">
-              <span class="author">{{ article.author }}</span>
-              <small
-                >Last updated:
-                {{ article.lastUpdated | date: 'mediumDate' }}</small
-                >
-              </div>
-            </div>
             @if (!article.youtubeVideoId) {
               <div class="cover-image">
                 <img

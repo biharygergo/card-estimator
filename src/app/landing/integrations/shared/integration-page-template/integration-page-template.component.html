@@ -1,7 +1,15 @@
 <section class="integration-header">
   <div class="integration-header-content">
     <div class="integration-header-left">
-      <h1 class="integration-title">{{ config().header.title }}</h1>
+      <h1 class="integration-title">
+        @for (segment of titleSegments; track segment.text) {
+          @if (segment.highlighted) {
+            <span class="highlight-marker">{{ segment.text }}</span>
+          } @else {
+            <span>{{ segment.text }}</span>
+          }
+        }
+      </h1>
       <p class="integration-description">
         {{ config().header.description }}
       </p>

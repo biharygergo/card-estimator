@@ -8,9 +8,9 @@ const routes: Routes = [
     loadComponent: () =>
       import('./home/home.component').then(mod => mod.HomeComponent),
     data: {
-      title: 'Planning Poker Online Free - Scrum Poker & Agile Estimation Tool',
+      title: 'Planning Poker for Developers - Free Scrum Estimation Tool',
       description:
-        'Free online planning poker tool for agile teams. Run scrum poker sessions in your browser with JIRA/Linear integration, custom cards, and anonymous voting. No sign-up required! Start your estimation poker session now.',
+        'The planning poker tool developers actually want to use. Clean UI, zero friction, instant setup. JIRA & Linear sync, Zoom/Teams integration, anonymous voting. No sign-up required — start estimating in seconds.',
       disablePostfix: true,
     },
   },

@@ -1,4 +1,4 @@
-<div class="page-wrapper">
+<div class="page-wrapper" [class.dark-theme]="pageMode === 'page'">
   @if (pageMode === 'modal') {
   <div class="close-button">
     <button mat-button mat-dialog-close>

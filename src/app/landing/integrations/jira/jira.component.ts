@@ -16,6 +16,7 @@ export class JiraComponent {
   config: IntegrationConfig = {
     header: {
       title: 'Estimate Jira Issues with PlanningPoker.live',
+      platformName: 'Jira',
       description:
         'Connect your PlanningPoker.live account with Jira to estimate issues directly from your backlog. Use advanced filters to import only the issues you need from your active sprint or project.',
       buttonLabel: 'Connect to Jira',

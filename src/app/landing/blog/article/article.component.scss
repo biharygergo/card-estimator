@@ -1,25 +1,41 @@
 @import '../../../common.scss';
 
-main {
-  background: white;
-  padding: 2rem 0;
-  min-height: 90vh;
+// Article meta in hero
+.article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
 
-  .breadcrumbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 13px;
-
-    a {
-      color: var(--main-color);
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  .separator {
+    color: rgba(255, 255, 255, 0.4);
   }
+
+  .author {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  background: transparent;
+  padding: 2rem 0 4rem;
+  min-height: 60vh;
 
   .layout {
     max-width: 1100px;
@@ -34,10 +50,10 @@ main {
   article {
     margin: 0 auto;
     flex: 3;
-
     padding: 1rem;
     font-size: 1rem;
-    line-height: 1.5rem;
+    line-height: 1.6;
+    color: white;
   }
 
   .recommendations {
@@ -45,88 +61,90 @@ main {
 
     .recommendations-inner {
       padding: 1rem;
-      margin-top: 200px;
+      margin-top: 50px;
       position: sticky;
       top: 100px;
 
       @include smallScreen {
-        margin-top: 0;
+        margin-top: 2rem;
         position: unset;
       }
     }
 
     h2 {
-      font-size: 1.1rem;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
     }
 
     .recommendation {
-      background: var(--light-blue);
-      border-radius: 8px;
-      padding: 1rem 0.5rem;
-      margin-bottom: 1rem;
-      transition: background 300ms linear;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s ease;
 
       h3 {
         margin: 0;
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 500;
       }
 
       &:hover {
-        background: var(--highlight-background-color);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.15);
       }
 
       a {
-        color: black;
+        color: white;
         text-decoration: none;
       }
 
       p {
-        font-size: 14px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
       }
     }
   }
 
-  h1 {
-    font-size: 2rem;
-    line-height: 2rem;
-  }
-
-  .author {
-    margin-bottom: 0.1rem;
-    display: block;
-  }
-
   .cover-image {
-    border-radius: 20px;
+    border-radius: 16px;
     overflow: hidden;
     position: relative;
     width: 100%;
     height: 400px;
     margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
     img {
       object-fit: cover;
     }
-  }
 
-  .card-header {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid #efefef;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    @include smallScreen {
+      height: 250px;
+    }
   }
 }
 .banner-wrapper {
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
   margin: 2rem 0;
 }
 
 ::ng-deep markdown {
+  color: rgba(255, 255, 255, 0.9);
+
   a {
-    color: var(--main-color);
+    color: #80c2f2;
+    
+    &:hover {
+      color: #9dd5ff;
+    }
+  }
+
+  h1, h2, h3 {
+    color: white;
   }
 
   h1 {
@@ -144,19 +162,64 @@ main {
     font-weight: 700;
   }
 
+  p, li {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  strong {
+    color: white;
+  }
+
+  code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    overflow-x: auto;
+
+    code {
+      background: transparent;
+      padding: 0;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    padding-left: 1rem;
+    margin-left: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+  }
+
   table {
-    background: var(--light-blue);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
     padding: 1rem;
     margin: 1rem 0;
-    overflow-x: scroll;
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+
+    th {
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
     td {
-      padding: 0.5rem;
+      padding: 0.75rem 0.5rem;
+      color: rgba(255, 255, 255, 0.8);
     }
 
     tr {
-      border-bottom: 1px solid var(--main-dark);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
   }
 
@@ -165,34 +228,49 @@ main {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 
     img,
     video {
       max-width: 80%;
-      border-radius: 20px;
-      margin-bottom: 0.2rem;
+      border-radius: 16px;
+      margin-bottom: 0.5rem;
       object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
       @media only screen and (max-width: 800px) {
         max-width: 100%;
       }
     }
 
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    em, figcaption {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+    }
   }
 
   .separator {
-    width: 20px;
+    width: 40px;
     height: 3px;
     border-radius: 16px;
-    background: var(--main-color);
+    background: rgba(255, 255, 255, 0.2);
     margin: 2rem auto;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
   }
 }
 
 .video-wrapper {
   margin: 1rem 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .tag-cloud {
@@ -200,12 +278,14 @@ main {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  margin-top: 2rem;
 
   span {
-    color: var(--main-color);
-    font-size: 13px;
-    background: var(--light-blue);
-    padding: 0.1rem 0.5rem;
+    color: white;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.25rem 0.75rem;
     border-radius: 16px;
   }
 }

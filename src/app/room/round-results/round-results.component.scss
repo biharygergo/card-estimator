@@ -53,14 +53,12 @@ mat-chip-set {
 
 .subheader {
   margin-top: 0;
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 0.8rem;
   margin-bottom: 1rem;
   margin-left: 0;
   color: var(--text-on-white);
-  opacity: 0.7;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  opacity: 0.6;
 }
 
 mat-list-item.statistic-line {

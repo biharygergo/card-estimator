@@ -10,8 +10,9 @@ import {
   Output,
   signal,
   ViewChild,
+  effect,
 } from '@angular/core';
-import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, map, takeUntil, tap, filter, distinctUntilChanged } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
@@ -25,6 +26,7 @@ import {
   Room,
   Round,
   SavedCardSetValue,
+  TimerState,
 } from 'src/app/types';
 import {
   cooldownPipe,
@@ -36,7 +38,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CardDeckService } from 'src/app/services/card-deck.service';
 import { AddCardDeckModalComponent } from '../add-card-deck-modal/add-card-deck-modal.component';
-import { delayedFadeAnimation, fadeAnimation } from 'src/app/shared/animations';
+import { collapseAnimation, delayedFadeAnimation, fadeAnimation } from 'src/app/shared/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RoomDataService } from '../room-data.service';
 import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
@@ -49,6 +51,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { ToastService } from 'src/app/services/toast.service';
 
 const ADD_CARD_DECK_MODAL = 'add-card-deck';
@@ -57,7 +60,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
   selector: 'planning-poker-room-controller-panel',
   templateUrl: './room-controller-panel.component.html',
   styleUrls: ['./room-controller-panel.component.scss'],
-  animations: [fadeAnimation, delayedFadeAnimation],
+  animations: [fadeAnimation, delayedFadeAnimation, collapseAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatCard,
@@ -72,6 +75,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
     MatMenuItem,
     MatDivider,
     MatCheckbox,
+    MatExpansionModule,
     NgClass,
     AsyncPipe,
   ],
@@ -106,6 +110,46 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     tap(isSmallScreen => this.isSmallScreen.set(isSmallScreen))
   );
   isSmallScreen = signal<boolean>(false);
+  
+  // Collapsible section states (with localStorage persistence)
+  private readonly STORAGE_KEY_ROOM_INFO = 'controlPanel.roomInfoCollapsed';
+  private readonly STORAGE_KEY_TIMER = 'controlPanel.timerCollapsed';
+  
+  isRoomInfoCollapsed = signal<boolean>(true); // Will be set properly in ngOnInit
+  isTimerCollapsed = signal<boolean>(true); // Will be set properly in ngOnInit
+  private collapseStatesInitialized = false;
+  
+  private loadCollapseState(key: string, defaultCollapsed: boolean): boolean {
+    try {
+      const stored = localStorage.getItem(key);
+      // If no stored value, use the default based on user role
+      if (stored === null) {
+        return defaultCollapsed;
+      }
+      return stored === 'true';
+    } catch {
+      return defaultCollapsed;
+    }
+  }
+  
+  private saveCollapseState(key: string, value: boolean): void {
+    try {
+      localStorage.setItem(key, value.toString());
+    } catch {
+      // localStorage not available
+    }
+  }
+  
+  private initializeCollapseStates(isCreator: boolean): void {
+    if (this.collapseStatesInitialized) return;
+    this.collapseStatesInitialized = true;
+    
+    // For creators: default to open (false), for non-creators: default to closed (true)
+    const defaultCollapsed = !isCreator;
+    
+    this.isRoomInfoCollapsed.set(this.loadCollapseState(this.STORAGE_KEY_ROOM_INFO, defaultCollapsed));
+    this.isTimerCollapsed.set(this.loadCollapseState(this.STORAGE_KEY_TIMER, defaultCollapsed));
+  }
 
   readonly localActiveRound = this.roomDataService.localActiveRound;
 
@@ -156,6 +200,29 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
     this.isSmallScreen$.pipe(takeUntil(this.destroy)).subscribe();
     this.savedCardSets$.subscribe(cardSets => this.savedCardSets.set(cardSets));
+    
+    // Initialize collapse states and watch for timer changes
+    this.activeMember$().pipe(
+      takeUntil(this.destroy)
+    ).subscribe(member => {
+      if (member) {
+        const isCreator = this.room().createdById === member.id;
+        this.initializeCollapseStates(isCreator);
+      }
+    });
+    
+    // Auto-expand timer section when timer becomes active
+    this.room$().pipe(
+      map(room => room?.timer?.state),
+      filter((state): state is TimerState => state !== undefined),
+      distinctUntilChanged(),
+      takeUntil(this.destroy)
+    ).subscribe(timerState => {
+      if (timerState === TimerState.ACTIVE && this.isTimerCollapsed()) {
+        this.isTimerCollapsed.set(false);
+        // Don't save to localStorage - this is an automatic expansion
+      }
+    });
   }
 
   ngOnDestroy(): void {}
@@ -353,5 +420,17 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   closeMenu() {
     this.settingsMenuTrigger.closeMenu();
+  }
+  
+  toggleRoomInfoCollapsed() {
+    const newValue = !this.isRoomInfoCollapsed();
+    this.isRoomInfoCollapsed.set(newValue);
+    this.saveCollapseState(this.STORAGE_KEY_ROOM_INFO, newValue);
+  }
+  
+  toggleTimerCollapsed() {
+    const newValue = !this.isTimerCollapsed();
+    this.isTimerCollapsed.set(newValue);
+    this.saveCollapseState(this.STORAGE_KEY_TIMER, newValue);
   }
 }

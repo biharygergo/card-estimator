@@ -1,20 +1,28 @@
 @if (!minimized() && timer()) {
   <div class="timer-container">
-    <div class="progress">
-      <mat-progress-bar
-        mode="determinate"
-        [value]="progressValue()"
+    <div class="circular-progress-container">
+      <div 
+        class="circular-progress" 
         [class.almost-done]="durationLeft() < 10"
-        id="timer-progress-bar"></mat-progress-bar>
-      <span class="time-left">
+        [class.active]="timer().state === TimerState.ACTIVE"
+        [style.--progress]="progressValue() + '%'">
+        <div class="progress-inner">
+          <span class="time-value">{{ durationLeft() }}</span>
+          <span class="time-unit">sec</span>
+        </div>
+      </div>
+      <span class="timer-status">
         @if (timer().state === TimerState.INIT) {
-          {{ durationLeft() }} second timer
+          Ready
         }
-        @if (timer().state !== TimerState.INIT && durationLeft() > 0) {
-          {{ durationLeft() }} seconds remaining
+        @if (timer().state === TimerState.ACTIVE && durationLeft() > 0) {
+          Running
         }
-        @if (timer().state !== TimerState.INIT && durationLeft() === 0) {
-          Time is up!
+        @if (timer().state === TimerState.STOPPED && durationLeft() > 0) {
+          Paused
+        }
+        @if (durationLeft() === 0) {
+          Time's up!
         }
       </span>
     </div>

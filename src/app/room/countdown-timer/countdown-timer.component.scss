@@ -2,42 +2,106 @@
 
 .timer-container {
   display: flex;
+  align-items: center;
+  gap: 1rem;
 
   @include extraSmallScreen {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 }
 
-.progress {
-  flex: 1 1 60%;
+.circular-progress-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.circular-progress {
+  --progress: 100%;
+  --size: 56px;
+  --stroke-width: 4px;
+  --progress-color: var(--accent-color);
+  --track-color: rgba(255, 255, 255, 0.1);
+  
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(
+    var(--progress-color) calc(var(--progress) * 3.6deg),
+    var(--track-color) calc(var(--progress) * 3.6deg)
+  );
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding-top: 0.8rem;
-  padding-right: 1rem;
-
-  .mat-mdc-progress-bar {
-    border-radius: 4px;
+  transition: background 0.3s ease;
+  
+  &.active {
+    animation: pulse 2s ease-in-out infinite;
   }
-
-  .time-left {
-    margin-top: 2px;
-    font-size: 0.7rem;
+  
+  &.almost-done {
+    --progress-color: #ff6b6b;
+    animation: pulse 0.5s ease-in-out infinite;
   }
-
-  @include extraSmallScreen {
-    padding-right: 0;
+  
+  .progress-inner {
+    width: calc(var(--size) - var(--stroke-width) * 2);
+    height: calc(var(--size) - var(--stroke-width) * 2);
+    border-radius: 50%;
+    background: var(--glass-bg, rgba(0, 27, 85, 0.95));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
+  
+  .time-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  .time-unit {
+    font-size: 0.6rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.timer-status {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: 60px;
 }
 
 .controls {
-  flex: 1 0 40%;
-  min-width: 210px;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 0.5rem;
+  
+  @include extraSmallScreen {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .mini-pause-button {
@@ -70,6 +134,18 @@
   padding: 8px 4px;
 }
 
+// Legacy linear progress bar styles (kept for reference)
 #timer-progress-bar.almost-done {
   --mat-progress-bar-active-indicator-color: var(--accent-color);
+}
+
+// Dark theme adjustments
+:host-context(.dark-theme) {
+  .circular-progress .progress-inner {
+    background: rgba(20, 20, 20, 0.95);
+  }
+  
+  .circular-progress {
+    --track-color: rgba(255, 255, 255, 0.06);
+  }
 }

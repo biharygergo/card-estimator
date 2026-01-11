@@ -4,7 +4,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  padding: 1.25rem;
+  padding: 0.75rem 1rem 1rem;
+
+  .main-button,
+  .main-split-button {
+    text-transform: none; // Override Material uppercase default
+  }
 
   .main-button {
     height: 3rem;
@@ -82,22 +87,287 @@
   padding: 0;
 }
 
+// Panel Header with Window Controls
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.02);
+  
+  :host-context(.dark-theme) & {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .panel-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.6;
+  }
+  
+  .window-controls {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .window-control-button {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.06);
+    transition: background 0.15s ease, transform 0.15s ease;
+    padding: 0;
+    
+    :host-context(.dark-theme) & {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    mat-icon {
+      font-size: 12px;
+      width: 12px;
+      height: 12px;
+      line-height: 12px;
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.12);
+      
+      :host-context(.dark-theme) & {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      mat-icon {
+        opacity: 1;
+      }
+    }
+    
+    &.minimize:hover {
+      background: rgba(255, 193, 7, 0.3);
+    }
+  }
+}
+
+// Material Accordion Sections
+.panel-accordion {
+  display: block;
+  
+  .panel-section {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important; // Remove default margin between panels
+    
+    &::before {
+      display: none; // Remove default border
+    }
+    
+    .mat-expansion-panel-header {
+      padding: 0 1rem;
+      height: 40px;
+      font-size: 0.8rem;
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.03) !important;
+        
+        :host-context(.dark-theme) & {
+          background: rgba(255, 255, 255, 0.03) !important;
+        }
+      }
+      
+      // Smaller expansion indicator icon
+      ::ng-deep .mat-expansion-indicator::after {
+        padding: 3px;
+        border-width: 0 2px 2px 0;
+      }
+    }
+    
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 0 1rem 0.75rem !important;
+    }
+    
+    mat-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      opacity: 0.6;
+      
+      .section-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+  
+  // Subtle border between panels
+  .panel-section + .panel-section {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    
+    :host-context(.dark-theme) & {
+      border-top-color: rgba(255, 255, 255, 0.06);
+    }
+  }
+}
+
+.room-info-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  
+  .room-id-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0.9;
+    font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+  }
+  
+  .invite-button {
+    flex-shrink: 0;
+  }
+}
+
+.timer-content {
+  padding-top: 0.25rem;
+}
+
+// Panel Footer
+.panel-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  
+  :host-context(.dark-theme) & {
+    background: rgba(255, 255, 255, 0.02);
+    border-top-color: rgba(255, 255, 255, 0.06);
+  }
+  
+  .footer-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    
+    .button-label {
+      font-size: 0.85rem;
+    }
+    
+    @media (max-width: 350px) {
+      .button-label {
+        display: none;
+      }
+    }
+  }
+}
+
 .mini-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.75rem 0.3rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
   align-items: center;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius-md);
+  background: transparent;
 
   @media screen and (max-width: 800px) {
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
-    padding: 0.5rem 0;
-    gap: 0.2rem;
-    background: transparent;
+    justify-content: center;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .mini-expand-button {
+    width: 100%;
+    padding: 0.4rem;
+    background: rgba(0, 0, 0, 0.04);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+    
+    :host-context(.dark-theme) & {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      opacity: 0.6;
+    }
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.08);
+      
+      :host-context(.dark-theme) & {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      
+      mat-icon {
+        opacity: 1;
+      }
+    }
+    
+    @media screen and (max-width: 800px) {
+      width: auto;
+      padding: 0.4rem 0.6rem;
+    }
+  }
+  
+  .mini-divider {
+    width: 80%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    
+    :host-context(.dark-theme) & {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    @media screen and (max-width: 800px) {
+      width: 1px;
+      height: 24px;
+    }
+  }
+  
+  .mini-actions,
+  .mini-secondary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    
+    @media screen and (max-width: 800px) {
+      flex-direction: row;
+      gap: 0.25rem;
+    }
+  }
+  
+  .mini-action-button {
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+    
+    &:hover:not(:disabled) {
+      opacity: 1;
+    }
   }
 
   @include extraSmallScreen {

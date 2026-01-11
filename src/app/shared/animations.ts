@@ -67,3 +67,14 @@ export const staggerFadeAnimation = trigger('staggerFadeAnimation', [
     ),
   ]),
 ]);
+
+export const collapseAnimation = trigger('collapseAnimation', [
+  transition(':enter', [
+    style({ opacity: 0, height: 0, overflow: 'hidden' }),
+    animate('200ms ease-out', style({ opacity: 1, height: '*' })),
+  ]),
+  transition(':leave', [
+    style({ opacity: 1, height: '*', overflow: 'hidden' }),
+    animate('200ms ease-out', style({ opacity: 0, height: 0 })),
+  ]),
+]);

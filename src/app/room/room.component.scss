@@ -183,7 +183,7 @@
   border: 1px solid var(--glass-border) !important;
   border-radius: var(--radius-lg) !important;
   box-shadow: var(--card-shadow);
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, height 100ms ease-out;
   
   &:hover {
     box-shadow: var(--card-shadow-hover);

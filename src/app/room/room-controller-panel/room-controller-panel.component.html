@@ -1,6 +1,20 @@
 <mat-card appearance="outlined" class="rounded-card">
   @if (isExpanded()) {
     <mat-card-content class="big-panel">
+      <!-- Panel Header with Window Controls -->
+      <div class="panel-header">
+        <span class="panel-title">Controls</span>
+        <div class="window-controls">
+          <button
+            class="window-control-button minimize"
+            matTooltip="Minimize panel"
+            (click)="expandClicked.emit()">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Primary Actions Section -->
       <div class="action-buttons-container main-room-actions">
         @if (room()?.isAsyncVotingEnabled) {
           <div class="alert">
@@ -117,183 +131,216 @@
           </div>
         }
       </div>
-      <div class="room-id-container">
-        <h4>
-          <span
-            >Room ID: <strong>{{ room()?.roomId }}</strong></span
-          >
-          <button
-            mat-stroked-button
-            (click)="inviteButtonClicked.next()"
-            [disabled]="
-              (inviteButtonCooldownState$ | async).includes('cooldown')
-            "
-            id="invite-button">
-            @if ((inviteButtonCooldownState$ | async) === 'initial') {
-              <div class="center-icon-button" @fadeAnimation>
-                <mat-icon>link</mat-icon>
-                Invite
-              </div>
-            }
-            @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
-              <div class="center-icon-button" @fadeAnimation>
-                <mat-icon>checkmark</mat-icon>
-                {{ config.runningIn === 'web' ? 'Copied' : 'Invited' }}
-              </div>
-            }
-          </button>
-        </h4>
-      </div>
-      <div class="card-footer-actions">
-        <countdown-timer [room]="room$()" [minimized]="false" />
-      </div>
-      <div class="card-footer-actions align-right">
+      
+      <!-- Collapsible Sections -->
+      <mat-accordion class="panel-accordion" multi>
+        <!-- Room Info Section -->
+        <mat-expansion-panel 
+          [expanded]="!isRoomInfoCollapsed()"
+          (opened)="isRoomInfoCollapsed.set(false)"
+          (closed)="isRoomInfoCollapsed.set(true)"
+          class="panel-section">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="section-icon">tag</mat-icon>
+              Room Info
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="room-info-content">
+            <span class="room-id-text">{{ room()?.roomId }}</span>
+            <button
+              mat-stroked-button
+              (click)="inviteButtonClicked.next(); $event.stopPropagation()"
+              [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+              id="invite-button"
+              class="invite-button">
+              @if ((inviteButtonCooldownState$ | async) === 'initial') {
+                <div class="center-icon-button" @fadeAnimation>
+                  <mat-icon>link</mat-icon>
+                  Invite
+                </div>
+              }
+              @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
+                <div class="center-icon-button" @fadeAnimation>
+                  <mat-icon>checkmark</mat-icon>
+                  {{ config.runningIn === 'web' ? 'Copied' : 'Invited' }}
+                </div>
+              }
+            </button>
+          </div>
+        </mat-expansion-panel>
+        
+        <!-- Timer Section -->
+        <mat-expansion-panel 
+          [expanded]="!isTimerCollapsed()"
+          (opened)="isTimerCollapsed.set(false)"
+          (closed)="isTimerCollapsed.set(true)"
+          class="panel-section">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="section-icon">timer</mat-icon>
+              Timer
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="timer-content">
+            <countdown-timer [room]="room$()" [minimized]="false" />
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      
+      <!-- Footer Actions -->
+      <div class="panel-footer">
         <button
           mat-stroked-button
           #menuTrigger="matMenuTrigger"
           [matMenuTriggerFor]="roomSettingsMenu"
           id="room-options-button"
-          class="responsive-label-button"
+          class="footer-button"
           matTooltip="Room settings">
           <mat-icon>settings</mat-icon>
-          Room settings
+          <span class="button-label">Settings</span>
         </button>
         <button
           mat-stroked-button
           id="manage-rounds-button"
-          class="responsive-label-button forced"
+          class="footer-button"
           matTooltip="Manage rounds"
           (click)="sidebarTriggered.emit()">
           <mat-icon>list</mat-icon>
-          Rounds
-        </button>
-        <button
-          mat-stroked-button
-          matTooltip="Minimize control panel"
-          (click)="expandClicked.emit()"
-          class="responsive-label-button forced"
-          id="minimize-panel-button">
-          @if (!isSmallScreen()) {
-            <mat-icon>chevron_right</mat-icon>
-          } @else {
-            <mat-icon>expand_less</mat-icon>
-          }
+          <span class="button-label">Rounds</span>
         </button>
       </div>
     </mat-card-content>
   }
   @if (!isExpanded()) {
     <mat-card-content class="mini-panel">
-      @if (
-        currentRound() === rounds().length - 1 && !room().isAsyncVotingEnabled
-      ) {
+      <!-- Expand button at top -->
+      <button
+        class="mini-expand-button"
+        (click)="expandClicked.emit()"
+        matTooltip="Expand control panel"
+        [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
+        id="expand-button">
+        @if (!isSmallScreen()) {
+          <mat-icon>chevron_left</mat-icon>
+        } @else {
+          <mat-icon>expand_more</mat-icon>
+        }
+      </button>
+      
+      <div class="mini-divider"></div>
+      
+      <!-- Primary actions -->
+      <div class="mini-actions">
+        @if (
+          currentRound() === rounds().length - 1 && !room().isAsyncVotingEnabled
+        ) {
+          <button
+            mat-icon-button
+            aria-label="New round"
+            color="primary"
+            (click)="newRoundClicked.next()"
+            [disabled]="
+              !(permissionsService.canCreateRounds() | async) ||
+              (newRoundButtonCooldownState$ | async).includes('cooldown') ||
+              isEditingTopic()
+            "
+            class="new-round-button mini-action-button"
+            id="new-round-button"
+            matTooltip="Add a new round"
+            [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'">
+            @if ((newRoundButtonCooldownState$ | async) === 'cooldown') {
+              <mat-icon @fadeAnimation>checkmark</mat-icon>
+            }
+            @if ((newRoundButtonCooldownState$ | async) === 'initial') {
+              <mat-icon @fadeAnimation>add</mat-icon>
+            }
+          </button>
+        }
+        @if (
+          currentRound() < rounds().length - 1 && !room().isAsyncVotingEnabled
+        ) {
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="nextRound()"
+            [disabled]="
+              !(permissionsService.canCreateRounds() | async) || isEditingTopic()
+            "
+            matTooltip="Go to next round"
+            [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
+            class="mini-action-button"
+            id="next-round-button">
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        }
+        @if (!room().isAsyncVotingEnabled) {
+          <button
+            mat-icon-button
+            (click)="showResults()"
+            [disabled]="
+              (room()?.rounds)[currentRound()]?.show_results ||
+              !(permissionsService.canRevealResults() | async)
+            "
+            matTooltip="Reveal results"
+            [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
+            class="mini-action-button"
+            id="reveal-results-button">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        }
+        @if (room().isAsyncVotingEnabled) {
+          <button
+            mat-icon-button
+            matTooltip="View previous round"
+            (click)="changeLocalRound(-1)"
+            [disabled]="localActiveRound.value === 0"
+            class="mini-action-button"
+            color="primary">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+        }
+        @if (room().isAsyncVotingEnabled) {
+          <button
+            mat-icon-button
+            matTooltip="View next round"
+            (click)="changeLocalRound(1)"
+            [disabled]="localActiveRound.value === rounds().length - 1"
+            class="mini-action-button"
+            color="primary">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        }
+      </div>
+      
+      <div class="mini-divider"></div>
+      
+      <!-- Secondary actions -->
+      <div class="mini-secondary">
         <button
           mat-icon-button
-          aria-label="New round"
-          color="primary"
-          (click)="newRoundClicked.next()"
-          [disabled]="
-            !(permissionsService.canCreateRounds() | async) ||
-            (newRoundButtonCooldownState$ | async).includes('cooldown') ||
-            isEditingTopic()
-          "
-          class="new-round-button"
-          id="new-round-button"
-          matTooltip="Add a new round"
-          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'">
-          @if ((newRoundButtonCooldownState$ | async) === 'cooldown') {
+          (click)="inviteButtonClicked.next()"
+          [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+          matTooltip="Invite others"
+          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
+          class="mini-action-button"
+          id="invite-button">
+          @if ((inviteButtonCooldownState$ | async) === 'initial') {
+            <mat-icon @fadeAnimation>link</mat-icon>
+          }
+          @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
             <mat-icon @fadeAnimation>checkmark</mat-icon>
           }
-          @if ((newRoundButtonCooldownState$ | async) === 'initial') {
-            <mat-icon @fadeAnimation>add</mat-icon>
-          }
         </button>
-      }
-      @if (
-        currentRound() < rounds().length - 1 && !room().isAsyncVotingEnabled
-      ) {
+        <countdown-timer [room]="room$()" [minimized]="true" />
         <button
           mat-icon-button
-          color="primary"
-          (click)="nextRound()"
-          [disabled]="
-            !(permissionsService.canCreateRounds() | async) || isEditingTopic()
-          "
-          matTooltip="Go to next round"
-          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
-          id="next-round-button">
-          <mat-icon>navigate_next</mat-icon>
-        </button>
-      }
-      @if (!room().isAsyncVotingEnabled) {
-        <button
-          mat-icon-button
-          (click)="showResults()"
-          [disabled]="
-            (room()?.rounds)[currentRound()]?.show_results ||
-            !(permissionsService.canRevealResults() | async)
-          "
-          matTooltip="Reveal results"
-          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
-          id="reveal-results-button">
-          <mat-icon>visibility</mat-icon>
-        </button>
-      }
-      @if (room().isAsyncVotingEnabled) {
-        <button
-          mat-icon-button
-          matTooltip="View previous round"
-          (click)="changeLocalRound(-1)"
-          [disabled]="localActiveRound.value === 0"
-          color="primary">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-      }
-      @if (room().isAsyncVotingEnabled) {
-        <button
-          mat-icon-button
-          matTooltip="View next round"
-          (click)="changeLocalRound(1)"
-          [disabled]="localActiveRound.value === rounds().length - 1"
-          color="primary">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      }
-      <button
-        mat-icon-button
-        (click)="inviteButtonClicked.next()"
-        [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
-        matTooltip="Invite others"
-        [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
-        id="invite-button">
-        @if ((inviteButtonCooldownState$ | async) === 'initial') {
-          <mat-icon @fadeAnimation>link</mat-icon>
-        }
-        @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
-          <mat-icon @fadeAnimation>checkmark</mat-icon>
-        }
-      </button>
-      <countdown-timer [room]="room$()" [minimized]="true" />
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="roomSettingsMenu"
-        id="room-options-button"
-        matTooltip="Room settings"
-        [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'">
-        <mat-icon>settings</mat-icon>
-      </button>
-      <div>
-        <button
-          mat-icon-button
-          (click)="expandClicked.emit()"
-          matTooltip="Expand control panel"
-          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
-          id="expand-button">
-          @if (!isSmallScreen()) {
-            <mat-icon>chevron_left</mat-icon>
-          } @else {
-            <mat-icon>expand_more</mat-icon>
-          }
+          [matMenuTriggerFor]="roomSettingsMenu"
+          id="room-options-button"
+          class="mini-action-button"
+          matTooltip="Room settings"
+          [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'">
+          <mat-icon>settings</mat-icon>
         </button>
       </div>
     </mat-card-content>

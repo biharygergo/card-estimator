@@ -112,7 +112,8 @@
         [room]="room()"
         [currentRound]="currentRound()"
         [estimationValues]="estimationValues()"
-        [currentEstimate]="currentEstimate()"></app-card-deck>
+        [currentEstimate]="currentEstimate()"
+        [cardOptionsMenu]="roomControllerPanel?.cardSetsMenu"></app-card-deck>
       @if ((isSmallScreen$ | async)?.matches === false) {
         <ng-container *ngTemplateOutlet="controlPanel" />
       }

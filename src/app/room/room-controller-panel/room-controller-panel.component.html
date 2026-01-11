@@ -422,7 +422,7 @@
     >
   </div>
 </mat-menu>
-<mat-menu #menu="matMenu">
+<mat-menu #menu="matMenu" #cardSetsMenu="matMenu">
   @for (cardSet of estimationCardSets(); track $index) {
     <button
       mat-menu-item

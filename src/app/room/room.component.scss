@@ -8,17 +8,40 @@
   right: 0;
 }
 
-@keyframes backgroundTransition {
-  100% {
-    background: var(--main-color);
+@keyframes gradientFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
 .sidenav-content {
-  background: var(--main-color);
-
-  animation: backgroundTransition 300ms;
-  animation-fill-mode: forwards;
+  background: var(--room-bg-gradient);
+  position: relative;
+  animation: gradientFadeIn 400ms ease-out;
+  
+  // Subtle radial accent overlays for depth
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(52, 92, 168, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13, 45, 90, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  // Ensure content is above the overlay
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .topics-sidenav {
@@ -154,7 +177,17 @@
 }
 
 .rounded-card {
-  border-color: var(--card-border-color);
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease;
+  
+  &:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
 }
 
 .credits-button {

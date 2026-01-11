@@ -7,9 +7,14 @@
     white-space: pre-line;
     color: #757780;
     padding: 1rem;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     max-height: 300px;
     overflow-y: scroll;
+    
+    .dark-theme & {
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+      color: #b0b0b0;
+    }
   }
 
   .summary-buttons {

@@ -15,7 +15,6 @@
   z-index: 2;
   max-width: calc(100% - 2 * (130px + 1.4rem + 1rem));
 
-
   @media screen and (max-width: 800px) {
     margin: 0.5rem;
     flex: 1;
@@ -33,15 +32,18 @@
 }
 
 .wrapper {
-  transition: transform 0.2s ease-in-out;
-  transition-property: transform, border-radius;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+  transition-property: transform, border-radius, box-shadow;
 }
 
 .main-row {
   display: flex;
-  background: var(--main-dark-color);
-  border-radius: 12px 12px 0 0;
-  border: 1px solid var(--card-border-color);
+  background: rgba(0, 27, 85, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
 
   @include extraSmallScreen {
     padding: 0.5rem;
@@ -50,8 +52,15 @@
   @media (max-width: 800px) {
     flex-wrap: wrap;
     flex-direction: column;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
   }
+}
+
+// Dark theme adjustments - separate selector for proper specificity
+:host-context(.dark-theme) .main-row {
+  background: rgba(10, 10, 10, 0.95);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .control-buttons {
@@ -60,12 +69,17 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0.3rem;
-  padding-right: 1rem;
+  padding: 0.4rem;
+  padding-right: 0.8rem;
   gap: 4px;
 
   &.minimized {
     flex-direction: row;
+    
+    > * {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   @media (max-width: 800px) {
@@ -77,41 +91,107 @@
     &.minimized {
       margin-top: 0;
     }
+    
+    > * {
+      flex: 1;
+    }
   }
 
   .emoji-button {
     color: var(--text-on-main);
-    background: none;
-    border-color: var(--card-border-color);
+    background: transparent;
+    border-color: transparent;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease, opacity 0.2s ease;
+    opacity: 0.6;
+    --mat-button-toggle-height: 28px;
+    min-width: 28px;
+    
+    ::ng-deep {
+      mat-icon {
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+      }
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      opacity: 0.8;
+    }
 
     &.mat-button-toggle-checked {
-      background: var(--main-color);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: transparent;
+      opacity: 0.85;
     }
 
     @media (max-width: 800px) {
       width: 100%;
-      --mat-button-toggle-height: 30px;
+      --mat-button-toggle-height: 26px;
       ::ng-deep {
         mat-icon {
-          font-size: 20px;
-          height: 20px;
-          width: 20px;
+          font-size: 16px;
+          height: 16px;
+          width: 16px;
         }
+      }
+    }
+  }
+  
+  .options-button {
+    color: var(--text-on-main);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    opacity: 0.6;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    width: 100%;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    --mdc-icon-button-state-layer-size: 100%;
+    --mdc-icon-button-icon-size: 18px;
+    
+    mat-icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 800px) {
+      height: 26px;
+      --mdc-icon-button-icon-size: 16px;
+      
+      mat-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
       }
     }
   }
 }
 
 .reaction-buttons {
-  background: var(--highlight-background-color);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  padding: 0.2rem;
+  padding: 0.4rem;
   margin-bottom: 0.5rem;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+:host-context(.dark-theme) .reaction-buttons {
+  background: rgba(255, 255, 255, 0.04);
 
   @include extraSmallScreen {
     padding-top: 0.4rem;
@@ -139,13 +219,46 @@
   padding-right: 0;
   overflow-x: auto;
   margin: 0 auto;
+  gap: 4px;
+  position: relative;
+  
+  // Hide scrollbar
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE/Edge
+  &::-webkit-scrollbar {
+    display: none; // Chrome/Safari
+  }
+  
+  // Gradient overlays for scroll indication
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 16px,
+    black calc(100% - 16px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 16px,
+    black calc(100% - 16px),
+    transparent 100%
+  );
+  
   @media (max-width: 800px) {
     flex-wrap: wrap;
     justify-content: center;
     padding: 0.5rem;
+    gap: 8px;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 }
 
 .pass-option-button:not(.mat-accent):not(.selected) {
-  background-color: var(--highlight-background-color);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:host-context(.dark-theme) .pass-option-button:not(.mat-accent):not(.selected) {
+  background-color: rgba(255, 255, 255, 0.06);
 }

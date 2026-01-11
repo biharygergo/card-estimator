@@ -26,6 +26,28 @@
   --light-background: white;
 
   --landing-text-color: white;
+
+  // Modern room gradient backgrounds
+  --room-bg-gradient: linear-gradient(180deg, #001a43 0%, #0d2d5a 40%, #1c4182 100%);
+  --room-bg-gradient-dark: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 40%, #16213e 100%);
+  
+  // Glass morphism effect tokens
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-bg-hover: rgba(255, 255, 255, 0.12);
+  
+  // Improved shadows for depth
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.18);
+  --card-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.2);
+  
+  // Modern border radius tokens
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
 }
 
 // Modern highlighter effect - used across landing pages
@@ -48,6 +70,43 @@
     transform: skewX(-3deg) rotate(-0.5deg);
     opacity: 0.9;
   }
+}
+
+// Glass card utility - modern frosted glass effect
+.glass-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--card-shadow);
+  border-radius: var(--radius-lg) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  
+  &:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+}
+
+// Glass card variant for dark/translucent backgrounds
+.glass-card-dark {
+  background: var(--glass-bg-subtle) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--card-shadow);
+  border-radius: var(--radius-lg) !important;
+  
+  &:hover {
+    background: var(--glass-bg-hover) !important;
+  }
+}
+
+// Modern heading typography
+.heading-modern {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 $m3-dark-theme: mat.define-theme(
@@ -97,7 +156,9 @@ $m3-light-theme: mat.define-theme(
   --mat-card-outlined-container-color: #2a2929 !important;
   --background-dark: black;
   --main-dark-color: black;
-  --main-dark-highlight-color: black;
+  --main-dark-highlight-color: #2a2a2a;
+  --light-blue: #3a3a3a;
+  --text-on-light-blue: #e0e0e0;
   --main-color: #141218;
   --light-background: #1f1f1f;
   --light-background-color: #1f1f1f;
@@ -107,6 +168,23 @@ $m3-light-theme: mat.define-theme(
   --text-on-white: #efefef;
   --title-on-light: #efefef;
   --ad-background: black;
+  
+  // Dark theme room gradient (much darker/black)
+  --room-bg-gradient: linear-gradient(180deg, #000000 0%, #0d0d0d 40%, #1a1a1a 100%);
+  
+  // Dark theme glass effects
+  --glass-bg: rgba(30, 30, 35, 0.95);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+  
+  // Dark theme shadows (subtle glow effect)
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --card-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.6);
+  
+  // Subtle dividers in dark mode (prevent glow)
+  --mat-divider-color: rgba(255, 255, 255, 0.08);
 
   &.running-in-teams {
     --background-dark: #1f1f1f;
@@ -178,7 +256,11 @@ body {
 
 .room-id-container {
   padding: 1rem !important;
-  border-top: 0.5px solid lightgrey;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  
+  .dark-theme & {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
 
   h4 {
     font-size: 0.9rem;
@@ -201,8 +283,12 @@ body {
 }
 
 .card-footer-actions {
-  border-top: 0.5px solid lightgrey;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1rem !important;
+  
+  .dark-theme & {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
 
   &.align-right {
     display: flex !important;
@@ -503,10 +589,6 @@ body {
     .mdc-dialog .mdc-dialog__content {
       padding: 0.5rem;
     }
-
-    .mat-mdc-dialog-title {
-      // padding: 0.5rem;
-    }
   }
 }
 
@@ -519,22 +601,24 @@ body {
   flex-grow: 0;
   display: flex;
   text-overflow: clip;
-  margin: 0.3rem;
+  margin: 0.25rem;
 
   button {
     flex: 1;
     height: 100%;
-    min-width: 70px;
-    min-height: 120px;
+    min-width: 65px;
+    min-height: 110px;
     font-size: 1.3rem;
-    font-weight: 400;
+    font-weight: 500;
     will-change: transform;
     transition:
-      transform 0.2s 50ms ease-in-out,
-      background 100ms linear;
-    margin: 0 0.3rem;
-    --mat-button-protected-container-shape: 8px;
-    // --mat-button-protected-label-text-color: black;
+      transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background 150ms ease,
+      box-shadow 0.2s ease;
+    margin: 0 0.25rem;
+    --mat-button-protected-container-shape: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 
     &.selected {
       --mat-button-protected-container-color: var(
@@ -543,18 +627,21 @@ body {
       --mat-button-protected-label-text-color: var(
         --mat-button-filled-label-text-color
       );
+      box-shadow: 0 6px 20px rgba(52, 92, 168, 0.3);
+      transform: translateY(-4px);
     }
 
     @media screen and (max-width: 800px) {
-      margin: initial;
-      min-width: 45px;
-      min-height: 80px;
+      margin: 0.15rem;
+      min-width: 48px;
+      min-height: 75px;
       padding: 0.4rem;
       font-size: 1.1rem;
+      --mat-button-protected-container-shape: 10px;
     }
 
     &:disabled {
-      opacity: 0.8;
+      opacity: 0.7;
       color: #efefef;
 
       &.selected {
@@ -564,8 +651,9 @@ body {
       }
     }
 
-    &:hover:not(.mat-accent):not(:disabled) {
-      transform: translate3d(2px, -10px, 0px) rotate(-5deg);
+    &:hover:not(.mat-accent):not(:disabled):not(.selected) {
+      transform: translate3d(2px, -12px, 0px) rotate(-4deg);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
     }
   }
 }
@@ -578,7 +666,7 @@ body {
 }
 
 .feedback-panel {
-  --mat-snackbar-container-color: var(--mat-dialog-container-color);
+  --mat-snack-bar-container-color: var(--mat-dialog-container-color);
 }
 
 .see-more-features {

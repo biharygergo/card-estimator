@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   QueryList,
@@ -26,6 +25,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { RoomDataService } from '../room-data.service';
 import { ToastService } from 'src/app/services/toast.service';
 
@@ -42,6 +42,7 @@ import { ToastService } from 'src/app/services/toast.service';
     MatButtonToggle,
     MatIcon,
     AsyncPipe,
+    MatMenuTrigger,
   ],
 })
 export class CardDeckComponent implements OnInit, OnDestroy {
@@ -50,11 +51,13 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   estimationValues = input.required<{ key: string; value: string }[]>();
   currentEstimate = input.required<number>();
 
+  cardOptionsMenu = input<any>();
+  
   @ViewChildren('cardContainer')
   cardContainers: QueryList<ElementRef<HTMLDivElement>>;
 
   @ViewChild('cardDeck') cardDeckContainer: ElementRef<HTMLDivElement>;
-
+  
   isMinimized = signal(false);
 
   readonly reactions: ReactionOption[] = this.reactionsService.reactionsList;

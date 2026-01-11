@@ -3,11 +3,11 @@
 @keyframes popIn {
   0% {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.8);
   }
-  50% {
+  60% {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
   100% {
     opacity: 1;
@@ -20,9 +20,16 @@ mat-chip-set {
   margin-left: auto;
 
   mat-chip {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+    
     &.consensus {
-      background: var(--accent-color);
+      background: linear-gradient(135deg, var(--accent-color) 0%, #e8940d 100%);
       --mat-chip-outline-color: var(--accent-color);
+      box-shadow: 0 2px 8px rgba(245, 161, 21, 0.3);
 
       strong {
         color: white;
@@ -38,7 +45,7 @@ mat-chip-set {
     }
 
     &.vote {
-      animation: popIn 200ms ease-in;
+      animation: popIn 250ms ease-out;
       animation-fill-mode: forwards;
     }
   }
@@ -46,10 +53,14 @@ mat-chip-set {
 
 .subheader {
   margin-top: 0;
-  font-weight: 500;
-  font-size: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
   margin-left: 0;
+  color: var(--text-on-white);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 mat-list-item.statistic-line {
@@ -62,7 +73,7 @@ mat-list-item.statistic-line {
 }
 
 .statistic {
-  padding: 4px;
+  padding: 6px 4px;
   flex-wrap: wrap;
   margin-bottom: 0;
   font-size: 1rem;
@@ -72,8 +83,9 @@ mat-list-item.statistic-line {
   .statistic-title {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
     margin-right: 8px;
+    font-weight: 500;
   }
 
   .multiple-chips {
@@ -88,16 +100,27 @@ mat-list-item.statistic-line {
 .votes {
   max-height: 500px;
   overflow: auto;
+  padding: 0.5rem 0;
 
   .vote-container {
     display: inline-flex;
     width: 100%;
     align-items: center;
-    padding: 0 20px;
-    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: var(--radius-md);
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.02);
+      
+      .dark-theme & {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
 
     @include extraSmallScreen {
-      padding: 0 8px;
+      padding: 0.4rem 8px;
     }
   }
 
@@ -205,11 +228,9 @@ mat-list-item.statistic-line {
   @keyframes spin {
     from {
       transform: rotate(0deg);
-      opacity: 1;
     }
     to {
       transform: rotate(360deg);
-      opacity: 1;
     }
   }
 
@@ -221,32 +242,37 @@ mat-list-item.statistic-line {
   }
 
   .vote {
-    background: var(--main-dark-highlight-color);
-    border-radius: 32px;
-    padding: 0px 12px;
+    background: linear-gradient(135deg, var(--main-dark-highlight-color) 0%, #0d2d5a 100%);
+    border-radius: 20px;
+    padding: 0 14px;
     font-size: 14px;
-    line-height: 24px;
-    height: 32px;
-    min-width: 32px;
+    line-height: 28px;
+    height: 36px;
+    min-width: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: 800;
-
+    font-weight: 700;
     margin-left: auto;
-
-    animation: popIn 200ms ease-in;
+    box-shadow: 0 2px 8px rgba(0, 27, 85, 0.25);
+    animation: popIn 250ms ease-out;
     animation-fill-mode: forwards;
+    
+    :host-context(.dark-theme) & {
+      background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
 
     .hourglass {
-      animation: spin 2s infinite;
-      animation-delay: 500ms;
+      animation: spin 2s infinite linear;
+      animation-delay: 300ms;
     }
+    
     mat-icon {
-      height: 15px;
-      width: 15px;
-      font-size: 15px;
+      height: 16px;
+      width: 16px;
+      font-size: 16px;
     }
   }
 
@@ -270,18 +296,17 @@ mat-list-item.statistic-line {
     &:hover {
       background: var(--accent-color-hover, var(--accent-color));
       color: white;
-      transform: scale(1.05);
     }
   }
 
   .member-name {
     font-weight: 500;
-    text-align: center;
-    margin-left: 0.5rem;
-    font-size: 1rem;
     text-align: left;
+    margin-left: 0.75rem;
+    font-size: 0.95rem;
     word-break: break-word;
     overflow-wrap: break-word;
+    line-height: 1.3;
 
     .verified-icon {
       display: inline-block;
@@ -298,14 +323,16 @@ mat-list-item.statistic-line {
 }
 
 #majority-vote-chip.overridden {
-  background: var(--accent-color);
-  --mat-chip-label-text-color: black;
-  --mat-chip-with-trailing-icon-trailing-icon-color: black;
+  background: linear-gradient(135deg, var(--accent-color) 0%, #e8940d 100%);
+  --mat-chip-label-text-color: white;
+  --mat-chip-with-trailing-icon-trailing-icon-color: white;
   --mat-chip-outline-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(245, 161, 21, 0.3);
 }
 
 .blur {
   filter: blur(5px);
+  transition: filter 0.3s ease;
 }
 
 @keyframes growAnimation {
@@ -322,29 +349,37 @@ mat-list-item.statistic-line {
 .distribution-chart {
   display: flex;
   flex-wrap: nowrap;
-  gap: 2px;
-  height: 15px;
-  border-radius: 16px;
+  gap: 3px;
+  height: 20px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  margin: 4px;
+  margin: 6px 4px;
+  background: rgba(0, 0, 0, 0.05);
+  
+  .dark-theme & {
+    background: rgba(255, 255, 255, 0.05);
+  }
 
   &__part {
     text-align: center;
     vertical-align: middle;
-    line-height: 15px;
-    padding: 0 4px;
+    line-height: 20px;
+    padding: 0 6px;
     min-width: 0;
-    font-size: 10px;
+    font-size: 11px;
+    font-weight: 600;
     color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    animation: growAnimation 300ms ease-out 0ms 1 forwards;
+    animation: growAnimation 350ms ease-out 0ms 1 forwards;
     transform-origin: left;
     opacity: 0;
+    border-radius: 2px;
+    
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
-        animation-delay: 200ms * calc($i - 1);
+        animation-delay: 150ms * calc($i - 1);
       }
     }
   }

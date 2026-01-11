@@ -119,6 +119,9 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   @ViewChild('menuTrigger')
   private readonly settingsMenuTrigger: MatMenuTrigger;
+  
+  @ViewChild('cardSetsMenu')
+  cardSetsMenu: MatMenu;
 
   constructor(
     private readonly estimatorService: EstimatorService,

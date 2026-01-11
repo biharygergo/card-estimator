@@ -27,9 +27,9 @@
 
   --landing-text-color: white;
 
-  // Modern room gradient backgrounds
-  --room-bg-gradient: linear-gradient(180deg, #001a43 0%, #0d2d5a 40%, #1c4182 100%);
-  --room-bg-gradient-dark: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 40%, #16213e 100%);
+  // Modern room gradient backgrounds (simplified, darker variant of landing page)
+  --room-bg-gradient: linear-gradient(180deg, #001a43 0%, #001a43 40%, #0d2d5a 100%);
+  --room-bg-gradient-dark: linear-gradient(180deg, #000000 0%, #0d0d0d 40%, #1a1a1a 100%);
   
   // Glass morphism effect tokens
   --glass-bg: rgba(255, 255, 255, 0.95);

@@ -289,6 +289,49 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
   readonly PageMode = PageMode;
   readonly MemberType = MemberType;
 
+  // Feature highlights for unauthenticated users
+  readonly features = [
+    {
+      icon: 'groups',
+      title: 'Real-time Collaboration',
+      description: 'See votes instantly as your team estimates together.',
+    },
+    {
+      icon: 'integration_instructions',
+      title: 'Jira & Linear Integration',
+      description: 'Import issues directly from your project management tools.',
+    },
+    {
+      icon: 'style',
+      title: 'Custom Card Decks',
+      description: 'Fibonacci, T-shirt sizes, or create your own card set.',
+    },
+    {
+      icon: 'video_call',
+      title: 'Video Conferencing Integration',
+      description: 'Use directly in Zoom, Teams, Meet, or Webex.',
+    },
+  ];
+
+  // Recent sessions for authenticated users (limit to 3 to minimize database calls)
+  recentSessions$: Observable<{ roomId: string; createdAt: Date; roundCount: number }[]> =
+    this.user.pipe(
+      switchMap(user => {
+        if (!user || user.isAnonymous) return of([]);
+        return this.estimatorService.getPreviousSessions(3).pipe(
+          map(rooms =>
+            rooms.map(room => ({
+              roomId: room.roomId,
+              createdAt: (room.createdAt as any)?.toDate?.() || new Date(),
+              roundCount: Object.keys(room.rounds || {}).length,
+            }))
+          ),
+          catchError(() => of([]))
+        );
+      }),
+      shareReplay(1)
+    );
+
   constructor(
     private estimatorService: EstimatorService,
     private router: Router,

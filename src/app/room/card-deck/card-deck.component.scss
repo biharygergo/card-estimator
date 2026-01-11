@@ -216,7 +216,7 @@
   flex-wrap: nowrap;
   flex: 1;
   padding: 1rem;
-  padding-right: 0;
+  padding-right: 0.5rem; // Extra right padding to avoid gradient overlap with cards
   overflow-x: auto;
   margin: 0 auto;
   gap: 4px;

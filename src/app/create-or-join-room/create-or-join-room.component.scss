@@ -1,110 +1,111 @@
 @import '../common.scss';
 
-$opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
-
-.join-container {
+// Page Container with room-style gradient
+.page-container {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 6rem 0;
+  position: relative;
+  background: var(--room-bg-gradient);
+  
+  // Subtle radial accents (matches landing page)
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(52, 92, 168, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 80% 50% at 80% 80%, rgba(128, 194, 242, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+  
   &:focus {
     outline: none !important;
   }
+  
+  // Dark theme support
+  :host-context(.dark-theme) & {
+    background: var(--room-bg-gradient);
+  }
 }
 
+// Navbar
 .navbar {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 10;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.terms {
-  padding-top: 16px;
-  color: var(--mat-card-subtitle-text-color);
-  a {
-    color: var(--title-on-light);
-  }
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
 }
 
-.welcome-name-container {
-  color: var(--text-on-main);
-  margin-bottom: 1rem;
-  text-align: center;
-
-  #welcome-back {
-    font-size: 1.2rem;
-    line-height: 1.4rem;
-    max-width: 500px;
-  }
-
-  @include extraSmallScreen {
-    #welcome-back {
-      font-size: 1.1rem;
-      line-height: 1.2rem;
-      padding: 0 0.5rem;
-    }
+.sign-in-button {
+  color: var(--text-on-main) !important;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
   }
 }
 
-.action-card {
-  padding: 1rem 0rem;
-  width: 100%;
-  max-width: 350px;
-  margin-bottom: 16px;
-  transition: height 300ms 100ms ease-out;
-  overflow: hidden;
-  flex-shrink: 0;
-  border-color: var(--card-border-color);
-
-  .mat-mdc-card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  form {
-    width: 90%;
-    .mat-mdc-form-field {
-      width: 100%;
-    }
-  }
-
-  @media screen and (max-width: 600px) {
-    width: 80%;
-  }
-
-  @include extraSmallScreen {
-    width: 95%;
-  }
-}
-
-.organization-logo-container {
-  display: inline-flex;
-  color: var(--text-on-main);
+// Hero Section - centered content
+.hero-section {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  padding: 6rem 2rem 2rem;
+  
+  @include extraSmallScreen {
+    padding: 5rem 1rem 1rem;
+  }
 }
 
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.hero-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+// Logos
 .logos {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   gap: 1rem;
   position: relative;
-  margin-top: auto;
 }
 
 .logo {
   width: 70px;
   height: 70px;
-  border-radius: 12px;
-  box-shadow:
-    rgba(5, 18, 37, 0.32) 0px 1px 4px,
-    rgba(5, 18, 37, 0.24) 0px 0px 8px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
   &.main-logo {
     view-transition-name: pp-logo;
   }
@@ -112,7 +113,6 @@ $opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   &.organization-logo {
     background: white;
     object-fit: contain;
-    margin-bottom: 0;
     color: black;
     display: flex;
     align-items: center;
@@ -131,14 +131,105 @@ $opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   }
 
   @include extraSmallScreen {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
   }
 }
-.other {
+
+.organization-logo-container {
+  display: inline-flex;
   color: var(--text-on-main);
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+// Welcome Text
+.welcome-name-container {
+  color: var(--text-on-main);
+  text-align: center;
+
+  #welcome-back {
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.5;
+    max-width: 360px;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+  }
+
+  p {
+    color: var(--secondary-text-on-main);
+    margin-top: 0.5rem;
+  }
+
+  @include extraSmallScreen {
+    #welcome-back {
+      font-size: 1.1rem;
+      padding: 0 0.5rem;
+    }
+  }
+}
+
+// Main Action Card - Glass effect
+.action-card {
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 1rem;
+  transition: height 300ms 100ms ease-out, box-shadow 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+
+  .mat-mdc-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 !important;
+  }
+
+  form {
+    width: 100%;
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+
+  button[mat-flat-button] {
+    width: 100%;
+    height: 48px;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 90%;
+  }
+
+  @include extraSmallScreen {
+    width: 95%;
+    padding: 1rem;
+  }
+}
+
+.main-card {
+  view-transition-name: loading-card;
+}
+
+// Links Section
+.other {
+  color: var(--secondary-text-on-main);
   margin-bottom: 0.5rem;
   font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .links {
@@ -146,56 +237,143 @@ $opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin-bottom: auto;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  
+  a, button {
+    color: var(--text-on-main);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
 }
 
-.sign-in-button {
-  color: var(--text-on-main) !important;
+// Footer Section - Fixed height to prevent layout shift
+.footer-section {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+// Feature Pills - Compact inline display
+.feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: var(--secondary-text-on-main);
+  transition: all 0.2s ease;
+  
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #7dd3fc; // Light blue
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-on-main);
+  }
+}
+
+// Recent Sessions Inline
+.recent-sessions-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.sessions-label {
+  font-size: 0.8rem;
+  color: var(--secondary-text-on-main);
+  margin-right: 0.25rem;
+}
+
+.session-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+  color: var(--text-on-main);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.view-all-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  color: #7dd3fc; // Light blue
+  text-decoration: none;
+  transition: color 0.2s ease;
+  
+  mat-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
+  
+  &:hover {
+    color: #a5e3fc;
+  }
+}
+
+
+// Form Elements
+.terms {
+  padding-top: 12px;
+  color: var(--mat-card-subtitle-text-color);
+  font-size: 0.75rem;
+  
+  a {
+    color: var(--title-on-light);
+  }
 }
 
 .observer-info {
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-radius: var(--radius-md) !important;
+  
+  .mat-mdc-card-content {
+    padding: 0 !important;
+  }
+  
   small {
     text-align: initial;
     color: var(--mat-card-subtitle-text-color);
-  }
-}
-
-.recent-card {
-  margin-bottom: 1rem;
-  padding: 0;
-
-  mat-card-content {
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-
-    p {
-      color: var(--text-on-white);
-    }
-  }
-
-  button {
-    margin: 0 auto;
-  }
-
-  .mat-mdc-card-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  @include extraSmallScreen {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    justify-content: center;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    max-width: unset;
-    border-radius: 0;
   }
 }
 
@@ -209,6 +387,14 @@ $opacityTransition: 'opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   margin-top: 0;
 }
 
-.main-card {
-  view-transition-name: loading-card;
+// Animations
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

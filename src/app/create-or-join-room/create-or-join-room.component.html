@@ -1,5 +1,6 @@
 @if (!isServer) {
-  <div class="join-container">
+  <div class="page-container" [class.web-layout]="config.runningIn === 'web'">
+    <!-- Navbar -->
     @if (!(isLoadingUser | async)) {
       <div class="navbar">
         @if (vm | async; as viewModel) {
@@ -24,48 +25,97 @@
         }
       </div>
     }
-    <div class="logos">
-      <img src="/assets/logo.webp" class="logo main-logo" />
-      @if (organization | async; as org) {
-        <div class="organization-logo-container">
-          <mat-icon @delayedFadeAnimation>add</mat-icon>
-          @if (org.logoUrl) {
-            <img
-              [src]="org.logoUrl"
-              class="logo organization-logo"
-              @slideInRightAnimation />
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <!-- Logo and Welcome -->
+        <div class="hero-header">
+          <div class="logos">
+            <img src="/assets/logo.webp" class="logo main-logo" />
+            @if (organization | async; as org) {
+              <div class="organization-logo-container">
+                <mat-icon @delayedFadeAnimation>add</mat-icon>
+                @if (org.logoUrl) {
+                  <img
+                    [src]="org.logoUrl"
+                    class="logo organization-logo"
+                    @slideInRightAnimation />
+                }
+                @if (!org.logoUrl) {
+                  <div class="logo organization-logo text-only" @slideInRightAnimation>
+                    <p>{{ org.name }}</p>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+          @if ((vm | async)?.user) {
+            <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
+          } @else {
+            <ng-container *ngTemplateOutlet="newUserWelcome"></ng-container>
           }
-          @if (!org.logoUrl) {
-            <div class="logo organization-logo text-only" @slideInRightAnimation>
-              <p>{{ org.name }}</p>
+        </div>
+
+        <!-- Main Action Card -->
+        @if (pageMode | async; as pageMode) {
+          <mat-card
+            appearance="outlined"
+            class="action-card main-card"
+            resizeMonitor
+            [verticalSpacing]="36">
+            <div class="transitioning-container" @delayedFadeAnimation>
+              @if (pageMode === PageMode.CREATE) {
+                <ng-container *ngTemplateOutlet="create"></ng-container>
+              }
+              @if (pageMode === PageMode.JOIN) {
+                <ng-container *ngTemplateOutlet="join"></ng-container>
+              }
             </div>
-          }
-        </div>
-      }
+          </mat-card>
+        }
+
+        <ng-container *ngTemplateOutlet="links"></ng-container>
+
+        <!-- Feature Pills or Recent Sessions (fixed height container to prevent layout shift) -->
+        @if (config.runningIn === 'web') {
+          <div class="footer-section">
+            @if (vm | async; as viewModel) {
+              @if (!viewModel.user) {
+                <!-- Feature Pills for Unauthenticated Users -->
+                <div class="feature-pills" @delayedFadeAnimation>
+                  @for (feature of features; track feature.title) {
+                    <div class="feature-pill">
+                      <mat-icon>{{ feature.icon }}</mat-icon>
+                      <span>{{ feature.title }}</span>
+                    </div>
+                  }
+                </div>
+              } @else if (!viewModel.user.isAnonymous) {
+                <!-- Recent Sessions for Authenticated Users -->
+                @if (recentSessions$ | async; as sessions) {
+                  @if (sessions.length > 0) {
+                    <div class="recent-sessions-inline" @delayedFadeAnimation>
+                      <span class="sessions-label">Recent:</span>
+                      @for (session of sessions; track session.roomId) {
+                        <a [routerLink]="['/room', session.roomId]" class="session-chip" matTooltip="{{ session.roundCount }} rounds · {{ session.createdAt | date:'MMM d' }}">
+                          {{ session.roomId }}
+                        </a>
+                      }
+                      <a routerLink="/history" class="view-all-chip">
+                        View all
+                        <mat-icon>arrow_forward</mat-icon>
+                      </a>
+                    </div>
+                  }
+                }
+              }
+            }
+          </div>
+        }
+      </div>
     </div>
-    @if ((vm | async)?.user) {
-      <ng-container *ngTemplateOutlet="welcomeBack"></ng-container>
-    } @else {
-      <ng-container *ngTemplateOutlet="newUserWelcome"></ng-container>
-    }
-    @if (pageMode | async; as pageMode) {
-      <mat-card
-        appearance="outlined"
-        class="action-card main-card"
-        resizeMonitor
-        [verticalSpacing]="36">
-        <div class="transitioning-container" @delayedFadeAnimation>
-          @if (pageMode === PageMode.CREATE) {
-            <ng-container *ngTemplateOutlet="create"></ng-container>
-          }
-          @if (pageMode === PageMode.JOIN) {
-            <ng-container *ngTemplateOutlet="join"></ng-container>
-          }
-        </div>
-      </mat-card>
-    }
-    <ng-container *ngTemplateOutlet="recent" />
-    <ng-container *ngTemplateOutlet="links"></ng-container>
+
     @if (config.runningIn === 'web') {
       <zoom-app-banner bannerLocation="banner_join" />
     }
@@ -156,6 +206,7 @@
     </mat-card-content>
   }
 </ng-template>
+
 <ng-template #links>
   <span class="other">You could also: </span>
   <div class="links">
@@ -211,36 +262,6 @@
         You've been invited to join room: <br />
         <strong>{{ (vm | async)?.roomId }}</strong>
       </h4>
-    </ng-template>
-    <ng-template #recent>
-      @if (
-        !hideRecentlyLeftRoom && recentlyLeftRoom$ | async;
-        as recentlyLeftRoom
-        ) {
-        <mat-card
-          class="recent-card action-card"
-          @delayedFadeAnimation
-          appearance="outlined">
-          <mat-card-content>
-            <p>
-              Continue where you left off? <br />
-              Your last room was {{ recentlyLeftRoom.roomId }}
-            </p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="navigateToRoom(recentlyLeftRoom.roomId)">
-              <mat-icon>play_arrow</mat-icon>
-              Continue
-            </button>
-            <button mat-button (click)="hideRecentlyLeftRoom = true">
-              Start fresh
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      }
     </ng-template>
     <ng-template #terms>
       <div class="terms">

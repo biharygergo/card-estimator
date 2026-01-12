@@ -30,4 +30,6 @@ export const environment = {
   orgBundleLargestPriceIdUsd: 'price_1RgJ3zCG1hllVHnciJkkuhwf',
   cloudProjectNumber: '615966905854',
   domain: 'https://test.planningpoker.live',
+  posthogKey: 'phc_Fxe5vq2dh3xoWFFKwImgrm19G0aKRhXGpocyvFRuMEy',
+  posthogHost: 'https://eu.i.posthog.com',
 };

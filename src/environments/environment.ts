@@ -35,6 +35,8 @@ export const environment = {
   orgBundleLargestPriceIdUsd: 'price_1RgJ3zCG1hllVHnciJkkuhwf',
   cloudProjectNumber: '417578634660',
   domain: 'https://localhost:4200',
+  posthogKey: 'phc_Fxe5vq2dh3xoWFFKwImgrm19G0aKRhXGpocyvFRuMEy',
+  posthogHost: 'https://eu.i.posthog.com',
 };
 
 /*

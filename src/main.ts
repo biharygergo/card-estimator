@@ -6,6 +6,17 @@ import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 import { bootstrapApplication } from '@angular/platform-browser';
 
+import posthog from 'posthog-js'
+
+posthog.init(
+  environment.posthogKey,
+  {
+    api_host:environment.posthogHost,
+    person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+    defaults: '2025-11-30'
+  }
+)
+
 if (environment.production) {
   enableProdMode();
 }

@@ -60,6 +60,7 @@
     "ng2-charts": "^7.0.0",
     "ngx-lottie": "^12.0.0",
     "ngx-markdown": "^20.1.0",
+    "posthog-js": "^1.318.1",
     "rxfire": "^6.0.0",
     "rxjs": "^7.4.0",
     "schema-dts": "^1.1.2",

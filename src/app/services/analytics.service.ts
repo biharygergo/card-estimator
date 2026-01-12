@@ -6,6 +6,7 @@ import {
   SubscriptionResult,
 } from '../types';
 import { isPlatformBrowser } from '@angular/common';
+import posthog from 'posthog-js';
 
 export type ZoomAppCtaLocation =
   | 'detail_page'
@@ -24,6 +25,8 @@ export class AnalyticsService {
     try {
       if (isPlatformBrowser(this.platformId)) {
         logEvent(this.analytics, eventName, params);
+        posthog.capture(eventName, params);
+
       }
     } catch (e) {
       console.error('Failed to log event to Analytics', e);

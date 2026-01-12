@@ -33,6 +33,18 @@
   :host-context(.dark-theme) & {
     background: var(--room-bg-gradient);
   }
+  
+  // In-app versions use solid backgrounds
+  :host-context(.running-in-teams) &,
+  :host-context(.running-in-zoom) &,
+  :host-context(.running-in-meet) &,
+  :host-context(.running-in-webex) & {
+    background: var(--background-dark);
+    
+    &::before {
+      display: none;
+    }
+  }
 }
 
 // Navbar

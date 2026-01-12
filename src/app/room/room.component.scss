@@ -39,6 +39,18 @@
     position: relative;
     z-index: 1;
   }
+  
+  // In-app versions (Teams, Zoom, Meet, Webex) use solid backgrounds
+  :host-context(.running-in-teams) &,
+  :host-context(.running-in-zoom) &,
+  :host-context(.running-in-meet) &,
+  :host-context(.running-in-webex) & {
+    background: var(--background-dark);
+    
+    &::before {
+      display: none; // No radial gradients for in-app versions
+    }
+  }
 }
 
 .topics-sidenav {

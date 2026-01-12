@@ -40,7 +40,6 @@
     "@angular/ssr": "^20.3.4",
     "@angular/youtube-player": "^20.2.7",
     "@googleworkspace/meet-addons": "^1.0.0",
-    "@microsoft/clarity": "^1.0.0",
     "@microsoft/teams-js": "^2.23.0",
     "@sentry/angular": "^10.17.0",
     "@sentry/tracing": "^7.120.4",

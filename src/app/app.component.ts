@@ -35,7 +35,6 @@ import { Theme, ThemeService } from './services/theme.service';
 import { isPlatformBrowser } from '@angular/common';
 import { APP_CONFIG, AppConfig } from './app-config.module';
 import { environment } from 'src/environments/environment';
-import Clarity from '@microsoft/clarity';
 import { SchemaTagService } from './services/schema-tag.service';
 import Cookies from 'js-cookie';
 
@@ -186,13 +185,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.document.body,
         `running-in-${this.config.runningIn}`
       );
-
-      if (
-        this.config.runningIn === 'web' &&
-        (window as any).Cypress === undefined
-      ) {
-        Clarity.init('qngk5xwpfw');
-      }
     }
     this.schemaTagService.setJsonLd(
       this.renderer,

@@ -38,11 +38,18 @@
   flex: 3;
 }
 
+.coupon-container {
+  text-align: center;
+  margin: 1rem 0;
+}
+
 .coupon {
-  background: var(--light-blue);
-  color: black;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin: 2px;
-  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, var(--accent-color) 0%, #e8940d 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(245, 161, 21, 0.3);
 }

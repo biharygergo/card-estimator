@@ -1,50 +1,81 @@
 @import '../../common.scss';
 
-.banner {
-  display: flex;
-  flex-direction: column;
-  border-color: var(--card-border-color);
-
-  &.banner-info {
-    color: var(--text-on-white);
-  }
-
-  .banner-icon {
-    flex-shrink: 0;
-    margin-top: 1rem;
-  }
-
-  .banner-main {
-    display: flex;
-    gap: 1rem;
-
-    @include extraSmallScreen {
-      flex-direction: column;
-    }
-  }
-
-  .banner-action {
-    display: flex;
-    gap: 0.5rem;
-
-    @include extraSmallScreen {
-      flex-direction: column;
-    }
-  }
+:host {
+  display: block;
+  width: 100%;
 }
 
-ul {
-  padding-inline-start: 0px;
-}
-
-li {
-  list-style-type: none;
+.compact-banner {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  box-sizing: border-box;
+  
+  @include smallScreen {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+}
 
-  mat-icon {
-    flex-shrink: 0;
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  
+  .headline {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-on-white);
+  }
+  
+  .benefits {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    color: var(--text-on-white);
+  }
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  
+  .signup-button {
+    font-size: 0.85rem;
+    height: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .signin-button {
+    font-size: 0.85rem;
+    height: 2rem;
+    padding: 0 0.75rem;
+    opacity: 0.8;
+  }
+  
+  .close-button {
+    opacity: 0.5;
+    height: 2rem;
+    width: 2rem;
+    padding: 0;
+    --mdc-icon-button-state-layer-size: 2rem;
+    
+    mat-icon {
+      font-size: 1rem !important;
+      width: 1rem !important;
+      height: 1rem !important;
+    }
+    
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }

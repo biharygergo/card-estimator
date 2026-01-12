@@ -631,12 +631,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    createTimer(2)
-      .pipe(takeUntil(this.destroy))
-      .subscribe(() => {
-        this.showAvatarPrompt();
-      });
-
     this.heartbeat$
       .pipe(
         switchMap(() =>
@@ -665,7 +659,11 @@ export class RoomComponent implements OnInit, OnDestroy {
       });
 
     this.creditsAlert$
-      .pipe(withLatestFrom(this.user$), takeUntil(this.destroy))
+      .pipe(
+        withLatestFrom(this.user$, this.isRoomCreator$),
+        filter(([credits, user, isCreator]) => isCreator),
+        takeUntil(this.destroy)
+      )
       .subscribe(([credits, user]) => {
         if (credits === 1) {
           this.dialog.open(
@@ -682,11 +680,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.showRoomLimitReachedDialog();
       });
 
-    this.shouldShowInvitationPopup$
-      .pipe(first(), takeUntil(this.destroy))
-      .subscribe(() => {
-        this.showInvitationPopup();
-      });
   }
 
   ngAfterViewInit() {
@@ -887,28 +880,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe(() => {
         this.isAloneInRoomHidden = true;
       });
-    }
-  }
-
-  private async showAvatarPrompt() {
-    const user = await this.authService.getUser();
-    if (!user?.photoURL) {
-      this.snackBar.dismiss();
-      this.snackBar
-        .open(
-          'Stand out from the crowd by adding your avatar 😎',
-          'Set my avatar',
-          { duration: 10000, horizontalPosition: 'right' }
-        )
-        .onAction()
-        .subscribe(() => {
-          this.dialog.open(
-            ...avatarModalCreator({
-              openAtTab: 'avatar',
-            })
-          );
-          this.analytics.logClickedEditAvatar('snackbar');
-        });
     }
   }
 

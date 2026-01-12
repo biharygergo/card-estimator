@@ -156,9 +156,6 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   readonly newRoundClicked = new Subject<void>();
   readonly newRoundButtonCooldownState$ = createCooldownState();
 
-  readonly inviteButtonClicked = new Subject<void>();
-  readonly inviteButtonCooldownState$ = createCooldownState();
-
   readonly MemberType = MemberType;
 
   @ViewChild('menuTrigger')
@@ -186,14 +183,6 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => this.newRound()),
         cooldownPipe(this.newRoundButtonCooldownState$),
-        takeUntil(this.destroy)
-      )
-      .subscribe();
-
-    this.inviteButtonClicked
-      .pipe(
-        tap(() => this.inviteClicked.emit()),
-        cooldownPipe(this.inviteButtonCooldownState$),
         takeUntil(this.destroy)
       )
       .subscribe();

@@ -144,8 +144,9 @@
       [roundStatistics]="roundStatistics()" />
   </mat-sidenav>
 </mat-sidenav-container>
+<!-- TODO: Remove true || - just for testing -->
 <ng-template #anonymousBanner>
-  @if ((sessionCount$ | async) > 1) {
+  @if (true || (sessionCount$ | async) > 1) {
     <anonymous-user-banner
       [hideable]="true"
       class="anonymous-user-banner"
@@ -167,7 +168,7 @@
       [isExpanded]="isControlPaneExpanded()"
       (sidebarTriggered)="sidenav.open()"
       (muteClicked)="toggleMute()"
-      (inviteClicked)="copyRoomId()"
+      (inviteClicked)="showInvitationPopup()"
       (expandClicked)="toggleControlPane()"
       #roomControllerPanel />
   </div>

@@ -10,7 +10,7 @@ import {
 } from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { AsyncPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
   MatCard,
@@ -28,6 +28,7 @@ import {
     MatIcon,
     MatCardActions,
     MatButton,
+    MatIconButton,
     MatTooltip,
     AsyncPipe,
   ],

@@ -101,6 +101,31 @@
   }
 }
 
+// Nice scrollbar utility - thin, modern scrollbar
+.nice-scrollbar {
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  
+  // Webkit (Chrome/Safari/Opera)
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
 // Modern heading typography
 .heading-modern {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -185,6 +210,19 @@ $m3-light-theme: mat.define-theme(
   
   // Subtle dividers in dark mode (prevent glow)
   --mat-divider-color: rgba(255, 255, 255, 0.08);
+  
+  // Nice scrollbar for dark theme
+  .nice-scrollbar {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
 
   &.running-in-teams {
     --background-dark: #1f1f1f;

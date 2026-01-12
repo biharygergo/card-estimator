@@ -150,22 +150,13 @@
             <span class="room-id-text">{{ room()?.roomId }}</span>
             <button
               mat-stroked-button
-              (click)="inviteButtonClicked.next(); $event.stopPropagation()"
-              [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+              (click)="inviteClicked.emit(); $event.stopPropagation()"
               id="invite-button"
               class="invite-button">
-              @if ((inviteButtonCooldownState$ | async) === 'initial') {
-                <div class="center-icon-button" @fadeAnimation>
-                  <mat-icon>link</mat-icon>
-                  Invite
-                </div>
-              }
-              @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
-                <div class="center-icon-button" @fadeAnimation>
-                  <mat-icon>checkmark</mat-icon>
-                  {{ config.runningIn === 'web' ? 'Copied' : 'Invited' }}
-                </div>
-              }
+              <div class="center-icon-button">
+                <mat-icon>group_add</mat-icon>
+                Invite
+              </div>
             </button>
           </div>
         </mat-expansion-panel>
@@ -319,18 +310,12 @@
       <div class="mini-secondary">
         <button
           mat-icon-button
-          (click)="inviteButtonClicked.next()"
-          [disabled]="(inviteButtonCooldownState$ | async).includes('cooldown')"
+          (click)="inviteClicked.emit()"
           matTooltip="Invite others"
           [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
           class="mini-action-button"
           id="invite-button">
-          @if ((inviteButtonCooldownState$ | async) === 'initial') {
-            <mat-icon @fadeAnimation>link</mat-icon>
-          }
-          @if ((inviteButtonCooldownState$ | async) === 'cooldown') {
-            <mat-icon @fadeAnimation>checkmark</mat-icon>
-          }
+          <mat-icon>group_add</mat-icon>
         </button>
         <countdown-timer [room]="room$()" [minimized]="true" />
         <button

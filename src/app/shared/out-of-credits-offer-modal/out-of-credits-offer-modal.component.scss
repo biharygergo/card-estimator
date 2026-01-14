@@ -36,20 +36,17 @@
 
 .text {
   flex: 3;
-}
-
-.coupon-container {
-  text-align: center;
-  margin: 1rem 0;
-}
-
-.coupon {
-  background: linear-gradient(135deg, var(--accent-color) 0%, #e8940d 100%);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  letter-spacing: 0.15em;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(245, 161, 21, 0.3);
+  
+  p {
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  strong {
+    color: var(--text-color);
+  }
 }

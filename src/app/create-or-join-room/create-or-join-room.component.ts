@@ -445,7 +445,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
             catchError(e => {
               if (e.details === 'error-no-credits') {
                 this.dialog.open(
-                  ...outOfCreditsOfferModalCreator('out-of-credits')
+                  ...outOfCreditsOfferModalCreator('creation-failed')
                 );
               } else {
                 throw e;

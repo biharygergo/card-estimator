@@ -9,7 +9,7 @@ import {
 import { createModal } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 
-type OutOfCreditsOfferState = 'out-of-credits' | 'almost-out-of-credits';
+type OutOfCreditsOfferState = 'out-of-credits' | 'almost-out-of-credits' | 'creation-failed';
 @Component({
   selector: 'app-out-of-credits-offer-modal',
   imports: [MatDialogModule, MatButtonModule],

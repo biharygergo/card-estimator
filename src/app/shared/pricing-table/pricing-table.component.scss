@@ -21,13 +21,69 @@
       color: rgba(255, 255, 255, 0.85);
     }
 
-    .pricing-configurator {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.12);
-      
-      .pricing-configurator-row {
-        color: rgba(255, 255, 255, 0.9);
+    .pricing-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+
+      &.free {
+        .pricing-card-icon {
+          background: rgba(76, 175, 80, 0.15);
+          color: #4caf50;
+        }
       }
+
+      &.paid {
+        .pricing-card-icon {
+          background: rgba(255, 152, 0, 0.15);
+          color: #ff9800;
+        }
+      }
+    }
+
+    .pricing-card-content {
+      h3 {
+        color: white;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    .pricing-badge {
+      &.free-badge {
+        background: rgba(76, 175, 80, 0.2);
+        color: #81c784;
+      }
+
+      &.credit-badge {
+        background: rgba(255, 152, 0, 0.2);
+        color: #ffb74d;
+      }
+    }
+
+    .pricing-note {
+      color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.03);
+
+      mat-icon {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .credit-type-tabs {
+      --mdc-secondary-navigation-tab-container-height: 48px;
+      --mat-tab-header-inactive-label-text-color: rgba(255, 255, 255, 0.6);
+      --mat-tab-header-active-label-text-color: white;
+      --mat-tab-header-inactive-hover-label-text-color: rgba(255, 255, 255, 0.8);
+      --mat-tab-header-inactive-focus-label-text-color: rgba(255, 255, 255, 0.8);
+      --mat-tab-header-active-focus-label-text-color: white;
+      --mat-tab-header-active-hover-label-text-color: white;
+      --mdc-tab-indicator-active-indicator-color: white;
+    }
+
+    .currency-switcher {
+      color: rgba(255, 255, 255, 0.6);
 
       mat-form-field {
         --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.3);
@@ -169,6 +225,148 @@
   margin: 0 auto;
   margin-bottom: 5rem;
   padding: 0.5rem;
+}
+
+.pricing-overview {
+  display: flex;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+  padding: 0 0.5rem;
+
+  @include smallScreen {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.pricing-card {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: #f8f9fc;
+  border: 1px solid #e0e4eb;
+
+  @include smallScreen {
+    padding: 1.25rem;
+  }
+
+  &.free {
+    .pricing-card-icon {
+      background: rgba(76, 175, 80, 0.15);
+      color: #388e3c;
+    }
+  }
+
+  &.paid {
+    .pricing-card-icon {
+      background: rgba(255, 152, 0, 0.15);
+      color: #f57c00;
+    }
+  }
+}
+
+.pricing-card-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.pricing-card-content {
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--title-on-light);
+  }
+
+  p {
+    margin: 0.75rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #808ca1;
+  }
+}
+
+.pricing-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  &.free-badge {
+    background: rgba(76, 175, 80, 0.15);
+    color: #2e7d32;
+  }
+
+  &.credit-badge {
+    background: rgba(255, 152, 0, 0.15);
+    color: #e65100;
+  }
+}
+
+.pricing-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: #808ca1;
+  background: #f0f2f5;
+  border-radius: 8px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #808ca1;
+  }
+}
+
+.credit-type-tabs {
+  max-width: 900px;
+  margin: 0 auto;
+
+  ::ng-deep .mat-mdc-tab-header {
+    max-width: 400px;
+    margin: 0 auto 1rem;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    padding-top: 1rem;
+  }
+}
+
+.currency-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: #808ca1;
+
+  @include mat.form-field-density(-5);
+
+  mat-form-field {
+    width: 100px;
+  }
 }
 
 .options-wrapper {
@@ -326,27 +524,6 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-}
-
-.pricing-configurator {
-  max-width: 500px;
-  margin: 0 auto;
-  margin-bottom: 1rem;
-
-  &-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-    color: var(--mat-card-subtitle-text-color);
-
-    @include mat.form-field-density(-5);
-
-    span {
-      margin: 8px 0;
-    }
-  }
 }
 
 .org-price-configurator {

@@ -8,41 +8,38 @@
   }
   <div class="content">
     <h1 class="title">Pricing</h1>
-    <p class="description">
-      Everyone can <strong>join rooms for free</strong>, while room creators
-      (like Scrum Masters) pick a payment option that suits them.<br /><br />
-      Each new room you create costs 1 credit. Everything else is free — no
-      extra charges for using the app in Teams, Zoom, Meet, Webex, or any other
-      platform, regardless of how many participants or features you use.
-      <br /><br />
-      Start with a free credit bundle, and as a registered user, you’ll also
-      receive <strong>1 free credit every month</strong>. Need more? Easily
-      top-up your account or switch to an unlimited subscription. Want to share
-      credits with your team? Explore our organization credit options.
+    <div class="pricing-overview">
+      <div class="pricing-card free">
+        <div class="pricing-card-icon">
+          <mat-icon>group_add</mat-icon>
+        </div>
+        <div class="pricing-card-content">
+          <h3>Join rooms</h3>
+          <span class="pricing-badge free-badge">Always free</span>
+          <p>Join any room and vote — no account or payment needed. Unlimited participants, all features included.</p>
+        </div>
+      </div>
+      <div class="pricing-card paid">
+        <div class="pricing-card-icon">
+          <mat-icon>add_circle</mat-icon>
+        </div>
+        <div class="pricing-card-content">
+          <h3>Create rooms</h3>
+          <span class="pricing-badge credit-badge">1 credit per room</span>
+          <p>Start with <strong>5 free credits</strong> + <strong>1 free credit monthly</strong>. Need more? Top up anytime below.</p>
+        </div>
+      </div>
+    </div>
+    <p class="pricing-note">
+      <mat-icon>favorite</mat-icon>
+      Open-source & indie-built — your purchase supports independent development.
     </p>
-    <mat-card appearance="outlined" class="pricing-configurator">
-      <mat-card-content>
-        <div class="pricing-configurator-row">
-          <span>I want to buy credits for:</span>
-          <mat-form-field appearance="outline" subscriptSizing="dynamic">
-            <mat-select [formControl]="creditTypeSelector">
-              <mat-option value="personal">Myself</mat-option>
-              <mat-option value="organization">My organization</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="pricing-configurator-row">
-          <span>I want to pay in:</span>
-          <mat-form-field appearance="outline" subscriptSizing="dynamic">
-            <mat-select [formControl]="currencyControl">
-              <mat-option value="usd">USD</mat-option>
-              <mat-option value="eur">EUR</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-    </mat-card>
-    @if (creditTypeSelector.value === 'personal') {
+    <mat-tab-group
+      class="credit-type-tabs"
+      [selectedIndex]="creditTypeSelector.value === 'personal' ? 0 : 1"
+      (selectedIndexChange)="creditTypeSelector.setValue($event === 0 ? 'personal' : 'organization')">
+      <mat-tab label="Individual">
+        <ng-template matTabContent>
     <div class="options-wrapper">
       @for (plan of PLANS; track plan.id) {
       <div class="option">
@@ -93,13 +90,25 @@
       </div>
       }
     </div>
-    } @else {
+    <div class="currency-switcher">
+      <span>Currency:</span>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-select [formControl]="currencyControl">
+          <mat-option value="usd">USD ($)</mat-option>
+          <mat-option value="eur">EUR (€)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Organization">
+        <ng-template matTabContent>
     <mat-card appearance="outlined" class="org-price-configurator">
       <mat-card-content>
         <div class="org-price-configurator-content">
           <div class="org-price-configurator-image">
             <div class="image-wrapper">
-              <img class="plan-image" src="/assets/credits_no_number.png" />
+              <img class="plan-image" src="/assets/credits-org.png" />
             </div>
           </div>
           <div class="org-price-configurator-config">
@@ -162,7 +171,18 @@
         </div>
       </mat-card-content>
     </mat-card>
-    }
+    <div class="currency-switcher">
+      <span>Currency:</span>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-select [formControl]="currencyControl">
+          <mat-option value="usd">USD ($)</mat-option>
+          <mat-option value="eur">EUR (€)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
     <h2 class="title">Everything included</h2>
     <p class="description">
       Everything you need for awesome planning sessions. Integrated with your

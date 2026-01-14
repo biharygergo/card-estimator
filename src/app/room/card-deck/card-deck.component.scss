@@ -63,6 +63,29 @@
   border-color: rgba(255, 255, 255, 0.06);
 }
 
+// In-app versions (Teams, Zoom, Meet, Webex) - Light theme
+// Use solid backgrounds that match the app context
+:host-context(.running-in-teams) .main-row,
+:host-context(.running-in-zoom) .main-row,
+:host-context(.running-in-meet) .main-row,
+:host-context(.running-in-webex) .main-row {
+  background: var(--main-color);
+  border: 1px solid var(--card-border-color);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+// In-app versions - Dark theme overrides
+:host-context(.dark-theme.running-in-teams) .main-row,
+:host-context(.dark-theme.running-in-zoom) .main-row,
+:host-context(.dark-theme.running-in-meet) .main-row,
+:host-context(.dark-theme.running-in-webex) .main-row {
+  background: var(--main-color);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
 .control-buttons {
   margin-left: auto;
   display: flex;
@@ -177,6 +200,34 @@
   }
 }
 
+// In-app light theme: Use dark icons on light backgrounds
+:host-context(.running-in-teams:not(.dark-theme)),
+:host-context(.running-in-zoom:not(.dark-theme)),
+:host-context(.running-in-meet:not(.dark-theme)),
+:host-context(.running-in-webex:not(.dark-theme)) {
+  .control-buttons {
+    .emoji-button {
+      color: var(--text-color);
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+      
+      &.mat-button-toggle-checked {
+        background: rgba(0, 0, 0, 0.08);
+      }
+    }
+    
+    .options-button {
+      color: var(--text-color);
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+    }
+  }
+}
+
 .reaction-buttons {
   // Base solid background + glass overlay for visibility over any background
   background: linear-gradient(180deg, rgba(0, 27, 85, 0.9) 0%, rgba(0, 27, 85, 0.85) 100%);
@@ -211,6 +262,25 @@
       }
     }
   }
+}
+
+// In-app reaction buttons - solid backgrounds
+:host-context(.running-in-teams) .reaction-buttons,
+:host-context(.running-in-zoom) .reaction-buttons,
+:host-context(.running-in-meet) .reaction-buttons,
+:host-context(.running-in-webex) .reaction-buttons {
+  background: var(--main-color);
+  border: 1px solid var(--card-border-color);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:host-context(.dark-theme.running-in-teams) .reaction-buttons,
+:host-context(.dark-theme.running-in-zoom) .reaction-buttons,
+:host-context(.dark-theme.running-in-meet) .reaction-buttons,
+:host-context(.dark-theme.running-in-webex) .reaction-buttons {
+  background: var(--main-color);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .estimator-buttons {

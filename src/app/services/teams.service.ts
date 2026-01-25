@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { app, authentication, meeting, teamsCore } from '@microsoft/teams-js';
 import { Theme, ThemeService } from './theme.service';
 import { PaymentService } from './payment.service';
+import Cookies from 'js-cookie';
 
 @Injectable({ providedIn: 'root' })
 export class TeamsService {
@@ -9,47 +12,83 @@ export class TeamsService {
 
   constructor(
     private readonly themeService: ThemeService,
-    private readonly paymentService: PaymentService
+    private readonly paymentService: PaymentService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly location: Location
   ) {}
 
   async configureApp() {
     if (!this.isInitialized) {
-      await app.initialize();
-      const frameContext = app.getFrameContext();
-      const appContext = await app.getContext();
-
-      if (
-        ['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)
-      ) {
-        this.paymentService.isSubscriptionDisabled.set(true);
-      }
-
-      if (frameContext === 'sidePanel' || frameContext === 'meetingStage') {
-        this.themeService.setTheme(Theme.DARK);
-      }
-
       try {
-        teamsCore.registerOnLoadHandler(data => {
-          try {
-            app.notifySuccess();
-          } catch {
-            console.error('Could not notify success');
-          }
-        });
+        await app.initialize();
+        const frameContext = app.getFrameContext();
+        const appContext = await app.getContext();
 
-        teamsCore.registerBeforeUnloadHandler(readyToUnload => {
-          try {
-            readyToUnload();
-          } catch {
-            console.error('Could not notify unload');
-          }
-          return true;
-        });
-      } catch {
-        console.error('Could not register for cache');
+        if (
+          ['android', 'ios', 'ipados'].includes(appContext.app.host.clientType)
+        ) {
+          this.paymentService.isSubscriptionDisabled.set(true);
+        }
+
+        if (frameContext === 'sidePanel' || frameContext === 'meetingStage') {
+          this.themeService.setTheme(Theme.DARK);
+        }
+
+        try {
+          teamsCore.registerOnLoadHandler(data => {
+            try {
+              app.notifySuccess();
+            } catch {
+              console.error('Could not notify success');
+            }
+          });
+
+          teamsCore.registerBeforeUnloadHandler(readyToUnload => {
+            try {
+              readyToUnload();
+            } catch {
+              console.error('Could not notify unload');
+            }
+            return true;
+          });
+        } catch {
+          console.error('Could not register for cache');
+        }
+
+        this.isInitialized = true;
+      } catch (error) {
+        console.warn(
+          'Failed to initialize Teams SDK - not in Teams context:',
+          error
+        );
+
+        // Clear the Teams cookie since we're not actually in Teams
+        Cookies.remove('runningInTeams');
+
+        // Remove the s=teams query parameter and reload using Angular utilities
+        const currentQueryParams = { ...this.route.snapshot.queryParams };
+
+        if (currentQueryParams['s'] === 'teams') {
+          delete currentQueryParams['s'];
+
+          // Build the cleaned URL
+          const urlTree = this.router.createUrlTree([], {
+            relativeTo: this.route,
+            queryParams: currentQueryParams,
+            fragment: this.route.snapshot.fragment || undefined,
+            preserveFragment: false,
+          });
+
+          // Do a full page reload to clear any Teams SDK state
+          const cleanUrl = this.location.prepareExternalUrl(
+            this.router.serializeUrl(urlTree)
+          );
+          window.location.href = cleanUrl;
+        }
+
+        throw error;
       }
-
-      this.isInitialized = true;
     }
   }
 

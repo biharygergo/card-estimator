@@ -185,6 +185,20 @@
   }
 }
 
+.low-credits-banner {
+  margin-top: 0.5rem;
+  
+  @media screen and (max-width: 800px) {
+    margin: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  @include extraSmallScreen {
+    margin: 0;
+    margin-top: 0.5rem;
+  }
+}
+
 .rounded-card {
   background: var(--glass-bg) !important;
   backdrop-filter: blur(12px);

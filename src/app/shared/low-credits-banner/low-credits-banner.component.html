@@ -1,0 +1,67 @@
+@if (!isHidden()) {
+  <div class="compact-banner">
+    <!-- Decorative poker chip -->
+    <div class="poker-chip"></div>
+    
+    <!-- Close button as direct child for absolute positioning -->
+    <button
+      mat-icon-button
+      (click)="hideBanner()"
+      class="close-button"
+      matTooltip="Dismiss">
+      <mat-icon>close</mat-icon>
+    </button>
+    
+    <div class="banner-text">
+      <span class="headline">⚠️ {{ messageTitle }}</span>
+      <span class="message">
+        {{ messageBody }}
+        <a class="pricing-link" (click)="openPricingModal()">View all pricing options</a>
+      </span>
+    </div>
+    
+    <div class="banner-actions">
+      <div class="bundle-buttons">
+        @if (hasOrganization()) {
+          <!-- Organization bundles -->
+          @for (bundle of orgBundles; track bundle.id) {
+            <button
+              mat-stroked-button
+              (click)="buySpecificBundle(bundle.id)"
+              [disabled]="loadingBundleId() === bundle.id"
+              [matTooltip]="'$' + bundle.priceUsd"
+              class="bundle-button">
+              @if (loadingBundleId() === bundle.id) {
+                <span class="loading-text">...</span>
+              } @else {
+                <div class="bundle-content">
+                  <mat-icon class="coin-icon">toll</mat-icon>
+                  <span class="bundle-credits">{{ bundle.creditAmount }}</span>
+                </div>
+              }
+            </button>
+          }
+        } @else {
+          <!-- Individual bundles -->
+          @for (bundle of individualBundles; track bundle.id) {
+            <button
+              mat-stroked-button
+              (click)="buySpecificBundle(bundle.id)"
+              [disabled]="loadingBundleId() === bundle.id"
+              [matTooltip]="'$' + bundle.priceUsd"
+              class="bundle-button">
+              @if (loadingBundleId() === bundle.id) {
+                <span class="loading-text">...</span>
+              } @else {
+                <div class="bundle-content">
+                  <mat-icon class="coin-icon">toll</mat-icon>
+                  <span class="bundle-credits">{{ bundle.creditAmount }}</span>
+                </div>
+              }
+            </button>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}

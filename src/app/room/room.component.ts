@@ -114,7 +114,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { ProfileDropdownComponent } from '../shared/profile-dropdown/profile-dropdown.component';
 import { ShepherdService } from 'angular-shepherd';
-import { outOfCreditsOfferModalCreator } from '../shared/out-of-credits-offer-modal/out-of-credits-offer-modal.component';
+import { LowCreditsBannerComponent } from '../shared/low-credits-banner/low-credits-banner.component';
 import { invitationPopupCreator } from '../shared/invitation-popup/invitation-popup.component';
 import { NudgeOverlayComponent, NudgeData } from './nudge-overlay/nudge-overlay.component';
 
@@ -157,6 +157,7 @@ const CHARTING_COLORS = [
     MatSidenav,
     TopicsSidebarComponent,
     AnonymousUserBannerComponent,
+    LowCreditsBannerComponent,
     RoomControllerPanelComponent,
     NudgeOverlayComponent,
     AsyncPipe,
@@ -454,6 +455,15 @@ export class RoomComponent implements OnInit, OnDestroy {
     distinctUntilChanged()
   );
 
+  // Expose credits state for inline banner (only for room creators)
+  lowCreditsState$: Observable<number | null> = combineLatest([
+    this.creditsAlert$,
+    this.isRoomCreator$,
+  ]).pipe(
+    map(([credits, isCreator]) => isCreator ? credits : null),
+    distinctUntilChanged()
+  );
+
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;
 
@@ -656,22 +666,6 @@ export class RoomComponent implements OnInit, OnDestroy {
             updatedPricingModalShown: true,
           })
           .subscribe();
-      });
-
-    this.creditsAlert$
-      .pipe(
-        withLatestFrom(this.user$, this.isRoomCreator$),
-        filter(([credits, user, isCreator]) => isCreator),
-        takeUntil(this.destroy)
-      )
-      .subscribe(([credits, user]) => {
-        if (credits === 1) {
-          this.dialog.open(
-            ...outOfCreditsOfferModalCreator('almost-out-of-credits')
-          );
-        } else if (credits === 0) {
-          this.dialog.open(...outOfCreditsOfferModalCreator('out-of-credits'));
-        }
       });
 
     this.roomDataService.onRoomRoundCountUpdated$

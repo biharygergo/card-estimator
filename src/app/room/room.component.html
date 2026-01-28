@@ -106,6 +106,7 @@
         </mat-card>
         @if ((isSmallScreen$ | async)?.matches === false) {
           <ng-container *ngTemplateOutlet="anonymousBanner" />
+          <ng-container *ngTemplateOutlet="lowCreditsBanner" />
         }
       </div>
       <app-card-deck
@@ -119,6 +120,7 @@
       }
       @if ((isSmallScreen$ | async)?.matches === true) {
         <ng-container *ngTemplateOutlet="anonymousBanner" />
+        <ng-container *ngTemplateOutlet="lowCreditsBanner" />
       }
       @if (config.runningIn === 'web') {
         <app-github-badge />
@@ -150,6 +152,14 @@
     <anonymous-user-banner
       [hideable]="true"
       class="anonymous-user-banner"
+      @fadeAnimation />
+  }
+</ng-template>
+<ng-template #lowCreditsBanner>
+  @if ((lowCreditsState$ | async) !== null; as credits) {
+    <low-credits-banner
+      [creditsRemaining]="lowCreditsState$ | async"
+      class="low-credits-banner"
       @fadeAnimation />
   }
 </ng-template>

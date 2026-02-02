@@ -268,6 +268,19 @@ const routes: Routes = [
         'Convert story points into project timelines with our free Story Point Calculator.',
     },
   },
+  {
+    path: 'tools/meeting-cost-calculator',
+    loadComponent: () =>
+      import(
+        './tools/meeting-cost-calculator/meeting-cost-calculator.component'
+      ).then(m => m.MeetingCostCalculatorComponent),
+    data: {
+      title: 'Free Meeting Cost Calculator | Agile Team Tool',
+      disablePostfix: true,
+      description:
+        'Calculate meeting costs for your agile team. Free meeting cost calculator helps optimize sprint planning, stand-ups, and retrospectives. Improve efficiency today.',
+    },
+  },
 ];
 
 @NgModule({

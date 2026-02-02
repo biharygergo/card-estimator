@@ -26,6 +26,7 @@ export const routes = [
   '/integrations/teams/configure',
   '/knowledge-base',
   '/tools/story-point-calculator',
+  '/tools/meeting-cost-calculator',
   '/getting-started',
   '/glossary',
   '/estimation-techniques-comparison',

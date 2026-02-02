@@ -1,0 +1,524 @@
+@import '../../../common.scss';
+
+// Intro Section
+.intro-section {
+  padding: 3rem 0 2rem;
+  background: transparent;
+
+  .intro-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: white;
+    text-align: center;
+    margin: 0;
+  }
+
+  @include smallScreen {
+    padding: 2rem 0 1.5rem;
+
+    .intro-text {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Calculator Section
+.calculator-section {
+  padding: 2rem 0 5rem;
+  background: transparent;
+
+  .calculator-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .calculator-card {
+    background: rgba(24, 50, 93, 0.7) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    padding: 3rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    h2 {
+      color: #d9e2ff;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 2rem 0;
+      text-align: center;
+    }
+  }
+
+  @include smallScreen {
+    padding: 1.5rem 0 3rem;
+
+    .calculator-card {
+      padding: 2rem 1.5rem;
+
+      h2 {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+}
+
+// Form Styling
+.meeting-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    @include smallScreen {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .form-field {
+    width: 100%;
+
+    ::ng-deep {
+      .mat-mdc-form-field-focus-overlay {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .mat-mdc-text-field-wrapper {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .mdc-text-field--outlined {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &:hover {
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__notch,
+          .mdc-notched-outline__trailing {
+            border-color: rgba(255, 255, 255, 0.3);
+          }
+        }
+
+        &.mdc-text-field--focused {
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__notch,
+          .mdc-notched-outline__trailing {
+            border-color: #afc6ff;
+          }
+        }
+      }
+
+      .mat-mdc-form-field-label,
+      .mdc-floating-label,
+      .mat-mdc-select-value,
+      .mat-mdc-select-value-text,
+      input {
+        color: white !important;
+      }
+
+      .mat-icon {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+}
+
+// Results Section
+.results {
+  margin-top: 3rem;
+
+  .section-heading {
+    color: #d9e2ff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+  }
+
+  @include smallScreen {
+    margin-top: 2rem;
+
+    .section-heading {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+// Hero Cost Display
+.total-cost-hero {
+  text-align: center;
+  padding: 2rem 0 3rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .cost-amount {
+    font-size: clamp(4rem, 8vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    width: 100%;
+    color: white;
+    text-shadow: 0 4px 12px rgba(175, 198, 255, 0.3);
+
+    .currency {
+      font-size: 0.6em;
+      opacity: 0.9;
+      margin-right: 0.1em;
+    }
+  }
+
+  .cost-subtitle {
+    color: #d9e2ff;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0.5rem 0 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+  }
+
+  .cost-per-minute {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+
+    .per-unit {
+      font-size: 0.8em;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+  }
+
+  @include smallScreen {
+    padding: 1.5rem 0 2rem;
+
+    .cost-amount {
+      font-size: clamp(3rem, 12vw, 4rem);
+    }
+
+    .cost-subtitle {
+      font-size: 0.8rem;
+    }
+
+    .cost-per-minute {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Comparisons Section
+.comparisons-section {
+  margin: 3rem 0;
+
+  .comparisons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+
+    @media screen and (max-width: 900px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include smallScreen {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .comparison-card {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .comparison-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      color: #afc6ff;
+      margin: 0 auto 0.75rem;
+    }
+
+    .comparison-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 0.25rem 0;
+      line-height: 1;
+    }
+
+    .comparison-label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+
+  @include smallScreen {
+    margin: 2rem 0;
+
+    .comparison-card {
+      padding: 1.25rem;
+
+      .comparison-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .comparison-value {
+        font-size: 1.75rem;
+      }
+
+      .comparison-label {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+// Insights Section
+.insights-section {
+  background: rgba(24, 50, 93, 0.5) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 2rem;
+  margin: 2rem 0;
+
+  .insights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      color: white;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      position: relative;
+
+      &::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: #afc6ff;
+        font-size: 1.5rem;
+        line-height: 1.4;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @include smallScreen {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+
+    .insights-list li {
+      font-size: 0.95rem;
+      padding-left: 1.25rem;
+    }
+  }
+}
+
+// Annual Projection Card
+.annual-projection-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 16px !important;
+  padding: 2rem;
+  margin: 2rem 0 0;
+  text-align: center;
+
+  .annual-cost {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #afc6ff;
+    margin: 1rem 0;
+    line-height: 1;
+  }
+
+  .annual-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  @include smallScreen {
+    padding: 1.5rem;
+
+    .annual-cost {
+      font-size: 2.25rem;
+    }
+
+    .annual-description {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Content Section (SEO)
+.content-section {
+  padding: 4rem 0 5rem;
+  background: transparent;
+
+  .content-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .content-heading {
+    color: #d9e2ff;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin: 0 0 3rem 0;
+  }
+
+  .content-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+
+    @media screen and (max-width: 900px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .content-column {
+    background: rgba(24, 50, 93, 0.5) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 2rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    h3 {
+      color: #d9e2ff;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+    }
+
+    p {
+      color: white;
+      line-height: 1.7;
+      margin: 0;
+    }
+  }
+
+  .cta-text {
+    text-align: center;
+    font-size: 1.15rem;
+    color: white;
+    line-height: 1.6;
+    margin: 2rem 0 0;
+
+    .cta-link {
+      color: #afc6ff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @include smallScreen {
+    padding: 3rem 0;
+
+    .content-heading {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .content-column {
+      padding: 1.5rem;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+
+    .cta-text {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Animation (fadeInUp)
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

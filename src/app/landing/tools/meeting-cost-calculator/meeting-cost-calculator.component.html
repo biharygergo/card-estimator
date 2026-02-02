@@ -1,0 +1,189 @@
+<app-page-header
+  title="Meeting Cost Calculator"
+  subtitle="Calculate the true cost of your meetings and improve team efficiency"
+/>
+
+<!-- SEO Content Section -->
+<section class="intro-section">
+  <div class="intro-content">
+    <p class="intro-text">
+      Meetings are essential for collaboration, but they come at a cost. Use
+      our free meeting cost calculator to understand the true financial impact
+      of your team meetings, stand-ups, sprint planning, and retrospectives.
+      Make data-driven decisions about meeting efficiency and optimize your
+      agile ceremonies.
+    </p>
+  </div>
+</section>
+
+<!-- Calculator Section -->
+<section class="calculator-section">
+  <div class="calculator-content">
+    <!-- Glass morphism card for calculator -->
+    <div class="calculator-card glass-card-dark">
+      <h2>Calculate Your Meeting Cost</h2>
+
+      <form [formGroup]="meetingForm" class="meeting-form">
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Number of Attendees</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="attendees"
+              placeholder="5"
+              min="1"
+              max="1000" />
+            <mat-icon matSuffix>group</mat-icon>
+            @if (meetingForm.get('attendees')?.hasError('min')) {
+              <mat-error>At least 1 attendee required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Average Hourly Rate ($)</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="avgHourlyRate"
+              placeholder="75"
+              min="0"
+              max="100000" />
+            <mat-icon matSuffix>attach_money</mat-icon>
+            @if (meetingForm.get('avgHourlyRate')?.hasError('min')) {
+              <mat-error>Must be a positive number</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Meeting Duration (minutes)</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="duration"
+              placeholder="60"
+              min="1"
+              max="480" />
+            <mat-icon matSuffix>schedule</mat-icon>
+            @if (meetingForm.get('duration')?.hasError('min')) {
+              <mat-error>At least 1 minute required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Meeting Frequency</mat-label>
+            <mat-select formControlName="frequency">
+              @for (option of frequencyOptions; track option.value) {
+                <mat-option [value]="option.value">{{
+                  option.label
+                }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>repeat</mat-icon>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <!-- Results with modern, eye-catching display -->
+      @if (result() && meetingForm.valid) {
+        <div class="results">
+          <!-- Hero cost display with gradient accent -->
+          <div class="total-cost-hero">
+            <div class="cost-amount">
+              <span class="currency">$</span
+              >{{ result()!.totalCost | number : "1.0-0" }}
+            </div>
+            <p class="cost-subtitle">Total Meeting Cost</p>
+            <p class="cost-per-minute">
+              ${{ result()!.costPerMinute | number : "1.2-2"
+              }}<span class="per-unit">/minute</span>
+            </p>
+          </div>
+
+          <!-- Comparison cards in grid -->
+          @if (comparisons().length > 0) {
+            <div class="comparisons-section">
+              <h3 class="section-heading">That's equivalent to...</h3>
+              <div class="comparisons-grid">
+                @for (comp of comparisons(); track $index) {
+                  <div class="comparison-card glass-card">
+                    <mat-icon class="comparison-icon">{{
+                      comp.icon
+                    }}</mat-icon>
+                    <p class="comparison-value">{{ comp.value }}</p>
+                    <p class="comparison-label">{{ comp.label }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Insights section -->
+          @if (insights().length > 0) {
+            <div class="insights-section glass-card-dark">
+              <h3 class="section-heading">💡 Insights & Recommendations</h3>
+              <ul class="insights-list">
+                @for (insight of insights(); track $index) {
+                  <li>{{ insight }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- Annual projection with emphasis -->
+          @if (result()!.annualCost) {
+            <div class="annual-projection-card glass-card">
+              <h3 class="section-heading">📊 Annual Impact</h3>
+              <div class="annual-cost">
+                ${{ result()!.annualCost | number : "1.0-0" }}
+              </div>
+              <p class="annual-description">per year for this meeting</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- SEO Content Section -->
+<section class="content-section">
+  <div class="content-inner">
+    <h2 class="content-heading">Why Calculate Meeting Costs?</h2>
+    <div class="content-columns">
+      <div class="content-column glass-card-dark">
+        <h3>Improve Meeting Efficiency</h3>
+        <p>
+          Understanding the cost helps teams make informed decisions about
+          meeting length, frequency, and attendee lists. When you can quantify
+          the investment, you're more likely to run focused, productive
+          meetings.
+        </p>
+      </div>
+      <div class="content-column glass-card-dark">
+        <h3>Optimize Agile Ceremonies</h3>
+        <p>
+          Sprint planning, daily stand-ups, and retrospectives are
+          valuable—but keeping them efficient saves time and money. Use this
+          calculator to evaluate your agile ceremonies and find opportunities
+          for improvement.
+        </p>
+      </div>
+      <div class="content-column glass-card-dark">
+        <h3>Better Time Management</h3>
+        <p>
+          Visualizing costs encourages async communication when appropriate and
+          focused, productive meetings when necessary. Not every discussion
+          needs a meeting—sometimes Slack or email works just as well.
+        </p>
+      </div>
+    </div>
+    <p class="cta-text">
+      Running estimation meetings?
+      <a routerLink="/create" class="cta-link">Try Planning Poker</a> to make
+      sprint planning faster and more engaging for your team.
+    </p>
+  </div>
+</section>
+
+<app-carbon-ad placement="landing" />

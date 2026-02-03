@@ -108,8 +108,10 @@
 .logos {
   display: flex;
   margin-bottom: 1.5rem;
-  gap: 1rem;
+  gap: 0;
   position: relative;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo {
@@ -120,24 +122,36 @@
   
   &.main-logo {
     view-transition-name: pp-logo;
+    position: relative;
+    z-index: 1;
   }
 
   &.organization-logo {
-    background: white;
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
     object-fit: contain;
     color: black;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid rgba(52, 92, 168, 0.15);
+    position: relative;
+    z-index: 2;
 
     &.text-only {
-      padding: 4px;
+      padding: 8px;
       p {
         font-size: 0.7rem;
+        font-weight: 600;
         word-break: break-all;
         overflow-wrap: break-word;
         margin: 0;
         text-align: center;
+        line-height: 1.2;
       }
     }
   }
@@ -153,7 +167,7 @@
   color: var(--text-on-main);
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  margin-left: -20px;
 }
 
 // Welcome Text
@@ -168,6 +182,13 @@
     max-width: 360px;
     margin: 0;
     font-family: 'Inter', sans-serif;
+  }
+
+  .subtitle {
+    color: var(--secondary-text-on-main);
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 0;
   }
 
   p {
@@ -185,7 +206,6 @@
 
 // Main Action Card - Glass effect
 .action-card {
-  padding: 1.5rem;
   width: 100%;
   max-width: 380px;
   margin-bottom: 1rem;
@@ -202,14 +222,19 @@
   .mat-mdc-card-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     text-align: center;
-    padding: 0 !important;
+    padding: 1.5rem !important;
+    
+    &.loading-state {
+      align-items: center;
+    }
   }
 
   form {
     width: 100%;
+    
     .mat-mdc-form-field {
       width: 100%;
     }
@@ -220,6 +245,7 @@
     height: 48px;
     font-size: 1rem;
     border-radius: var(--radius-md);
+    margin: 0;
   }
 
   @media screen and (max-width: 600px) {
@@ -228,7 +254,10 @@
 
   @include extraSmallScreen {
     width: 95%;
-    padding: 1rem;
+    
+    .mat-mdc-card-content {
+      padding: 1rem !important;
+    }
   }
 }
 
@@ -263,14 +292,26 @@
   }
 }
 
+// Value Proposition Section (before form)
+.value-proposition {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 // Footer Section - Fixed height to prevent layout shift
 .footer-section {
-  min-height: 60px;
+  min-height: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
   max-width: 450px;
+  margin-top: 1rem;
 }
 
 // Feature Pills - Compact inline display
@@ -306,49 +347,37 @@
   }
 }
 
-// Recent Sessions Inline
-.recent-sessions-inline {
+// Recent Sessions List (Stacked Layout)
+.recent-sessions-list {
+  width: 100%;
+  max-width: 420px;
+  padding: 0 1rem;
+}
+
+.recent-sessions-header {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
 }
 
 .sessions-label {
   font-size: 0.8rem;
   color: var(--secondary-text-on-main);
-  margin-right: 0.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.session-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.7rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  font-size: 0.75rem;
-  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
-  color: var(--text-on-main);
-  text-decoration: none;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-}
-
-.view-all-chip {
+.view-all-link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.35rem 0.7rem;
   font-size: 0.75rem;
-  color: #7dd3fc; // Light blue
+  color: #7dd3fc;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   
   mat-icon {
     font-size: 12px;
@@ -358,7 +387,60 @@
   
   &:hover {
     color: #a5e3fc;
+    transform: translateX(2px);
   }
+}
+
+.sessions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.session-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+  }
+}
+
+.session-room-id {
+  font-size: 0.85rem;
+  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+  color: var(--text-on-main);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.session-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--secondary-text-on-main);
+}
+
+.session-rounds {
+  color: var(--secondary-text-on-main);
+}
+
+.session-divider {
+  color: var(--secondary-text-on-main);
+  opacity: 0.5;
+}
+
+.session-date {
+  color: var(--secondary-text-on-main);
 }
 
 
@@ -397,6 +479,105 @@
 .card-subheader {
   color: var(--mat-card-subtitle-text-color);
   margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+// Invited Room Info
+.invited-room-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(52, 92, 168, 0.12);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(52, 92, 168, 0.3);
+  
+  .room-icon {
+    color: #0369a1 !important;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+  
+  .card-subheader {
+    color: rgba(0, 0, 0, 0.87) !important;
+    
+    strong {
+      color: rgba(0, 0, 0, 0.95) !important;
+    }
+  }
+  
+  .room-hint {
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6) !important;
+    margin: 0;
+  }
+  
+  // Dark mode overrides
+  :host-context(.dark-theme) & {
+    background: rgba(52, 92, 168, 0.1);
+    border: 1px solid rgba(52, 92, 168, 0.2);
+    
+    .room-icon {
+      color: #7dd3fc !important;
+    }
+    
+    .card-subheader {
+      color: rgba(255, 255, 255, 0.95) !important;
+      
+      strong {
+        color: rgba(255, 255, 255, 1) !important;
+      }
+    }
+    
+    .room-hint {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+  }
+}
+
+// Join Mode Info
+.join-mode-info {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(52, 92, 168, 0.1);
+  border: 1px solid rgba(52, 92, 168, 0.2);
+  border-radius: var(--radius-md);
+  text-align: left;
+  
+  small {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.7) !important;
+    line-height: 1.4;
+    
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #0369a1 !important;
+    }
+  }
+  
+  // Dark mode overrides
+  :host-context(.dark-theme) & {
+    background: rgba(52, 92, 168, 0.08);
+    border: none;
+    
+    small {
+      color: rgba(255, 255, 255, 0.75) !important;
+      
+      mat-icon {
+        color: #7dd3fc !important;
+      }
+    }
+  }
 }
 
 // Animations

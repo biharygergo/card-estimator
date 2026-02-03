@@ -35,7 +35,6 @@
             <img src="/assets/logo.webp" class="logo main-logo" />
             @if (organization | async; as org) {
               <div class="organization-logo-container">
-                <mat-icon @delayedFadeAnimation>add</mat-icon>
                 @if (org.logoUrl) {
                   <img
                     [src]="org.logoUrl"
@@ -57,13 +56,28 @@
           }
         </div>
 
+        <!-- Value Proposition Section (before form) -->
+        @if (config.runningIn === 'web' && (vm | async); as viewModel) {
+          @if (!viewModel.user) {
+            <div class="value-proposition" @delayedFadeAnimation>
+              <!-- Feature Pills for Unauthenticated Users -->
+              <div class="feature-pills">
+                @for (feature of features; track feature.title) {
+                  <div class="feature-pill">
+                    <mat-icon>{{ feature.icon }}</mat-icon>
+                    <span>{{ feature.title }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
+
         <!-- Main Action Card -->
         @if (pageMode | async; as pageMode) {
           <mat-card
             appearance="outlined"
-            class="action-card main-card"
-            resizeMonitor
-            [verticalSpacing]="36">
+            class="action-card main-card">
             <div class="transitioning-container" @delayedFadeAnimation>
               @if (pageMode === PageMode.CREATE) {
                 <ng-container *ngTemplateOutlet="create"></ng-container>
@@ -77,35 +91,33 @@
 
         <ng-container *ngTemplateOutlet="links"></ng-container>
 
-        <!-- Feature Pills or Recent Sessions (fixed height container to prevent layout shift) -->
+        <!-- Recent Sessions for Authenticated Users (after form) -->
         @if (config.runningIn === 'web') {
           <div class="footer-section">
             @if (vm | async; as viewModel) {
-              @if (!viewModel.user) {
-                <!-- Feature Pills for Unauthenticated Users -->
-                <div class="feature-pills" @delayedFadeAnimation>
-                  @for (feature of features; track feature.title) {
-                    <div class="feature-pill">
-                      <mat-icon>{{ feature.icon }}</mat-icon>
-                      <span>{{ feature.title }}</span>
-                    </div>
-                  }
-                </div>
-              } @else if (!viewModel.user.isAnonymous) {
-                <!-- Recent Sessions for Authenticated Users -->
+              @if (viewModel.user && !viewModel.user.isAnonymous) {
                 @if (recentSessions$ | async; as sessions) {
                   @if (sessions.length > 0) {
-                    <div class="recent-sessions-inline" @delayedFadeAnimation>
-                      <span class="sessions-label">Recent:</span>
-                      @for (session of sessions; track session.roomId) {
-                        <a [routerLink]="['/room', session.roomId]" class="session-chip" matTooltip="{{ session.roundCount }} rounds · {{ session.createdAt | date:'MMM d' }}">
-                          {{ session.roomId }}
+                    <div class="recent-sessions-list" @delayedFadeAnimation>
+                      <div class="recent-sessions-header">
+                        <span class="sessions-label">Recent sessions</span>
+                        <a routerLink="/history" class="view-all-link">
+                          View all
+                          <mat-icon>arrow_forward</mat-icon>
                         </a>
-                      }
-                      <a routerLink="/history" class="view-all-chip">
-                        View all
-                        <mat-icon>arrow_forward</mat-icon>
-                      </a>
+                      </div>
+                      <div class="sessions-grid">
+                        @for (session of sessions; track session.roomId) {
+                          <a [routerLink]="['/room', session.roomId]" class="session-item">
+                            <div class="session-room-id">{{ session.roomId }}</div>
+                            <div class="session-meta">
+                              <span class="session-rounds">{{ session.roundCount }} {{ session.roundCount === 1 ? 'round' : 'rounds' }}</span>
+                              <span class="session-divider">·</span>
+                              <span class="session-date">{{ session.createdAt | date:'MMM d' }}</span>
+                            </div>
+                          </a>
+                        }
+                      </div>
                     </div>
                   }
                 }
@@ -129,7 +141,6 @@
           @if (!viewModel.user?.displayName) {
             <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
           }
-          <ng-container *ngTemplateOutlet="joinMode"></ng-container>
         </form>
         <button
           color="primary"
@@ -145,7 +156,7 @@
         }
       </mat-card-content>
     } @else {
-      <mat-card-content>
+      <mat-card-content class="loading-state">
         <mat-progress-spinner
           mode="indeterminate"
         [diameter]="30"></mat-progress-spinner>
@@ -153,7 +164,7 @@
       </mat-card-content>
     }
   } @else {
-    <mat-card-content>
+    <mat-card-content class="loading-state">
       <mat-progress-spinner
         mode="indeterminate"
       [diameter]="30"></mat-progress-spinner>
@@ -174,7 +185,6 @@
           @if (!viewModel.roomId) {
             <ng-container *ngTemplateOutlet="roomIdTemplate"></ng-container>
           }
-          <ng-container *ngTemplateOutlet="joinMode"></ng-container>
         </form>
         <button
           mat-flat-button
@@ -192,14 +202,14 @@
         }
       </mat-card-content>
     } @else {
-      <mat-card-content>
+      <mat-card-content class="loading-state">
         <mat-progress-spinner
           mode="indeterminate"
         [diameter]="30"></mat-progress-spinner>
       </mat-card-content>
     }
   } @else {
-    <mat-card-content>
+    <mat-card-content class="loading-state">
       <mat-progress-spinner
         mode="indeterminate"
       [diameter]="30"></mat-progress-spinner>
@@ -250,18 +260,30 @@
           <h1 id="welcome-back">
             {{
             (pageMode | async) === PageMode.JOIN
-            ? "Welcome! 👋 Set your name and the room you want to join and you'll be planning in no time."
-            : 'Welcome! 👋 Set your name, create a new room and invite your team to start planning.'
+            ? "Join your team's planning session"
+            : 'Start estimating in seconds'
             }}
           </h1>
+          <p class="subtitle">
+            {{
+            (pageMode | async) === PageMode.JOIN
+            ? "Enter your name and you'll be planning in no time."
+            : 'No signup required. Free forever.'
+            }}
+          </p>
         </div>
       }
     </ng-template>
     <ng-template #invitedToRoomText>
-      <h4 class="card-subheader">
-        You've been invited to join room: <br />
-        <strong>{{ (vm | async)?.roomId }}</strong>
-      </h4>
+      <div class="invited-room-info">
+        <mat-icon class="room-icon">meeting_room</mat-icon>
+        <div>
+          <h4 class="card-subheader">
+            Joining room: <strong>{{ (vm | async)?.roomId }}</strong>
+          </h4>
+          <p class="room-hint">Just set your name and you're in</p>
+        </div>
+      </div>
     </ng-template>
     <ng-template #terms>
       <div class="terms">
@@ -301,23 +323,11 @@
         </mat-form-field>
       </ng-template>
       <ng-template #joinMode>
-        <mat-form-field appearance="outline">
-          <mat-label>Join as an</mat-label>
-          <mat-select [formControl]="joinAs">
-            <mat-option [value]="MemberType.ESTIMATOR">Estimator</mat-option>
-            <mat-option [value]="MemberType.OBSERVER">Observer</mat-option>
-          </mat-select>
-        </mat-form-field>
-        @if (joinAs.value === MemberType.OBSERVER) {
-          <mat-card class="observer-info" appearance="outlined">
-            <mat-card-content>
-              <small>
-                Observers have access to all room features, but they can not vote.
-                Choose this if you are the facilitator, but not part of the estimation
-                process.
-              </small>
-            </mat-card-content>
-          </mat-card>
-        }
+        <div class="join-mode-info">
+          <small>
+            <mat-icon inline>info</mat-icon>
+            You can switch to Observer mode later if you're facilitating but not estimating.
+          </small>
+        </div>
       </ng-template>
       <app-carbon-ad placement="landing" />

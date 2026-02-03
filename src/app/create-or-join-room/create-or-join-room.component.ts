@@ -73,7 +73,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ResizeMonitorDirective } from '../shared/directives/resize-monitor.directive';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -126,11 +125,11 @@ const GREETINGS: { [hour: number]: string } = {
 };
 
 const LOADING_MESSAGES = [
-  'Waking up the servers... 😴',
-  'Checking your credits... 🪙',
-  'Generating a great room name... 💭',
-  'Packing it all up... 📦',
-  'Redirecting to your room... 🔜',
+  'Creating your room...',
+  'Setting up your workspace...',
+  'Almost ready...',
+  'Finalizing...',
+  'Taking you to your room...',
 ];
 
 @Component({
@@ -147,7 +146,6 @@ const LOADING_MESSAGES = [
     MatSelectModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    ResizeMonitorDirective,
     MatTooltipModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -357,6 +355,22 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     }
 
     this.cookieService.tryShowCookieBanner();
+
+    // Auto-join if user has a name and roomId in URL
+    combineLatest([this.user, this.roomIdFromParams, this.pageMode])
+      .pipe(
+        take(1),
+        filter(([user, roomId, mode]) => 
+          !!roomId && 
+          mode === PageMode.JOIN && 
+          !!user?.displayName
+        ),
+        takeUntil(this.destroy)
+      )
+      .subscribe(([user, roomId]) => {
+        // Auto-join for users with existing names
+        this.onJoinRoomClicked.next();
+      });
 
     const sessionCookie = this.authService.getSessionCookie();
     if (

@@ -1,0 +1,58 @@
+<div class="dialog-content">
+  <h1 mat-dialog-title>Voting settings</h1>
+  <div mat-dialog-content>
+    <div class="tab-section">
+      <div class="setting-item">
+        <p>
+          <strong>Auto-reveal results</strong>
+          <br />
+          <small>Results are revealed automatically once all votes are cast.</small>
+        </p>
+        <mat-slide-toggle
+          [checked]="room.isAutoRevealEnabled"
+          [disabled]="!(permissionsService.canRevealResults() | async)"
+          (change)="toggleAutoReveal()"
+          class="auto-reveal-toggle" />
+      </div>
+      <div class="setting-item">
+        <p>
+          <strong>Async voting</strong>
+          <br />
+          <small>Team members vote at their own pace. Prepare topics in advance, then disable async mode to discuss results together.</small>
+        </p>
+        <mat-slide-toggle
+          [checked]="room.isAsyncVotingEnabled"
+          (change)="toggleAsyncVoting()"
+          class="async-vote-toggle" />
+      </div>
+      <div class="setting-item">
+        <p>
+          <strong>Anonymous voting</strong>
+          <br />
+          <small>Hides members' names to reduce bias during discussions.</small>
+        </p>
+        <mat-slide-toggle
+          [checked]="room.isAnonymousVotingEnabled"
+          (change)="toggleAnonymousVoting()"
+          class="anonymous-vote-toggle" />
+      </div>
+      <div class="setting-item">
+        <p>
+          <strong>Change vote after reveal</strong>
+          <br />
+          <small>Allow members to change their vote after results are revealed.</small>
+        </p>
+        <mat-slide-toggle
+          [checked]="room.isChangeVoteAfterRevealEnabled"
+          (change)="toggleChangeVoteAfterReveal()"
+          class="change-vote-toggle" />
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </div>
+</div>

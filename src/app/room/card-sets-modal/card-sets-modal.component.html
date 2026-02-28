@@ -1,0 +1,78 @@
+<div class="dialog-content">
+  <h1 mat-dialog-title>Set cards</h1>
+  <div mat-dialog-content>
+    <div class="tab-section">
+      <div class="card-sets-list">
+        @for (cardSet of estimationCardSets; track cardSet.key) {
+          <button
+            class="card-set-item"
+            [ngClass]="{ selected: selectedKey === cardSet.key }"
+            (click)="setEstimationCardSet(cardSet)">
+            <mat-icon>{{ cardSet.icon }}</mat-icon>
+            <div class="card-set-info">
+              <span class="card-set-name">{{ cardSet.title }}</span>
+              <span class="card-set-values">{{ getCardSetDisplayValues(cardSet) }}</span>
+            </div>
+            @if (selectedKey === cardSet.key) {
+              <mat-icon class="check-icon">check</mat-icon>
+            }
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="tab-section">
+      <div class="toggle-row">
+        <p>
+          <strong>Include "Pass" (?) card</strong>
+          <br />
+          <small>Lets members skip a round without casting a numeric vote</small>
+        </p>
+        <mat-slide-toggle
+          [checked]="room.showPassOption"
+          (change)="toggleShowPassOption()" />
+      </div>
+    </div>
+
+    @if (savedCardSets().length > 0) {
+      <div class="tab-section">
+        <p class="section-title"><strong>Saved card sets</strong></p>
+        <div class="saved-sets-list">
+          @for (cardSet of savedCardSets(); track cardSet.id) {
+            <div
+              class="card-set-item saved"
+              [ngClass]="{ selected: selectedKey === cardSet.key }"
+              (click)="setEstimationCardSet(cardSet)">
+              <mat-icon>cloud_download</mat-icon>
+              <div class="card-set-info">
+                <span class="card-set-name">{{ cardSet.title }}</span>
+                <span class="card-set-values">{{ getCardSetDisplayValues(cardSet) }}</span>
+              </div>
+              <button
+                mat-icon-button
+                class="delete-button"
+                (click)="deleteSavedCardSet(cardSet.id); $event.stopPropagation()">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="custom-deck-button"
+      (click)="openAddCardDeckModal()">
+      <mat-icon>add</mat-icon>
+      Set a custom card deck
+    </button>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </div>
+</div>

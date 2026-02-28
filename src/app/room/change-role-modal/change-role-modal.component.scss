@@ -1,0 +1,54 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.mat-mdc-dialog-actions {
+  margin-top: auto;
+  justify-content: flex-end;
+}
+
+.role-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 8px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text-on-white);
+  transition: background 0.15s ease;
+
+  p {
+    flex: 1;
+    margin: 0;
+  }
+
+  &:hover {
+    background: var(--on-light-background-color);
+  }
+
+  &.selected {
+    background: var(--on-light-background-color);
+
+    > .mat-icon:first-child {
+      color: var(--accent-color);
+    }
+  }
+
+  .check-icon {
+    color: var(--accent-color);
+    margin-left: auto;
+  }
+}

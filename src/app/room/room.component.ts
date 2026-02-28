@@ -779,6 +779,10 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.isControlPaneExpansionSetByUser = true;
   }
 
+  openCardSetsFromDeck = () => {
+    this.roomControllerPanel?.openCardSetsModal();
+  };
+
   private saveJoinedRoom(): Observable<any> {
     return this.authService.updateUserPreference({
       lastJoinedRoom: {

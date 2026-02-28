@@ -114,7 +114,7 @@
         [currentRound]="currentRound()"
         [estimationValues]="estimationValues()"
         [currentEstimate]="currentEstimate()"
-        [cardOptionsMenu]="roomControllerPanel?.cardSetsMenu"></app-card-deck>
+        [onCardOptionsClick]="roomControllerPanel ? openCardSetsFromDeck : undefined"></app-card-deck>
       @if ((isSmallScreen$ | async)?.matches === false) {
         <ng-container *ngTemplateOutlet="controlPanel" />
       }

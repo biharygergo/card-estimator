@@ -344,10 +344,9 @@
   <mat-divider />
   <button
     mat-menu-item
-    [matMenuTriggerFor]="menu"
     aria-label="Estimator settings"
     class="estimator-settings-button"
-    (click)="clickedUnitsButton()"
+    (click)="openCardSetsModal()"
     id="card-sets-button"
     [disabled]="!(permissionsService.canChangeCardSet() | async)">
     <mat-icon>style</mat-icon>
@@ -355,16 +354,16 @@
   </button>
   <button
     mat-menu-item
-    [matMenuTriggerFor]="changeRoleMenu"
     aria-label="Switch current role"
+    (click)="openChangeRoleModal()"
     id="switch-role-button">
     <mat-icon>switch_account</mat-icon>
     Change role
   </button>
   <button
     mat-menu-item
-    [matMenuTriggerFor]="voteSettingsMenu"
     aria-label="Vote settings"
+    (click)="openVotingSettingsModal()"
     id="vote-settings-button">
     <mat-icon>ballot</mat-icon>
     Voting settings
@@ -389,140 +388,5 @@
     id="leave-room-button">
     <mat-icon>exit_to_app</mat-icon>
     Leave room
-  </button>
-</mat-menu>
-<mat-menu #voteSettingsMenu="matMenu">
-  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
-    <mat-checkbox
-      (click)="toggleAutoReveal(); $event.stopPropagation()"
-      [disabled]="!(permissionsService.canRevealResults() | async)"
-      [checked]="room()?.isAutoRevealEnabled"
-      class="menu-option-checkbox auto-reveal-checkbox"
-      ><span class="pass-option-label"
-        >Auto-reveal results
-        <mat-icon
-          matTooltip="When enabled, results are revealed once all votes are cast."
-          class="menu-item-icon"
-          >help</mat-icon
-        ></span
-      ></mat-checkbox
-    >
-  </div>
-  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
-    <mat-checkbox
-      (click)="toggleAsyncVoting(); $event.stopPropagation()"
-      [checked]="room()?.isAsyncVotingEnabled"
-      class="menu-option-checkbox async-vote-checkbox"
-      ><span class="pass-option-label"
-        >Async voting
-        <mat-icon
-          matTooltip="Async voting lets team members vote on their own pace. Make sure you prepare topics in advance before enabling async voting. Once all votes are cast disable async mode to discuss results together."
-          class="menu-item-icon"
-          >help</mat-icon
-        ></span
-      ></mat-checkbox
-    >
-  </div>
-  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
-    <mat-checkbox
-      (click)="toggleAnonymousVoting(); $event.stopPropagation()"
-      [checked]="room()?.isAnonymousVotingEnabled"
-      class="menu-option-checkbox anonymous-vote-checkbox"
-      ><span class="pass-option-label"
-        >Anonymous voting
-        <mat-icon
-          matTooltip="Anonymous voting hides members' names to reduce bias during discussions."
-          class="menu-item-icon"
-          >help</mat-icon
-        ></span
-      ></mat-checkbox
-    >
-  </div>
-  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
-    <mat-checkbox
-      (click)="toggleChangeVoteAfterReveal(); $event.stopPropagation()"
-      [checked]="room()?.isChangeVoteAfterRevealEnabled"
-      class="menu-option-checkbox change-vote-checkbox"
-      ><span class="pass-option-label"
-        >Change vote after reveal
-        <mat-icon
-          matTooltip="Allow members to change their vote after the results are revealed."
-          class="menu-item-icon"
-          >help</mat-icon
-        ></span
-      ></mat-checkbox
-    >
-  </div>
-</mat-menu>
-<mat-menu #menu="matMenu" #cardSetsMenu="matMenu">
-  @for (cardSet of estimationCardSets(); track $index) {
-    <button
-      mat-menu-item
-      (click)="setEstimationCardSet(cardSet)"
-      [ngClass]="
-        selectedEstimationCardSetValue().key === cardSet.key && 'selected'
-      ">
-      <mat-icon>{{ cardSet.icon }}</mat-icon>
-      <span class="card-set-title"
-        >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})</span
-      >
-    </button>
-  }
-  <mat-divider></mat-divider>
-  <div mat-menu-item role="menuitemcheckbox" class="pass-option">
-    <mat-checkbox
-      (click)="toggleShowPassOption(); $event.stopPropagation()"
-      [checked]="room()?.showPassOption"
-      class="menu-option-checkbox pass-option-checkbox"
-      ><span class="pass-option-label"
-        >Include "Pass" (?) card</span
-      ></mat-checkbox
-    >
-  </div>
-  <mat-divider></mat-divider>
-  <button
-    mat-menu-item
-    [matMenuTriggerFor]="savedCardsMenu"
-    aria-label="Saved card sets"
-    id="card-saved-sets-button"
-    [disabled]="savedCardSets().length === 0">
-    <mat-icon>cloud</mat-icon>
-    Saved card sets ({{ savedCardSets().length }})
-  </button>
-  <mat-menu #savedCardsMenu="matMenu">
-    @for (cardSet of savedCardSets(); track $index) {
-      <button mat-menu-item (click)="setEstimationCardSet(cardSet)">
-        <mat-icon>cloud_download</mat-icon>
-        <span class="card-set-title"
-          >{{ cardSet.title }} ({{ getCardSetDisplayValues(cardSet) }})
-          <button
-            mat-icon-button
-            class="menu-item-action-button delete-card-set-button"
-            (click)="deleteSavedCardSet(cardSet.id); $event.stopPropagation()">
-            <mat-icon class="menu-item-icon">delete</mat-icon>
-          </button>
-        </span>
-      </button>
-    }
-  </mat-menu>
-  <button mat-menu-item (click)="openAddCardDeckModal()">
-    <mat-icon>add</mat-icon>
-    <span>Set a custom card deck</span>
-  </button>
-</mat-menu>
-<mat-menu #changeRoleMenu="matMenu">
-  <button
-    mat-menu-item
-    [class.selected]="(activeMember$() | async)?.type === MemberType.ESTIMATOR"
-    (click)="updateMemberType(MemberType.ESTIMATOR)">
-    <mat-icon>how_to_vote</mat-icon>
-    Estimator
-  </button>
-  <button
-    mat-menu-item
-    [class.selected]="(activeMember$() | async)?.type === MemberType.OBSERVER"
-    (click)="updateMemberType(MemberType.OBSERVER)">
-    <mat-icon>visibility</mat-icon>
-    Observer
   </button>
 </mat-menu>

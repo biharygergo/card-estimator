@@ -1,0 +1,43 @@
+<div class="dialog-content">
+  <h1 mat-dialog-title>Change role</h1>
+  <div mat-dialog-content>
+    <div class="tab-section">
+      <div class="role-list">
+        <button
+          class="role-item"
+          [ngClass]="{ selected: currentMemberType === MemberType.ESTIMATOR }"
+          (click)="selectRole(MemberType.ESTIMATOR)">
+          <mat-icon>how_to_vote</mat-icon>
+          <p>
+            <strong>Estimator</strong>
+            <br />
+            <small>Vote on topics and participate in estimation</small>
+          </p>
+          @if (currentMemberType === MemberType.ESTIMATOR) {
+            <mat-icon class="check-icon">check</mat-icon>
+          }
+        </button>
+        <button
+          class="role-item"
+          [ngClass]="{ selected: currentMemberType === MemberType.OBSERVER }"
+          (click)="selectRole(MemberType.OBSERVER)">
+          <mat-icon>visibility</mat-icon>
+          <p>
+            <strong>Observer</strong>
+            <br />
+            <small>Watch the session without voting</small>
+          </p>
+          @if (currentMemberType === MemberType.OBSERVER) {
+            <mat-icon class="check-icon">check</mat-icon>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+  </div>
+</div>

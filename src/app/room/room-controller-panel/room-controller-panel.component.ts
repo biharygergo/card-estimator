@@ -4,25 +4,21 @@ import {
   EventEmitter,
   Inject,
   input,
-  Input,
   OnDestroy,
   OnInit,
   Output,
   signal,
   ViewChild,
-  effect,
 } from '@angular/core';
-import { Observable, Subject, map, takeUntil, tap, filter, distinctUntilChanged } from 'rxjs';
+import { Observable, Subject, map, takeUntil, tap, filter, distinctUntilChanged, first } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { EstimatorService } from 'src/app/services/estimator.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import {
   CardSetValue,
-  CustomCardSet,
   Member,
   MemberStatus,
-  MemberType,
   Room,
   Round,
   SavedCardSetValue,
@@ -31,19 +27,16 @@ import {
 import {
   cooldownPipe,
   createCooldownState,
-  getSortedCardSetValues,
 } from 'src/app/utils';
 import { roomConfigurationModalCreator } from '../room-configuration-modal/room-configuration-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CardDeckService } from 'src/app/services/card-deck.service';
-import { AddCardDeckModalComponent } from '../add-card-deck-modal/add-card-deck-modal.component';
 import { collapseAnimation, delayedFadeAnimation, fadeAnimation } from 'src/app/shared/animations';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { RoomDataService } from '../room-data.service';
 import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
-import { NgClass, AsyncPipe } from '@angular/common';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { AsyncPipe } from '@angular/common';
 import { MatDivider } from '@angular/material/divider';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { CountdownTimerComponent } from '../countdown-timer/countdown-timer.component';
@@ -53,8 +46,9 @@ import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ToastService } from 'src/app/services/toast.service';
-
-const ADD_CARD_DECK_MODAL = 'add-card-deck';
+import { votingSettingsModalCreator } from '../voting-settings-modal/voting-settings-modal.component';
+import { cardSetsModalCreator } from '../card-sets-modal/card-sets-modal.component';
+import { changeRoleModalCreator } from '../change-role-modal/change-role-modal.component';
 
 @Component({
   selector: 'planning-poker-room-controller-panel',
@@ -74,9 +68,7 @@ const ADD_CARD_DECK_MODAL = 'add-card-deck';
     MatMenu,
     MatMenuItem,
     MatDivider,
-    MatCheckbox,
     MatExpansionModule,
-    NgClass,
     AsyncPipe,
   ],
 })
@@ -156,13 +148,8 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   readonly newRoundClicked = new Subject<void>();
   readonly newRoundButtonCooldownState$ = createCooldownState();
 
-  readonly MemberType = MemberType;
-
   @ViewChild('menuTrigger')
   private readonly settingsMenuTrigger: MatMenuTrigger;
-  
-  @ViewChild('cardSetsMenu')
-  cardSetsMenu: MatMenu;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -255,15 +242,44 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  clickedUnitsButton() {
-    this.analytics.logClickedUnits();
-  }
-
   openRoomConfigurationModal() {
     this.analytics.logClickedOpenRoomConfigurationModal();
     this.dialog.open(
       ...roomConfigurationModalCreator({ roomId: this.room().roomId })
     );
+  }
+
+  openVotingSettingsModal() {
+    this.dialog.open(
+      ...votingSettingsModalCreator({ room: this.room() })
+    );
+  }
+
+  openCardSetsModal() {
+    this.analytics.logClickedUnits();
+    this.dialog.open(
+      ...cardSetsModalCreator({
+        room: this.room(),
+        estimationCardSets: this.estimationCardSets(),
+        selectedEstimationCardSetValue: this.selectedEstimationCardSetValue(),
+        savedCardSets: this.savedCardSets(),
+      })
+    );
+  }
+
+  openChangeRoleModal() {
+    this.activeMember$()
+      .pipe(first())
+      .subscribe(member => {
+        if (member) {
+          this.dialog.open(
+            ...changeRoleModalCreator({
+              room: this.room(),
+              currentMemberType: member.type,
+            })
+          );
+        }
+      });
   }
 
   async leaveRoom() {
@@ -288,51 +304,6 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  setEstimationCardSet(cardSet: CardSetValue) {
-    this.analytics.logSelectedCardSet(cardSet.key);
-    if (cardSet.key === CustomCardSet) {
-      this.estimatorService.setRoomCustomCardSetValue(
-        this.room().roomId,
-        cardSet
-      );
-    } else {
-      this.estimatorService.setRoomCardSet(this.room().roomId, cardSet.key);
-    }
-  }
-
-  getCardSetDisplayValues(cardSet: CardSetValue | undefined) {
-    if (!cardSet) {
-      return '';
-    }
-    return getSortedCardSetValues(cardSet)
-      .map(item => item.value)
-      .join(', ');
-  }
-
-  toggleShowPassOption() {
-    this.analytics.logTogglePassOption(!this.room().showPassOption);
-    this.estimatorService.toggleShowPassOption(
-      this.room().roomId,
-      !this.room().showPassOption
-    );
-  }
-
-  toggleAsyncVoting() {
-    this.analytics.logToggleAsyncVote(!this.room().isAsyncVotingEnabled);
-    this.estimatorService.toggleAsyncVoting(
-      this.room().roomId,
-      !this.room().isAsyncVotingEnabled
-    );
-  }
-
-  toggleAnonymousVoting() {
-    this.analytics.logToggleAnonymousVote(!this.room().isAsyncVotingEnabled);
-    this.estimatorService.toggleAnonymousVoting(
-      this.room().roomId,
-      !this.room().isAnonymousVotingEnabled
-    );
-  }
-
   async toggleAutoReveal() {
     this.analytics.logToggleAutoReveal(!this.room().isAutoRevealEnabled);
     this.estimatorService.toggleAutoReveal(
@@ -343,63 +314,6 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
       'Auto reveal is now ' +
         (!this.room().isAutoRevealEnabled ? 'enabled' : 'disabled') +
         '.'
-    );
-  }
-
-  toggleChangeVoteAfterReveal() {
-    this.analytics.logToggleChangeVoteAfterReveal(
-      !this.room().isChangeVoteAfterRevealEnabled
-    );
-    this.estimatorService.toggleChangeVoteAfterReveal(
-      this.room().roomId,
-      !this.room().isChangeVoteAfterRevealEnabled
-    );
-  }
-
-  openAddCardDeckModal() {
-    if (this.dialog.getDialogById(ADD_CARD_DECK_MODAL) === undefined) {
-      this.analytics.logClickedSetCustomCards();
-      const dialogRef = this.dialog.open(AddCardDeckModalComponent, {
-        id: ADD_CARD_DECK_MODAL,
-        width: '90%',
-        maxWidth: '600px',
-        disableClose: false,
-        panelClass: 'custom-dialog',
-        data: {
-          roomId: this.room().roomId,
-        },
-      });
-
-      dialogRef.afterClosed().subscribe(() => {});
-    }
-  }
-
-  async deleteSavedCardSet(cardSetId: string) {
-    if (
-      await this.confirmService.openConfirmationDialog({
-        title: 'Are you sure you want to delete this card set?',
-        content:
-          'The set will be removed from your saved sets but it will be kept in rooms where it is selected.',
-        positiveText: 'Delete',
-        negativeText: 'Cancel',
-      })
-    ) {
-      this.cardDeckService.deleteCardDeck(cardSetId).subscribe(() => {
-        this.toastService.showMessage('Card set deleted');
-      });
-    }
-  }
-
-  async updateMemberType(newType: MemberType) {
-    await this.estimatorService.updateMemberType(
-      this.room().roomId,
-      this.estimatorService.activeMember,
-      newType
-    );
-
-    this.permissionsService.initializePermissions(
-      this.room(),
-      this.estimatorService.activeMember.id
     );
   }
 

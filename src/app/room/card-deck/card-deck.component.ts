@@ -25,7 +25,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
-import { MatMenuTrigger } from '@angular/material/menu';
 import { RoomDataService } from '../room-data.service';
 import { ToastService } from 'src/app/services/toast.service';
 
@@ -42,7 +41,6 @@ import { ToastService } from 'src/app/services/toast.service';
     MatButtonToggle,
     MatIcon,
     AsyncPipe,
-    MatMenuTrigger,
   ],
 })
 export class CardDeckComponent implements OnInit, OnDestroy {
@@ -51,7 +49,7 @@ export class CardDeckComponent implements OnInit, OnDestroy {
   estimationValues = input.required<{ key: string; value: string }[]>();
   currentEstimate = input.required<number>();
 
-  cardOptionsMenu = input<any>();
+  onCardOptionsClick = input<() => void>();
   
   @ViewChildren('cardContainer')
   cardContainers: QueryList<ElementRef<HTMLDivElement>>;

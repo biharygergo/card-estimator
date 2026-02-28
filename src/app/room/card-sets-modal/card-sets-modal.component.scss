@@ -1,0 +1,112 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.mat-mdc-dialog-actions {
+  margin-top: auto;
+  justify-content: flex-end;
+}
+
+.card-sets-list,
+.saved-sets-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-set-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text-on-white);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--on-light-background-color);
+  }
+
+  &.selected {
+    background: var(--on-light-background-color);
+
+    .mat-icon:first-child {
+      color: var(--accent-color);
+    }
+  }
+
+  .check-icon {
+    color: var(--accent-color);
+    margin-left: auto;
+  }
+}
+
+.card-set-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.card-set-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.card-set-values {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toggle-row {
+  display: flex;
+  gap: 2rem;
+
+  p {
+    flex: 1;
+    margin: 0;
+    color: var(--text-on-white);
+  }
+
+  mat-slide-toggle {
+    flex-shrink: 0;
+    align-self: center;
+  }
+}
+
+.section-title {
+  margin: 0 0 0.5rem;
+  padding: 0 8px;
+  color: var(--text-on-white);
+}
+
+.delete-button {
+  --mat-icon-button-state-layer-size: 32px !important;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.custom-deck-button {
+  width: 100%;
+}

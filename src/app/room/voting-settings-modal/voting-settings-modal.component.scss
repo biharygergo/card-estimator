@@ -1,0 +1,33 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.mat-mdc-dialog-actions {
+  margin-top: auto;
+  justify-content: flex-end;
+}
+
+.setting-item {
+  display: flex;
+  gap: 2rem;
+
+  p {
+    flex: 1;
+    margin: 0;
+    color: var(--text-on-white);
+  }
+
+  mat-slide-toggle {
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  & + .setting-item {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--on-light-background-color);
+  }
+}

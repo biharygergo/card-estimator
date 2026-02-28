@@ -78,12 +78,12 @@
           matTooltipPosition="right">
           <mat-icon>style</mat-icon>
         </mat-button-toggle>
-        @if (cardOptionsMenu()) {
+        @if (onCardOptionsClick(); as handler) {
           <button
             mat-icon-button
             class="options-button"
             id="card-options-toggle"
-            [matMenuTriggerFor]="cardOptionsMenu()"
+            (click)="handler()"
             matTooltip="Card options"
             matTooltipPosition="right">
             <mat-icon>tune</mat-icon>

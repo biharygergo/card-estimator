@@ -52,6 +52,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ResizeMonitorDirective } from '../directives/resize-monitor.directive';
+import * as Sentry from '@sentry/angular';
 
 export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 
@@ -340,6 +341,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     this.isBusy.next(false);
     console.error(error);
     this.errorMessage$.next(error.message);
+    Sentry.captureException(error);
     return of(false);
   }
 

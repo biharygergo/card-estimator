@@ -159,6 +159,29 @@ export class AuthService {
     }&platform=${this.config.runningIn}&provider=${provider}`;
   }
 
+  getDeviceAuthUrl(authIntent: AuthIntent, provider: string): string {
+    return `${window.origin}/api/startDeviceAuth?intent=${authIntent}&provider=${provider}`;
+  }
+
+  async redeemDeviceCode(
+    code: string
+  ): Promise<{ idToken: string; provider: string; authIntent: string }> {
+    const response = await fetch(`${window.origin}/api/redeemDeviceCode`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.error || 'Failed to redeem code. Please try again.'
+      );
+    }
+
+    return response.json();
+  }
+
   async signInWithMicrosoft(idToken?: string) {
     validateIdToken(idToken);
 

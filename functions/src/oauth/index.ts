@@ -19,12 +19,35 @@ import {
 import {getSessionVariable} from "../zoom/routes";
 import {MicrosoftOAuthHandler} from "./microsoft";
 import {getZoomAccessCodeRedirectUrl, ZoomOAuthHandler} from "./zoom";
+import {
+  buildDeviceCodeState,
+  handleDeviceCodeCallback,
+} from "./device-code";
 
 const HANDLERS: { [provider in OAuthProvider]: OAuthHandler } = {
   [OAuthProvider.GOOGLE]: new GoogleOAuthHandler(),
   [OAuthProvider.MICROSOFT]: new MicrosoftOAuthHandler(),
   [OAuthProvider.ZOOM]: new ZoomOAuthHandler(),
 };
+
+export async function startDeviceAuth(
+    req: Request,
+    res: Response
+) {
+  const provider = req.query.provider as OAuthProvider | undefined;
+
+  if (
+    !provider ||
+    ![OAuthProvider.GOOGLE, OAuthProvider.MICROSOFT].includes(provider)
+  ) {
+    res.status(400).send("Invalid or missing provider");
+    return;
+  }
+
+  const oAuthState = buildDeviceCodeState(req);
+  const redirectUrl = HANDLERS[provider].startOauthFlow(req, oAuthState);
+  res.redirect(redirectUrl);
+}
 
 export async function startOAuth(
     req: Request,
@@ -95,6 +118,13 @@ export async function onOAuthResult(
     }
   }
 
+  if ((state?.platform as string) === "device-code") {
+    await handleDeviceCodeCallback(req, res, idToken, provider, state!);
+    return;
+  }
+
+  // Legacy Zoom deeplink flow - replaced by device-code flow above.
+  // Kept temporarily for in-flight sessions during rollout.
   if (state?.platform === "zoom") {
     const sessionData = {
       idToken: idToken,
@@ -104,7 +134,6 @@ export async function onOAuthResult(
       provider,
     };
 
-    // Save idToken into temporary storage
     const savedAuthSession = await getFirestore()
         .collection(AUTH_SESSIONS)
         .add(sessionData);

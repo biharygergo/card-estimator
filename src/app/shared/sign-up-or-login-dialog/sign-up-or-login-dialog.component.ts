@@ -34,6 +34,9 @@ import {
   authProgressDialogCreator,
   AuthProgressState,
 } from '../auth-progress-dialog/auth-progress-dialog.component';
+import {
+  deviceCodeDialogCreator,
+} from '../device-code-dialog/device-code-dialog.component';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { TeamsService } from 'src/app/services/teams.service';
 import { ActivatedRoute } from '@angular/router';
@@ -346,23 +349,27 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   }
 
   private async linkAccountWithProviderInZoom(provider: string): Promise<void> {
-    this.dialog.open(
-      ...authProgressDialogCreator({
-        initialState: AuthProgressState.IN_PROGRESS,
-        startAccountSetupOnOpen: false,
-      })
-    );
     await this.zoomApiService.openUrl(
-      this.authService.getApiAuthUrl(
-        AuthIntent.LINK_ACCOUNT,
-        provider
-        // this.activatedRoute.snapshot.toString()
-      ),
+      this.authService.getDeviceAuthUrl(AuthIntent.LINK_ACCOUNT, provider),
       true
     );
 
-    // This promise never resolves, as the app will be reloaded on Auth success
-    return new Promise(() => {});
+    const dialogRef = this.dialog.open(
+      ...deviceCodeDialogCreator({
+        authIntent: AuthIntent.LINK_ACCOUNT,
+        provider,
+      })
+    );
+
+    return new Promise<void>((resolve, reject) => {
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          resolve();
+        } else {
+          reject(new Error('Account linking cancelled'));
+        }
+      });
+    });
   }
 
   private signInWithGoogle(): Observable<boolean> {
@@ -394,17 +401,28 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     return this.authService.signInWithGoogle();
   }
 
-  private signInWithProviderInZoom(provider: string) {
-    this.dialog.open(
-      ...authProgressDialogCreator({
-        initialState: AuthProgressState.IN_PROGRESS,
-        startAccountSetupOnOpen: false,
-      })
-    );
-    return this.zoomApiService.openUrl(
-      this.authService.getApiAuthUrl(AuthIntent.SIGN_IN, provider),
+  private async signInWithProviderInZoom(provider: string) {
+    await this.zoomApiService.openUrl(
+      this.authService.getDeviceAuthUrl(AuthIntent.SIGN_IN, provider),
       true
     );
+
+    const dialogRef = this.dialog.open(
+      ...deviceCodeDialogCreator({
+        authIntent: AuthIntent.SIGN_IN,
+        provider,
+      })
+    );
+
+    return new Promise<void>((resolve, reject) => {
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          resolve();
+        } else {
+          reject(new Error('Sign-in cancelled'));
+        }
+      });
+    });
   }
 
   ngOnDestroy(): void {

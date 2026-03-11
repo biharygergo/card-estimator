@@ -330,6 +330,16 @@ exports.onOAuthResult = onRequest({cors: true, region}, async (req, res) => {
   return cookieParser()(req, res, () => onOAuthResult(req, res));
 });
 
+exports.startDeviceAuth = onRequest({cors: true, region, invoker: "public"}, async (req, res) => {
+  const {startDeviceAuth} = await import("./oauth");
+  return startDeviceAuth(req, res);
+});
+
+exports.redeemDeviceCode = onRequest({cors: true, region, invoker: "public"}, async (req, res) => {
+  const {redeemDeviceCode} = await import("./oauth/device-code");
+  return redeemDeviceCode(req, res);
+});
+
 exports.slack = onRequest({cors: true, region}, async (req, res) => {
   const {slackMicroservice} = await import("./slack");
   return slackMicroservice(req, res);

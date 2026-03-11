@@ -52,7 +52,7 @@
     "eslint-plugin-import": "^2.26.0",
     "firebase-functions-test": "^3.4.1",
     "prettier": "^3.5.3",
-    "react-email": "^4.0.17",
+    "react-email": "^5.2.9",
     "typescript": "~5.2"
   },
   "private": true

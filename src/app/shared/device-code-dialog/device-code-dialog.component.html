@@ -1,0 +1,49 @@
+@if (state | async; as currentState) {
+  <div mat-dialog-content>
+    <div class="content-container">
+      @if (currentState === 'loading') {
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Verifying code and signing you in...</p>
+      }
+      @if (currentState === 'success') {
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <p>You are now signed in!</p>
+      }
+      @if (currentState === 'error') {
+        <mat-icon class="error-icon">error</mat-icon>
+        <p class="error-text">{{ errorMessage }}</p>
+        <button mat-flat-button color="primary" (click)="retry()">
+          Try again
+        </button>
+      }
+      @if (currentState === 'input') {
+        <mat-icon class="key-icon">vpn_key</mat-icon>
+        <h2>Enter sign-in code</h2>
+        <p class="subtitle">
+          Complete sign-in with Google or Microsoft in your browser, then enter
+          the 6-letter code shown on the page.
+        </p>
+        <mat-form-field appearance="outline" class="code-field">
+          <mat-label>Code</mat-label>
+          <input
+            matInput
+            [formControl]="codeControl"
+            maxlength="6"
+            autocomplete="off"
+            class="code-input"
+            (keydown.enter)="submitCode()" />
+          @if (codeControl.errors?.['minlength'] || codeControl.errors?.['maxlength']) {
+            <mat-error>Code must be exactly 6 characters.</mat-error>
+          }
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="!codeControl.valid"
+          (click)="submitCode()">
+          Verify code
+        </button>
+      }
+    </div>
+  </div>
+}

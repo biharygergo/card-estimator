@@ -46,10 +46,6 @@ import {
   slideInRightAnimation,
 } from '../shared/animations';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  authProgressDialogCreator,
-  AuthProgressState,
-} from '../shared/auth-progress-dialog/auth-progress-dialog.component';
 import { CommonModule } from '@angular/common';
 import { ZoomAppBannerComponent } from '../shared/zoom-app-banner/zoom-app-banner.component';
 import {
@@ -371,20 +367,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         // Auto-join for users with existing names
         this.onJoinRoomClicked.next();
       });
-
-    const sessionCookie = this.authService.getSessionCookie();
-    if (
-      this.config.runningIn === 'zoom' &&
-      sessionCookie &&
-      typeof sessionCookie !== 'string'
-    ) {
-      this.dialog.open(
-        ...authProgressDialogCreator({
-          initialState: AuthProgressState.IN_PROGRESS,
-          startAccountSetupOnOpen: true,
-        })
-      );
-    }
 
     if (this.config.runningIn === 'webex') {
       this.configService.setSessionCookie('runningInWebex', '1');

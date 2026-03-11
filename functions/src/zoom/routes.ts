@@ -7,7 +7,6 @@ import {
   setSessionVariable,
 } from "./zoomApi";
 import {getHost, isRunningInDevMode} from "../config";
-import {AUTH_SESSIONS} from "../shared/collections";
 import {getFirestore} from "firebase-admin/firestore";
 import {captureError} from "../shared/errors";
 import {Request, Response} from "express";
@@ -48,16 +47,6 @@ export const zoomHome = async (
           const doc = snapshot.docs[0];
           roomId = doc.data().roomId;
         }
-      }
-
-      if (appContext.act) {
-        const action = JSON.parse(appContext.act);
-        const sessionId = action.session;
-        const sessionData = await (
-          await getFirestore().collection(AUTH_SESSIONS).doc(sessionId).get()
-        ).data();
-        setSessionVariable(res, JSON.stringify(sessionData));
-        await getFirestore().collection(AUTH_SESSIONS).doc(sessionId).delete();
       }
 
       const path = roomId ? `/join?roomId=${roomId}&s=zoom` : "/create?s=zoom";

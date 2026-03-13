@@ -23,7 +23,9 @@ export const createTimer = (minutes: number) => {
 export const isRunningInZoom = () => {
   return (
     typeof window !== 'undefined' &&
-    window.navigator.userAgent.includes('ZoomWebKit')
+    (window.navigator.userAgent.includes('ZoomWebKit') ||
+      window.location.search.includes('s=zoom') ||
+      Cookies.get('runningInZoom'))
   );
 };
 

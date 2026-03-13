@@ -368,6 +368,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         this.onJoinRoomClicked.next();
       });
 
+    if (this.config.runningIn === 'zoom') {
+      this.configService.setSessionCookie('runningInZoom', '1');
+    }
+
     if (this.config.runningIn === 'webex') {
       this.configService.setSessionCookie('runningInWebex', '1');
     }

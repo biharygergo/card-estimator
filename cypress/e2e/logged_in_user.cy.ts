@@ -15,10 +15,10 @@ describe('Authentication', () => {
 
     cy.get('#sign-in-button').click();
 
-    // Account modal appears
-    cy.get('#email-input').click().type(testEmail);
-    cy.get('#password-input').click().type(testPassword);
-    cy.get('#create-account-button').click();
+    // Account modal appears on the Sign in tab
+    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail);
+    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword);
+    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
     cy.wait(1000);
   });
 

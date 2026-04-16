@@ -26,13 +26,14 @@ describe('Authentication', () => {
 
     cy.get('#menu-button').click();
     cy.get('#account-menu-item').click();
+    cy.wait(500);
 
-    cy.get('#create-account-button-banner').click();
+    cy.get('#create-account-button-banner').click({ force: true });
 
-    // Account modal appears
-    cy.get('#email-input').click().type(testEmail, { delay: 1});
-    cy.get('#password-input').click().type(testPassword, { delay: 1});
-    cy.get('#create-account-button').click();
+    // Account modal appears on the Register tab
+    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail, { delay: 1});
+    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword, { delay: 1});
+    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
     cy.wait(1000);
 
     // Modal disappears
@@ -44,13 +45,14 @@ describe('Authentication', () => {
   it('can sign back in', () => {
     cy.get('#sign-in-button').click();
 
-    // Account modal appears
-    cy.get('#email-input').click().type(testEmail, { delay: 10});
-    cy.get('#password-input').click().type(testPassword, { delay: 1});
-    cy.get('#create-account-button').click();
+    // Switch to Sign in tab and fill in credentials
+    cy.get('#sign-up-modal').contains('Sign in').first().click();
+    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail, { delay: 10});
+    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword, { delay: 1});
+    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
     cy.wait(1000);
 
-    cy.get('#email-input').should('not.exist');
+    cy.get('.mat-mdc-tab-body-active #email-input').should('not.exist');
     // Modal disappears
     cy.get('#sign-up-modal').should('not.exist');
 

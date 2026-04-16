@@ -15,7 +15,7 @@ describe('Landing page', () => {
   });
 
   it('can navigate to the /create page', () => {
-    cy.contains('Start Estimating').click();
+    cy.get('.start-planning-btn').first().click();
     cy.location('pathname').should('eq', '/create');
   });
 

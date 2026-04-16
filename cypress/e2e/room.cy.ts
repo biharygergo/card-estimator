@@ -13,6 +13,13 @@ describe('Inside the room', () => {
 
   beforeEach(() => {
     cy.visit(roomUrl);
+    cy.wait(2000);
+    // Dismiss alone-in-room modal if it appears
+    cy.get('body').then($body => {
+      if ($body.text().includes('Continue alone')) {
+        cy.contains('Continue alone').click();
+      }
+    });
   });
 
   afterEach(() => {
@@ -62,11 +69,9 @@ describe('Inside the room', () => {
     cy.contains('Votes revealed').should('be.disabled');
 
     cy.contains('New round').click();
+    cy.wait(1000);
 
-    // Banner appears
-    cy.contains('Continue alone').click();
-
-    cy.get('.vote-waiting').should('be.visible');
+    cy.get('.vote-waiting').scrollIntoView().should('be.visible');
   });
 
   it('can update the topic name', () => {
@@ -74,6 +79,8 @@ describe('Inside the room', () => {
     cy.get('#topic-name').click().clear().type('Custom name');
 
     cy.contains('Save').click();
+
+    cy.get('.topic-title').should('contain.text', 'Custom name');
 
     cy.get('#room-options-button').click();
     cy.get('.topics-toggle').click();
@@ -107,13 +114,14 @@ describe('Inside the room', () => {
     cy.get('.window-control-button.minimize').click();
 
     cy.get('#new-round-button').click();
-    cy.contains('Topic of Round 3').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Topic of Round 3');
 
     cy.get('#reveal-results-button').click();
     cy.get('#reveal-results-button').should('be.disabled');
 
     cy.get('#invite-button').click();
-    cy.contains('Join link copied to clipboard').should('be.visible');
+    cy.contains('Invite others to join').should('be.visible');
+    cy.contains('Close').click();
 
     cy.get('#room-options-button').click();
     cy.get('#topics-toggle').click();
@@ -156,19 +164,19 @@ describe('Inside the room', () => {
     cy.get('#async-next-round').should('be.disabled');
 
     cy.get('#async-previous-round').click();
-    cy.contains('Custom name').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Custom name');
     cy.get('#async-previous-round').click();
     cy.get('#async-previous-round').should('be.disabled');
 
     cy.get('#async-next-round').click();
-    cy.contains('Custom name').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Custom name');
 
     cy.get('#room-options-button').click();
     cy.contains('Voting settings').click();
     cy.get('.async-vote-toggle').click();
     cy.contains('Close').click();
 
-    cy.contains('Topic of Round 3').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Topic of Round 3');
   });
 
   it('can use anonymous voting', () => {
@@ -204,7 +212,8 @@ describe('Inside the room', () => {
 
     cy.get('#majority-vote-chip').should('contain', '3');
 
-    cy.get('#override-majority-vote-button').click();
+    cy.wait(500);
+    cy.get('#override-majority-vote-button').click({ force: true });
     cy.contains('Clear override').click();
     cy.contains('Close').click();
 

@@ -29,9 +29,6 @@ describe('Authentication', () => {
     cy.location('pathname').should('include', '/room');
     cy.wait(1000);
 
-    cy.contains('Invite others to join').should('be.visible');
-    cy.contains('Close').click();
-
     cy.get('#room-options-button').click();
     cy.contains('Security and permissions').click();
 
@@ -55,10 +52,6 @@ describe('Authentication', () => {
     cy.location('pathname').should('include', '/room');
     cy.wait(1000);
 
-    // Shows room invitation popup
-    cy.contains('Invite others to join').should('be.visible');
-    cy.contains('Close').click();
-    
     cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();
 

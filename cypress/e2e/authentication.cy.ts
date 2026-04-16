@@ -20,7 +20,7 @@ describe('Authentication', () => {
     createNewRoom('Test Bela');
 
     // Skip onboarding
-    cy.contains('No thanks').click();
+    cy.contains('Skip tour').click();
     
     assertInvitationPopup();
 

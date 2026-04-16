@@ -10,12 +10,12 @@ describe('Landing page', () => {
   it('opens the landing page', () => {
     cy.get('h1').should(
       'contain.text',
-      'Planning Poker - Sprint Estimation for Agile Teams'
+      'Planning Poker for Dev Teams That Ship'
     );
   });
 
   it('can navigate to the /create page', () => {
-    cy.contains('Start planning').click();
+    cy.contains('Start Estimating').click();
     cy.location('pathname').should('eq', '/create');
   });
 

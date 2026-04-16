@@ -928,15 +928,15 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   calculateRoundStatistics(round: Round) {
     const elapsed = getHumanReadableElapsedTime(round);
-    const estimates = Object.keys(round.estimates)
+    const estimates = Object.keys(round.estimates ?? {})
       .filter(member =>
         this.room()
-          .members.map(m => m.id)
-          .includes(member)
+          ?.members?.map(m => m.id)
+          ?.includes(member)
       )
       .map(member => ({
         value: round.estimates[member],
-        voter: this.room().members.find(m => m.id === member)?.name,
+        voter: this.room()?.members?.find(m => m.id === member)?.name,
       }))
       .filter(e => e.value !== null)
       .sort((a, b) => a.value - b.value);

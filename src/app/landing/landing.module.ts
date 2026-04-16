@@ -69,6 +69,18 @@ const routes: Routes = [
     },
   },
   {
+    path: 'security',
+    loadComponent: () =>
+      import('./security/security.component').then(
+        mod => mod.SecurityComponent
+      ),
+    data: {
+      title: 'Security & Trust - How PlanningPoker.live Protects Your Data',
+      description:
+        'Learn about PlanningPoker.live security: open-source codebase, Firebase & Google Cloud infrastructure, marketplace certifications, data handling, and compliance.',
+    },
+  },
+  {
     path: 'integrations/zoom',
     loadComponent: () =>
       import('./integrations/zoom/zoom.component').then(

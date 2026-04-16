@@ -5,6 +5,7 @@ export const routes = [
   '/features',
   '/policies/terms',
   '/policies/privacy',
+  '/security',
   '/join',
   '/create',
   '/room',

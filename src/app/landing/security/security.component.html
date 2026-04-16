@@ -1,0 +1,382 @@
+<app-page-header
+  title="Security & Trust"
+  subtitle="PlanningPoker.live is an open-source, serverless app built entirely on Google Cloud. Here's how we keep your data safe.">
+</app-page-header>
+
+<main>
+  <div class="content">
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+      <div class="trust-badge">
+        <mat-icon>code</mat-icon>
+        <span>Open Source</span>
+      </div>
+      <div class="trust-badge">
+        <mat-icon>cloud</mat-icon>
+        <span>Firebase &amp; Google Cloud</span>
+      </div>
+      <div class="trust-badge">
+        <mat-icon>verified</mat-icon>
+        <span>Marketplace Approved</span>
+      </div>
+      <div class="trust-badge">
+        <mat-icon>shield</mat-icon>
+        <span>GDPR Compliant</span>
+      </div>
+    </div>
+
+    <!-- Architecture Overview -->
+    <section class="section-card" id="architecture">
+      <div class="section-header">
+        <mat-icon>account_tree</mat-icon>
+        <h2>Architecture Overview</h2>
+      </div>
+      <p>
+        PlanningPoker.live runs on a fully serverless architecture powered by
+        <strong>Firebase</strong> and <strong>Google Cloud</strong>. There are no custom servers,
+        no VMs, and no SSH surface to attack. All infrastructure is managed, patched, and
+        secured by Google.
+      </p>
+
+      <div class="architecture-flow">
+        <div class="flow-node">
+          <mat-icon>devices</mat-icon>
+          <span class="flow-label">Browser</span>
+        </div>
+        <div class="flow-arrow">
+          <span class="arrow-line"></span>
+          <span class="arrow-text">HTTPS</span>
+        </div>
+        <div class="flow-node">
+          <mat-icon>dns</mat-icon>
+          <span class="flow-label">Firebase Hosting</span>
+          <span class="flow-sublabel">Global CDN</span>
+        </div>
+        <div class="flow-arrow">
+          <span class="arrow-line"></span>
+        </div>
+        <div class="flow-node">
+          <mat-icon>bolt</mat-icon>
+          <span class="flow-label">Cloud Functions</span>
+          <span class="flow-sublabel">europe-west1</span>
+        </div>
+        <div class="flow-arrow">
+          <span class="arrow-line"></span>
+        </div>
+        <div class="flow-node">
+          <mat-icon>storage</mat-icon>
+          <span class="flow-label">Cloud Firestore</span>
+          <span class="flow-sublabel">Encrypted at rest</span>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <strong>Frontend</strong>
+          <span>Angular app served via Firebase Hosting on Google's global edge network</span>
+        </div>
+        <div class="detail-item">
+          <strong>Backend</strong>
+          <span>Firebase Cloud Functions (Node.js) in europe-west1 — no persistent servers</span>
+        </div>
+        <div class="detail-item">
+          <strong>Database</strong>
+          <span>Cloud Firestore with server-side security rules enforcing per-document access control</span>
+        </div>
+        <div class="detail-item">
+          <strong>Payments</strong>
+          <span>Stripe (PCI DSS Level 1 compliant) — we never see or store credit card numbers</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marketplace Security Reviews -->
+    <section class="section-card" id="marketplace">
+      <div class="section-header">
+        <mat-icon>verified_user</mat-icon>
+        <h2>Marketplace Security Reviews</h2>
+      </div>
+      <p>
+        PlanningPoker.live is listed on four major collaboration platform marketplaces.
+        Each platform conducts its own independent security and compliance review before
+        approving an app for distribution.
+      </p>
+
+      <div class="marketplace-grid">
+        <a
+          class="marketplace-card"
+          href="https://appsource.microsoft.com/en-us/product/office/WA200005858"
+          target="_blank"
+          rel="noopener noreferrer">
+          <span class="marketplace-name">Microsoft Teams</span>
+          <span class="marketplace-source">AppSource</span>
+          <span class="marketplace-badge">
+            <mat-icon>verified</mat-icon> Verified
+          </span>
+        </a>
+        <a
+          class="marketplace-card"
+          href="https://workspace.google.com/marketplace/app/planningpokerlive/417578634660"
+          target="_blank"
+          rel="noopener noreferrer">
+          <span class="marketplace-name">Google Meet</span>
+          <span class="marketplace-source">Workspace Marketplace</span>
+          <span class="marketplace-badge">
+            <mat-icon>verified</mat-icon> Verified
+          </span>
+        </a>
+        <a
+          class="marketplace-card"
+          href="https://marketplace.zoom.us/apps/nqabdP6JSI-uoVffd6A5Vg"
+          target="_blank"
+          rel="noopener noreferrer">
+          <span class="marketplace-name">Zoom</span>
+          <span class="marketplace-source">Zoom App Marketplace</span>
+          <span class="marketplace-badge">
+            <mat-icon>verified</mat-icon> Verified
+          </span>
+        </a>
+        <a
+          class="marketplace-card"
+          href="https://apphub.webex.com/applications/planning-poker-planningpoker-live"
+          target="_blank"
+          rel="noopener noreferrer">
+          <span class="marketplace-name">Webex</span>
+          <span class="marketplace-source">Webex App Hub</span>
+          <span class="marketplace-badge">
+            <mat-icon>verified</mat-icon> Verified
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Open Source -->
+    <section class="section-card" id="open-source">
+      <div class="section-header">
+        <mat-icon>code</mat-icon>
+        <h2>Open-Source Codebase</h2>
+      </div>
+      <p>
+        The entire PlanningPoker.live codebase is
+        <a href="https://github.com/biharygergo/card-estimator" target="_blank" rel="noopener noreferrer">
+          public on GitHub</a>.
+        This includes the Angular frontend, Firebase Cloud Functions, Firestore security rules,
+        and storage rules. Anyone can audit the code, verify our security claims, and see exactly
+        what data we access.
+      </p>
+      <p>
+        We believe transparency is the strongest security signal a small app can offer. Instead of
+        asking you to trust a black box, we invite you to read the source.
+      </p>
+      <a
+        class="repo-link"
+        href="https://github.com/biharygergo/card-estimator"
+        target="_blank"
+        rel="noopener noreferrer">
+        <mat-icon>open_in_new</mat-icon>
+        View source on GitHub
+      </a>
+    </section>
+
+    <!-- Firebase & Google Cloud Certifications -->
+    <section class="section-card" id="certifications">
+      <div class="section-header">
+        <mat-icon>workspace_premium</mat-icon>
+        <h2>Google Cloud &amp; Firebase Certifications</h2>
+      </div>
+      <p>
+        Firebase is part of Google Cloud and inherits its world-class security infrastructure.
+        All data is encrypted at rest (AES-256) and in transit (TLS 1.2+). Google manages
+        infrastructure patching, DDoS protection, and physical data center security.
+      </p>
+
+      <div class="cert-grid">
+        <div class="cert-card">
+          <span class="cert-name">SOC 1</span>
+          <span class="cert-desc">Financial reporting controls</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">SOC 2</span>
+          <span class="cert-desc">Security, availability &amp; confidentiality</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">SOC 3</span>
+          <span class="cert-desc">Public trust services report</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">ISO 27001</span>
+          <span class="cert-desc">Information security management</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">ISO 27017</span>
+          <span class="cert-desc">Cloud security controls</span>
+        </div>
+        <div class="cert-card">
+          <span class="cert-name">ISO 27018</span>
+          <span class="cert-desc">Cloud privacy protection</span>
+        </div>
+      </div>
+
+      <p class="learn-more">
+        Learn more:
+        <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Firebase Security &amp; Privacy</a>
+        &middot;
+        <a href="https://cloud.google.com/security/compliance" target="_blank" rel="noopener noreferrer">Google Cloud Compliance</a>
+      </p>
+    </section>
+
+    <!-- Data Handling -->
+    <section class="section-card" id="data">
+      <div class="section-header">
+        <mat-icon>database</mat-icon>
+        <h2>Data Handling &amp; Storage</h2>
+      </div>
+
+      <div class="data-columns">
+        <div class="data-column stored">
+          <h3>
+            <mat-icon>check_circle</mat-icon>
+            What we store
+          </h3>
+          <ul>
+            <li>Room data: topics, votes, card sets, timer state</li>
+            <li>Display names chosen by participants</li>
+            <li>Email address (only if you create an account)</li>
+            <li>Organization metadata (name, member list)</li>
+            <li>Stripe customer reference (for premium users)</li>
+          </ul>
+        </div>
+        <div class="data-column not-stored">
+          <h3>
+            <mat-icon>block</mat-icon>
+            What we don't store
+          </h3>
+          <ul>
+            <li>Passwords — Firebase Auth handles hashing</li>
+            <li>Credit card numbers — Stripe handles payments</li>
+            <li>Sensitive PII beyond your email address</li>
+            <li>Screen recordings, keystrokes, or clipboard data</li>
+            <li>Data from your Jira/Linear beyond synced issues</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="data-details">
+        <div class="detail-item">
+          <strong>Data residency</strong>
+          <span>Cloud Functions and primary data processing in europe-west1 (Belgium, EU)</span>
+        </div>
+        <div class="detail-item">
+          <strong>Data retention</strong>
+          <span>Rooms can be deleted by their creators. User data is deletable on request. We never sell data to third parties.</span>
+        </div>
+        <div class="detail-item">
+          <strong>Integration tokens</strong>
+          <span>Jira and Linear OAuth tokens are stored in Firestore and used only for issue sync. You can revoke access at any time.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Authentication & Access Control -->
+    <section class="section-card" id="auth">
+      <div class="section-header">
+        <mat-icon>lock</mat-icon>
+        <h2>Authentication &amp; Access Control</h2>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <strong>Authentication</strong>
+          <span>Firebase Authentication with support for anonymous access, email/password, Google OAuth, and Microsoft OAuth</span>
+        </div>
+        <div class="detail-item">
+          <strong>Authorization</strong>
+          <span>Firestore Security Rules enforce per-document access control — all rules are
+            <a href="https://github.com/biharygergo/card-estimator/blob/master/firestore.rules" target="_blank" rel="noopener noreferrer">viewable in the repo</a></span>
+        </div>
+        <div class="detail-item">
+          <strong>Room-level security</strong>
+          <span>Password-protected rooms and organization-restricted rooms for private sessions</span>
+        </div>
+        <div class="detail-item">
+          <strong>Bot &amp; abuse protection</strong>
+          <span>reCAPTCHA v3 and Firebase App Check to prevent automated abuse and API misuse</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transport & HTTP Security -->
+    <section class="section-card" id="transport">
+      <div class="section-header">
+        <mat-icon>security</mat-icon>
+        <h2>Transport &amp; HTTP Security</h2>
+      </div>
+      <p>
+        All traffic to PlanningPoker.live is served over HTTPS with modern security headers.
+        The serverless architecture means there are no managed servers, VMs, or SSH endpoints
+        to attack.
+      </p>
+
+      <div class="headers-list">
+        <div class="header-item">
+          <code>Strict-Transport-Security</code>
+          <span>HSTS with preload — max-age=31536000; includeSubDomains; preload</span>
+        </div>
+        <div class="header-item">
+          <code>Content-Security-Policy</code>
+          <span>Restrictive CSP limiting allowed script, style, and frame sources</span>
+        </div>
+        <div class="header-item">
+          <code>X-Content-Type-Options</code>
+          <span>nosniff — prevents MIME type sniffing</span>
+        </div>
+        <div class="header-item">
+          <code>Referrer-Policy</code>
+          <span>strict-origin-when-cross-origin</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Monitoring -->
+    <section class="section-card" id="monitoring">
+      <div class="section-header">
+        <mat-icon>monitoring</mat-icon>
+        <h2>Monitoring &amp; Error Tracking</h2>
+      </div>
+      <div class="detail-grid three-col">
+        <div class="detail-item">
+          <strong>Sentry</strong>
+          <span>Error monitoring and crash reporting. No PII is included in error reports.</span>
+        </div>
+        <div class="detail-item">
+          <strong>PostHog</strong>
+          <span>Product analytics for understanding usage patterns. Privacy-conscious with opt-out support.</span>
+        </div>
+        <div class="detail-item">
+          <strong>Firebase Analytics</strong>
+          <span>Aggregate usage metrics to improve the product. No individual tracking.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section-card contact-card" id="contact">
+      <div class="section-header">
+        <mat-icon>mail</mat-icon>
+        <h2>Security Questions?</h2>
+      </div>
+      <p>
+        If you have security questions, need to complete a vendor assessment, or want to report
+        a vulnerability, reach out to us at
+        <a href="mailto:hello&#64;planningpoker.live">hello&#64;planningpoker.live</a>.
+      </p>
+      <p>
+        You can also review our
+        <a routerLink="/policies/privacy">Privacy Policy</a> and
+        <a routerLink="/policies/terms">Terms &amp; Conditions</a>.
+      </p>
+    </section>
+
+  </div>
+</main>

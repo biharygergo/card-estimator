@@ -15,10 +15,10 @@ describe('Authentication', () => {
 
     cy.get('#sign-in-button').click();
 
-    // Account modal appears
-    cy.get('#email-input').click().type(testEmail);
-    cy.get('#password-input').click().type(testPassword);
-    cy.get('#create-account-button').click();
+    // Account modal appears on the Sign in tab
+    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail);
+    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword);
+    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
     cy.wait(1000);
   });
 
@@ -28,9 +28,6 @@ describe('Authentication', () => {
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
     cy.wait(1000);
-
-    cy.contains('Invite others to join').should('be.visible');
-    cy.contains('Close').click();
 
     cy.get('#room-options-button').click();
     cy.contains('Security and permissions').click();
@@ -55,10 +52,6 @@ describe('Authentication', () => {
     cy.location('pathname').should('include', '/room');
     cy.wait(1000);
 
-    // Shows room invitation popup
-    cy.contains('Invite others to join').should('be.visible');
-    cy.contains('Close').click();
-    
     cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();
 

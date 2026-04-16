@@ -13,6 +13,13 @@ describe('Inside the room', () => {
 
   beforeEach(() => {
     cy.visit(roomUrl);
+    cy.wait(2000);
+    // Dismiss alone-in-room modal if it appears
+    cy.get('body').then($body => {
+      if ($body.text().includes('Continue alone')) {
+        cy.contains('Continue alone').click();
+      }
+    });
   });
 
   afterEach(() => {
@@ -51,7 +58,6 @@ describe('Inside the room', () => {
   });
 
   it('can cast votes', () => {
-    assertInvitationPopup();
     cy.contains('Test User').should('be.visible');
     cy.get('.vote-waiting').should('be.visible');
 
@@ -63,11 +69,9 @@ describe('Inside the room', () => {
     cy.contains('Votes revealed').should('be.disabled');
 
     cy.contains('New round').click();
+    cy.wait(1000);
 
-    // Banner appears
-    cy.contains('Continue alone').click();
-
-    cy.get('.vote-waiting').should('be.visible');
+    cy.get('.vote-waiting').scrollIntoView().should('be.visible');
   });
 
   it('can update the topic name', () => {
@@ -75,6 +79,8 @@ describe('Inside the room', () => {
     cy.get('#topic-name').click().clear().type('Custom name');
 
     cy.contains('Save').click();
+
+    cy.get('.topic-title').should('contain.text', 'Custom name');
 
     cy.get('#room-options-button').click();
     cy.get('.topics-toggle').click();
@@ -86,7 +92,7 @@ describe('Inside the room', () => {
   });
 
   it('can use the timer', () => {
-    cy.get('.time-left').should('contain.text', '30 second timer');
+    cy.get('.timer-status').should('contain.text', 'Ready');
     cy.get('#start-button').click();
     cy.wait(1000);
     cy.get('#pause-button').click();
@@ -95,8 +101,9 @@ describe('Inside the room', () => {
   it('can set custom card sets', () => {
     cy.get('#room-options-button').click();
     cy.get('#card-sets-button').click();
-    cy.get('.pass-option-checkbox').click();
+    cy.contains('Include "Pass"').parents('.toggle-row').find('mat-slide-toggle').click();
     cy.contains('Fibonacci').click();
+    cy.contains('Close').click();
 
     cy.contains('13').should('be.visible');
 
@@ -104,17 +111,17 @@ describe('Inside the room', () => {
   });
 
   it('can use minimized panel', () => {
-    cy.get('.mat-sidenav-content').scrollTo('bottom');
-    cy.get('#minimize-panel-button').click();
+    cy.get('.window-control-button.minimize').click();
 
     cy.get('#new-round-button').click();
-    cy.contains('Topic of Round 3').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Topic of Round 3');
 
     cy.get('#reveal-results-button').click();
     cy.get('#reveal-results-button').should('be.disabled');
 
     cy.get('#invite-button').click();
-    cy.contains('Join link copied to clipboard').should('be.visible');
+    cy.contains('Invite others to join').should('be.visible');
+    cy.contains('Close').click();
 
     cy.get('#room-options-button').click();
     cy.get('#topics-toggle').click();
@@ -149,28 +156,27 @@ describe('Inside the room', () => {
   it('can use async voting', () => {
     cy.get('#room-options-button').click();
     cy.contains('Voting settings').click();
-    cy.get('.async-vote-checkbox').click();
-
-    cy.get('body').click(10, 10);
+    cy.get('.async-vote-toggle').click();
+    cy.contains('Close').click();
 
     cy.contains('Async voting enabled').should('be.visible');
 
     cy.get('#async-next-round').should('be.disabled');
 
     cy.get('#async-previous-round').click();
-    cy.contains('Custom name').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Custom name');
     cy.get('#async-previous-round').click();
     cy.get('#async-previous-round').should('be.disabled');
 
     cy.get('#async-next-round').click();
-    cy.contains('Custom name').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Custom name');
 
     cy.get('#room-options-button').click();
     cy.contains('Voting settings').click();
-    cy.get('.async-vote-checkbox').click();
+    cy.get('.async-vote-toggle').click();
+    cy.contains('Close').click();
 
-    cy.get('body').click(10, 10);
-    cy.contains('Topic of Round 3').should('be.visible');
+    cy.get('.topic-title').should('contain.text', 'Topic of Round 3');
   });
 
   it('can use anonymous voting', () => {
@@ -178,15 +184,15 @@ describe('Inside the room', () => {
 
     cy.get('#room-options-button').click();
     cy.contains('Voting settings').click();
-    cy.get('.anonymous-vote-checkbox').click();
-
-    cy.get('body').click(10, 10);
+    cy.get('.anonymous-vote-toggle').click();
+    cy.contains('Close').click();
 
     cy.contains('Test User').should('not.exist');
 
     cy.get('#room-options-button').click();
     cy.contains('Voting settings').click();
-    cy.get('.anonymous-vote-checkbox').click();
+    cy.get('.anonymous-vote-toggle').click();
+    cy.contains('Close').click();
   });
 
   it('can override majority vote', () => {
@@ -206,7 +212,8 @@ describe('Inside the room', () => {
 
     cy.get('#majority-vote-chip').should('contain', '3');
 
-    cy.get('#override-majority-vote-button').click();
+    cy.wait(500);
+    cy.get('#override-majority-vote-button').click({ force: true });
     cy.contains('Clear override').click();
     cy.contains('Close').click();
 

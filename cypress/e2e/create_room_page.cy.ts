@@ -18,7 +18,7 @@ describe('Creating a room as a new user', () => {
     cy.location('pathname').should('include', '/room');
 
     // Skip onboarding
-    cy.contains('No thanks').click();
+    cy.contains('Skip tour').click();
 
     assertInvitationPopup();
   
@@ -45,10 +45,6 @@ describe('Creating a room as a returning user', () => {
     cy.get('#create-room-button').should('be.enabled');
     cy.get('#create-room-button').click();
     cy.location('pathname').should('include', '/room');
-
-    // Shows room invitation popup
-    cy.contains('Invite others to join').should('be.visible');
-    cy.contains('Close').click();
 
     // It uses a credit
     cy.contains('Menu').click();

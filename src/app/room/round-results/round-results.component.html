@@ -235,7 +235,7 @@
               @let round = room()?.rounds?.[currentRound()];
               @let memberEstimate = round?.estimates?.[member.id];
               @if (member.type === MemberType.ESTIMATOR) {
-                @if (memberEstimate === null && round.show_results) {
+                @if (memberEstimate === null && round?.show_results) {
                   <div class="vote vote-pass" matTooltip="Passed">
                     <mat-icon>question_mark</mat-icon>
                   </div>
@@ -243,7 +243,7 @@
                 @if (
                   memberEstimate !== undefined &&
                   memberEstimate !== null &&
-                  round.show_results
+                  round?.show_results
                   ) {
                   <div class="vote vote-value">
                     {{
@@ -252,14 +252,14 @@
                     }}
                   </div>
                 }
-                @if (memberEstimate === undefined && round.show_results) {
+                @if (memberEstimate === undefined && round?.show_results) {
                   <div
                     class="vote vote-none"
                     matTooltip="No vote cast - maybe next time?">
                     <mat-icon>bedtime</mat-icon>
                   </div>
                 }
-                @if (memberEstimate === undefined && !round.show_results) {
+                @if (memberEstimate === undefined && !round?.show_results) {
                   <div class="vote-waiting-container">
                     @if (canShowNudgeButton(member)) {
                       <button
@@ -277,7 +277,7 @@
                     
                   </div>
                 }
-                @if (memberEstimate !== undefined && !round.show_results) {
+                @if (memberEstimate !== undefined && !round?.show_results) {
                   <div class="vote vote-voted" matTooltip="Voted">
                     <mat-icon>checked</mat-icon>
                   </div>

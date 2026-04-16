@@ -40,7 +40,9 @@ import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.se
 })
 export class RoomDataService {
   roomSubject = new BehaviorSubject<Room | undefined>(undefined);
-  room$: Observable<Room> = this.roomSubject.pipe(filter(room => !!room));
+  room$: Observable<Room> = this.roomSubject.pipe(
+    filter(room => !!room?.rounds)
+  );
 
   localActiveRound = new BehaviorSubject<number | undefined>(undefined);
 
@@ -67,7 +69,7 @@ export class RoomDataService {
     this.currentRoundNumber$,
   ]).pipe(
     map(([room, roundNumber]) => room.rounds[roundNumber]),
-    filter(round => !!round),
+    filter(round => !!round?.estimates),
     distinctUntilChanged(isEqual)
   );
 
@@ -149,9 +151,7 @@ export class RoomDataService {
 
   /* Events */
   onEstimatesUpdated$ = this.activeRound$.pipe(
-    map(round => {
-      return round.estimates;
-    }),
+    map(round => round.estimates),
     distinctUntilChanged(isEqual)
   );
 

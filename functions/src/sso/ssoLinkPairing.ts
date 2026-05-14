@@ -2,7 +2,7 @@ import {Response, Request} from "express";
 import {getAuth, UserRecord} from "firebase-admin/auth";
 import {FieldValue, getFirestore, Timestamp} from "firebase-admin/firestore";
 import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
-import * as crypto from "crypto";
+import { createHash, randomBytes, randomInt } from "crypto";
 import {SSO_LINK_PAIRINGS} from "../shared/collections";
 
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -11,18 +11,18 @@ const EXPIRY_MINUTES = 10;
 const DEVICE_SECRET_BYTES = 32;
 
 function generateUserCode(): string {
-  const bytes = crypto.randomBytes(USER_CODE_LENGTH);
-  return Array.from(bytes)
-      .map((b) => CODE_CHARS[b % CODE_CHARS.length])
-      .join("");
+  const n = CODE_CHARS.length;
+  return Array.from({ length: USER_CODE_LENGTH }, () =>
+    CODE_CHARS[randomInt(n)]
+  ).join("");
 }
 
 function generateDeviceSecret(): string {
-  return crypto.randomBytes(DEVICE_SECRET_BYTES).toString("hex");
+  return randomBytes(DEVICE_SECRET_BYTES).toString("hex");
 }
 
 function hashDeviceSecret(deviceSecret: string): string {
-  return crypto.createHash("sha256").update(deviceSecret, "utf8").digest("hex");
+  return createHash("sha256").update(deviceSecret, "utf8").digest("hex");
 }
 
 async function generateUniqueUserCode(): Promise<string> {

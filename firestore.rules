@@ -134,7 +134,7 @@ service cloud.firestore {
       allow update: if request.auth.uid == resource.data.createdById || 
                       (request.auth.uid in resource.data.memberIds && 
                        resource.data.memberRoles[request.auth.uid] == 'ADMIN');
-                                                                                     
+
       match /memberInvitations/{invitationId} {
         allow read, write: if request.auth.uid in getOrganization(organizationId).data.memberIds;
       }
@@ -159,6 +159,16 @@ service cloud.firestore {
 
     match /authSessions/{sessionId} {
       allow list, update, delete, create, get: if false;
+    }
+
+    // Enterprise SSO: public read by domain/slug for login routing (no list)
+    match /ssoDomains/{domain} {
+      allow get: if true;
+      allow list, create, update, delete: if false;
+    }
+
+    match /ssoLinkPairings/{pairingId} {
+      allow read, write: if false;
     }
 
     match /feedbacks/{feedbackId} {

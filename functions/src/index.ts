@@ -192,13 +192,31 @@ exports.acceptOrganizationInvitation = onRequest(
 
 exports.getOrganizationMembers = onCall({cors: true, region}, async (request) => {
   const {getOrganizationMembers} = await import("./organizations");
-  const {organizationId} = request.data;
+  const {organizationId} = request.data ?? {};
 
   if (!request.auth?.uid) {
-    throw new Error("Unauthorized");
+    throw new HttpsError("unauthenticated", "Unauthorized");
+  }
+  if (typeof organizationId !== "string" || !organizationId.trim()) {
+    throw new HttpsError("invalid-argument", "organizationId is required");
   }
 
-  return getOrganizationMembers(organizationId);
+  const trimmedId = organizationId.trim();
+  const orgSnap = await getFirestore()
+      .doc(`organizations/${trimmedId}`)
+      .get();
+  if (!orgSnap.exists) {
+    throw new HttpsError("not-found", "Organization not found");
+  }
+  const org = orgSnap.data() as {memberIds?: string[]};
+  if (!(org.memberIds ?? []).includes(request.auth.uid)) {
+    throw new HttpsError(
+        "permission-denied",
+        "Not a member of this organization",
+    );
+  }
+
+  return getOrganizationMembers(trimmedId);
 });
 
 exports.updateOrganizationMemberRole = onCall({cors: true, region}, async (request) => {
@@ -221,6 +239,20 @@ exports.removeOrganizationMember = onCall({cors: true, region}, async (request) 
   }
 
   return removeMemberFromOrganization(organizationId, memberId, request.auth.uid);
+});
+
+exports.joinOrganizationIfSsoEligible = onCall({cors: true, region}, async (request) => {
+  const {joinOrganizationIfSsoEligible} = await import("./sso/joinOrganizationIfSsoEligible");
+  const {organizationId} = request.data ?? {};
+
+  if (!request.auth?.uid) {
+    throw new Error("Unauthorized");
+  }
+  if (!organizationId || typeof organizationId !== "string") {
+    throw new Error("organizationId is required");
+  }
+
+  return joinOrganizationIfSsoEligible(request.auth.uid, organizationId);
 });
 
 exports.onUserSubscriptionCreated = onDocumentCreated(
@@ -340,6 +372,21 @@ exports.redeemDeviceCode = onRequest({cors: true, region, invoker: "public"}, as
   return redeemDeviceCode(req, res);
 });
 
+exports.createSsoLinkPairing = onRequest({cors: true, region, invoker: "public"}, async (req, res) => {
+  const {createSsoLinkPairing} = await import("./sso/ssoLinkPairing");
+  return createSsoLinkPairing(req, res);
+});
+
+exports.redeemSsoLinkPairing = onRequest({cors: true, region, invoker: "public"}, async (req, res) => {
+  const {redeemSsoLinkPairing} = await import("./sso/ssoLinkPairing");
+  return redeemSsoLinkPairing(req, res);
+});
+
+exports.completeSsoLinkPairing = onCall({cors: true, region}, async (request) => {
+  const {completeSsoLinkPairing} = await import("./sso/ssoLinkPairing");
+  return completeSsoLinkPairing(request);
+});
+
 exports.slack = onRequest({cors: true, region}, async (req, res) => {
   const {slackMicroservice} = await import("./slack");
   return slackMicroservice(req, res);
@@ -400,7 +447,8 @@ exports.onUserPaymentUpdated = onDocumentUpdated(
 
 // Weekly full sync - drops and recreates entire table
 exports.fullSyncRoomsToBigQuery = onSchedule(
-    {schedule: "every sunday 03:00", timeoutSeconds: 3600, memory: "2GiB", region},
+    // Scheduled triggers max out at 1800s (30m); see Cloud Functions quotas.
+    {schedule: "every sunday 03:00", timeoutSeconds: 1800, memory: "2GiB", region},
     async () => {
       console.log("Scheduled full room sync triggered.");
       const {fullSyncRoomsToBigQuery} = await import("./room/bigquery");

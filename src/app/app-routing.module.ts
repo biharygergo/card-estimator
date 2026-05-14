@@ -86,6 +86,14 @@ const routes: Routes = [
     data: { title: 'Authenticate', supportsTheme: true, noIndex: true },
   },
   {
+    path: 'integrations/embed-sso-link',
+    loadComponent: () =>
+      import(
+        './integration/embed-sso-link/embed-sso-link.component'
+      ).then(m => m.EmbedSsoLinkComponent),
+    data: { title: 'Connect SSO', supportsTheme: true, noIndex: true },
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./landing/not-found/not-found.component').then(

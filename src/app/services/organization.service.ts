@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import {
-  arrayRemove,
   arrayUnion,
   collection,
   doc,
   docData,
   Firestore,
-  setDoc,
   updateDoc,
   DocumentReference,
   query,
   where,
   CollectionReference,
-  collectionData,
   serverTimestamp,
   addDoc,
   collectionSnapshots,
   deleteDoc,
+  setDoc,
 } from '@angular/fire/firestore';
 import { InvitationData, Organization, OrganizationMember, OrganizationRole } from '../types';
 import {
@@ -27,6 +25,12 @@ import {
   of,
   distinctUntilChanged,
   combineLatest,
+  defer,
+  from,
+  throwError,
+  mergeMap,
+  retryWhen,
+  timer,
 } from 'rxjs';
 import { FileUploadService } from './file-upload.service';
 import { PaymentService } from './payment.service';
@@ -52,8 +56,12 @@ export class OrganizationService {
 
   async createOrganization(
     organizationDto: Pick<Organization, 'name' | 'logoUrl'>
-  ): Promise<void> {
+  ): Promise<string> {
     const user = await this.authService.getUser();
+    if (!user) {
+      throw new Error('Not signed in');
+    }
+
     const isPremium = await this.paymentService.isPremiumSubscriber();
 
     const organization: Organization = {
@@ -66,10 +74,14 @@ export class OrganizationService {
       activePlan: isPremium ? 'premium' : 'basic',
     };
 
-    await setDoc(
-      doc(this.firestore, ORGANIZATION_COLLECTION, organization.id),
-      organization
+    const orgRef = doc(
+      this.firestore,
+      ORGANIZATION_COLLECTION,
+      organization.id
     );
+
+    await setDoc(orgRef, organization);
+    return organization.id;
   }
 
   async updateLogo(file: File, organizationId: string) {
@@ -157,12 +169,9 @@ export class OrganizationService {
   }
 
   async addMember(organizationId: string, memberId: string) {
-    await updateDoc(
-      doc(this.firestore, ORGANIZATION_COLLECTION, organizationId),
-      {
-        memberIds: arrayUnion(memberId),
-      }
-    );
+    await updateDoc(doc(this.firestore, ORGANIZATION_COLLECTION, organizationId), {
+      memberIds: arrayUnion(memberId),
+    });
   }
 
   async removeMember(organizationId: string, memberId: string) {
@@ -172,14 +181,27 @@ export class OrganizationService {
 
   getOrganizationMembers(organizationId: string): Observable<OrganizationMember[]> {
     const getMembersFunction = httpsCallable(this.functions, 'getOrganizationMembers');
-    return new Observable(observer => {
-      getMembersFunction({ organizationId }).then((result: any) => {
-        observer.next(result.data);
-        observer.complete();
-      }).catch(error => {
-        observer.error(error);
-      });
-    });
+    return defer(() =>
+      from(getMembersFunction({ organizationId }) as Promise<{ data: OrganizationMember[] }>)
+    ).pipe(
+      map(result => result.data),
+      retryWhen(errors =>
+        errors.pipe(
+          mergeMap((error, attemptIndex) => {
+            const code = (error as { code?: string })?.code ?? '';
+            const transient =
+              code === 'functions/not-found' ||
+              code === 'functions/permission-denied' ||
+              code === 'not-found' ||
+              code === 'permission-denied';
+            if (transient && attemptIndex < 5) {
+              return timer(280 + attemptIndex * 200);
+            }
+            return throwError(() => error);
+          })
+        )
+      )
+    );
   }
 
   async updateMemberRole(organizationId: string, memberId: string, newRole: OrganizationRole): Promise<void> {
@@ -210,7 +232,17 @@ export class OrganizationService {
         }
         const q = query(ref, where('memberIds', 'array-contains', user.uid));
 
-        return collectionData<Organization>(q).pipe();
+        return collectionSnapshots(q).pipe(
+          map(snapshots =>
+            snapshots.map(
+              doc =>
+                ({
+                  ...doc.data(),
+                  id: doc.id,
+                }) as Organization
+            )
+          )
+        );
       })
     );
   }
@@ -224,7 +256,9 @@ export class OrganizationService {
       this.getMyOrganizations(),
     ]).pipe(
       map(([activeOrgId, orgs]) => {
-        const selectedOrg = orgs.find(org => org.id === activeOrgId);
+        const selectedOrg = activeOrgId
+          ? orgs.find(org => org.id === activeOrgId)
+          : undefined;
         return selectedOrg ?? orgs?.[0];
       })
     );
@@ -233,6 +267,6 @@ export class OrganizationService {
   setSelectedOrganization(orgId: string) {
     this.authService
       .updateUserPreference({ activeOrganizationId: orgId })
-      .subscribe();
+      .subscribe({ error: () => {} });
   }
 }

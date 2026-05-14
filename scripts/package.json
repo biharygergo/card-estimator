@@ -4,7 +4,8 @@
   "description": "Utility scripts for card-estimator",
   "main": "index.js",
   "scripts": {
-    "transfer-credits": "tsx transfer-credits-to-organization.ts"
+    "transfer-credits": "tsx transfer-credits-to-organization.ts",
+    "configure-org-sso": "tsx configure-org-sso.ts"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",

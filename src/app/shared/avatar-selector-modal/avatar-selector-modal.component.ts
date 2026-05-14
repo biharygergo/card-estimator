@@ -1,7 +1,22 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { EmailAuthProvider, User } from '@angular/fire/auth';
-import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import {
+  EmailAuthProvider,
+  GoogleAuthProvider,
+  User,
+} from '@angular/fire/auth';
+import {
+  BehaviorSubject,
+  combineLatest,
+  firstValueFrom,
+  from,
+  Observable,
+  of,
+  Subject,
+} from 'rxjs';
+import {
+  AuthService,
+  authProviderIdToLabel,
+} from 'src/app/services/auth.service';
 import {
   catchError,
   distinctUntilChanged,
@@ -12,6 +27,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { SocialAccountLinkService } from 'src/app/services/social-account-link.service';
 import { ComponentType } from '@angular/cdk/portal';
 import {
   MatDialog,
@@ -34,21 +50,25 @@ import {
   PaymentService,
   StripeSubscription,
 } from 'src/app/services/payment.service';
-import { BundleWithCredits, Credit, getBundleTitle } from 'src/app/types';
+import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
+import { OrganizationService } from 'src/app/services/organization.service';
+import {
+  BundleWithCredits,
+  Credit,
+  getBundleTitle,
+  isEmbeddedPlatform,
+} from 'src/app/types';
 import moment from 'moment';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { groupBy } from 'lodash';
-import {
-  SignUpOrLoginIntent,
-  signUpOrLoginDialogCreator,
-} from '../sign-up-or-login-dialog/sign-up-or-login-dialog.component';
 import { manageEmailModalCreator } from '../manage-email-modal/manage-email-modal.component';
 import { referralDialogCreator } from '../referral-dialog/referral-dialog.component';
+import { embedSsoLinkDialogCreator } from '../embed-sso-link-dialog/embed-sso-link-dialog.component';
 import {
   AsyncPipe,
-  UpperCasePipe,
-  TitleCasePipe,
   DatePipe,
+  TitleCasePipe,
+  UpperCasePipe,
 } from '@angular/common';
 import {
   MatAccordion,
@@ -67,6 +87,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import { AnonymousUserBannerComponent } from '../anonymous-user-banner/anonymous-user-banner.component';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
@@ -90,6 +111,12 @@ export function createModal<T>(
 
 export interface AvatarDialogData {
   openAtTab?: 'profile' | 'avatar' | 'subscription';
+}
+
+/** When SAML/OIDC can be linked for the user's email domain or org */
+interface LinkWorkSsoOffer {
+  providerId: string;
+  organizationId?: string;
 }
 
 export const avatarModalCreator = ({
@@ -243,6 +270,7 @@ const AVATAR_COUNT = 39;
     MatChipOption,
     MatExpansionPanelActionRow,
     MatIconButton,
+    MatTooltip,
     MatDialogActions,
     MatDialogClose,
     AsyncPipe,
@@ -289,6 +317,45 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
       .join(',')
   );
   user: User | undefined;
+  unlinkingProviderId: string | null = null;
+  linkingAddKey: 'google' | 'microsoft' | 'sso' | null = null;
+
+  /** OpenID Connect provider id used for Microsoft account linking */
+  readonly microsoftOidcProviderId = 'oidc.microsoft';
+  readonly googleAuthProviderId = GoogleAuthProvider.PROVIDER_ID;
+
+  /** When enterprise SSO can be linked (domain / org SAML or OIDC) */
+  linkWorkSsoOffer$: Observable<LinkWorkSsoOffer | null> = combineLatest([
+    this.auth.user,
+    this.organizationService.getMyOrganization(),
+  ]).pipe(
+    switchMap(([user, org]) => {
+      if (!user?.email || user.isAnonymous) {
+        return of(null);
+      }
+      const domain = user.email.split('@')[1]?.toLowerCase() ?? '';
+      return from(
+        (async (): Promise<LinkWorkSsoOffer | null> => {
+          const ssoCfg = domain
+            ? await this.auth.getSsoDomainConfig(domain)
+            : null;
+          const providerId = ssoCfg?.providerId ?? org?.ssoProviderId ?? null;
+          if (!providerId) {
+            return null;
+          }
+          const has = user.providerData.some(
+            p => p.providerId === providerId
+          );
+          if (has) {
+            return null;
+          }
+          const organizationId = ssoCfg?.organizationId ?? org?.id;
+          return { providerId, organizationId };
+        })()
+      );
+    }),
+    shareReplay(1)
+  );
 
   isUserSignedInWithEmail$ = this.auth.user.pipe(
     map(
@@ -386,12 +453,15 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private auth: AuthService,
+    private readonly socialAccountLink: SocialAccountLinkService,
     private analytics: AnalyticsService,
     private snackBar: MatSnackBar,
     public readonly paymentsService: PaymentService,
     public dialogRef: MatDialogRef<AvatarSelectorModalComponent>,
     private readonly dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) private dialogData: AvatarDialogData
+    private readonly organizationService: OrganizationService,
+    @Inject(MAT_DIALOG_DATA) private dialogData: AvatarDialogData,
+    @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -476,14 +546,6 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  linkAccount() {
-    this.dialog.open(
-      ...signUpOrLoginDialogCreator({
-        intent: SignUpOrLoginIntent.LINK_ACCOUNT,
-      })
-    );
-  }
-
   async redirectToCustomerPortal() {
     this.isLoadingStripe = true;
     this.analytics.logClickedManageSubscription('profile');
@@ -507,5 +569,107 @@ export class AvatarSelectorModalComponent implements OnInit, OnDestroy {
 
   openManageEmailModal() {
     this.dialog.open(...manageEmailModalCreator());
+  }
+
+  canUnlinkProvider(): boolean {
+    return this.auth.canUnlinkProvider(this.user);
+  }
+
+  providerLabel(providerId: string): string {
+    return authProviderIdToLabel(providerId);
+  }
+
+  async onUnlinkProvider(providerId: string): Promise<void> {
+    if (!this.canUnlinkProvider()) {
+      this.snackBar.open(
+        'Add another sign-in method before removing your only one.',
+        undefined,
+        { duration: 4000, horizontalPosition: 'right' }
+      );
+      return;
+    }
+    this.unlinkingProviderId = providerId;
+    try {
+      await this.auth.unlinkProvider(providerId);
+      this.snackBar.open('Sign-in method removed.', undefined, {
+        duration: 3000,
+        horizontalPosition: 'right',
+      });
+    } catch (e: unknown) {
+      this.snackBar.open(
+        e instanceof Error ? e.message : 'Could not unlink this method',
+        undefined,
+        { duration: 5000, horizontalPosition: 'right' }
+      );
+    } finally {
+      this.unlinkingProviderId = null;
+    }
+  }
+
+  hasLinkedProvider(providerId: string): boolean {
+    return !!this.user?.providerData?.some(p => p.providerId === providerId);
+  }
+
+  isLinkBusy(): boolean {
+    return this.linkingAddKey !== null || this.unlinkingProviderId !== null;
+  }
+
+  async onLinkGoogle(): Promise<void> {
+    this.linkingAddKey = 'google';
+    try {
+      await this.socialAccountLink.linkGoogle();
+    } catch (e: unknown) {
+      this.snackBar.open(
+        e instanceof Error
+          ? e.message
+          : 'Could not link your Google account',
+        undefined,
+        { duration: 5000, horizontalPosition: 'right' }
+      );
+    } finally {
+      this.linkingAddKey = null;
+    }
+  }
+
+  async onLinkMicrosoft(): Promise<void> {
+    this.linkingAddKey = 'microsoft';
+    try {
+      await this.socialAccountLink.linkMicrosoft();
+    } catch (e: unknown) {
+      this.snackBar.open(
+        e instanceof Error
+          ? e.message
+          : 'Could not link your Microsoft account',
+        undefined,
+        { duration: 5000, horizontalPosition: 'right' }
+      );
+    } finally {
+      this.linkingAddKey = null;
+    }
+  }
+
+  async onLinkWorkSso(offer: LinkWorkSsoOffer): Promise<void> {
+    this.linkingAddKey = 'sso';
+    try {
+      if (isEmbeddedPlatform(this.config.runningIn)) {
+        const ref = this.dialog.open(
+          ...embedSsoLinkDialogCreator({
+            ssoProviderId: offer.providerId,
+            ssoOrganizationId: offer.organizationId,
+          })
+        );
+        await firstValueFrom(ref.afterClosed());
+        return;
+      }
+      await this.auth.linkEnterpriseSso(offer.providerId, offer.organizationId);
+    } catch (e: unknown) {
+      this.snackBar.open(
+        e instanceof Error ? e.message : 'Could not link work SSO',
+        undefined,
+        { duration: 5000, horizontalPosition: 'right' }
+      );
+    } finally {
+      this.linkingAddKey = null;
+    }
   }
 }

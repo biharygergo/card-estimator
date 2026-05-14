@@ -33,7 +33,6 @@ export async function getOrganizationMembers(organizationId: string): Promise<Or
   const memberIds = orgData.memberIds || [];
   const memberRoles = orgData.memberRoles || {};
 
-  // Get user profiles for all members
   const userProfiles = await Promise.all(
       memberIds.map(async (memberId) => {
         try {
@@ -43,7 +42,7 @@ export async function getOrganizationMembers(organizationId: string): Promise<Or
             displayName: userRecord.displayName || userRecord.email?.split("@")[0] || "Unknown User",
             email: userRecord.email || "",
             role: memberRoles[memberId] || (orgData.createdById === memberId ? OrganizationRole.ADMIN : OrganizationRole.MEMBER),
-            joinedAt: orgData.createdAt, // For now, using org creation date. Could be enhanced with actual join dates
+            joinedAt: orgData.createdAt,
           };
         } catch (error) {
           console.error(`Error fetching user ${memberId}:`, error);

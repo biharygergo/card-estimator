@@ -1,0 +1,96 @@
+<div class="embed-sso-page">
+  <div class="card">
+    <h1>Connect your session</h1>
+    @if (!pairingId()) {
+      <p class="error">This link isn’t valid. Open it again from the integration.</p>
+    } @else if (done()) {
+      <p class="success">You’re connected. Return to the embedded app or close this tab.</p>
+    } @else {
+      <p class="lead">Use your <strong>organization sign-in</strong> so we can securely hand off to the integration.</p>
+
+      @if (errorText()) {
+        <p class="error">{{ errorText() }}</p>
+      }
+
+      @if (pendingSsoAccountExists()) {
+        <p class="hint">
+          <a routerLink="/join">Sign in on the website</a>, then
+          <strong>Menu → Link work SSO</strong>, and return here.
+        </p>
+      }
+
+      @if (busy()) {
+        <div class="spinner-wrap">
+          <mat-progress-spinner mode="indeterminate" [diameter]="36" />
+        </div>
+      } @else if (!pendingSsoAccountExists()) {
+        @if (!activeSso()) {
+          <p class="body-short">
+            Enter your <strong>work email</strong>. We’ll open your organization’s SSO;
+            when you’re done, we’ll finish connecting the integration in this tab.
+          </p>
+          <mat-form-field appearance="outline" class="work-email-field">
+            <mat-label>Work email</mat-label>
+            <input
+              matInput
+              type="email"
+              [formControl]="workEmailControl"
+              autocomplete="email"
+              (keyup.enter)="continueFromWorkEmail()" />
+            @if (workEmailControl.hasError('required') && workEmailControl.touched) {
+              <mat-error>Work email is required</mat-error>
+            }
+            @if (
+              workEmailControl.hasError('email') &&
+              workEmailControl.touched &&
+              !workEmailControl.hasError('required')
+            ) {
+              <mat-error>Enter a valid email address</mat-error>
+            }
+            @if (workEmailControl.hasError('invalidDomain') && workEmailControl.touched) {
+              <mat-error>That address doesn’t include a domain after &#64;</mat-error>
+            }
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="primary-action"
+            (click)="continueFromWorkEmail()">
+            Continue with work SSO
+          </button>
+        } @else if (!user()) {
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="primary-action"
+            (click)="signInWithOrgSso()">
+            Continue with {{ activeSso()!.label }}
+          </button>
+          <p class="hint muted">Company SSO only — not a personal Google or Microsoft account.</p>
+        } @else if (hasEnterpriseProvider()) {
+          <p class="body-short">Signed in as <strong>{{ user()!.email }}</strong>.</p>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="primary-action"
+            (click)="completePairingOnly()">
+            Finish
+          </button>
+        } @else {
+          <p class="body-short">Signed in as <strong>{{ user()!.email }}</strong>.</p>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="primary-action"
+            (click)="linkWorkSsoAndFinish()">
+            Link work SSO
+          </button>
+        }
+      }
+    }
+  </div>
+</div>

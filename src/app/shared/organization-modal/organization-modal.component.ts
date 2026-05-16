@@ -64,7 +64,7 @@ import { FileUploadDragDropComponent } from '../file-upload-drag-drop/file-uploa
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatHint, MatSuffix } from '@angular/material/form-field';
 import { MatTabGroup, MatTab } from '@angular/material/tabs';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatAnchor, MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
@@ -72,7 +72,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { MatDivider } from '@angular/material/divider';
-import { environment } from 'src/environments/environment';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -107,6 +106,7 @@ interface OrganizationChecklist {
     MatCardContent,
     MatIcon,
     MatButton,
+    MatAnchor,
     MatTabGroup,
     MatTab,
     FormsModule,
@@ -138,8 +138,7 @@ interface OrganizationChecklist {
   ],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
-  /** SAML ACS / default SP entity ID for this Firebase project (auth domain). */
-  readonly samlAuthHandlerUrl = `https://${environment.firebase.authDomain}/__/auth/handler`;
+  private static readonly SALES_EMAIL = 'info@planningpoker.live';
 
   organization$ = this.organizationService.getMyOrganization().pipe(
     tap(org => (this.organization = org)),
@@ -533,6 +532,15 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     const id = org.ssoProviderId?.trim();
     const domains = org.ssoDomains?.filter(d => d?.trim()) ?? [];
     return Boolean(id) || domains.length > 0;
+  }
+
+  /** `mailto:` link to sales, with org name safely URL-encoded into the subject. */
+  get salesMailto(): string {
+    const orgName = this.organization?.name?.trim();
+    const subject = orgName
+      ? `Enterprise SSO for ${orgName}`
+      : 'Enterprise SSO inquiry';
+    return `mailto:${OrganizationModalComponent.SALES_EMAIL}?subject=${encodeURIComponent(subject)}`;
   }
 
   getRoleDisplayName(role: OrganizationRole): string {

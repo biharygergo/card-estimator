@@ -2,7 +2,7 @@ import {Response, Request} from "express";
 import {getAuth, UserRecord} from "firebase-admin/auth";
 import {FieldValue, getFirestore, Timestamp} from "firebase-admin/firestore";
 import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
-import { createHash, randomBytes, randomInt } from "crypto";
+import {createHash, randomBytes, randomInt} from "crypto";
 import {SSO_LINK_PAIRINGS} from "../shared/collections";
 
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -12,7 +12,7 @@ const DEVICE_SECRET_BYTES = 32;
 
 function generateUserCode(): string {
   const n = CODE_CHARS.length;
-  return Array.from({ length: USER_CODE_LENGTH }, () =>
+  return Array.from({length: USER_CODE_LENGTH}, () =>
     CODE_CHARS[randomInt(n)]
   ).join("");
 }

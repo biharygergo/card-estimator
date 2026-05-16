@@ -17,6 +17,9 @@
     <div class="center polling">
       <mat-progress-spinner mode="indeterminate" [diameter]="32" />
       <p>Waiting for browser to finish…</p>
+      @if (pollingHint(); as hint) {
+        <p class="polling-hint">{{ hint }}</p>
+      }
     </div>
   } @else if (state() === 'success') {
     <div class="center success">

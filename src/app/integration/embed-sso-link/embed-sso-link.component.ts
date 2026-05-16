@@ -135,6 +135,8 @@ export class EmbedSsoLinkComponent implements OnInit {
     const pid = q.get('pairingId');
     this.pairingId.set(pid);
 
+    console.info('[ssoLinkPairing] browser tab loaded', { pairingId: pid });
+
     const providerId = q.get('providerId');
     const organizationId = q.get('organizationId');
     if (providerId?.trim() && organizationId?.trim()) {
@@ -278,7 +280,22 @@ export class EmbedSsoLinkComponent implements OnInit {
     if (!pid) {
       throw new Error('Missing pairing');
     }
-    await this.authService.completeSsoLinkPairingInBrowser(pid);
+    console.info('[ssoLinkPairing] browser calling completeSsoLinkPairing', {
+      pairingId: pid,
+      uid: this.user()?.uid,
+    });
+    try {
+      await this.authService.completeSsoLinkPairingInBrowser(pid);
+      console.info('[ssoLinkPairing] browser callable returned ok', {
+        pairingId: pid,
+      });
+    } catch (err) {
+      console.error('[ssoLinkPairing] browser callable failed', {
+        pairingId: pid,
+        err,
+      });
+      throw err;
+    }
     const orgId = this.activeSso()?.organizationId;
     await this.authService.ensureJoinedEnterpriseOrganization(orgId);
     this.done.set(true);

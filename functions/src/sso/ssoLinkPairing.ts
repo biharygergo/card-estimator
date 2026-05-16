@@ -99,6 +99,8 @@ export async function createSsoLinkPairing(req: Request, res: Response) {
     expiresAt,
   });
 
+  console.log("[ssoLinkPairing] create", {pairingId: docRef.id, userCode});
+
   res.json({
     pairingId: docRef.id,
     userCode,
@@ -135,6 +137,7 @@ export async function redeemSsoLinkPairing(req: Request, res: Response) {
   const snap = await docRef.get();
 
   if (!snap.exists) {
+    console.log("[ssoLinkPairing] redeem", {pairingId, branch: "not_found"});
     res.status(404).json({error: "Pairing not found"});
     return;
   }
@@ -142,16 +145,24 @@ export async function redeemSsoLinkPairing(req: Request, res: Response) {
   const data = snap.data()!;
   if (data.expiresAt && data.expiresAt.toMillis() < Date.now()) {
     await docRef.delete();
+    console.log("[ssoLinkPairing] redeem", {pairingId, branch: "expired"});
     res.status(410).json({error: "Pairing expired"});
     return;
   }
 
   if (data.deviceSecretHash !== hashDeviceSecret(deviceSecret)) {
+    console.log("[ssoLinkPairing] redeem", {pairingId, branch: "invalid_secret"});
     res.status(403).json({error: "Invalid device secret"});
     return;
   }
 
   if (data.status !== "completed" || !data.uid) {
+    console.log("[ssoLinkPairing] redeem", {
+      pairingId,
+      branch: "not_completed",
+      status: data.status,
+      hasUid: Boolean(data.uid),
+    });
     res.status(404).json({error: "Pairing not completed yet"});
     return;
   }
@@ -159,6 +170,7 @@ export async function redeemSsoLinkPairing(req: Request, res: Response) {
   await docRef.delete();
 
   const customToken = await getAuth().createCustomToken(data.uid as string);
+  console.log("[ssoLinkPairing] redeem", {pairingId, branch: "success"});
   res.json({customToken});
 }
 
@@ -168,11 +180,23 @@ export async function redeemSsoLinkPairing(req: Request, res: Response) {
 export async function completeSsoLinkPairing(
     request: CallableRequest<{ pairingId?: string }>,
 ): Promise<{ ok: true }> {
-  if (!request.auth?.uid) {
+  const uid = request.auth?.uid;
+  const pairingId = request.data?.pairingId?.trim();
+  console.log("[ssoLinkPairing] complete:enter", {pairingId, uid});
+
+  if (!uid) {
+    console.log("[ssoLinkPairing] complete:rejected", {
+      pairingId,
+      reason: "unauthenticated",
+    });
     throw new HttpsError("unauthenticated", "Sign in required");
   }
-  const pairingId = request.data?.pairingId?.trim();
   if (!pairingId) {
+    console.log("[ssoLinkPairing] complete:rejected", {
+      pairingId,
+      uid,
+      reason: "missing_pairing_id",
+    });
     throw new HttpsError("invalid-argument", "pairingId is required");
   }
 
@@ -181,22 +205,44 @@ export async function completeSsoLinkPairing(
   const snap = await docRef.get();
 
   if (!snap.exists) {
+    console.log("[ssoLinkPairing] complete:rejected", {
+      pairingId,
+      uid,
+      reason: "not_found",
+    });
     throw new HttpsError("not-found", "Pairing not found or already used");
   }
 
   const data = snap.data()!;
   if (data.expiresAt && data.expiresAt.toMillis() < Date.now()) {
     await docRef.delete();
+    console.log("[ssoLinkPairing] complete:rejected", {
+      pairingId,
+      uid,
+      reason: "expired",
+    });
     throw new HttpsError("deadline-exceeded", "Pairing expired");
   }
 
   if (data.status !== "pending") {
+    console.log("[ssoLinkPairing] complete:rejected", {
+      pairingId,
+      uid,
+      reason: "not_pending",
+      status: data.status,
+    });
     throw new HttpsError("failed-precondition", "Pairing is not pending");
   }
 
-  const authUser = await getAuth().getUser(request.auth.uid);
+  const authUser = await getAuth().getUser(uid);
   const linked = await userHasDomainEnterpriseSsoLinked(authUser);
   if (!linked) {
+    console.log("[ssoLinkPairing] complete:rejected", {
+      pairingId,
+      uid,
+      reason: "sso_not_linked",
+      providerIds: authUser.providerData.map((p) => p.providerId),
+    });
     throw new HttpsError(
         "failed-precondition",
         "Your account does not have enterprise SSO linked for this email domain. " +
@@ -206,9 +252,11 @@ export async function completeSsoLinkPairing(
 
   await docRef.update({
     status: "completed",
-    uid: request.auth.uid,
+    uid,
     completedAt: FieldValue.serverTimestamp(),
   });
+
+  console.log("[ssoLinkPairing] complete:success", {pairingId, uid});
 
   return {ok: true};
 }

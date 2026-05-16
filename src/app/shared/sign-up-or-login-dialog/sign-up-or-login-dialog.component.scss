@@ -139,4 +139,54 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  align-self: stretch;
+}
+
+.sso-sign-in {
+  width: 100%;
+  align-self: stretch;
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+
+  .sso-toggle {
+    width: 100%;
+    max-width: none;
+    height: 56px;
+    font-size: 1rem;
+
+    mat-icon {
+      margin-right: 1rem;
+    }
+  }
+
+  .sso-hint {
+    text-align: center;
+    color: var(--mat-dialog-supporting-text-color);
+    line-height: 1.4;
+    margin: 0;
+    width: 100%;
+  }
+
+  .sso-email-field {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .sso-continue {
+    width: 100%;
+    max-width: none;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .sso-spinner {
+    display: inline-block;
+  }
 }

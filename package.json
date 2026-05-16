@@ -22,6 +22,7 @@
     "stripe-forward-local": "stripe listen --forward-to 127.0.0.1:5001/ext-firestore-stripe-payments-handleWebhookEvents",
     "serve:ssr:estimator": "node dist/estimator/server/server.mjs",
     "generate-sitemap": "npx tsx ./src/cli/generate_sitemap.ts",
+    "configure-org-sso": "npx tsx scripts/configure-org-sso.ts",
     "cy:run": "cypress run --headless",
     "cy:run:spec": "cypress run --headless --spec"
   },

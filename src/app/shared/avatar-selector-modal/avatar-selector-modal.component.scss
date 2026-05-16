@@ -101,6 +101,90 @@
   }
 }
 
+.linked-auth-providers {
+  margin: 0 1rem 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mat-divider-color);
+
+  .section-heading {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+  }
+
+  .hint {
+    font-size: 0.875rem;
+    color: var(--mat-dialog-supporting-text-color);
+    margin: 0 0 1rem;
+    line-height: 1.4;
+  }
+
+  .linked-provider-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .linked-provider-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--mat-divider-color);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .linked-provider-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .linked-provider-label {
+    font-weight: 500;
+  }
+
+  .linked-provider-email {
+    font-size: 0.8125rem;
+    color: var(--mat-dialog-supporting-text-color);
+    word-break: break-word;
+  }
+
+  .unlink-spinner {
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+  /* Compact stroked actions (unlink + add Google/Microsoft/SSO) */
+  .mat-mdc-outlined-button {
+    --mdc-outlined-button-container-height: 32px;
+    font-size: 0.8125rem;
+    padding: 0 10px;
+    letter-spacing: normal;
+  }
+
+  .subsection-heading {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .add-sign-in-methods {
+    margin-top: 0.5rem;
+  }
+
+  .add-method-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
 .section-title {
   margin-top: 1rem;
 }

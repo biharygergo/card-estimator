@@ -89,6 +89,56 @@
               }}
             </button>
           </div>
+          <div class="sso-sign-in">
+            @if (!showSsoEmailPanel()) {
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                class="sso-toggle"
+                (click)="revealSsoEmailPanel()">
+                <mat-icon>business</mat-icon>
+                Sign in with SSO
+              </button>
+            } @else {
+              <small class="sso-hint">Use your work email so we can find your organization SSO.</small>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="sso-email-field">
+                <mat-label>Work email</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="you@company.com"
+                  [formControl]="ssoEmailControl"
+                  id="sso-email-input" />
+                <mat-icon matSuffix>alternate_email</mat-icon>
+                @if (ssoEmailControl.touched && ssoEmailControl.invalid) {
+                  @if (ssoEmailControl.errors?.['required']) {
+                    <mat-error>Work email is required.</mat-error>
+                  } @else if (ssoEmailControl.errors?.['email']) {
+                    <mat-error>This does not look like a valid e-mail.</mat-error>
+                  } @else if (ssoEmailControl.errors?.['invalidDomain']) {
+                    <mat-error>Enter a valid work email address.</mat-error>
+                  }
+                }
+              </mat-form-field>
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                class="sso-continue"
+                [disabled]="ssoEmailControl.invalid || ssoFlowBusy()"
+                (click)="startEnterpriseSsoFromEmail()">
+                @if (ssoFlowBusy()) {
+                  <mat-progress-spinner
+                    mode="indeterminate"
+                    [diameter]="22"
+                    class="sso-spinner"></mat-progress-spinner>
+                } @else {
+                  Continue with work SSO
+                }
+              </button>
+            }
+          </div>
         </div>
         <mat-divider></mat-divider>
         <mat-tab-group
@@ -163,7 +213,7 @@
                     type="email"
                     placeholder="you@company.com"
                     formControlName="email"
-                    id="email-input" />
+                    id="email-input-register" />
                   <mat-icon matSuffix>alternate_email</mat-icon>
                   @if (form.controls.email.errors?.['email']) {
                     <mat-error
@@ -177,7 +227,7 @@
                     matInput
                     type="password"
                     formControlName="password"
-                    id="password-input" />
+                    id="password-input-register" />
                   <mat-icon matSuffix>lock</mat-icon>
                   @if (form.controls.password.errors?.['minlength']) {
                     <mat-error
@@ -190,7 +240,7 @@
                 mat-stroked-button
                 [disabled]="!form.valid"
                 (click)="onCreateAccountClicked.next()"
-                id="create-account-button">
+                id="create-account-button-register">
                 Create account
               </button>
             </div></mat-tab

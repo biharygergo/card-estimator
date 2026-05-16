@@ -1,6 +1,7 @@
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {addContact, sendWelcomeEmail} from "../email";
 import {FirestoreEvent, QueryDocumentSnapshot, Change} from "firebase-functions/v2/firestore";
+import {addSsoUserToOrganizationIfNeeded} from "../sso/addSsoUserToOrganizationOnSignup";
 
 const PROFILES_COLLECTION = "userProfiles";
 
@@ -40,7 +41,8 @@ export async function onUserDetailsCreate(
   } catch (e) {
     console.error("Error adding customer to mailing list", e);
   }
-  return createUserProfile(userDetails);
+  await createUserProfile(userDetails);
+  await addSsoUserToOrganizationIfNeeded(userDetails);
 }
 
 export function onUserDetailsUpdate(change: FirestoreEvent<Change<QueryDocumentSnapshot> | undefined>) {

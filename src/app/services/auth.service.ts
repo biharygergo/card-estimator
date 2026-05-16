@@ -16,6 +16,7 @@ import {
   EmailAuthProvider,
   linkWithPopup,
   signInAnonymously,
+  signInWithCustomToken,
   signInWithPopup,
   unlink,
   updateProfile,
@@ -33,12 +34,13 @@ import {
   FieldValue,
   Firestore,
   query,
-  getDocs,
+  getDoc,
   serverTimestamp,
   setDoc,
   updateDoc,
   collectionSnapshots,
 } from '@angular/fire/firestore';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import {
   catchError,
   combineLatest,
@@ -60,15 +62,40 @@ import {
   UserPreference,
   UserProfile,
   UserProfileMap,
+  SsoDomainConfig,
 } from '../types';
 import { SupportedPhotoUrlPipe } from '../shared/supported-photo-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import {
+  SAMLAuthProvider,
+} from 'firebase/auth';
+
+export const SSO_DOMAINS_COLLECTION = 'ssoDomains';
 
 export const PROFILES_COLLECTION = 'userProfiles';
 export const USER_DETAILS_COLLECTION = 'userDetails';
+
+const AUTH_PROVIDER_LABELS: Record<string, string> = {
+  'google.com': 'Google',
+  'microsoft.com': 'Microsoft',
+  'facebook.com': 'Facebook',
+  'twitter.com': 'Twitter / X',
+  'github.com': 'GitHub',
+  'apple.com': 'Apple',
+  password: 'Email & password',
+  phone: 'Phone',
+};
+
+/** User-facing label for a Firebase `UserInfo.providerId`. */
+export function authProviderIdToLabel(providerId: string): string {
+  if (providerId.startsWith('saml.')) {
+    return 'Work SSO';
+  }
+  return AUTH_PROVIDER_LABELS[providerId] ?? providerId;
+}
 
 // TODO(biharygergo): This is duplicated between /functions
 export enum AuthIntent {
@@ -107,6 +134,7 @@ export class AuthService {
     private auth: Auth,
     private firestore: Firestore,
     private snackbar: MatSnackBar,
+    private functions: Functions,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {
     this.user = user(this.auth).pipe();
@@ -180,6 +208,67 @@ export class AuthService {
     }
 
     return response.json();
+  }
+
+  async createSsoLinkPairing(): Promise<{
+    pairingId: string;
+    userCode: string;
+    deviceSecret: string;
+    expiresInMinutes: number;
+  }> {
+    const response = await fetch(`${window.origin}/api/createSsoLinkPairing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.error || 'Could not start SSO link session. Try again.'
+      );
+    }
+    return response.json();
+  }
+
+  /**
+   * Poll from embedded app after user completes SSO in the browser.
+   * Returns customToken only when the browser session called completeSsoLinkPairing.
+   */
+  async redeemSsoLinkPairing(
+    pairingId: string,
+    deviceSecret: string
+  ): Promise<{ customToken: string }> {
+    const response = await fetch(`${window.origin}/api/redeemSsoLinkPairing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pairingId, deviceSecret }),
+    });
+    const body = await response.json().catch(() => null);
+    if (!response.ok) {
+      const msg =
+        typeof body?.error === 'string'
+          ? body.error
+          : 'Pairing not ready';
+      const err = new Error(msg) as Error & { status?: number };
+      err.status = response.status;
+      throw err;
+    }
+    return body as { customToken: string };
+  }
+
+  async completeSsoLinkPairingInBrowser(pairingId: string): Promise<void> {
+    const fn = httpsCallable(this.functions, 'completeSsoLinkPairing');
+    await fn({ pairingId });
+  }
+
+  async signInWithCustomTokenFromPairing(customToken: string): Promise<void> {
+    const cred = await signInWithCustomToken(this.auth, customToken);
+    const isNewUser = getAdditionalUserInfo(cred).isNewUser ?? false;
+    await this.handleSignInResult({ isNewUser });
+    this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
   }
 
   async signInWithMicrosoft(idToken?: string) {
@@ -335,9 +424,131 @@ export class AuthService {
     return provider;
   }
 
+  private createEnterpriseSsoProvider(providerId: string) {
+    if (providerId.startsWith('saml.')) {
+      return new SAMLAuthProvider(providerId);
+    }
+    const p = new OAuthProvider(providerId);
+    p.addScope('openid');
+    p.addScope('profile');
+    p.addScope('email');
+    return p;
+  }
+
+  async getSsoDomainConfig(domain: string): Promise<SsoDomainConfig | null> {
+    const normalized = domain.trim().toLowerCase();
+    if (!normalized) {
+      return null;
+    }
+    const snap = await getDoc(
+      doc(this.firestore, SSO_DOMAINS_COLLECTION, normalized)
+    );
+    if (!snap.exists()) {
+      return null;
+    }
+    return snap.data() as SsoDomainConfig;
+  }
+
+  async ensureJoinedEnterpriseOrganization(
+    organizationId: string | undefined
+  ): Promise<void> {
+    if (!organizationId) {
+      return;
+    }
+    const u = await this.getUser();
+    if (!u) {
+      return;
+    }
+    try {
+      const joinFn = httpsCallable(
+        this.functions,
+        'joinOrganizationIfSsoEligible'
+      );
+      await joinFn({ organizationId });
+    } catch (e) {
+      console.warn('joinOrganizationIfSsoEligible', e);
+    }
+  }
+
+  /**
+   * Link enterprise SAML/OIDC to the current account (browser popup).
+   * Use in web profile or embed handoff page after signing in with email/Google/Microsoft.
+   */
+  async linkEnterpriseSso(
+    providerId: string,
+    organizationId?: string
+  ): Promise<void> {
+    const current = this.auth.currentUser;
+    if (!current || current.isAnonymous) {
+      throw new Error('You must be signed in to link work SSO.');
+    }
+    const authProvider = this.createEnterpriseSsoProvider(providerId);
+    await linkWithPopup(current, authProvider);
+    await current.reload();
+    await this.handleSignInResult({ isNewUser: false });
+    await this.ensureJoinedEnterpriseOrganization(organizationId);
+    this.snackbar.open(`Work SSO linked to your account.`, null, {
+      duration: 4000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  /**
+   * Enterprise SSO via Identity Platform (project-level SAML or OIDC provider id).
+   * For existing accounts, prefer linkEnterpriseSso from Profile instead.
+   */
+  async signInWithEnterpriseSso(
+    providerId: string,
+    organizationId?: string
+  ): Promise<void> {
+    const authProvider = this.createEnterpriseSsoProvider(providerId);
+    const userCredential = await signInWithPopup(this.auth, authProvider);
+    const isNewUser = getAdditionalUserInfo(userCredential).isNewUser ?? false;
+    await this.handleSignInResult({ isNewUser });
+    await this.ensureJoinedEnterpriseOrganization(organizationId);
+    this.snackbar.open(`You are now signed in, welcome back!`, null, {
+      duration: 3000,
+      horizontalPosition: 'right',
+    });
+  }
+
+  /**
+   * True when the user has more than one linked provider so unlinking is allowed.
+   */
+  canUnlinkProvider(user: User | null | undefined): boolean {
+    if (!user || user.isAnonymous) {
+      return false;
+    }
+    return (user.providerData?.length ?? 0) > 1;
+  }
+
+  /**
+   * Unlink a Firebase Auth provider from the current user.
+   * Requires at least one other sign-in method to remain.
+   */
+  async unlinkProvider(providerId: string): Promise<void> {
+    const u = this.auth.currentUser;
+    if (!u) {
+      throw new Error('You are not signed in.');
+    }
+    if (u.isAnonymous) {
+      throw new Error('Anonymous users cannot manage linked sign-in methods.');
+    }
+    if ((u.providerData?.length ?? 0) <= 1) {
+      throw new Error(
+        'You must keep at least one sign-in method on your account.'
+      );
+    }
+    if (!u.providerData.some(p => p.providerId === providerId)) {
+      throw new Error('This sign-in method is not linked to your account.');
+    }
+    await unlink(u, providerId);
+    await u.reload();
+    await this.refreshIdToken();
+  }
+
   async unlinkGoogleAccount() {
-    const provider = new GoogleAuthProvider();
-    await unlink(this.auth.currentUser, provider.providerId);
+    await this.unlinkProvider(GoogleAuthProvider.PROVIDER_ID);
   }
 
   async updateAvatar(avatarUrl: string | null) {

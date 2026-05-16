@@ -119,6 +119,62 @@
         </div>
       </div>
     </mat-tab>
+    <mat-tab label="SSO">
+      <div class="tab-content">
+        <div class="tab-section sso-tab">
+          <h5 class="section-title">
+            <mat-icon>vpn_key</mat-icon>
+            Enterprise sign-in (SAML)
+          </h5>
+          @if (hasSsoConfiguration(organization)) {
+          <p class="sso-lead">
+            These values come from your organization settings. Use the ACS URL and
+            audience when configuring your identity provider.
+          </p>
+          @if (organization?.ssoProviderId) {
+          <dl class="sso-dl">
+            <dt>Identity Platform provider ID</dt>
+            <dd>
+              <code class="sso-code">{{ organization?.ssoProviderId }}</code>
+            </dd>
+          </dl>
+          } @if ((organization?.ssoDomains?.length ?? 0) > 0) {
+          <dl class="sso-dl">
+            <dt>Email domains</dt>
+            <dd>
+              <mat-chip-set class="sso-domain-chips" aria-label="SSO email domains">
+                @for (domain of organization?.ssoDomains ?? []; track domain) {
+                <mat-chip disabled>{{ domain }}</mat-chip>
+                }
+              </mat-chip-set>
+            </dd>
+          </dl>
+          }
+          <dl class="sso-dl">
+            <dt>Assertion Consumer Service (ACS) URL</dt>
+            <dd>
+              <code class="sso-code sso-code-block">{{ samlAuthHandlerUrl }}</code>
+            </dd>
+            <dt>Audience (SP entity ID)</dt>
+            <dd>
+              <code class="sso-code sso-code-block">{{ samlAuthHandlerUrl }}</code>
+              <p class="sso-hint">
+                For many setups this matches the ACS URL. Enter the same value under
+                Audience in your IdP when testing mock SAML.
+              </p>
+            </dd>
+          </dl>
+          <p class="sso-footnote">
+            SSO configuration is managed outside the app. This tab is read-only.
+          </p>
+          } @else {
+          <p class="sso-empty">
+            Enterprise SAML SSO is not configured for this organization.
+          </p>
+          }
+        </div>
+      </div>
+    </mat-tab>
     <mat-tab label="Members">
       <div class="tab-content">
         <div class="tab-section">
@@ -256,7 +312,7 @@
                 <mat-icon matTooltip="Waiting for delivery"
                   >hourglass_empty</mat-icon
                 >
-                } @if (invite.emailStatus === 'error') {
+                } @if (invite.emailStatus === 'failure') {
                 <mat-icon matTooltip="Mail could not be delivered"
                   >warning</mat-icon
                 >

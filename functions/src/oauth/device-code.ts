@@ -3,17 +3,17 @@ import {getAuthIntent, OAuthProvider, OAuthState} from "./types";
 import {isRunningInDevMode, getHost} from "../config";
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {AUTH_SESSIONS} from "../shared/collections";
-import * as crypto from "crypto";
+import { randomInt } from "crypto";
 
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const CODE_LENGTH = 6;
 const CODE_EXPIRY_MINUTES = 10;
 
 function generateDeviceCode(): string {
-  const bytes = crypto.randomBytes(CODE_LENGTH);
-  return Array.from(bytes)
-      .map((b) => CODE_CHARS[b % CODE_CHARS.length])
-      .join("");
+  const n = CODE_CHARS.length;
+  return Array.from({ length: CODE_LENGTH }, () =>
+    CODE_CHARS[randomInt(n)]
+  ).join("");
 }
 
 /**

@@ -60,6 +60,119 @@
                 </button>
               </div>
             </div>
+            @if (user && !user.isAnonymous) {
+            @let ssoOffer = linkWorkSsoOffer$ | async;
+            <div class="linked-auth-providers">
+              <h3 class="section-heading">Sign-in methods</h3>
+              <p class="hint">
+                Ways you can sign in to this account. At least one must stay
+                linked.
+              </p>
+              @if ((user.providerData?.length ?? 0) > 0) {
+              <ul class="linked-provider-list">
+                @for (p of user.providerData; track p.providerId) {
+                <li class="linked-provider-row">
+                  <div class="linked-provider-info">
+                    <span class="linked-provider-label">{{
+                      providerLabel(p.providerId)
+                    }}</span>
+                    @if (p.email) {
+                    <span class="linked-provider-email">{{ p.email }}</span>
+                    }
+                  </div>
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    type="button"
+                    [disabled]="!canUnlinkProvider() || isLinkBusy()"
+                    [matTooltip]="
+                      canUnlinkProvider()
+                        ? ''
+                        : 'Add another sign-in method before removing this one.'
+                    "
+                    [matTooltipDisabled]="canUnlinkProvider()"
+                    (click)="onUnlinkProvider(p.providerId)">
+                    @if (unlinkingProviderId === p.providerId) {
+                    <mat-progress-spinner
+                      class="unlink-spinner"
+                      diameter="20"
+                      mode="indeterminate" />
+                    } @else {
+                    Unlink
+                    }
+                  </button>
+                </li>
+                }
+              </ul>
+              }
+              @if (
+                !hasLinkedProvider(googleAuthProviderId) ||
+                !hasLinkedProvider(microsoftOidcProviderId) ||
+                ssoOffer
+              ) {
+              <div class="add-sign-in-methods">
+                <h4 class="subsection-heading">Add a sign-in method</h4>
+                <p class="hint">
+                  Link Google or Microsoft, or connect work SSO when your
+                  organization supports it.
+                </p>
+                <div class="add-method-actions">
+                  @if (!hasLinkedProvider(googleAuthProviderId)) {
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    type="button"
+                    [disabled]="isLinkBusy()"
+                    (click)="onLinkGoogle()">
+                    @if (linkingAddKey === 'google') {
+                    <mat-progress-spinner
+                      class="unlink-spinner"
+                      diameter="16"
+                      mode="indeterminate" />
+                    } @else {
+                    Link Google
+                    }
+                  </button>
+                  }
+                  @if (!hasLinkedProvider(microsoftOidcProviderId)) {
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    type="button"
+                    [disabled]="isLinkBusy()"
+                    (click)="onLinkMicrosoft()">
+                    @if (linkingAddKey === 'microsoft') {
+                    <mat-progress-spinner
+                      class="unlink-spinner"
+                      diameter="16"
+                      mode="indeterminate" />
+                    } @else {
+                    Link Microsoft
+                    }
+                  </button>
+                  }
+                  @if (ssoOffer) {
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    type="button"
+                    [disabled]="isLinkBusy()"
+                    (click)="onLinkWorkSso(ssoOffer)">
+                    @if (linkingAddKey === 'sso') {
+                    <mat-progress-spinner
+                      class="unlink-spinner"
+                      diameter="16"
+                      mode="indeterminate" />
+                    } @else {
+                    Link work SSO
+                    }
+                  </button>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+            }
           </div>
         </div>
       </mat-tab>

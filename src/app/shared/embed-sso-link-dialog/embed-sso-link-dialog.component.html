@@ -1,0 +1,33 @@
+<div mat-dialog-content class="content">
+  @if (state() === 'loading') {
+    <div class="center">
+      <mat-progress-spinner mode="indeterminate" [diameter]="40" />
+      <p>Starting secure handoff…</p>
+    </div>
+  } @else if (state() === 'polling') {
+    <h2 class="title">Complete sign-in in your browser</h2>
+    <p class="hint">
+      We opened a browser tab. Sign in there, link work SSO if asked, then come
+      back here.
+    </p>
+    @if (userCode(); as code) {
+      <div class="code-box" aria-label="Verification code">{{ code }}</div>
+      <p class="code-caption">Verification code (optional check)</p>
+    }
+    <div class="center polling">
+      <mat-progress-spinner mode="indeterminate" [diameter]="32" />
+      <p>Waiting for browser to finish…</p>
+    </div>
+  } @else if (state() === 'success') {
+    <div class="center success">
+      <mat-icon>check_circle</mat-icon>
+      <p>Signed in</p>
+    </div>
+  } @else {
+    <p class="error">{{ errorMessage() }}</p>
+    <div class="actions">
+      <button mat-stroked-button type="button" (click)="retry()">Try again</button>
+      <button mat-button type="button" (click)="cancel()">Cancel</button>
+    </div>
+  }
+</div>

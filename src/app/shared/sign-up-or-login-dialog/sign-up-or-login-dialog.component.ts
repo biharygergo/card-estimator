@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -15,7 +15,6 @@ import {
 import {
   BehaviorSubject,
   catchError,
-  EMPTY,
   from,
   map,
   Observable,
@@ -29,14 +28,14 @@ import {
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService, AuthIntent } from 'src/app/services/auth.service';
+import { SocialAccountLinkService } from 'src/app/services/social-account-link.service';
 import { ZoomApiService } from 'src/app/services/zoom-api.service';
 import {
   authProgressDialogCreator,
   AuthProgressState,
 } from '../auth-progress-dialog/auth-progress-dialog.component';
-import {
-  deviceCodeDialogCreator,
-} from '../device-code-dialog/device-code-dialog.component';
+import { deviceCodeDialogCreator } from '../device-code-dialog/device-code-dialog.component';
+import { embedSsoLinkDialogCreator } from '../embed-sso-link-dialog/embed-sso-link-dialog.component';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { TeamsService } from 'src/app/services/teams.service';
 import { ActivatedRoute } from '@angular/router';
@@ -56,6 +55,7 @@ import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ResizeMonitorDirective } from '../directives/resize-monitor.directive';
 import * as Sentry from '@sentry/angular';
+import { isEmbeddedPlatform } from 'src/app/types';
 
 export const SIGN_UP_OR_LOGIN_MODAL = 'signUpOrLoginModal';
 
@@ -82,6 +82,15 @@ export const signUpOrLoginDialogCreator = (
     data,
   },
 ];
+
+function emailDomainFromAddress(email: string): string | null {
+  const trimmed = email.trim().toLowerCase();
+  const parts = trimmed.split('@');
+  if (parts.length < 2 || parts[1].length === 0) {
+    return null;
+  }
+  return parts[1];
+}
 
 @Component({
   selector: 'app-sign-up-or-login-dialog',
@@ -133,11 +142,20 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
   errorMessage$ = new Subject<string>();
   destroy = new Subject<void>();
 
+  /** Expands to work email + “Continue with SSO” (lookup runs on submit only). */
+  showSsoEmailPanel = signal(false);
+  ssoFlowBusy = signal(false);
+  ssoEmailControl = new FormControl<string>('', {
+    validators: [Validators.required, Validators.email],
+    nonNullable: true,
+  });
+
   intent: SignUpOrLoginIntent;
 
   readonly SignUpOrLoginIntent = SignUpOrLoginIntent;
   constructor(
     private readonly authService: AuthService,
+    private readonly socialAccountLink: SocialAccountLinkService,
     private readonly analyticsService: AnalyticsService,
     private readonly zoomApiService: ZoomApiService,
     private readonly dialog: MatDialog,
@@ -194,9 +212,6 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
             return this.signInWithMicrosoft();
           }
         }),
-        tap(
-          () => {} // this.analyticsService.logClickedSignUpWithMicrosoft('sign-in-dialog')
-        ),
         takeUntil(this.destroy)
       )
       .subscribe(success => {
@@ -226,6 +241,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
             );
           }
           return from(signInPromise).pipe(
+            tap(() => this.isBusy.next(false)),
             map(() => true),
             catchError(error => {
               this.isBusy.next(false);
@@ -263,6 +279,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
             );
           }
           return from(signInPromise).pipe(
+            tap(() => this.isBusy.next(false)),
             map(() => true),
             catchError(error => {
               this.isBusy.next(false);
@@ -278,6 +295,81 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
           this.dialogRef.close();
         }
       });
+  }
+
+  revealSsoEmailPanel(): void {
+    this.showSsoEmailPanel.set(true);
+  }
+
+  async startEnterpriseSsoFromEmail(): Promise<void> {
+    this.ssoEmailControl.markAllAsTouched();
+    if (this.ssoEmailControl.invalid) {
+      return;
+    }
+    const domain = emailDomainFromAddress(this.ssoEmailControl.value);
+    if (!domain) {
+      this.ssoEmailControl.setErrors({ invalidDomain: true });
+      return;
+    }
+
+    this.ssoFlowBusy.set(true);
+    this.errorMessage$.next('');
+    try {
+      const cfg = await this.authService.getSsoDomainConfig(domain);
+      if (!cfg?.providerId) {
+        this.toastService.showMessage(
+          'No work SSO is set up for that email domain. Use Google, Microsoft, or email and password.',
+          undefined,
+          'error'
+        );
+        return;
+      }
+
+      const inEmbed = isEmbeddedPlatform(this.config.runningIn);
+      if (inEmbed) {
+        this.dialog.open(
+          ...embedSsoLinkDialogCreator({
+            ssoProviderId: cfg.providerId,
+            ssoOrganizationId: cfg.organizationId,
+            ssoOrganizationName: cfg.organizationName,
+          })
+        );
+        return;
+      }
+
+      const user = await this.authService.getUser();
+      if (
+        this.intent === SignUpOrLoginIntent.LINK_ACCOUNT &&
+        user &&
+        !user.isAnonymous
+      ) {
+        await this.authService.linkEnterpriseSso(
+          cfg.providerId,
+          cfg.organizationId
+        );
+      } else {
+        await this.authService.signInWithEnterpriseSso(
+          cfg.providerId,
+          cfg.organizationId
+        );
+      }
+      this.dialogRef.close();
+    } catch (e: unknown) {
+      const err = e as { code?: string; message?: string };
+      if (err.code === 'auth/account-exists-with-different-credential') {
+        this.errorMessage$.next(
+          'That email already has an account with a different sign-in method. Open planningpoker.live in a browser and use Join, or link work SSO from your profile after signing in.'
+        );
+      } else {
+        console.error(e);
+        this.errorMessage$.next(
+          err.message ?? 'Work SSO could not be started. Please try again.'
+        );
+        Sentry.captureException(e);
+      }
+    } finally {
+      this.ssoFlowBusy.set(false);
+    }
   }
 
   async forgotPassword() {
@@ -296,31 +388,14 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     );
   }
 
-  private linkAccountWithGoogle(): Observable<void | {}> {
-    let signInPromise: Promise<void>;
-    if (this.config.runningIn === 'zoom') {
-      signInPromise = this.linkAccountWithProviderInZoom('google');
-    } else if (this.config.runningIn === 'teams') {
-      const returnTo = this.route.snapshot.url.join('/');
-      signInPromise = this.teamsService
-        .getGoogleOauthToken(returnTo)
-        .then(token => {
-          return this.authService.linkAccountWithGoogle(token);
-        });
-    } else {
-      signInPromise = this.linkAccountWithGoogleWeb();
-    }
-    return from(signInPromise).pipe(
+  private linkAccountWithGoogle(): Observable<boolean> {
+    return from(this.socialAccountLink.linkGoogle()).pipe(
       tap(() => {
         this.isBusy.next(false);
       }),
       map(() => true),
       catchError(error => this.handleAccountError(error))
     );
-  }
-
-  private async linkAccountWithGoogleWeb(): Promise<void> {
-    return this.authService.linkAccountWithGoogle();
   }
 
   private handleAccountError(error: any): Observable<boolean> {
@@ -346,30 +421,6 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     this.errorMessage$.next(error.message);
     Sentry.captureException(error);
     return of(false);
-  }
-
-  private async linkAccountWithProviderInZoom(provider: string): Promise<void> {
-    await this.zoomApiService.openUrl(
-      this.authService.getDeviceAuthUrl(AuthIntent.LINK_ACCOUNT, provider),
-      true
-    );
-
-    const dialogRef = this.dialog.open(
-      ...deviceCodeDialogCreator({
-        authIntent: AuthIntent.LINK_ACCOUNT,
-        provider,
-      })
-    );
-
-    return new Promise<void>((resolve, reject) => {
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          resolve();
-        } else {
-          reject(new Error('Account linking cancelled'));
-        }
-      });
-    });
   }
 
   private signInWithGoogle(): Observable<boolean> {
@@ -415,7 +466,7 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     );
 
     return new Promise<void>((resolve, reject) => {
-      dialogRef.afterClosed().subscribe((result) => {
+      dialogRef.afterClosed().subscribe(result => {
         if (result) {
           resolve();
         } else {
@@ -430,22 +481,8 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  private linkAccountWithMicrosoft(): Observable<void | {}> {
-    let signInPromise: Promise<void>;
-    if (this.config.runningIn === 'zoom') {
-      signInPromise = this.linkAccountWithProviderInZoom('microsoft');
-    } else if (this.config.runningIn === 'teams') {
-      const returnTo = this.route.snapshot.url.join('/');
-
-      signInPromise = this.teamsService
-        .getMicrosoftAuthToken(returnTo)
-        .then(token => {
-          return this.authService.linkAccountWithMicrosoft(token);
-        });
-    } else {
-      signInPromise = this.authService.linkAccountWithMicrosoft();
-    }
-    return from(signInPromise).pipe(
+  private linkAccountWithMicrosoft(): Observable<boolean> {
+    return from(this.socialAccountLink.linkMicrosoft()).pipe(
       tap(() => {
         this.isBusy.next(false);
       }),

@@ -1,0 +1,74 @@
+.content {
+  padding-top: 8px;
+}
+
+.title {
+  font-size: 1.15rem;
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
+.hint {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+
+.code-box {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-align: center;
+  padding: 14px 12px;
+  background: #f0f4ff;
+  border: 2px dashed #3f51b5;
+  border-radius: 10px;
+  color: #3f51b5;
+  margin-bottom: 4px;
+}
+
+.code-caption {
+  font-size: 0.75rem;
+  color: #888;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.polling p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.success mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #4caf50;
+}
+
+.success p {
+  font-weight: 600;
+  margin: 0;
+}
+
+.error {
+  color: #c62828;
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

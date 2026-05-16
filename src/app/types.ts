@@ -78,6 +78,11 @@ export enum MemberStatus {
 
 export type Platform = 'zoom' | 'webex' | 'teams' | 'meet' | 'web';
 
+/** True when the app runs inside an embedded integration, not the public website. */
+export function isEmbeddedPlatform(runningIn: Platform): boolean {
+  return runningIn !== 'web';
+}
+
 export interface Member {
   id: string;
   name: string;
@@ -337,7 +342,17 @@ export interface Organization {
   memberIds: string[];
   memberRoles?: { [memberId: string]: OrganizationRole };
   logoUrl: string;
-  activePlan: 'basic' | 'premium';
+  activePlan: 'basic' | 'premium' | 'enterprise';
+  /** Identity Platform SAML provider id, e.g. `saml.marriott` */
+  ssoProviderId?: string;
+  ssoDomains?: string[];
+}
+
+/** Public lookup: doc id = email domain (lowercase), e.g. `marriott.com` */
+export interface SsoDomainConfig {
+  organizationId: string;
+  providerId: string;
+  organizationName?: string;
 }
 
 export enum OrganizationRole {
@@ -350,7 +365,8 @@ export interface OrganizationMember {
   displayName: string;
   email: string;
   role: OrganizationRole;
-  joinedAt: FieldValue;
+  /** Best-effort display; membership is defined by `Organization.memberIds`. */
+  joinedAt?: FieldValue | Timestamp;
 }
 
 export enum SubscriptionResult {

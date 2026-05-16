@@ -9,6 +9,7 @@ import { MatButton, MatAnchor, MatIconButton } from '@angular/material/button';
 import { NgClass } from '@angular/common';
 import { ProfileDropdownComponent } from 'src/app/shared/profile-dropdown/profile-dropdown.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { isEmbeddedPlatform } from 'src/app/types';
 
 @Component({
   selector: 'planning-poker-landing-header',
@@ -37,7 +38,9 @@ export class HeaderV2Component implements OnInit {
   // Mobile submenu state
   mobileSubmenuOpen: 'resources' | null = null;
 
-  isEmbeddedApp = this.config.runningIn !== 'web';
+  get isEmbeddedApp(): boolean {
+    return isEmbeddedPlatform(this.config.runningIn);
+  }
   user = toSignal(inject(AuthService).user);
 
   constructor(

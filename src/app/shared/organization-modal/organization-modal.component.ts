@@ -19,7 +19,6 @@ import {
   combineLatest,
   delay,
   distinctUntilChanged,
-  filter,
   from,
   map,
   Observable,
@@ -30,6 +29,7 @@ import {
   takeUntil,
   tap,
   withLatestFrom,
+  catchError,
 } from 'rxjs';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -72,6 +72,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { pricingModalCreator } from '../pricing-table/pricing-table.component';
 import { MatDivider } from '@angular/material/divider';
+import { environment } from 'src/environments/environment';
 
 export const organizationModalCreator =
   (): ModalCreator<OrganizationModalComponent> => [
@@ -137,6 +138,9 @@ interface OrganizationChecklist {
   ],
 })
 export class OrganizationModalComponent implements OnInit, OnDestroy {
+  /** SAML ACS / default SP entity ID for this Firebase project (auth domain). */
+  readonly samlAuthHandlerUrl = `https://${environment.firebase.authDomain}/__/auth/handler`;
+
   organization$ = this.organizationService.getMyOrganization().pipe(
     tap(org => (this.organization = org)),
     tap(org => {
@@ -157,7 +161,9 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       if (!organizationId) {
         return of([]);
       }
-      return this.organizationService.getOrganizationMembers(organizationId);
+      return this.organizationService
+        .getOrganizationMembers(organizationId)
+        .pipe(catchError(() => of([])));
     }),
     shareReplay(1)
   );
@@ -165,15 +171,18 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   invitations$ = this.organization$.pipe(
     switchMap(organization => {
       if (!organization || !organization.memberIds?.length) {
-        return of({ invitations: [], organization });
+        return of({ invitations: [] as InvitationData[], organization });
       }
-      // Add a delay before querying invitations to handle newly created organizations
+      // Delay so org doc + memberIds are visible to security rules and cf. getOrganizationMembers
       return of(null).pipe(
-        delay(500), // 500ms delay
+        delay(700), // 500ms delay
         switchMap(() =>
-          this.organizationService
-            .getInvitations(organization.id)
-            .pipe(map(invitations => ({ invitations, organization })))
+          this.organizationService.getInvitations(organization.id).pipe(
+            map(invitations => ({ invitations, organization })),
+            catchError(() =>
+              of({ invitations: [] as InvitationData[], organization })
+            )
+          )
         )
       );
     }),
@@ -181,12 +190,14 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       invitations.filter(invite => invite.status !== 'accepted')
     ),
     map(invitations =>
-      invitations.map(invite => ({
-        ...invite,
-        tooltip: `Invite sent at: ${new Date(
-          invite.createdAt?.seconds * 1000
-        ).toLocaleString()}`,
-      }))
+      invitations.map(invite => {
+        const created = invite.createdAt as { seconds?: number } | undefined;
+        const ms = (created?.seconds ?? 0) * 1000;
+        return {
+          ...invite,
+          tooltip: `Invite sent at: ${new Date(ms).toLocaleString()}`,
+        };
+      })
     )
   );
 
@@ -197,7 +208,7 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
       const checklistItems = {
         organizationCreated: true,
         logoUploaded: !!organization?.logoUrl,
-        colleaguesInvited: organization?.memberIds.length > 1,
+        colleaguesInvited: (organization?.memberIds?.length ?? 0) > 1,
       };
       return {
         items: checklistItems,
@@ -233,12 +244,14 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     combineLatest([
       from(this.paymentsService.getAndAssignCreditBundles()),
       this.organization$.pipe(
-        map(org => org?.id),
-        filter(orgId => !!orgId),
+        map(org => org?.id ?? null),
         distinctUntilChanged()
       ),
     ]).pipe(
       map(([{ credits }, orgId]) => {
+        if (orgId == null) {
+          return { total: 0, available: 0, used: 0 };
+        }
         const organizationCredits = credits.filter(
           credit => credit.organizationId === orgId
         );
@@ -250,7 +263,10 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
         const used = total - available;
 
         return { total, available, used };
-      })
+      }),
+      catchError(() =>
+        of({ total: 0, available: 0, used: 0 })
+      )
     )
   );
 
@@ -297,31 +313,53 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
   }
 
   async createEmptyOrganization() {
-    const user = await this.authService.getUser();
-    let domain = '';
-
     try {
-      const emailDomain = user.email.split('@')[1].split('.')[0];
-      if (!['gmail', 'icloud', 'hotmail'].includes(emailDomain)) {
-        domain = emailDomain.charAt(0).toUpperCase() + emailDomain.slice(1);
+      const user = await this.authService.getUser();
+      if (!user) {
+        this.toastService.showMessage('You must be signed in to create an organization.', 5000, 'error');
+        return;
       }
-    } catch {
-      // No-op
-    }
+      let domain = '';
 
-    await this.organizationService.createOrganization({
-      name: domain || `${user.displayName}'s Organization`,
-      logoUrl: null,
-    });
-    this.analytics.logClickedGetStartedOrganization();
+      try {
+        const emailDomain = user.email.split('@')[1].split('.')[0];
+        if (!['gmail', 'icloud', 'hotmail'].includes(emailDomain)) {
+          domain = emailDomain.charAt(0).toUpperCase() + emailDomain.slice(1);
+        }
+      } catch {
+        // ignore
+      }
+
+      const name = domain || `${user.displayName}'s Organization`;
+      const newOrgId = await this.organizationService.createOrganization({
+        name,
+        logoUrl: null,
+      });
+      this.organizationService.setSelectedOrganization(newOrgId);
+      this.showIntro = false;
+      this.analytics.logClickedGetStartedOrganization();
+    } catch (e) {
+      const msg =
+        e instanceof Error ? e.message : 'Could not create organization.';
+      this.toastService.showMessage(msg, 6000, 'error');
+    }
   }
 
   async saveOrganization() {
     if (this.organization === undefined) {
-      await this.organizationService.createOrganization({
-        name: this.organizationForm.controls.name.value,
-        logoUrl: this.organizationForm.controls.logoUrl.value,
-      });
+      try {
+        const newId = await this.organizationService.createOrganization({
+          name: this.organizationForm.controls.name.value,
+          logoUrl: this.organizationForm.controls.logoUrl.value,
+        });
+        this.organizationService.setSelectedOrganization(newId);
+        this.showIntro = false;
+      } catch (e) {
+        const msg =
+          e instanceof Error ? e.message : 'Could not create organization.';
+        this.toastService.showMessage(msg, 6000, 'error');
+        return;
+      }
     } else {
       await this.organizationService.updateOrganization(this.organization.id, {
         name: this.organizationForm.controls.name.value,
@@ -485,6 +523,16 @@ export class OrganizationModalComponent implements OnInit, OnDestroy {
     }
     
     return true;
+  }
+
+  /** True when org document has any SAML / domain routing config (read-only SSO tab). */
+  hasSsoConfiguration(org: Organization | null | undefined): boolean {
+    if (!org) {
+      return false;
+    }
+    const id = org.ssoProviderId?.trim();
+    const domains = org.ssoDomains?.filter(d => d?.trim()) ?? [];
+    return Boolean(id) || domains.length > 0;
   }
 
   getRoleDisplayName(role: OrganizationRole): string {

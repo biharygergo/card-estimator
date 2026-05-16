@@ -1,15 +1,41 @@
 <div class="embed-sso-page">
   <div class="card">
-    <h1>Connect your session</h1>
+    <div class="brand">
+      <picture>
+        <source srcset="/assets/logo.webp" type="image/webp" />
+        <img src="/assets/logo.png" alt="Planning Poker" class="logo" />
+      </picture>
+      <span class="brand-name">PlanningPoker.live</span>
+    </div>
     @if (!pairingId()) {
-      <p class="error">This link isn’t valid. Open it again from the integration.</p>
+      <h1>Invalid link</h1>
+      <p class="error-block">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <span>This link isn’t valid. Open it again from the integration.</span>
+      </p>
     } @else if (done()) {
-      <p class="success">You’re connected. Return to the embedded app or close this tab.</p>
+      <div class="success-state">
+        <div class="success-icon-wrap">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h1>You're connected</h1>
+        <p class="lead">
+          Return to the embedded app — we'll finish signing you in there. You
+          can close this tab.
+        </p>
+      </div>
     } @else {
-      <p class="lead">Use your <strong>organization sign-in</strong> so we can securely hand off to the integration.</p>
+      <h1>Connect your session</h1>
+      <p class="lead">
+        Use your <strong>organization sign-in</strong> so we can securely hand
+        off to the integration.
+      </p>
 
       @if (errorText()) {
-        <p class="error">{{ errorText() }}</p>
+        <p class="error-block">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          <span>{{ errorText() }}</span>
+        </p>
       }
 
       @if (pendingSsoAccountExists()) {
@@ -93,4 +119,9 @@
       }
     }
   </div>
+  <p class="footer">
+    <a href="https://planningpoker.live" target="_blank" rel="noopener">
+      planningpoker.live
+    </a>
+  </p>
 </div>

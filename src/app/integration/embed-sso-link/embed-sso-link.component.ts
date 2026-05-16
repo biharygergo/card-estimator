@@ -12,6 +12,7 @@ import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { SsoDomainConfig } from 'src/app/types';
@@ -33,6 +34,7 @@ import { AuthError } from 'firebase/auth';
     MatLabel,
     MatInput,
     MatError,
+    MatIcon,
   ],
   templateUrl: './embed-sso-link.component.html',
   styleUrls: ['./embed-sso-link.component.scss'],

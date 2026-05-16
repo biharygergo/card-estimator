@@ -3,6 +3,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogContent,
   MatDialogRef,
+  MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -38,6 +39,7 @@ export const embedSsoLinkDialogCreator = (
   templateUrl: './embed-sso-link-dialog.component.html',
   styleUrls: ['./embed-sso-link-dialog.component.scss'],
   imports: [
+    MatDialogTitle,
     MatDialogContent,
     MatButton,
     MatIcon,

@@ -167,9 +167,20 @@ export async function redeemSsoLinkPairing(req: Request, res: Response) {
     return;
   }
 
-  await docRef.delete();
+  let customToken: string;
+  try {
+    customToken = await getAuth().createCustomToken(data.uid as string);
+  } catch (e) {
+    console.error("[ssoLinkPairing] redeem", {
+      pairingId,
+      branch: "token_failed",
+      message: e instanceof Error ? e.message : String(e),
+    });
+    res.status(500).json({error: "Could not mint token"});
+    return;
+  }
 
-  const customToken = await getAuth().createCustomToken(data.uid as string);
+  await docRef.delete();
   console.log("[ssoLinkPairing] redeem", {pairingId, branch: "success"});
   res.json({customToken});
 }

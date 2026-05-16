@@ -1,36 +1,55 @@
+@if (state() !== 'success') {
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon">vpn_key</mat-icon>
+    Work SSO sign-in
+  </h2>
+}
 <div mat-dialog-content class="content">
   @if (state() === 'loading') {
-    <div class="center">
+    <div class="center loading">
       <mat-progress-spinner mode="indeterminate" [diameter]="40" />
-      <p>Starting secure handoff…</p>
+      <p class="muted">Starting secure handoff…</p>
     </div>
   } @else if (state() === 'polling') {
-    <h2 class="title">Complete sign-in in your browser</h2>
-    <p class="hint">
+    <p class="lead">
       We opened a browser tab. Sign in there, link work SSO if asked, then come
-      back here.
+      back here — we'll finish automatically.
     </p>
     @if (userCode(); as code) {
-      <div class="code-box" aria-label="Verification code">{{ code }}</div>
-      <p class="code-caption">Verification code (optional check)</p>
+      <div class="code-block">
+        <div class="code-box" aria-label="Verification code">
+          @for (char of code.split(''); track $index) {
+            <span class="code-char">{{ char }}</span>
+          }
+        </div>
+        <p class="code-caption">Verification code (optional check)</p>
+      </div>
     }
     <div class="center polling">
-      <mat-progress-spinner mode="indeterminate" [diameter]="32" />
-      <p>Waiting for browser to finish…</p>
+      <mat-progress-spinner mode="indeterminate" [diameter]="28" />
+      <p class="muted">Waiting for browser to finish…</p>
       @if (pollingHint(); as hint) {
         <p class="polling-hint">{{ hint }}</p>
       }
     </div>
   } @else if (state() === 'success') {
     <div class="center success">
-      <mat-icon>check_circle</mat-icon>
-      <p>Signed in</p>
+      <div class="success-icon-wrap">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <h2 class="success-title">You're signed in</h2>
+      <p class="muted">Welcome back!</p>
     </div>
   } @else {
-    <p class="error">{{ errorMessage() }}</p>
+    <div class="error-block">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <p class="error">{{ errorMessage() }}</p>
+    </div>
     <div class="actions">
-      <button mat-stroked-button type="button" (click)="retry()">Try again</button>
       <button mat-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-flat-button color="primary" type="button" (click)="retry()">
+        Try again
+      </button>
     </div>
   }
 </div>

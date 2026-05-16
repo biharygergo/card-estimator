@@ -15,6 +15,7 @@ import {
 import {
   BehaviorSubject,
   catchError,
+  firstValueFrom,
   from,
   map,
   Observable,
@@ -327,13 +328,17 @@ export class SignUpOrLoginDialogComponent implements OnInit, OnDestroy {
 
       const inEmbed = isEmbeddedPlatform(this.config.runningIn);
       if (inEmbed) {
-        this.dialog.open(
+        const ref = this.dialog.open(
           ...embedSsoLinkDialogCreator({
             ssoProviderId: cfg.providerId,
             ssoOrganizationId: cfg.organizationId,
             ssoOrganizationName: cfg.organizationName,
           })
         );
+        const success = await firstValueFrom(ref.afterClosed());
+        if (success === true) {
+          this.dialogRef.close();
+        }
         return;
       }
 

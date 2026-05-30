@@ -3,7 +3,7 @@ import {
   EmailAuthProvider,
   GoogleAuthProvider,
   User,
-} from '@angular/fire/auth';
+} from 'firebase/auth';
 import {
   BehaviorSubject,
   combineLatest,

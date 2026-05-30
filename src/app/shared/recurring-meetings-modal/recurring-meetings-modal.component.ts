@@ -30,7 +30,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router } from '@angular/router';
 import { DialogRef } from '@angular/cdk/dialog';
-import { User } from '@angular/fire/auth';
+import { User } from 'firebase/auth';
 import { createModal } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';

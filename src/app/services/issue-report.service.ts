@@ -1,10 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  serverTimestamp,
-} from '@angular/fire/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
 import { AuthService } from './auth.service';
 import { from, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -28,7 +24,6 @@ export class IssueReportService {
   private readonly ISSUE_REPORTS_COLLECTION = 'issueReports';
 
   constructor(
-    private firestore: Firestore,
     private authService: AuthService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
@@ -53,7 +48,7 @@ export class IssueReportService {
 
         return from(
           addDoc(
-            collection(this.firestore, this.ISSUE_REPORTS_COLLECTION),
+            collection(firestore, this.ISSUE_REPORTS_COLLECTION),
             report
           )
         );

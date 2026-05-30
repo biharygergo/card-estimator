@@ -1,40 +1,44 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import {
+  addDoc,
   arrayUnion,
   collection,
+  CollectionReference,
+  deleteDoc,
   doc,
-  docData,
-  Firestore,
-  updateDoc,
   DocumentReference,
   query,
-  where,
-  CollectionReference,
   serverTimestamp,
-  addDoc,
-  collectionSnapshots,
-  deleteDoc,
   setDoc,
-} from '@angular/fire/firestore';
-import { InvitationData, Organization, OrganizationMember, OrganizationRole } from '../types';
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { firestore, functions } from '../firebase/firebase';
+import { collectionSnapshots, docData } from '../firebase/firestore-rx';
 import {
-  map,
-  Observable,
-  switchMap,
-  of,
-  distinctUntilChanged,
+  InvitationData,
+  Organization,
+  OrganizationMember,
+  OrganizationRole,
+} from '../types';
+import {
   combineLatest,
   defer,
+  distinctUntilChanged,
   from,
-  throwError,
+  map,
   mergeMap,
+  Observable,
+  of,
   retryWhen,
+  switchMap,
+  throwError,
   timer,
 } from 'rxjs';
 import { FileUploadService } from './file-upload.service';
 import { PaymentService } from './payment.service';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 
 const ORGANIZATION_COLLECTION = 'organizations';
 
@@ -43,15 +47,13 @@ const ORGANIZATION_COLLECTION = 'organizations';
 })
 export class OrganizationService {
   constructor(
-    private firestore: Firestore,
     private authService: AuthService,
     private fileUploadService: FileUploadService,
-    private readonly paymentService: PaymentService,
-    private functions: Functions
+    private readonly paymentService: PaymentService
   ) {}
 
   private createId() {
-    return doc(collection(this.firestore, '_')).id;
+    return doc(collection(firestore, '_')).id;
   }
 
   async createOrganization(
@@ -75,7 +77,7 @@ export class OrganizationService {
     };
 
     const orgRef = doc(
-      this.firestore,
+      firestore,
       ORGANIZATION_COLLECTION,
       organization.id
     );
@@ -99,7 +101,7 @@ export class OrganizationService {
     organization: Partial<Organization>
   ): Promise<void> {
     await updateDoc(
-      doc(this.firestore, ORGANIZATION_COLLECTION, organizationId),
+      doc(firestore, ORGANIZATION_COLLECTION, organizationId),
       organization
     );
   }
@@ -107,7 +109,7 @@ export class OrganizationService {
   getOrganization(organizationId: string): Observable<Organization> {
     return docData<Organization>(
       doc(
-        this.firestore,
+        firestore,
         ORGANIZATION_COLLECTION,
         organizationId
       ) as DocumentReference<Organization>
@@ -116,7 +118,7 @@ export class OrganizationService {
 
   getInvitations(organizationId): Observable<InvitationData[]> {
     const collectionReference = collection(
-      this.firestore,
+      firestore,
       ORGANIZATION_COLLECTION,
       organizationId,
       'memberInvitations'
@@ -147,7 +149,7 @@ export class OrganizationService {
 
     await addDoc(
       collection(
-        this.firestore,
+        firestore,
         ORGANIZATION_COLLECTION,
         organizationId,
         'memberInvitations'
@@ -159,7 +161,7 @@ export class OrganizationService {
   removeInvitation(organizationId: string, invitationId: string) {
     deleteDoc(
       doc(
-        this.firestore,
+        firestore,
         ORGANIZATION_COLLECTION,
         organizationId,
         'memberInvitations',
@@ -169,18 +171,18 @@ export class OrganizationService {
   }
 
   async addMember(organizationId: string, memberId: string) {
-    await updateDoc(doc(this.firestore, ORGANIZATION_COLLECTION, organizationId), {
+    await updateDoc(doc(firestore, ORGANIZATION_COLLECTION, organizationId), {
       memberIds: arrayUnion(memberId),
     });
   }
 
   async removeMember(organizationId: string, memberId: string) {
-    const removeMemberFunction = httpsCallable(this.functions, 'removeOrganizationMember');
+    const removeMemberFunction = httpsCallable(functions, 'removeOrganizationMember');
     await removeMemberFunction({ organizationId, memberId });
   }
 
   getOrganizationMembers(organizationId: string): Observable<OrganizationMember[]> {
-    const getMembersFunction = httpsCallable(this.functions, 'getOrganizationMembers');
+    const getMembersFunction = httpsCallable(functions, 'getOrganizationMembers');
     return defer(() =>
       from(getMembersFunction({ organizationId }) as Promise<{ data: OrganizationMember[] }>)
     ).pipe(
@@ -205,7 +207,7 @@ export class OrganizationService {
   }
 
   async updateMemberRole(organizationId: string, memberId: string, newRole: OrganizationRole): Promise<void> {
-    const updateRoleFunction = httpsCallable(this.functions, 'updateOrganizationMemberRole');
+    const updateRoleFunction = httpsCallable(functions, 'updateOrganizationMemberRole');
     await updateRoleFunction({ organizationId, memberId, newRole });
   }
 
@@ -221,7 +223,7 @@ export class OrganizationService {
 
   getMyOrganizations(): Observable<Organization[]> {
     const ref = collection(
-      this.firestore,
+      firestore,
       ORGANIZATION_COLLECTION
     ) as CollectionReference<Organization>;
 

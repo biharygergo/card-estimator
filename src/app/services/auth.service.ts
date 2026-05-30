@@ -1,46 +1,46 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-  Auth,
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
   getAdditionalUserInfo,
+  GoogleAuthProvider,
   linkWithCredential,
+  linkWithPopup,
   OAuthProvider,
   reauthenticateWithCredential,
+  SAMLAuthProvider,
   sendPasswordResetEmail,
-  signInWithCredential,
-  signInWithEmailAndPassword,
-  updateEmail,
-  user,
-} from '@angular/fire/auth';
-import {
-  EmailAuthProvider,
-  linkWithPopup,
   signInAnonymously,
+  signInWithCredential,
   signInWithCustomToken,
+  signInWithEmailAndPassword,
   signInWithPopup,
   unlink,
+  updateEmail,
   updateProfile,
   User,
   UserInfo,
-  GoogleAuthProvider,
-} from '@angular/fire/auth';
+} from 'firebase/auth';
 import {
   collection,
   deleteDoc,
   doc,
-  docData,
-  docSnapshots,
   DocumentReference,
   FieldValue,
-  Firestore,
-  query,
   getDoc,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { auth, firestore, functions } from '../firebase/firebase';
+import {
+  authUser,
   collectionSnapshots,
-} from '@angular/fire/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+  docData,
+  docSnapshots,
+} from '../firebase/firestore-rx';
 import {
   catchError,
   combineLatest,
@@ -69,9 +69,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import Cookies from 'js-cookie';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import {
-  SAMLAuthProvider,
-} from 'firebase/auth';
 
 export const SSO_DOMAINS_COLLECTION = 'ssoDomains';
 
@@ -131,17 +128,14 @@ export class AuthService {
   nameUpdated = new Subject<string>();
 
   constructor(
-    private auth: Auth,
-    private firestore: Firestore,
     private snackbar: MatSnackBar,
-    private functions: Functions,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {
-    this.user = user(this.auth).pipe();
+    this.user = authUser(auth);
   }
 
   async loginAnonymously(displayName?: string) {
-    await signInAnonymously(this.auth);
+    await signInAnonymously(auth);
     const user = await this.getUser();
     await this.updateDisplayName(user, displayName);
     return user;
@@ -161,20 +155,20 @@ export class AuthService {
   }
 
   getUid() {
-    return this.auth.currentUser?.uid;
+    return auth.currentUser?.uid;
   }
 
   refreshIdToken() {
-    return this.auth.currentUser?.getIdToken(true);
+    return auth.currentUser?.getIdToken(true);
   }
 
   async getCustomClaims() {
-    const token = await this.auth.currentUser?.getIdTokenResult();
+    const token = await auth.currentUser?.getIdTokenResult();
     return token?.claims;
   }
 
   signOut() {
-    this.auth.signOut();
+    auth.signOut();
   }
 
   getApiAuthUrl(
@@ -257,12 +251,12 @@ export class AuthService {
   }
 
   async completeSsoLinkPairingInBrowser(pairingId: string): Promise<void> {
-    const fn = httpsCallable(this.functions, 'completeSsoLinkPairing');
+    const fn = httpsCallable(functions, 'completeSsoLinkPairing');
     await fn({ pairingId });
   }
 
   async signInWithCustomTokenFromPairing(customToken: string): Promise<void> {
-    const cred = await signInWithCustomToken(this.auth, customToken);
+    const cred = await signInWithCustomToken(auth, customToken);
     const isNewUser = getAdditionalUserInfo(cred).isNewUser ?? false;
     await this.handleSignInResult({ isNewUser });
     this.snackbar.open(`You are now signed in, welcome back!`, null, {
@@ -276,8 +270,8 @@ export class AuthService {
 
     const provider = this.createMicrosoftOpenIdProvider();
     const userCredential = idToken
-      ? await signInWithCredential(this.auth, provider.credential({ idToken }))
-      : await signInWithPopup(this.auth, provider);
+      ? await signInWithCredential(auth, provider.credential({ idToken }))
+      : await signInWithPopup(auth, provider);
 
     const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
 
@@ -294,10 +288,10 @@ export class AuthService {
     const provider = this.createMicrosoftOpenIdProvider();
     const userCredential = idToken
       ? await linkWithCredential(
-          this.auth.currentUser,
+          auth.currentUser,
           provider.credential({ idToken })
         )
-      : await linkWithPopup(this.auth.currentUser, provider);
+      : await linkWithPopup(auth.currentUser, provider);
 
     await this.handleSignInResult({ isNewUser: true });
     this.snackbar.open(`Your account is now set up, awesome!`, null, {
@@ -310,10 +304,10 @@ export class AuthService {
     const provider = this.createGoogleProvider();
     const userCredential = idToken
       ? await signInWithCredential(
-          this.auth,
+          auth,
           GoogleAuthProvider.credential(idToken)
         )
-      : await signInWithPopup(this.auth, provider);
+      : await signInWithPopup(auth, provider);
 
     const isNewUser = getAdditionalUserInfo(userCredential).isNewUser;
 
@@ -329,10 +323,10 @@ export class AuthService {
 
     const userCredential = idToken
       ? await linkWithCredential(
-          this.auth.currentUser,
+          auth.currentUser,
           GoogleAuthProvider.credential(idToken)
         )
-      : await linkWithPopup(this.auth.currentUser, provider);
+      : await linkWithPopup(auth.currentUser, provider);
 
     await this.handleSignInResult({ isNewUser: true });
     this.snackbar.open(`Your account is now set up, awesome!`, null, {
@@ -343,7 +337,7 @@ export class AuthService {
 
   async signInWithEmailAndPassword(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(
-      this.auth,
+      auth,
       email,
       password
     );
@@ -363,7 +357,7 @@ export class AuthService {
     displayName: string
   ) {
     const userCredential = await createUserWithEmailAndPassword(
-      this.auth,
+      auth,
       email,
       password
     );
@@ -379,7 +373,7 @@ export class AuthService {
     const credential = EmailAuthProvider.credential(email, password);
 
     const userCredential = await linkWithCredential(
-      this.auth.currentUser,
+      auth.currentUser,
       credential
     );
 
@@ -396,14 +390,14 @@ export class AuthService {
   }) {
     if (
       new SupportedPhotoUrlPipe().isSupported(
-        this.auth.currentUser.photoURL
+        auth.currentUser.photoURL
       ) === false
     ) {
-      await updateProfile(this.auth.currentUser, { photoURL: '' });
+      await updateProfile(auth.currentUser, { photoURL: '' });
     }
     if (options.isNewUser) {
       await this.createPermanentUser(
-        this.auth.currentUser,
+        auth.currentUser,
         options.displayName
       );
     }
@@ -441,7 +435,7 @@ export class AuthService {
       return null;
     }
     const snap = await getDoc(
-      doc(this.firestore, SSO_DOMAINS_COLLECTION, normalized)
+      doc(firestore, SSO_DOMAINS_COLLECTION, normalized)
     );
     if (!snap.exists()) {
       return null;
@@ -461,7 +455,7 @@ export class AuthService {
     }
     try {
       const joinFn = httpsCallable(
-        this.functions,
+        functions,
         'joinOrganizationIfSsoEligible'
       );
       await joinFn({ organizationId });
@@ -478,7 +472,7 @@ export class AuthService {
     providerId: string,
     organizationId?: string
   ): Promise<void> {
-    const current = this.auth.currentUser;
+    const current = auth.currentUser;
     if (!current || current.isAnonymous) {
       throw new Error('You must be signed in to link work SSO.');
     }
@@ -502,7 +496,7 @@ export class AuthService {
     organizationId?: string
   ): Promise<void> {
     const authProvider = this.createEnterpriseSsoProvider(providerId);
-    const userCredential = await signInWithPopup(this.auth, authProvider);
+    const userCredential = await signInWithPopup(auth, authProvider);
     const isNewUser = getAdditionalUserInfo(userCredential).isNewUser ?? false;
     await this.handleSignInResult({ isNewUser });
     await this.ensureJoinedEnterpriseOrganization(organizationId);
@@ -527,7 +521,7 @@ export class AuthService {
    * Requires at least one other sign-in method to remain.
    */
   async unlinkProvider(providerId: string): Promise<void> {
-    const u = this.auth.currentUser;
+    const u = auth.currentUser;
     if (!u) {
       throw new Error('You are not signed in.');
     }
@@ -552,9 +546,9 @@ export class AuthService {
   }
 
   async updateAvatar(avatarUrl: string | null) {
-    await updateProfile(this.auth.currentUser, { photoURL: avatarUrl ?? '' });
-    if (!this.auth.currentUser?.isAnonymous) {
-      await this.updateUserDetails(this.auth.currentUser.uid, { avatarUrl });
+    await updateProfile(auth.currentUser, { photoURL: avatarUrl ?? '' });
+    if (!auth.currentUser?.isAnonymous) {
+      await this.updateUserDetails(auth.currentUser.uid, { avatarUrl });
     }
     this.avatarUpdated.next(avatarUrl);
   }
@@ -577,11 +571,11 @@ export class AuthService {
 
     if (user.displayName !== userDetails.displayName) {
       await updateProfile(user, { displayName: userDetails.displayName });
-      await this.auth.currentUser.reload();
+      await auth.currentUser.reload();
     }
 
     await setDoc(
-      doc(this.firestore, USER_DETAILS_COLLECTION, user.uid),
+      doc(firestore, USER_DETAILS_COLLECTION, user.uid),
       userDetails
     );
   }
@@ -604,7 +598,7 @@ export class AuthService {
 
   async updateUserDetails(userId: string, userDetails: Partial<UserDetails>) {
     await updateDoc(
-      doc(this.firestore, USER_DETAILS_COLLECTION, userId),
+      doc(firestore, USER_DETAILS_COLLECTION, userId),
       userDetails
     ).catch(error => {
       console.error('Error while updating userDetails: ', error);
@@ -654,7 +648,7 @@ export class AuthService {
         }
 
         return setDoc(
-          doc(this.firestore, `userPreferences/${user.uid}`),
+          doc(firestore, `userPreferences/${user.uid}`),
           preference,
           { merge: true }
         );
@@ -671,7 +665,7 @@ export class AuthService {
 
         return docSnapshots(
           doc(
-            this.firestore,
+            firestore,
             `userPreferences/${user.uid}`
           ) as DocumentReference<UserPreference>
         ).pipe(
@@ -692,7 +686,7 @@ export class AuthService {
   getUserProfile(userId: string): Observable<UserProfile | undefined> {
     return docData<UserProfile | undefined>(
       doc(
-        this.firestore,
+        firestore,
         `${PROFILES_COLLECTION}/${userId}`
       ) as DocumentReference<UserProfile>
     );
@@ -713,13 +707,13 @@ export class AuthService {
   }
 
   sendForgotPasswordEmail(email: string) {
-    return sendPasswordResetEmail(this.auth, email, {
+    return sendPasswordResetEmail(auth, email, {
       url: `${window.location.origin}/join`,
     });
   }
 
   createId() {
-    return doc(collection(this.firestore, '_')).id;
+    return doc(collection(firestore, '_')).id;
   }
 
   setRoomTemplate(slotId: SlotId, roomTemplate: RoomTemplate) {
@@ -730,7 +724,7 @@ export class AuthService {
         }
         return setDoc(
           doc(
-            this.firestore,
+            firestore,
             `userDetails/${user.uid}/roomTemplates/${slotId}`
           ),
           roomTemplate,
@@ -747,7 +741,7 @@ export class AuthService {
           return of(undefined);
         }
         return deleteDoc(
-          doc(this.firestore, `userDetails/${user.uid}/roomTemplates/${slotId}`)
+          doc(firestore, `userDetails/${user.uid}/roomTemplates/${slotId}`)
         );
       })
     );
@@ -761,7 +755,7 @@ export class AuthService {
         }
         return collectionSnapshots(
           query(
-            collection(this.firestore, `userDetails/${user.uid}/roomTemplates`)
+            collection(firestore, `userDetails/${user.uid}/roomTemplates`)
           )
         ).pipe(
           map(snapshots => snapshots.map(doc => doc.data() as RoomTemplate))

@@ -1,11 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-  deleteDoc,
-  doc,
-  docData,
-  DocumentReference,
-  Firestore,
-} from '@angular/fire/firestore';
+import { deleteDoc, doc, DocumentReference } from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
+import { docData } from '../firebase/firestore-rx';
 import { AuthService } from './auth.service';
 import { ZoomApiService } from './zoom-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +18,6 @@ import { SlackIntegration } from '../types';
 })
 export class SlackService {
   constructor(
-    private readonly firestore: Firestore,
     private readonly authService: AuthService,
     private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
@@ -81,7 +76,7 @@ export class SlackService {
 
         const slackIntegration = docData<SlackIntegration>(
           doc(
-            this.firestore,
+            firestore,
             `userDetails/${user.uid}/integrations/slack`
           ) as DocumentReference<SlackIntegration>
         );
@@ -99,7 +94,7 @@ export class SlackService {
 
         return from(
           deleteDoc(
-            doc(this.firestore, `userDetails/${user.uid}/integrations/slack`)
+            doc(firestore, `userDetails/${user.uid}/integrations/slack`)
           )
         );
       })

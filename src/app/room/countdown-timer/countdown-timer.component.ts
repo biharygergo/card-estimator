@@ -9,7 +9,7 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { serverTimestamp, Timestamp } from '@angular/fire/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { isEqual } from 'lodash';
 import {
   distinctUntilChanged,

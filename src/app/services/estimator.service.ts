@@ -2,16 +2,26 @@ import { Inject, Injectable } from '@angular/core';
 import {
   addDoc,
   arrayUnion,
-  collectionData,
-  collectionSnapshots,
-  docData,
-  Firestore,
+  collection,
+  CollectionReference,
+  doc,
+  DocumentReference,
   limit,
   orderBy,
   query,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+  updateDoc,
   where,
-} from '@angular/fire/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { firestore, functions } from '../firebase/firebase';
+import {
+  collectionData,
+  collectionSnapshots,
+  docData,
+} from '../firebase/firestore-rx';
 import {
   combineLatest,
   firstValueFrom,
@@ -48,16 +58,6 @@ import {
   MemberStats,
   RoomTemplate,
 } from './../types';
-import {
-  collection,
-  CollectionReference,
-  doc,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-  updateDoc,
-  DocumentReference,
-} from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { createHash } from '../utils';
 import { OrganizationService } from './organization.service';
@@ -79,16 +79,14 @@ export class EstimatorService {
   activeMember: Member;
 
   constructor(
-    private firestore: Firestore,
     private authService: AuthService,
-    private functions: Functions,
     private readonly paymentService: PaymentService,
     private readonly organizationService: OrganizationService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
   createId() {
-    return doc(collection(this.firestore, '_')).id;
+    return doc(collection(firestore, '_')).id;
   }
 
   private async signInAsMember(member: Member) {
@@ -120,7 +118,7 @@ export class EstimatorService {
     return firstValueFrom(
       docData<Room>(
         doc(
-          this.firestore,
+          firestore,
           this.ROOMS_COLLECTION,
           roomId
         ) as DocumentReference<Room>
@@ -145,7 +143,7 @@ export class EstimatorService {
       { member: Member; recurringMeetingId: string | null },
       { room: Room }
     >(
-      this.functions,
+      functions,
       'createRoom'
     )({ member, recurringMeetingId });
 
@@ -164,7 +162,7 @@ export class EstimatorService {
 
     updatedMembers.push(member);
 
-    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    await updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       members: isAlreadyMember ? updatedMembers : arrayUnion(member),
       memberIds: arrayUnion(member.id),
     });
@@ -185,7 +183,7 @@ export class EstimatorService {
 
     updatedMember.status = status;
 
-    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    await updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       members: updatedMembers,
     });
 
@@ -203,7 +201,7 @@ export class EstimatorService {
 
     updatedMember.type = memberType;
 
-    await updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    await updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       members: updatedMembers,
     });
 
@@ -215,7 +213,7 @@ export class EstimatorService {
       this.authService.user,
       docData<Room>(
         doc(
-          this.firestore,
+          firestore,
           this.ROOMS_COLLECTION,
           roomId
         ) as DocumentReference<Room>
@@ -241,7 +239,7 @@ export class EstimatorService {
   }
 
   updateRoom(roomId: string, fields: Partial<Room>) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       ...fields,
     });
   }
@@ -261,31 +259,31 @@ export class EstimatorService {
     }
 
     return updateDoc(
-      doc(this.firestore, this.ROOMS_COLLECTION, room.roomId),
+      doc(firestore, this.ROOMS_COLLECTION, room.roomId),
       updates
     );
   }
 
   setShowResults(room: Room, round: number, showResults: boolean) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${round}.show_results`]: showResults,
     });
   }
 
   setMajorityOverride(roomId: string, roundId: number, cardKey: number | null) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       [`rounds.${roundId}.majorityOverride`]: cardKey,
     });
   }
 
   setTimer(room: Room, timer: Timer) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       timer,
     });
   }
 
   setConfiguration(roomId: string, configuration: RoomConfiguration) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       configuration,
     });
   }
@@ -402,37 +400,37 @@ export class EstimatorService {
     estimate: number | null,
     userId: string
   ) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${roundNumber}.estimates.${userId}`]: estimate,
     });
   }
 
   setRoomCardSet(roomId: string, selectedSet: CardSet) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       cardSet: selectedSet,
     });
   }
 
   toggleShowPassOption(roomId: string, showPassOption: boolean) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       showPassOption,
     });
   }
 
   toggleAsyncVoting(roomId: string, isAsyncVotingEnabled: boolean) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       isAsyncVotingEnabled,
     });
   }
 
   toggleAnonymousVoting(roomId: string, isAnonymousVotingEnabled: boolean) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       isAnonymousVotingEnabled,
     });
   }
 
   toggleAutoReveal(roomId: string, isAutoRevealEnabled: boolean) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       isAutoRevealEnabled,
     });
   }
@@ -441,7 +439,7 @@ export class EstimatorService {
     roomId: string,
     isChangeVoteAfterRevealEnabled: boolean
   ) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       isChangeVoteAfterRevealEnabled,
     });
   }
@@ -489,13 +487,13 @@ export class EstimatorService {
       note,
       editedBy: member || null,
     };
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${currentRound}.notes`]: newNote,
     });
   }
 
   setNoteEditor(room: Room, currentRound: number, member: Member | null) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${currentRound}.notes.editedBy`]: member
         ? { id: member.id, name: member.name }
         : null,
@@ -503,7 +501,7 @@ export class EstimatorService {
   }
 
   setRoomCustomCardSetValue(roomId: string, selectedSet: CardSetValue) {
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, roomId), {
       cardSet: CustomCardSet,
       customCardSetValue: selectedSet,
     });
@@ -513,7 +511,7 @@ export class EstimatorService {
     const newMembers = [...room.members];
     const member = newMembers.find(m => m.id === this.activeMember.id);
     member.avatarUrl = avatarUrl;
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
     });
   }
@@ -522,7 +520,7 @@ export class EstimatorService {
     const newMembers = [...room.members];
     const member = newMembers.find(m => m.id === this.activeMember.id);
     member.name = name;
-    return updateDoc(doc(this.firestore, this.ROOMS_COLLECTION, room.roomId), {
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
     });
   }
@@ -530,7 +528,7 @@ export class EstimatorService {
   updateCurrentUserMemberHeartbeat(roomId: string) {
     return setDoc(
       doc(
-        this.firestore,
+        firestore,
         this.ROOMS_COLLECTION,
         roomId,
         'metadata',
@@ -547,7 +545,7 @@ export class EstimatorService {
     return combineLatest([
       docData<any>(
         doc(
-          this.firestore,
+          firestore,
           this.ROOMS_COLLECTION,
           roomId,
           'metadata',
@@ -572,7 +570,7 @@ export class EstimatorService {
   saveInvitation(invitationId: string, roomId: string) {
     return setDoc(
       doc(
-        this.firestore,
+        firestore,
         this.INVITATIONS_COLLECTION,
         createHash(invitationId)
       ),
@@ -592,7 +590,7 @@ export class EstimatorService {
           return of([]);
         }
         const ref = collection(
-          this.firestore,
+          firestore,
           this.ROOMS_COLLECTION
         ) as CollectionReference<Room>;
         const q = query(
@@ -616,7 +614,7 @@ export class EstimatorService {
       switchMap(user => {
         const userId = user.uid;
         return from(
-          addDoc(collection(this.firestore, this.FEEDBACK_COLLECTION), {
+          addDoc(collection(firestore, this.FEEDBACK_COLLECTION), {
             userId,
             rating,
             createdAt: serverTimestamp(),
@@ -631,7 +629,7 @@ export class EstimatorService {
     additionalFeedback: string
   ): Observable<void> {
     return from(
-      updateDoc(doc(this.firestore, this.FEEDBACK_COLLECTION, feedbackId), {
+      updateDoc(doc(firestore, this.FEEDBACK_COLLECTION, feedbackId), {
         details: additionalFeedback,
       })
     );
@@ -639,7 +637,7 @@ export class EstimatorService {
 
   getRoomSummaries(roomId: string): Observable<RoomSummary[]> {
     const ref = collection(
-      this.firestore,
+      firestore,
       this.ROOMS_COLLECTION,
       roomId,
       'summaries'
@@ -652,14 +650,14 @@ export class EstimatorService {
 
   generateRoomSummary(roomId: string, csvSummary: string) {
     return httpsCallable(
-      this.functions,
+      functions,
       'createSummary'
     )({ csvSummary, roomId });
   }
 
   async setRoomPassword(roomId: string, password: string) {
     const result = await httpsCallable(
-      this.functions,
+      functions,
       'setRoomPassword'
     )({ password, roomId });
     await this.authService.refreshIdToken();
@@ -668,7 +666,7 @@ export class EstimatorService {
 
   async joinRoomWithPassword(roomId: string, password: string) {
     const result = await httpsCallable(
-      this.functions,
+      functions,
       'enterProtectedRoom'
     )({ password, roomId });
     await this.authService.refreshIdToken();
@@ -678,7 +676,7 @@ export class EstimatorService {
   getAuthorizationMetadata(roomId: string): Observable<AuthorizationMetadata> {
     return docData<AuthorizationMetadata>(
       doc(
-        this.firestore,
+        firestore,
         this.ROOMS_COLLECTION,
         roomId,
         'metadata',
@@ -690,7 +688,7 @@ export class EstimatorService {
   isPasswordSet(roomId: string): Observable<boolean> {
     return docData<any>(
       doc(
-        this.firestore,
+        firestore,
         this.ROOMS_COLLECTION,
         roomId,
         'metadata',
@@ -713,7 +711,7 @@ export class EstimatorService {
     };
     return setDoc(
       doc(
-        this.firestore,
+        firestore,
         this.ROOMS_COLLECTION,
         roomId,
         'metadata',
@@ -749,7 +747,7 @@ export class EstimatorService {
 
       await setDoc(
         doc(
-          this.firestore,
+          firestore,
           this.ROOMS_COLLECTION,
           roomId,
           'metadata',
@@ -763,7 +761,7 @@ export class EstimatorService {
     } else {
       await setDoc(
         doc(
-          this.firestore,
+          firestore,
           this.ROOMS_COLLECTION,
           roomId,
           'metadata',

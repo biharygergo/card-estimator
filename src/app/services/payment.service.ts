@@ -1,22 +1,17 @@
 import { Inject, Injectable, signal } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
 import {
   addDoc,
-  collectionData,
-  docData,
-  Firestore,
-  query,
-  where,
-  collection,
   CollectionReference,
+  collection,
+  query,
   Timestamp,
-} from '@angular/fire/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+  where,
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { firestore, functions } from '../firebase/firebase';
+import { collectionData, docData } from '../firebase/firestore-rx';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  StripePayments,
-  Subscription,
-} from '@stripe/firestore-stripe-payments';
+import { Subscription } from '@stripe/firestore-stripe-payments';
 import { Observable, of, switchMap, map, firstValueFrom } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import {
@@ -39,15 +34,11 @@ export type StripeSubscription = CorrectSubscription;
   providedIn: 'root',
 })
 export class PaymentService {
-  payments: StripePayments;
   isSubscriptionDisabled = signal<boolean>(false);
 
   constructor(
-    readonly app: FirebaseApp,
     private readonly zoomService: ZoomApiService,
     private readonly authService: AuthService,
-    private readonly firestore: Firestore,
-    private readonly functions: Functions,
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig,
     private readonly confirmService: ConfirmDialogService
@@ -107,7 +98,7 @@ export class PaymentService {
     if (!passes) return;
 
     const checkoutSessionsCollection = collection(
-      this.firestore,
+      firestore,
       'customers',
       user.uid,
       'checkout_sessions'
@@ -240,7 +231,7 @@ export class PaymentService {
     if (!passes) return;
 
     const checkoutSessionsCollection = collection(
-      this.firestore,
+      firestore,
       'customers',
       user.uid,
       'checkout_sessions'
@@ -321,7 +312,7 @@ export class PaymentService {
     }
 
     const result = await httpsCallable(
-      this.functions,
+      functions,
       'ext-firestore-stripe-payments-createPortalLink'
     )({ returnUrl: window.location.href });
     window.location.assign((result.data as any).url);
@@ -335,7 +326,7 @@ export class PaymentService {
         }
 
         const collectionRef = collection(
-          this.firestore,
+          firestore,
           `customers/${user.uid}/subscriptions`
         ) as CollectionReference<StripeSubscription>;
         const q = query(
@@ -357,7 +348,7 @@ export class PaymentService {
     bundles: BundleWithCredits[];
   }> {
     const result = await httpsCallable(
-      this.functions,
+      functions,
       'getAllCreditsAndAssignWelcome'
     )();
 

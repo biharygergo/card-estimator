@@ -1,5 +1,6 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Analytics, logEvent } from '@angular/fire/analytics';
+import { logEvent } from 'firebase/analytics';
+import { getFirebaseAnalytics } from '../firebase/firebase';
 import {
   CardSetOrCustom,
   RoomPermissionId,
@@ -16,17 +17,17 @@ export type ZoomAppCtaLocation =
   providedIn: 'root',
 })
 export class AnalyticsService {
-  constructor(
-    private analytics: Analytics,
-    @Inject(PLATFORM_ID) private readonly platformId: Object
-  ) {}
+  constructor(@Inject(PLATFORM_ID) private readonly platformId: Object) {}
 
   private logEventInternal(eventName: string, params?: any) {
     try {
       if (isPlatformBrowser(this.platformId)) {
-        logEvent(this.analytics, eventName, params);
+        void getFirebaseAnalytics().then(analytics => {
+          if (analytics) {
+            logEvent(analytics, eventName, params);
+          }
+        });
         posthog.capture(eventName, params);
-
       }
     } catch (e) {
       console.error('Failed to log event to Analytics', e);

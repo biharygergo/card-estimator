@@ -172,10 +172,6 @@
             "styles": ["src/styles.scss"],
             "scripts": []
           }
-        },
-        "deploy": {
-          "builder": "@angular/fire:deploy",
-          "options": {}
         }
       }
     }

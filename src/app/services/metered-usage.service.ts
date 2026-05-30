@@ -3,23 +3,20 @@ import { AuthService } from './auth.service';
 import { Observable, of, switchMap } from 'rxjs';
 import { MeteredUsage } from '../types';
 import {
-  collectionData,
   CollectionReference,
-  Firestore,
+  Timestamp,
   collection,
   query,
   where,
-  Timestamp,
-} from '@angular/fire/firestore';
+} from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
+import { collectionData } from '../firebase/firestore-rx';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeteredUsageService {
-  constructor(
-    private firestore: Firestore,
-    private authService: AuthService
-  ) {}
+  constructor(private authService: AuthService) {}
 
   getMeteredUsage(
     usageType: 'chatgpt-query',
@@ -39,7 +36,7 @@ export class MeteredUsageService {
         );
 
         const ref = collection(
-          this.firestore,
+          firestore,
           'userDetails',
           user.uid,
           'meteredUsage'

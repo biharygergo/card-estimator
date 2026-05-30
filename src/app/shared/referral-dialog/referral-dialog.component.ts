@@ -18,7 +18,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { map, Observable } from 'rxjs';
-import { User } from '@angular/fire/auth';
+import { User } from 'firebase/auth';
 import { MatDialog } from '@angular/material/dialog';
 import {
   signUpOrLoginDialogCreator,

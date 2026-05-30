@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from '@angular/fire/firestore';
+import { FieldValue, Timestamp } from 'firebase/firestore';
 
 export enum CardSet {
   DEFAULT = 'DEFAULT',

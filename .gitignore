@@ -1,3 +1,4 @@
+<<<<<<< ours
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
@@ -55,3 +56,8 @@ cypress.env.json
 /cypress/screenshots
 appPackage/build
 /extensions/firestore-stripe-payments.secret.local
+=======
+node_modules/
+.env
+.DS_Store
+>>>>>>> theirs

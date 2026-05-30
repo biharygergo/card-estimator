@@ -1,6 +1,6 @@
 import {PubSub} from "@google-cloud/pubsub";
-import axios from "axios";
 import {Room} from "../types";
+import {isAllowedSlackResponseUrl, postToSlackResponseUrl} from "./response-url";
 
 export function createActionMessage(params: {
   text: string;
@@ -57,6 +57,10 @@ export async function sendCreateRoomPubSubMessage(
     slackUserId: string,
     responseUrl: string
 ) {
+  if (!isAllowedSlackResponseUrl(responseUrl)) {
+    throw new Error("Disallowed Slack response URL");
+  }
+
   const pubSub = new PubSub();
   const topicName = "create-room-from-messaging-integration";
   const data: CreateRoomPubSubMessage = {
@@ -82,7 +86,7 @@ export function sendRoomCreatedMessage(
     room: Room,
     createdBy: string,
 ) {
-  return axios.post(
+  return postToSlackResponseUrl(
       responseUrl,
       createActionMessage({
         text: `*📣 New room created!*\nJoin the room with the button below and let's start planning together!\n\n*Room ID*: ${room.roomId}\n*Created by:* <@${createdBy}>`,
@@ -97,26 +101,24 @@ export function sendRoomCreatedMessage(
 }
 
 export function sendOutOfCreditsMessage(responseUrl: string) {
-  return axios
-      .post(
-          responseUrl,
-          createActionMessage({
-            text: "*🚨 Out of credits!*\nYou have run out of credits to create a room. Please top up your credits and try again.",
-            action: {
-              label: "Top Up Credits",
-              url: "https://planningpoker.live/pricing",
-              id: "top_up_credits",
-            },
-          })
-      )
-      .catch((error) => console.error(error));
+  return postToSlackResponseUrl(
+      responseUrl,
+      createActionMessage({
+        text: "*🚨 Out of credits!*\nYou have run out of credits to create a room. Please top up your credits and try again.",
+        action: {
+          label: "Top Up Credits",
+          url: "https://planningpoker.live/pricing",
+          id: "top_up_credits",
+        },
+      })
+  ).catch((error) => console.error(error));
 }
 
 export function sendGenericErrorMessage(
     responseUrl: string,
     errorMessage: string
 ) {
-  return axios.post(
+  return postToSlackResponseUrl(
       responseUrl,
       createActionMessage({
         text: `🚨 An error occurred: ${errorMessage}`,

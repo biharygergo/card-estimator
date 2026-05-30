@@ -8,11 +8,12 @@ import {SlackIntegration} from "../types";
 import {getUserId} from "../jira/oauth";
 import {getSlackConfig} from "./config";
 import {createActionMessage, sendCreateRoomPubSubMessage} from "./messaging";
+import {isAllowedSlackResponseUrl, postToSlackResponseUrl} from "./response-url";
 
 const SLACK_OAUTH_STATES = "slackOAuthStates"; // Firestore collection name
 
 const slackMicroservice = express();
-slackMicroservice.use(express.json());
+slackMicroservice.use(express.urlencoded({extended: true}));
 slackMicroservice.use(cookieParser());
 
 slackMicroservice.post(
@@ -24,6 +25,7 @@ slackMicroservice.get("/api/slack/install", handleSlackInstall);
 slackMicroservice.get("/api/slack/oauth-success", handleSlackOAuthSuccess);
 slackMicroservice.post(
     "/api/slack/interaction",
+    validateSlackRequest,
     handleBlockInteraction
 );
 
@@ -61,10 +63,16 @@ async function handlePlanningPokerCommand(
     return;
   }
 
+  const responseUrl = req.body.response_url as string;
+  if (!isAllowedSlackResponseUrl(responseUrl)) {
+    res.status(400).send("Invalid response URL.");
+    return;
+  }
+
   await sendCreateRoomPubSubMessage(
       slackIntegration.userId,
       slackUserId,
-      req.body.response_url
+      responseUrl
   );
 
   res.json({
@@ -154,7 +162,12 @@ async function handleBlockInteraction(
     return;
   }
 
-  await axios.post(responseUrl, {
+  if (!responseUrl || !isAllowedSlackResponseUrl(responseUrl)) {
+    console.error("Blocked Slack interaction with invalid response_url");
+    return;
+  }
+
+  await postToSlackResponseUrl(responseUrl, {
     text: `👀 <@${slackUserId}> is joining the room...`,
     response_type: "in_channel",
     replace_original: false,

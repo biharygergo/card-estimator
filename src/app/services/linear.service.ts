@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@angular/core';
 import {
   deleteDoc,
   doc,
-  docData,
   DocumentReference,
-  Firestore,
   updateDoc,
-} from '@angular/fire/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { firestore, functions } from '../firebase/firebase';
+import { docData } from '../firebase/firestore-rx';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of, switchMap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
@@ -29,9 +29,7 @@ import { ZoomApiService } from './zoom-api.service';
 })
 export class LinearService {
   constructor(
-    private readonly firestore: Firestore,
     private readonly authService: AuthService,
-    private readonly functions: Functions,
     private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
     @Inject(APP_CONFIG) public readonly config: AppConfig
@@ -90,7 +88,7 @@ export class LinearService {
 
         const linearDoc = docData<LinearIntegration>(
           doc(
-            this.firestore,
+            firestore,
             `userDetails/${user.uid}/integrations/linear`
           ) as DocumentReference<LinearIntegration>
         );
@@ -108,7 +106,7 @@ export class LinearService {
 
         return from(
           deleteDoc(
-            doc(this.firestore, `userDetails/${user.uid}/integrations/linear`)
+            doc(firestore, `userDetails/${user.uid}/integrations/linear`)
           )
         );
       })
@@ -123,7 +121,7 @@ export class LinearService {
   ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
-        this.functions,
+        functions,
         'queryLinearIssues'
       )({ search: query, filters, nextPageToken, sortBy }).then(
         response => response.data as IssuesSearchApiResult
@@ -137,7 +135,7 @@ export class LinearService {
   }): Observable<{ success: boolean }> {
     return from(
       httpsCallable(
-        this.functions,
+        functions,
         'updateIssue'
       )({ updateRequest: { ...updateRequest, provider: 'linear' } }).then(
         response => response.data as { success: boolean }

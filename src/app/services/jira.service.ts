@@ -3,12 +3,12 @@ import { Inject, Injectable } from '@angular/core';
 import {
   deleteDoc,
   doc,
-  docData,
   DocumentReference,
-  Firestore,
   updateDoc,
-} from '@angular/fire/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import { firestore, functions } from '../firebase/firebase';
+import { docData } from '../firebase/firestore-rx';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of, switchMap } from 'rxjs';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
@@ -32,9 +32,7 @@ import { ZoomApiService } from './zoom-api.service';
 })
 export class JiraService {
   constructor(
-    private readonly firestore: Firestore,
     private readonly authService: AuthService,
-    private readonly functions: Functions,
     private readonly http: HttpClient,
     private readonly zoomService: ZoomApiService,
     private readonly dialog: MatDialog,
@@ -94,7 +92,7 @@ export class JiraService {
 
         const jiraDoc = docData<JiraIntegration>(
           doc(
-            this.firestore,
+            firestore,
             `userDetails/${user.uid}/integrations/jira`
           ) as DocumentReference<JiraIntegration>
         );
@@ -112,7 +110,7 @@ export class JiraService {
 
         return from(
           updateDoc(
-            doc(this.firestore, `userDetails/${user.uid}/integrations/jira`),
+            doc(firestore, `userDetails/${user.uid}/integrations/jira`),
             { jiraResources: resourceList }
           )
         );
@@ -129,7 +127,7 @@ export class JiraService {
 
         return from(
           deleteDoc(
-            doc(this.firestore, `userDetails/${user.uid}/integrations/jira`)
+            doc(firestore, `userDetails/${user.uid}/integrations/jira`)
           )
         );
       })
@@ -144,7 +142,7 @@ export class JiraService {
   ): Observable<IssuesSearchApiResult> {
     return from(
       httpsCallable(
-        this.functions,
+        functions,
         'queryJiraIssues'
       )({ search: query, filters, nextPageToken, sortBy }).then(
         response => response.data as IssuesSearchApiResult
@@ -158,7 +156,7 @@ export class JiraService {
   }): Observable<{ success: boolean }> {
     return from(
       httpsCallable(
-        this.functions,
+        functions,
         'updateIssue'
       )({ updateRequest: { ...updateRequest, provider: 'jira' } }).then(
         response => response.data as { success: boolean }

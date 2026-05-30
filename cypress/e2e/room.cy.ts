@@ -50,8 +50,12 @@ describe('Inside the room', () => {
     cy.contains('Next').click({ force: true });
 
     cy.contains('Your Account').should('be.visible');
-    cy.contains('Got it').click();
+    // Profile menu is open on this step; its CDK backdrop sits above the Shepherd button.
+    cy.get('[data-shepherd-step-id="app-options"]')
+      .contains('button', 'Got it')
+      .click({ force: true });
 
+    cy.get('[data-shepherd-step-id="app-options"]').should('not.exist');
     assertInvitationPopup();
 
     cy.contains('Test User').should('be.visible');

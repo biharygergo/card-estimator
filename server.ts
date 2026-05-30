@@ -12,7 +12,18 @@ export function app(): express.Express {
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
-  const commonEngine = new CommonEngine();
+  const commonEngine = new CommonEngine({
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'planningpoker.live',
+      '*.planningpoker.live',
+      'card-estimator.web.app',
+      '*.web.app',
+      'card-estimator.firebaseapp.com',
+      '*.firebaseapp.com',
+    ],
+  });
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);

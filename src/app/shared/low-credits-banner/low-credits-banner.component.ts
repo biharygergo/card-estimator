@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, signal, OnDestroy } from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -61,12 +61,11 @@ const ORG_BUNDLES: OrgBundleOption[] = [
   templateUrl: './low-credits-banner.component.html',
   styleUrls: ['./low-credits-banner.component.scss'],
   imports: [
-    CommonModule,
     AsyncPipe,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule,
-  ],
+    MatTooltipModule
+],
 })
 export class LowCreditsBannerComponent implements OnInit, OnDestroy {
   @Input() creditsRemaining: number = 0;

@@ -20,7 +20,7 @@ import {
   Subject,
   takeUntil,
 } from 'rxjs';
-import { FirebaseError } from '@angular/fire/app';
+import { FirebaseError } from 'firebase/app';
 import { Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';

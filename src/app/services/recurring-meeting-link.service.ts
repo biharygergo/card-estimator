@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
   Timestamp,
   collection,
-  collectionData,
   doc,
   orderBy,
   query,
   setDoc,
   updateDoc,
   where,
-} from '@angular/fire/firestore';
+} from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
+import { collectionData, docData } from '../firebase/firestore-rx';
 import { AuthService } from './auth.service';
 import {
   Observable,
@@ -29,7 +29,6 @@ import {
   RecurringMeetingLinkCreatedRoom,
   Room,
 } from '../types';
-import { docData } from 'rxfire/firestore';
 import { OrganizationService } from './organization.service';
 
 @Injectable({
@@ -37,7 +36,6 @@ import { OrganizationService } from './organization.service';
 })
 export class RecurringMeetingLinkService {
   constructor(
-    private firestore: Firestore,
     private authService: AuthService,
     private readonly organizationService: OrganizationService
   ) {}
@@ -47,7 +45,7 @@ export class RecurringMeetingLinkService {
   ): Observable<RecurringMeetingLink> {
     return docData<RecurringMeetingLink>(
       doc(
-        this.firestore,
+        firestore,
         'recurringMeetingLinks',
         recurringMeetingLinkId
       ) as DocumentReference<RecurringMeetingLink>
@@ -67,7 +65,7 @@ export class RecurringMeetingLinkService {
         date.setDate(date.getDate() - recurringMeetingLink.frequencyDays);
 
         const ref = collection(
-          this.firestore,
+          firestore,
           'recurringMeetingLinks',
           recurringMeetingLinkId,
           'createdRooms'
@@ -115,7 +113,7 @@ export class RecurringMeetingLinkService {
 
         return from(
           setDoc(
-            doc(this.firestore, `recurringMeetingLinks/${recurringMeeting.id}`),
+            doc(firestore, `recurringMeetingLinks/${recurringMeeting.id}`),
             recurringMeeting
           )
         );
@@ -125,7 +123,7 @@ export class RecurringMeetingLinkService {
 
   updateRecurringMeeting(linkId: string, data: Partial<RecurringMeetingLink>) {
     return from(
-      updateDoc(doc(this.firestore, `recurringMeetingLinks/${linkId}`), data)
+      updateDoc(doc(firestore, `recurringMeetingLinks/${linkId}`), data)
     );
   }
 
@@ -137,7 +135,7 @@ export class RecurringMeetingLinkService {
         }
 
         const collectionReference = collection(
-          this.firestore,
+          firestore,
           'recurringMeetingLinks'
         ) as CollectionReference<RecurringMeetingLink>;
         const q = query(
@@ -160,7 +158,7 @@ export class RecurringMeetingLinkService {
         }
 
         const collectionReference = collection(
-          this.firestore,
+          firestore,
           'recurringMeetingLinks'
         ) as CollectionReference<RecurringMeetingLink>;
         const q = query(
@@ -178,6 +176,6 @@ export class RecurringMeetingLinkService {
   }
 
   createId() {
-    return doc(collection(this.firestore, '_')).id;
+    return doc(collection(firestore, '_')).id;
   }
 }

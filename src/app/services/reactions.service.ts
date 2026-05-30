@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Timestamp } from '@angular/fire/firestore';
+import { CollectionReference, Timestamp } from 'firebase/firestore';
 import { NEVER, Observable, Subject, catchError, filter, map } from 'rxjs';
 import { AuthService } from './auth.service';
-import {
-  Firestore,
-  collection,
-  doc,
-  query,
-  setDoc,
-  where,
-} from '@angular/fire/firestore';
-import { sortedChanges } from 'rxfire/firestore';
+import { collection, doc, query, setDoc, where } from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
+import { sortedChanges } from '../firebase/firestore-rx';
 
 export interface ReactionOption {
   id: string;
@@ -94,10 +88,7 @@ export class ReactionsService {
 
   private reactions = new Subject<Reaction>();
 
-  constructor(
-    private readonly firestore: Firestore,
-    private readonly authService: AuthService
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   async sendReaction(reactionId: string, roomId: string) {
     const user = await this.authService.getUser();
@@ -109,7 +100,7 @@ export class ReactionsService {
     };
 
     return setDoc(
-      doc(this.firestore, 'rooms', roomId, 'reactions', reaction.id),
+      doc(firestore, 'rooms', roomId, 'reactions', reaction.id),
       reaction
     );
   }
@@ -125,14 +116,14 @@ export class ReactionsService {
     };
 
     return setDoc(
-      doc(this.firestore, 'rooms', roomId, 'reactions', reaction.id),
+      doc(firestore, 'rooms', roomId, 'reactions', reaction.id),
       reaction
     );
   }
 
   getReactionsStream(roomId: string): Observable<Reaction> {
     const ref = collection(
-      this.firestore,
+      firestore,
       'rooms',
       roomId,
       'reactions'
@@ -147,7 +138,7 @@ export class ReactionsService {
 
   getNudgesStream(roomId: string, userId: string): Observable<Reaction> {
     const ref = collection(
-      this.firestore,
+      firestore,
       'rooms',
       roomId,
       'reactions'
@@ -166,6 +157,6 @@ export class ReactionsService {
   }
 
   private createId() {
-    return doc(collection(this.firestore, '_')).id;
+    return doc(collection(firestore, '_')).id;
   }
 }

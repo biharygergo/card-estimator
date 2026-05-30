@@ -16,5 +16,12 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
+// Benign browser noise from Material menus / Shepherd during layout (see Chromium #809574).
+Cypress.on('uncaught:exception', err => {
+  if (err.message.includes('ResizeObserver loop')) {
+    return false;
+  }
+});
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import {
   CollectionReference,
-  Firestore,
   Timestamp,
   collection,
-  collectionData,
   deleteDoc,
   doc,
   setDoc,
-} from '@angular/fire/firestore';
+} from 'firebase/firestore';
+import { firestore } from '../firebase/firebase';
+import { collectionData } from '../firebase/firestore-rx';
 import { OrganizationService } from './organization.service';
 import { CardSetValue, SavedCardSetValue } from '../types';
 import {
@@ -32,7 +32,6 @@ export class UnauthorizedError extends Error {
 })
 export class CardDeckService {
   constructor(
-    private firestore: Firestore,
     private authService: AuthService,
     private readonly permissionsService: PermissionsService,
     private readonly organizationService: OrganizationService
@@ -58,7 +57,7 @@ export class CardDeckService {
         return from(
           setDoc(
             doc(
-              this.firestore,
+              firestore,
               `userDetails/${user.uid}/cardSets/${savedCardSet.id}`
             ),
             savedCardSet
@@ -77,7 +76,7 @@ export class CardDeckService {
         }
         return from(
           deleteDoc(
-            doc(this.firestore, `userDetails/${user.uid}/cardSets/${id}`)
+            doc(firestore, `userDetails/${user.uid}/cardSets/${id}`)
           )
         );
       })
@@ -91,7 +90,7 @@ export class CardDeckService {
           return of([]);
         }
         const cardSetsCollection = collection(
-          this.firestore,
+          firestore,
           `userDetails/${user.uid}/cardSets`
         ) as CollectionReference<SavedCardSetValue>;
         return collectionData<SavedCardSetValue>(cardSetsCollection);
@@ -100,6 +99,6 @@ export class CardDeckService {
   }
 
   private createId() {
-    return doc(collection(this.firestore, '_')).id;
+    return doc(collection(firestore, '_')).id;
   }
 }

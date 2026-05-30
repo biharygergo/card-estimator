@@ -2,6 +2,9 @@ import {
   assertInvitationPopup,
   clearFirebaseLocalStorage,
   createNewRoom,
+  fillRegisterCredentials,
+  fillSignInCredentials,
+  openSignInTab,
   setAppCheckCookie,
 } from '../support/utils';
 
@@ -31,9 +34,7 @@ describe('Authentication', () => {
     cy.get('#create-account-button-banner').click({ force: true });
 
     // Account modal appears on the Register tab
-    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail, { delay: 1});
-    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword, { delay: 1});
-    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
+    fillRegisterCredentials(testEmail, testPassword, { delay: 1 });
     cy.wait(1000);
 
     // Modal disappears
@@ -46,10 +47,8 @@ describe('Authentication', () => {
     cy.get('#sign-in-button').click();
 
     // Switch to Sign in tab and fill in credentials
-    cy.get('#sign-up-modal').contains('Sign in').first().click();
-    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail, { delay: 10});
-    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword, { delay: 1});
-    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
+    openSignInTab();
+    fillSignInCredentials(testEmail, testPassword, { delay: 10 });
     cy.wait(1000);
 
     cy.get('.mat-mdc-tab-body-active #email-input').should('not.exist');

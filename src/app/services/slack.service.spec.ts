@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SlackService } from '../service/slack.service';
+import { SlackService } from './slack.service';
 
 describe('SlackService', () => {
   let service: SlackService;

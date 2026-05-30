@@ -86,7 +86,7 @@ import { WebexApiService } from '../services/webex-api.service';
 import { delayedFadeAnimation, fadeAnimation } from '../shared/animations';
 import { TeamsService } from '../services/teams.service';
 import { PaymentService } from '../services/payment.service';
-import { Timestamp } from '@angular/fire/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { ToastService } from '../services/toast.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BreakpointObserver } from '@angular/cdk/layout';

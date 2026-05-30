@@ -10,7 +10,8 @@
     "target": "es2020",
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["node"]
   },
   "compileOnSave": true,
   "include": [

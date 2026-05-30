@@ -6,23 +6,6 @@ import {
   provideAppInitializer,
 } from '@angular/core';
 import {
-  provideFunctions,
-  getFunctions,
-  connectFunctionsEmulator,
-} from '@angular/fire/functions';
-import {
-  provideStorage,
-  getStorage,
-  connectStorageEmulator,
-} from '@angular/fire/storage';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import {
-  provideFirestore,
-  initializeFirestore,
-  connectFirestoreEmulator,
-} from '@angular/fire/firestore';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import {
   withInterceptorsFromDi,
   provideHttpClient,
   withFetch,
@@ -40,12 +23,7 @@ import {
 } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { GlobalErrorHandler } from './error-handler';
-import {
-  ScreenTrackingService,
-  provideAnalytics,
-  initializeAnalytics,
-} from '@angular/fire/analytics';
-import { environment } from '../environments/environment';
+import { ScreenTrackingService } from './firebase/screen-tracking.service';
 import * as Sentry from '@sentry/angular';
 import { provideLottieOptions } from 'ngx-lottie';
 
@@ -78,49 +56,6 @@ export const appConfig: ApplicationConfig = {
     provideCloudinaryLoader('https://res.cloudinary.com/dtvhnllmc'),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => {
-      const app = initializeApp(environment.firebase);
-      const firestore = initializeFirestore(app, {
-        experimentalAutoDetectLongPolling: true,
-        ignoreUndefinedProperties: true,
-      });
-      if (environment.useEmulators) {
-        connectFirestoreEmulator(firestore, 'localhost', 8080);
-      } else {
-      }
-      return firestore;
-    }),
-    provideAuth(() => {
-      const auth = getAuth();
-      if (environment.useEmulators) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true,
-        });
-      }
-      return auth;
-    }),
-    provideAnalytics(() => {
-      const app = initializeApp(environment.firebase);
-      return initializeAnalytics(app, {
-        config: { cookie_flags: 'SameSite=None;Secure' },
-      });
-    }),
-    provideStorage(() => {
-      const storage = getStorage();
-      if (environment.useEmulators) {
-        connectStorageEmulator(storage, 'localhost', 9199);
-      }
-      return storage;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-      functions.region = 'europe-west1';
-      if (environment.useEmulators) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-      return functions;
-    }),
     provideLottieOptions({
       player: () => import('lottie-web'),
     }),

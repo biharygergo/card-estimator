@@ -1,14 +1,21 @@
 import {
   clearFirebaseLocalStorage,
   createNewRoom,
+  fillSignInCredentials,
   setAppCheckCookie,
 } from '../support/utils';
 
 describe('Authentication', () => {
   const testEmail = `cypress-test-premium@example.com`;
-  const testPassword = Cypress.env('PREMIUM_USER_PASSWORD');
+  const testPassword = Cypress.env('PREMIUM_USER_PASSWORD') as string | undefined;
 
-  before(() => {
+  before(function () {
+    if (!testPassword) {
+      throw new Error(
+        'PREMIUM_USER_PASSWORD is not set. Copy cypress.env.example.json to cypress.env.json and add the password for cypress-test-premium@example.com, or export CYPRESS_PREMIUM_USER_PASSWORD.'
+      );
+    }
+
     clearFirebaseLocalStorage();
     setAppCheckCookie();
     cy.visit('/create');
@@ -16,9 +23,7 @@ describe('Authentication', () => {
     cy.get('#sign-in-button').click();
 
     // Account modal appears on the Sign in tab
-    cy.get('.mat-mdc-tab-body-active #email-input').click().type(testEmail);
-    cy.get('.mat-mdc-tab-body-active #password-input').click().type(testPassword);
-    cy.get('.mat-mdc-tab-body-active #create-account-button').click();
+    fillSignInCredentials(testEmail, testPassword);
     cy.wait(1000);
   });
 

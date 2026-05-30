@@ -11,8 +11,8 @@ import { httpsCallable } from 'firebase/functions';
 import { firestore, functions } from '../firebase/firebase';
 import { collectionData, docData } from '../firebase/firestore-rx';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from '@stripe/firestore-stripe-payments';
 import { Observable, of, switchMap, map, firstValueFrom } from 'rxjs';
+import { StripeSubscription } from '../types/stripe-subscription';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import {
   signUpOrLoginDialogCreator,
@@ -24,11 +24,7 @@ import { environment } from 'src/environments/environment';
 import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.service';
 import { BundleName, BundleWithCredits, Credit, CreditBundle } from '../types';
 
-export type CorrectSubscription = Subscription & {
-  created: Timestamp;
-  current_period_end: Timestamp;
-};
-export type StripeSubscription = CorrectSubscription;
+export type { StripeSubscription } from '../types/stripe-subscription';
 
 @Injectable({
   providedIn: 'root',

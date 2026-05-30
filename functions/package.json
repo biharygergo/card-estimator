@@ -15,6 +15,9 @@
   "engines": {
     "node": "20"
   },
+  "overrides": {
+    "@types/express": "^4.17.25"
+  },
   "main": "lib/functions/src/index.js",
   "dependencies": {
     "@google-cloud/bigquery": "^7.7.1",
@@ -22,15 +25,15 @@
     "@google-cloud/vertexai": "^0.5.0",
     "@linear/sdk": "^19.3.0",
     "@react-email/components": "^0.1.1",
-    "@sentry/node": "^7.46.0",
+    "@sentry/node": "^10.55.0",
     "@types/node": "^18.11.18",
     "axios": "^1.2.2",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "firebase-admin": "^11.11.1",
-    "firebase-functions": "^6.3.2",
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.6.0",
     "moment": "^2.29.4",
     "openai": "^3.2.1",
     "openid-client": "^5.4.0",
@@ -43,6 +46,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
+    "@types/express": "^4.17.25",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
@@ -53,7 +57,7 @@
     "firebase-functions-test": "^3.4.1",
     "prettier": "^3.5.3",
     "react-email": "^5.2.9",
-    "typescript": "~5.2"
+    "typescript": "~5.9.3"
   },
   "private": true
 }

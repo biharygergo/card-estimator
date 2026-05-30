@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, PLATFORM_ID, inject, afterNextRender, sign
 import { RouterLink } from '@angular/router';
 import { MatAnchor } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface HeaderConfig {
   title: string;
@@ -45,7 +45,7 @@ interface TitleSegment {
   selector: 'planning-poker-page-header-with-cta',
   templateUrl: './page-header-with-cta.component.html',
   styleUrl: './page-header-with-cta.component.scss',
-  imports: [MatIcon, MatAnchor, RouterLink, CommonModule],
+  imports: [MatIcon, MatAnchor, RouterLink],
 })
 export class PageHeaderWithCtaComponent implements OnDestroy {
   @Input({ required: true }) config!: HeaderConfig;

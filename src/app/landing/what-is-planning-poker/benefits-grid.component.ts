@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-benefits-grid',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="benefits-container">
-      <div class="benefit-card" *ngFor="let benefit of benefits">
-        <h3>{{ benefit.title }}</h3>
-        <p>{{ benefit.description }}</p>
-      </div>
+      @for (benefit of benefits; track benefit) {
+        <div class="benefit-card">
+          <h3>{{ benefit.title }}</h3>
+          <p>{{ benefit.description }}</p>
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [`
     .benefits-container {
       display: grid;

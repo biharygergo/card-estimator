@@ -177,7 +177,7 @@ export class HeaderV2Component implements OnInit {
     }
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onWindowScroll() {
     // Show compact navbar after scrolling down 100px
     const scrollPosition = window.scrollY || document.documentElement.scrollTop;

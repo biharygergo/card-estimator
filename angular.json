@@ -36,7 +36,7 @@
               "src/styles.scss",
               "node_modules/shepherd.js/dist/css/shepherd.css"
             ],
-            "scripts": ["node_modules/marked/marked.min.js"],
+            "scripts": [],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
@@ -165,7 +165,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],

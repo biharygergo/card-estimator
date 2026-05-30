@@ -26,7 +26,7 @@ export class YoutubePlayerComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.onResize();
   }
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     if (this.youtubePlayerContainer()) {
       const width = this.youtubePlayerContainer().nativeElement.clientWidth;

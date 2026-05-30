@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
 import * as Sentry from '@sentry/angular';
 
 import { environment } from './environments/environment';
@@ -32,7 +32,7 @@ function bootstrap() {
     });
   }
 
-  bootstrapApplication(AppComponent, appConfig).catch(err =>
+  bootstrapApplication(AppComponent, {...appConfig, providers: [provideZoneChangeDetection(), ...appConfig.providers]}).catch(err =>
     console.error(err)
   );
 }

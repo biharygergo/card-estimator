@@ -180,6 +180,7 @@ export class EstimatorService {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
     const updatedMember = room.members.find(m => m.id === member.id);
+    if (!updatedMember) return;
 
     updatedMember.status = status;
 
@@ -198,6 +199,7 @@ export class EstimatorService {
     const room = await this.getRoom(roomId);
     const updatedMembers = [...room.members];
     const updatedMember = room.members.find(m => m.id === member.id);
+    if (!updatedMember) return;
 
     updatedMember.type = memberType;
 
@@ -510,6 +512,7 @@ export class EstimatorService {
   updateCurrentUserMemberAvatar(room: Room, avatarUrl: string | null) {
     const newMembers = [...room.members];
     const member = newMembers.find(m => m.id === this.activeMember.id);
+    if (!member) return Promise.resolve();
     member.avatarUrl = avatarUrl;
     return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
@@ -519,6 +522,7 @@ export class EstimatorService {
   updateCurrentUserMemberName(room: Room, name: string) {
     const newMembers = [...room.members];
     const member = newMembers.find(m => m.id === this.activeMember.id);
+    if (!member) return Promise.resolve();
     member.name = name;
     return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       members: newMembers,
@@ -703,7 +707,7 @@ export class EstimatorService {
   async togglePasswordProtection(roomId: string, isEnabled: boolean) {
     const existingMeta = await firstValueFrom(
       this.getAuthorizationMetadata(roomId)
-    );
+    ) ?? {} as AuthorizationMetadata;
 
     const meta: AuthorizationMetadata = {
       ...existingMeta,
@@ -728,7 +732,7 @@ export class EstimatorService {
   ) {
     const existingMeta = await firstValueFrom(
       this.getAuthorizationMetadata(roomId)
-    );
+    ) ?? {} as AuthorizationMetadata;
 
     const meta: AuthorizationMetadata = {
       ...existingMeta,

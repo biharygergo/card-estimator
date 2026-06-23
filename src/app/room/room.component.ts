@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnDestroy,
   Inject,
+  PLATFORM_ID,
   ChangeDetectionStrategy,
   signal,
 } from '@angular/core';
@@ -105,7 +106,7 @@ import { GithubBadgeComponent } from './github-badge/github-badge.component';
 import { CardDeckComponent } from './card-deck/card-deck.component';
 import { NotesFieldComponent } from './notes-field/notes-field.component';
 import { RoundResultsComponent } from './round-results/round-results.component';
-import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { NgTemplateOutlet, AsyncPipe, isPlatformBrowser } from '@angular/common';
 import { RichTopicComponent } from './rich-topic/rich-topic.component';
 import { ResizeMonitorDirective } from '../shared/directives/resize-monitor.directive';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -485,6 +486,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     public readonly permissionsService: PermissionsService,
     public readonly paymentService: PaymentService,
     @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(PLATFORM_ID) private platformId: object,
     private readonly clipboard: Clipboard,
     private readonly toastService: ToastService,
     private readonly breakpointObserver: BreakpointObserver,
@@ -721,21 +723,18 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private showNudgeNotification(fromMemberName: string): void {
-    // Check if page is hidden (user is on another tab)
-    const isPageHidden = document.hidden;
-
-    if (isPageHidden) {
-      // Flash page title to get user's attention
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (document.hidden) {
       this.startTitleFlashing(`👋 ${fromMemberName} nudged you!`);
     }
   }
 
   private startTitleFlashing(message: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     if (!this.originalPageTitle) {
       this.originalPageTitle = document.title;
     }
 
-    // Clear any existing flash interval
     this.stopTitleFlashing();
 
     let isOriginalTitle = true;
@@ -744,7 +743,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       isOriginalTitle = !isOriginalTitle;
     }, 1000);
 
-    // Stop flashing when user returns to tab
     const handleVisibilityChange = () => {
       if (!document.hidden) {
         this.stopTitleFlashing();
@@ -755,6 +753,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   private stopTitleFlashing(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     if (this.titleFlashInterval) {
       clearInterval(this.titleFlashInterval);
       this.titleFlashInterval = undefined;
@@ -765,7 +764,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   showInvitationPopup() {
-    const roomUrl = `${window.location.origin}/room/${this.room().roomId}`;
+    const roomUrl = `${isPlatformBrowser(this.platformId) ? window.location.origin : ''}/room/${this.room().roomId}`;
     this.dialog.open(
       ...invitationPopupCreator({
         roomId: this.room().roomId,
@@ -1006,7 +1005,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     let message = '';
     let duration = 3000;
 
-    const host = window.origin || 'https://card-estimator.web.app';
+    const host = isPlatformBrowser(this.platformId) ? window.origin : 'https://card-estimator.web.app';
     const roomUrl = `${host}/join?roomId=${this.room().roomId}`;
     if (this.config.runningIn === 'zoom') {
       try {

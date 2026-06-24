@@ -128,13 +128,13 @@ export class PaymentService {
 
     const sessionRef = await addDoc(checkoutSessionsCollection, checkoutDoc);
 
-    return new Promise((resolve, rejet) => {
+    return new Promise((resolve, reject) => {
       docData(sessionRef).subscribe(session => {
         if (session.url) {
           window.location.assign(session.url);
           resolve(true);
         } else if (session.error?.message) {
-          rejet(session.error.message);
+          reject(session.error.message);
         }
       });
     });
@@ -247,13 +247,13 @@ export class PaymentService {
       trial_from_plan: false,
     });
 
-    return new Promise((resolve, rejet) => {
+    return new Promise((resolve, reject) => {
       docData(sessionRef).subscribe(session => {
         if (session.url) {
           window.location.assign(session.url);
           resolve(true);
         } else if (session.error?.message) {
-          rejet(session.error.message);
+          reject(session.error.message);
         }
       });
     });

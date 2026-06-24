@@ -326,6 +326,11 @@
     mask-image: none;
     -webkit-mask-image: none;
   }
+
+  @include extraSmallScreen {
+    padding: 0.3rem;
+    gap: 4px;
+  }
 }
 
 .pass-option-button:not(.mat-accent):not(.selected) {

@@ -58,8 +58,7 @@
         @if (pageMode | async; as pageMode) {
           <mat-card
             appearance="outlined"
-            class="action-card main-card"
-            [class.has-sidebar]="config.runningIn === 'web'">
+            class="action-card main-card has-sidebar">
             <div class="card-layout">
               <!-- Primary: Form -->
               <div class="card-primary">
@@ -74,9 +73,8 @@
               </div>
 
               <!-- Sidebar within card -->
-              @if (config.runningIn === 'web') {
-                <div class="card-divider"></div>
-                <div class="card-secondary" @delayedFadeAnimation>
+              <div class="card-divider"></div>
+              <div class="card-secondary" @delayedFadeAnimation>
                   @if (vm | async; as viewModel) {
                     @if (viewModel.user && !viewModel.user.isAnonymous) {
                       <!-- Authenticated: Recent Sessions -->
@@ -135,7 +133,6 @@
                     }
                   }
                 </div>
-              }
             </div>
           </mat-card>
         }

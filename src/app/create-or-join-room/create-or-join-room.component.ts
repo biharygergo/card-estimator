@@ -307,7 +307,8 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     },
   ];
 
-  // Recent sessions for authenticated users (limit to 3 to minimize database calls)
+  skeletonItems = [1, 2, 3];
+
   recentSessions$: Observable<{ roomId: string; createdAt: Date; roundCount: number }[]> =
     this.user.pipe(
       switchMap(user => {

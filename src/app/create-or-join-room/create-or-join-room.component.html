@@ -1,35 +1,33 @@
 @if (!isServer) {
   <div class="page-container" [class.web-layout]="config.runningIn === 'web'">
     <!-- Navbar -->
-    @if (!(isLoadingUser | async)) {
-      <div class="navbar">
-        @if (vm | async; as viewModel) {
-          <div class="navbar-left">
-            <app-profile-dropdown></app-profile-dropdown>
-          </div>
-          <div class="navbar-right">
-            @if (!viewModel.user) {
-              <button
-                mat-button
-                class="sign-in-button"
-                #tooltip="matTooltip"
-                matTooltip="Created a permanent account before? Jump right back."
-                matTooltipPosition="right"
-                (click)="onSignInClicked.next()"
-                id="sign-in-button">
-                <mat-icon>account_circle</mat-icon>
-                Sign in
-              </button>
-            }
-          </div>
-        }
-      </div>
-    }
+    <div class="navbar" [class.navbar-hidden]="isLoadingUser | async">
+      @if (vm | async; as viewModel) {
+        <div class="navbar-left">
+          <app-profile-dropdown></app-profile-dropdown>
+        </div>
+        <div class="navbar-right">
+          @if (!viewModel.user) {
+            <button
+              mat-button
+              class="sign-in-button"
+              #tooltip="matTooltip"
+              matTooltip="Created a permanent account before? Jump right back."
+              matTooltipPosition="right"
+              (click)="onSignInClicked.next()"
+              id="sign-in-button">
+              <mat-icon>account_circle</mat-icon>
+              Sign in
+            </button>
+          }
+        </div>
+      }
+    </div>
 
     <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-content">
-        <!-- Logo and Welcome -->
+        <!-- Centered Logo and Welcome -->
         <div class="hero-header">
           <div class="logos">
             <img src="/assets/logo.webp" class="logo main-logo" />
@@ -56,49 +54,32 @@
           }
         </div>
 
-        <!-- Value Proposition Section (before form) -->
-        @if (config.runningIn === 'web' && (vm | async); as viewModel) {
-          @if (!viewModel.user) {
-            <div class="value-proposition" @delayedFadeAnimation>
-              <!-- Feature Pills for Unauthenticated Users -->
-              <div class="feature-pills">
-                @for (feature of features; track feature.title) {
-                  <div class="feature-pill">
-                    <mat-icon>{{ feature.icon }}</mat-icon>
-                    <span>{{ feature.title }}</span>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-        }
-
-        <!-- Main Action Card -->
+        <!-- Unified Card -->
         @if (pageMode | async; as pageMode) {
           <mat-card
             appearance="outlined"
-            class="action-card main-card">
-            <div class="transitioning-container" @delayedFadeAnimation>
-              @if (pageMode === PageMode.CREATE) {
-                <ng-container *ngTemplateOutlet="create"></ng-container>
-              }
-              @if (pageMode === PageMode.JOIN) {
-                <ng-container *ngTemplateOutlet="join"></ng-container>
-              }
-            </div>
-          </mat-card>
-        }
+            class="action-card main-card"
+            [class.has-sidebar]="config.runningIn === 'web'">
+            <div class="card-layout">
+              <!-- Primary: Form -->
+              <div class="card-primary">
+                <div class="transitioning-container" @delayedFadeAnimation>
+                  @if (pageMode === PageMode.CREATE) {
+                    <ng-container *ngTemplateOutlet="create"></ng-container>
+                  }
+                  @if (pageMode === PageMode.JOIN) {
+                    <ng-container *ngTemplateOutlet="join"></ng-container>
+                  }
+                </div>
+              </div>
 
-        <ng-container *ngTemplateOutlet="links"></ng-container>
-
-        <!-- Recent Sessions for Authenticated Users (after form) -->
-        @if (config.runningIn === 'web') {
-          <div class="footer-section">
-            @if (vm | async; as viewModel) {
-              @if (viewModel.user && !viewModel.user.isAnonymous) {
-                @if (recentSessions$ | async; as sessions) {
-                  @if (sessions.length > 0) {
-                    <div class="recent-sessions-list" @delayedFadeAnimation>
+              <!-- Sidebar within card -->
+              @if (config.runningIn === 'web') {
+                <div class="card-divider"></div>
+                <div class="card-secondary" @delayedFadeAnimation>
+                  @if (vm | async; as viewModel) {
+                    @if (viewModel.user && !viewModel.user.isAnonymous) {
+                      <!-- Authenticated: Recent Sessions -->
                       <div class="recent-sessions-header">
                         <span class="sessions-label">Recent sessions</span>
                         <a routerLink="/history" class="view-all-link">
@@ -106,25 +87,59 @@
                           <mat-icon>arrow_forward</mat-icon>
                         </a>
                       </div>
-                      <div class="sessions-grid">
-                        @for (session of sessions; track session.roomId) {
-                          <a [routerLink]="['/room', session.roomId]" class="session-item">
-                            <div class="session-room-id">{{ session.roomId }}</div>
-                            <div class="session-meta">
-                              <span class="session-rounds">{{ session.roundCount }} {{ session.roundCount === 1 ? 'round' : 'rounds' }}</span>
-                              <span class="session-divider">·</span>
-                              <span class="session-date">{{ session.createdAt | date:'MMM d' }}</span>
+                      @if (recentSessions$ | async; as sessions) {
+                        @if (sessions.length > 0) {
+                          <div class="sessions-grid">
+                            @for (session of sessions; track session.roomId) {
+                              <a [routerLink]="['/room', session.roomId]" class="session-item">
+                                <div class="session-room-id">{{ session.roomId }}</div>
+                                <div class="session-meta">
+                                  <span class="session-rounds">{{ session.roundCount }} {{ session.roundCount === 1 ? 'round' : 'rounds' }}</span>
+                                  <span class="session-divider">·</span>
+                                  <span class="session-date">{{ session.createdAt | date:'MMM d' }}</span>
+                                </div>
+                              </a>
+                            }
+                          </div>
+                        } @else {
+                          <div class="empty-sessions">
+                            <mat-icon>history</mat-icon>
+                            <p>No recent sessions yet</p>
+                          </div>
+                        }
+                      } @else {
+                        <!-- Skeleton: loading -->
+                        <div class="sessions-grid">
+                          @for (item of skeletonItems; track item) {
+                            <div class="session-item skeleton-item">
+                              <div class="skeleton-line" style="width: 65%"></div>
+                              <div class="skeleton-line short" style="width: 40%"></div>
                             </div>
-                          </a>
+                          }
+                        </div>
+                      }
+                    } @else {
+                      <!-- Unauthenticated: Feature Highlights -->
+                      <span class="sidebar-card-title">Why teams love us</span>
+                      <div class="feature-highlights">
+                        @for (feature of features; track feature.title) {
+                          <div class="feature-highlight-item">
+                            <mat-icon>{{ feature.icon }}</mat-icon>
+                            <div>
+                              <span class="feature-title">{{ feature.title }}</span>
+                              <span class="feature-description">{{ feature.description }}</span>
+                            </div>
+                          </div>
                         }
                       </div>
-                    </div>
+                    }
                   }
-                }
+                </div>
               }
-            }
-          </div>
+            </div>
+          </mat-card>
         }
+
       </div>
     </div>
 
@@ -142,15 +157,38 @@
             <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
           }
         </form>
-        <button
-          color="primary"
-          mat-flat-button
-          (click)="onCreateRoomClicked.next()"
-          [disabled]="(isBusy | async) || !name.value.length"
-          id="create-room-button">
-          <mat-icon>add</mat-icon>
-          Create room
-        </button>
+        @if (viewModel.user?.displayName) {
+          <div class="hero-action">
+            <button
+              color="primary"
+              mat-flat-button
+              class="hero-button"
+              (click)="onCreateRoomClicked.next()"
+              [disabled]="(isBusy | async) || !name.value.length"
+              id="create-room-button">
+              <mat-icon>add</mat-icon>
+              Create room
+            </button>
+            <a routerLink="/join" class="hero-action-alt">
+              <mat-icon>login</mat-icon>
+              Or join an existing room
+            </a>
+          </div>
+        } @else {
+          <button
+            color="primary"
+            mat-flat-button
+            (click)="onCreateRoomClicked.next()"
+            [disabled]="(isBusy | async) || !name.value.length"
+            id="create-room-button">
+            <mat-icon>add</mat-icon>
+            Create room
+          </button>
+          <a routerLink="/join" class="hero-action-alt">
+            <mat-icon>login</mat-icon>
+            Or join an existing room
+          </a>
+        }
         @if (!viewModel.user) {
           <ng-container *ngTemplateOutlet="terms"></ng-container>
         }
@@ -186,17 +224,42 @@
             <ng-container *ngTemplateOutlet="roomIdTemplate"></ng-container>
           }
         </form>
-        <button
-          mat-flat-button
-          color="primary"
-          [disabled]="
-            !roomId.value.length || !name.value.length || (isBusy | async)
-          "
-          (click)="onJoinRoomClicked.next()"
-          id="join-room-button">
-          <mat-icon>login</mat-icon>
-          Join room
-        </button>
+        @if (viewModel.user?.displayName) {
+          <div class="hero-action">
+            <button
+              mat-flat-button
+              color="primary"
+              class="hero-button"
+              [disabled]="
+                !roomId.value.length || !name.value.length || (isBusy | async)
+              "
+              (click)="onJoinRoomClicked.next()"
+              id="join-room-button">
+              <mat-icon>login</mat-icon>
+              Join room
+            </button>
+            <a routerLink="/create" class="hero-action-alt">
+              <mat-icon>add</mat-icon>
+              Or create a new room
+            </a>
+          </div>
+        } @else {
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="
+              !roomId.value.length || !name.value.length || (isBusy | async)
+            "
+            (click)="onJoinRoomClicked.next()"
+            id="join-room-button">
+            <mat-icon>login</mat-icon>
+            Join room
+          </button>
+          <a routerLink="/create" class="hero-action-alt">
+            <mat-icon>add</mat-icon>
+            Or create a new room
+          </a>
+        }
         @if (!viewModel.user) {
           <ng-container *ngTemplateOutlet="terms"></ng-container>
         }

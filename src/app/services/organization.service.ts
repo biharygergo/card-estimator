@@ -39,6 +39,7 @@ import {
 } from 'rxjs';
 import { FileUploadService } from './file-upload.service';
 import { PaymentService } from './payment.service';
+import { ToastService } from './toast.service';
 
 const ORGANIZATION_COLLECTION = 'organizations';
 
@@ -49,7 +50,8 @@ export class OrganizationService {
   constructor(
     private authService: AuthService,
     private fileUploadService: FileUploadService,
-    private readonly paymentService: PaymentService
+    private readonly paymentService: PaymentService,
+    private readonly toastService: ToastService
   ) {}
 
   private createId() {
@@ -158,8 +160,8 @@ export class OrganizationService {
     );
   }
 
-  removeInvitation(organizationId: string, invitationId: string) {
-    deleteDoc(
+  async removeInvitation(organizationId: string, invitationId: string) {
+    await deleteDoc(
       doc(
         firestore,
         ORGANIZATION_COLLECTION,
@@ -269,6 +271,13 @@ export class OrganizationService {
   setSelectedOrganization(orgId: string) {
     this.authService
       .updateUserPreference({ activeOrganizationId: orgId })
-      .subscribe({ error: () => {} });
+      .subscribe({
+        error: () =>
+          this.toastService.showMessage(
+            'Could not save your selection. Please try again.',
+            3000,
+            'error'
+          ),
+      });
   }
 }

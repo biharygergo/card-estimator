@@ -85,7 +85,7 @@
     "@types/node": "^20.19.0",
     "browser-sync": "^3.0.0",
     "cypress": "^15.3.0",
-    "firebase-tools": "^15.19.0",
+    "firebase-tools": "^15.22.3",
     "fuzzy": "^0.1.3",
     "inquirer": "^6.2.2",
     "inquirer-autocomplete-prompt": "^1.3.0",

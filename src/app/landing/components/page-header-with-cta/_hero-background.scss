@@ -1,0 +1,11 @@
+// Shared by page-header-with-cta and any other hero section that wants the
+// same transparent/clipped background treatment. Kept as its own mixin-only
+// partial (not part of page-header-with-cta.component.scss) so pages that
+// only need this mixin don't pull that component's full compiled CSS into
+// their own bundle - Sass's `@use` emits a module's top-level CSS rules
+// wherever it's used, not just its mixins/functions.
+@mixin heroBackground() {
+  background: transparent;
+  overflow: hidden;
+  position: relative;
+}

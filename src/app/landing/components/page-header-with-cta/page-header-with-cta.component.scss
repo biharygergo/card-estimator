@@ -1,11 +1,7 @@
-@mixin heroBackground() {
-  background: transparent;
-  overflow: hidden;
-  position: relative;
-}
+@use 'hero-background';
 
 .hero-header-section {
-  @include heroBackground();
+  @include hero-background.heroBackground();
 }
 
 .hero-header {

@@ -17,6 +17,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Preload the icon font files directly so they start downloading in
+         parallel with the stylesheet below, instead of only being discovered
+         once that CSS is parsed - this is what causes mat-icon ligatures
+         (e.g. "close", "check_circle") to flash as literal text on load. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/materialicons/v145/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/materialsymbolsoutlined/v361/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDCvHOejbd5zrDAt.woff2" />
+
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link
       rel="apple-touch-icon"
@@ -42,8 +59,12 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet" />
+    <!-- display=block (not swap) for the icon font: with swap, mat-icon
+         ligature text (e.g. "close") renders literally until the font loads;
+         block instead renders an invisible glyph during that (now very
+         short, thanks to the preloads above) wait. -->
     <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Symbols+Outlined&display=swap"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Symbols+Outlined&display=block"
       rel="stylesheet" />
     <meta
       name="google-site-verification"

@@ -1,8 +1,7 @@
-@use '../../../components/page-header-with-cta/page-header-with-cta.component'
-  as page-header-with-cta;
+@use '../../../components/page-header-with-cta/hero-background';
 
 .integration-header {
-  @include page-header-with-cta.heroBackground();
+  @include hero-background.heroBackground();
 }
 
 .integration-header-content {

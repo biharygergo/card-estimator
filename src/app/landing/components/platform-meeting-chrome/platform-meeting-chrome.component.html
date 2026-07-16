@@ -1,0 +1,116 @@
+<div class="meeting-chrome-scene" [style.--accent-color]="config.accentColor">
+  <div class="meeting-window">
+    <div class="meeting-toolbar">
+      <div class="toolbar-brand">
+        <span class="toolbar-status-dot"></span>
+        <img [src]="config.logo" class="toolbar-logo" alt="" />
+        <span class="toolbar-app-name">{{ config.label }}</span>
+      </div>
+      <div class="toolbar-window-controls">
+        <mat-icon>remove</mat-icon>
+        <mat-icon>crop_square</mat-icon>
+        <mat-icon>close</mat-icon>
+      </div>
+    </div>
+    <div class="meeting-content">
+      <div class="meeting-body">
+        <div class="video-grid">
+          @for (avatar of videoTileAvatars; track avatar; let i = $index) {
+            <div class="video-tile"
+                 [class.show]="state().showMeetingJoined"
+                 [style.transition-delay.ms]="i * 120">
+              <img class="tile-avatar-img" [src]="avatar" alt="" />
+            </div>
+          }
+        </div>
+        <div class="sidebar-panel" [class.show]="state().showSidebar">
+          <div class="app-panel">
+            <div class="app-brand-bar">
+              <img src="/assets/logo.png" class="app-brand-logo" alt="" />
+              <span class="app-brand-name">PlanningPoker.live</span>
+            </div>
+
+            <div class="app-panel-header">
+              <mat-icon class="app-panel-icon">description</mat-icon>
+              <span class="app-panel-ticket">PP-1</span>
+              <span class="app-panel-title">Redesign homepage</span>
+            </div>
+
+            @if (!state().showResults) {
+            <div class="participant-list">
+              <div class="participant-row" [class.show]="state().showEstimator1">
+                <img class="participant-avatar-img" [src]="videoTileAvatars[0]" alt="" />
+                <span class="participant-name">Alice</span>
+                <span class="participant-status" [class.voted]="state().showVote1" [class.revealed]="state().cardsFlipped">
+                  @if (state().cardsFlipped) {
+                    <span class="vote-chip">3</span>
+                  } @else if (state().showVote1) {
+                    <mat-icon>check_circle</mat-icon>
+                  } @else {
+                    <span class="voting-dots">•••</span>
+                  }
+                </span>
+              </div>
+              <div class="participant-row" [class.show]="state().showEstimator2">
+                <img class="participant-avatar-img" [src]="videoTileAvatars[1]" alt="" />
+                <span class="participant-name">Bob</span>
+                <span class="participant-status" [class.voted]="state().showVote2" [class.revealed]="state().cardsFlipped">
+                  @if (state().cardsFlipped) {
+                    <span class="vote-chip">3</span>
+                  } @else if (state().showVote2) {
+                    <mat-icon>check_circle</mat-icon>
+                  } @else {
+                    <span class="voting-dots">•••</span>
+                  }
+                </span>
+              </div>
+              <div class="participant-row" [class.show]="state().showEstimator3">
+                <img class="participant-avatar-img" [src]="videoTileAvatars[2]" alt="" />
+                <span class="participant-name">Carol</span>
+                <span class="participant-status" [class.voted]="state().showVote3" [class.revealed]="state().cardsFlipped">
+                  @if (state().cardsFlipped) {
+                    <span class="vote-chip">5</span>
+                  } @else if (state().showVote3) {
+                    <mat-icon>check_circle</mat-icon>
+                  } @else {
+                    <span class="voting-dots">•••</span>
+                  }
+                </span>
+              </div>
+            </div>
+            } @else {
+            <div class="app-panel-results">
+              <div class="results-row"><img class="participant-avatar-img" [src]="videoTileAvatars[0]" alt="" /><span>Alice</span> <strong>3</strong></div>
+              <div class="results-row"><img class="participant-avatar-img" [src]="videoTileAvatars[1]" alt="" /><span>Bob</span> <strong>3</strong></div>
+              <div class="results-row"><img class="participant-avatar-img" [src]="videoTileAvatars[2]" alt="" /><span>Carol</span> <strong>5</strong></div>
+              <div class="app-panel-stats">
+                <div class="stat-chip">
+                  <span class="stat-chip-label">Average</span>
+                  <span class="stat-chip-value">3.7</span>
+                </div>
+                <div class="stat-chip stat-chip-primary">
+                  <span class="stat-chip-label">Majority</span>
+                  <span class="stat-chip-value">3</span>
+                </div>
+              </div>
+              <button type="button" class="restart-btn" (click)="restartAnimation()">
+                <mat-icon>replay</mat-icon>
+                Restart
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="splash-screen" [class.hide]="!state().showSplash">
+        <img [src]="config.logo" class="splash-logo" alt="" />
+        <div class="splash-loader">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

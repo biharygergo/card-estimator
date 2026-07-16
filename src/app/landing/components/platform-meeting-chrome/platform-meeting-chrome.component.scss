@@ -1,0 +1,521 @@
+// Don't participate in the parent's flex box layout - render as if our
+// children were direct children of .header-cards in the parent component.
+:host {
+  display: contents;
+}
+
+.meeting-chrome-scene {
+  // Center within .header-cards (the nearest positioned ancestor, via :host
+  // being display:contents) at a fixed aspect ratio, rather than stretching
+  // to fill it - .header-cards's box is tuned for the tall card-fan hero, and
+  // a percentage height/width wouldn't reliably resolve anyway (flex-item
+  // percentage sizing doesn't resolve when the parent's size comes only from
+  // min-height, true when .hero-header switches to flex-direction: column on
+  // mobile). This also keeps the box-shadow clear of .hero-header-section's
+  // overflow: hidden edge, since the box no longer touches the container edge.
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+  .meeting-window {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Muted, neutral title bar - like a real desktop app window - with the
+  // platform brand kept small in the top-left instead of a loud accent fill
+  .meeting-toolbar {
+    flex: 0 0 auto;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 10px;
+    background: #3c3c3c;
+
+    .toolbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+
+      .toolbar-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-color, #6b7280);
+        flex-shrink: 0;
+      }
+
+      .toolbar-logo {
+        height: 15px;
+        width: auto;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+
+      .toolbar-app-name {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #d4d4d4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .toolbar-window-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        color: #a0a0a0;
+      }
+    }
+  }
+
+  .meeting-content {
+    position: relative;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .meeting-body {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: #1a1a1a;
+  }
+
+  .video-grid {
+    flex: 1 1 55%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    align-content: center;
+
+    .video-tile {
+      background: #2b2b2b;
+      border-radius: 8px;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      &.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .tile-avatar-img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  // Dark/muted sidebar so the panel doesn't read as a stark white cutout
+  // against the rest of the meeting UI
+  .sidebar-panel {
+    flex: 1 1 45%;
+    min-width: 300px;
+    max-width: 340px;
+    background: #2b2d31;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translateX(16px);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  // App "loading" splash screen shown before the meeting UI is revealed
+  .splash-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    background: #fafafa;
+    opacity: 1;
+    transition: opacity 0.4s ease-out;
+    z-index: 2;
+
+    &.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .splash-logo {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .splash-loader {
+      display: flex;
+      gap: 6px;
+
+      span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #b0b0b0;
+        animation: splashDotBounce 1s ease-in-out infinite;
+
+        &:nth-child(2) {
+          animation-delay: 0.15s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: 0.3s;
+        }
+      }
+    }
+  }
+
+  // Compact, sidebar-native version of the join/vote/reveal/stats flow
+  .app-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+
+    // Our own app's branding, shown as the sidebar's top bar
+    .app-brand-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+      .app-brand-logo {
+        height: 20px;
+        width: auto;
+        border-radius: 4px;
+      }
+
+      .app-brand-name {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #e8e8e8;
+      }
+    }
+
+    .app-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+
+      .app-panel-icon {
+        color: var(--accent-color, #6ea8fe);
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
+      .app-panel-ticket {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--accent-color, #6ea8fe);
+        flex-shrink: 0;
+      }
+
+      .app-panel-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #e8e8e8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .participant-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .participant-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      &.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .participant-avatar-img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .participant-name {
+        font-size: 0.85rem;
+        color: #e8e8e8;
+        flex: 1;
+      }
+
+      .participant-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 28px;
+
+        .voting-dots {
+          color: #8a8f98;
+          font-size: 0.9rem;
+          letter-spacing: 1px;
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          color: #36b37e;
+        }
+
+        .vote-chip {
+          width: 26px;
+          height: 26px;
+          border-radius: 6px;
+          background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+          border: 1px solid rgba(255, 140, 66, 0.4);
+          color: #ff8c42;
+          font-weight: 700;
+          font-size: 0.85rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+      }
+    }
+
+    .app-panel-results {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeInDown 0.3s ease-out;
+
+      .results-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8rem;
+        color: #e8e8e8;
+        padding: 4px 10px;
+        background: #38393f;
+        border-radius: 20px;
+        animation: fadeInLeft 0.3s ease-out;
+        animation-fill-mode: both;
+
+        &:nth-child(1) {
+          animation-delay: 0.05s;
+        }
+
+        &:nth-child(2) {
+          animation-delay: 0.1s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: 0.15s;
+        }
+
+        .participant-avatar-img {
+          width: 18px;
+          height: 18px;
+        }
+
+        strong {
+          margin-left: auto;
+          color: #ff8c42;
+          font-weight: 700;
+        }
+      }
+    }
+
+    .app-panel-stats {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+
+      .stat-chip {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #38393f;
+        border-radius: 8px;
+        padding: 6px;
+        animation: fadeInScale 0.3s ease-out;
+        animation-fill-mode: both;
+        animation-delay: 0.2s;
+
+        &.stat-chip-primary {
+          background: rgba(255, 140, 66, 0.15);
+          border: 1px solid rgba(255, 140, 66, 0.35);
+        }
+
+        .stat-chip-label {
+          font-size: 0.65rem;
+          color: #9aa1ac;
+        }
+
+        .stat-chip-value {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #ff8c42;
+        }
+      }
+    }
+
+    .restart-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: transparent;
+      color: #9aa1ac;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease-out;
+      animation: fadeInScale 0.3s ease-out;
+      animation-fill-mode: both;
+      animation-delay: 0.3s;
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+      }
+
+      &:hover {
+        color: #e8e8e8;
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .meeting-chrome-scene {
+    // Narrower and taller than the desktop ratio - more room for the sidebar
+    // list now that the video tiles are hidden below.
+    max-width: 420px;
+    aspect-ratio: 1 / 1;
+
+    .video-grid {
+      display: none;
+    }
+
+    .sidebar-panel {
+      flex: 1 1 100%;
+      min-width: 0;
+      max-width: none;
+    }
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splashDotBounce {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}

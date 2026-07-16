@@ -3,6 +3,10 @@ import { RouterLink } from '@angular/router';
 import { MatAnchor } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { isPlatformBrowser } from '@angular/common';
+import {
+  PlatformChromeConfig,
+  PlatformMeetingChromeComponent,
+} from '../platform-meeting-chrome/platform-meeting-chrome.component';
 
 export interface HeaderConfig {
   title: string;
@@ -13,9 +17,10 @@ export interface HeaderConfig {
   ctaIcon: string;
   ctaTitle: string;
   showPlatforms: boolean;
+  platformChrome?: PlatformChromeConfig;
 }
 
-// Animation state
+// Animation state for the plain (non-chrome) card/ticket hero, used on the homepage
 interface AnimationState {
   showTicket: boolean;
   showEstimator1: boolean;
@@ -45,11 +50,11 @@ interface TitleSegment {
   selector: 'planning-poker-page-header-with-cta',
   templateUrl: './page-header-with-cta.component.html',
   styleUrl: './page-header-with-cta.component.scss',
-  imports: [MatIcon, MatAnchor, RouterLink],
+  imports: [MatIcon, MatAnchor, RouterLink, PlatformMeetingChromeComponent],
 })
 export class PageHeaderWithCtaComponent implements OnDestroy {
   @Input({ required: true }) config!: HeaderConfig;
-  
+
   // Computed title segments for highlighting
   get titleSegments(): TitleSegment[] {
     if (!this.config.titleHighlights?.length) {
@@ -78,10 +83,8 @@ export class PageHeaderWithCtaComponent implements OnDestroy {
   }
   
   private platformId = inject(PLATFORM_ID);
-  
-  // Single state signal
-  isBrowser = signal(false);
-  private animationState = signal<AnimationState>({
+
+  private static readonly INITIAL_STATE: AnimationState = {
     showTicket: false,
     showEstimator1: false,
     showEstimator2: false,
@@ -92,39 +95,51 @@ export class PageHeaderWithCtaComponent implements OnDestroy {
     cardsFlipped: false,
     showResults: false,
     hideOverlay: false,
-  });
-  
+  };
+
+  // Single state signal
+  isBrowser = signal(false);
+  private animationState = signal<AnimationState>(
+    PageHeaderWithCtaComponent.INITIAL_STATE
+  );
+
   // Computed signals for template access
   state = this.animationState.asReadonly();
-  
+
   private timeouts: ReturnType<typeof setTimeout>[] = [];
-  
-  // Animation timeline in milliseconds - slower, more elegant timing
+
+  // Animation timeline in milliseconds - overlay appears almost immediately
+  // to grab attention fast, rest of the sequence plays out a bit quicker too
   private readonly ANIMATION_TIMELINE: AnimationStep[] = [
-    { delay: 1200, updates: { showTicket: true } },
-    { delay: 2600, updates: { showEstimator1: true } },
-    { delay: 3200, updates: { showEstimator2: true } },
-    { delay: 3800, updates: { showEstimator3: true } },
-    { delay: 5200, updates: { showVote1: true } },
-    { delay: 5700, updates: { showVote2: true } },
-    { delay: 6200, updates: { showVote3: true } },
-    { delay: 8000, updates: { cardsFlipped: true } },
-    { delay: 9200, updates: { showResults: true } },
+    { delay: 150, updates: { showTicket: true } },
+    { delay: 900, updates: { showEstimator1: true } },
+    { delay: 1300, updates: { showEstimator2: true } },
+    { delay: 1700, updates: { showEstimator3: true } },
+    { delay: 2800, updates: { showVote1: true } },
+    { delay: 3150, updates: { showVote2: true } },
+    { delay: 3500, updates: { showVote3: true } },
+    { delay: 4800, updates: { cardsFlipped: true } },
+    { delay: 5600, updates: { showResults: true } },
   ];
-  
+
   constructor() {
     afterNextRender(() => {
       if (isPlatformBrowser(this.platformId)) {
         this.isBrowser.set(true);
-        this.startAnimation();
+        // The platform-chrome pages delegate their entire hero animation to
+        // <planning-poker-platform-meeting-chrome>, so this card/ticket
+        // timeline only needs to run for the plain (homepage) hero.
+        if (!this.config.platformChrome) {
+          this.startAnimation();
+        }
       }
     });
   }
-  
+
   ngOnDestroy() {
     this.clearAllTimeouts();
   }
-  
+
   private startAnimation() {
     // Schedule all animation steps - runs once, no looping for a cleaner experience
     this.ANIMATION_TIMELINE.forEach(step => {
@@ -134,7 +149,7 @@ export class PageHeaderWithCtaComponent implements OnDestroy {
       this.timeouts.push(timeout);
     });
   }
-  
+
   private clearAllTimeouts() {
     this.timeouts.forEach(timeout => clearTimeout(timeout));
     this.timeouts = [];

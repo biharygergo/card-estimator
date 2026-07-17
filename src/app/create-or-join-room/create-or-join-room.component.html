@@ -149,7 +149,7 @@
   @if (vm | async; as viewModel) {
     @if (!(isBusy | async)) {
       <mat-card-content>
-        <form class="full-bleed">
+        <form class="full-bleed" (ngSubmit)="onCreateRoomSubmit()">
           @if (!viewModel.user?.displayName) {
             <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
           }
@@ -213,7 +213,7 @@
         @if (viewModel.roomId) {
           <ng-container *ngTemplateOutlet="invitedToRoomText"></ng-container>
         }
-        <form class="full-bleed">
+        <form class="full-bleed" (ngSubmit)="onJoinRoomSubmit()">
           @if (!viewModel.user?.displayName) {
             <ng-container *ngTemplateOutlet="nameTemplate"></ng-container>
           }
@@ -362,7 +362,6 @@
             placeholder="existing-room-id"
             [formControl]="roomId"
             (blur)="onRoomIdBlur()"
-            (keyup.enter)="onJoinRoomClicked.next()"
             autocomplete="off"
             spellcheck="false"
             required

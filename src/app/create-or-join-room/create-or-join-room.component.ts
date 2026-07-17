@@ -598,6 +598,24 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     return this.navigateToRoom(room.roomId);
   }
 
+  onCreateRoomSubmit(): void {
+    if (this.isBusy.value || !this.name.value?.length) {
+      return;
+    }
+    this.onCreateRoomClicked.next();
+  }
+
+  onJoinRoomSubmit(): void {
+    if (
+      this.isBusy.value ||
+      !this.roomId.value?.length ||
+      !this.name.value?.length
+    ) {
+      return;
+    }
+    this.onJoinRoomClicked.next();
+  }
+
   onNameBlur() {
     this.analytics.logFilledNameInput();
   }

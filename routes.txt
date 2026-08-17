@@ -48,4 +48,7 @@
 /knowledge-base/planningpoker-live-2024-year-in-review
 /knowledge-base/ai-tools-for-scrum-masters
 /knowledge-base/benefits-of-planning-poker
+/knowledge-base/planitpoker-alternatives
 /knowledge-base/planning-poker-azure-devops
+/knowledge-base/planningpoker-com-alternatives
+/knowledge-base/pointing-poker-alternatives

@@ -6,7 +6,7 @@ lastUpdated: 2023/10/05
 author: Gergely Bihary
 coverImageId: pexels-lukas-317353_hm0fzm
 coverImageAlt: A top shot of a post it and a keyboard
-category: techniques
+category: technique
 tags: Agile Estimation, Planning Poker, T-shirt Sizing, Dot Voting, Wideband Delphi, Three-Point Estimate
 ---
 ## Introduction

@@ -6,7 +6,7 @@ lastUpdated: 2023/10/01
 author: Gergely Bihary
 coverImageId: pexels-cottonbro-studio-7437491_vswau5
 coverImageAlt: A group of people looking at a laptop during a meeting
-category: techniques
+category: technique
 tags: Planning Poker, Scrum Roles, Product Owner, Scrum Master, Developers, Team Collaboration
 ---
 

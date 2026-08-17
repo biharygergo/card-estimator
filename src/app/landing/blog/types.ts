@@ -1,4 +1,4 @@
-export type Category = 'guide' | 'technique' | 'other';
+export type Category = 'guide' | 'technique' | 'comparison' | 'other';
 export interface Article {
   slug: string;
   title: string;

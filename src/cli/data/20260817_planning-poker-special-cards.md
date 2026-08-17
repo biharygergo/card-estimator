@@ -1,0 +1,78 @@
+---
+title: What the ?, 0, Infinity and Coffee Cards Mean in Planning Poker
+description: The non-numeric planning poker cards explained - what the question mark, zero, half, infinity and coffee cup cards actually mean, and how a facilitator should respond to each.
+slug: planning-poker-special-cards
+lastUpdated: 2026/08/17
+author: Gergely Bihary
+coverImageId: planning-poker-misused-terms
+coverImageAlt: Planning poker cards fanned out
+category: technique
+tags: Planning Poker Cards, Facilitation, Story Points, Agile Estimation, Card Decks
+faqs:[{"question": "What does the ? card mean in planning poker?", "answer": "It means the player does not have enough information to give a number - there is a gap in what has been explained, and any estimate would be invented. The right response is to find out what is missing and re-vote, or send the story back to refinement. Never average around a question mark."}, {"question": "What does the coffee cup card mean?", "answer": "It means 'I need a break'. It is not a joke card - estimates degrade when people are tired, and a card anyone can play gives quieter team members a way to call a pause without having to interrupt the meeting."}, {"question": "What is the difference between a 13 and an infinity card?", "answer": "A 13 says the story is large and should probably be split. Infinity says it cannot be sized as one item at all and should be split or spiked rather than estimated. If your team already treats 13 as a split signal, an infinity card is largely redundant."}, {"question": "Does a 0 card mean there is no work?", "answer": "No. It means the effort is not worth tracking - a config flag, a copy change, or something that falls out of another story you already estimated. It protects velocity from drifting. Watch out for sprints full of zero-point stories, which look light on paper and land heavy."}]
+---
+Most planning poker cards are numbers and need no explanation. Then there are the other ones — the question mark, the zero, the infinity symbol, the coffee cup — which people play without ever quite agreeing on what they mean.
+
+These cards carry more weight than their face value suggests. Used well, they're the most informative cards in the deck, because each one communicates something a number can't.
+
+### The `?` card — "I can't estimate this"
+
+The most useful non-numeric card, and the most under-used.
+
+`?` means: *I do not have enough information to give you a number.* Not "this is hard", not "I'd rather not commit" — specifically, there's a gap in what's been explained, and any number played would be invented.
+
+Teams often treat a `?` as a non-answer to be moved past. It's the opposite. A `?` is the cheapest possible moment to discover that a story isn't ready. The alternative is a made-up 5 that becomes a sprint commitment and then quietly fails two weeks later.
+
+**How to handle it:** stop and ask what's missing. If it can be answered in the room, answer it and re-vote. If it can't, the story goes back to refinement. Do not average around it, and do not pressure the person into picking a number.
+
+### The `0` card — "this is already done, or free"
+
+Zero doesn't mean "no work". It means the work isn't worth tracking as effort — a config flag, a one-line copy change, or something that will fall out of another story you've already estimated.
+
+It exists to protect your velocity number. Without it, teams either inflate trivial work to a 1 (making velocity drift upward for no real reason) or leave it off the board entirely (making it invisible until someone forgets to do it).
+
+**The trap:** zero-point stories still take time. A sprint stuffed with them looks light on paper and lands heavy in practice. If you find yourself playing a lot of zeros, that's worth noticing.
+
+### The `0.5` or `½` card — "smaller than your smallest"
+
+Half a point exists for work that's real but genuinely below the granularity of a 1.
+
+It's a reasonable card that causes an unreasonable amount of debate. The distinction between 0.5 and 1 is almost never worth the three minutes a team will spend on it, and the sprint outcome is identical either way. If your team argues about halves regularly, consider dropping the card — you'll lose nothing and reclaim the time.
+
+**Better used as:** a signal that a batch of tiny tasks should be bundled into one story rather than estimated individually.
+
+### The `∞` card — "this is unboundedly large"
+
+Infinity means: *this cannot be estimated at this size and shouldn't be attempted as one piece.*
+
+It's the escalation of a 13. Where a 13 says "this is big, consider splitting", infinity says "there is no version of this that fits in a sprint, and estimating it is theatre".
+
+**How to handle it:** don't estimate it. Split it, spike it, or send it back to the product owner. An infinity card that gets negotiated down to a 13 has done nobody any favours.
+
+### The coffee cup — "I need a break"
+
+Yes, really. Most physical decks include one, and it's not a joke card.
+
+Refinement sessions are cognitively demanding and estimates degrade badly when people are tired. The coffee card gives anyone permission to call a pause without having to be the person who interrupts the meeting. In a session where a junior engineer would never say "can we stop", a card they can simply play is a genuinely useful piece of design.
+
+**How to handle it:** take the break. The estimates you'd have produced in the next ten minutes weren't going to be good ones.
+
+### A quick reference
+
+| Card | Means | Right response |
+|---|---|---|
+| `?` | Not enough information | Ask what's missing; re-vote or send back to refinement |
+| `0` | Real but effectively free | Accept it; watch for sprints stuffed with zeros |
+| `0.5` | Below your smallest unit | Accept quickly; don't debate it |
+| `13` | Large, probably needs splitting | Ask whether it can be broken down |
+| `∞` | Cannot be sized as one item | Split or spike it; don't negotiate a number |
+| ☕ | I need a break | Take the break |
+
+### Which of these do you actually need?
+
+Fewer than you'd think. Every additional card is another option six people must consider on every single story, and the speed of planning poker comes from having few choices.
+
+The `?` card earns its place on almost any team — it converts a bad guess into a good question. The rest are situational. Infinity is largely redundant if your team already treats 13 as a split signal. Zero matters if you track velocity carefully. The coffee cup matters more than people expect in long remote sessions.
+
+In [PlanningPoker.live](https://planningpoker.live), the five built-in decks — Fibonacci, Default, Half, Large, and T-shirt — cover the numeric values, and you can define a **custom deck** to add `?`, `∞`, a coffee card, or anything else your team wants. If you'd rather use physical cards, our [printable deck](https://planningpoker.live/printable-planning-poker-cards) is free to download.
+
+[Start a free session](https://planningpoker.live/create) and set up a deck that fits how your team actually estimates.

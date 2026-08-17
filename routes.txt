@@ -48,7 +48,10 @@
 /knowledge-base/planningpoker-live-2024-year-in-review
 /knowledge-base/ai-tools-for-scrum-masters
 /knowledge-base/benefits-of-planning-poker
+/knowledge-base/fibonacci-planning-poker-cards
 /knowledge-base/planitpoker-alternatives
 /knowledge-base/planning-poker-azure-devops
+/knowledge-base/planning-poker-card-decks-explained
+/knowledge-base/planning-poker-special-cards
 /knowledge-base/planningpoker-com-alternatives
 /knowledge-base/pointing-poker-alternatives

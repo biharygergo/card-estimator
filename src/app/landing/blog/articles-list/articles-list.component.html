@@ -5,48 +5,22 @@
 />
 <main>
   <div class="content">
-    <h2>Tutorials</h2>
-    <p>
-      Learn how to use PlanningPoker.live with our in-depth tutorials covering
-      basic usage, Jira/Linear integration and our embedded apps in Teams, Zoom,
-      Meet and Webex.
-    </p>
-    <div class="articles">
-      @for (article of articlesByCategory['guide']; track article.slug) {
-        <ng-container
-          *ngTemplateOutlet="
-            articleCard;
-            context: { $implicit: article }
-          "></ng-container>
-      }
-    </div>
-    <h2>Planning poker techniques</h2>
-    <p>
-      Learn how to estimate with Planning Poker, how to facilitate a session and
-      how to use the app to get the most out of your estimation sessions.
-    </p>
-    <div class="articles">
-      @for (article of articlesByCategory['technique']; track article.slug) {
-        <ng-container
-          *ngTemplateOutlet="
-            articleCard;
-            context: { $implicit: article }
-          "></ng-container>
-      }
-    </div>
-    <h2>News & app updates</h2>
-    <p>
-      Read about our latest updates, new features and improvements to the app.
-    </p>
-    <div class="articles">
-      @for (article of articlesByCategory['other']; track article.slug) {
-        <ng-container
-          *ngTemplateOutlet="
-            articleCard;
-            context: { $implicit: article }
-          "></ng-container>
-      }
-    </div>
+    @for (section of sections; track section.category) {
+      <h2>{{ section.title }}</h2>
+      <p>{{ section.description }}</p>
+      <div class="articles">
+        @for (
+          article of articlesByCategory[section.category];
+          track article.slug
+        ) {
+          <ng-container
+            *ngTemplateOutlet="
+              articleCard;
+              context: { $implicit: article }
+            "></ng-container>
+        }
+      </div>
+    }
   </div>
 </main>
 <app-carbon-ad placement="landing" />

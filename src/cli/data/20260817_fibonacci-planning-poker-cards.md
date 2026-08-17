@@ -1,0 +1,69 @@
+---
+title: Fibonacci Planning Poker Cards - Why the Sequence Works and What Each Value Means
+description: Why planning poker decks use 1, 2, 3, 5, 8, 13, what each Fibonacci card typically means, when to use a modified sequence, and how to run a session with them.
+slug: fibonacci-planning-poker-cards
+lastUpdated: 2026/08/17
+author: Gergely Bihary
+coverImageId: poker-cards_akrfnx
+coverImageAlt: Planning poker cards laid out on a table
+category: technique
+tags: Planning Poker Cards, Fibonacci, Story Points, Agile Estimation, Card Decks
+faqs:[{"question": "Why does planning poker use the Fibonacci sequence?", "answer": "The gaps between Fibonacci numbers widen as the values grow, which mirrors how estimation accuracy drops as work gets bigger. Each value is roughly 60% larger than the one before it, so every step feels like a comparable increase - and the missing numbers force teams to commit to a side rather than hide in a comfortable middle value."}, {"question": "What are the standard Fibonacci planning poker card values?", "answer": "Most decks use 1, 2, 3, 5, 8, 13. Strict Fibonacci continues 21, 34, 55, but teams rarely estimate above 13. Mike Cohn recommends a modified sequence of 1, 2, 3, 5, 8, 13, 20, 40, 100 for larger work."}, {"question": "What does a 13 mean in planning poker?", "answer": "A 13 is usually a signal rather than an estimate. It means the story is large enough that the team cannot size it confidently, and the most productive response is normally to split it into smaller stories instead of committing to it."}, {"question": "Do I have to use Fibonacci?", "answer": "No. Fibonacci is a convention, not a rule. What matters is that your scale is relative, has widening gaps, and offers few enough options that choosing is quick. T-shirt sizing and powers of two both work well."}]
+---
+Open almost any planning poker deck and you'll find the same numbers: 1, 2, 3, 5, 8, 13. Each one is the sum of the two before it — the Fibonacci sequence, borrowed from a 13th-century book about rabbit populations and now the default scale for agile estimation worldwide.
+
+It's a strange lineage for a software practice. It's also, as it turns out, a very good fit.
+
+### Why the gaps get bigger
+
+The useful property of Fibonacci isn't the arithmetic. It's that the gaps widen as the numbers grow.
+
+Between 1 and 2, the step is small. Between 8 and 13, it's large. That shape mirrors how estimation accuracy actually behaves: you can tell the difference between a one-point task and a two-point task with reasonable confidence, because both are small and well understood. You cannot meaningfully distinguish a 21-point story from a 22-point one. Nobody can. The scale stops offering you that false precision.
+
+This tracks a principle from psychophysics — Weber's law — which holds that people perceive differences proportionally rather than absolutely. After the initial jump, each Fibonacci number is roughly 60% larger than the one before it, so every step up feels like a comparable increase in size. A linear scale (1, 2, 3, 4, 5, 6) doesn't behave that way: the jump from 5 to 6 is a 20% increase and barely registers as a distinct choice, which is why teams using linear scales spend so long arguing about it.
+
+The widening gaps also do something quietly valuable: **they force a decision.** With no 9, 10, 11 or 12 available, a team weighing "somewhere around ten" has to commit to 8 or to 13. That choice surfaces a real disagreement about scope that a comfortable middle number would have hidden.
+
+### What each value tends to mean
+
+Point values are relative, not absolute — a 5 on your team is not a 5 on another team, and that's fine. But most teams converge on something like this:
+
+| Card | Typical meaning |
+|---|---|
+| **1** | Trivial. Well understood, no unknowns, done in well under a day. |
+| **2** | Small and clear. Slightly more work than a 1, still no surprises. |
+| **3** | Straightforward but real. A known shape of task with some substance to it. |
+| **5** | Medium. Some complexity or a couple of unknowns; usually the largest thing comfortably finished within a sprint. |
+| **8** | Large. Multiple moving parts, real uncertainty. Worth asking whether it should be split. |
+| **13** | Too big. Almost always a signal to break the story down rather than an estimate to commit to. |
+
+That last row is the one teams under-use. A 13 is less an estimate than a flag. If a story lands on 13, the most productive next move is usually to stop estimating it and start splitting it.
+
+### Where the sequence gets modified
+
+Strict Fibonacci is 1, 2, 3, 5, 8, 13, 21, 34, 55. Most teams don't use it past 13, and many use a modified version.
+
+Mike Cohn, who popularised story points, recommends a modified sequence of 1, 2, 3, 5, 8, 13, 20, 40, 100 — rounding the awkward large numbers to values that are easier to say out loud and that nobody mistakes for precision. Teams that estimate at epic scale often use a separate large-value deck entirely (0, 20, 40, 60, 80, 100) rather than stretching one scale across both sprint stories and quarterly initiatives.
+
+Some teams add a 0 for work that's genuinely free — a flag flip, something already done as a side effect of another story. Some add a 0.5 for tasks too small to call a 1 but too real to call nothing. Both are reasonable; both also tend to invite debates disproportionate to the value at stake.
+
+### Using Fibonacci cards in a session
+
+Whether you're using a physical deck or estimating online, the mechanics matter as much as the scale:
+
+1. **Establish a reference story first.** Pick a task everyone remembers and agree it was a 3. Every subsequent estimate is relative to that anchor. Without one, the numbers drift between sessions and velocity stops meaning anything.
+2. **Reveal simultaneously.** The entire value of the scale disappears if people hear a number before choosing their own. Anchoring is powerful and nobody is immune to it.
+3. **Discuss the spread, not the average.** A 2 and a 13 on the same story is the most useful thing that can happen in a refinement session. Someone knows something. Averaging to 8 throws that information away.
+4. **Re-vote once, then move on.** One round of discussion resolves most disagreements. If a second vote doesn't converge, the story isn't ready.
+
+In [PlanningPoker.live](https://planningpoker.live) the Fibonacci deck (1, 2, 3, 5, 8, 13) is built in, alongside a default set that includes 0 and 0.5, a half-point set for finer-grained work, a large-value set for epics, and T-shirt sizing. You can also define a custom deck if your team wants values the standard sets don't cover — a `?` card for "I need more information" is a common addition.
+
+If you'd rather work with physical cards, we have a [printable deck](https://planningpoker.live/printable-planning-poker-cards) you can download.
+
+### Is Fibonacci actually necessary?
+
+Honestly, no. The sequence is a convention, not a law, and teams estimate perfectly well with T-shirt sizes or powers of two. What matters is that your scale is **relative**, has **widening gaps**, and offers **few enough options that choosing between them is quick**.
+
+Fibonacci happens to satisfy all three, which is why it won. But if your team has been arguing about whether something is a 5 or an 8 for ten minutes, the scale isn't your problem — and switching it won't help.
+
+Ready to try it? [Start a free session](https://planningpoker.live/create) and pick the Fibonacci deck.

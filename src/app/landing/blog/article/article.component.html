@@ -43,9 +43,14 @@
               </div>
             </div>
             @if (article.faqs?.length > 0) {
+              <!--
+                No [inverse] here: that variant forces text to #000 for a light
+                background, but the article page is dark (main is transparent,
+                article text is white), so it rendered black on dark. The
+                default light-on-dark styling matches the rest of the page.
+              -->
               <app-faq-section
                 [faqs]="article.faqs"
-                [inverse]="true"
                 [hideMoreButton]="true"
                 [hideTitle]="true" />
             }

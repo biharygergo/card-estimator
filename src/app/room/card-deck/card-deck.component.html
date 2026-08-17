@@ -17,12 +17,17 @@
     }
     <div class="main-row card-deck-container">
       @if (!isMinimized()) {
-        <div class="estimator-buttons">
+        <div
+          class="estimator-buttons"
+          role="radiogroup"
+          aria-label="Estimation cards"
+          (keydown)="onCardKeydown($event)">
           @let isRevealedWithNoChangeAfterReveal =
             room()?.rounds[currentRound()]?.show_results &&
             !room()?.isChangeVoteAfterRevealEnabled;
-          @for (item of estimationValues(); track item.key) {
+          @for (item of estimationValues(); track item.key; let i = $index) {
             <div
+              #cardContainer
               class="estimator-button-container"
               (click)="
                 isRevealedWithNoChangeAfterReveal ? disabledClick() : null
@@ -30,6 +35,10 @@
               <button
                 mat-raised-button
                 class="estimator-button"
+                role="radio"
+                [attr.aria-checked]="+item.key === currentEstimate()"
+                [attr.aria-label]="'Estimate ' + item.value"
+                [tabindex]="i === 0 ? 0 : -1"
                 (click)="setEstimate(item.key)"
                 [class.selected]="+item.key === currentEstimate()"
                 [disabled]="
@@ -42,10 +51,14 @@
             </div>
           }
           @if (room()?.showPassOption) {
-            <div class="estimator-button-container">
+            <div #cardContainer class="estimator-button-container">
               <button
                 mat-raised-button
                 class="estimator-button pass-option-button"
+                role="radio"
+                [attr.aria-checked]="currentEstimate() === null"
+                aria-label="Pass — skip voting"
+                [tabindex]="-1"
                 (click)="setWildcard()"
                 [class.selected]="currentEstimate() === null"
                 [disabled]="

@@ -678,6 +678,15 @@ body {
       --mat-button-protected-container-shape: 10px;
     }
 
+    @media screen and (max-width: 380px) {
+      margin: 0.1rem;
+      min-width: 38px;
+      min-height: 58px;
+      padding: 0.25rem;
+      font-size: 0.95rem;
+      --mat-button-protected-container-shape: 8px;
+    }
+
     &:disabled {
       opacity: 0.7;
       color: #efefef;

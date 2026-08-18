@@ -32,7 +32,18 @@
       }
     }
 
-    h1 {
+    .hero-eyebrow {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+      line-height: 1.2;
+      font-weight: 400;
+      margin: 0 0 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .hero-title {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: clamp(2.5rem, 5vw, 3.8rem);
       line-height: 1.15;
@@ -578,7 +589,13 @@
       padding-bottom: 3rem;
       text-align: center;
 
-      h1 {
+      .hero-eyebrow {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+      }
+
+      .hero-title {
         font-size: 1.5rem;
         line-height: 1.7rem;
       }

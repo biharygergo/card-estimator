@@ -2,13 +2,20 @@ import { Component, Input, OnDestroy, PLATFORM_ID, inject, afterNextRender, sign
 import { RouterLink } from '@angular/router';
 import { MatAnchor } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
   PlatformChromeConfig,
   PlatformMeetingChromeComponent,
 } from '../platform-meeting-chrome/platform-meeting-chrome.component';
 
 export interface HeaderConfig {
+  /**
+   * Optional short kicker rendered above the display headline. When set it
+   * becomes the page's h1 and the headline drops to h2, so the primary
+   * heading can match the search result title while the headline stays the
+   * dominant visual element. Pages that omit it keep the headline as h1.
+   */
+  eyebrow?: string;
   title: string;
   titleHighlights?: string[];
   description: string;
@@ -50,7 +57,13 @@ interface TitleSegment {
   selector: 'planning-poker-page-header-with-cta',
   templateUrl: './page-header-with-cta.component.html',
   styleUrl: './page-header-with-cta.component.scss',
-  imports: [MatIcon, MatAnchor, RouterLink, PlatformMeetingChromeComponent],
+  imports: [
+    MatIcon,
+    MatAnchor,
+    RouterLink,
+    PlatformMeetingChromeComponent,
+    NgTemplateOutlet,
+  ],
 })
 export class PageHeaderWithCtaComponent implements OnDestroy {
   @Input({ required: true }) config!: HeaderConfig;

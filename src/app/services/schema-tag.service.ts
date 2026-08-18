@@ -1,4 +1,3 @@
-
 import { Inject, Injectable, Renderer2, signal, DOCUMENT } from '@angular/core';
 import { WebApplication, WithContext } from 'schema-dts';
 import { FaqItem } from '../types';
@@ -66,25 +65,47 @@ export class SchemaTagService {
 
   constructor(@Inject(DOCUMENT) private _document: Document) {}
 
-  public setJsonLd(renderer2: Renderer2, data: any): void {
-    let script = renderer2.createElement('script');
+  /**
+   * Injects one JSON-LD block into the document head.
+   *
+   * Pass an array to describe a page with several entities - an Article plus
+   * its BreadcrumbList and FAQPage, say. They are emitted as a single @graph
+   * rather than several script tags, which is what Google recommends and
+   * keeps the cleanup below simple.
+   */
+  public setJsonLd(renderer2: Renderer2, data: unknown | unknown[]): void {
+    const payload = Array.isArray(data)
+      ? {
+          '@context': 'https://schema.org',
+          // Nodes carry their own @context when emitted alone; inside a @graph
+          // the context belongs on the wrapper, so strip the duplicates.
+          '@graph': data.map(node => {
+            const { '@context': _discarded, ...rest } = node as Record<
+              string,
+              unknown
+            >;
+            return rest;
+          }),
+        }
+      : data;
+
+    const script = renderer2.createElement('script');
     script.type = 'application/ld+json';
-    script.text = `${JSON.stringify(data)}`;
+    // script.text is textContent, so the live DOM is safe on its own. During
+    // prerendering though, Angular serializes the DOM back to an HTML string,
+    // and a literal </script> inside article copy would close this element
+    // early. \u003C is valid JSON and renders identically to a parser.
+    script.text = JSON.stringify(payload).replace(/</g, '\\u003C');
     script.setAttribute('class', 'structured-data-markup');
 
-    // Remove existing elements
-    const existing = this._document.querySelector(
-      'script.structured-data-markup'
-    );
-    if (existing) {
-      renderer2.removeChild(this._document.body, existing);
-    }
-    const defaultData = this._document.querySelector(
-      'script.default-structured-data'
-    );
-    if (defaultData) {
-      renderer2.removeChild(this._document.body, defaultData);
-    }
+    // querySelectorAll, not querySelector: a single call could previously
+    // leave earlier nodes behind, and stale schema is worse than none.
+    this._document
+      .querySelectorAll('script.structured-data-markup')
+      .forEach(node => node.remove());
+    this._document
+      .querySelectorAll('script.default-structured-data')
+      .forEach(node => node.remove());
 
     renderer2.appendChild(this._document.head, script);
   }

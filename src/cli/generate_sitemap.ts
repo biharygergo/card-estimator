@@ -1,4 +1,4 @@
-import { Glob } from 'glob';
+import { globSync } from 'glob';
 import * as fs from 'fs';
 
 export class SitemapGenerator {
@@ -29,42 +29,12 @@ export class SitemapGenerator {
   }
 
   process(): void {
-    new Glob(
-      this.srcDirectory + '/**/index.html',
-      (err: Error, res: string[]) => this.filesCallback(err, res)
-    );
-  }
+    const files = globSync(this.srcDirectory + '**/index.html');
 
-  private addToSitemap(file: string): void {
-    let url = file.replace(this.srcDirectory, this.baseUrl);
-    url = url.replace('/index.html', '');
-    this.sitemapContent += `
-    <url>
-        <loc>${url}</loc>
-    </url>`;
-  }
-
-  private writeSitemapToFile(): void {
-    fs.writeFile(
-      this.srcDirectory + 'sitemap.xml',
-      this.SITEMAP_HEADER + this.sitemapContent + this.SITEMAP_FOOTER,
-      (err: NodeJS.ErrnoException | null) => {
-        if (err) {
-          console.log(err.message);
-          return;
-        }
-
-        console.log(
-          `sitemap.xml successfully created in '${this.srcDirectory}'`
-        );
-      }
-    );
-  }
-
-  private filesCallback(err: Error, files: string[]): void {
-    if (err) {
-      console.log('Error', err);
-      return;
+    if (!files.length) {
+      throw new Error(
+        `No index.html files found in '${this.srcDirectory}'. Run the build before generating the sitemap.`
+      );
     }
 
     files.sort((a, b) => {
@@ -80,6 +50,32 @@ export class SitemapGenerator {
 
     this.writeSitemapToFile();
   }
+
+  private addToSitemap(file: string): void {
+    let url = file.replace(this.srcDirectory, this.baseUrl);
+    url = url.replace('/index.html', '');
+    this.sitemapContent += `
+    <url>
+        <loc>${url}</loc>
+    </url>`;
+  }
+
+  private writeSitemapToFile(): void {
+    const target = this.srcDirectory + 'sitemap.xml';
+    fs.writeFileSync(
+      target,
+      this.SITEMAP_HEADER + this.sitemapContent + this.SITEMAP_FOOTER
+    );
+    console.log(`sitemap.xml successfully created in '${this.srcDirectory}'`);
+  }
 }
 
-new SitemapGenerator().process();
+try {
+  new SitemapGenerator().process();
+} catch (error) {
+  console.error(
+    'Failed to generate sitemap.xml:',
+    error instanceof Error ? error.message : error
+  );
+  process.exit(1);
+}

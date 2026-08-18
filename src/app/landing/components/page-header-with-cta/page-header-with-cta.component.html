@@ -1,13 +1,19 @@
 <div class="hero-header-section">
   <div class="hero-header">
     <div class="header-intro">
-      <h1>@for (segment of titleSegments; track segment.text) {
+      <ng-template #heroTitle>@for (segment of titleSegments; track segment.text) {
         @if (segment.highlighted) {
           <span class="highlight-marker">{{ segment.text }}</span>
         } @else {
           <span>{{ segment.text }}</span>
         }
-      }</h1>
+      }</ng-template>
+      @if (config.eyebrow) {
+        <h1 class="hero-eyebrow">{{ config.eyebrow }}</h1>
+        <h2 class="hero-title"><ng-container *ngTemplateOutlet="heroTitle" /></h2>
+      } @else {
+        <h1 class="hero-title"><ng-container *ngTemplateOutlet="heroTitle" /></h1>
+      }
       <p class="header-description">
         {{ config.description }}
       </p>

@@ -146,9 +146,8 @@
       [roundStatistics]="roundStatistics()" />
   </mat-sidenav>
 </mat-sidenav-container>
-<!-- TODO: Remove true || - just for testing -->
 <ng-template #anonymousBanner>
-  @if (true || (sessionCount$ | async) > 1) {
+  @if ((sessionCount$ | async) > 1) {
     <anonymous-user-banner
       [hideable]="true"
       class="anonymous-user-banner"

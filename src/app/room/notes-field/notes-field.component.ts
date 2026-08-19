@@ -1,10 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   debounceTime,
@@ -59,7 +62,8 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
     private readonly permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private auth: AuthService,
-    private readonly roomDataService: RoomDataService
+    private readonly roomDataService: RoomDataService,
+    @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
   ngOnInit(): void {
@@ -123,7 +127,9 @@ export class NotesFieldComponent implements OnInit, OnDestroy {
   }
 
   onNoteBlur() {
-    (document.activeElement as HTMLTextAreaElement)?.blur();
+    if (isPlatformBrowser(this.platformId)) {
+      (document.activeElement as HTMLTextAreaElement)?.blur();
+    }
     clearTimeout(this.blurTimeout());
     this.isCurrentUserEditing.set(false);
 

@@ -283,6 +283,7 @@ export class AuthService {
   }
 
   async linkAccountWithMicrosoft(idToken?: string) {
+    if (!auth.currentUser) throw new Error('Session expired — please sign in again.');
     validateIdToken(idToken);
 
     const provider = this.createMicrosoftOpenIdProvider();
@@ -319,6 +320,7 @@ export class AuthService {
   }
 
   async linkAccountWithGoogle(idToken?: string) {
+    if (!auth.currentUser) throw new Error('Session expired — please sign in again.');
     const provider = this.createGoogleProvider();
 
     const userCredential = idToken
@@ -370,6 +372,7 @@ export class AuthService {
   }
 
   async linkAccountWithEmailAndPassword(email: string, password: string) {
+    if (!auth.currentUser) throw new Error('Session expired — please sign in again.');
     const credential = EmailAuthProvider.credential(email, password);
 
     const userCredential = await linkWithCredential(
@@ -389,9 +392,8 @@ export class AuthService {
     displayName?: string;
   }) {
     if (
-      new SupportedPhotoUrlPipe().isSupported(
-        auth.currentUser.photoURL
-      ) === false
+      auth.currentUser &&
+      new SupportedPhotoUrlPipe().isSupported(auth.currentUser.photoURL) === false
     ) {
       await updateProfile(auth.currentUser, { photoURL: '' });
     }

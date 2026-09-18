@@ -8,14 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { combineLatest, map, take } from 'rxjs';
+import { combineLatest, firstValueFrom, map, take } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   AnalyticsService,
@@ -28,7 +24,6 @@ import { PaymentService } from 'src/app/services/payment.service';
 import { Theme, ThemeService } from 'src/app/services/theme.service';
 import { BundleName, Room } from 'src/app/types';
 import { createModal } from '../avatar-selector-modal/avatar-selector-modal.component';
-import { organizationModalCreator } from '../organization-modal/organization-modal.component';
 
 export interface UpsellModalData {
   trigger: PaywallTrigger;
@@ -164,6 +159,8 @@ export class UpsellModalComponent implements OnInit {
   readonly cadence = signal<Cadence>('biweekly');
   readonly squads = signal<number>(2);
   readonly isRedirecting = signal<boolean>(false);
+  /** Name for the organization created on the fly for a first team purchase. */
+  readonly newTeamName = signal<string>('');
 
   readonly organizations$ = this.organizationService.getMyOrganizations();
   readonly organization = toSignal(
@@ -220,7 +217,28 @@ export class UpsellModalComponent implements OnInit {
     ).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
   );
 
+  /**
+   * True when the user has been the only one creating rooms and has no team to
+   * share credits with - the case shared credits actually solve.
+   */
+  readonly isSoloCreator = computed(() => {
+    const rooms = this.recentRooms();
+    const userId = this.userId();
+    if (!userId || rooms.length < 3 || this.organization()) {
+      return false;
+    }
+    return rooms.every(room => room.createdById === userId);
+  });
+
   readonly headline = computed(() => {
+    if (this.data.trigger !== 'solo_creator' && this.isSoloCreator()) {
+      return {
+        eyebrow: `You created all ${this.recentRooms().length} rooms`,
+        title: 'Let your teammates create rooms too',
+        lede: 'Shared credits sit in one pool your whole team draws from, so planning still happens when you are away.',
+      };
+    }
+
     switch (this.data.trigger) {
       case 'preempt':
         return {
@@ -307,8 +325,7 @@ export class UpsellModalComponent implements OnInit {
     private readonly organizationService: OrganizationService,
     private readonly estimatorService: EstimatorService,
     private readonly authService: AuthService,
-    private readonly analytics: AnalyticsService,
-    private readonly dialog: MatDialog
+    private readonly analytics: AnalyticsService
   ) {
     if (data.trigger === 'solo_creator') {
       this.selectedPlanId.set('org-75');
@@ -366,6 +383,11 @@ export class UpsellModalComponent implements OnInit {
     this.squads.set(squads);
   }
 
+  /** A first team purchase has to name the team before there is a pool. */
+  readonly needsTeamName = computed(
+    () => this.isTeamPlan() && !this.organization()
+  );
+
   get ctaLabel(): string {
     const plan = this.selectedPlan();
     if (plan.scope !== 'team') {
@@ -375,7 +397,7 @@ export class UpsellModalComponent implements OnInit {
     const org = this.organization();
     return org
       ? `Add ${plan.credits} credits to ${org.name} — $${plan.priceUsd}`
-      : 'Create a team to buy shared credits';
+      : `Create your team and get ${plan.credits} credits — $${plan.priceUsd}`;
   }
 
   get microcopy(): string {
@@ -385,28 +407,38 @@ export class UpsellModalComponent implements OnInit {
     }
     return this.organization()
       ? 'Shared with every member · never expires · admins can top up'
-      : 'Create your team first, then buy credits everyone can use';
+      : 'You can invite teammates by email once your team exists';
+  }
+
+  get isCtaDisabled(): boolean {
+    return (
+      this.isRedirecting() ||
+      (this.needsTeamName() && this.newTeamName().trim().length === 0)
+    );
+  }
+
+  onTeamNameInput(event: Event): void {
+    this.newTeamName.set((event.target as HTMLInputElement).value);
   }
 
   async onCtaClick(): Promise<void> {
     const plan = this.selectedPlan();
-    const org = this.organization();
-
-    if (plan.scope === 'team' && !org) {
-      // Without an organization there is no pool to buy into yet.
-      this.dialog.open(...organizationModalCreator());
-      return;
-    }
 
     this.analytics.logPaywallCheckoutStarted(this.data.trigger, plan.id);
     this.isRedirecting.set(true);
 
     try {
       if (plan.scope === 'team') {
+        const organizationId = await this.resolveOrganizationId();
+        if (!organizationId) {
+          this.isRedirecting.set(false);
+          return;
+        }
+
         await this.paymentService.buyBundle(
           BundleName.ORGANIZATION_BUNDLE,
           'usd',
-          org.id,
+          organizationId,
           plan.credits
         );
       } else {
@@ -416,6 +448,32 @@ export class UpsellModalComponent implements OnInit {
       console.error('Could not start checkout', e);
       this.isRedirecting.set(false);
     }
+  }
+
+  /**
+   * Returns the team to buy credits for, creating it first when the user has
+   * none. Creating an organization needs no subscription, so this stays one
+   * step instead of sending the user through the organization modal.
+   */
+  private async resolveOrganizationId(): Promise<string | undefined> {
+    const existing = this.organization();
+    if (existing) {
+      return existing.id;
+    }
+
+    const name = this.newTeamName().trim();
+    if (!name) {
+      return undefined;
+    }
+
+    const organizationId = await this.organizationService.createOrganization({
+      name,
+      logoUrl: '',
+    });
+    this.organizationService.setSelectedOrganization(organizationId);
+    // Make sure the new team is the active one before credits are attached.
+    await firstValueFrom(this.organizations$.pipe(take(1)));
+    return organizationId;
   }
 
   private inferCadence(

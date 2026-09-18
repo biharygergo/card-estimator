@@ -156,9 +156,9 @@
   }
 </ng-template>
 <ng-template #lowCreditsBanner>
-  @if ((lowCreditsState$ | async) !== null; as credits) {
+  @if ((lowCreditsState$ | async) !== null) {
     <low-credits-banner
-      [creditsRemaining]="lowCreditsState$ | async"
+      [creditsRemaining]="(lowCreditsState$ | async) ?? 0"
       class="low-credits-banner"
       @fadeAnimation />
   }

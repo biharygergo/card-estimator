@@ -771,6 +771,39 @@
   line-height: 1.25;
 }
 
+.team-name {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .team-name-label {
+    font: 500 9.5px/1 var(--u-mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--u-faint);
+  }
+
+  input {
+    font: 400 14px/1.3 inherit;
+    font-family: inherit;
+    color: var(--u-text);
+    background: var(--u-surface);
+    border: 1px solid var(--u-line-strong);
+    border-radius: var(--radius-sm, 8px);
+    padding: 10px 12px;
+    width: 100%;
+
+    &::placeholder {
+      color: var(--u-faint);
+    }
+
+    &:focus {
+      outline: 2px solid var(--u-brand);
+      outline-offset: 1px;
+    }
+  }
+}
+
 .microcopy {
   text-align: center;
   font: 400 11px/1.45 var(--u-mono);

@@ -1,0 +1,229 @@
+<div class="upsell" [class.dark-theme]="theme() === Theme.DARK">
+  <button
+    class="dismiss"
+    mat-icon-button
+    aria-label="Close"
+    (click)="dialogRef.close()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div class="rail">
+    <div class="rail-head">
+      <span class="eyebrow"
+        ><span class="dot"></span>{{ headline().eyebrow }}</span
+      >
+      <h1>{{ headline().title }}</h1>
+      <p class="lede">{{ headline().lede }}</p>
+    </div>
+
+    <!-- Narrow viewports get a scope switch instead of both plan groups -->
+    <div class="seg scope-switch" role="group" aria-label="Who the credits are for">
+      <button
+        type="button"
+        [attr.aria-pressed]="!isTeamPlan()"
+        (click)="selectScope('personal')">
+        Just me
+      </button>
+      <button
+        type="button"
+        [attr.aria-pressed]="isTeamPlan()"
+        (click)="selectScope('team')">
+        My team
+      </button>
+    </div>
+
+    <div class="groups">
+      <div class="group" [class.inactive-on-narrow]="isTeamPlan()">
+        <div class="group-label">
+          Just me <em>only I can create rooms</em>
+        </div>
+        <div class="options">
+          @for (plan of personalPlans; track plan.id) {
+            <button
+              type="button"
+              class="option"
+              [attr.aria-pressed]="selectedPlanId() === plan.id"
+              (click)="selectPlan(plan)">
+              <span class="poker-chip" aria-hidden="true"></span>
+              <span class="name">{{ plan.label }}</span>
+              @if (plan.tag) {
+                <span class="tag">{{ plan.tag }}</span>
+              }
+              <span class="cost"
+                ><b>${{ plan.priceUsd }}</b> ·
+                ${{ (plan.priceUsd / plan.credits).toFixed(2) }}/room</span
+              >
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="group" [class.inactive-on-narrow]="!isTeamPlan()">
+        <div class="group-label">My team <em>one shared pool</em></div>
+        <div class="options">
+          @for (plan of teamPlans; track plan.id) {
+            <button
+              type="button"
+              class="option"
+              [attr.aria-pressed]="selectedPlanId() === plan.id"
+              (click)="selectPlan(plan)">
+              <span class="chip-stack" aria-hidden="true">
+                <span class="poker-chip"></span>
+                <span class="poker-chip"></span>
+                <span class="poker-chip gold"></span>
+              </span>
+              <span class="name">{{ plan.label }}</span>
+              @if (plan.tag) {
+                <span class="tag">{{ plan.tag }}</span>
+              }
+              <span class="cost"
+                ><b>${{ plan.priceUsd }}</b> ·
+                ${{ (plan.priceUsd / plan.credits).toFixed(2) }}/room</span
+              >
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-foot">
+      @if (usageLabel()) {
+        <div class="usage">
+          <div class="usage-key">Your usage</div>
+          <div class="usage-value">{{ usageLabel() }}</div>
+        </div>
+      }
+      <button type="button" class="text-link" (click)="openAllPlans()">
+        Compare all options <mat-icon>arrow_forward</mat-icon>
+      </button>
+      <button type="button" class="text-link quiet" (click)="openPremium()">
+        Or subscribe to Premium for unlimited rooms
+      </button>
+    </div>
+  </div>
+
+  <div class="pane">
+    <div class="hero">
+      <div class="hero-top">
+        <div class="avatars" [class.shared]="isTeamPlan()" aria-hidden="true">
+          <i>A</i><i>K</i><i>R</i><i>M</i><i>+3</i>
+        </div>
+        <span class="joined">
+          @if (isTeamPlan()) {
+            Everyone joins free · any member can create the next room
+          } @else {
+            Everyone joins free · one credit per room
+          }
+        </span>
+      </div>
+
+      <div class="fan" aria-hidden="true">
+        <div class="card" data-value="3">3</div>
+        <div class="card" data-value="5">5</div>
+        <div class="card majority" data-value="5">5</div>
+        <div class="card" data-value="5">5</div>
+        <div class="card" data-value="8">8</div>
+      </div>
+
+      <p class="hero-caption">
+        @if (isTeamPlan()) {
+          With shared credits, whoever runs the session creates the room.
+        } @else {
+          Every credit creates one room, for as many teammates as you invite.
+        }
+      </p>
+    </div>
+
+    <div class="pane-body">
+      <div class="runway">
+        <div class="runway-controls">
+          <span class="control-label">{{
+            isTeamPlan() ? 'Each squad plans' : 'I plan'
+          }}</span>
+          <div class="seg" role="group" aria-label="Planning cadence">
+            @for (option of cadences; track option.id) {
+              <button
+                type="button"
+                [attr.aria-pressed]="cadence() === option.id"
+                (click)="setCadence(option.id)">
+                {{ option.label }}
+              </button>
+            }
+          </div>
+
+          @if (isTeamPlan()) {
+            <span class="control-label">Squads</span>
+            <div class="seg" role="group" aria-label="Squads sharing the pool">
+              @for (count of squadOptions; track count) {
+                <button
+                  type="button"
+                  [attr.aria-pressed]="squads() === count"
+                  (click)="setSquads(count)">
+                  {{ count }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <p class="runway-result">
+          @if (isTeamPlan()) {
+            {{ selectedPlan().credits }} shared credits last
+            <b>{{ runwayLabel() }}</b> across {{ squads() }}
+            {{ squads() === 1 ? 'squad' : 'squads' }}
+            <span class="date">— into {{ runsOutLabel() }}</span>
+          } @else {
+            {{ selectedPlan().credits }} credits last
+            <b>{{ runwayLabel() }}</b> of planning
+            <span class="date">— into {{ runsOutLabel() }}</span>
+          }
+        </p>
+        <div class="runway-note">
+          Free credits cover about one room a month, and expire after two.
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="crow head">
+          <div class="label">Compared with free credits</div>
+          <div class="free">Free</div>
+          <div class="mine">{{ selectedPlan().label }}</div>
+        </div>
+        @for (row of comparisonRows(); track row.label) {
+          <div class="crow" [class.hook]="row.isHook">
+            <div class="label">{{ row.label }}</div>
+            <div class="free">
+              @if (row.free === 'yes') {
+                Yes
+              } @else if (row.free === 'no') {
+                <span class="no">No</span>
+              } @else {
+                {{ row.free }}
+              }
+            </div>
+            <div class="mine">
+              @if (row.selected === 'yes') {
+                <span class="yes">Yes, any member</span>
+              } @else if (row.selected === 'no') {
+                <span class="no">No</span>
+              } @else {
+                {{ row.selected }}
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="pane-foot">
+      <button
+        mat-flat-button
+        class="cta"
+        [disabled]="isRedirecting()"
+        (click)="onCtaClick()">
+        {{ isRedirecting() ? 'Opening checkout...' : ctaLabel }}
+      </button>
+      <div class="microcopy">{{ microcopy }}</div>
+    </div>
+  </div>
+</div>

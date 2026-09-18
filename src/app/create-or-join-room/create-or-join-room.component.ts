@@ -11,6 +11,7 @@ import {
   RecurringMeetingLink,
 } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
+import { PaymentService } from '../services/payment.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
@@ -343,6 +344,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly meetService: MeetApiService,
     private readonly navigationService: NavigationService,
     private readonly toastService: ToastService,
+    private readonly paymentService: PaymentService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -442,17 +444,32 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         }),
         switchMap(() => this.recurringMeetingId$),
         switchMap(recurringMeetingId =>
-          from(this.createRoom(recurringMeetingId)).pipe(
-            catchError(e => {
-              if (e.details === 'error-no-credits') {
+          from(this.canCreateRoom()).pipe(
+            switchMap(canCreate => {
+              if (!canCreate) {
+                this.analytics.logPaywallShown('intercept', 0);
                 this.dialog.open(
-                  ...outOfCreditsOfferModalCreator('creation-failed')
+                  ...outOfCreditsOfferModalCreator('out-of-credits')
                 );
-              } else {
-                throw e;
+                this.isBusy.next(false);
+                return of({});
               }
-              this.isBusy.next(false);
-              return of({});
+
+              return from(this.createRoom(recurringMeetingId)).pipe(
+                catchError(e => {
+                  if (e.details === 'error-no-credits') {
+                    // Stale credit count on the client; the server had the last word.
+                    this.analytics.logPaywallShown('recover', 0);
+                    this.dialog.open(
+                      ...outOfCreditsOfferModalCreator('creation-failed')
+                    );
+                  } else {
+                    throw e;
+                  }
+                  this.isBusy.next(false);
+                  return of({});
+                })
+              );
             })
           )
         ),
@@ -553,6 +570,30 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
 
   signOut() {
     return this.authService.signOut();
+  }
+
+  /**
+   * Checks the user's credits before attempting a creation that would fail, so
+   * the paywall lands on an intent instead of an error. Fails open: the cloud
+   * function still enforces the limit.
+   */
+  private async canCreateRoom(): Promise<boolean> {
+    try {
+      const user = await this.authService.getUser();
+      if (!user) {
+        return true;
+      }
+
+      const [isPremium, credits] = await Promise.all([
+        this.paymentService.isPremiumSubscriber(),
+        this.paymentService.refreshCredits(),
+      ]);
+
+      return isPremium || credits.availableCredits.length > 0;
+    } catch (e) {
+      console.error('Could not check credits before creating a room', e);
+      return true;
+    }
   }
 
   async createRoom(recurringMeetingId: string | null) {

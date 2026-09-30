@@ -1,5 +1,10 @@
-// Layout branches on the modal's own width via container queries, so the modal
-// stacks correctly inside Zoom/Teams panels as well as on a phone.
+@import '../../common.scss';
+
+// Two-pane on desktop, stacked on small windows. Stacking is driven by the
+// app's viewport mixins (smallScreen / extraSmallScreen), not container
+// queries: the modal sizes to its content inside the CDK dialog, so a fixed
+// rail column would give the grid a min-width and overflow a narrow window
+// instead of collapsing.
 .upsell {
   --u-surface: #ffffff;
   --u-rail: #f6f8fb;
@@ -20,7 +25,6 @@
   --u-cta-text: #ffffff;
   --u-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  container-type: inline-size;
   display: grid;
   grid-template-columns: 296px 1fr;
   grid-template-rows: minmax(0, 1fr); // the row must fit the modal, so the panes scroll
@@ -50,6 +54,13 @@
     --u-cta: #eef2fa;
     --u-cta-text: #0b1322;
   }
+
+  @include smallScreen {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto; // both panes size to content; the modal scrolls
+    max-height: min(760px, 90vh);
+    overflow-y: auto;
+  }
 }
 
 .dismiss {
@@ -64,12 +75,20 @@
 .rail {
   background: var(--u-rail);
   border-right: 1px solid var(--u-line);
-  padding: 22px 20px;
+  padding: 24px 22px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   min-height: 0;
   overflow-y: auto;
+
+  @include smallScreen {
+    border-right: 0;
+    border-bottom: 1px solid var(--u-line);
+    padding: 22px 18px 16px;
+    gap: 14px;
+    overflow: visible;
+  }
 }
 
 .eyebrow {
@@ -98,6 +117,14 @@
   letter-spacing: -0.028em;
   text-wrap: balance;
   color: var(--u-ink);
+
+  @include smallScreen {
+    font-size: 21px;
+  }
+
+  @include extraSmallScreen {
+    font-size: 19.5px;
+  }
 }
 
 .rail .lede {
@@ -105,6 +132,10 @@
   color: var(--u-dim);
   font-size: 13px;
   max-width: 34ch;
+
+  @include smallScreen {
+    max-width: none;
+  }
 }
 
 /* ---------- segmented controls ---------- */
@@ -138,46 +169,23 @@
   }
 }
 
-.scope-switch {
-  display: none;
+// The scope toggle splits its two options evenly across the rail width.
+.scope-switch button {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
-/* ---------- plan groups ---------- */
-.groups {
-  display: flex;
-  flex-direction: column;
-}
-
-.group + .group {
-  border-top: 1px solid var(--u-line);
-  padding-top: 10px;
-  margin-top: 10px;
-}
-
-.group-label {
-  font: 500 10px/1 var(--u-mono);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--u-faint);
-  padding: 0 0 6px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-
-  em {
-    font-style: normal;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--u-dim);
-    font-family: inherit;
-    font-size: 11px;
-  }
-}
-
+/* ---------- plan options ---------- */
 .options {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  @include smallScreen {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 }
 
 .option {
@@ -188,7 +196,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 4px 10px;
-  padding: 8px 11px;
+  padding: 9px 11px;
   border: 1px solid transparent;
   border-radius: var(--radius-md, 12px);
   background: transparent;
@@ -233,6 +241,33 @@
     border-radius: 5px;
     padding: 4px 6px;
     flex: none;
+  }
+
+  @include smallScreen {
+    flex: 1 1 130px;
+    min-width: 0;
+    padding: 8px 10px;
+    gap: 2px 8px;
+    border-color: var(--u-line);
+    background: var(--u-surface);
+
+    .tag {
+      display: none;
+    }
+
+    .cost {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+
+    &[aria-pressed='true'] {
+      border-color: var(--u-ink);
+      box-shadow: 0 0 0 1px var(--u-ink);
+    }
+  }
+
+  @include extraSmallScreen {
+    flex: 1 1 100%;
   }
 }
 
@@ -292,6 +327,10 @@
   flex-direction: column;
   gap: 8px;
   padding-top: 8px;
+
+  @include smallScreen {
+    margin-top: 4px;
+  }
 }
 
 .usage {
@@ -313,36 +352,6 @@
   }
 }
 
-.text-link {
-  background: none;
-  border: 0;
-  padding: 0;
-  font: 600 12.5px/1.3 inherit;
-  font-family: inherit;
-  color: var(--u-brand);
-  cursor: pointer;
-  text-align: left;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &.quiet {
-    font-weight: 500;
-    font-size: 11.5px;
-    color: var(--u-faint);
-  }
-}
-
 /* ---------- pane ---------- */
 .pane {
   display: flex;
@@ -350,6 +359,10 @@
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
+
+  @include smallScreen {
+    overflow: visible;
+  }
 }
 
 /* ---------- hero: a revealed round, no image files ---------- */
@@ -376,78 +389,25 @@
     );
     pointer-events: none;
   }
-}
 
-.hero-top {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 2;
-}
-
-.avatars {
-  display: flex;
-
-  i {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font: 700 10px/1 inherit;
-    font-style: normal;
-    color: #001a43;
-    border: 2px solid #001b46;
-    margin-right: -7px;
-    position: relative;
-
-    &:nth-child(1) {
-      background: #d9e2ff;
-    }
-    &:nth-child(2) {
-      background: #ffd79a;
-    }
-    &:nth-child(3) {
-      background: #b9e6d3;
-    }
-    &:nth-child(4) {
-      background: #f3c7d8;
-    }
-    &:nth-child(5) {
-      background: #cfd4e0;
-    }
+  @include smallScreen {
+    padding: 22px 18px 18px;
   }
-
-  // Room-creator markers appear when shared credits are selected
-  &.shared i::after {
-    content: '';
-    position: absolute;
-    right: -1px;
-    bottom: -1px;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--u-amber);
-    border: 2px solid #001b46;
-  }
-
-  &.shared i:nth-child(5)::after {
-    display: none;
-  }
-}
-
-.joined {
-  font: 400 11px/1.3 var(--u-mono);
-  color: rgba(255, 255, 255, 0.62);
 }
 
 .fan {
   position: relative;
-  height: 116px;
-  margin: 10px 0 0;
+  height: 122px;
+  margin: 4px 0 0;
   z-index: 2;
+
+  @include smallScreen {
+    height: 100px;
+  }
+
+  @include extraSmallScreen {
+    height: 92px;
+  }
 }
 
 .card {
@@ -457,7 +417,7 @@
   position: absolute;
   bottom: 8px;
   left: 50%;
-  width: clamp(46px, 11cqw, 62px);
+  width: 58px;
   aspect-ratio: 2 / 3;
   border-radius: 9px;
   background: linear-gradient(170deg, #ffffff 0%, #eef1f7 100%);
@@ -466,7 +426,7 @@
   display: grid;
   place-items: center;
   font-weight: 700;
-  font-size: clamp(16px, 4cqw, 21px);
+  font-size: 20px;
   color: #001a43;
   letter-spacing: -0.02em;
   animation: upsell-deal 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
@@ -533,6 +493,44 @@
     --dy: 12px;
     animation-delay: 0.26s;
   }
+
+  @include smallScreen {
+    width: 50px;
+    border-radius: 7px;
+    font-size: 18px;
+
+    &:nth-child(1) {
+      --dx: -96px;
+    }
+    &:nth-child(2) {
+      --dx: -49px;
+    }
+    &:nth-child(4) {
+      --dx: 49px;
+    }
+    &:nth-child(5) {
+      --dx: 96px;
+    }
+  }
+
+  @include extraSmallScreen {
+    width: 46px;
+
+    &:nth-child(1) {
+      --dx: -78px;
+      --rot: -14deg;
+    }
+    &:nth-child(2) {
+      --dx: -40px;
+    }
+    &:nth-child(4) {
+      --dx: 40px;
+    }
+    &:nth-child(5) {
+      --dx: 78px;
+      --rot: 14deg;
+    }
+  }
 }
 
 @keyframes upsell-deal {
@@ -558,6 +556,11 @@
   flex-direction: column;
   gap: 16px;
   min-width: 0;
+
+  @include smallScreen {
+    padding: 18px 18px 16px;
+    gap: 14px;
+  }
 }
 
 .runway {
@@ -567,6 +570,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @include smallScreen {
+    padding: 10px 11px;
+  }
 
   .seg {
     background: var(--u-surface);
@@ -588,6 +595,23 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px 10px;
+
+  @include smallScreen {
+    gap: 5px 8px;
+
+    // Each control gets its own full-width row so the buttons never
+    // overflow their label on a phone.
+    .control-label,
+    .seg {
+      flex: 1 1 100%;
+    }
+
+    .seg button {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 7px 4px;
+    }
+  }
 }
 
 .control-label {
@@ -602,6 +626,10 @@
   font-size: 13.5px;
   color: var(--u-text);
   text-wrap: pretty;
+
+  @include smallScreen {
+    font-size: 12.5px;
+  }
 
   b {
     font-weight: 700;
@@ -632,6 +660,20 @@
 
   > * {
     padding: 7px 4px;
+  }
+
+  @include smallScreen {
+    grid-template-columns: minmax(0, 1fr) 62px 80px;
+    font-size: 12.5px;
+
+    > * {
+      padding: 9px 3px;
+    }
+  }
+
+  @include extraSmallScreen {
+    grid-template-columns: minmax(0, 1fr) 54px 68px;
+    font-size: 12px;
   }
 
   .label {
@@ -702,12 +744,17 @@
   position: sticky;
   bottom: 0;
   z-index: 4;
-  padding: 10px 26px calc(14px + env(safe-area-inset-bottom, 0px));
+  padding: 12px 26px calc(16px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   background: var(--u-surface);
   border-top: 1px solid var(--u-line);
+
+  @include smallScreen {
+    padding: 12px 18px calc(14px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -8px 20px -12px rgba(0, 26, 67, 0.3);
+  }
 }
 
 .cta.mat-mdc-unelevated-button {
@@ -728,194 +775,6 @@
   text-align: center;
   font: 400 11px/1.45 var(--u-mono);
   color: var(--u-faint);
-}
-
-/* ---------- stacked ---------- */
-@container (max-width: 719px) {
-  .upsell {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto; // both panes size to content; the modal scrolls
-    max-height: min(720px, 88vh);
-    overflow-y: auto;
-  }
-
-  .rail {
-    border-right: 0;
-    border-bottom: 1px solid var(--u-line);
-    padding: 20px 18px 14px;
-    gap: 12px;
-    overflow: visible;
-  }
-
-  .rail h1 {
-    font-size: 21px;
-  }
-
-  .rail .lede {
-    max-width: none;
-  }
-
-  // One scope switch, then only that group's options
-  .scope-switch {
-    display: flex;
-    width: 100%;
-  }
-
-  .group-label,
-  .group.inactive-on-narrow {
-    display: none;
-  }
-
-  .group + .group {
-    border-top: 0;
-    padding-top: 0;
-    margin-top: 0;
-  }
-
-  .options {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .option {
-    flex: 1 1 130px;
-    min-width: 0;
-    padding: 8px 10px;
-    gap: 2px 8px;
-    border-color: var(--u-line);
-    background: var(--u-surface);
-
-    .tag {
-      display: none;
-    }
-
-    .cost {
-      margin-left: 0;
-      flex-basis: 100%;
-    }
-
-    &[aria-pressed='true'] {
-      border-color: var(--u-ink);
-      box-shadow: 0 0 0 1px var(--u-ink);
-    }
-  }
-
-  .rail-foot {
-    margin-top: 4px;
-  }
-
-  .hero {
-    padding: 22px 18px 18px;
-  }
-
-  .fan {
-    height: 100px;
-  }
-
-  .card {
-    width: clamp(40px, 16cqw, 54px);
-    border-radius: 7px;
-
-    &:nth-child(1) {
-      --dx: -96px;
-    }
-    &:nth-child(2) {
-      --dx: -49px;
-    }
-    &:nth-child(4) {
-      --dx: 49px;
-    }
-    &:nth-child(5) {
-      --dx: 96px;
-    }
-  }
-
-  .pane {
-    overflow: visible;
-  }
-
-  .pane-body {
-    padding: 18px 18px 16px;
-    gap: 14px;
-  }
-
-  .runway {
-    padding: 10px 11px;
-  }
-
-  .runway-controls {
-    gap: 5px 8px;
-
-    .control-label,
-    .seg {
-      flex: 1 1 100%;
-    }
-
-    .seg button {
-      flex: 1 1 0;
-      min-width: 0;
-      padding: 7px 4px;
-    }
-  }
-
-  .runway-result {
-    font-size: 12.5px;
-  }
-
-  .crow {
-    grid-template-columns: minmax(0, 1fr) 62px 80px;
-    font-size: 12.5px;
-
-    > * {
-      padding: 9px 3px;
-    }
-  }
-
-  .pane-foot {
-    padding: 12px 18px calc(14px + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 -8px 20px -12px rgba(0, 26, 67, 0.3);
-  }
-}
-
-@container (max-width: 400px) {
-  .rail h1 {
-    font-size: 19.5px;
-  }
-
-  .option {
-    flex: 1 1 100%;
-  }
-
-  .fan {
-    height: 92px;
-  }
-
-  .card {
-    &:nth-child(1) {
-      --dx: -78px;
-      --rot: -14deg;
-    }
-    &:nth-child(2) {
-      --dx: -40px;
-    }
-    &:nth-child(4) {
-      --dx: 40px;
-    }
-    &:nth-child(5) {
-      --dx: 78px;
-      --rot: 14deg;
-    }
-  }
-
-  .crow {
-    grid-template-columns: minmax(0, 1fr) 54px 68px;
-    font-size: 12px;
-  }
-
-  .avatars i:nth-child(5) {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

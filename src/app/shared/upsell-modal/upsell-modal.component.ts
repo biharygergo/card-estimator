@@ -29,8 +29,6 @@ import { Theme, ThemeService } from 'src/app/services/theme.service';
 import { BundleName, Room } from 'src/app/types';
 import { createModal } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { organizationModalCreator } from '../organization-modal/organization-modal.component';
-import { pricingModalCreator } from '../pricing-table/pricing-table.component';
-import { premiumLearnMoreModalCreator } from '../premium-learn-more/premium-learn-more.component';
 
 export interface UpsellModalData {
   trigger: PaywallTrigger;
@@ -184,6 +182,11 @@ export class UpsellModalComponent implements OnInit {
   );
 
   readonly isTeamPlan = computed(() => this.selectedPlan().scope === 'team');
+
+  /** Only the active scope's plans; the scope toggle switches between them. */
+  readonly visiblePlans = computed(() =>
+    this.isTeamPlan() ? this.teamPlans : this.personalPlans
+  );
 
   readonly pricePerRoom = computed(
     () => this.selectedPlan().priceUsd / this.selectedPlan().credits
@@ -413,16 +416,6 @@ export class UpsellModalComponent implements OnInit {
       console.error('Could not start checkout', e);
       this.isRedirecting.set(false);
     }
-  }
-
-  openAllPlans(): void {
-    this.dialog.open(...pricingModalCreator({}));
-    this.dialogRef.close();
-  }
-
-  openPremium(): void {
-    this.dialog.open(...premiumLearnMoreModalCreator());
-    this.dialogRef.close();
   }
 
   private inferCadence(

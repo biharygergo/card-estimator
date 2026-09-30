@@ -139,6 +139,34 @@ export class CardDeckComponent implements OnInit, OnDestroy {
     this.analytics.logClickedReaction(reactionId);
   }
 
+  onCardKeydown(event: KeyboardEvent) {
+    const buttons = this.cardContainers
+      .toArray()
+      .map(ref => ref.nativeElement.querySelector<HTMLButtonElement>('button'))
+      .filter((b): b is HTMLButtonElement => !!b && !b.disabled);
+
+    const focused = document.activeElement as HTMLButtonElement;
+    const idx = buttons.indexOf(focused);
+    if (idx === -1) return;
+
+    let next = -1;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      next = (idx + 1) % buttons.length;
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      next = (idx - 1 + buttons.length) % buttons.length;
+    } else if (event.key === 'Home') {
+      next = 0;
+    } else if (event.key === 'End') {
+      next = buttons.length - 1;
+    }
+
+    if (next !== -1) {
+      event.preventDefault();
+      buttons.forEach((b, i) => b.setAttribute('tabindex', i === next ? '0' : '-1'));
+      buttons[next].focus();
+    }
+  }
+
   disabledClick() {
     this.clickCounter.set(this.clickCounter() + 1);
     if (this.clickCounter() === 3) {

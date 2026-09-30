@@ -74,7 +74,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { outOfCreditsOfferModalCreator } from '../shared/out-of-credits-offer-modal/out-of-credits-offer-modal.component';
+import { upsellModalCreator } from '../shared/upsell-modal/upsell-modal.component';
 
 enum PageMode {
   CREATE = 'create',
@@ -447,9 +447,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
           from(this.canCreateRoom()).pipe(
             switchMap(canCreate => {
               if (!canCreate) {
-                this.analytics.logPaywallShown('intercept', 0);
                 this.dialog.open(
-                  ...outOfCreditsOfferModalCreator('out-of-credits')
+                  ...upsellModalCreator({
+                    trigger: 'intercept',
+                    creditsRemaining: 0,
+                  })
                 );
                 this.isBusy.next(false);
                 return of({});
@@ -459,9 +461,11 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
                 catchError(e => {
                   if (e.details === 'error-no-credits') {
                     // Stale credit count on the client; the server had the last word.
-                    this.analytics.logPaywallShown('recover', 0);
                     this.dialog.open(
-                      ...outOfCreditsOfferModalCreator('creation-failed')
+                      ...upsellModalCreator({
+                        trigger: 'recover',
+                        creditsRemaining: 0,
+                      })
                     );
                   } else {
                     throw e;

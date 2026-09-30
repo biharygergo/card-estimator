@@ -8,6 +8,7 @@ import {
   MatDialogClose,
 } from '@angular/material/dialog';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { PaymentService } from 'src/app/services/payment.service';
 import { SubscriptionResult } from 'src/app/types';
 import { ModalCreator } from '../avatar-selector-modal/avatar-selector-modal.component';
 import { MatButton } from '@angular/material/button';
@@ -48,9 +49,15 @@ export class SubscriptionResultComponent {
     public dialogRef: MatDialogRef<SubscriptionResultComponent>,
     @Inject(MAT_DIALOG_DATA)
     private readonly dialogData: SubscriptionResultModalData,
-    private readonly analytics: AnalyticsService
+    private readonly analytics: AnalyticsService,
+    private readonly paymentService: PaymentService
   ) {
     this.subscriptionResult = dialogData.result;
     this.analytics.logSubscriptionResultReceived(dialogData.result);
+
+    if (dialogData.result === SubscriptionResult.SUCCESS) {
+      // Pull the new credits in so low-credit paywalls retract right away.
+      this.paymentService.refreshCredits();
+    }
   }
 }

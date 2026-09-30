@@ -13,6 +13,22 @@ export type ZoomAppCtaLocation =
   | 'detail_page'
   | 'banner_landing'
   | 'banner_join';
+
+/**
+ * Where a paywall was raised from. Kept as a union so conversion can be
+ * compared per trigger: checkout_started / paywall_shown.
+ */
+export type PaywallTrigger =
+  /** Blocked a room creation the user just attempted. */
+  | 'intercept'
+  /** Shown while the user still has a credit left. */
+  | 'preempt'
+  /** Server rejected the creation, e.g. a stale client-side credit count. */
+  | 'recover'
+  /** The user creates every room for their team. */
+  | 'solo_creator'
+  /** Opened from a link or menu rather than raised by the app. */
+  | 'manual';
 @Injectable({
   providedIn: 'root',
 })
@@ -434,5 +450,27 @@ export class AnalyticsService {
 
   logClickedOpenReferralDialog(source: string) {
     this.logEventInternal('clicked_open_referral_dialog', { source });
+  }
+
+  logPaywallShown(trigger: PaywallTrigger, creditsRemaining: number) {
+    this.logEventInternal('paywall_shown', {
+      trigger,
+      credits_remaining: creditsRemaining,
+    });
+  }
+
+  logPaywallDismissed(trigger: PaywallTrigger, secondsOpen: number) {
+    this.logEventInternal('paywall_dismissed', {
+      trigger,
+      seconds_open: secondsOpen,
+    });
+  }
+
+  logPaywallPlanSelected(trigger: PaywallTrigger, plan: string) {
+    this.logEventInternal('paywall_plan_selected', { trigger, plan });
+  }
+
+  logPaywallCheckoutStarted(trigger: PaywallTrigger, plan: string) {
+    this.logEventInternal('paywall_checkout_started', { trigger, plan });
   }
 }

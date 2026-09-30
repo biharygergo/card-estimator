@@ -11,7 +11,14 @@ import { httpsCallable } from 'firebase/functions';
 import { firestore, functions } from '../firebase/firebase';
 import { collectionData, docData } from '../firebase/firestore-rx';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, of, switchMap, map, firstValueFrom } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  of,
+  switchMap,
+  map,
+  firstValueFrom,
+} from 'rxjs';
 import { StripeSubscription } from '../types/stripe-subscription';
 import { APP_CONFIG, AppConfig } from '../app-config.module';
 import {
@@ -26,11 +33,29 @@ import { BundleName, BundleWithCredits, Credit, CreditBundle } from '../types';
 
 export type { StripeSubscription } from '../types/stripe-subscription';
 
+export interface CreditsState {
+  availableCredits: Credit[];
+  credits: Credit[];
+  bundles: BundleWithCredits[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
   isSubscriptionDisabled = signal<boolean>(false);
+
+  private readonly creditsState = new BehaviorSubject<CreditsState | null>(
+    null
+  );
+  private creditsRequest: Promise<CreditsState> | undefined;
+
+  /**
+   * Last known credit state, or null until the first load resolves. Emits again
+   * whenever credits are refreshed, so paywalls retract after a purchase.
+   */
+  readonly credits$: Observable<CreditsState | null> =
+    this.creditsState.asObservable();
 
   constructor(
     private readonly zoomService: ZoomApiService,
@@ -338,11 +363,29 @@ export class PaymentService {
     );
   }
 
-  async getAndAssignCreditBundles(): Promise<{
-    availableCredits: Credit[];
-    credits: Credit[];
-    bundles: BundleWithCredits[];
-  }> {
+  /**
+   * Returns the cached credit state, loading it first if needed. Concurrent
+   * callers share one request instead of each hitting the callable.
+   */
+  loadCredits(): Promise<CreditsState> {
+    const cached = this.creditsState.value;
+    if (cached) {
+      return Promise.resolve(cached);
+    }
+    return this.refreshCredits();
+  }
+
+  /** Re-fetches credits and notifies everything bound to `credits$`. */
+  refreshCredits(): Promise<CreditsState> {
+    if (!this.creditsRequest) {
+      this.creditsRequest = this.getAndAssignCreditBundles().finally(() => {
+        this.creditsRequest = undefined;
+      });
+    }
+    return this.creditsRequest;
+  }
+
+  async getAndAssignCreditBundles(): Promise<CreditsState> {
     const result = await httpsCallable(
       functions,
       'getAllCreditsAndAssignWelcome'
@@ -374,6 +417,8 @@ export class PaymentService {
         (!c.expiresAt || c.expiresAt.toDate().getTime() > Date.now())
     );
 
-    return { credits, bundles, availableCredits };
+    const state = { credits, bundles, availableCredits };
+    this.creditsState.next(state);
+    return state;
   }
 }

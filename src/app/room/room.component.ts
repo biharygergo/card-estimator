@@ -430,8 +430,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   isRoomCreator$ = this.roomDataService.isRoomCreator$;
 
   availableCredits$ = timer(5000).pipe(
-    switchMap(() => from(this.paymentService.getAndAssignCreditBundles())),
-    map(response => response.availableCredits),
+    tap(() => this.paymentService.loadCredits()),
+    switchMap(() => this.paymentService.credits$),
+    filter(state => state !== null),
+    map(state => state.availableCredits),
     shareReplay(1)
   );
 
@@ -446,12 +448,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     shareReplay(1)
   );
 
-  creditsAlert$: Observable<number> = combineLatest([
+  creditsAlert$: Observable<number | null> = combineLatest([
     this.availableCredits$,
     this.permissionsService.hasPremiumAccess(),
   ]).pipe(
-    filter(([credits, isPremium]) => credits.length <= 1 && !isPremium),
-    map(([credits]) => credits.length),
+    map(([credits, isPremium]) =>
+      isPremium === false && credits.length <= 1 ? credits.length : null
+    ),
     distinctUntilChanged()
   );
 
@@ -460,8 +463,9 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.creditsAlert$,
     this.isRoomCreator$,
   ]).pipe(
-    map(([credits, isCreator]) => isCreator ? credits : null),
-    distinctUntilChanged()
+    map(([credits, isCreator]) => (isCreator ? credits : null)),
+    distinctUntilChanged(),
+    shareReplay(1)
   );
 
   readonly MemberType = MemberType;

@@ -242,6 +242,51 @@
   margin-bottom: 0.5rem;
   overflow-x: auto;
   overflow-y: hidden;
+  align-items: center;
+}
+
+.reaction-separator {
+  flex: 0 0 auto;
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 4px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.note-button {
+  flex: 0 0 auto;
+  color: var(--text-on-main);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.has-note {
+    color: var(--accent-color, #ffd54f);
+    opacity: 1;
+  }
+
+  mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+// In-app light themes: separator/note icon need contrast on light backgrounds
+:host-context(.running-in-teams:not(.dark-theme)) .reaction-buttons,
+:host-context(.running-in-zoom:not(.dark-theme)) .reaction-buttons,
+:host-context(.running-in-meet:not(.dark-theme)) .reaction-buttons,
+:host-context(.running-in-webex:not(.dark-theme)) .reaction-buttons {
+  .reaction-separator {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .note-button {
+    color: var(--text-color);
+  }
 }
 
 :host-context(.dark-theme) .reaction-buttons {

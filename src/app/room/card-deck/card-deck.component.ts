@@ -7,6 +7,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  computed,
   input,
   signal,
 } from '@angular/core';
@@ -27,6 +28,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { RoomDataService } from '../room-data.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { MatDialog } from '@angular/material/dialog';
+import { voteNoteModalCreator } from '../vote-note-modal/vote-note-modal.component';
 
 @Component({
   selector: 'app-card-deck',
@@ -70,13 +73,33 @@ export class CardDeckComponent implements OnInit, OnDestroy {
     map(member => member?.type === MemberType.OBSERVER)
   );
 
+  /** The active member's saved note for the current round, if any. */
+  currentNote = computed(() => {
+    const memberId = this.estimatorService.activeMember?.id;
+    if (!memberId) {
+      return '';
+    }
+    return (
+      this.room()?.rounds?.[this.currentRound()]?.estimateNotes?.[memberId] ?? ''
+    );
+  });
+
+  /** Notes stay editable until results are revealed (unless vote changes are allowed after reveal). */
+  canEditNote = computed(() => {
+    const round = this.room()?.rounds?.[this.currentRound()];
+    return (
+      !round?.show_results || !!this.room()?.isChangeVoteAfterRevealEnabled
+    );
+  });
+
   constructor(
     private analytics: AnalyticsService,
     private estimatorService: EstimatorService,
     public permissionsService: PermissionsService,
     private readonly reactionsService: ReactionsService,
     private readonly roomDataService: RoomDataService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +139,19 @@ export class CardDeckComponent implements OnInit, OnDestroy {
       this.currentRound(),
       null,
       this.estimatorService.activeMember.id
+    );
+  }
+
+  openNoteDialog() {
+    this.analytics.logOpenedVoteNoteEditor();
+    this.dialog.open(
+      ...voteNoteModalCreator({
+        room: this.room(),
+        roundNumber: this.currentRound(),
+        userId: this.estimatorService.activeMember.id,
+        currentNote: this.currentNote(),
+        canEdit: this.canEditNote(),
+      })
     );
   }
 

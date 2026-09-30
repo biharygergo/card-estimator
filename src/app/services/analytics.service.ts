@@ -134,6 +134,10 @@ export class AnalyticsService {
     this.logEventInternal('clicked_vote_option');
   }
 
+  logOpenedVoteNoteEditor() {
+    this.logEventInternal('opened_vote_note_editor');
+  }
+
   logClickedLeaveRoom() {
     this.logEventInternal('clicked_leave_room');
   }

@@ -55,6 +55,8 @@ export interface Round {
   started_at: Timestamp;
   finished_at: Timestamp | null;
   estimates: { [memberId: string]: number | null };
+  /** Optional per-voter note attached to an estimate, keyed by memberId. Distinct from the round-level shared `notes`. */
+  estimateNotes?: { [memberId: string]: string };
   show_results: boolean;
   notes?: Notes;
   majorityOverride?: number | null;

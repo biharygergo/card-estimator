@@ -1,0 +1,39 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.description {
+  margin: 0 0 1rem;
+  color: var(--text-on-white);
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+.note-field {
+  width: 100%;
+}
+
+.locked-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0.25rem 0 0;
+  color: var(--text-on-white);
+  opacity: 0.7;
+  font-size: 0.85rem;
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  margin-top: auto;
+  justify-content: flex-end;
+  gap: 8px;
+}

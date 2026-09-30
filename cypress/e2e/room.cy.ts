@@ -199,6 +199,39 @@ describe('Inside the room', () => {
     cy.contains('Close').click();
   });
 
+  it('can add a note to a vote and reveal it', () => {
+    // Start a clean round so earlier tests don't interfere
+    cy.get('#new-round-button').click();
+    cy.wait(1000);
+
+    // Cast a vote
+    cy.get('.estimator-button').first().click();
+
+    // Open the note dialog from the reaction bar
+    cy.get('#vote-note-button').click();
+    cy.contains('Add a note').should('be.visible');
+
+    // Write and save a note
+    cy.get('#vote-note-input').click().type('Assuming we reuse the API');
+    cy.contains('Save note').click();
+
+    // The reaction-bar button now reflects that a note exists
+    cy.get('#vote-note-button').should('have.class', 'has-note');
+
+    // Note stays hidden until results are revealed
+    cy.get('.member-note').should('not.exist');
+
+    // Reveal and verify the note is shown under the member's name
+    cy.contains('Reveal votes').click();
+    cy.get('.member-note').should('contain.text', 'Assuming we reuse the API');
+
+    // Reopening shows the edit title and the saved text
+    cy.get('#vote-note-button').click();
+    cy.contains('Edit your note').should('be.visible');
+    cy.get('#vote-note-input').should('have.value', 'Assuming we reuse the API');
+    cy.contains('Cancel').click();
+  });
+
   it('can override majority vote', () => {
     cy.get('#new-round-button').click();
     cy.contains('5').click();
@@ -246,7 +279,8 @@ describe('Inside the room', () => {
 
     cy.contains('Leave room').click();
 
-    cy.contains('Create a new room').should('be.visible');
+    cy.url().should('include', '/join');
+    cy.get('#join-room-button').should('be.visible');
   });
 
   it('can use room templates', () => {

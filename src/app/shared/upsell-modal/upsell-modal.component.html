@@ -170,10 +170,22 @@
     </div>
 
     <div class="pane-foot">
+      @if (needsTeamName()) {
+        <label class="team-name">
+          <span class="team-name-label">Team name</span>
+          <input
+            id="upsellTeamName"
+            type="text"
+            autocomplete="organization"
+            placeholder="e.g. Platform squad"
+            [value]="newTeamName()"
+            (input)="onTeamNameInput($event)" />
+        </label>
+      }
       <button
         mat-flat-button
         class="cta"
-        [disabled]="isRedirecting()"
+        [disabled]="isCtaDisabled"
         (click)="onCtaClick()">
         {{ isRedirecting() ? 'Opening checkout...' : ctaLabel }}
       </button>

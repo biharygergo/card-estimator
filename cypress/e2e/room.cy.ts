@@ -279,7 +279,8 @@ describe('Inside the room', () => {
 
     cy.contains('Leave room').click();
 
-    cy.contains('Create a new room').should('be.visible');
+    cy.url().should('include', '/join');
+    cy.get('#join-room-button').should('be.visible');
   });
 
   it('can use room templates', () => {

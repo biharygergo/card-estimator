@@ -1,0 +1,41 @@
+<div class="dialog-content">
+  <h1 mat-dialog-title>
+    {{ data.currentNote ? 'Edit your note' : 'Add a note' }}
+  </h1>
+  <div mat-dialog-content>
+    <p class="description">
+      Add context to your estimate — it stays hidden until results are revealed.
+    </p>
+    <mat-form-field appearance="outline" class="note-field">
+      <mat-label>Your note</mat-label>
+      <textarea
+        matInput
+        id="vote-note-input"
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="3"
+        cdkAutosizeMaxRows="8"
+        [maxlength]="maxLength"
+        [disabled]="!data.canEdit"
+        [ngModel]="note()"
+        (ngModelChange)="note.set($event)"
+        placeholder="e.g. Assuming we reuse the existing API…"></textarea>
+      <mat-hint align="end">{{ note().length }} / {{ maxLength }}</mat-hint>
+    </mat-form-field>
+    @if (!data.canEdit) {
+      <p class="locked-hint">
+        <mat-icon>lock</mat-icon>
+        Results are revealed — your note can no longer be changed.
+      </p>
+    }
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="save()"
+      [disabled]="!data.canEdit">
+      Save note
+    </button>
+  </div>
+</div>

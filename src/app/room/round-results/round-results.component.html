@@ -210,6 +210,10 @@
               }
             }
           </div>
+          @let round = room()?.rounds?.[currentRound()];
+          @let memberEstimate = round?.estimates?.[member.id];
+          @let memberNote = round?.estimateNotes?.[member.id];
+          <div class="member-name-block">
           <span class="member-name" [class.blur]="member.isAnonymous">
             {{ member.name }}
             @if (!recentlyActiveMembers()[member.id]) {
@@ -232,8 +236,12 @@
                   >
                 }
               </span>
-              @let round = room()?.rounds?.[currentRound()];
-              @let memberEstimate = round?.estimates?.[member.id];
+              @if (round?.show_results && memberNote) {
+                <p class="member-note" [class.blur]="member.isAnonymous">
+                  {{ memberNote }}
+                </p>
+              }
+              </div>
               @if (member.type === MemberType.ESTIMATOR) {
                 @if (memberEstimate === null && round?.show_results) {
                   <div class="vote vote-pass" matTooltip="Passed">

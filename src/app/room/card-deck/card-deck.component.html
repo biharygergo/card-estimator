@@ -12,6 +12,22 @@
               <img [src]="reaction.svg" [alt]="reaction.alt" />
             </button>
           }
+          @if ((isObserver | async) === false) {
+            <span class="reaction-separator"></span>
+            <button
+              mat-icon-button
+              class="note-button"
+              [class.has-note]="currentNote()"
+              (click)="openNoteDialog()"
+              [matTooltip]="
+                currentNote() ? 'Edit your vote note' : 'Add a note to your vote'
+              "
+              id="vote-note-button">
+              <mat-icon>{{
+                currentNote() ? 'comment' : 'add_comment'
+              }}</mat-icon>
+            </button>
+          }
         </div>
       </div>
     }

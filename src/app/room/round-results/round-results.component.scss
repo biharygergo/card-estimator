@@ -382,3 +382,31 @@ mat-list-item.statistic-line {
     }
   }
 }
+
+.member-name-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  margin-left: 0.75rem;
+  margin-right: 0.5rem;
+
+  .member-name {
+    margin-left: 0;
+  }
+}
+
+.member-note {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--text-color);
+  opacity: 0.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  &.blur {
+    filter: blur(5px);
+  }
+}

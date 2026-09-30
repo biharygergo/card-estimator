@@ -41,7 +41,9 @@ export function createRoundStatistics(
   const estimates = Object.entries(round.estimates)
     .filter(estimate => estimate[1] !== null)
     .reduce((acc, [id, estimate]) => {
-      acc[id] = converter.transform(estimate, cardSet, 'exact').toString();
+      const value = converter.transform(estimate, cardSet, 'exact').toString();
+      const note = round.estimateNotes?.[id];
+      acc[id] = note ? `${value} (note: ${note})` : value;
       if (members[id] === undefined) {
         members[id] = {
           name: 'Unknown Voter',

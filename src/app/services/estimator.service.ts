@@ -4,6 +4,7 @@ import {
   arrayUnion,
   collection,
   CollectionReference,
+  deleteField,
   doc,
   DocumentReference,
   limit,
@@ -402,6 +403,20 @@ export class EstimatorService {
   ) {
     return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
       [`rounds.${roundNumber}.estimates.${userId}`]: estimate,
+    });
+  }
+
+  setEstimateNote(
+    room: Room,
+    roundNumber: number,
+    note: string,
+    userId: string
+  ) {
+    const trimmed = note.trim();
+    return updateDoc(doc(firestore, this.ROOMS_COLLECTION, room.roomId), {
+      [`rounds.${roundNumber}.estimateNotes.${userId}`]: trimmed.length
+        ? trimmed
+        : deleteField(),
     });
   }
 

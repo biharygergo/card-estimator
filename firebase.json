@@ -233,6 +233,86 @@
           "source": "/premium",
           "destination": "/pricing",
           "type": 301
+        },
+        {
+          "source": "/knowledge-base/comparing-agile-estimation-techniques",
+          "destination": "/estimation-techniques-comparison",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/commonly-misused-terms-planning-poker",
+          "destination": "/glossary",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/fibonacci-planning-poker-cards",
+          "destination": "/printable-planning-poker-cards",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planning-poker-card-decks-explained",
+          "destination": "/printable-planning-poker-cards",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planning-poker-special-cards",
+          "destination": "/printable-planning-poker-cards",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planning-poker-and-the-scrum-roles",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/essential-scrum-master-tools",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/common-mistakes-planning-poker",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/advanced-strategies-planning-poker-remote-teams",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planning-poker-guide-agile-estimation-techniques",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/ai-tools-for-scrum-masters",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/benefits-of-planning-poker",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planningpoker-live-2024-year-in-review",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planitpoker-alternatives",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/planningpoker-com-alternatives",
+          "destination": "/knowledge-base",
+          "type": 301
+        },
+        {
+          "source": "/knowledge-base/pointing-poker-alternatives",
+          "destination": "/knowledge-base",
+          "type": 301
         }
       ]
     }

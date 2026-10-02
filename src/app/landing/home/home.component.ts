@@ -31,21 +31,20 @@ const KNOWLEDGE_BASE_SAMPLES = [
     slug: 'how-to-run-planning-poker-session-with-planningpoker-live',
   },
   {
-    title:
-      'The Definitive Guide to Planning Poker - Master Agile Estimation Poker Techniques',
+    title: 'How to estimate JIRA issues with Planning Poker',
     description:
-      'Master Agile estimation with our simple guide to Planning Poker, also known as Agile Poker or Scrum Poker. Discover how this powerful tool enhances team collaboration, accuracy, and project success.',
-    imageId: 'pexels-fauxels-3183197_k4uned',
-    imageAlt: 'People at a meeting table',
-    slug: 'planning-poker-guide-agile-estimation-techniques',
+      'In this short tutorial you can learn how to set up an integration with JIRA in PlanningPoker.live and estimate tickets without leaving the tool.',
+    imageId: 'topics',
+    imageAlt: 'A graphic showing issues stacked over each other',
+    slug: 'how-to-estimate-jira-issues-with-planning-poker',
   },
   {
-    title: '5 Essential Scrum Master Tools to Empower Your Agile Team',
+    title: 'Step-by-step guide for using Planning Poker in Zoom',
     description:
-      "Discover the top 5 must-have tools that every Scrum Master needs to streamline processes, boost collaboration, and drive project success. From project management to retrospectives, we've got you covered.",
-    imageId: 'Feautres_Zoom_fkn3mh',
-    imageAlt: 'Application logos scattered',
-    slug: 'essential-scrum-master-tools',
+      'Learn how to install the PlanningPoker.live app in Zoom. With the Zoom integration, teams can enhance their planning sessions without leaving the call.',
+    imageId: 'zoom_app',
+    imageAlt: 'A screenshot showing the PlanningPoker.live app running in Zoom',
+    slug: 'how-to-use-planning-poker-in-zoom',
   },
   {
     title: 'Guide to Installing Planning Poker in Microsoft Teams',
@@ -147,7 +146,7 @@ export class HomeComponent implements OnInit {
       question:
         'How do I facilitate effective planning poker sessions as a Scrum Master?',
       answer:
-        'As a Scrum Master, start by ensuring all participants understand the user story and acceptance criteria before voting. Use our timer feature to keep discussions focused, and leverage the statistics feature to prompt meaningful discussions about estimate differences. For distributed teams, use our video integration features to maintain face-to-face communication. Check out our <a href="/knowledge-base/planning-poker-guide-agile-estimation-techniques">Scrum Master\'s guide</a> for more facilitation tips.',
+        'As a Scrum Master, start by ensuring all participants understand the user story and acceptance criteria before voting. Use our timer feature to keep discussions focused, and leverage the statistics feature to prompt meaningful discussions about estimate differences. For distributed teams, use our video integration features to maintain face-to-face communication. Check out our <a href="/knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live">session guide</a> for more facilitation tips.',
     },
     {
       question: 'Can I play Planning Poker when my team is meeting in person?',

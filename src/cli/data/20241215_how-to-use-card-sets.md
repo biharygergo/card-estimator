@@ -29,7 +29,7 @@ By customizing the visibility of your cards and emojis, you can create a cleaner
 
 ### **2. Switching Between Different Card Sets for Better Estimates**
 
-Not all estimation tasks are the same, and using the right card set can make a big difference. For example, estimating a straightforward task might be best with a simple numeric scale, while more complex tasks benefit from broader categories like T-shirt sizes. Check out our [comparison of different estimation techniques](/knowledge-base/comparing-agile-estimation-techniques) to learn more about which approach might work best for your team.
+Not all estimation tasks are the same, and using the right card set can make a big difference. For example, estimating a straightforward task might be best with a simple numeric scale, while more complex tasks benefit from broader categories like T-shirt sizes. Check out our [comparison of different estimation techniques](/estimation-techniques-comparison) to learn more about which approach might work best for your team.
 
 To change your card set:
 

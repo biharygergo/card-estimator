@@ -69,4 +69,4 @@ Here are some tips for estimating JIRA issues with the Planning Poker technique:
 
 By following these tips, you can use Planning Poker to effectively estimate JIRA issues and improve your team's communication, collaboration, and confidence.
 
-Planning Poker is a consensus-based technique for estimating effort or complexity. It is often used in agile software development to estimate user stories or product backlog items, making it an ideal fit for estimating JIRA issues. Learn more about [how different Scrum roles use Planning Poker](/knowledge-base/planning-poker-and-the-scrum-roles) and [how it can improve your sprint planning](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning).
+Planning Poker is a consensus-based technique for estimating effort or complexity. It is often used in agile software development to estimate user stories or product backlog items, making it an ideal fit for estimating JIRA issues. Learn more about [how it can improve your sprint planning](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning).

@@ -40,7 +40,7 @@ As remote work continues to evolve, the need for effective collaboration tools b
    - Seamlessly transition from Zoom to PlanningPoker.live without leaving the meeting interface, ensuring a fluid planning experience.
    - The same features you know from the web available inside Zoom. No restrictions.
    - Easy room invitations: Just click on "Invite" and everyone in the meeting will join.
-   - Want to learn more? Check out our [comprehensive guide to Planning Poker](/knowledge-base/planning-poker-guide-agile-estimation-techniques).
+   - Want to learn more? Check out our [guide to running a Planning Poker session](/knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live).
 
 2. **Real-Time Collaboration easier than ever:**
    - Engage in live discussions, task estimations, and decision-making directly within Zoom. This real-time collaboration fosters agility and adaptability.

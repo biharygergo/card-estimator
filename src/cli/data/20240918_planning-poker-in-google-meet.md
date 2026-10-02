@@ -16,7 +16,7 @@ This step-by-step tutorial will guide you through installing the [PlanningPoker.
 
 ## Why Use Planning Poker?
 
-Planning Poker is an essential tool for teams practicing agile development, especially for estimating the effort required for tasks. Learn more about [how different Scrum roles can use Planning Poker effectively](/knowledge-base/planning-poker-and-the-scrum-roles) and [how it can improve your sprint planning](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning). It fosters collaboration, reduces biases, and ensures that all team members have a say in the estimation process. Using PlanningPoker.live within [Google Meet](https://meet.google.com) simplifies remote team planning by integrating seamlessly into your virtual meetings. Here's why you should consider using it:
+Planning Poker is an essential tool for teams practicing agile development, especially for estimating the effort required for tasks. Learn more about [how it can improve your sprint planning](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning). It fosters collaboration, reduces biases, and ensures that all team members have a say in the estimation process. Using PlanningPoker.live within [Google Meet](https://meet.google.com) simplifies remote team planning by integrating seamlessly into your virtual meetings. Here's why you should consider using it:
 
 - **Effortless Collaboration:** All participants can provide estimates in real-time during the meeting, ensuring consensus and preventing any one member from dominating the conversation.
 - **Bias-Free Voting:** Anonymous voting ensures fair estimates, avoiding influence from senior team members or dominant voices.
@@ -72,7 +72,7 @@ Now that you've installed PlanningPoker.live, here's how to make the most of its
 
 - **Jira and Linear Integration:** Link PlanningPoker.live with your project management tools like [Jira](https://planningpoker.live/integrations/jira) or [Linear](https://planningpoker.live/integrations/linear) to import tasks directly. Once your planning session is complete, export the estimates back into your tool for easy tracking. Learn more about our [Jira integration](https://planningpoker.live/knowledge-base/how-to-estimate-jira-issues-with-planning-poker) and our [Linear integration](https://planningpoker.live/knowledge-base/estimate-linear-issues-planning-poker-live) in our knowledge base.
   
-- **Anonymous Voting:** Keep the estimation process fair by enabling anonymous voting. This [feature](https://planningpoker.live/features) minimizes bias and encourages all team members to provide honest, independent estimates. Learn more about why this is beneficial in our [pitfalls](https://planningpoker.live/knowledge-base/common-mistakes-planning-poker) guide.
+- **Anonymous Voting:** Keep the estimation process fair by enabling anonymous voting. This [feature](https://planningpoker.live/features) minimizes bias and encourages all team members to provide honest, independent estimates.
 
 - **Async Voting:** For teams spread across time zones or those who need flexibility, async voting allows participants to cast their votes on tasks at their convenience before the meeting.
 

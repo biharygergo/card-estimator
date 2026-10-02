@@ -48,6 +48,6 @@ tags: Linear Integration, Agile Estimation, Planning Poker, Project Management, 
 **By combining the collaborative power of planning poker with the intuitive interface of Linear, you can ensure your agile projects have a strong foundation and are delivered on time.** Give PlanningPoker.live a try today and experience the [difference](https://planningpoker.live/features) in your estimation process!
 
 **Want to learn more about planning poker?** Check out our other guides:
-- [Comprehensive guide to Planning Poker](/knowledge-base/planning-poker-guide-agile-estimation-techniques)
+- [How to run a Planning Poker session](/knowledge-base/how-to-run-planning-poker-session-with-planningpoker-live)
 - [How to improve sprint planning with Planning Poker](/knowledge-base/how-to-use-planning-poker-to-improve-sprint-planning)
-- [Different estimation techniques compared](/knowledge-base/comparing-agile-estimation-techniques)
+- [Different estimation techniques compared](/estimation-techniques-comparison)

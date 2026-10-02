@@ -1,5 +1,5 @@
 import {Filter, Timestamp, getFirestore} from "firebase-admin/firestore";
-import {Credit, BundleName, CreditBundle, BundleWithCredits} from "../types";
+import {Credit, BundleName, CreditBundle, BundleWithCredits, Organization} from "../types";
 import moment from "moment";
 import {getAuth} from "firebase-admin/auth";
 import {isAnonymousUser, isPremiumSubscriber} from "../shared/customClaims";
@@ -32,34 +32,53 @@ export async function getAllCreditBundles(
   return {credits: allCredits, bundles};
 }
 
-export async function assignCreditsAsNeeded(userId: string) {
-  if (
-    !(await hasReceivedWelcomeBundle(userId)) &&
-    !(await isPremiumSubscriber(userId))
-  ) {
-    const user = await getAuth().getUser(userId);
-    const isExistingUser = moment(user.metadata.creationTime).isBefore(
-        moment("2023-12-11")
-    );
-    await createBundle(
-      isExistingUser ?
-        BundleName.WELCOME_BUNDLE_EXISTING_USER :
-        BundleName.WELCOME_BUNDLE_STANDARD,
-      userId,
-      null,
-      undefined
-    );
+export async function assignCreditsAsNeeded(
+    userId: string,
+    // Lets callers that already fetched the Auth user record (e.g. room
+    // creation) skip the redundant getAuth().getUser() round trips below.
+    precomputed?: {
+      isPremium?: boolean;
+      isAnonymous?: boolean;
+      userCreationTime?: string;
+    }
+) {
+  const [isPremium, isAnonymous] = await Promise.all([
+    precomputed?.isPremium ?? isPremiumSubscriber(userId),
+    precomputed?.isAnonymous ?? isAnonymousUser(userId),
+  ]);
+
+  const [needsWelcomeBundle, needsMonthlyBundle] = await Promise.all([
+    isPremium ? false : hasReceivedWelcomeBundle(userId).then((has) => !has),
+    isAnonymous ? false : hasReceivedMonthlyBundle(userId).then((has) => !has),
+  ]);
+
+  const bundleCreations: Promise<unknown>[] = [];
+
+  if (needsWelcomeBundle) {
+    const creationTime = precomputed?.userCreationTime ??
+      (await getAuth().getUser(userId)).metadata.creationTime;
+    const isExistingUser = moment(creationTime).isBefore(moment("2023-12-11"));
+    bundleCreations.push(createBundle(
+        isExistingUser ?
+          BundleName.WELCOME_BUNDLE_EXISTING_USER :
+          BundleName.WELCOME_BUNDLE_STANDARD,
+        userId,
+        null,
+        undefined
+    ));
   }
 
-  if (!(await isAnonymousUser(userId)) && !(await hasReceivedMonthlyBundle(userId))) {
-    await createBundle(
+  if (needsMonthlyBundle) {
+    bundleCreations.push(createBundle(
         BundleName.MONTHLY_BUNDLE,
         userId,
         null,
         `${moment().format("MMMM")} bundle`,
         moment().startOf("month").toDate()
-    );
+    ));
   }
+
+  await Promise.all(bundleCreations);
 }
 
 function getAllUserCredits(userId: string): Promise<Credit[]> {
@@ -101,9 +120,19 @@ export function getAllOrganizationBundles(organizationId: string): Promise<Credi
       );
 }
 
-export async function getValidCredits(userId: string): Promise<Credit[]> {
-  const credits = await getAllUserCredits(userId);
-  const organization = await getCurrentOrganization(userId);
+export async function getValidCredits(
+    userId: string,
+    // Pass the organization in when the caller already looked it up, to avoid
+    // re-running the same org/userPreference reads within one request.
+    // Omit (undefined) to have it looked up here; pass null for "no org".
+    precomputedOrganization?: Organization | null
+): Promise<Credit[]> {
+  const [credits, organization] = await Promise.all([
+    getAllUserCredits(userId),
+    precomputedOrganization !== undefined ?
+      Promise.resolve(precomputedOrganization) :
+      getCurrentOrganization(userId),
+  ]);
 
   const organizationCredits = organization ?
     await getAllOrganizationCredits(organization.id) :
@@ -118,9 +147,10 @@ export async function getValidCredits(userId: string): Promise<Credit[]> {
 }
 
 export async function getCreditForNewRoom(
-    userId: string
+    userId: string,
+    precomputedOrganization?: Organization | null
 ): Promise<Credit | undefined> {
-  const credits = (await getValidCredits(userId)).sort((a, b) => {
+  const credits = (await getValidCredits(userId, precomputedOrganization)).sort((a, b) => {
     if (!a.expiresAt) {
       return -1;
     } else if (!b.expiresAt) {
@@ -228,22 +258,23 @@ export async function createCredits(
     bundle: CreditBundle,
     createdAt: Timestamp
 ) {
-  await Promise.all(
-      Array.from(Array(bundle.creditCount)).map(() => {
-        const creditRef = getFirestore()
-            .collection(`userDetails/${bundle.userId}/${CREDITS_COLLECTION}`)
-            .doc();
-        const credit: Credit = {
-          id: creditRef.id,
-          assignedToUserId: bundle.userId,
-          bundleId: bundle.id,
-          createdAt: createdAt as any,
-          expiresAt: getBundleExpirationDate(bundle.name, createdAt) as any,
-          isPaidCredit: !!bundle.paymentId,
-        };
-        return creditRef.set(credit);
-      })
-  );
+  const batch = getFirestore().batch();
+  Array.from(Array(bundle.creditCount)).forEach(() => {
+    const creditRef = getFirestore()
+        .collection(`userDetails/${bundle.userId}/${CREDITS_COLLECTION}`)
+        .doc();
+    const credit: Credit = {
+      id: creditRef.id,
+      assignedToUserId: bundle.userId,
+      bundleId: bundle.id,
+      createdAt: createdAt as any,
+      expiresAt: getBundleExpirationDate(bundle.name, createdAt) as any,
+      isPaidCredit: !!bundle.paymentId,
+    };
+    batch.set(creditRef, credit);
+  });
+
+  await batch.commit();
 }
 
 export async function createOrganizationCreditBundle(

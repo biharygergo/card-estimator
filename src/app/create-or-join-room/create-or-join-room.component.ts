@@ -9,9 +9,9 @@ import {
   MemberStatus,
   Organization,
   RecurringMeetingLink,
+  RoomTemplate,
 } from '../types';
 import { AnalyticsService } from '../services/analytics.service';
-import { PaymentService } from '../services/payment.service';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from '../services/cookie.service';
 
@@ -344,7 +344,6 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly meetService: MeetApiService,
     private readonly navigationService: NavigationService,
     private readonly toastService: ToastService,
-    private readonly paymentService: PaymentService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -444,36 +443,22 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         }),
         switchMap(() => this.recurringMeetingId$),
         switchMap(recurringMeetingId =>
-          from(this.canCreateRoom()).pipe(
-            switchMap(canCreate => {
-              if (!canCreate) {
+          from(this.createRoom(recurringMeetingId)).pipe(
+            catchError(e => {
+              if (e.details === 'error-no-credits') {
+                // The server is the source of truth on credits; show the
+                // paywall on its say-so instead of pre-checking on the client.
                 this.dialog.open(
                   ...upsellModalCreator({
-                    trigger: 'intercept',
+                    trigger: 'recover',
                     creditsRemaining: 0,
                   })
                 );
-                this.isBusy.next(false);
-                return of({});
+              } else {
+                throw e;
               }
-
-              return from(this.createRoom(recurringMeetingId)).pipe(
-                catchError(e => {
-                  if (e.details === 'error-no-credits') {
-                    // Stale credit count on the client; the server had the last word.
-                    this.dialog.open(
-                      ...upsellModalCreator({
-                        trigger: 'recover',
-                        creditsRemaining: 0,
-                      })
-                    );
-                  } else {
-                    throw e;
-                  }
-                  this.isBusy.next(false);
-                  return of({});
-                })
-              );
+              this.isBusy.next(false);
+              return of({});
             })
           )
         ),
@@ -576,28 +561,26 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     return this.authService.signOut();
   }
 
-  /**
-   * Checks the user's credits before attempting a creation that would fail, so
-   * the paywall lands on an intent instead of an error. Fails open: the cloud
-   * function still enforces the limit.
-   */
-  private async canCreateRoom(): Promise<boolean> {
-    try {
-      const user = await this.authService.getUser();
-      if (!user) {
-        return true;
-      }
+  private async getDefaultTemplate(): Promise<RoomTemplate | undefined> {
+    const userPreference = await firstValueFrom(
+      this.authService.getUserPreference()
+    );
 
-      const [isPremium, credits] = await Promise.all([
-        this.paymentService.isPremiumSubscriber(),
-        this.paymentService.refreshCredits(),
-      ]);
-
-      return isPremium || credits.availableCredits.length > 0;
-    } catch (e) {
-      console.error('Could not check credits before creating a room', e);
-      return true;
+    if (!userPreference?.defaultRoomTemplateId) {
+      return undefined;
     }
+
+    return firstValueFrom(
+      this.authService
+        .getRoomTemplates()
+        .pipe(
+          map(templates =>
+            templates.find(
+              t => t.slotId === userPreference.defaultRoomTemplateId
+            )
+          )
+        )
+    );
   }
 
   async createRoom(recurringMeetingId: string | null) {
@@ -608,35 +591,22 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       status: MemberStatus.ACTIVE,
     };
 
-    const { room } = await this.estimatorService.createRoom(
-      newMember,
-      recurringMeetingId
-    );
+    // The default-template lookup doesn't depend on the room being created
+    // yet, so run it concurrently with the createRoom call instead of after it.
+    const [{ room }, template] = await Promise.all([
+      this.estimatorService.createRoom(newMember, recurringMeetingId),
+      this.getDefaultTemplate().catch(error => {
+        console.error(error);
+        return undefined;
+      }),
+    ]);
 
-    try {
-      const userPreference = await firstValueFrom(
-        this.authService.getUserPreference()
-      );
-
-      if (userPreference?.defaultRoomTemplateId) {
-        const template = await firstValueFrom(
-          this.authService
-            .getRoomTemplates()
-            .pipe(
-              map(templates =>
-                templates.find(
-                  t => t.slotId === userPreference.defaultRoomTemplateId
-                )
-              )
-            )
-        );
-
-        if (template) {
-          await this.estimatorService.applyTemplate(room, template);
-        }
+    if (template) {
+      try {
+        await this.estimatorService.applyTemplate(room, template);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
 
     this.analytics.logClickedCreateNewRoom();

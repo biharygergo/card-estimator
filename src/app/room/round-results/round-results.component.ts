@@ -270,6 +270,7 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   }
 
   async addToOrganization(memberId: string) {
+    if (!this.organization()) return;
     await this.organizationService.addMember(this.organization().id, memberId);
     this.toastService.showMessage('Added to organization!');
   }

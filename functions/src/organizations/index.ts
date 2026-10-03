@@ -13,8 +13,10 @@ export async function getOrganizations(userId: string): Promise<Organization[]> 
 }
 
 export async function getCurrentOrganization(userId: string): Promise<Organization | undefined> {
-  const orgs = await getOrganizations(userId);
-  const userPreference = await getUserPreference(userId);
+  const [orgs, userPreference] = await Promise.all([
+    getOrganizations(userId),
+    getUserPreference(userId),
+  ]);
 
   const selectedOrg = orgs.find((org) => org.id === userPreference?.activeOrganizationId);
   return selectedOrg ?? orgs.at(0);

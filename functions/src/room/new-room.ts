@@ -19,14 +19,14 @@ import {
   animals,
   languages,
 } from "unique-names-generator";
-import {isPremiumSubscriber} from "../shared/customClaims";
+import {CustomClaims} from "../shared/customClaims";
 import {CallableRequest, HttpsError} from "firebase-functions/v2/https";
 import {
   assignCreditsAsNeeded,
   getCreditForNewRoom,
 } from "../credits";
 import {getCurrentOrganization} from "../organizations";
-import {getAuth} from "firebase-admin/auth";
+import {getAuth, UserRecord} from "firebase-admin/auth";
 import {
   CreateRoomPubSubMessage,
   sendGenericErrorMessage,
@@ -82,6 +82,7 @@ export async function createRoomFromSlack(data: CreateRoomPubSubMessage) {
     const createResult = await createRoomInternal({
       userId,
       member,
+      userRecord: user,
     });
     await sendRoomCreatedMessage(
         responseUrl,
@@ -140,34 +141,38 @@ async function createRoomInternal(params: {
   userId: string;
   member: Member;
   recurringMeetingId?: string;
+  userRecord?: UserRecord;
 }) {
   const {userId, member, recurringMeetingId} = params;
 
-  // Run credit check and room ID generation in parallel
-  const [isPremium, creditToUse] = await Promise.all([
-    isPremiumSubscriber(userId),
-    assignCreditsAsNeeded(userId).then(() => getCreditForNewRoom(userId)),
+  // Room ID generation doesn't depend on the user/credit/org lookups below,
+  // so kick it off in parallel instead of waiting on them first.
+  const roomIdPromise = generateUniqueRoomId();
+
+  // Fetch the Auth user record once (unless the caller already has it) and
+  // derive isPremium/isAnonymous from it, instead of letting downstream
+  // helpers each call getAuth().getUser() again.
+  const [userRecord, organization] = await Promise.all([
+    params.userRecord ?? getAuth().getUser(userId),
+    getCurrentOrganization(userId),
   ]);
+
+  const isPremium = (userRecord.customClaims as CustomClaims | undefined)
+      ?.stripeRole === "premium";
+  const isAnonymous = !userRecord.providerData?.length;
+
+  const creditToUse = await assignCreditsAsNeeded(userId, {
+    isPremium,
+    isAnonymous,
+    userCreationTime: userRecord.metadata.creationTime,
+  }).then(() => getCreditForNewRoom(userId, organization ?? null));
 
   if (!creditToUse && !isPremium) {
     throw new OutOfCreditsError();
   }
 
-  const customConfig: Config = {
-    dictionaries: [adjectives, colors, animals, languages],
-    separator: "-",
-    length: 3,
-    style: "lowerCase",
-  };
+  const roomId = await roomIdPromise;
 
-  let roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
-
-  while (await doesRoomAlreadyExist(roomId)) {
-    roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
-  }
-
-  // Get organization first since it's needed for subscription metadata
-  const organization = await getCurrentOrganization(userId);
   const subscriptionMetadata = await getSubscriptionMetadata(
       userId,
       creditToUse,
@@ -196,10 +201,31 @@ async function createRoomInternal(params: {
   await getFirestore().collection("rooms").doc(room.roomId).set(room);
 
   if (!isPremium) {
-    await sendUpdateCreditUsagePubSubMessage(creditToUse!, userId, room.roomId);
+    // Best-effort bookkeeping message; don't make the user wait on Pub/Sub
+    // latency before they can enter the room they just created.
+    sendUpdateCreditUsagePubSubMessage(creditToUse!, userId, room.roomId).catch((error) => {
+      console.error("Failed to send update-credit-usage message", error);
+    });
   }
 
   return {room, member};
+}
+
+async function generateUniqueRoomId(): Promise<string> {
+  const customConfig: Config = {
+    dictionaries: [adjectives, colors, animals, languages],
+    separator: "-",
+    length: 3,
+    style: "lowerCase",
+  };
+
+  let roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
+
+  while (await doesRoomAlreadyExist(roomId)) {
+    roomId = uniqueNamesGenerator(customConfig).replace(" ", "-");
+  }
+
+  return roomId;
 }
 
 async function doesRoomAlreadyExist(roomId: string): Promise<boolean> {
